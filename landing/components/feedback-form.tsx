@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -111,7 +112,12 @@ export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
         />
         
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : "Send Feedback"}
+          {isSubmitting ? "Sending..." : (
+            <>
+              <Send className="mr-2 h-4 w-4" />
+              Send Feedback
+            </>
+          )}
         </Button>
       </form>
     </Form>

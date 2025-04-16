@@ -22,10 +22,10 @@ import {
  * Schema for contact form validation
  */
 const contactFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
   email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(1, "Subject is required"),
-  message: z.string().min(1, "Message is required"),
+  message: z.string()
+    .min(3, "Message must be at least 3 characters")
+    .max(2000, "Message cannot exceed 2000 characters"),
 })
 
 /**
@@ -42,9 +42,7 @@ export default function ContactForm() {
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
-      name: "",
       email: "",
-      subject: "",
       message: "",
     },
   })
@@ -57,10 +55,19 @@ export default function ContactForm() {
    */
   const onSubmit = async (values: ContactFormValues) => {
     try {
-      // In a real application, you would send the form data to your API here
-      // For demo purposes, we'll simulate a successful API call
-      console.log("Form submitted with values:", values)
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message')
+      }
       
       // Reset form after successful submission
       form.reset()
@@ -97,44 +104,14 @@ export default function ContactForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="your.email@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        
         <FormField
           control={form.control}
-          name="subject"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subject</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="What's this regarding?" {...field} />
+                <Input type="email" placeholder="your.email@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -149,12 +126,16 @@ export default function ContactForm() {
               <FormLabel>Message</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Tell us how we can help..."
+                  placeholder="Your message (3-2000 characters)"
                   rows={5}
+                  className="min-h-32 resize-none"
                   {...field}
                 />
               </FormControl>
               <FormMessage />
+              <div className="text-xs text-muted-foreground text-right">
+                {field.value.length}/2000
+              </div>
             </FormItem>
           )}
         />
