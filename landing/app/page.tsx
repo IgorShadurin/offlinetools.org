@@ -26,8 +26,14 @@ export default function Home() {
               Available for macOS, Windows, and Linux.
             </p>
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <Button size="lg" asChild>
-                <Link href="/download"><Download /> Download Now</Link>
+              <Button 
+                size="lg" 
+                className="text-base py-2.5 px-5 font-medium"
+                asChild
+              >
+                <Link href="/download" className="flex items-center gap-2">
+                  <Download className="h-5 w-5" /> Download Now
+                </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="#features">Learn More</Link>
@@ -113,8 +119,15 @@ export default function Home() {
               <p className="mx-auto max-w-2xl text-lg mb-8">
                 Join thousands of developers who use OfflineTools to streamline their daily tasks.
               </p>
-              <Button size="lg" variant="secondary" asChild>
-                <Link href="/download"><Download /> Download Now</Link>
+              <Button 
+                size="lg" 
+                className="text-base py-2.5 px-5 font-medium"
+                variant="secondary" 
+                asChild
+              >
+                <Link href="/download" className="flex items-center gap-2">
+                  <Download className="h-5 w-5" /> Download Now
+                </Link>
               </Button>
             </div>
           </Container>
