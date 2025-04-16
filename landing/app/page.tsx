@@ -6,6 +6,7 @@ import { FeatureItem } from "@/components/feature-item"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { Section, SectionHeading } from "@/components/ui/section"
+import { Download } from "lucide-react"
 import Link from "next/link"
 
 export default function Home() {
@@ -25,7 +26,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
               <Button size="lg" asChild>
-                <Link href="/download">Download Now</Link>
+                <Link href="/download"><Download /> Download Now</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="#features">Learn More</Link>
@@ -134,7 +135,7 @@ export default function Home() {
                 Join thousands of developers who use OfflineTools to streamline their daily tasks.
               </p>
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/download">Download Now</Link>
+                <Link href="/download"><Download /> Download Now</Link>
               </Button>
             </div>
           </Container>

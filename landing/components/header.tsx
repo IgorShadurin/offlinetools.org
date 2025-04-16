@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Container } from "@/components/ui/container"
 import Link from "next/link"
 import React, { useState } from "react"
+import { Download } from "lucide-react"
 
 /**
  * Header component with navigation links and download button
@@ -46,7 +47,7 @@ export function Header() {
           </div>
           <div className="flex items-center gap-4">
             <Button asChild size="sm" className="hidden md:flex">
-              <Link href="/download">Download</Link>
+              <Link href="/download"><Download /> Download</Link>
             </Button>
             <Button
               variant="outline"
@@ -109,7 +110,7 @@ export function Header() {
               </Link>
               <div className="pt-2">
                 <Button asChild size="sm" className="w-full">
-                  <Link href="/download">Download</Link>
+                  <Link href="/download"><Download /> Download</Link>
                 </Button>
               </div>
             </nav>
