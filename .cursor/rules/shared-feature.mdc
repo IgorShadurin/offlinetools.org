@@ -1,0 +1,212 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Shared Feature Development Guidelines
+
+This document provides a step-by-step guide for implementing new shared features in the offlinetools project. Each shared feature should be implemented in the shared library first, then exposed through a dedicated page in the landing site.
+
+## Step 1: Implement the Core Feature in Shared Library
+
+Create a new feature directory under `shared/src/feature-name/` with implementation:
+
+```
+shared/src/
+└── feature-name/
+    ├── index.ts         # Main implementation with exported functions/types
+    └── index.test.ts    # Tests for the feature
+```
+
+Example paths:
+- `shared/src/json-validator/index.ts`
+- `shared/src/json-validator/index.test.ts`
+
+### Implementation Guidelines:
+
+1. Use TypeScript for all implementations
+2. Include JSDoc comments for all exports (functions, interfaces, enums)
+3. Export all types and enums needed by the landing page
+4. For error handling, throw descriptive Error objects 
+5. Structure the code with a clear public API
+
+Example implementation pattern:
+
+```typescript
+/**
+ * Options for the feature
+ */
+export interface FeatureOptions {
+  // Define options here
+}
+
+/**
+ * Default options for the feature
+ */
+export const DEFAULT_OPTIONS: FeatureOptions = {
+  // Default values
+};
+
+/**
+ * Main function for the feature
+ * @param input - The input to process
+ * @param options - Optional configuration
+ * @returns The processed output
+ * @throws Error if processing fails
+ */
+export function featureFunction(input: string, options = DEFAULT_OPTIONS): string {
+  // Implementation
+}
+```
+
+## Step 2: Test the Feature Implementation
+
+Create comprehensive tests in `index.test.ts` to cover:
+
+1. Basic functionality
+2. Edge cases
+3. Error handling
+4. All options/configurations
+
+Example test structure:
+
+```typescript
+import { featureFunction, FeatureOptions } from './index';
+
+describe('featureFunction', () => {
+  // Test with valid inputs
+  it('should correctly process valid input', () => {
+    const result = featureFunction('valid input');
+    expect(result).toBe('expected output');
+  });
+
+  // Test with different options
+  it('should respect provided options', () => {
+    const options: FeatureOptions = { /* custom options */ };
+    const result = featureFunction('input', options);
+    expect(result).toBe('expected output with options');
+  });
+
+  // Test error handling
+  it('should throw an error for invalid input', () => {
+    expect(() => {
+      featureFunction('invalid input');
+    }).toThrow('Expected error message');
+  });
+});
+```
+
+Run tests using: `cd shared && pnpm test`
+
+## Step 3: Export the Feature from Shared
+
+Add the export to `shared/src/index.ts`:
+
+```typescript
+// Existing exports...
+
+// Export new feature
+export * from './feature-name';
+```
+
+## Step 4: Create a Tool Page in Landing Site
+
+Create a new page for the tool at `landing/app/tools/feature-name/page.tsx`:
+
+1. Use a client-side rendered component with the "use client" directive
+2. Import the feature functions from "shared" package
+3. Implement a user interface with appropriate controls and displays
+4. Ensure mobile responsiveness with responsive classes
+
+Example page structure:
+
+```tsx
+"use client"
+
+import { Container } from "@/components/ui/container"
+import { SectionHeading } from "@/components/ui/section"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+// Import other UI components as needed
+import { featureFunction, FeatureOptions } from "shared"
+import { useState } from "react"
+// Import icons as needed
+
+export default function FeatureNamePage() {
+  // State management
+  const [input, setInput] = useState("")
+  const [output, setOutput] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  
+  // Handle processing
+  const handleProcess = () => {
+    try {
+      const result = featureFunction(input)
+      setOutput(result)
+      setError(null)
+    } catch (error) {
+      setError((error as Error).message)
+      setOutput("")
+    }
+  }
+  
+  return (
+    <>
+      <Container className="py-8 md:py-12">
+        <SectionHeading
+          title="Feature Name"
+          description="Description of what this tool does and how it helps users."
+        />
+        
+        {/* UI Implementation */}
+        {/* Follow the pattern of existing tools like JSON Formatter */}
+        {/* Ensure responsiveness with mobile-first classes */}
+      </Container>
+    </>
+  )
+}
+```
+
+Example path: `landing/app/tools/json-validator/page.tsx`
+
+## Step 5: Add the Tool to Online Tools List
+
+Add the new tool to the list in `landing/components/online-tools-grid.tsx`:
+
+```typescript
+export const onlineTools = [
+  // Existing tools...
+  {
+    title: "Feature Name", // User-friendly name
+    path: "/tools/feature-name" // URL path to the tool page
+  },
+  // Rest of tools...
+]
+```
+
+## Step 6: Update Description in Tools Page
+
+Update the description for the tool in the `/tools` page by modifying `landing/app/tools/page.tsx`. Find the CardDescription section and add a description for your tool:
+
+```tsx
+<CardDescription>
+  Format and beautify your JSON with customizable indentation options.
+</CardDescription>
+```
+
+## Final Checks
+
+After completing all steps:
+
+1. Run linting and type checking: `cd landing && pnpm lint && pnpm types:check`
+2. Ensure mobile responsiveness of the UI
+3. Test the feature with various inputs
+4. Verify proper error handling and display
+
+Remember to follow the general project rules:
+- Use pnpm for dependency management
+- Develop components to be mobile-friendly
+- Use TypeScript for strong typing
+- Add comprehensive JSDoc comments
+- Keep files under 400 lines (split if needed)
+- Reuse UI components when possible 
