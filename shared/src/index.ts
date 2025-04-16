@@ -23,3 +23,6 @@ export * from './json-formatter';
 
 // Export Base64 codec
 export * from './base64-codec';
+
+// Export URL encoder/decoder
+export * from './url-encoder';
