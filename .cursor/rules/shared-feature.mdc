@@ -171,28 +171,36 @@ Example path: `landing/app/tools/json-validator/page.tsx`
 
 ## Step 5: Add the Tool to Online Tools List
 
-Add the new tool to the list in `landing/components/online-tools-grid.tsx`:
+Add the new tool to the list in `landing/components/online-tools-grid.tsx`. Make sure to include the title, path, and a concise description that explains what the tool does:
 
 ```typescript
 export const onlineTools = [
   // Existing tools...
   {
-    title: "Feature Name", // User-friendly name
-    path: "/tools/feature-name" // URL path to the tool page
+    title: "Feature Name",     // User-friendly name
+    path: "/tools/feature-name", // URL path to the tool page
+    description: "Clear, concise description of what this tool does and what problem it solves for users."
   },
   // Rest of tools...
 ]
 ```
 
-## Step 6: Update Description in Tools Page
+### Guidelines for Tool Descriptions:
 
-Update the description for the tool in the `/tools` page by modifying `landing/app/tools/page.tsx`. Find the CardDescription section and add a description for your tool:
+1. **Be concise**: Keep descriptions under 100 characters when possible
+2. **Focus on value**: Explain what the tool helps users accomplish
+3. **Use action verbs**: Start with verbs like "Convert", "Format", "Validate", etc.
+4. **Be specific**: Mention key features or options that make the tool valuable
+5. **Maintain consistency**: Follow the pattern of existing tool descriptions
 
-```tsx
-<CardDescription>
-  Format and beautify your JSON with customizable indentation options.
-</CardDescription>
-```
+Examples of good descriptions:
+- "Format and beautify your JSON with customizable indentation options."
+- "Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
+- "Validate XML against schemas and highlight errors with detailed reports."
+
+The same description should be used in two places:
+1. In the `onlineTools` array in `landing/components/online-tools-grid.tsx`
+2. In the `SectionHeading` component of your tool's page
 
 ## Final Checks
 
