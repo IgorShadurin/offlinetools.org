@@ -31,6 +31,11 @@ export const onlineTools = [
     description: "Compare hashes of files or text strings using different algorithms."
   },
   {
+    title: "Text Hash Generator",
+    path: "/tools/text-hash-generator",
+    description: "Generate cryptographic hashes from text using various algorithms including SHA-256, SHA-3, and RIPEMD-160."
+  },
+  {
     title: "Tool 2",
     path: "/tools/tool2",
     description: "Description for Tool 2"

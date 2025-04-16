@@ -1,0 +1,339 @@
+"use client"
+
+import { useState, useCallback, useRef } from "react"
+import { 
+  generateHash, 
+  generateAllHashes,
+  verifyTextHash,
+  TextHashAlgorithm as HashAlgorithm,
+  HASH_ALGORITHM_GROUPS
+} from "shared"
+import { Container } from "@/components/ui/container"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Check, Copy, AlertCircle } from "lucide-react"
+
+export default function TextHashGeneratorPage() {
+  const [text, setText] = useState("")
+  const [algorithm, setAlgorithm] = useState<HashAlgorithm>(HashAlgorithm.SHA256)
+  const [hashOutput, setHashOutput] = useState("")
+  const [verifyHash, setVerifyHash] = useState("")
+  const [verificationResult, setVerificationResult] = useState<boolean | null>(null)
+  const [allHashesOutput, setAllHashesOutput] = useState<Record<HashAlgorithm, string> | null>(null)
+  const [uppercase, setUppercase] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  
+  /**
+   * Generates a hash based on the current text and selected algorithm
+   */
+  const generateHashOutput = useCallback(() => {
+    if (!text) return
+    
+    try {
+      const hash = generateHash(text, { algorithm, uppercase })
+      setHashOutput(hash)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [text, algorithm, uppercase])
+
+  /**
+   * Generates hashes using all available algorithms
+   */
+  const generateAllHashesOutput = useCallback(() => {
+    if (!text) return
+    
+    try {
+      const hashes = generateAllHashes(text, uppercase)
+      setAllHashesOutput(hashes)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [text, uppercase])
+
+  /**
+   * Verifies if the input text produces the expected hash
+   */
+  const verifyTextHashOutput = useCallback(() => {
+    if (!text || !verifyHash) return
+    
+    try {
+      const result = verifyTextHash(text, verifyHash, algorithm)
+      setVerificationResult(result)
+    } catch (error) {
+      console.error(error)
+      setVerificationResult(false)
+    }
+  }, [text, verifyHash, algorithm])
+
+  /**
+   * Copies text to clipboard and shows a success indicator
+   * @param textToCopy - The text to copy to clipboard
+   */
+  const copyToClipboard = useCallback((textToCopy: string) => {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setCopied(true)
+      
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      
+      timeoutRef.current = setTimeout(() => {
+        setCopied(false)
+        timeoutRef.current = null
+      }, 2000)
+    })
+  }, [])
+
+  /**
+   * Renders algorithm buttons grouped by category
+   */
+  const renderAlgorithmButtons = useCallback(() => {
+    return Object.entries(HASH_ALGORITHM_GROUPS).map(([groupName, groupData]) => (
+      <div key={groupName} className="mb-4">
+        <h3 className="text-sm font-medium text-gray-500 mb-2">{groupName}</h3>
+        <div className="flex flex-wrap gap-2">
+          {groupData.algorithms.map((alg: HashAlgorithm) => (
+            <Button
+              key={alg}
+              size="sm"
+              variant={algorithm === alg ? "default" : "outline"}
+              onClick={() => setAlgorithm(alg)}
+              className="text-xs md:text-sm"
+            >
+              {alg}
+            </Button>
+          ))}
+        </div>
+      </div>
+    ))
+  }, [algorithm])
+
+  return (
+    <Container className="py-6 md:py-8">
+      <h1 className="text-2xl font-bold mb-2">Text Hash Generator</h1>
+      <p className="mb-6 text-gray-500">Generate cryptographic hashes from text using various algorithms.</p>
+      
+      <Tabs defaultValue="generate" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsTrigger value="generate">Generate</TabsTrigger>
+          <TabsTrigger value="verify">Verify</TabsTrigger>
+          <TabsTrigger value="all">All Algorithms</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="generate">
+          <Card>
+            <CardHeader>
+              <CardTitle>Generate Hash</CardTitle>
+              <CardDescription>Enter text and select an algorithm to generate a hash</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="input-text">Input Text</Label>
+                  <Textarea
+                    id="input-text"
+                    placeholder="Enter text to hash..."
+                    className="mt-1 h-32"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                  />
+                </div>
+                
+                <div>
+                  <Label className="block mb-2">Select Algorithm</Label>
+                  <div className="max-h-48 overflow-y-auto pr-2 pb-2">
+                    {renderAlgorithmButtons()}
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="uppercase" className="cursor-pointer">
+                    Uppercase Output
+                  </Label>
+                  <input
+                    id="uppercase"
+                    type="checkbox"
+                    checked={uppercase}
+                    onChange={(e) => setUppercase(e.target.checked)}
+                    className="rounded"
+                  />
+                </div>
+                
+                <Button onClick={generateHashOutput} className="w-full">
+                  Generate Hash
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {hashOutput && (
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Hash Output</CardTitle>
+                <CardDescription>{algorithm}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="relative">
+                  <div className="p-4 bg-gray-100 rounded font-mono text-xs md:text-sm break-all">
+                    {hashOutput}
+                  </div>
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="absolute top-2 right-2"
+                    onClick={() => copyToClipboard(hashOutput)}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="verify">
+          <Card>
+            <CardHeader>
+              <CardTitle>Verify Hash</CardTitle>
+              <CardDescription>Check if text produces an expected hash</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="verify-text">Input Text</Label>
+                  <Textarea
+                    id="verify-text"
+                    placeholder="Enter text to verify..."
+                    className="mt-1 h-24"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="verify-hash">Expected Hash</Label>
+                  <Input
+                    id="verify-hash"
+                    placeholder="Enter expected hash..."
+                    className="mt-1 font-mono"
+                    value={verifyHash}
+                    onChange={(e) => setVerifyHash(e.target.value)}
+                  />
+                </div>
+                
+                <div>
+                  <Label className="block mb-2">Algorithm</Label>
+                  <div className="max-h-32 overflow-y-auto pr-2 pb-2">
+                    {renderAlgorithmButtons()}
+                  </div>
+                </div>
+                
+                <Button 
+                  onClick={verifyTextHashOutput} 
+                  className="w-full"
+                  disabled={!text || !verifyHash}
+                >
+                  Verify Hash
+                </Button>
+                
+                {verificationResult !== null && (
+                  <Alert className={verificationResult ? "bg-green-50" : "bg-red-50"}>
+                    <AlertCircle className={`h-4 w-4 ${verificationResult ? "text-green-500" : "text-red-500"}`} />
+                    <AlertDescription className={verificationResult ? "text-green-700" : "text-red-700"}>
+                      {verificationResult
+                        ? "Hash verification successful! The text produces the expected hash."
+                        : "Hash verification failed. The text does not produce the expected hash."}
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="all">
+          <Card>
+            <CardHeader>
+              <CardTitle>Generate All Hashes</CardTitle>
+              <CardDescription>Generate hashes using all supported algorithms</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="all-text">Input Text</Label>
+                  <Textarea
+                    id="all-text"
+                    placeholder="Enter text to hash..."
+                    className="mt-1 h-24"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                  />
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="all-uppercase" className="cursor-pointer">
+                    Uppercase Output
+                  </Label>
+                  <input
+                    id="all-uppercase"
+                    type="checkbox"
+                    checked={uppercase}
+                    onChange={(e) => setUppercase(e.target.checked)}
+                    className="rounded"
+                  />
+                </div>
+                
+                <Button 
+                  onClick={generateAllHashesOutput} 
+                  className="w-full"
+                  disabled={!text}
+                >
+                  Generate All Hashes
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {allHashesOutput && (
+            <div className="mt-6 space-y-4">
+              {Object.entries(HASH_ALGORITHM_GROUPS).map(([groupName, groupData]) => (
+                <Card key={groupName}>
+                  <CardHeader>
+                    <CardTitle>{groupName}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {groupData.algorithms.map((alg: HashAlgorithm) => (
+                        <div key={alg} className="relative">
+                          <Label className="text-xs mb-1 block">{alg}</Label>
+                          <div className="p-3 bg-gray-100 rounded font-mono text-xs md:text-sm break-all relative">
+                            {allHashesOutput[alg]}
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="absolute top-1 right-1"
+                              onClick={() => copyToClipboard(allHashesOutput[alg])}
+                            >
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </Container>
+  )
+} 

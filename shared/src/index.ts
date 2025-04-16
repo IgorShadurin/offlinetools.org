@@ -32,3 +32,26 @@ export * from './url-encoder';
 
 // Export File Hash Compare
 export * from './file-hash-compare';
+
+// Export Text Hash Generator with renamed exports to avoid conflicts
+import {
+  HashAlgorithm as TextHashAlgorithm,
+  DEFAULT_HASH_OPTIONS as TEXT_HASH_DEFAULT_OPTIONS,
+  HASH_ALGORITHM_GROUPS,
+  generateHash,
+  generateAllHashes,
+  verifyTextHash,
+  textToFileHashFormat,
+  type HashGeneratorOptions,
+} from './text-hash-generator';
+
+export {
+  TextHashAlgorithm,
+  TEXT_HASH_DEFAULT_OPTIONS,
+  HASH_ALGORITHM_GROUPS,
+  generateHash,
+  generateAllHashes,
+  verifyTextHash,
+  textToFileHashFormat,
+  type HashGeneratorOptions,
+};
