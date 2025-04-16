@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Container } from "@/components/ui/container"
 import Link from "next/link"
@@ -32,16 +34,16 @@ export function Header() {
                 Use Cases
               </Link>
               <Link
-                href="#templates"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-              >
-                Templates
-              </Link>
-              <Link
                 href="#pricing"
                 className="text-sm font-medium transition-colors hover:text-foreground/80"
               >
                 Pricing
+              </Link>
+              <Link
+                href="/contact"
+                className="text-sm font-medium transition-colors hover:text-foreground/80"
+              >
+                Contact
               </Link>
             </nav>
           </div>
@@ -95,18 +97,18 @@ export function Header() {
                 Use Cases
               </Link>
               <Link
-                href="#templates"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Templates
-              </Link>
-              <Link
                 href="#pricing"
                 className="text-sm font-medium transition-colors hover:text-foreground/80"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pricing
+              </Link>
+              <Link
+                href="/contact"
+                className="text-sm font-medium transition-colors hover:text-foreground/80"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
               </Link>
               <div className="pt-2">
                 <Button asChild size="sm" className="w-full">

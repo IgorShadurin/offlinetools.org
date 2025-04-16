@@ -99,31 +99,6 @@ export default function Home() {
           </Container>
         </Section>
 
-        {/* Templates */}
-        <Section id="templates" className="bg-gray-50 dark:bg-gray-900/50">
-          <Container>
-            <SectionHeading
-              title="Customizable Templates"
-              description="Start with pre-built templates or create your own to save time on common tasks."
-            />
-            <div className="grid gap-6 md:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="rounded-lg border bg-background shadow-sm overflow-hidden">
-                  <div className="aspect-[16/12] bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                    <p className="text-muted-foreground">Template Placeholder</p>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-medium mb-2">Template {i}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Quick starter template for common development tasks.
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </Section>
-
         {/* CTA */}
         <Section>
           <Container>

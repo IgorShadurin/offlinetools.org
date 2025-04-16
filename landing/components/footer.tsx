@@ -24,11 +24,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#templates" className="text-muted-foreground hover:text-foreground">
-                  Templates
-                </Link>
-              </li>
-              <li>
                 <Link href="#pricing" className="text-muted-foreground hover:text-foreground">
                   Pricing
                 </Link>
