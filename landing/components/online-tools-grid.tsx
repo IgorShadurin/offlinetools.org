@@ -16,6 +16,11 @@ export const onlineTools = [
     description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
   },
   {
+    title: "Binary Base64 Encoder/Decoder",
+    path: "/tools/binary-base64-codec",
+    description: "Convert binary files to Base64 or decode Base64 to binary files."
+  },
+  {
     title: "URL Encoder/Decoder",
     path: "/tools/url-encoder",
     description: "Encode text for use in URLs or decode URL-encoded text."

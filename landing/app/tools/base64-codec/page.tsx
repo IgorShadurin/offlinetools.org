@@ -9,8 +9,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { encodeBase64, decodeBase64 } from "shared"
 import { useState } from "react"
-import { AlertCircle, Check, Copy } from "lucide-react"
+import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import Link from "next/link"
 
 export default function Base64CodecPage() {
   const [input, setInput] = useState("")
@@ -58,6 +59,17 @@ export default function Base64CodecPage() {
           title="Base64 Encoder/Decoder"
           description="Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
         />
+        
+        <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
+          <LinkIcon className="h-4 w-4" />
+          <span>Related tool: </span>
+          <Link 
+            href="/tools/binary-base64-codec" 
+            className="text-primary hover:underline"
+          >
+            Binary Base64 Encoder/Decoder
+          </Link>
+        </div>
 
         <div className="space-y-6">
           {/* Tabs for Encode/Decode */}
