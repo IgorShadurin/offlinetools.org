@@ -29,3 +29,6 @@ export * from './binary-base64-codec';
 
 // Export URL encoder/decoder
 export * from './url-encoder';
+
+// Export File Hash Compare
+export * from './file-hash-compare';

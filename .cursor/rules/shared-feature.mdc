@@ -7,7 +7,7 @@ alwaysApply: false
 
 This document provides a step-by-step guide for implementing new shared features in the offlinetools project. Each shared feature should be implemented in the shared library first, then exposed through a dedicated page in the landing site.
 
-## Step 0: Research Before Implementation
+## Step 0: Research Before Implementation using MCP or Browse abilities
 
 Before beginning development, conduct thorough research to understand industry standards, best practices, and user expectations:
 

@@ -26,6 +26,11 @@ export const onlineTools = [
     description: "Encode text for use in URLs or decode URL-encoded text."
   },
   {
+    title: "File & Text Hash Compare",
+    path: "/tools/file-hash-compare",
+    description: "Compare hashes of files or text strings using different algorithms."
+  },
+  {
     title: "Tool 2",
     path: "/tools/tool2",
     description: "Description for Tool 2"
