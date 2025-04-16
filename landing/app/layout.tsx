@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "OfflineTools - All-in-one Toolbox for Developers",
   description: "A collection of essential offline developer tools to boost your productivity.",
+  metadataBase: new URL("https://offlinetools.org"),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
