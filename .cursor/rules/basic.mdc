@@ -6,10 +6,12 @@ alwaysApply: true
 
 # Rules for project development
 
-- We use pnpm to manage dependencies
+- We use pnpm to manage dependencies. Don't use npm at all
+- Run `pnpm run lint && pnpm run types:check` after completing a task
 - The project is a monorepo where the `@landing` directory is the landing page, and the `@shared` directory contains shared components and utilities used across the project
 
 # Rules for developing the landing page
 
 - The landing page is developed using TypeScript, Next.js, and Shadcn UI with Tailwind v4
 - For any new component, first try to find and use an existing component from Shadcn UI (Tailwind v4)
+- Keep in mind to develop all components mobile + pc friendly
