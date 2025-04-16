@@ -26,33 +26,33 @@
   <!-- Features icons -->
   <g>
     <!-- Feature 1: Tools -->
-    <circle cx="320" cy="350" r="60" fill="url(#featureGradient1)" />
-    <g transform="translate(320, 350) scale(0.8)">
+    <circle cx="320" cy="350" r="48" fill="url(#featureGradient1)" />
+    <g transform="translate(320, 350) scale(0.64)">
       <path d="M-20 -10 L-30 0 L-20 10 M20 -10 L30 0 L20 10 M-10 -20 L0 -30 L10 -20 M-10 20 L0 30 L10 20" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
       <circle cx="0" cy="0" r="15" fill="white" />
       <path d="M0 -8 L0 8 M-8 0 L8 0" stroke="#4338ca" stroke-width="4" stroke-linecap="round" />
     </g>
-    <text x="320" y="430" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Developer Tools</text>
+    <text x="320" y="415" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Developer Tools</text>
   </g>
   
   <g>
     <!-- Feature 2: Offline -->
-    <circle cx="600" cy="350" r="60" fill="url(#featureGradient2)" />
-    <g transform="translate(600, 350) scale(0.7)">
+    <circle cx="600" cy="350" r="48" fill="url(#featureGradient2)" />
+    <g transform="translate(600, 350) scale(0.56)">
       <path d="M-40 0 C-40 -22 -22 -40 0 -40 C22 -40 40 -22 40 0 C40 22 22 40 0 40 C-22 40 -40 22 -40 0 Z" fill="none" stroke="white" stroke-width="8" />
       <path d="M-20 0 L40 0" stroke="white" stroke-width="8" stroke-linecap="round" />
       <path d="M-20 -15 L-20 15" stroke="white" stroke-width="8" stroke-linecap="round" />
     </g>
-    <text x="600" y="430" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Works Offline</text>
+    <text x="600" y="415" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Works Offline</text>
   </g>
   
   <g>
     <!-- Feature 3: Fast -->
-    <circle cx="880" cy="350" r="60" fill="url(#featureGradient3)" />
-    <g transform="translate(880, 350) scale(0.7)">
+    <circle cx="880" cy="350" r="48" fill="url(#featureGradient3)" />
+    <g transform="translate(880, 350) scale(0.56)">
       <path d="M-30 0 L30 0 M-10 -30 L30 0 L-10 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
     </g>
-    <text x="880" y="430" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Lightning Fast</text>
+    <text x="880" y="415" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Lightning Fast</text>
   </g>
   
   <!-- Call to action button -->
@@ -87,17 +87,17 @@
     </linearGradient>
     
     <!-- Feature icons gradients -->
-    <linearGradient id="featureGradient1" x1="260" y1="290" x2="380" y2="410" gradientUnits="userSpaceOnUse">
+    <linearGradient id="featureGradient1" x1="272" y1="302" x2="368" y2="398" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#4f46e5" />
       <stop offset="1" stop-color="#3730a3" />
     </linearGradient>
     
-    <linearGradient id="featureGradient2" x1="540" y1="290" x2="660" y2="410" gradientUnits="userSpaceOnUse">
+    <linearGradient id="featureGradient2" x1="552" y1="302" x2="648" y2="398" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#06b6d4" />
       <stop offset="1" stop-color="#0284c7" />
     </linearGradient>
     
-    <linearGradient id="featureGradient3" x1="820" y1="290" x2="940" y2="410" gradientUnits="userSpaceOnUse">
+    <linearGradient id="featureGradient3" x1="832" y1="302" x2="928" y2="398" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ec4899" />
       <stop offset="1" stop-color="#9333ea" />
     </linearGradient>
