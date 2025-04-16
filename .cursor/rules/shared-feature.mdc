@@ -7,6 +7,30 @@ alwaysApply: false
 
 This document provides a step-by-step guide for implementing new shared features in the offlinetools project. Each shared feature should be implemented in the shared library first, then exposed through a dedicated page in the landing site.
 
+## Step 0: Research Before Implementation
+
+Before beginning development, conduct thorough research to understand industry standards, best practices, and user expectations:
+
+1. **Competitive Analysis**: Visit at least 10 websites/tools with similar functionality to:
+   - Identify common features and options that users expect
+   - Note UI/UX patterns and conventions specific to this type of tool
+   - Analyze which options are considered essential vs nice-to-have
+   - Determine common edge cases and error handling approaches
+   - Observe performance optimizations for larger inputs/files
+
+2. **Document Findings**: Create a brief summary of research findings, including:
+   - Core features that must be implemented
+   - Optional features that could be added in future iterations
+   - UI/UX best practices specific to this tool type
+   - Potential challenges and how other implementations address them
+
+3. **Set Scope**: Based on research, define a clear scope for the initial implementation that:
+   - Focuses on the must-have features
+   - Follows established conventions for similar tools
+   - Considers extensibility for future enhancements
+
+This research phase helps ensure the feature meets user expectations and follows established patterns, leading to a more intuitive and complete implementation.
+
 ## Step 1: Implement the Core Feature in Shared Library
 
 Create a new feature directory under `shared/src/feature-name/` with implementation:
@@ -67,6 +91,10 @@ Create comprehensive tests in `index.test.ts` to cover:
 2. Edge cases
 3. Error handling
 4. All options/configurations
+
+### Test Framework
+
+Unless otherwise specified, use Jest as the testing framework for the shared library. The project is already configured with Jest, and test files should follow Jest's conventions and assertions.
 
 Example test structure:
 
