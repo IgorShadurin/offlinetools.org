@@ -11,5 +11,5 @@ alwaysApply: true
 
 # Rules for developing the landing page
 
-- The landing page is developed using TypeScript, Next.js, and Shadcn UI (v4)
-- For any new component, first try to find and use an existing component from Shadcn UI (v4)
+- The landing page is developed using TypeScript, Next.js, and Shadcn UI with Tailwind v4
+- For any new component, first try to find and use an existing component from Shadcn UI (Tailwind v4)
