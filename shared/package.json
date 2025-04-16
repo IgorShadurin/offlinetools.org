@@ -2,5 +2,8 @@
   "name": "shared",
   "version": "1.0.0",
   "main": "src/index.ts",
-  "types": "src/index.ts"
+  "types": "src/index.ts",
+  "dependencies": {
+    "js-sha256": "^0.11.0"
+  }
 }

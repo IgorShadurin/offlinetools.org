@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button"
-import { test1 } from "shared"
+import { test1, test2 } from "shared"
 
 export default function Home() {
   return (
@@ -12,6 +12,7 @@ export default function Home() {
             {
               console.log(123)
               console.log(test1(6, 6))
+              console.log(test2())
             }
         }>Click me!</Button>
 
