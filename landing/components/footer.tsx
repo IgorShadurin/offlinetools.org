@@ -83,6 +83,11 @@ export function Footer() {
                   Terms
                 </Link>
               </li>
+              <li>
+                <Link href="/tools" className="text-muted-foreground hover:text-foreground">
+                  All Tools
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

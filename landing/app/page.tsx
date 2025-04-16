@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container"
 import { FeatureItem } from "@/components/feature-item"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
+import { OnlineToolsGrid } from "@/components/online-tools-grid"
 import { Section, SectionHeading } from "@/components/ui/section"
 import { Download } from "lucide-react"
 import Link from "next/link"
@@ -98,6 +99,9 @@ export default function Home() {
             </div>
           </Container>
         </Section>
+
+        {/* Online Tools Grid */}
+        <OnlineToolsGrid />
 
         {/* CTA */}
         <Section>
