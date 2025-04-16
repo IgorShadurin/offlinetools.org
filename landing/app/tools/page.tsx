@@ -92,7 +92,7 @@ export default function ToolsPage() {
                 </CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button asChild className="w-full">
+                <Button asChild variant="outline" className="w-full hover:bg-primary/10 border-primary/30 text-primary">
                   <Link href={tool.path}>Use Tool</Link>
                 </Button>
               </CardFooter>
