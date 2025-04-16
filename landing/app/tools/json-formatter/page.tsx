@@ -82,9 +82,11 @@ export default function JsonFormatterPage() {
           description="Format and beautify your JSON with customizable indentation options."
         />
 
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="space-y-4">
+          {/* Headers Row */}
+          <div className="flex flex-wrap md:flex-nowrap gap-8">
+            {/* Input Section Header */}
+            <div className="w-full md:w-1/2 flex items-center justify-between flex-wrap gap-2">
               <Label htmlFor="input-json">Input JSON</Label>
               
               {/* Mobile: Dropdown Select */}
@@ -126,46 +128,67 @@ export default function JsonFormatterPage() {
                 </div>
               </RadioGroup>
             </div>
-            <Textarea
-              id="input-json"
-              className="min-h-[300px] font-mono"
-              placeholder="Paste your JSON here..."
-              value={inputJson}
-              onChange={(e) => setInputJson(e.target.value)}
-            />
-            <Button onClick={handleFormat} className="w-full">Format JSON</Button>
+
+            {/* Output Section Header */}
+            <div className="w-full md:w-1/2 flex items-center justify-between h-9">
+              <Label htmlFor="output-json">Formatted JSON</Label>
+              <div className="min-w-[85px] h-8 flex justify-end">
+                {outputJson ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex items-center gap-1"
+                    onClick={handleCopy}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copied ? "Copied!" : "Copy"}
+                  </Button>
+                ) : null}
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="output-json">Formatted JSON</Label>
-              {outputJson && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex items-center gap-1"
-                  onClick={handleCopy}
-                >
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  {copied ? "Copied!" : "Copy"}
-                </Button>
+          {/* Textareas Row */}
+          <div className="flex flex-wrap md:flex-nowrap gap-8">
+            {/* Input Textarea */}
+            <div className="w-full md:w-1/2">
+              <Textarea
+                id="input-json"
+                className="min-h-[300px] font-mono w-full"
+                placeholder="Paste your JSON here..."
+                value={inputJson}
+                onChange={(e) => setInputJson(e.target.value)}
+              />
+            </div>
+
+            {/* Output Textarea */}
+            <div className="w-full md:w-1/2">
+              {error ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              ) : (
+                <Textarea
+                  id="output-json"
+                  className="min-h-[300px] font-mono w-full"
+                  placeholder="Formatted JSON will appear here..."
+                  value={outputJson}
+                  readOnly
+                />
               )}
             </div>
-            {error ? (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            ) : (
-              <Textarea
-                id="output-json"
-                className="min-h-[300px] font-mono"
-                placeholder="Formatted JSON will appear here..."
-                value={outputJson}
-                readOnly
-              />
-            )}
+          </div>
+
+          {/* Button Row */}
+          <div className="flex flex-wrap md:flex-nowrap gap-8">
+            <div className="w-full md:w-1/2">
+              <Button onClick={handleFormat} className="w-full">Format JSON</Button>
+            </div>
+            <div className="w-full md:w-1/2">
+              {/* Empty space to align with button */}
+            </div>
           </div>
         </div>
       </Container>
