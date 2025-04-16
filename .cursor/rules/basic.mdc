@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Rules for project development
+
+- We use pnpm to manage dependencies
+- The project is a monorepo where the `@landing` directory is the landing page, and the `@shared` directory contains shared components and utilities used across the project
+
+# Rules for developing the landing page
+
+- The landing page is developed using TypeScript, Next.js, and Shadcn UI (v4)
+- For any new component, first try to find and use an existing component from Shadcn UI (v4)
