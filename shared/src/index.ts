@@ -20,3 +20,6 @@ export function test2(): string {
 
 // Export JSON formatter
 export * from './json-formatter';
+
+// Export Base64 codec
+export * from './base64-codec';

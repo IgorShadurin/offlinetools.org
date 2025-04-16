@@ -7,47 +7,63 @@ import React from "react"
 export const onlineTools = [
   {
     title: "JSON Formatter",
-    path: "/tools/json-formatter"
+    path: "/tools/json-formatter",
+    description: "Format and beautify your JSON with customizable indentation options."
+  },
+  {
+    title: "Base64 Encoder/Decoder",
+    path: "/tools/base64-codec",
+    description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
   },
   {
     title: "Tool 2",
-    path: "/tools/tool2"
+    path: "/tools/tool2",
+    description: "Description for Tool 2"
   },
   {
     title: "Tool 3",
-    path: "/tools/tool3"
+    path: "/tools/tool3",
+    description: "Description for Tool 3"
   },
   {
     title: "Tool 4",
-    path: "/tools/tool4"
+    path: "/tools/tool4",
+    description: "Description for Tool 4"
   },
   {
     title: "Tool 5",
-    path: "/tools/tool5"
+    path: "/tools/tool5",
+    description: "Description for Tool 5"
   },
   {
     title: "Tool 6",
-    path: "/tools/tool6"
+    path: "/tools/tool6",
+    description: "Description for Tool 6"
   },
   {
     title: "Tool 7",
-    path: "/tools/tool7"
+    path: "/tools/tool7",
+    description: "Description for Tool 7"
   },
   {
     title: "Tool 8",
-    path: "/tools/tool8"
+    path: "/tools/tool8",
+    description: "Description for Tool 8"
   },
   {
     title: "Tool 9",
-    path: "/tools/tool9"
+    path: "/tools/tool9",
+    description: "Description for Tool 9"
   },
   {
     title: "Tool 10",
-    path: "/tools/tool10"
+    path: "/tools/tool10",
+    description: "Description for Tool 10"
   },
   {
     title: "Tool 11",
-    path: "/tools/tool11"
+    path: "/tools/tool11",
+    description: "Description for Tool 11"
   }
 ]
 

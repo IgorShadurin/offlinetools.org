@@ -86,9 +86,7 @@ export default function ToolsPage() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-xl">{tool.title}</CardTitle>
                 <CardDescription>
-                  {tool.title === "JSON Formatter" 
-                    ? "Format and beautify your JSON with customizable indentation options."
-                    : `Description for ${tool.title}`}
+                  {tool.description}
                 </CardDescription>
               </CardHeader>
               <CardFooter>
