@@ -1,106 +1,73 @@
 "use client"
 
 import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Form, FormField, FormMessage } from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 import { Send } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
 /**
- * Interface for form field errors
+ * Schema for contact form validation
  */
-interface FormErrors {
-  name?: string
-  email?: string
-  subject?: string
-  message?: string
-}
+const contactFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Please enter a valid email address"),
+  subject: z.string().min(1, "Subject is required"),
+  message: z.string().min(1, "Message is required"),
+})
+
+/**
+ * Type for contact form values
+ */
+type ContactFormValues = z.infer<typeof contactFormSchema>
 
 /**
  * Contact form component with validation and submission handling
  */
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  })
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-
-  /**
-   * Validates form data and returns any errors
-   */
-  const validateForm = () => {
-    const newErrors: FormErrors = {}
-    
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required"
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required"
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
-    }
-    
-    if (!formData.subject.trim()) {
-      newErrors.subject = "Subject is required"
-    }
-    
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required"
-    }
-    
-    return newErrors
-  }
-
-  /**
-   * Handles form input changes
-   */
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-    
-    // Clear error for this field if it exists
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }))
-    }
-  }
+  
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+  })
+  
+  const isSubmitting = form.formState.isSubmitting
 
   /**
    * Handles form submission
+   * @param values - Form values
    */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    const formErrors = validateForm()
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors)
-      return
-    }
-    
-    setIsSubmitting(true)
-    
+  const onSubmit = async (values: ContactFormValues) => {
     try {
       // In a real application, you would send the form data to your API here
       // For demo purposes, we'll simulate a successful API call
+      console.log("Form submitted with values:", values)
       await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Reset form after successful submission
-      setFormData({ name: "", email: "", subject: "", message: "" })
+      form.reset()
       setIsSubmitted(true)
     } catch (error) {
       // Handle submission error
       console.error("Form submission error:", error)
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
@@ -128,81 +95,89 @@ export default function ContactForm() {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <div className="grid gap-6 sm:grid-cols-2">
-        <FormField>
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid gap-6 sm:grid-cols-2">
+          <FormField
+            control={form.control}
             name="name"
-            placeholder="Your name"
-            value={formData.name}
-            onChange={handleChange}
-            className={errors.name ? "border-destructive" : ""}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <FormMessage>{errors.name}</FormMessage>
-        </FormField>
-        
-        <FormField>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
+          
+          <FormField
+            control={form.control}
             name="email"
-            type="email"
-            placeholder="your.email@example.com"
-            value={formData.email}
-            onChange={handleChange}
-            className={errors.email ? "border-destructive" : ""}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="your.email@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <FormMessage>{errors.email}</FormMessage>
-        </FormField>
-      </div>
-      
-      <FormField className="mt-4">
-        <Label htmlFor="subject">Subject</Label>
-        <Input
-          id="subject"
+        </div>
+        
+        <FormField
+          control={form.control}
           name="subject"
-          placeholder="What's this regarding?"
-          value={formData.subject}
-          onChange={handleChange}
-          className={errors.subject ? "border-destructive" : ""}
-        />
-        <FormMessage>{errors.subject}</FormMessage>
-      </FormField>
-      
-      <FormField className="mt-4">
-        <Label htmlFor="message">Message</Label>
-        <Textarea
-          id="message"
-          name="message"
-          placeholder="Tell us how we can help..."
-          rows={5}
-          value={formData.message}
-          onChange={handleChange}
-          className={errors.message ? "border-destructive" : ""}
-        />
-        <FormMessage>{errors.message}</FormMessage>
-      </FormField>
-      
-      <div className="mt-6">
-        <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send className="mr-2 h-4 w-4" />
-              Send Message
-            </>
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Subject</FormLabel>
+              <FormControl>
+                <Input placeholder="What's this regarding?" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </Button>
-      </div>
+        />
+        
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Tell us how we can help..."
+                  rows={5}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div>
+          <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send className="mr-2 h-4 w-4" />
+                Send Message
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
     </Form>
   )
 } 
