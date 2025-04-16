@@ -16,7 +16,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Check, Copy, AlertCircle } from "lucide-react"
+import { Check, Copy, AlertCircle, Link as LinkIcon } from "lucide-react"
+import Link from "next/link"
 
 export default function TextHashGeneratorPage() {
   const [text, setText] = useState("")
@@ -119,6 +120,17 @@ export default function TextHashGeneratorPage() {
     <Container className="py-6 md:py-8">
       <h1 className="text-2xl font-bold mb-2">Text Hash Generator</h1>
       <p className="mb-6 text-gray-500">Generate cryptographic hashes from text using various algorithms.</p>
+      
+      <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
+        <LinkIcon className="h-4 w-4" />
+        <span>Related tool: </span>
+        <Link 
+          href="/tools/file-hash-compare" 
+          className="text-primary hover:underline"
+        >
+          File & Text Hash Compare
+        </Link>
+      </div>
       
       <Tabs defaultValue="generate" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-6">

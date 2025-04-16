@@ -26,7 +26,8 @@ import {
   AlertCircle, 
   FileText,
   CheckCircle2, 
-  XCircle
+  XCircle,
+  Link as LinkIcon
 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { 
@@ -35,6 +36,7 @@ import {
   calculateFileHash, 
   compareHashes
 } from "shared"
+import Link from "next/link"
 
 export default function HashComparePage() {
   // Common state
@@ -184,6 +186,17 @@ export default function HashComparePage() {
           title="File & Text Hash Comparison"
           description="Compare hashes of files or text strings using different algorithms."
         />
+        
+        <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
+          <LinkIcon className="h-4 w-4" />
+          <span>Related tool: </span>
+          <Link 
+            href="/tools/text-hash-generator" 
+            className="text-primary hover:underline"
+          >
+            Text Hash Generator
+          </Link>
+        </div>
         
         <div className="mb-4">
           <Label htmlFor="algorithm" className="mb-2 block">Hash Algorithm</Label>

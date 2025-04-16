@@ -230,6 +230,10 @@ The same description should be used in two places:
 1. In the `onlineTools` array in `landing/components/online-tools-grid.tsx`
 2. In the `SectionHeading` component of your tool's page
 
+## Step 6: Link Related Tools
+
+For each new tool, implement related tool links to enhance navigation and discoverability. Add a "Related tool" component below the SectionHeading that links to 1-2 functionally similar or complementary tools. Use the standardized UI pattern with the LinkIcon from lucide-react and Next.js Link component. Always maintain bi-directional linking - if Tool A links to Tool B, ensure Tool B also links back to Tool A. This cross-linking creates a connected ecosystem that improves user experience, reduces navigation friction, and increases tool usage by helping users discover related functionality they might otherwise miss.
+
 ## Final Checks
 
 After completing all steps:
