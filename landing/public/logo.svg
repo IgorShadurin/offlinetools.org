@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#1E40AF" />
+  
+  <!-- Toolbox with shadow -->
+  <rect x="116" y="156" width="280" height="240" rx="24" fill="#0F172A" fill-opacity="0.5" />
+  <rect x="106" y="146" width="280" height="240" rx="24" fill="white" />
+  
+  <!-- Toolbox top lid -->
+  <rect x="136" y="116" width="240" height="40" rx="12" fill="#0F172A" fill-opacity="0.5" />
+  <rect x="126" y="106" width="240" height="40" rx="12" fill="white" />
+  
+  <!-- Toolbox handle -->
+  <rect x="236" y="96" width="40" height="20" rx="10" fill="#0F172A" fill-opacity="0.5" />
+  <rect x="226" y="86" width="40" height="20" rx="10" fill="white" />
+  
+  <!-- Divider line -->
+  <rect x="126" y="206" width="240" height="4" rx="2" fill="#E2E8F0" />
+  
+  <!-- Simple tool icons -->
+  <!-- Plus tool -->
+  <path d="M176 236v80M136 276h80" stroke="#2563EB" stroke-width="24" stroke-linecap="round" />
+  
+  <!-- X symbol for second tool -->
+  <path d="M336 236l-80 80M256 236l80 80" stroke="#2563EB" stroke-width="24" stroke-linecap="round" />
+  
+  <!-- Offline slash -->
+  <path d="M126 386L386 126" stroke="#FBBF24" stroke-width="32" stroke-linecap="round" />
+</svg> 

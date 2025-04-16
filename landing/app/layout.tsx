@@ -15,6 +15,35 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "OfflineTools - All-in-one Toolbox for Developers",
   description: "A collection of essential offline developer tools to boost your productivity.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/images/logo.png",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://offlinetools.org",
+    title: "OfflineTools - All-in-one Toolbox for Developers",
+    description: "A collection of essential offline developer tools to boost your productivity.",
+    siteName: "OfflineTools",
+    images: [
+      {
+        url: "/images/social-preview.png",
+        width: 1200,
+        height: 630,
+        alt: "OfflineTools - All-in-one Toolbox for Developers",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OfflineTools - All-in-one Toolbox for Developers",
+    description: "A collection of essential offline developer tools to boost your productivity.",
+    images: ["/images/social-preview.png"],
+  },
 };
 
 export default function RootLayout({

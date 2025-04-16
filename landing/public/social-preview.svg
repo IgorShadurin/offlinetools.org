@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with modern gradient -->
+  <rect width="1200" height="630" fill="url(#backgroundGradient)" />
+  
+  <!-- Decorative elements -->
+  <circle cx="100" cy="530" r="300" fill="url(#circleGradient1)" opacity="0.4" />
+  <circle cx="1100" cy="100" r="250" fill="url(#circleGradient2)" opacity="0.3" />
+  
+  <!-- Grid pattern for developer theme -->
+  <path d="M0 80H1200M0 160H1200M0 240H1200M0 320H1200M0 400H1200M0 480H1200M0 560H1200" stroke="white" stroke-width="0.5" stroke-opacity="0.1" />
+  <path d="M80 0V630M160 0V630M240 0V630M320 0V630M400 0V630M480 0V630M560 0V630M640 0V630M720 0V630M800 0V630M880 0V630M960 0V630M1040 0V630M1120 0V630" stroke="white" stroke-width="0.5" stroke-opacity="0.1" />
+  
+  <!-- Main content container with glass effect -->
+  <rect x="200" y="120" width="800" height="390" rx="24" fill="url(#glassGradient)" filter="url(#glassBlur)" />
+  <rect x="200" y="120" width="800" height="390" rx="24" stroke="white" stroke-opacity="0.2" stroke-width="1" />
+  
+  <!-- Main title with subtle text shadow -->
+  <g filter="url(#textShadow)">
+    <text x="600" y="220" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="90" fill="white" text-anchor="middle">OfflineTools</text>
+  </g>
+  
+  <!-- Tagline -->
+  <text x="600" y="280" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="36" fill="white" text-anchor="middle" opacity="0.9">All-in-one Toolbox for Developers</text>
+  
+  <!-- Features icons -->
+  <g>
+    <!-- Feature 1: Tools -->
+    <circle cx="320" cy="350" r="60" fill="url(#featureGradient1)" />
+    <g transform="translate(320, 350) scale(0.8)">
+      <path d="M-20 -10 L-30 0 L-20 10 M20 -10 L30 0 L20 10 M-10 -20 L0 -30 L10 -20 M-10 20 L0 30 L10 20" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="0" cy="0" r="15" fill="white" />
+      <path d="M0 -8 L0 8 M-8 0 L8 0" stroke="#4338ca" stroke-width="4" stroke-linecap="round" />
+    </g>
+    <text x="320" y="430" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Developer Tools</text>
+  </g>
+  
+  <g>
+    <!-- Feature 2: Offline -->
+    <circle cx="600" cy="350" r="60" fill="url(#featureGradient2)" />
+    <g transform="translate(600, 350) scale(0.7)">
+      <path d="M-40 0 C-40 -22 -22 -40 0 -40 C22 -40 40 -22 40 0 C40 22 22 40 0 40 C-22 40 -40 22 -40 0 Z" fill="none" stroke="white" stroke-width="8" />
+      <path d="M-20 0 L40 0" stroke="white" stroke-width="8" stroke-linecap="round" />
+      <path d="M-20 -15 L-20 15" stroke="white" stroke-width="8" stroke-linecap="round" />
+    </g>
+    <text x="600" y="430" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Works Offline</text>
+  </g>
+  
+  <g>
+    <!-- Feature 3: Fast -->
+    <circle cx="880" cy="350" r="60" fill="url(#featureGradient3)" />
+    <g transform="translate(880, 350) scale(0.7)">
+      <path d="M-30 0 L30 0 M-10 -30 L30 0 L-10 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    <text x="880" y="430" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="20" fill="white" text-anchor="middle">Lightning Fast</text>
+  </g>
+  
+  <!-- Call to action button -->
+  <g>
+    <rect x="450" y="470" width="300" height="70" rx="35" fill="url(#buttonGradient)" filter="url(#buttonShadow)" />
+    <text x="600" y="516" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="28" fill="white" text-anchor="middle">Get Started</text>
+  </g>
+  
+  <!-- Definitions -->
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="backgroundGradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3730a3" />
+      <stop offset="1" stop-color="#0f172a" />
+    </linearGradient>
+    
+    <!-- Decorative circle gradients -->
+    <radialGradient id="circleGradient1" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#8b5cf6" />
+      <stop offset="1" stop-color="#4f46e5" stop-opacity="0" />
+    </radialGradient>
+    
+    <radialGradient id="circleGradient2" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#3b82f6" />
+      <stop offset="1" stop-color="#1d4ed8" stop-opacity="0" />
+    </radialGradient>
+    
+    <!-- Glass effect -->
+    <linearGradient id="glassGradient" x1="200" y1="120" x2="1000" y2="510" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="white" stop-opacity="0.1" />
+      <stop offset="1" stop-color="white" stop-opacity="0.05" />
+    </linearGradient>
+    
+    <!-- Feature icons gradients -->
+    <linearGradient id="featureGradient1" x1="260" y1="290" x2="380" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4f46e5" />
+      <stop offset="1" stop-color="#3730a3" />
+    </linearGradient>
+    
+    <linearGradient id="featureGradient2" x1="540" y1="290" x2="660" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#06b6d4" />
+      <stop offset="1" stop-color="#0284c7" />
+    </linearGradient>
+    
+    <linearGradient id="featureGradient3" x1="820" y1="290" x2="940" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ec4899" />
+      <stop offset="1" stop-color="#9333ea" />
+    </linearGradient>
+    
+    <!-- Button gradient -->
+    <linearGradient id="buttonGradient" x1="450" y1="470" x2="750" y2="540" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3b82f6" />
+      <stop offset="1" stop-color="#1d4ed8" />
+    </linearGradient>
+    
+    <!-- Filters -->
+    <filter id="glassBlur" x="180" y="100" width="840" height="430" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="10"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur" result="shape"/>
+    </filter>
+    
+    <filter id="buttonShadow" x="440" y="464" width="320" height="90" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="5"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+    
+    <filter id="textShadow" x="200" y="150" width="800" height="100" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg> 
