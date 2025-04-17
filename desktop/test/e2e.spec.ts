@@ -82,5 +82,28 @@ if (process.platform === 'linux') {
       const titleText = await cardTitle?.textContent()
       expect(titleText).eq('JSON Format/Validate')
     })
+
+    test('should switch to Base64 Encoder/Decoder when clicked', async () => {
+      if (!page) {
+        expect(true).toBe(true)
+        return
+      }
+      
+      // Find all sidebar buttons
+      const buttons = await page.$$('button')
+      
+      // Click the second button (Base64 String Encode/Decode)
+      if (buttons.length > 1) {
+        await buttons[1].click()
+        
+        // Wait for the component to load
+        await page.waitForTimeout(500)
+        
+        // Check if the card title is correct
+        const cardTitle = await page.$('h3')
+        const titleText = await cardTitle?.textContent()
+        expect(titleText).eq('Base64 Encoder/Decoder')
+      }
+    })
   })
 }

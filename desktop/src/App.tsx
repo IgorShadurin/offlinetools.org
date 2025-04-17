@@ -9,6 +9,7 @@ import {
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
 import { ToolPlaceholder } from './components/tool-placeholder'
+import { Base64Codec } from './components/base64-codec'
 
 // List of tools
 const tools: Tool[] = [
@@ -37,6 +38,8 @@ function App() {
       <div className="flex-1 overflow-auto">
         {selectedTool === 'json-formatter' ? (
           <JsonFormatter className="min-h-full" />
+        ) : selectedTool === 'base64-string' ? (
+          <Base64Codec className="min-h-full" />
         ) : (
           <ToolPlaceholder 
             title={tools.find(t => t.id === selectedTool)?.name || ''}

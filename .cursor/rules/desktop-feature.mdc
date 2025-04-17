@@ -1,0 +1,66 @@
+# Guide for Porting Features from Landing to Desktop App
+
+## Architecture Overview
+- `/landing` - Next.js web application with feature implementations
+- `/desktop` - Electron desktop application, target for new features
+- `/shared` - Common utilities used by both applications
+
+## Implementation Flow
+
+1. **Identify the Landing Page Implementation**
+   - Source feature components are in: `/landing/app/tools/{feature-name}/`
+   - Example: Base64 Encoder at `/landing/app/tools/base64-codec/Base64Codec.tsx`
+   - Example: JSON Formatter at `/landing/app/tools/json-formatter/JsonFormatter.tsx`
+
+2. **Locate Shared Logic**
+   - Core business logic should be in: `/shared/src/{feature-name}/`
+   - Example: Base64 functions at `/shared/src/base64-codec/index.ts`
+   - Example: JSON utilities at `/shared/src/json-formatter/index.ts`
+   - Import in desktop using: `import { ... } from 'shared/{feature-name}'`
+
+3. **Create Desktop Component**
+   - Target path: `/desktop/src/components/{feature-name}.tsx`
+   - Use desktop UI components from: `/desktop/src/components/ui/`
+   - Follow existing patterns like in `/desktop/src/components/json-formatter.tsx`
+   - Adapt Next.js components to match desktop styling
+
+4. **Update Desktop App**
+   - Add to tools list in `/desktop/src/App.tsx`:
+     ```tsx
+     const tools: Tool[] = [
+       // ... existing tools
+       { id: '{feature-id}', name: '{Feature Name}', icon: <IconComponent size={16} /> },
+     ]
+     ```
+   - Add conditional rendering in the same file:
+     ```tsx
+     {selectedTool === '{feature-id}' ? (
+       <YourComponent className="min-h-full" />
+     ) : (
+       // ... existing code
+     )}
+     ```
+
+5. **Testing Requirements**
+   - **IMPORTANT: Create a separate, dedicated test for each new feature**
+   - Do not modify existing files; add new ones
+   - Each test should focus on one feature's UI functionality
+   - Add feature-specific tests in `/desktop/test/new-ferature.spec.ts`:
+     ```tsx
+     test('should properly render and operate {Feature Name}', async () => {
+       // 1. Navigate to the feature
+       const buttons = await page.$$('button');
+       await buttons[featureIndex].click();
+       
+       // 2. Verify component renders correctly
+       const cardTitle = await page.$('h3');
+       expect(await cardTitle?.textContent()).eq('{Feature Name}');
+       
+       // 3. Test feature-specific functionality
+       // - Input test data
+       // - Trigger actions
+       // - Verify output/results
+     })
+     ```
+   - Run tests with: `pnpm run test`
+   - Ensure tests pass before submitting final changes
