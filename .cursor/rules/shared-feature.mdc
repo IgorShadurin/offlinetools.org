@@ -1,3 +1,9 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
 # Shared Feature Development Guidelines
 
 This document provides a step-by-step guide for implementing new shared features in the offlinetools project. Each shared feature should be implemented in the shared library first, then exposed through a dedicated page in the landing site.

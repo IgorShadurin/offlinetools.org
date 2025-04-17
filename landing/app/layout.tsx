@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 import { FeedbackProvider } from "@/components/feedback-provider";
+import { GoogleAnalytics } from "@/components/google-analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,6 +66,7 @@ export default function RootLayout({
       >
         <FeedbackProvider>{children}</FeedbackProvider>
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );
