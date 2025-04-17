@@ -50,5 +50,23 @@ jobs:
     - name: Install dependencies
       run: pnpm install
       
-    - name: Run tests
-      run: pnpm test 
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb libxtst-dev libpng-dev libxss-dev
+
+    - name: Create screenshots directory
+      run: mkdir -p test/screenshots
+      
+    - name: Run tests with xvfb
+      run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" pnpm test
+      env:
+        DISPLAY: ':99.0'
+        
+    - name: Upload test screenshots on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-screenshots
+        path: desktop/test/screenshots
+        if-no-files-found: ignore 
