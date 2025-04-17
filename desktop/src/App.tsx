@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UpdateElectron from '@/components/update'
 import logoVite from './assets/logo-vite.svg'
 import logoElectron from './assets/logo-electron.svg'
 import './App.css'
+import { test1 } from '../../shared'
 
 function App() {
   const [count, setCount] = useState(0)
+  useEffect(()=>{
+    console.log('hello world', test1(55, 11))
+  },[])
   return (
     <div className='App'>
       <div className='logo-box'>
@@ -20,7 +24,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Test <code>test1(55, 11)</code> = <code>{test1(55, 11)}</code>
         </p>
       </div>
       <p className='read-the-docs'>
