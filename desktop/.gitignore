@@ -3,6 +3,7 @@
 dist
 dist-electron
 release
+screenshots
 # dependencies
 .idea
 /node_modules

@@ -47,25 +47,30 @@ alwaysApply: false
      ```
 
 5. **Testing Requirements**
-   - **IMPORTANT: Create a separate, dedicated test for each new feature**
-   - Do not modify existing files; add new ones
-   - Each test should focus on one feature's UI functionality
-   - Add feature-specific tests in `/desktop/test/new-ferature.spec.ts`:
-     ```tsx
-     test('should properly render and operate {Feature Name}', async () => {
-       // 1. Navigate to the feature
-       const buttons = await page.$$('button');
-       await buttons[featureIndex].click();
-       
-       // 2. Verify component renders correctly
-       const cardTitle = await page.$('h3');
-       expect(await cardTitle?.textContent()).eq('{Feature Name}');
-       
-       // 3. Test feature-specific functionality
-       // - Input test data
-       // - Trigger actions
-       // - Verify output/results
-     })
-     ```
-   - Run tests with: `pnpm run test`
-   - Ensure tests pass before submitting final changes
+      - Create a test file for each feature at `/desktop/test/{feature-name}.spec.ts`
+      - Use shared test utilities from `/desktop/test/utils.ts`:
+        ```tsx
+        import { launchElectronWithRetry, findButtonByText } from './utils';
+        ```
+      - Find elements by text content instead of indices:
+        ```tsx
+        // Find and click feature button by text
+        const featureButton = await findButtonByText(page, 'Feature Name');
+        expect(featureButton).not.toBeNull();
+        await featureButton.click();
+        ```
+      - Add proper waiting and error handling:
+        ```tsx
+        // Wait for component to load
+        await page.waitForTimeout(1500);
+
+        // Use try/catch with screenshots for better debugging
+        try {
+          // Test feature functionality
+        } catch (error) {
+          await page.screenshot({ path: path.join(__dirname, 'screenshots', 'failure.png') });
+          throw error;
+        }
+        ```
+      - Run tests with: `pnpm run test`
+      - Test should verify feature renders correctly and operates as expected
