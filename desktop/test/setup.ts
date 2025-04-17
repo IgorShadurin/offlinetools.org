@@ -8,7 +8,6 @@ function ensureScreenshotsDir() {
   try {
     const screenshotsDir = path.join(__dirname, 'screenshots');
     if (!fs.existsSync(screenshotsDir)) {
-      console.log('Creating screenshots directory for tests');
       fs.mkdirSync(screenshotsDir, { recursive: true });
     }
   } catch (error) {

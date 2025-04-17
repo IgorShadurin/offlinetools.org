@@ -12,7 +12,7 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText } from './utils'
+import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
@@ -26,26 +26,20 @@ const testMethod = isCI ? test.skip : test;
 describe('[electron-vite-react] e2e tests', async () => {
   beforeAll(async () => {
     try {
-      console.log('Starting e2e test setup');
-      
       // Launch Electron with retry logic
       electronApp = await launchElectronWithRetry();
       
       // Get the first window
-      console.log('Getting first window');
       page = await electronApp.firstWindow();
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      console.log(`Waiting for page load with timeout: ${loadTimeout}ms`);
       await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
-        win.webContents.executeJavaScript('console.log("Execute JavaScript with e2e testing.")')
+        win.webContents.executeJavaScript('// Test initialization complete')
       });
-      
-      console.log('E2E test setup complete');
     } catch (error) {
       console.error('Setup failed:', error);
       throw error; // Make sure the test fails properly if setup fails
@@ -53,19 +47,20 @@ describe('[electron-vite-react] e2e tests', async () => {
   });
 
   afterAll(async () => {
-    console.log('Running afterAll cleanup');
     if (page) {
       await page.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
     }
-    console.log('Cleanup complete');
   });
 
   testMethod('startup', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
+    
+    // Take initial screenshot
+    await takeScreenshot(page, 'e2e-startup', 'initial-view');
     
     const title = await page.title();
     expect(title).toBe('Offline Tools');
@@ -79,6 +74,9 @@ describe('[electron-vite-react] e2e tests', async () => {
     const waitTimeout = isCI ? 15000 : 5000;
     await page.waitForLoadState('domcontentloaded', { timeout: waitTimeout });
     
+    // Take screenshot of sidebar
+    await takeScreenshot(page, 'e2e-sidebar', 'sidebar-view');
+    
     // Find JSON Format button in sidebar
     const jsonFormatButton = await findButtonByText(page, 'JSON Format/Validate');
     expect(jsonFormatButton).not.toBeNull();
@@ -89,6 +87,9 @@ describe('[electron-vite-react] e2e tests', async () => {
   testMethod('should display JSON formatter by default', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
+    
+    // Take screenshot of default view
+    await takeScreenshot(page, 'e2e-json-formatter', 'default-view');
     
     const cardTitle = await page.$('h3');
     const titleText = await cardTitle.textContent();
@@ -110,9 +111,39 @@ describe('[electron-vite-react] e2e tests', async () => {
     const waitTime = isCI ? 3000 : 1000;
     await page.waitForTimeout(waitTime);
     
+    // Take screenshot after navigation
+    await takeScreenshot(page, 'e2e-base64', 'base64-view');
+    
     // Check if the card title is correct
     const cardTitle = await page.$('h3');
     const titleText = await cardTitle.textContent();
     expect(titleText).toBe('Base64 Encoder/Decoder');
+    
+    // Find textareas for additional screenshots
+    const textareas = await page.$$('textarea');
+    if (textareas.length > 0) {
+      try {
+        // Enter an encoded value
+        const inputTextarea = textareas[0];
+        await inputTextarea.fill('SGVsbG8gV29ybGQh');
+        
+        // Take screenshot after input
+        await takeScreenshot(page, 'e2e-base64', 'after-input');
+        
+        // Find decode button if it exists
+        const decodeButton = await findButtonByText(page, 'Decode');
+        if (decodeButton) {
+          await decodeButton.click();
+          
+          // Wait for UI to update
+          await page.waitForTimeout(500);
+          
+          // Take screenshot after decoding
+          await takeScreenshot(page, 'e2e-base64', 'after-decoding', true);
+        }
+      } catch (error) {
+        console.error('Interaction error:', error);
+      }
+    }
   });
 });
