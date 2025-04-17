@@ -59,7 +59,7 @@ if (process.platform === 'linux') {
         return
       }
       const title = await page.title()
-      expect(title).eq('Offline Developer Tools')
+      expect(title).eq('Offline Tools')
     })
 
     test('should load the tools sidebar correctly', async () => {
