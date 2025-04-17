@@ -1,40 +1,122 @@
-import { useEffect, useState } from 'react'
-import UpdateElectron from '@/components/update'
-import logoVite from './assets/logo-vite.svg'
-import logoElectron from './assets/logo-electron.svg'
+import { useState } from 'react'
 import './App.css'
-import { test1 } from '../../shared'
+import { formatJson, JsonIndentationType } from '../../shared'
+
+// Tool type definition
+type Tool = {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+// List of tools
+const tools: Tool[] = [
+  { id: 'json-formatter', name: 'JSON Format/Validate', icon: '{}' },
+  { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: '64' },
+  { id: 'base64-image', name: 'Base64 Image Encode/Decode', icon: '📷' },
+  { id: 'jwt-debugger', name: 'JWT Debugger', icon: '🔑' },
+  { id: 'regex-tester', name: 'RegExp Tester', icon: '*' },
+]
 
 function App() {
-  const [count, setCount] = useState(0)
-  useEffect(()=>{
-    console.log('hello world', test1(55, 11))
-  },[])
+  const [selectedTool, setSelectedTool] = useState<string>('json-formatter')
+  const [inputValue, setInputValue] = useState<string>('')
+  const [outputValue, setOutputValue] = useState<string>('')
+  const [indentation, setIndentation] = useState<JsonIndentationType>(JsonIndentationType.TwoSpaces)
+
+  // Format JSON when the format button is clicked
+  const handleFormatJson = () => {
+    try {
+      const formatted = formatJson(inputValue, { indentation })
+      setOutputValue(formatted)
+    } catch (error) {
+      setOutputValue(`Error: ${(error as Error).message}`)
+    }
+  }
+
+  // Clear input and output
+  const handleClear = () => {
+    setInputValue('')
+    setOutputValue('')
+  }
+
   return (
-    <div className='App'>
-      <div className='logo-box'>
-        <a href='https://github.com/electron-vite/electron-vite-react' target='_blank'>
-          <img src={logoVite} className='logo vite' alt='Electron + Vite logo' />
-          <img src={logoElectron} className='logo electron' alt='Electron + Vite logo' />
-        </a>
-      </div>
-      <h1>Electron + Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Test <code>test1(55, 11)</code> = <code>{test1(55, 11)}</code>
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Electron + Vite logo to learn more
-      </p>
-      <div className='flex-center'>
-        Place static files into the<code>/public</code> folder <img style={{ width: '5em' }} src='./node.svg' alt='Node logo' />
+    <div className="app-container">
+      {/* Left sidebar with tools */}
+      <div className="sidebar">
+        {tools.map((tool) => (
+          <div 
+            key={tool.id}
+            className={`tool-item ${selectedTool === tool.id ? 'selected' : ''}`}
+            onClick={() => setSelectedTool(tool.id)}
+          >
+            <span className="tool-icon">{tool.icon}</span>
+            <span className="tool-name">{tool.name}</span>
+          </div>
+        ))}
       </div>
 
-      <UpdateElectron />
+      {/* Right content area */}
+      <div className="content-area">
+        {selectedTool === 'json-formatter' ? (
+          <div className="json-formatter">
+            <div className="tool-header">
+              <h2>JSON Format/Validate</h2>
+            </div>
+            
+            <div className="tool-controls">
+              <div className="control-group">
+                <label htmlFor="indentation">Indentation:</label>
+                <select 
+                  id="indentation"
+                  value={indentation}
+                  onChange={(e) => setIndentation(e.target.value as JsonIndentationType)}
+                >
+                  {Object.values(JsonIndentationType).map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="button-group">
+                <button onClick={handleFormatJson}>Format JSON</button>
+                <button onClick={handleClear}>Clear</button>
+              </div>
+            </div>
+            
+            <div className="editor-container">
+              <div className="editor-column">
+                <h3>Input:</h3>
+                <textarea 
+                  className="editor-textarea"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Enter Your JSON Text"
+                />
+              </div>
+              
+              <div className="editor-column">
+                <h3>Output:</h3>
+                <textarea 
+                  className="editor-textarea"
+                  value={outputValue}
+                  readOnly
+                  placeholder="Formatted JSON will appear here"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="empty-tool">
+            <h2>{tools.find(t => t.id === selectedTool)?.name}</h2>
+            <textarea 
+              className="editor-textarea"
+              placeholder="This tool is not implemented yet"
+              readOnly
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

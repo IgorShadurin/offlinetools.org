@@ -46,21 +46,21 @@ if (process.platform === 'linux') {
   describe('[electron-vite-react] e2e tests', async () => {
     test('startup', async () => {
       const title = await page.title()
-      expect(title).eq('Electron + Vite + React')
+      expect(title).eq('Offline Developer Tools')
     })
 
-    test('should be home page is load correctly', async () => {
+    test('should load the tools sidebar correctly', async () => {
       await page.waitForLoadState('domcontentloaded')
-      const h1 = await page.$('h1')
-      const title = await h1?.textContent()
-      expect(title).eq('Electron + Vite + React')
+      const firstToolItem = await page.$('.tool-item')
+      const toolName = await firstToolItem?.$('.tool-name')
+      const toolText = await toolName?.textContent()
+      expect(toolText).eq('JSON Format/Validate')
     })
 
-    test('should be count button can click', async () => {
-      const countButton = await page.$('button')
-      await countButton?.click()
-      const countValue = await countButton?.textContent()
-      expect(countValue).eq('count is 1')
+    test('should display JSON formatter by default', async () => {
+      const formatButton = await page.$('button')
+      const buttonText = await formatButton?.textContent()
+      expect(buttonText).eq('Format JSON')
     })
   })
 }

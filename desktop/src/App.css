@@ -1,52 +1,158 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Main layout */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: #f0f0f0;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+}
+
+.tool-item:hover {
+  background-color: #e8e8e8;
+}
+
+.tool-item.selected {
+  background-color: #d0d0d0;
+  font-weight: 500;
+}
+
+.tool-icon {
+  margin-right: 12px;
+  font-size: 18px;
+  width: 24px;
   text-align: center;
 }
 
-.logo-box {
-  position: relative;
-  height: 9em;
+.tool-name {
+  flex: 1;
 }
 
-.logo {
-  position: absolute;
-  left: calc(50% - 4.5em);
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+/* Content area styles */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* JSON Formatter styles */
+.json-formatter, .empty-tool {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .logo.electron {
-    animation: logo-spin infinite 20s linear;
-  }
+.tool-header {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
 }
 
-.card {
-  padding: 2em;
+.tool-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-.read-the-docs {
-  color: #888;
-}
-
-.flex-center {
+.tool-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+}
+
+.control-group label {
+  margin-right: 8px;
+}
+
+.control-group select {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.button-group button {
+  margin-left: 8px;
+  padding: 8px 16px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button-group button:hover {
+  background-color: #0066b3;
+}
+
+.editor-container {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.editor-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-column h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.editor-textarea {
+  flex: 1;
+  width: 100%;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  overflow: auto;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+  }
+
+  .editor-container {
+    flex-direction: column;
+  }
 }
