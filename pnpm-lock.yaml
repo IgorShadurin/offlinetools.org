@@ -10,13 +10,31 @@ importers:
 
   desktop:
     dependencies:
+      '@radix-ui/react-slot':
+        specifier: ^1.2.0
+        version: 1.2.0(@types/react@19.1.2)(react@18.3.1)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       electron-updater:
         specifier: ^6.6.2
         version: 6.6.2
+      lucide-react:
+        specifier: ^0.488.0
+        version: 0.488.0(react@18.3.1)
+      tailwind-merge:
+        specifier: ^3.2.0
+        version: 3.2.0
     devDependencies:
       '@playwright/test':
         specifier: ^1.51.1
         version: 1.51.1
+      '@tailwindcss/postcss':
+        specifier: ^4
+        version: 4.1.4
       '@types/react':
         specifier: ^19.1.2
         version: 19.1.2
@@ -5884,6 +5902,12 @@ snapshots:
       '@types/react': 19.1.2
       '@types/react-dom': 19.1.2(@types/react@19.1.2)
 
+  '@radix-ui/react-compose-refs@1.1.2(@types/react@19.1.2)(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 19.1.2
+
   '@radix-ui/react-compose-refs@1.1.2(@types/react@19.1.2)(react@19.1.0)':
     dependencies:
       react: 19.1.0
@@ -6084,6 +6108,13 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.2
       '@types/react-dom': 19.1.2(@types/react@19.1.2)
+
+  '@radix-ui/react-slot@1.2.0(@types/react@19.1.2)(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.1.2)(react@18.3.1)
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 19.1.2
 
   '@radix-ui/react-slot@1.2.0(@types/react@19.1.2)(react@19.1.0)':
     dependencies:
@@ -8901,6 +8932,10 @@ snapshots:
       yallist: 4.0.0
 
   lru-cache@7.18.3: {}
+
+  lucide-react@0.488.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   lucide-react@0.488.0(react@19.1.0):
     dependencies:
