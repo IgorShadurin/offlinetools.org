@@ -1,7 +1,8 @@
 import { rmSync } from 'node:fs'
 import path from 'node:path'
 import { defineConfig } from 'vite'
-import * as react from '@vitejs/plugin-react'
+// @ts-ignore
+import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron/simple'
 import pkg from './package.json'
 
