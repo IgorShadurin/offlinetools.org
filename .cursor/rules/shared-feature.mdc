@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: false
----
 # Shared Feature Development Guidelines
 
 This document provides a step-by-step guide for implementing new shared features in the offlinetools project. Each shared feature should be implemented in the shared library first, then exposed through a dedicated page in the landing site.
@@ -51,8 +46,11 @@ Example paths:
 1. Use TypeScript for all implementations
 2. Include JSDoc comments for all exports (functions, interfaces, enums)
 3. Export all types and enums needed by the landing page
-4. For error handling, throw descriptive Error objects 
+4. For error handling, throw descriptive Error objects
 5. Structure the code with a clear public API
+6. Always wrap implementation in try/catch blocks with specific error messages
+7. Include handling for empty/undefined inputs
+8. Provide good defaults in a DEFAULT_OPTIONS constant
 
 Example implementation pattern:
 
@@ -62,6 +60,7 @@ Example implementation pattern:
  */
 export interface FeatureOptions {
   // Define options here
+  optionOne: boolean;
 }
 
 /**
@@ -69,6 +68,7 @@ export interface FeatureOptions {
  */
 export const DEFAULT_OPTIONS: FeatureOptions = {
   // Default values
+  optionOne: false
 };
 
 /**
@@ -78,8 +78,19 @@ export const DEFAULT_OPTIONS: FeatureOptions = {
  * @returns The processed output
  * @throws Error if processing fails
  */
-export function featureFunction(input: string, options = DEFAULT_OPTIONS): string {
-  // Implementation
+export function featureFunction(
+  input: string,
+  options: FeatureOptions = DEFAULT_OPTIONS
+): string {
+  try {
+    // Handle empty input
+    if (!input) return "";
+
+    // Implementation
+    return "processed result";
+  } catch (error) {
+    throw new Error(`Feature processing failed: ${(error as Error).message}`);
+  }
 }
 ```
 
@@ -91,6 +102,8 @@ Create comprehensive tests in `index.test.ts` to cover:
 2. Edge cases
 3. Error handling
 4. All options/configurations
+5. Empty and undefined inputs
+6. Unicode/special character handling
 
 ### Test Framework
 
@@ -101,25 +114,40 @@ Example test structure:
 ```typescript
 import { featureFunction, FeatureOptions } from './index';
 
-describe('featureFunction', () => {
-  // Test with valid inputs
-  it('should correctly process valid input', () => {
-    const result = featureFunction('valid input');
-    expect(result).toBe('expected output');
-  });
+describe('Feature Name', () => {
+  describe('featureFunction', () => {
+    // Test with valid inputs
+    it('should correctly process valid input', () => {
+      const result = featureFunction('valid input');
+      expect(result).toBe('expected output');
+    });
 
-  // Test with different options
-  it('should respect provided options', () => {
-    const options: FeatureOptions = { /* custom options */ };
-    const result = featureFunction('input', options);
-    expect(result).toBe('expected output with options');
-  });
+    // Test with different options
+    it('should respect provided options', () => {
+      const options: FeatureOptions = { optionOne: true };
+      const result = featureFunction('input', options);
+      expect(result).toBe('expected output with options');
+    });
 
-  // Test error handling
-  it('should throw an error for invalid input', () => {
-    expect(() => {
-      featureFunction('invalid input');
-    }).toThrow('Expected error message');
+    // Test with empty inputs
+    it('should return empty string for empty input', () => {
+      expect(featureFunction('')).toBe('');
+      expect(featureFunction(undefined as unknown as string)).toBe('');
+    });
+
+    // Test with special characters
+    it('should handle special and unicode characters correctly', () => {
+      const input = 'Special chars: &%$#@! and Unicode: こんにちは世界';
+      const expected = 'expected output with special chars';
+      expect(featureFunction(input)).toBe(expected);
+    });
+
+    // Test error handling
+    it('should throw an error for invalid input', () => {
+      expect(() => {
+        featureFunction('invalid input that causes error');
+      }).toThrow('Feature processing failed');
+    });
   });
 });
 ```
@@ -139,14 +167,15 @@ export * from './feature-name';
 
 ## Step 4: Create a Tool Page in Landing Site
 
-Create a new page for the tool at `landing/app/tools/feature-name/page.tsx`:
+Create a new tool implementation with a client component and a server component:
 
-1. Use a client-side rendered component with the "use client" directive
-2. Import the feature functions from "shared" package
-3. Implement a user interface with appropriate controls and displays
-4. Ensure mobile responsiveness with responsive classes
+1. First, create the client component at `landing/app/tools/feature-name/FeatureName.tsx`:
+   - Use the "use client" directive at the top of the file
+   - Import the feature functions from "shared" package
+   - Implement the user interface with all interactive functionality
+   - Ensure mobile responsiveness with responsive classes
 
-Example page structure:
+Example client component structure:
 
 ```tsx
 "use client"
@@ -155,17 +184,21 @@ import { Container } from "@/components/ui/container"
 import { SectionHeading } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 // Import other UI components as needed
 import { featureFunction, FeatureOptions } from "shared"
 import { useState } from "react"
-// Import icons as needed
+import { AlertCircle, Check, Copy } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-export default function FeatureNamePage() {
+export default function FeatureName() {
   // State management
   const [input, setInput] = useState("")
   const [output, setOutput] = useState("")
   const [error, setError] = useState<string | null>(null)
-  
+  const [copied, setCopied] = useState(false)
+
   // Handle processing
   const handleProcess = () => {
     try {
@@ -177,7 +210,14 @@ export default function FeatureNamePage() {
       setOutput("")
     }
   }
-  
+
+  // Handle copy to clipboard
+  const handleCopy = () => {
+    navigator.clipboard.writeText(output)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
     <>
       <Container className="py-8 md:py-12">
@@ -185,17 +225,65 @@ export default function FeatureNamePage() {
           title="Feature Name"
           description="Description of what this tool does and how it helps users."
         />
-        
+
         {/* UI Implementation */}
-        {/* Follow the pattern of existing tools like JSON Formatter */}
-        {/* Ensure responsiveness with mobile-first classes */}
+                {/* Follow the pattern of existing tools like JSON Formatter */}
+                {/* Ensure responsiveness with mobile-first classes */}
       </Container>
     </>
   )
 }
 ```
 
-Example path: `landing/app/tools/json-validator/page.tsx`
+2. Then, create the server component at `landing/app/tools/feature-name/page.tsx`:
+   - Import the client component
+   - Export metadata for the page
+   - Return the client component
+
+Example server component structure:
+
+```tsx
+import FeatureName from "./FeatureName"
+
+export const metadata = {
+  title: "Feature Name",
+  description: "Concise description of what this tool does. Keep it informative and under 160 characters for optimal SEO.",
+}
+
+export default function FeatureNamePage() {
+  return <FeatureName />
+}
+```
+
+Example paths:
+- Client component: `landing/app/tools/json-validator/JsonValidator.tsx`
+- Server component: `landing/app/tools/json-validator/page.tsx`
+
+### UI Component Patterns
+
+When implementing your tool's UI, follow these consistent layout patterns observed in existing tools:
+
+1. **Two-column Layout**: Use a two-column layout with input on the left and output on the right
+   - Use `flex-wrap md:flex-nowrap` for responsive behavior
+   - Each column should use `w-full md:w-1/2` for responsive width
+
+2. **Standard Sections**:
+   - Section Heading: Use the SectionHeading component for title and description
+   - Related Tools: Include links to related tools with the LinkIcon
+   - Labels: Add clear labels for input and output areas
+   - Copy Button: Add a copy button for output
+   - Error Display: Use Alert component for error messages
+
+3. **Mobile Adaptations**:
+   - Stack columns vertically on mobile
+   - Adapt complex UI elements (like radio buttons to dropdowns)
+   - Ensure adequate spacing with responsive gap classes
+
+4. **Consistent UI Elements**:
+   - Use Textarea with font-mono class for code/text input/output
+   - Use Button component for actions
+   - Use consistent height classes (min-h-[250px] for textareas)
+   - Add placeholders to all input fields
 
 ## Step 5: Add the Tool to Online Tools List
 
@@ -234,14 +322,40 @@ The same description should be used in two places:
 
 For each new tool, implement related tool links to enhance navigation and discoverability. Add a "Related tool" component below the SectionHeading that links to 1-2 functionally similar or complementary tools. Use the standardized UI pattern with the LinkIcon from lucide-react and Next.js Link component. Always maintain bi-directional linking - if Tool A links to Tool B, ensure Tool B also links back to Tool A. This cross-linking creates a connected ecosystem that improves user experience, reduces navigation friction, and increases tool usage by helping users discover related functionality they might otherwise miss.
 
+## Error Handling Best Practices
+
+When implementing error handling in your tool:
+
+1. **Consistent Error Display**:
+   - Display errors in an Alert component with destructive variant
+   - Include both an AlertTitle ("Error") and AlertDescription (error message)
+   - Clear output when an error occurs
+
+2. **Specific Error Messages**:
+   - In shared functions, throw errors with specific messages
+   - Include the original error message from caught exceptions
+   - Format error messages consistently (e.g., "Feature failed: detailed reason")
+
+3. **Error State Management**:
+   - Clear errors when processing successfully completes
+   - Clear errors when switching modes or tabs
+   - Reset error state when input changes significantly
+
 ## Final Checks
 
 After completing all steps:
 
 1. Run linting and type checking: `cd landing && pnpm lint && pnpm types:check`
-2. Ensure mobile responsiveness of the UI
-3. Test the feature with various inputs
+2. Ensure mobile responsiveness of the UI by testing at various breakpoints
+3. Test the feature with various inputs including:
+   - Normal expected input
+   - Empty input
+   - Very large input
+   - Unicode and special characters
+   - Malformed input that should trigger errors
 4. Verify proper error handling and display
+5. Check that all links to related tools work correctly
+6. Validate that copy functionality works as expected
 
 Remember to follow the general project rules:
 - Use pnpm for dependency management
