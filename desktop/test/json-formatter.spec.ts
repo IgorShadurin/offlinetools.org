@@ -95,8 +95,11 @@ describe('JSON Format/Validate tests', async () => {
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
     
-    // Wait for output textarea to update
-    await page.waitForTimeout(500);
+    // Wait for output textarea to update with formatted content (contains line breaks and indentation)
+    await page.waitForFunction(() => {
+      const outputTextarea = document.querySelectorAll('textarea')[1];
+      return outputTextarea && outputTextarea.value && outputTextarea.value.includes('\n');
+    }, { timeout: 2000 });
     
     // Take screenshot of formatted result
     await takeScreenshot(page, 'json-formatter', 'formatted-output', true);
@@ -128,8 +131,11 @@ describe('JSON Format/Validate tests', async () => {
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
     
-    // Wait for output textarea to update
-    await page.waitForTimeout(500);
+    // Wait for output textarea to update with error message
+    await page.waitForFunction(() => {
+      const outputTextarea = document.querySelectorAll('textarea')[1];
+      return outputTextarea && outputTextarea.value && outputTextarea.value.includes('Error:');
+    }, { timeout: 2000 });
     
     // Take screenshot of validation error
     await takeScreenshot(page, 'json-formatter', 'validation-error', true);
@@ -157,7 +163,12 @@ describe('JSON Format/Validate tests', async () => {
     
     // Format to get output
     await (await findButtonByText(page, 'Format JSON')).click();
-    await page.waitForTimeout(500);
+    
+    // Wait for output textarea to update
+    await page.waitForFunction(() => {
+      const outputTextarea = document.querySelectorAll('textarea')[1];
+      return outputTextarea && outputTextarea.value && outputTextarea.value.length > 0;
+    }, { timeout: 2000 });
     
     // Verify both textareas have content
     expect(await textareas[0].inputValue()).not.toBe('');
@@ -168,6 +179,14 @@ describe('JSON Format/Validate tests', async () => {
     
     // Click Clear button
     await (await findButtonByText(page, 'Clear')).click();
+    
+    // Wait for textareas to be cleared
+    await page.waitForFunction(() => {
+      const textareas = document.querySelectorAll('textarea');
+      return textareas.length >= 2 && 
+             textareas[0].value === '' && 
+             textareas[1].value === '';
+    }, { timeout: 2000 });
     
     // Take screenshot after clearing
     await takeScreenshot(page, 'json-formatter', 'after-clear', true);
