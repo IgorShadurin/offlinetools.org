@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 
@@ -170,6 +170,31 @@ Add the export to `shared/src/index.ts`:
 // Export new feature
 export * from './feature-name';
 ```
+
+## Step 3.1: Update the Clipboard Detector
+
+When adding a new tool, update the clipboard detector so it can suggest your tool when appropriate:
+
+1. **Update the Tool Enum**:
+   Add your new tool to the `Tool` enum in `shared/src/clipboard-detector/index.ts`:
+
+   ```
+   export enum Tool {
+     // Existing tools...
+     YOUR_NEW_TOOL = 'your-new-tool'
+   }
+   ```
+
+2. **Update Tool Compatibility**:
+   Add your tool to the `TOOL_COMPATIBILITY` configuration in `shared/src/clipboard-detector/index.ts` based on which content types it can handle (string, photo, video).
+
+3. **Add Content Detection Logic** (if applicable):
+   If your tool handles a specific string format (like JSON or Base64), add appropriate detection logic in the `detectClipboardTools` function.
+
+4. **Update Tests**:
+   Add test cases in `shared/src/clipboard-detector/index.test.ts` to verify your tool is correctly suggested for compatible content types.
+
+This ensures your new tool will be properly suggested to users when they have compatible clipboard content.
 
 ## Step 4: Create a Tool Page in Landing Site
 

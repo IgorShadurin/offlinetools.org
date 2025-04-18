@@ -33,6 +33,9 @@ export * from './url-encoder';
 // Export File Hash Compare
 export * from './file-hash-compare';
 
+// Export Clipboard Detector
+export * from './clipboard-detector';
+
 // Export Text Hash Generator with renamed exports to avoid conflicts
 import {
   HashAlgorithm as TextHashAlgorithm,
