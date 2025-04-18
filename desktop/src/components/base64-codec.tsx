@@ -4,6 +4,7 @@ import { encodeBase64, decodeBase64 } from "shared/base64-codec";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
 /**
  * Props for the Base64Codec component
@@ -50,8 +51,8 @@ export function Base64Codec({ className = "" }: Base64CodecProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleTabChange = (newMode: "encode" | "decode") => {
-    setMode(newMode);
+  const handleTabChange = (value: string) => {
+    setMode(value as "encode" | "decode");
     setInput("");
     setOutput("");
     setError(null);
@@ -68,22 +69,16 @@ export function Base64Codec({ className = "" }: Base64CodecProps) {
             {/* Top Section: Mode Selector and URL-safe option */}
             <div className="flex flex-row justify-between items-center">
               {/* Mode Selector */}
-              <div className="flex space-x-2">
-                <Button
-                  variant={mode === "encode" ? "default" : "outline"}
-                  onClick={() => handleTabChange("encode")}
-                  className="flex-1"
-                >
-                  Encode
-                </Button>
-                <Button
-                  variant={mode === "decode" ? "default" : "outline"}
-                  onClick={() => handleTabChange("decode")}
-                  className="flex-1"
-                >
-                  Decode
-                </Button>
-              </div>
+              <Tabs
+                value={mode}
+                onValueChange={handleTabChange}
+                className="w-auto"
+              >
+                <TabsList className="grid grid-cols-2 w-[200px]">
+                  <TabsTrigger value="encode">Encode</TabsTrigger>
+                  <TabsTrigger value="decode">Decode</TabsTrigger>
+                </TabsList>
+              </Tabs>
 
               {/* URL-safe option */}
               <div className="flex items-center space-x-2">
