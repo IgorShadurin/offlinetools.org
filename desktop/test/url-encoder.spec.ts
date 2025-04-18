@@ -56,47 +56,43 @@ describe('URL Encoder/Decoder tests', async () => {
   });
 
   testMethod('should properly render URL Encoder/Decoder', async () => {
-    // Make sure the page and app are initialized
     expect(page).not.toBeNull();
     
-    try {
-      // Take a screenshot of the initial state
-      await takeScreenshot(page, 'url-encoder', 'initial-state');
-      
-      // Find and click on the URL Encoder button by its text content
-      const urlEncoderButton = await findButtonByText(page, 'URL Encoder');
-      expect(urlEncoderButton).not.toBeNull();
-      
-      await urlEncoderButton.click();
-      
-      // Wait for the component to load with longer timeout in CI
-      const waitTime = isCI ? 5000 : 1500;
-      await page.waitForTimeout(waitTime);
-      
-      // Take a screenshot to verify we're on the URL Encoder page
-      await takeScreenshot(page, 'url-encoder', 'url-encoder-page');
-      
-      // Verify component renders correctly
-      const cardTitle = await page.$('h3');
-      expect(await cardTitle.textContent()).toBe('URL Encoder/Decoder');
-      
-      // Test basic functionality - find textareas
-      await page.waitForSelector('textarea', { timeout: isCI ? 15000 : 5000 });
-      const textareas = await page.$$('textarea');
-      expect(textareas.length).toBeGreaterThan(0);
-      
-      // Take an additional screenshot after finding UI elements (after decoding completed)
-      await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
-      
-    } catch (error) {
-      console.error('Test failure details:', error);
-      
-      // Take a screenshot to help debug failures
-      if (page) {
-        await takeScreenshot(page, 'url-encoder', 'url-encoder-failure');
-      }
-      
-      throw error;
-    }
+    // Take a screenshot of the initial state
+    await takeScreenshot(page, 'url-encoder', 'initial-state');
+    
+    // Navigate to URL Encoder/Decoder
+    await (await findButtonByText(page, 'URL Encoder/Decoder')).click();
+    
+    // Wait for component to be visible instead of using timeout
+    await page.waitForSelector('h3:has-text("URL Encoder/Decoder")', { 
+      state: 'visible',
+      timeout: isCI ? 5000 : 1500 
+    });
+    
+    // Take a screenshot to verify we're on the URL Encoder page
+    await takeScreenshot(page, 'url-encoder', 'url-encoder-page');
+    
+    // Verify component title
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('URL Encoder/Decoder');
+    
+    // Verify textarea components are present
+    await page.waitForSelector('textarea', { timeout: isCI ? 15000 : 5000 });
+    
+    // Input test data with spaces and special characters
+    const textareas = await page.$$('textarea');
+    await textareas[0].fill('https://example.com/path with spaces?query=special chars!@#$%^&*()');
+    
+    // Click the Encode URL button
+    await (await findButtonByText(page, 'Encode URL')).click();
+    
+    // Wait for result to appear
+    await page.waitForFunction(() => {
+      const textareas = document.querySelectorAll('textarea');
+      return textareas.length > 1 && textareas[1].value.includes('%20');
+    }, { timeout: 2000 });
+    
+    // Take a screenshot of the encoded result
+    await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
   });
 }); 
