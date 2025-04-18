@@ -12,7 +12,15 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText, takeScreenshot, navigateToTool } from './utils'
+import { 
+  launchElectronWithRetry, 
+  findButtonByText, 
+  takeScreenshot, 
+  navigateToTool,
+  fillTextareaInput,
+  waitForTextareaOutput,
+  getTextareaOutput
+} from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
@@ -74,21 +82,16 @@ describe('URL Encoder/Decoder tests', async () => {
     // Verify component title
     await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
-    // Verify textarea components are present
-    await page.waitForSelector('textarea', { timeout: isCI ? 15000 : 5000 });
-    
     // Input test data with spaces and special characters
-    const textareas = await page.$$('textarea');
-    await textareas[0].fill('https://example.com/path with spaces?query=special chars!@#$%^&*()');
+    const testData = 'https://example.com/path with spaces?query=special chars!@#$%^&*()';
+    await fillTextareaInput(page, testData);
     
     // Click the Encode URL button
     await (await findButtonByText(page, 'Encode URL')).click();
     
-    // Wait for result to appear
-    await page.waitForFunction(() => {
-      const textareas = document.querySelectorAll('textarea');
-      return textareas.length > 1 && textareas[1].value.includes('%20');
-    }, { timeout: 2000 });
+    // Wait for result containing encoded spaces
+    const encodedOutput = await waitForTextareaOutput(page, { contains: '%20' });
+    expect(encodedOutput).toContain('%20');
     
     // Take a screenshot of the encoded result
     await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
@@ -107,18 +110,16 @@ describe('URL Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'url-decoder', 'decode-tab-view');
     
     // Input encoded test data
-    const textareas = await page.$$('textarea');
-    await textareas[0].fill('https%3A%2F%2Fexample.com%2Fpath%20with%20spaces%3Fquery%3Dspecial%20chars%21%40%23%24%25%5E%26%2A%28%29');
+    const encodedData = 'https%3A%2F%2Fexample.com%2Fpath%20with%20spaces%3Fquery%3Dspecial%20chars%21%40%23%24%25%5E%26%2A%28%29';
+    await fillTextareaInput(page, encodedData);
     await takeScreenshot(page, 'url-decoder', 'after-input');
     
     // Click the Decode URL button
     await (await findButtonByText(page, 'Decode URL')).click();
     
-    // Wait for result to appear
-    await page.waitForFunction(() => {
-      const textareas = document.querySelectorAll('textarea');
-      return textareas.length > 1 && textareas[1].value.includes('example.com');
-    }, { timeout: 2000 });
+    // Wait for result containing decoded content
+    const decodedOutput = await waitForTextareaOutput(page, { contains: 'example.com' });
+    expect(decodedOutput).toContain('example.com');
     
     // Take a screenshot of the decoded result
     await takeScreenshot(page, 'url-decoder', 'after-decoding', true);

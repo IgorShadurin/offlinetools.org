@@ -12,7 +12,16 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText, takeScreenshot, navigateToTool, waitForComponentTitle } from './utils'
+import { 
+  launchElectronWithRetry, 
+  findButtonByText, 
+  takeScreenshot, 
+  navigateToTool, 
+  waitForComponentTitle,
+  fillTextareaInput,
+  waitForTextareaOutput,
+  getTextareaOutput
+} from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
@@ -82,27 +91,22 @@ describe('JSON Format/Validate tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input unformatted JSON
-    const textareas = await page.$$('textarea');
     const unformattedJson = '{"name":"John","age":30,"city":"New York","skills":["JavaScript","HTML","CSS"],"address":{"street":"123 Main St","zip":"10001","country":"USA"}}';
-    await textareas[0].fill(unformattedJson);
+    await fillTextareaInput(page, unformattedJson);
     await takeScreenshot(page, 'json-formatter', 'unformatted-input');
     
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
     
     // Wait for output textarea to update with formatted content (contains line breaks and indentation)
-    await page.waitForFunction(() => {
-      const outputTextarea = document.querySelectorAll('textarea')[1];
-      return outputTextarea && outputTextarea.value && outputTextarea.value.includes('\n');
-    }, { timeout: 2000 });
+    const formattedOutput = await waitForTextareaOutput(page, { hasLineBreaks: true });
     
     // Take screenshot of formatted result
     await takeScreenshot(page, 'json-formatter', 'formatted-output', true);
     
     // Verify formatting worked (checking for line breaks and proper spacing)
-    const formattedText = await textareas[1].inputValue();
-    expect(formattedText).toContain('\n');
-    expect(formattedText).toContain('  ');
+    expect(formattedOutput).toContain('\n');
+    expect(formattedOutput).toContain('  ');
   });
 
   testMethod('should show error for invalid JSON', async () => {
@@ -112,26 +116,21 @@ describe('JSON Format/Validate tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input invalid JSON
-    const textareas = await page.$$('textarea');
     const invalidJson = '{"name":"John","age":30,city:"New York"}'; // Missing quotes around city
-    await textareas[0].fill(invalidJson);
+    await fillTextareaInput(page, invalidJson);
     await takeScreenshot(page, 'json-formatter', 'invalid-json-input');
     
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
     
     // Wait for output textarea to update with error message
-    await page.waitForFunction(() => {
-      const outputTextarea = document.querySelectorAll('textarea')[1];
-      return outputTextarea && outputTextarea.value && outputTextarea.value.includes('Error:');
-    }, { timeout: 2000 });
+    const errorOutput = await waitForTextareaOutput(page, { hasError: true });
     
     // Take screenshot of validation error
     await takeScreenshot(page, 'json-formatter', 'validation-error', true);
     
     // Verify error message is shown
-    const outputText = await textareas[1].inputValue();
-    expect(outputText).toContain('Error:');
+    expect(errorOutput).toContain('Error:');
   });
 
   testMethod('should clear input and output when Clear button is clicked', async () => {
@@ -141,21 +140,17 @@ describe('JSON Format/Validate tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input some JSON
-    const textareas = await page.$$('textarea');
-    await textareas[0].fill('{"test": "data"}');
+    await fillTextareaInput(page, '{"test": "data"}');
     
     // Format to get output
     await (await findButtonByText(page, 'Format JSON')).click();
     
     // Wait for output textarea to update
-    await page.waitForFunction(() => {
-      const outputTextarea = document.querySelectorAll('textarea')[1];
-      return outputTextarea && outputTextarea.value && outputTextarea.value.length > 0;
-    }, { timeout: 2000 });
+    await waitForTextareaOutput(page, { notEmpty: true });
     
     // Verify both textareas have content
-    expect(await textareas[0].inputValue()).not.toBe('');
-    expect(await textareas[1].inputValue()).not.toBe('');
+    expect(await getTextareaOutput(page, 0)).not.toBe('');
+    expect(await getTextareaOutput(page, 1)).not.toBe('');
     
     // Take screenshot before clearing
     await takeScreenshot(page, 'json-formatter', 'before-clear');
@@ -175,7 +170,7 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'after-clear', true);
     
     // Verify both textareas are empty
-    expect(await textareas[0].inputValue()).toBe('');
-    expect(await textareas[1].inputValue()).toBe('');
+    expect(await getTextareaOutput(page, 0)).toBe('');
+    expect(await getTextareaOutput(page, 1)).toBe('');
   });
 }); 

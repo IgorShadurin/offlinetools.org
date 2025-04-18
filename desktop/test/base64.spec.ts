@@ -12,7 +12,15 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText, takeScreenshot, navigateToTool } from './utils'
+import { 
+  launchElectronWithRetry, 
+  findButtonByText, 
+  takeScreenshot, 
+  navigateToTool,
+  fillTextareaInput,
+  waitForTextareaOutput,
+  getTextareaOutput
+} from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
@@ -72,18 +80,14 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test data
-    const inputTextarea = (await page.$$('textarea'))[0];
-    await inputTextarea.fill('hello world');
+    await fillTextareaInput(page, 'hello world');
     await takeScreenshot(page, 'e2e-base64-encode', 'after-input');
     
     // Encode the input and wait for result
     await (await findButtonByText(page, 'Encode to Base64')).click();
     
-    // Wait for content to update instead of arbitrary timeout
-    await page.waitForFunction(() => {
-      const textareas = document.querySelectorAll('textarea');
-      return textareas.length > 1 && textareas[1].value !== '';
-    }, { timeout: 1000 });
+    // Wait for content to update
+    await waitForTextareaOutput(page, { notEmpty: true });
     
     // Capture final state
     await takeScreenshot(page, 'e2e-base64-encode', 'after-encoding', true);
@@ -105,11 +109,14 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await (await findButtonByText(page, 'Decode')).click();
     
     // Input test data
-    const inputTextarea = (await page.$$('textarea'))[0];
-    await inputTextarea.fill('SGVsbG8gV29ybGQh');
+    await fillTextareaInput(page, 'SGVsbG8gV29ybGQh');
     await takeScreenshot(page, 'e2e-base64-decode', 'after-input');
     
     await (await findButtonByText(page, 'Decode from Base64')).click();
+    
+    // Wait for output
+    const output = await waitForTextareaOutput(page, { notEmpty: true });
+    expect(output).toBeTruthy();
     
     // Capture final state
     await takeScreenshot(page, 'e2e-base64-decode', 'after-decoding', true);

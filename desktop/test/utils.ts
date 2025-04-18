@@ -187,4 +187,126 @@ export async function waitForComponentTitle(page: Page, title: string, timeout?:
     console.error(`Error waiting for component title "${title}":`, error);
     throw new Error(`Component with title "${title}" did not appear within timeout`);
   }
+}
+
+/**
+ * Interface for wait options when waiting for textarea output
+ */
+export interface WaitForOutputOptions {
+  /** Text content that must be included in the output */
+  contains?: string;
+  /** Check if output is not empty */
+  notEmpty?: boolean;
+  /** Check if output includes a specific error message */
+  hasError?: boolean;
+  /** Check if output includes line breaks (for formatting) */
+  hasLineBreaks?: boolean;
+  /** Maximum time to wait in milliseconds */
+  timeout?: number;
+}
+
+/**
+ * Fills the input textarea with test data
+ * @param {Page} page - Playwright page object
+ * @param {string} text - The text to input
+ * @param {number} index - Optional index of the textarea (default: 0 for input)
+ * @returns {Promise<any>} Promise resolving to the filled textarea element
+ */
+export async function fillTextareaInput(page: Page, text: string, index = 0): Promise<any> {
+  if (!page) {
+    throw new Error('Page object is null or undefined');
+  }
+  
+  // Wait for textareas to be available
+  await page.waitForSelector('textarea', { 
+    state: 'visible',
+    timeout: process.env.CI === 'true' ? 10000 : 5000
+  });
+  
+  // Get all textareas and select the one at the specified index
+  const textareas = await page.$$('textarea');
+  
+  if (!textareas || textareas.length <= index) {
+    throw new Error(`No textarea found at index ${index}`);
+  }
+  
+  // Fill the textarea with the provided text
+  await textareas[index].fill(text);
+  
+  return textareas[index];
+}
+
+/**
+ * Gets the value from a textarea
+ * @param {Page} page - Playwright page object
+ * @param {number} index - Index of the textarea (default: 1 for output)
+ * @returns {Promise<string>} Promise resolving to the textarea content
+ */
+export async function getTextareaOutput(page: Page, index = 1): Promise<string> {
+  if (!page) {
+    throw new Error('Page object is null or undefined');
+  }
+  
+  // Wait for textareas to be available
+  await page.waitForSelector('textarea', { 
+    state: 'visible',
+    timeout: process.env.CI === 'true' ? 10000 : 5000
+  });
+  
+  // Get all textareas and select the one at the specified index
+  const textareas = await page.$$('textarea');
+  
+  if (!textareas || textareas.length <= index) {
+    throw new Error(`No textarea found at index ${index}`);
+  }
+  
+  // Get the content of the textarea
+  return textareas[index].inputValue();
+}
+
+/**
+ * Waits for output to appear in a textarea with various conditions
+ * @param {Page} page - Playwright page object
+ * @param {WaitForOutputOptions} options - Options for what to wait for
+ * @returns {Promise<string>} Promise that resolves to the output text when the condition is met
+ */
+export async function waitForTextareaOutput(page: Page, options: WaitForOutputOptions = {}): Promise<string> {
+  if (!page) {
+    throw new Error('Page object is null or undefined');
+  }
+  
+  // Set default timeout based on CI environment
+  const timeout = options.timeout || (process.env.CI === 'true' ? 10000 : 2000);
+  
+  try {
+    // Create a condition function based on the provided options
+    await page.waitForFunction((opts) => {
+      const textareas = document.querySelectorAll('textarea');
+      
+      // We need at least 2 textareas (input and output)
+      if (textareas.length < 2) return false;
+      
+      // Get the output textarea (usually the second one, index 1)
+      const outputTextarea = textareas[1];
+      const outputValue = outputTextarea.value;
+      
+      // If no output yet, condition is not met
+      if (!outputValue) return false;
+      
+      // Check specific conditions
+      if (opts.contains && !outputValue.includes(opts.contains)) return false;
+      if (opts.notEmpty && outputValue.trim() === '') return false;
+      if (opts.hasError && !outputValue.includes('Error')) return false;
+      if (opts.hasLineBreaks && !outputValue.includes('\n')) return false;
+      
+      // All checks passed
+      return true;
+    }, options, { timeout });
+    
+    // Return the output text
+    return await getTextareaOutput(page);
+  } catch (error) {
+    console.error('Error waiting for textarea output:', error);
+    throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
+  }
 } 
