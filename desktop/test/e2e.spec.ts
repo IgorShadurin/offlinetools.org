@@ -144,8 +144,7 @@ describe('[electron-vite-react] e2e tests', async () => {
     await takeScreenshot(page, 'e2e-base64-decode', 'base64-view');
     
     // Verify correct component loaded
-    const titleText = await page.$eval('h3', el => el.textContent);
-    expect(titleText).toBe('Base64 Encoder/Decoder');
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('Base64 Encoder/Decoder');
     
     // Switch to decode mode
     await (await findButtonByText(page, 'Decode')).click();
