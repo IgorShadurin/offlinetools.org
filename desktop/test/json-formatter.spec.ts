@@ -98,14 +98,13 @@ describe('JSON Format/Validate tests', async () => {
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
     
-    // Wait for output textarea to update with formatted content (contains line breaks and indentation)
+    // Wait for output textarea to update with formatted content
     const formattedOutput = await waitForTextareaOutput(page, { hasLineBreaks: true });
     
     // Take screenshot of formatted result
     await takeScreenshot(page, 'json-formatter', 'formatted-output', true);
     
-    // Verify formatting worked (checking for line breaks and proper spacing)
-    expect(formattedOutput).toContain('\n');
+    // Verify spacing is correct (the line breaks were already verified by waitForTextareaOutput)
     expect(formattedOutput).toContain('  ');
   });
 
@@ -124,13 +123,10 @@ describe('JSON Format/Validate tests', async () => {
     await (await findButtonByText(page, 'Format JSON')).click();
     
     // Wait for output textarea to update with error message
-    const errorOutput = await waitForTextareaOutput(page, { hasError: true });
+    await waitForTextareaOutput(page, { hasError: true });
     
     // Take screenshot of validation error
     await takeScreenshot(page, 'json-formatter', 'validation-error', true);
-    
-    // Verify error message is shown
-    expect(errorOutput).toContain('Error:');
   });
 
   testMethod('should clear input and output when Clear button is clicked', async () => {

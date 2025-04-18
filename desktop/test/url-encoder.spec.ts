@@ -89,9 +89,8 @@ describe('URL Encoder/Decoder tests', async () => {
     // Click the Encode URL button
     await (await findButtonByText(page, 'Encode URL')).click();
     
-    // Wait for result containing encoded spaces
-    const encodedOutput = await waitForTextareaOutput(page, { contains: '%20' });
-    expect(encodedOutput).toContain('%20');
+    // Wait for result containing encoded spaces (the contains option confirms %20 is present)
+    await waitForTextareaOutput(page, { contains: '%20' });
     
     // Take a screenshot of the encoded result
     await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
@@ -117,9 +116,8 @@ describe('URL Encoder/Decoder tests', async () => {
     // Click the Decode URL button
     await (await findButtonByText(page, 'Decode URL')).click();
     
-    // Wait for result containing decoded content
-    const decodedOutput = await waitForTextareaOutput(page, { contains: 'example.com' });
-    expect(decodedOutput).toContain('example.com');
+    // Wait for result containing decoded content (the contains option confirms example.com is present)
+    await waitForTextareaOutput(page, { contains: 'example.com' });
     
     // Take a screenshot of the decoded result
     await takeScreenshot(page, 'url-decoder', 'after-decoding', true);

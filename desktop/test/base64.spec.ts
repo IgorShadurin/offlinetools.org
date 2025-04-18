@@ -74,14 +74,14 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot after navigation
-    await takeScreenshot(page, 'e2e-base64-encode', 'base64-view');
+    await takeScreenshot(page, 'base64-encode', 'base64-view');
     
     // Verify correct component loaded
     await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test data
     await fillTextareaInput(page, 'hello world');
-    await takeScreenshot(page, 'e2e-base64-encode', 'after-input');
+    await takeScreenshot(page, 'base64-encode', 'after-input');
     
     // Encode the input and wait for result
     await (await findButtonByText(page, 'Encode to Base64')).click();
@@ -90,7 +90,7 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await waitForTextareaOutput(page, { notEmpty: true });
     
     // Capture final state
-    await takeScreenshot(page, 'e2e-base64-encode', 'after-encoding', true);
+    await takeScreenshot(page, 'base64-encode', 'after-encoding', true);
   });
 
   testMethod('should switch to Base64 Decoder when clicked', async () => {
@@ -100,7 +100,7 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot after navigation
-    await takeScreenshot(page, 'e2e-base64-decode', 'base64-view');
+    await takeScreenshot(page, 'base64-decode', 'base64-view');
     
     // Verify correct component loaded
     await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
@@ -110,15 +110,10 @@ describe('Base64 Encoder/Decoder tests', async () => {
     
     // Input test data
     await fillTextareaInput(page, 'SGVsbG8gV29ybGQh');
-    await takeScreenshot(page, 'e2e-base64-decode', 'after-input');
-    
+    await takeScreenshot(page, 'base64-decode', 'after-input');
     await (await findButtonByText(page, 'Decode from Base64')).click();
-    
-    // Wait for output
-    const output = await waitForTextareaOutput(page, { notEmpty: true });
-    expect(output).toBeTruthy();
-    
+    await waitForTextareaOutput(page, { notEmpty: true });
     // Capture final state
-    await takeScreenshot(page, 'e2e-base64-decode', 'after-decoding', true);
+    await takeScreenshot(page, 'base64-decode', 'after-decoding', true);
   });
 }); 
