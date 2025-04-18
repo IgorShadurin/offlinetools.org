@@ -129,25 +129,35 @@ describe('[electron-vite-react] e2e tests', async () => {
   });
 
   testMethod('should switch to Base64 Decoder when clicked', async () => {
-    // Make sure the page is initialized
     expect(page).not.toBeNull();
+    
+    // Navigate to Base64 tool
     await (await findButtonByText(page, 'Base64 String Encode/Decode')).click();
-    // Wait for the component to load with a longer timeout
-    const waitTime = isCI ? 3000 : 1000;
-    await page.waitForTimeout(waitTime);
+    
+    // Wait for component to be visible instead of using timeout
+    await page.waitForSelector('h3:has-text("Base64 Encoder/Decoder")', { 
+      state: 'visible',
+      timeout: isCI ? 3000 : 1000 
+    });
+    
     // Take screenshot after navigation
     await takeScreenshot(page, 'e2e-base64-decode', 'base64-view');
-    // Check if the card title is correct
-    const cardTitle = await page.$('h3');
-    const titleText = await cardTitle.textContent();
+    
+    // Verify correct component loaded
+    const titleText = await page.$eval('h3', el => el.textContent);
     expect(titleText).toBe('Base64 Encoder/Decoder');
-    await (await await findButtonByText(page, 'Decode')).click();
-    const textareas = await page.$$('textarea');
-    expect(textareas.length).toBeGreaterThan(0);
-    const inputTextarea = textareas[0];
+    
+    // Switch to decode mode
+    await (await findButtonByText(page, 'Decode')).click();
+    
+    // Input test data
+    const inputTextarea = (await page.$$('textarea'))[0];
     await inputTextarea.fill('SGVsbG8gV29ybGQh');
     await takeScreenshot(page, 'e2e-base64-decode', 'after-input');
+    
     await (await findButtonByText(page, 'Decode from Base64')).click();
+    
+    // Capture final state
     await takeScreenshot(page, 'e2e-base64-decode', 'after-decoding', true);
   });
 });
