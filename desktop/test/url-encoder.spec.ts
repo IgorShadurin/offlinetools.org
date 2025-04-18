@@ -95,4 +95,40 @@ describe('URL Encoder/Decoder tests', async () => {
     // Take a screenshot of the encoded result
     await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
   });
+
+  testMethod('should decode URL encoded text', async () => {
+    expect(page).not.toBeNull();
+    
+    // Navigate to URL Encoder/Decoder
+    await (await findButtonByText(page, 'URL Encoder/Decoder')).click();
+    
+    // Wait for component to be visible
+    await page.waitForSelector('h3:has-text("URL Encoder/Decoder")', { 
+      state: 'visible',
+      timeout: isCI ? 5000 : 1500 
+    });
+    
+    // Switch to Decode tab
+    await (await findButtonByText(page, 'Decode')).click();
+    
+    // Take a screenshot of the decode tab
+    await takeScreenshot(page, 'url-decoder', 'decode-tab-view');
+    
+    // Input encoded test data
+    const textareas = await page.$$('textarea');
+    await textareas[0].fill('https%3A%2F%2Fexample.com%2Fpath%20with%20spaces%3Fquery%3Dspecial%20chars%21%40%23%24%25%5E%26%2A%28%29');
+    await takeScreenshot(page, 'url-decoder', 'after-input');
+    
+    // Click the Decode URL button
+    await (await findButtonByText(page, 'Decode URL')).click();
+    
+    // Wait for result to appear
+    await page.waitForFunction(() => {
+      const textareas = document.querySelectorAll('textarea');
+      return textareas.length > 1 && textareas[1].value.includes('example.com');
+    }, { timeout: 2000 });
+    
+    // Take a screenshot of the decoded result
+    await takeScreenshot(page, 'url-decoder', 'after-decoding', true);
+  });
 }); 
