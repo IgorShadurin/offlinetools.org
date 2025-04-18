@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AlertCircle, Check, Copy } from "lucide-react";
 import { encodeUrl, decodeUrl } from "shared/url-encoder";
 import { Button } from "./ui/button";
@@ -26,6 +26,34 @@ export function UrlEncoder({ className = "" }: UrlEncoderProps) {
   const [useEscapeUnescape, setUseEscapeUnescape] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Check for clipboard content when component mounts
+  useEffect(() => {
+    const clipboardContent = localStorage.getItem('clipboard-content-for-tool');
+    if (clipboardContent) {
+      setInput(clipboardContent);
+      // Clear the stored content after using it
+      localStorage.removeItem('clipboard-content-for-tool');
+      
+      // Auto process if there's content
+      try {
+        let result = "";
+        if (mode === "encode") {
+          result = encodeUrl(clipboardContent, { useEscapeUnescape });
+          setOutput(result);
+        } else {
+          // Check if it looks like a URL-encoded string before auto-decoding
+          if (clipboardContent.includes('%') || /^https?:\/\//.test(clipboardContent)) {
+            result = decodeUrl(clipboardContent, { useEscapeUnescape });
+            setOutput(result);
+          }
+        }
+        setError(null);
+      } catch (error) {
+        // Don't set error on auto-process, just don't auto-process
+      }
+    }
+  }, []);
 
   const handleProcess = () => {
     try {

@@ -128,53 +128,60 @@ function isLikelyUrl(content: string): boolean {
 }
 
 /**
- * Detects which tools can handle the provided clipboard content
- * @param options - Options for clipboard content detection
- * @returns Array of tools that can handle the content
+ * Detect compatible tools based on clipboard content type and content
+ * @param clipboardData - Clipboard data containing type and content
+ * @returns Array of compatible tools sorted by relevance
+ * @throws Error if clipboardData is null or undefined
  */
-export function detectClipboardTools(options: ClipboardDetectorOptions): Tool[] {
-  try {
-    if (!options) {
-      throw new Error('Options are required');
-    }
-    
-    const { type, content } = options;
-    
-    // For non-string types, return only compatible tools
-    if (type !== 'string') {
-      return TOOL_COMPATIBILITY[type] || [];
-    }
-    
-    // For string type without content or with empty content, return all string-compatible tools
-    if (content === undefined || content === null || content === '') {
-      return TOOL_COMPATIBILITY.string;
-    }
-    
-    // For string with content, detect specific format
-    const compatibleTools: Tool[] = [];
-    
-    // Check if content is JSON
-    if (isLikelyJson(content)) {
-      compatibleTools.push(Tool.JSON_FORMATTER);
-    }
-    
-    // Check if content looks like Base64
-    if (isLikelyBase64(content)) {
-      compatibleTools.push(Tool.BASE64_CODEC);
-    }
-    
-    // Check if content is URL
-    if (isLikelyUrl(content)) {
-      compatibleTools.push(Tool.URL_ENCODER);
-    }
-    
-    // These tools can handle any string
-    compatibleTools.push(Tool.TEXT_HASH_GENERATOR);
-    compatibleTools.push(Tool.FILE_HASH_COMPARE);
-    compatibleTools.push(Tool.BINARY_BASE64_CODEC);
-    
-    return compatibleTools;
-  } catch (error) {
-    throw new Error(`Failed to detect clipboard tools: ${(error as Error).message}`);
+export function detectClipboardTools(clipboardData: { 
+  type: ClipboardType; 
+  content?: string;
+}): Tool[] {
+  if (!clipboardData) {
+    throw new Error('Failed to detect clipboard tools: Options are required');
   }
+
+  const { type, content } = clipboardData;
+  let compatibleTools = [...TOOL_COMPATIBILITY[type] || []];
+
+  // For string content, check for special formats and prioritize specific tools
+  if (type === 'string' && content) {
+    // Create a prioritized array of tools based on content detection
+    const prioritizedTools: Tool[] = [];
+    
+    // Only add specialized format tools if they are truly detected
+    if (isLikelyJson(content)) {
+      prioritizedTools.push(Tool.JSON_FORMATTER);
+    }
+    
+    if (isLikelyUrl(content)) {
+      prioritizedTools.push(Tool.URL_ENCODER);
+    }
+    
+    if (isLikelyBase64(content)) {
+      prioritizedTools.push(Tool.BASE64_CODEC);
+    }
+    
+    // Add the other general tools that weren't specifically matched
+    compatibleTools.forEach(tool => {
+      // Don't duplicate specialized tools that were already matched
+      if (!prioritizedTools.includes(tool)) {
+        // Filter out specialized tools that didn't match the content
+        if (
+          (tool === Tool.JSON_FORMATTER && !isLikelyJson(content)) ||
+          (tool === Tool.URL_ENCODER && !isLikelyUrl(content)) ||
+          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content))
+        ) {
+          // Skip this tool
+        } else {
+          // Include this tool
+          prioritizedTools.push(tool);
+        }
+      }
+    });
+    
+    return prioritizedTools;
+  }
+
+  return compatibleTools;
 } 

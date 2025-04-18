@@ -66,13 +66,16 @@ describe('JSON Format/Validate tests', async () => {
     }
   });
 
-  test('should load JSON formatter by default', async () => {
+  test('should navigate to JSON formatter', async () => {
     expect(page).not.toBeNull();
+    
+    // Navigate to JSON Format/Validate
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot of initial state
     await takeScreenshot(page, 'json-formatter', 'initial-view');
     
-    // Verify correct component is loaded by default
+    // Verify correct component is loaded
     await waitForComponentTitle(page, COMPONENT_TITLE);
     
     // Verify component title

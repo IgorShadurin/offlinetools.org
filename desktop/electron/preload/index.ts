@@ -1,27 +1,164 @@
-import { ipcRenderer, contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 
-// --------- Expose some API to the Renderer process ---------
-contextBridge.exposeInMainWorld('ipcRenderer', {
-  on(...args: Parameters<typeof ipcRenderer.on>) {
-    const [channel, listener] = args
-    return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))
+// Create IPC-based clipboard API for the renderer
+const ipcClipboard = {
+  readText: async () => {
+    try {
+      return await ipcRenderer.invoke('clipboard:readText')
+    } catch (error) {
+      console.error('Preload: Error in clipboard.readText:', error)
+      return ''
+    }
   },
-  off(...args: Parameters<typeof ipcRenderer.off>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.off(channel, ...omit)
+  
+  writeText: async (text: string) => {
+    try {
+      return await ipcRenderer.invoke('clipboard:writeText', text)
+    } catch (error) {
+      console.error('Preload: Error in clipboard.writeText:', error)
+      return false
+    }
   },
-  send(...args: Parameters<typeof ipcRenderer.send>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.send(channel, ...omit)
+  
+  availableFormats: async () => {
+    try {
+      return await ipcRenderer.invoke('clipboard:availableFormats')
+    } catch (error) {
+      console.error('Preload: Error in clipboard.availableFormats:', error)
+      return []
+    }
   },
-  invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.invoke(channel, ...omit)
+  
+  hasImage: async () => {
+    try {
+      return await ipcRenderer.invoke('clipboard:hasImage')
+    } catch (error) {
+      console.error('Preload: Error in clipboard.hasImage:', error)
+      return false
+    }
   },
+  
+  hasContent: async () => {
+    try {
+      return await ipcRenderer.invoke('clipboard:hasContent')
+    } catch (error) {
+      console.error('Preload: Error in clipboard.hasContent:', error)
+      return { hasText: false, hasHtml: false, hasImage: false, formats: [] }
+    }
+  }
+}
 
-  // You can expose other APTs you need here.
-  // ...
-})
+// Create safe IPC wrapper for renderer with listener tracking
+const safeIpcRenderer = {
+  // Map to track event listeners for proper removal
+  listeners: new Map<string, Map<Function, Function>>(),
+  
+  // Standard IPC methods
+  send: (channel: string, ...args: unknown[]) => {
+    if (validateChannel(channel)) {
+      ipcRenderer.send(channel, ...args)
+    }
+  },
+  invoke: (channel: string, ...args: unknown[]) => {
+    if (validateChannel(channel)) {
+      return ipcRenderer.invoke(channel, ...args)
+    }
+    return Promise.reject(new Error(`Invalid channel: ${channel}`))
+  },
+  on: (channel: string, func: (...args: unknown[]) => void) => {
+    if (validateChannel(channel)) {
+      // Create a wrapper to handle event objects
+      const subscription = (_event: Electron.IpcRendererEvent, ...args: unknown[]) => func(...args)
+      
+      // Store the mapping between original and wrapped function
+      if (!safeIpcRenderer.listeners.has(channel)) {
+        safeIpcRenderer.listeners.set(channel, new Map())
+      }
+      safeIpcRenderer.listeners.get(channel)?.set(func, subscription)
+      
+      // Add the actual listener
+      ipcRenderer.on(channel, subscription)
+      
+      return () => {
+        // Remove listener when the returned function is called
+        ipcRenderer.removeListener(channel, subscription)
+        safeIpcRenderer.listeners.get(channel)?.delete(func)
+      }
+    }
+    return () => {}
+  },
+  once: (channel: string, func: (...args: unknown[]) => void) => {
+    if (validateChannel(channel)) {
+      // For once, we don't need to track since it auto-removes
+      ipcRenderer.once(channel, (_event, ...args) => func(...args))
+    }
+  },
+  // Proper 'off' method that retrieves the wrapped function
+  off: (channel: string, func: (...args: unknown[]) => void) => {
+    if (validateChannel(channel)) {
+      // Get the original wrapper function
+      const wrappedFunc = safeIpcRenderer.listeners.get(channel)?.get(func)
+      if (wrappedFunc) {
+        // Remove the actual listener using the stored wrapper
+        ipcRenderer.removeListener(channel, wrappedFunc as any)
+        // Clean up our tracking map
+        safeIpcRenderer.listeners.get(channel)?.delete(func)
+      }
+    }
+  },
+  removeAllListeners: (channel: string) => {
+    if (validateChannel(channel)) {
+      ipcRenderer.removeAllListeners(channel)
+      // Clean up our tracking map for this channel
+      safeIpcRenderer.listeners.delete(channel)
+    }
+  },
+  // Additional methods if needed
+}
+
+// Validate IPC channel names for security
+function validateChannel(channel: string): boolean {
+  // Restrict channels to alphanumeric, underscore, dash and period
+  const validChannelRegex = /^[a-z0-9_\-\.:]+$/i
+  return validChannelRegex.test(channel)
+}
+
+// Log that the preload script is running
+console.log('Preload script is running - initializing clipboard API via IPC')
+
+// Define our electron API with clipboard support
+const electronAPIForRenderer = {
+  // Expose ipcRenderer directly to match expected structure
+  ipcRenderer: safeIpcRenderer,
+  clipboard: ipcClipboard
+}
+
+// Use `contextBridge` APIs to expose Electron APIs to
+// renderer only if context isolation is enabled, otherwise
+// just add to the DOM global.
+if (process.contextIsolated) {
+  try {
+    contextBridge.exposeInMainWorld('electron', electronAPIForRenderer)
+    // Also expose ipcRenderer directly for compatibility
+    contextBridge.exposeInMainWorld('ipcRenderer', safeIpcRenderer)
+    // Expose api for backward compatibility
+    contextBridge.exposeInMainWorld('api', safeIpcRenderer)
+    console.log('Preload script loaded successfully (context isolated)')
+  } catch (error) {
+    console.error('Error exposing APIs:', error)
+  }
+} else {
+  // @ts-ignore (define in dts)
+  window.electron = electronAPIForRenderer
+  // @ts-ignore (define in dts)
+  window.ipcRenderer = safeIpcRenderer
+  // @ts-ignore (define in dts)
+  window.api = safeIpcRenderer
+  console.log('Preload script loaded successfully (no context isolation)')
+}
+
+// Log that the clipboard API has been exposed
+console.log('IPC-based clipboard API exposed to renderer process')
 
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
@@ -116,3 +253,6 @@ window.onmessage = (ev) => {
 }
 
 setTimeout(removeLoading, 4999)
+
+// Log that the preload script has been loaded
+console.log("Electron preload script loaded");

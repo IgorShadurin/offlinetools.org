@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
@@ -24,6 +24,26 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
   const [indentation, setIndentation] = useState<JsonIndentationType>(
     JsonIndentationType.TwoSpaces
   );
+
+  // Check for clipboard content when component mounts
+  useEffect(() => {
+    const clipboardContent = localStorage.getItem('clipboard-content-for-tool');
+    if (clipboardContent) {
+      setInputValue(clipboardContent);
+      // Clear the stored content after using it
+      localStorage.removeItem('clipboard-content-for-tool');
+      
+      // Optionally auto-format if it appears to be JSON
+      try {
+        JSON.parse(clipboardContent);
+        // If parsing succeeds, it's valid JSON - auto format
+        const formatted = formatJson(clipboardContent, { indentation });
+        setOutputValue(formatted);
+      } catch (error) {
+        // Not valid JSON, just set the input without auto-formatting
+      }
+    }
+  }, []);
 
   // Format JSON when the format button is clicked
   const handleFormatJson = () => {

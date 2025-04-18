@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AlertCircle, Check, Copy } from "lucide-react";
 import { encodeBase64, decodeBase64 } from "shared/base64-codec";
 import { Button } from "./ui/button";
@@ -26,6 +26,33 @@ export function Base64Codec({ className = "" }: Base64CodecProps) {
   const [urlSafe, setUrlSafe] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Check for clipboard content when component mounts
+  useEffect(() => {
+    const clipboardContent = localStorage.getItem('clipboard-content-for-tool');
+    if (clipboardContent) {
+      setInput(clipboardContent);
+      // Clear the stored content after using it
+      localStorage.removeItem('clipboard-content-for-tool');
+      
+      // Auto process if there's content
+      try {
+        if (mode === "encode") {
+          const result = encodeBase64(clipboardContent, { urlSafe });
+          setOutput(result);
+        } else {
+          // Check if it looks like base64 before auto-decoding
+          if (/^[A-Za-z0-9+/=_-]+$/.test(clipboardContent)) {
+            const result = decodeBase64(clipboardContent, { urlSafe });
+            setOutput(result);
+          }
+        }
+        setError(null);
+      } catch (error) {
+        // Don't set error on auto-process, just don't auto-process
+      }
+    }
+  }, []);
 
   const handleProcess = () => {
     try {

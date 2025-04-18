@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, Tray, Menu, nativeImage } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, Tray, Menu, nativeImage, clipboard, MenuItem } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -43,6 +43,70 @@ let win: BrowserWindow | null = null
 let tray: Tray | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
+
+/**
+ * Set up IPC handlers for clipboard operations
+ */
+function setupClipboardHandlers() {
+  // Read text from clipboard
+  ipcMain.handle('clipboard:readText', () => {
+    try {
+      return clipboard.readText()
+    } catch (error) {
+      console.error('Main process: Error reading clipboard text:', error)
+      return ''
+    }
+  })
+
+  // Write text to clipboard
+  ipcMain.handle('clipboard:writeText', (_, text) => {
+    try {
+      clipboard.writeText(text)
+      return true
+    } catch (error) {
+      console.error('Main process: Error writing clipboard text:', error)
+      return false
+    }
+  })
+
+  // Get available formats in clipboard
+  ipcMain.handle('clipboard:availableFormats', () => {
+    try {
+      return clipboard.availableFormats()
+    } catch (error) {
+      console.error('Main process: Error getting clipboard formats:', error)
+      return []
+    }
+  })
+
+  // Check if image is available in clipboard
+  ipcMain.handle('clipboard:hasImage', () => {
+    try {
+      const formats = clipboard.availableFormats()
+      const hasImage = formats.some(format => format.startsWith('image/'))
+      return hasImage
+    } catch (error) {
+      console.error('Main process: Error checking for image in clipboard:', error)
+      return false
+    }
+  })
+
+  // Check if clipboard has content
+  ipcMain.handle('clipboard:hasContent', () => {
+    try {
+      // Try to check for any content in the clipboard
+      const hasText = clipboard.readText().length > 0
+      const hasHtml = clipboard.readHTML().length > 0
+      const formats = clipboard.availableFormats()
+      const hasImage = formats.some(format => format.startsWith('image/'))
+      
+      return { hasText, hasHtml, hasImage, formats }
+    } catch (error) {
+      console.error('Main process: Error checking clipboard content:', error)
+      return { hasText: false, hasHtml: false, hasImage: false, formats: [] }
+    }
+  })
+}
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -221,9 +285,107 @@ function createTemplateIcon() {
   return icon
 }
 
+/**
+ * Creates the application menu
+ */
+function createApplicationMenu() {
+  const isMac = process.platform === 'darwin'
+  
+  const debugMenuItem: Electron.MenuItemConstructorOptions = {
+    label: 'Debug',
+    submenu: [
+      {
+        label: 'Toggle Clipboard Debug',
+        accelerator: isMac ? 'Cmd+Shift+D' : 'Ctrl+Shift+D',
+        click: () => {
+          if (win) {
+            win.webContents.send('toggle-debug-panel')
+          }
+        }
+      }
+    ]
+  }
+  
+  const template: Electron.MenuItemConstructorOptions[] = [
+    // macOS app menu
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { role: 'about' as const },
+        { type: 'separator' as const },
+        { role: 'services' as const },
+        { type: 'separator' as const },
+        { role: 'hide' as const },
+        { role: 'hideOthers' as const },
+        { role: 'unhide' as const },
+        { type: 'separator' as const },
+        { role: 'quit' as const }
+      ]
+    }] : []),
+    // File Menu
+    {
+      label: 'File',
+      submenu: [
+        isMac ? { role: 'close' as const } : { role: 'quit' as const }
+      ]
+    },
+    // Edit Menu
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' as const },
+        { role: 'redo' as const },
+        { type: 'separator' as const },
+        { role: 'cut' as const },
+        { role: 'copy' as const },
+        { role: 'paste' as const }
+      ]
+    },
+    // View Menu
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' as const },
+        { role: 'forceReload' as const },
+        { role: 'toggleDevTools' as const },
+        { type: 'separator' as const },
+        { role: 'resetZoom' as const },
+        { role: 'zoomIn' as const },
+        { role: 'zoomOut' as const },
+        { type: 'separator' as const },
+        { role: 'togglefullscreen' as const }
+      ]
+    },
+    // Debug Menu
+    debugMenuItem,
+    // Window Menu
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' as const },
+        ...(isMac ? [
+          { type: 'separator' as const },
+          { role: 'front' as const },
+          { type: 'separator' as const },
+          { role: 'window' as const }
+        ] : [
+          { role: 'close' as const }
+        ])
+      ]
+    }
+  ]
+  
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+}
+
 app.whenReady().then(() => {
+  // Set up clipboard handlers
+  setupClipboardHandlers()
+  
   createWindow()
   createTray()
+  createApplicationMenu()
 })
 
 app.on('window-all-closed', () => {
