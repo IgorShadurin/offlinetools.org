@@ -47,42 +47,20 @@ alwaysApply: false
      ```
 
 5. **Testing Requirements**
-      - Create a test file for each feature at `/desktop/test/{feature-name}.spec.ts`
-      - Use shared test utilities from `/desktop/test/utils.ts`:
-        ```tsx
-        import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './utils';
-        ```
-      - Use explicit waiting for elements instead of timeouts:
-        ```tsx
-        // Wait for component to be visible
-        await page.waitForSelector('h3:has-text("Feature Name")', { 
-          state: 'visible',
-          timeout: isCI ? 5000 : 1500 
-        });
-        ```
-      - Wait for content changes with waitForFunction:
-        ```tsx
-        // Wait for output to appear
-        await page.waitForFunction(() => {
-          const textareas = document.querySelectorAll('textarea');
-          return textareas.length > 1 && textareas[1].value !== '';
-        }, { timeout: 2000 });
-        ```
-      - Take screenshots at each step for better debugging:
-        ```tsx
-        await takeScreenshot(page, 'feature-name', 'step-description');
-        ```
-      - Find buttons by text content instead of selectors:
-        ```tsx
-        await (await findButtonByText(page, 'Button Text')).click();
-        ```
-      - Verify component content with assertions:
-        ```tsx
-        await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('Expected Title');
-        ```
-      - Run tests with: `pnpm run test`
-      - Tests should verify that:
-        - The component renders correctly
-        - User interactions (click, input) work as expected
-        - The component produces correct output
-        - Error states are handled properly
+   - Create tests in `/desktop/test/{feature-name}.spec.ts`
+   - Follow style patterns from existing tests:
+     - `/desktop/test/base64.spec.ts` - Base64 encoder/decoder tests
+     - `/desktop/test/json-formatter.spec.ts` - JSON formatter tests
+     - `/desktop/test/url-encoder.spec.ts` - URL encoder tests
+   - Important testing principles:
+     - **Never use arbitrary timeouts** (e.g., `page.waitForTimeout()`)
+     - Always wait for specific elements or conditions instead
+     - Use `waitForVisibleElement()`, `waitForComponentTitle()`, etc.
+   - Recommended test structure:
+     1. Setup: Initialize Electron app
+     2. Navigation: Wait for sidebar to load, then click tool
+     3. Input: Test with valid and invalid inputs
+     4. Verification: Wait for and verify correct output
+     5. Error handling: Verify appropriate error messages
+   - Use utilities from `/desktop/test/utils.ts` to handle waiting
+   - Run with `pnpm run test`
