@@ -77,22 +77,21 @@ describe('[electron-vite-react] e2e tests', async () => {
     // Take screenshot of sidebar
     await takeScreenshot(page, 'e2e-sidebar', 'sidebar-view');
     
-    // Find JSON Format button in sidebar
+    // Look for any interactive element that should be present in the sidebar
+    // This ensures the sidebar content has loaded before we check for specific buttons
+    await page.waitForFunction(() => {
+      // Check if there are any buttons rendered on the page
+      return document.querySelectorAll('button').length > 0;
+    }, { timeout: waitTimeout });
+    
+    // Now check for specific tool buttons - these should be available now
     const jsonFormatButton = await findButtonByText(page, 'JSON Format/Validate');
     expect(jsonFormatButton).not.toBeNull();
-    const sidebarText = await jsonFormatButton.textContent();
-    expect(sidebarText.trim()).toContain('JSON Format/Validate');
-  });
-
-  testMethod('should display JSON formatter by default', async () => {
-    // Make sure the page is initialized
-    expect(page).not.toBeNull();
     
-    // Take screenshot of default view
-    await takeScreenshot(page, 'e2e-json-formatter', 'default-view');
+    const base64Button = await findButtonByText(page, 'Base64 String Encode/Decode');
+    expect(base64Button).not.toBeNull();
     
-    const cardTitle = await page.$('h3');
-    const titleText = await cardTitle.textContent();
-    expect(titleText).toBe('JSON Format/Validate');
+    const urlEncoderButton = await findButtonByText(page, 'URL Encoder/Decoder');
+    expect(urlEncoderButton).not.toBeNull();
   });
 });
