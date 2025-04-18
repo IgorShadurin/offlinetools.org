@@ -75,15 +75,7 @@ export async function findButtonByText(page: Page, text: string, timeout = 5000)
     
     for (const button of buttons) {
       const buttonText = await button.textContent();
-      if (buttonText && buttonText.includes(text)) {
-        return button;
-      }
-    }
-    
-    // If no exact match, try a more flexible search
-    for (const button of buttons) {
-      const buttonText = await button.textContent();
-      if (buttonText && buttonText.toLowerCase().includes(text.toLowerCase())) {
+      if (buttonText && buttonText === text) {
         return button;
       }
     }
@@ -126,7 +118,7 @@ export async function takeScreenshot(
   // If this is after decoding, create a special subdirectory
   let targetDir = testDir;
   if (afterDecoding) {
-    const decodingDir = path.join(testDir, 'after-decoding');
+    const decodingDir = path.join(testDir, 'after');
     if (!fs.existsSync(decodingDir)) {
       fs.mkdirSync(decodingDir, { recursive: true });
     }

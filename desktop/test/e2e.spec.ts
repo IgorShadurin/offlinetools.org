@@ -96,54 +96,58 @@ describe('[electron-vite-react] e2e tests', async () => {
     expect(titleText).toBe('JSON Format/Validate');
   });
 
-  testMethod('should switch to Base64 Encoder/Decoder when clicked', async () => {
+  testMethod('should switch to Base64 Encoder when clicked', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
-    
-    // Find Base64 Encoder button by text
-    const base64Button = await findButtonByText(page, 'Base64');
+    const base64Button = await findButtonByText(page, 'Base64 String Encode/Decode');
     expect(base64Button).not.toBeNull();
-    
     // Click the Base64 button
     await base64Button.click();
-    
     // Wait for the component to load with a longer timeout
     const waitTime = isCI ? 3000 : 1000;
     await page.waitForTimeout(waitTime);
-    
     // Take screenshot after navigation
-    await takeScreenshot(page, 'e2e-base64', 'base64-view');
-    
+    await takeScreenshot(page, 'e2e-base64-encode', 'base64-view');
     // Check if the card title is correct
     const cardTitle = await page.$('h3');
     const titleText = await cardTitle.textContent();
     expect(titleText).toBe('Base64 Encoder/Decoder');
-    
     // Find textareas for additional screenshots
     const textareas = await page.$$('textarea');
-    if (textareas.length > 0) {
-      try {
-        // Enter an encoded value
-        const inputTextarea = textareas[0];
-        await inputTextarea.fill('SGVsbG8gV29ybGQh');
-        
-        // Take screenshot after input
-        await takeScreenshot(page, 'e2e-base64', 'after-input');
-        
-        // Find decode button if it exists
-        const decodeButton = await findButtonByText(page, 'Encode to Base64');
-        if (decodeButton) {
-          await decodeButton.click();
-          
-          // Wait for UI to update
-          await page.waitForTimeout(500);
-          
-          // Take screenshot after decoding
-          await takeScreenshot(page, 'e2e-base64', 'after-decoding', true);
-        }
-      } catch (error) {
-        console.error('Interaction error:', error);
-      }
-    }
+    expect(textareas.length).toBeGreaterThan(0);
+    // Enter an encoded value
+    const inputTextarea = textareas[0];
+    await inputTextarea.fill('hello world');
+    await takeScreenshot(page, 'e2e-base64-encode', 'after-input');
+    const decodeButton = await findButtonByText(page, 'Encode to Base64');
+    expect(decodeButton).not.toBeNull()
+    await decodeButton.click();
+    // Wait for UI to update
+    await page.waitForTimeout(500);
+    // Take screenshot after decoding
+    await takeScreenshot(page, 'e2e-base64-encode', 'after-encoding', true);
+  });
+
+  testMethod('should switch to Base64 Decoder when clicked', async () => {
+    // Make sure the page is initialized
+    expect(page).not.toBeNull();
+    await (await findButtonByText(page, 'Base64 String Encode/Decode')).click();
+    // Wait for the component to load with a longer timeout
+    const waitTime = isCI ? 3000 : 1000;
+    await page.waitForTimeout(waitTime);
+    // Take screenshot after navigation
+    await takeScreenshot(page, 'e2e-base64-decode', 'base64-view');
+    // Check if the card title is correct
+    const cardTitle = await page.$('h3');
+    const titleText = await cardTitle.textContent();
+    expect(titleText).toBe('Base64 Encoder/Decoder');
+    await (await await findButtonByText(page, 'Decode')).click();
+    const textareas = await page.$$('textarea');
+    expect(textareas.length).toBeGreaterThan(0);
+    const inputTextarea = textareas[0];
+    await inputTextarea.fill('SGVsbG8gV29ybGQh');
+    await takeScreenshot(page, 'e2e-base64-decode', 'after-input');
+    await (await findButtonByText(page, 'Decode from Base64')).click();
+    await takeScreenshot(page, 'e2e-base64-decode', 'after-decoding', true);
   });
 });
