@@ -12,11 +12,15 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './utils'
+import { launchElectronWithRetry, findButtonByText, takeScreenshot, navigateToTool } from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
 let page: Page | null = null
+
+// Tool name constants
+const TOOL_BUTTON_NAME = 'URL Encoder/Decoder';
+const COMPONENT_TITLE = 'URL Encoder/Decoder';
 
 // Skip all tests if running in GitHub Actions for now
 // until we properly fix the CI environment
@@ -62,19 +66,13 @@ describe('URL Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'url-encoder', 'initial-state');
     
     // Navigate to URL Encoder/Decoder
-    await (await findButtonByText(page, 'URL Encoder/Decoder')).click();
-    
-    // Wait for component to be visible instead of using timeout
-    await page.waitForSelector('h3:has-text("URL Encoder/Decoder")', { 
-      state: 'visible',
-      timeout: isCI ? 5000 : 1500 
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take a screenshot to verify we're on the URL Encoder page
     await takeScreenshot(page, 'url-encoder', 'url-encoder-page');
     
     // Verify component title
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('URL Encoder/Decoder');
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Verify textarea components are present
     await page.waitForSelector('textarea', { timeout: isCI ? 15000 : 5000 });
@@ -100,13 +98,7 @@ describe('URL Encoder/Decoder tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to URL Encoder/Decoder
-    await (await findButtonByText(page, 'URL Encoder/Decoder')).click();
-    
-    // Wait for component to be visible
-    await page.waitForSelector('h3:has-text("URL Encoder/Decoder")', { 
-      state: 'visible',
-      timeout: isCI ? 5000 : 1500 
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Switch to Decode tab
     await (await findButtonByText(page, 'Decode')).click();

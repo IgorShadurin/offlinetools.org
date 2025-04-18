@@ -45,7 +45,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
       return app;
     } catch (error) {
       lastError = error as Error;
-      console.error(`Electron launch attempt ${attempt + 1} failed:`, error);
+      // console.error(`Electron launch attempt ${attempt + 1} failed:`, error);
     }
   }
   
@@ -131,4 +131,60 @@ export async function takeScreenshot(
   await page.screenshot({ path: filePath });
   
   return filePath;
+}
+
+/**
+ * Navigates to a specific tool by clicking on its sidebar button
+ * @param {Page} page - Playwright page object
+ * @param {string} toolName - The exact name of the tool as it appears in the sidebar
+ * @param {string} componentTitle - Optional component title to wait for (if different from toolName)
+ * @returns {Promise<void>} Promise that resolves when navigation is complete and component is visible
+ */
+export async function navigateToTool(page: Page, toolName: string, componentTitle?: string): Promise<void> {
+  if (!page) {
+    throw new Error('Page object is null or undefined');
+  }
+  
+  // Find and click the tool button in the sidebar
+  const button = await findButtonByText(page, toolName);
+  if (!button) {
+    throw new Error(`Tool button "${toolName}" not found in sidebar`);
+  }
+  
+  await button.click();
+  
+  // Use provided componentTitle or fallback to toolName
+  const titleToWaitFor = componentTitle || toolName;
+  
+  // Wait for the component title to appear
+  await waitForComponentTitle(page, titleToWaitFor);
+}
+
+/**
+ * Waits for a component to be fully loaded by its title
+ * @param {Page} page - Playwright page object
+ * @param {string} title - The title text to wait for (exact match)
+ * @param {number} timeout - Timeout in milliseconds (default: adjusted based on CI environment)
+ * @returns {Promise<void>} Promise that resolves when component is visible
+ */
+export async function waitForComponentTitle(page: Page, title: string, timeout?: number): Promise<void> {
+  if (!page) {
+    throw new Error('Page object is null or undefined');
+  }
+  
+  // Adjust timeout for CI environment if not specified
+  if (!timeout) {
+    timeout = process.env.CI === 'true' ? 5000 : 1500;
+  }
+  
+  try {
+    // Wait for h3 with exact text content
+    await page.waitForSelector(`h3:has-text("${title}")`, {
+      state: 'visible',
+      timeout
+    });
+  } catch (error) {
+    console.error(`Error waiting for component title "${title}":`, error);
+    throw new Error(`Component with title "${title}" did not appear within timeout`);
+  }
 } 

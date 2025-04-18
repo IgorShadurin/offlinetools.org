@@ -12,11 +12,15 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './utils'
+import { launchElectronWithRetry, findButtonByText, takeScreenshot, navigateToTool } from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
 let page: Page | null = null
+
+// Tool name constants
+const TOOL_BUTTON_NAME = 'Base64 String Encode/Decode';
+const COMPONENT_TITLE = 'Base64 Encoder/Decoder';
 
 // Skip all tests if running in GitHub Actions for now
 // until we properly fix the CI environment
@@ -59,19 +63,13 @@ describe('Base64 Encoder/Decoder tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Base64 tool
-    await (await findButtonByText(page, 'Base64 String Encode/Decode')).click();
-    
-    // Wait for component to be visible instead of using timeout
-    await page.waitForSelector('h3:has-text("Base64 Encoder/Decoder")', { 
-      state: 'visible',
-      timeout: isCI ? 3000 : 1000 
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot after navigation
     await takeScreenshot(page, 'e2e-base64-encode', 'base64-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('Base64 Encoder/Decoder');
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test data
     const inputTextarea = (await page.$$('textarea'))[0];
@@ -95,19 +93,13 @@ describe('Base64 Encoder/Decoder tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Base64 tool
-    await (await findButtonByText(page, 'Base64 String Encode/Decode')).click();
-    
-    // Wait for component to be visible instead of using timeout
-    await page.waitForSelector('h3:has-text("Base64 Encoder/Decoder")', { 
-      state: 'visible',
-      timeout: isCI ? 3000 : 1000 
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot after navigation
     await takeScreenshot(page, 'e2e-base64-decode', 'base64-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('Base64 Encoder/Decoder');
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Switch to decode mode
     await (await findButtonByText(page, 'Decode')).click();

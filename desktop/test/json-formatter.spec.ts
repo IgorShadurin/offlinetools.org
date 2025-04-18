@@ -12,11 +12,15 @@ import {
   expect,
   test,
 } from 'vitest'
-import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './utils'
+import { launchElectronWithRetry, findButtonByText, takeScreenshot, navigateToTool, waitForComponentTitle } from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
 let page: Page | null = null
+
+// Tool name constants
+const TOOL_BUTTON_NAME = 'JSON Format/Validate';
+const COMPONENT_TITLE = 'JSON Format/Validate';
 
 // Skip all tests if running in GitHub Actions for now
 // until we properly fix the CI environment
@@ -62,13 +66,10 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'initial-view');
     
     // Verify correct component is loaded by default
-    await page.waitForSelector('h3:has-text("JSON Format/Validate")', {
-      state: 'visible',
-      timeout: isCI ? 5000 : 1500
-    });
+    await waitForComponentTitle(page, COMPONENT_TITLE);
     
     // Verify component title
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('JSON Format/Validate');
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Take screenshot of loaded component
     await takeScreenshot(page, 'json-formatter', 'component-loaded');
@@ -78,13 +79,7 @@ describe('JSON Format/Validate tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate (or ensure we're there)
-    await (await findButtonByText(page, 'JSON Format/Validate')).click();
-    
-    // Wait for component to be visible
-    await page.waitForSelector('h3:has-text("JSON Format/Validate")', {
-      state: 'visible',
-      timeout: isCI ? 5000 : 1500
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input unformatted JSON
     const textareas = await page.$$('textarea');
@@ -114,13 +109,7 @@ describe('JSON Format/Validate tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate
-    await (await findButtonByText(page, 'JSON Format/Validate')).click();
-    
-    // Wait for component to be visible
-    await page.waitForSelector('h3:has-text("JSON Format/Validate")', {
-      state: 'visible',
-      timeout: isCI ? 5000 : 1500
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input invalid JSON
     const textareas = await page.$$('textarea');
@@ -149,13 +138,7 @@ describe('JSON Format/Validate tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate
-    await (await findButtonByText(page, 'JSON Format/Validate')).click();
-    
-    // Wait for component to be visible
-    await page.waitForSelector('h3:has-text("JSON Format/Validate")', {
-      state: 'visible',
-      timeout: isCI ? 5000 : 1500
-    });
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input some JSON
     const textareas = await page.$$('textarea');
