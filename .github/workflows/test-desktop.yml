@@ -63,15 +63,16 @@ jobs:
       run: mkdir -p test/screenshots
       
     - name: Run tests with xvfb
-      run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" pnpm test
+      run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" pnpm test
       env:
         CI: true
-        DISPLAY: ':99.0'
         
-    - name: Upload test screenshots on failure
+    - name: Upload test artifacts on failure
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: test-screenshots
-        path: desktop/test/screenshots
+        name: test-artifacts
+        path: |
+          desktop/test/screenshots
+          desktop/test/*.log
         if-no-files-found: ignore 
