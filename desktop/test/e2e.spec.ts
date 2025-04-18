@@ -131,7 +131,7 @@ describe('[electron-vite-react] e2e tests', async () => {
         await takeScreenshot(page, 'e2e-base64', 'after-input');
         
         // Find decode button if it exists
-        const decodeButton = await findButtonByText(page, 'Decode');
+        const decodeButton = await findButtonByText(page, 'Encode to Base64');
         if (decodeButton) {
           await decodeButton.click();
           
