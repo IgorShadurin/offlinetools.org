@@ -97,34 +97,38 @@ describe('[electron-vite-react] e2e tests', async () => {
   });
 
   testMethod('should switch to Base64 Encoder when clicked', async () => {
-    // Make sure the page is initialized
     expect(page).not.toBeNull();
-    const base64Button = await findButtonByText(page, 'Base64 String Encode/Decode');
-    expect(base64Button).not.toBeNull();
-    // Click the Base64 button
-    await base64Button.click();
-    // Wait for the component to load with a longer timeout
-    const waitTime = isCI ? 3000 : 1000;
-    await page.waitForTimeout(waitTime);
+    
+    // Navigate to Base64 tool
+    await (await findButtonByText(page, 'Base64 String Encode/Decode')).click();
+    
+    // Wait for component to be visible instead of using timeout
+    await page.waitForSelector('h3:has-text("Base64 Encoder/Decoder")', { 
+      state: 'visible',
+      timeout: isCI ? 3000 : 1000 
+    });
+    
     // Take screenshot after navigation
     await takeScreenshot(page, 'e2e-base64-encode', 'base64-view');
-    // Check if the card title is correct
-    const cardTitle = await page.$('h3');
-    const titleText = await cardTitle.textContent();
-    expect(titleText).toBe('Base64 Encoder/Decoder');
-    // Find textareas for additional screenshots
-    const textareas = await page.$$('textarea');
-    expect(textareas.length).toBeGreaterThan(0);
-    // Enter an encoded value
-    const inputTextarea = textareas[0];
+    
+    // Verify correct component loaded
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('Base64 Encoder/Decoder');
+    
+    // Input test data
+    const inputTextarea = (await page.$$('textarea'))[0];
     await inputTextarea.fill('hello world');
     await takeScreenshot(page, 'e2e-base64-encode', 'after-input');
-    const decodeButton = await findButtonByText(page, 'Encode to Base64');
-    expect(decodeButton).not.toBeNull()
-    await decodeButton.click();
-    // Wait for UI to update
-    await page.waitForTimeout(500);
-    // Take screenshot after decoding
+    
+    // Encode the input and wait for result
+    await (await findButtonByText(page, 'Encode to Base64')).click();
+    
+    // Wait for content to update instead of arbitrary timeout
+    await page.waitForFunction(() => {
+      const textareas = document.querySelectorAll('textarea');
+      return textareas.length > 1 && textareas[1].value !== '';
+    }, { timeout: 1000 });
+    
+    // Capture final state
     await takeScreenshot(page, 'e2e-base64-encode', 'after-encoding', true);
   });
 
