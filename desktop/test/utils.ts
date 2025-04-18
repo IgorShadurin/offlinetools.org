@@ -19,6 +19,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
   if (isCI) {
     maxRetries = 10;
     retryDelay = 3000;
+    console.log('Running in CI environment with increased retries and timeouts');
   }
   
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -29,7 +30,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
       }
       
       // Launch with more generous timeout in CI
-      const launchTimeout = isCI ? 30000 : 15000;
+      const launchTimeout = isCI ? 60000 : 15000;
       
       const app = await electron.launch({
         args: ['.', '--no-sandbox'],
@@ -38,6 +39,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
           ...process.env, 
           NODE_ENV: 'test',
           ELECTRON_ENABLE_LOGGING: '1',
+          DISPLAY: isCI ? process.env.DISPLAY || ':99.0' : undefined, // For xvfb in CI
         },
         timeout: launchTimeout,
       });
@@ -45,7 +47,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
       return app;
     } catch (error) {
       lastError = error as Error;
-      // console.error(`Electron launch attempt ${attempt + 1} failed:`, error);
+      console.error(`Electron launch attempt ${attempt + 1} failed:`, error);
     }
   }
   

@@ -30,10 +30,8 @@ let page: Page | null = null
 const TOOL_BUTTON_NAME = 'URL Encoder/Decoder';
 const COMPONENT_TITLE = 'URL Encoder/Decoder';
 
-// Skip all tests if running in GitHub Actions for now
-// until we properly fix the CI environment
+// Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
-const testMethod = isCI ? test.skip : test;
 
 describe('URL Encoder/Decoder tests', async () => {
   beforeAll(async () => {
@@ -67,7 +65,7 @@ describe('URL Encoder/Decoder tests', async () => {
     }
   });
 
-  testMethod('should properly render URL Encoder/Decoder', async () => {
+  test('should properly render URL Encoder/Decoder', async () => {
     expect(page).not.toBeNull();
     
     // Take a screenshot of the initial state
@@ -96,7 +94,7 @@ describe('URL Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
   });
 
-  testMethod('should decode URL encoded text', async () => {
+  test('should decode URL encoded text', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to URL Encoder/Decoder

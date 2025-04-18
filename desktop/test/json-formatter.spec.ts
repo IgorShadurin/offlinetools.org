@@ -31,10 +31,8 @@ let page: Page | null = null
 const TOOL_BUTTON_NAME = 'JSON Format/Validate';
 const COMPONENT_TITLE = 'JSON Format/Validate';
 
-// Skip all tests if running in GitHub Actions for now
-// until we properly fix the CI environment
+// Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
-const testMethod = isCI ? test.skip : test;
 
 describe('JSON Format/Validate tests', async () => {
   beforeAll(async () => {
@@ -68,7 +66,7 @@ describe('JSON Format/Validate tests', async () => {
     }
   });
 
-  testMethod('should load JSON formatter by default', async () => {
+  test('should load JSON formatter by default', async () => {
     expect(page).not.toBeNull();
     
     // Take screenshot of initial state
@@ -84,7 +82,7 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'component-loaded');
   });
 
-  testMethod('should format valid JSON correctly', async () => {
+  test('should format valid JSON correctly', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate (or ensure we're there)
@@ -108,7 +106,7 @@ describe('JSON Format/Validate tests', async () => {
     expect(formattedOutput).toContain('  ');
   });
 
-  testMethod('should show error for invalid JSON', async () => {
+  test('should show error for invalid JSON', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate
@@ -129,7 +127,7 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'validation-error', true);
   });
 
-  testMethod('should clear input and output when Clear button is clicked', async () => {
+  test('should clear input and output when Clear button is clicked', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate

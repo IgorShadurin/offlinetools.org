@@ -30,10 +30,8 @@ let page: Page | null = null
 const TOOL_BUTTON_NAME = 'Base64 String Encode/Decode';
 const COMPONENT_TITLE = 'Base64 Encoder/Decoder';
 
-// Skip all tests if running in GitHub Actions for now
-// until we properly fix the CI environment
+// Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
-const testMethod = isCI ? test.skip : test;
 
 describe('Base64 Encoder/Decoder tests', async () => {
   beforeAll(async () => {
@@ -67,7 +65,7 @@ describe('Base64 Encoder/Decoder tests', async () => {
     }
   });
 
-  testMethod('should switch to Base64 Encoder when clicked', async () => {
+  test('should switch to Base64 Encoder when clicked', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Base64 tool
@@ -93,7 +91,7 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'base64-encode', 'after-encoding', true);
   });
 
-  testMethod('should switch to Base64 Decoder when clicked', async () => {
+  test('should switch to Base64 Decoder when clicked', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Base64 tool

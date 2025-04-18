@@ -18,10 +18,8 @@ const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
 let page: Page | null = null
 
-// Skip all tests if running in GitHub Actions for now
-// until we properly fix the CI environment
+// Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
-const testMethod = isCI ? test.skip : test;
 
 describe('[electron-vite-react] e2e tests', async () => {
   beforeAll(async () => {
@@ -55,7 +53,7 @@ describe('[electron-vite-react] e2e tests', async () => {
     }
   });
 
-  testMethod('startup', async () => {
+  test('startup', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
     
@@ -66,7 +64,7 @@ describe('[electron-vite-react] e2e tests', async () => {
     expect(title).toBe('Offline Tools');
   });
 
-  testMethod('should load the tools sidebar correctly', async () => {
+  test('should load the tools sidebar correctly', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
     
