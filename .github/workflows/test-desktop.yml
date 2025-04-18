@@ -5,10 +5,14 @@ on:
     branches: [ master ]
     paths:
       - 'desktop/**'
+      - 'shared/**'
+      - '.github/workflows/test-desktop.yml'
   pull_request:
     branches: [ master ]
     paths:
       - 'desktop/**'
+      - 'shared/**'
+      - '.github/workflows/test-desktop.yml'
 
 jobs:
   test:
@@ -53,7 +57,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y xvfb libxtst-dev libpng-dev libxss-dev
+        sudo apt-get install -y xvfb libxtst-dev libpng-dev libxss-dev libgtk-3-0 libnss3 libasound2t64
 
     - name: Create screenshots directory
       run: mkdir -p test/screenshots
@@ -61,6 +65,7 @@ jobs:
     - name: Run tests with xvfb
       run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" pnpm test
       env:
+        CI: true
         DISPLAY: ':99.0'
         
     - name: Upload test screenshots on failure
