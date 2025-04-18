@@ -50,27 +50,39 @@ alwaysApply: false
       - Create a test file for each feature at `/desktop/test/{feature-name}.spec.ts`
       - Use shared test utilities from `/desktop/test/utils.ts`:
         ```tsx
-        import { launchElectronWithRetry, findButtonByText } from './utils';
+        import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './utils';
         ```
-      - Find elements by text content instead of indices:
+      - Use explicit waiting for elements instead of timeouts:
         ```tsx
-        // Find and click feature button by text
-        const featureButton = await findButtonByText(page, 'Feature Name');
-        expect(featureButton).not.toBeNull();
-        await featureButton.click();
+        // Wait for component to be visible
+        await page.waitForSelector('h3:has-text("Feature Name")', { 
+          state: 'visible',
+          timeout: isCI ? 5000 : 1500 
+        });
         ```
-      - Add proper waiting and error handling:
+      - Wait for content changes with waitForFunction:
         ```tsx
-        // Wait for component to load
-        await page.waitForTimeout(1500);
-
-        // Use try/catch with screenshots for better debugging
-        try {
-          // Test feature functionality
-        } catch (error) {
-          await page.screenshot({ path: path.join(__dirname, 'screenshots', 'failure.png') });
-          throw error;
-        }
+        // Wait for output to appear
+        await page.waitForFunction(() => {
+          const textareas = document.querySelectorAll('textarea');
+          return textareas.length > 1 && textareas[1].value !== '';
+        }, { timeout: 2000 });
+        ```
+      - Take screenshots at each step for better debugging:
+        ```tsx
+        await takeScreenshot(page, 'feature-name', 'step-description');
+        ```
+      - Find buttons by text content instead of selectors:
+        ```tsx
+        await (await findButtonByText(page, 'Button Text')).click();
+        ```
+      - Verify component content with assertions:
+        ```tsx
+        await expect(page.$eval('h3', el => el.textContent)).resolves.toBe('Expected Title');
         ```
       - Run tests with: `pnpm run test`
-      - Test should verify feature renders correctly and operates as expected
+      - Tests should verify that:
+        - The component renders correctly
+        - User interactions (click, input) work as expected
+        - The component produces correct output
+        - Error states are handled properly
