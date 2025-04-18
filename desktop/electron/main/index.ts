@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, Tray, Menu, nativeImage } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -40,6 +40,7 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let win: BrowserWindow | null = null
+let tray: Tray | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
 
@@ -83,7 +84,147 @@ async function createWindow() {
   update(win)
 }
 
-app.whenReady().then(createWindow)
+/**
+ * Creates the system tray icon and menu
+ */
+function createTray() {
+  // Use a fallback icon if the favicon.ico is not found
+  let iconPath = path.join(process.env.VITE_PUBLIC, 'favicon.ico')
+  let trayIcon;
+  
+  // Fallback to app.getAppPath() if the icon doesn't exist
+  try {
+    if (!require('fs').existsSync(iconPath)) {
+      console.log(`Icon not found at ${iconPath}, using default icon`)
+      iconPath = process.platform === 'win32'
+        ? path.join(app.getAppPath(), 'build', 'icon.ico')
+        : path.join(app.getAppPath(), 'build', 'icon.png')
+    }
+    
+    trayIcon = nativeImage.createFromPath(iconPath)
+    
+    // Check if the icon was loaded successfully
+    if (trayIcon.isEmpty()) {
+      console.log('Icon is empty, using template icon')
+      // Create a minimal template icon
+      trayIcon = createTemplateIcon()
+    }
+  } catch (err) {
+    console.error('Error loading icon:', err)
+    // Create a minimal template icon as fallback
+    trayIcon = createTemplateIcon()
+  }
+  
+  tray = new Tray(trayIcon)
+  tray.setToolTip('Offline Tools')
+  
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Open App', 
+      click: () => {
+        if (win) {
+          win.show()
+          win.focus()
+        } else {
+          createWindow()
+        }
+      } 
+    },
+    { type: 'separator' },
+    { 
+      label: 'Test Button 1', 
+      click: () => {
+        if (win) {
+          win.webContents.send('tray-action', 'test-button-1')
+        }
+      } 
+    },
+    { 
+      label: 'Test Button 2', 
+      click: () => {
+        if (win) {
+          win.webContents.send('tray-action', 'test-button-2')
+        }
+      } 
+    },
+    { type: 'separator' },
+    { 
+      label: 'Exit', 
+      click: () => {
+        app.quit()
+      } 
+    }
+  ])
+  
+  tray.setContextMenu(contextMenu)
+  
+  // Optional: Add click handler to open app on tray icon click
+  tray.on('click', () => {
+    if (win) {
+      if (win.isVisible()) {
+        win.focus()
+      } else {
+        win.show()
+      }
+    } else {
+      createWindow()
+    }
+  })
+}
+
+/**
+ * Creates a template icon when no icon file is available
+ * @returns {Electron.NativeImage} A template icon
+ */
+function createTemplateIcon() {
+  // Create a simple 16x16 icon
+  const size = 16
+  const icon = nativeImage.createEmpty()
+  
+  // Create a simple monochrome buffer for a 16x16 icon
+  // Each pixel is represented by 4 bytes (RGBA)
+  const buffer = Buffer.alloc(size * size * 4)
+  
+  // Fill with a square pattern
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const offset = (y * size + x) * 4
+      
+      // Create a simple square pattern
+      const isBorder = x === 0 || y === 0 || x === size - 1 || y === size - 1
+      const isInnerSquare = x > 3 && x < size - 4 && y > 3 && y < size - 4
+      
+      if (isBorder || isInnerSquare) {
+        // White pixel
+        buffer[offset] = 255     // R
+        buffer[offset + 1] = 255 // G
+        buffer[offset + 2] = 255 // B
+        buffer[offset + 3] = 255 // A
+      } else {
+        // Black pixel
+        buffer[offset] = 0       // R
+        buffer[offset + 1] = 0   // G
+        buffer[offset + 2] = 0   // B
+        buffer[offset + 3] = 255 // A
+      }
+    }
+  }
+  
+  // Add the buffer as a representation to the icon
+  icon.addRepresentation({
+    scaleFactor: 1.0,
+    width: size,
+    height: size,
+    buffer: buffer
+  })
+  
+  return icon
+}
+
+app.whenReady().then(() => {
+  createWindow()
+  createTray()
+})
 
 app.on('window-all-closed', () => {
   win = null
@@ -121,5 +262,43 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
   } else {
     childWindow.loadFile(indexHtml, { hash: arg })
+  }
+})
+
+// Handle window minimize to tray
+ipcMain.handle('minimize-to-tray', () => {
+  if (win) {
+    win.hide()
+  }
+})
+
+// Update tray menu dynamically
+ipcMain.handle('update-tray-menu', (_, items) => {
+  if (tray) {
+    const template = [
+      { 
+        label: 'Open App', 
+        click: () => {
+          if (win) {
+            win.show()
+            win.focus()
+          } else {
+            createWindow()
+          }
+        } 
+      },
+      { type: 'separator' },
+      ...items,
+      { type: 'separator' },
+      { 
+        label: 'Exit', 
+        click: () => {
+          app.quit()
+        } 
+      }
+    ]
+    
+    const contextMenu = Menu.buildFromTemplate(template)
+    tray.setContextMenu(contextMenu)
   }
 })

@@ -2,19 +2,23 @@ import { useState } from 'react'
 import { 
   BracketsIcon, 
   Hash,
-  Link2Icon
+  Link2Icon,
+  LayoutGridIcon
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
 import { ToolPlaceholder } from './components/tool-placeholder'
 import { Base64Codec } from './components/base64-codec'
 import { UrlEncoder } from './components/url-encoder'
+import { TrayControls } from './components/tray-controls'
+import { TrayNotification } from './components/ui/tray-notification'
 
 // List of tools
 const tools: Tool[] = [
   { id: 'json-formatter', name: 'JSON Format/Validate', icon: <BracketsIcon size={16} /> },
   { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
+  { id: 'tray-controls', name: 'Tray Controls', icon: <LayoutGridIcon size={16} /> },
 ]
 
 /**
@@ -39,6 +43,8 @@ function App() {
           <Base64Codec className="min-h-full" />
         ) : selectedTool === 'url-encoder' ? (
           <UrlEncoder className="min-h-full" />
+        ) : selectedTool === 'tray-controls' ? (
+          <TrayControls className="min-h-full" />
         ) : (
           <ToolPlaceholder 
             title={tools.find(t => t.id === selectedTool)?.name || ''}
@@ -46,6 +52,9 @@ function App() {
           />
         )}
       </div>
+      
+      {/* Tray notification component */}
+      <TrayNotification />
     </main>
   )
 }
