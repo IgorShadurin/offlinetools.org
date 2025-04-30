@@ -39,56 +39,6 @@ export const onlineTools = [
     title: "File Generator",
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns."
-  },
-  {
-    title: "Tool 2",
-    path: "/tools/tool2",
-    description: "Description for Tool 2"
-  },
-  {
-    title: "Tool 3",
-    path: "/tools/tool3",
-    description: "Description for Tool 3"
-  },
-  {
-    title: "Tool 4",
-    path: "/tools/tool4",
-    description: "Description for Tool 4"
-  },
-  {
-    title: "Tool 5",
-    path: "/tools/tool5",
-    description: "Description for Tool 5"
-  },
-  {
-    title: "Tool 6",
-    path: "/tools/tool6",
-    description: "Description for Tool 6"
-  },
-  {
-    title: "Tool 7",
-    path: "/tools/tool7",
-    description: "Description for Tool 7"
-  },
-  {
-    title: "Tool 8",
-    path: "/tools/tool8",
-    description: "Description for Tool 8"
-  },
-  {
-    title: "Tool 9",
-    path: "/tools/tool9",
-    description: "Description for Tool 9"
-  },
-  {
-    title: "Tool 10",
-    path: "/tools/tool10",
-    description: "Description for Tool 10"
-  },
-  {
-    title: "Tool 11",
-    path: "/tools/tool11",
-    description: "Description for Tool 11"
   }
 ]
 

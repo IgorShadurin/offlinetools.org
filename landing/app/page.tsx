@@ -5,11 +5,11 @@ import { Container } from "@/components/ui/container"
 import { FeatureItem } from "@/components/feature-item"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
-import { OnlineToolsGrid } from "@/components/online-tools-grid"
 import { Section } from "@/components/ui/section"
 import { Download } from "lucide-react"
 import Link from "next/link"
 import { StructuredData } from "@/components/structured-data"
+import { onlineTools } from "@/components/online-tools-grid"
 
 export default function Home() {
   return (
@@ -57,33 +57,25 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-center mb-4">🧰 What&apos;s in the box?</h2>
             <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
               OfflineTools provides powerful utilities for developers in a single, well-designed desktop application.
+              All tools are also available online for free use in your browser.
             </p>
             <div className="grid gap-8 md:grid-cols-3">
-              <FeatureItem
-                title="File Generator"
-                description="Create files of any size from 1KB to 10GB with precise control over content. Ideal for testing file handling, compression, and network transfers."
-                icon="/images/placeholder.svg"
-              />
-              <FeatureItem
-                title="JSON Formatter"
-                description="Format, validate, and beautify JSON data with customizable indentation options."
-                icon="/images/placeholder.svg"
-              />
-              <FeatureItem
-                title="Base64 Encoder/Decoder"
-                description="Encode/decode text and binary files (images, PDFs) to/from Base64 format."
-                icon="/images/placeholder.svg"
-              />
-              <FeatureItem
-                title="URL Encoder/Decoder"
-                description="Encode/decode URLs or text components for safe web transmission using percent-encoding."
-                icon="/images/placeholder.svg"
-              />
-              <FeatureItem
-                title="Hash Generator & Comparer"
-                description="Generate MD5, SHA1, SHA256/512 hashes for text or files and compare against expected values."
-                icon="/images/placeholder.svg"
-              />
+              {onlineTools.map((tool, index) => (
+                <FeatureItem
+                  key={index}
+                  title={tool.title}
+                  description={tool.description}
+                  icon="/images/placeholder.svg"
+                >
+                  <div className="mt-4">
+                    <Button variant="link" asChild className="h-auto p-0">
+                      <Link href={tool.path}>
+                        Try online →
+                      </Link>
+                    </Button>
+                  </div>
+                </FeatureItem>
+              ))}
             </div>
           </Container>
         </Section>
@@ -119,9 +111,6 @@ export default function Home() {
             </div>
           </Container>
         </Section>
-
-        {/* Online Tools Grid */}
-        <OnlineToolsGrid />
 
         {/* CTA */}
         <Section>

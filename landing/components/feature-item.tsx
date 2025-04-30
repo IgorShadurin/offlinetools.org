@@ -10,11 +10,13 @@ export function FeatureItem({
   description,
   icon,
   className,
+  children,
   ...props
 }: {
   title: string
   description: string
   icon: string
+  children?: React.ReactNode
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
@@ -35,6 +37,7 @@ export function FeatureItem({
       </div>
       <h3 className="mb-2 text-xl font-semibold">{title}</h3>
       <p className="text-muted-foreground">{description}</p>
+      {children}
     </div>
   )
 } 
