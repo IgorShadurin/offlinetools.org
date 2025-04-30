@@ -56,6 +56,11 @@ export default function Home() {
             />
             <div className="grid gap-8 md:grid-cols-3">
               <FeatureItem
+                title="File Generator"
+                description="Create files of any size from 1KB to 10GB with precise control over content. Ideal for testing file handling, compression, and network transfers."
+                icon="/images/placeholder.svg"
+              />
+              <FeatureItem
                 title="JSON Formatter"
                 description="Format, validate, and transform JSON data with a powerful editing interface."
                 icon="/images/placeholder.svg"

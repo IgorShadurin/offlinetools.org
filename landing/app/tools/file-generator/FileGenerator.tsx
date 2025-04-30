@@ -29,6 +29,7 @@ import {
 import { Slider } from "@/components/ui/slider"
 import { useSearchParams } from "next/navigation"
 import { Progress } from "@/components/ui/progress"
+import FileGeneratorExplanation from "./FileGeneratorExplanation"
 
 export default function FileGenerator() {
   const searchParams = useSearchParams()
@@ -500,7 +501,7 @@ export default function FileGenerator() {
           </Link>
         </div>
         
-        <div className="p-6 border rounded-lg bg-card text-card-foreground shadow-sm">
+        <div className="p-6 border rounded-lg bg-card text-card-foreground shadow-sm mb-8">
           <div className="space-y-6">
             {/* File Size & Extension Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -708,6 +709,9 @@ export default function FileGenerator() {
             />
           </div>
         </div>
+        
+        {/* Use the new explanation component */}
+        <FileGeneratorExplanation />
       </Container>
     </>
   )
