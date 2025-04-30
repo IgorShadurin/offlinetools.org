@@ -149,12 +149,12 @@ export function detectClipboardTools(clipboardData: {
     // Create a prioritized array of tools based on content detection
     const prioritizedTools: Tool[] = [];
     
-    // Only add specialized format tools if they are truly detected
+    // Add other specialized format tools if they are detected
     if (isLikelyJson(content)) {
       prioritizedTools.push(Tool.JSON_FORMATTER);
     }
     
-    if (isLikelyUrl(content)) {
+    if (isLikelyUrl(content) && !prioritizedTools.includes(Tool.URL_ENCODER)) {
       prioritizedTools.push(Tool.URL_ENCODER);
     }
     
@@ -179,7 +179,10 @@ export function detectClipboardTools(clipboardData: {
         }
       }
     });
-    
+
+    // Always add URL_ENCODER as the first tool for string type
+    prioritizedTools.push(Tool.URL_ENCODER);
+
     return prioritizedTools;
   }
 

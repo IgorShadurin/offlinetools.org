@@ -51,7 +51,7 @@ describe('Clipboard Detector', () => {
     });
     
     // Test JSON content
-    it('should include JSON formatter for valid JSON content', () => {
+    it('should include JSON formatter for valid JSON content and include URL_ENCODER', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: '{"name": "Test", "value": 123}'
@@ -59,10 +59,11 @@ describe('Clipboard Detector', () => {
       const result = detectClipboardTools(options);
       
       expect(result).toContain(Tool.JSON_FORMATTER);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test malformed JSON content
-    it('should not include JSON formatter for malformed JSON', () => {
+    it('should not include JSON formatter for malformed JSON but include URL_ENCODER', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: '{"name": "Test", "value": 123'  // Missing closing brace
@@ -70,10 +71,11 @@ describe('Clipboard Detector', () => {
       const result = detectClipboardTools(options);
       
       expect(result).not.toContain(Tool.JSON_FORMATTER);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test valid Base64 content
-    it('should include base64-codec for valid Base64 content', () => {
+    it('should include base64-codec for valid Base64 content and include URL_ENCODER', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'SGVsbG8gV29ybGQ=' // "Hello World" in Base64
@@ -81,10 +83,11 @@ describe('Clipboard Detector', () => {
       const result = detectClipboardTools(options);
       
       expect(result).toContain(Tool.BASE64_CODEC);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test invalid Base64 content (invalid characters)
-    it('should not include base64-codec for content with invalid Base64 characters', () => {
+    it('should not include base64-codec for content with invalid Base64 characters but include URL_ENCODER', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'SGVsbG8gV29ybGQ*' // Not valid Base64 (has *)
@@ -92,10 +95,11 @@ describe('Clipboard Detector', () => {
       const result = detectClipboardTools(options);
       
       expect(result).not.toContain(Tool.BASE64_CODEC);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test invalid Base64 content (invalid length)
-    it('should not include base64-codec for content with invalid Base64 length', () => {
+    it('should not include base64-codec for content with invalid Base64 length but include URL_ENCODER', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'SGVsbG' // Length not divisible by 4
@@ -103,10 +107,11 @@ describe('Clipboard Detector', () => {
       const result = detectClipboardTools(options);
       
       expect(result).not.toContain(Tool.BASE64_CODEC);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test too short Base64-like content
-    it('should not include base64-codec for very short content even if it matches Base64 format', () => {
+    it('should not include base64-codec for very short content even if it matches Base64 format but include URL_ENCODER', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'abcd' // Valid Base64 format but too short to be likely
@@ -114,52 +119,67 @@ describe('Clipboard Detector', () => {
       const result = detectClipboardTools(options);
       
       expect(result).not.toContain(Tool.BASE64_CODEC);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test URL content
-    it('should include url-encoder for valid URL content', () => {
+    it('should include url-encoder as first tool for valid URL content', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'https://example.com/path?query=value'
       };
       const result = detectClipboardTools(options);
       
+      expect(result[0]).toBe(Tool.URL_ENCODER);
       expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test invalid URL-like content
-    it('should not include url-encoder for content that looks like URL but is invalid', () => {
+    it('should include URL_ENCODER for content that looks like URL but is invalid', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'http://abc' // Too short to be a valid URL
       };
       const result = detectClipboardTools(options);
       
-      expect(result).not.toContain(Tool.URL_ENCODER);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test URL-like content with spaces
-    it('should not include url-encoder for URL-like content with spaces', () => {
+    it('should include URL_ENCODER for URL-like content with spaces', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'https://example.com/path with spaces'
       };
       const result = detectClipboardTools(options);
       
-      expect(result).not.toContain(Tool.URL_ENCODER);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test plain text content
-    it('should include text-hash-generator, file-hash-compare and binary-base64-codec for any string content', () => {
+    it('should include URL_ENCODER plus text-hash-generator, file-hash-compare and binary-base64-codec for any string content', () => {
       const options: ClipboardDetectorOptions = { 
         type: 'string', 
         content: 'Just a regular text string'
       };
       const result = detectClipboardTools(options);
       
+      expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
+    });
+    
+    // Test plain text with default to URL Encoder
+    it('should return URL_ENCODER as a tool for plain text like "hello world"', () => {
+      const options: ClipboardDetectorOptions = { 
+        type: 'string', 
+        content: 'hello world'
+      };
+      const result = detectClipboardTools(options);
+      
+      expect(result.length).toBeGreaterThan(0);
+      expect(result).toContain(Tool.URL_ENCODER);
     });
     
     // Test null options
