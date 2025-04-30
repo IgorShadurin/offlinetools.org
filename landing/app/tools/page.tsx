@@ -1,9 +1,8 @@
 "use client"
 
 import { Container } from "@/components/ui/container"
-import { SectionHeading } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardDescription, CardFooter, CardHeader } from "@/components/ui/card"
 import Link from "next/link"
 import { onlineTools } from "@/components/online-tools-grid"
 import { ArrowDownToLine, ShieldCheck, WifiOff, Zap } from "lucide-react"
@@ -12,9 +11,7 @@ export default function ToolsPage() {
   return (
     <>
       <Container className="py-8 md:py-12">
-        <SectionHeading
-          title="Online Tools"
-        />
+        <h1 className="text-4xl font-bold text-center mb-6">Available Tools</h1>
         
         {/* Why Go Offline Section */}
         <div className="mb-12 p-8 bg-muted rounded-xl">
@@ -31,7 +28,7 @@ export default function ToolsPage() {
             <Card className="bg-background shadow-sm">
               <CardHeader>
                 <ShieldCheck className="h-8 w-8 text-primary mb-2" />
-                <CardTitle>Complete Privacy</CardTitle>
+                <h3 className="text-xl font-semibold">Complete Privacy</h3>
                 <CardDescription>
                   Your data never leaves your device. Process sensitive information without cloud transmission or server storage.
                 </CardDescription>
@@ -41,7 +38,7 @@ export default function ToolsPage() {
             <Card className="bg-background shadow-sm">
               <CardHeader>
                 <WifiOff className="h-8 w-8 text-primary mb-2" />
-                <CardTitle>Work Anywhere</CardTitle>
+                <h3 className="text-xl font-semibold">Work Anywhere</h3>
                 <CardDescription>
                   No internet connection required. Process your data in remote locations, during travel, or in secure environments.
                 </CardDescription>
@@ -51,7 +48,7 @@ export default function ToolsPage() {
             <Card className="bg-background shadow-sm">
               <CardHeader>
                 <Zap className="h-8 w-8 text-primary mb-2" />
-                <CardTitle>Superior Performance</CardTitle>
+                <h3 className="text-xl font-semibold">Superior Performance</h3>
                 <CardDescription>
                   Process large files faster with native performance, without upload/download delays or bandwidth limitations.
                 </CardDescription>
@@ -80,11 +77,12 @@ export default function ToolsPage() {
           </div>
         </div>
 
+        <h2 className="text-3xl font-bold text-center mb-6">Online Tool Collection</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {onlineTools.map((tool, index) => (
             <Card key={index} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <CardTitle className="text-xl">{tool.title}</CardTitle>
+                <h3 className="text-xl font-semibold">{tool.title}</h3>
                 <CardDescription>
                   {tool.description}
                 </CardDescription>

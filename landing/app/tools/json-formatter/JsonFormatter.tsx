@@ -1,7 +1,6 @@
 "use client"
 
 import { Container } from "@/components/ui/container"
-import { SectionHeading } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -78,10 +77,10 @@ export default function JsonFormatter() {
   return (
     <>
       <Container className="py-8 md:py-12">
-        <SectionHeading
-          title="JSON Formatter"
-          description="Format and beautify your JSON with customizable indentation options."
-        />
+        <h1 className="text-4xl font-bold text-center mb-3">JSON Formatter</h1>
+        <p className="text-center text-muted-foreground text-lg max-w-3xl mx-auto mb-10">
+          Format and beautify your JSON with customizable indentation options.
+        </p>
 
         <div className="space-y-4">
           {/* Headers Row */}

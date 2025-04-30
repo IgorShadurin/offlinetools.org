@@ -6,7 +6,7 @@ import { FeatureItem } from "@/components/feature-item"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { OnlineToolsGrid } from "@/components/online-tools-grid"
-import { Section, SectionHeading } from "@/components/ui/section"
+import { Section } from "@/components/ui/section"
 import { Download } from "lucide-react"
 import Link from "next/link"
 
@@ -50,10 +50,10 @@ export default function Home() {
         {/* Features Section */}
         <Section id="features" className="bg-gray-50 dark:bg-gray-900/50">
           <Container>
-            <SectionHeading
-              title="🧰 What's in the box?"
-              description="OfflineTools provides powerful utilities for developers in a single, well-designed desktop application."
-            />
+            <h2 className="text-3xl font-bold text-center mb-4">🧰 What&apos;s in the box?</h2>
+            <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+              OfflineTools provides powerful utilities for developers in a single, well-designed desktop application.
+            </p>
             <div className="grid gap-8 md:grid-cols-3">
               <FeatureItem
                 title="File Generator"
@@ -87,10 +87,10 @@ export default function Home() {
         {/* Use Cases */}
         <Section id="use-cases">
           <Container>
-            <SectionHeading
-              title="For every developer workflow"
-              description="OfflineTools adapts to how you work, whether you're a frontend developer, backend engineer, or DevOps specialist."
-            />
+            <h2 className="text-3xl font-bold text-center mb-4">For every developer workflow</h2>
+            <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+              OfflineTools adapts to how you work, whether you&apos;re a frontend developer, backend engineer, or DevOps specialist.
+            </p>
             <div className="grid gap-10 md:grid-cols-2">
               <div className="rounded-lg border bg-background p-6 shadow-sm">
                 <h3 className="text-2xl font-semibold mb-4">Frontend Developers</h3>
