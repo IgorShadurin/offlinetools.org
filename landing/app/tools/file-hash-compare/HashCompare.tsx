@@ -37,6 +37,7 @@ import {
   compareHashes
 } from "shared"
 import Link from "next/link"
+import HashCompareExplanation from "./HashCompareExplanation"
 
 export default function HashCompare() {
   // Common state
@@ -411,6 +412,11 @@ export default function HashCompare() {
             )}
           </TabsContent>
         </Tabs>
+      </Container>
+
+      {/* Add the explanation section */}
+      <Container className="py-8 md:py-12">
+        <HashCompareExplanation />
       </Container>
     </>
   )

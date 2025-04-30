@@ -18,6 +18,7 @@ import { encodeUrl, decodeUrl } from "shared"
 import { useState } from "react"
 import { AlertCircle, Check, Copy } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import UrlEncoderExplanation from "./UrlEncoderExplanation"
 
 export default function UrlEncoder() {
   const [inputText, setInputText] = useState("")
@@ -194,6 +195,11 @@ export default function UrlEncoder() {
             </div>
           </div>
         </div>
+      </Container>
+
+      {/* Add the explanation section */}
+      <Container className="py-8 md:py-12">
+        <UrlEncoderExplanation />
       </Container>
     </>
   )

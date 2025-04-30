@@ -62,17 +62,22 @@ export default function Home() {
               />
               <FeatureItem
                 title="JSON Formatter"
-                description="Format, validate, and transform JSON data with a powerful editing interface."
+                description="Format, validate, and beautify JSON data with customizable indentation options."
                 icon="/images/placeholder.svg"
               />
               <FeatureItem
                 title="Base64 Encoder/Decoder"
-                description="Quickly encode and decode Base64 strings with support for various formats."
+                description="Encode/decode text and binary files (images, PDFs) to/from Base64 format."
                 icon="/images/placeholder.svg"
               />
               <FeatureItem
-                title="URL Parser"
-                description="Parse and analyze URL components with an intuitive visual interface."
+                title="URL Encoder/Decoder"
+                description="Encode/decode URLs or text components for safe web transmission using percent-encoding."
+                icon="/images/placeholder.svg"
+              />
+              <FeatureItem
+                title="Hash Generator & Comparer"
+                description="Generate MD5, SHA1, SHA256/512 hashes for text or files and compare against expected values."
                 icon="/images/placeholder.svg"
               />
             </div>

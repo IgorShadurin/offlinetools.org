@@ -17,6 +17,7 @@ import { formatJson, JsonIndentationType } from "shared"
 import { useState } from "react"
 import { AlertCircle, Check, Copy } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import JsonFormatterExplanation from "./JsonFormatterExplanation"
 
 export default function JsonFormatter() {
   const [inputJson, setInputJson] = useState("")
@@ -191,6 +192,11 @@ export default function JsonFormatter() {
             </div>
           </div>
         </div>
+      </Container>
+
+      {/* Add the explanation section */}
+      <Container className="py-8 md:py-12">
+        <JsonFormatterExplanation />
       </Container>
     </>
   )

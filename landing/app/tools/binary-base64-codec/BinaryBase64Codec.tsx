@@ -11,6 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { encodeBinaryBase64, decodeBinaryBase64 } from "shared"
 import { useState, useRef, ChangeEvent } from "react"
 import Link from "next/link"
+import BinaryBase64CodecExplanation from "./BinaryBase64CodecExplanation"
 
 export default function BinaryBase64Codec() {
   const [mode, setMode] = useState<"encode" | "decode">("encode")
@@ -325,6 +326,11 @@ export default function BinaryBase64Codec() {
             </div>
           )}
         </div>
+      </Container>
+
+      {/* Add the explanation section */}
+      <Container className="py-8 md:py-12">
+        <BinaryBase64CodecExplanation />
       </Container>
     </>
   )
