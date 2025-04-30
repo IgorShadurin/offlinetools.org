@@ -9,12 +9,16 @@ import { OnlineToolsGrid } from "@/components/online-tools-grid"
 import { Section } from "@/components/ui/section"
 import { Download } from "lucide-react"
 import Link from "next/link"
+import { StructuredData } from "@/components/structured-data"
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
+        {/* Add specific home page structured data */}
+        <StructuredData type="home" />
+        
         {/* Hero Section */}
         <section className="relative py-20 md:py-28">
           <Container className="flex flex-col items-center text-center">

@@ -1,4 +1,5 @@
 import JsonFormatter from "./JsonFormatter"
+import { StructuredData } from "@/components/structured-data"
 
 export const metadata = {
   title: "JSON Formatter",
@@ -6,5 +7,16 @@ export const metadata = {
 }
 
 export default function JsonFormatterPage() {
-  return <JsonFormatter />
+  return (
+    <>
+      <StructuredData 
+        type="tool" 
+        toolName="JSON Formatter"
+        toolDescription="Format, validate, and beautify JSON data with customizable indentation options for better readability and debugging."
+        toolUrl="/tools/json-formatter"
+        toolCategory="DeveloperTool"
+      />
+      <JsonFormatter />
+    </>
+  )
 } 

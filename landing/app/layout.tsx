@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { FeedbackProvider } from "@/components/feedback-provider";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { StructuredData } from "@/components/structured-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,6 +68,7 @@ export default function RootLayout({
         <FeedbackProvider>{children}</FeedbackProvider>
         <Analytics />
         <GoogleAnalytics />
+        <StructuredData />
       </body>
     </html>
   );

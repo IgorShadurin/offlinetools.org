@@ -6,10 +6,12 @@ import { Card, CardDescription, CardFooter, CardHeader } from "@/components/ui/c
 import Link from "next/link"
 import { onlineTools } from "@/components/online-tools-grid"
 import { ArrowDownToLine, ShieldCheck, WifiOff, Zap } from "lucide-react"
+import { StructuredData } from "@/components/structured-data"
 
 export default function ToolsPage() {
   return (
     <>
+      <StructuredData type="tools" />
       <Container className="py-8 md:py-12">
         <h1 className="text-4xl font-bold text-center mb-6">Available Tools</h1>
         
