@@ -14,7 +14,7 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Link as LinkIcon, AlertCircle, Download } from "lucide-react"
+import { Link as LinkIcon, AlertCircle, Download, Share, Check } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { 
@@ -25,15 +25,37 @@ import {
   COMMON_EXTENSIONS,
 } from "shared"
 import { Slider } from "@/components/ui/slider"
+import { useSearchParams } from "next/navigation"
 
 export default function FileGenerator() {
+  const searchParams = useSearchParams()
+
   // Form state
-  const [selectedSize, setSelectedSize] = useState("1")
-  const [unit, setUnit] = useState<FileSizeUnit>(FileSizeUnit.KB)
-  const [extension, setExtension] = useState("txt")
-  const [contentType, setContentType] = useState<FileContentType>(FileContentType.Random)
-  const [customHexValue, setCustomHexValue] = useState("FF")
+  const [selectedSize, setSelectedSize] = useState(() => {
+    return searchParams.get("size") || "1"
+  })
+  const [unit, setUnit] = useState<FileSizeUnit>(() => {
+    return (searchParams.get("unit") as FileSizeUnit) || FileSizeUnit.KB
+  })
+  const [extension, setExtension] = useState(() => {
+    return searchParams.get("ext") || "txt"
+  })
+  const [contentType, setContentType] = useState<FileContentType>(() => {
+    const param = searchParams.get("content")
+    if (param === "zeros") return FileContentType.Zeros
+    if (param === "hex") return FileContentType.CustomHex
+    return FileContentType.Random
+  })
+  const [customHexValue, setCustomHexValue] = useState(() => {
+    return searchParams.get("hex") || "FF"
+  })
   const [sliderValue, setSliderValue] = useState(0) // 0-100 slider value
+  const [customFilename, setCustomFilename] = useState(() => {
+    return searchParams.get("filename") || "file"
+  })
+  const [showCustomExtension, setShowCustomExtension] = useState(() => {
+    return !COMMON_EXTENSIONS.includes(extension)
+  })
   
   // Computed values
   const [sizeInBytes, setSizeInBytes] = useState<number>(1024) // Default to 1KB
@@ -43,6 +65,8 @@ export default function FileGenerator() {
   const [error, setError] = useState<string | null>(null)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
   const [downloadFilename, setDownloadFilename] = useState<string>("file.txt")
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
   
   // Reference to download link
   const downloadLinkRef = useRef<HTMLAnchorElement>(null)
@@ -55,6 +79,9 @@ export default function FileGenerator() {
     { value: 1, unit: FileSizeUnit.MB },
     { value: 10, unit: FileSizeUnit.MB },
     { value: 100, unit: FileSizeUnit.MB },
+    { value: 1, unit: FileSizeUnit.GB },
+    { value: 5, unit: FileSizeUnit.GB },
+    { value: 10, unit: FileSizeUnit.GB },
   ], [])
   
   // Convert slider value (0-100) to size and unit
@@ -87,23 +114,49 @@ export default function FileGenerator() {
       }
     }
     
-    // If units are different (KB to MB), use a logarithmic scale
-    if (segmentPosition < 0.5) {
-      // First half: stay in KB and approach 1000
-      const position = segmentPosition * 2
-      const size = lowerPreset.value + position * (1000 - lowerPreset.value)
-      return { 
-        size: Math.round(size).toString(), 
-        unit: FileSizeUnit.KB 
+    // If units are different, handle transitions
+    if (lowerPreset.unit === FileSizeUnit.KB && upperPreset.unit === FileSizeUnit.MB) {
+      if (segmentPosition < 0.5) {
+        // First half: stay in KB and approach 1000
+        const position = segmentPosition * 2
+        const size = lowerPreset.value + position * (1000 - lowerPreset.value)
+        return { 
+          size: Math.round(size).toString(), 
+          unit: FileSizeUnit.KB 
+        }
+      } else {
+        // Second half: switch to MB and go from 1 to upperPreset.value
+        const position = (segmentPosition - 0.5) * 2
+        const size = 1 + position * (upperPreset.value - 1)
+        return { 
+          size: Math.round(size).toString(), 
+          unit: FileSizeUnit.MB 
+        }
       }
-    } else {
-      // Second half: switch to MB and go from 1 to upperPreset.value
-      const position = (segmentPosition - 0.5) * 2
-      const size = 1 + position * (upperPreset.value - 1)
-      return { 
-        size: Math.round(size).toString(), 
-        unit: FileSizeUnit.MB 
+    } else if (lowerPreset.unit === FileSizeUnit.MB && upperPreset.unit === FileSizeUnit.GB) {
+      if (segmentPosition < 0.5) {
+        // First half: stay in MB and approach 1000
+        const position = segmentPosition * 2
+        const size = lowerPreset.value + position * (1000 - lowerPreset.value)
+        return { 
+          size: Math.round(size).toString(), 
+          unit: FileSizeUnit.MB 
+        }
+      } else {
+        // Second half: switch to GB and go from 1 to upperPreset.value
+        const position = (segmentPosition - 0.5) * 2
+        const size = 1 + position * (upperPreset.value - 1)
+        return { 
+          size: Math.round(size).toString(), 
+          unit: FileSizeUnit.GB 
+        }
       }
+    }
+    
+    // Fallback for other unit transitions
+    return { 
+      size: lowerPreset.value.toString(), 
+      unit: lowerPreset.unit 
     }
   }
   
@@ -143,6 +196,21 @@ export default function FileGenerator() {
           return i * segmentSize + progress * segmentSize
         }
       }
+      
+      // If between MB and GB
+      if (current.unit === FileSizeUnit.MB && next.unit === FileSizeUnit.GB) {
+        const segmentSize = 100 / (sizePresets.length - 1)
+        
+        if (unit === FileSizeUnit.MB && numSize > current.value && numSize <= 1000) {
+          // First half: MB increasing to 1000
+          const progress = (numSize - current.value) / (1000 - current.value) * 0.5
+          return i * segmentSize + progress * segmentSize
+        } else if (unit === FileSizeUnit.GB && numSize >= 1 && numSize < next.value) {
+          // Second half: GB increasing from 1
+          const progress = 0.5 + (numSize - 1) / (next.value - 1) * 0.5
+          return i * segmentSize + progress * segmentSize
+        }
+      }
     }
     
     // If it's the last preset
@@ -152,13 +220,16 @@ export default function FileGenerator() {
     }
     
     // Default fallback - clamp the value to valid range
-    if (unit === FileSizeUnit.MB && numSize > 100) return 100
+    if (unit === FileSizeUnit.GB && numSize > 10) return 100
     if (unit === FileSizeUnit.KB && numSize < 1) return 0
     
     // For values outside the interpolation ranges, make a best guess
-    const sizeInBytes = numSize * (unit === FileSizeUnit.KB ? 1024 : 1024 * 1024)
+    const sizeInBytes = numSize * 
+      (unit === FileSizeUnit.KB ? 1024 : 
+       unit === FileSizeUnit.MB ? 1024 * 1024 : 
+       1024 * 1024 * 1024)
     const minBytes = 1 * 1024 // 1 KB
-    const maxBytes = 100 * 1024 * 1024 // 100 MB
+    const maxBytes = 10 * 1024 * 1024 * 1024 // 10 GB
     const percentage = Math.log(sizeInBytes / minBytes) / Math.log(maxBytes / minBytes)
     return Math.max(0, Math.min(100, percentage * 100))
   }, [sizePresets])
@@ -200,13 +271,15 @@ export default function FileGenerator() {
         size = numSize
       } else if (unit === FileSizeUnit.KB) {
         size = numSize * 1024
-      } else {
+      } else if (unit === FileSizeUnit.MB) {
         size = numSize * 1024 * 1024
+      } else {
+        size = numSize * 1024 * 1024 * 1024
       }
       
-      // Cap at 100MB
-      if (size > 100 * 1024 * 1024) {
-        throw new Error("Size cannot exceed 100MB")
+      // Cap at 10GB
+      if (size > 10 * 1024 * 1024 * 1024) {
+        throw new Error("Size cannot exceed 10GB")
       }
       
       setSizeInBytes(size)
@@ -219,7 +292,7 @@ export default function FileGenerator() {
     }
   }, [selectedSize, unit])
   
-  // Update filename when extension changes
+  // Update filename when extension or custom filename changes
   useEffect(() => {
     let ext = extension
     
@@ -233,8 +306,8 @@ export default function FileGenerator() {
       ext = "bin"
     }
     
-    setDownloadFilename(`file.${ext}`)
-  }, [extension])
+    setDownloadFilename(`${customFilename}.${ext}`)
+  }, [extension, customFilename])
   
   // Cleanup URLs when component unmounts
   useEffect(() => {
@@ -244,6 +317,36 @@ export default function FileGenerator() {
       }
     }
   }, [downloadUrl])
+  
+  // Generate shareable link with current parameters
+  const generateShareableLink = () => {
+    const params = new URLSearchParams()
+    params.set("size", selectedSize)
+    params.set("unit", unit)
+    params.set("ext", extension)
+    params.set("filename", customFilename)
+    
+    if (contentType === FileContentType.Zeros) {
+      params.set("content", "zeros")
+    } else if (contentType === FileContentType.CustomHex) {
+      params.set("content", "hex")
+      params.set("hex", customHexValue)
+    } else {
+      params.set("content", "random")
+    }
+    
+    const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`
+    setShareUrl(url)
+    return url
+  }
+  
+  // Copy shareable link to clipboard
+  const copyShareableLink = () => {
+    const url = shareUrl || generateShareableLink()
+    navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
   
   // Generate the file with current settings and download it immediately
   const handleGenerateFile = () => {
@@ -283,14 +386,22 @@ export default function FileGenerator() {
         ...(contentType === FileContentType.CustomHex && { customHexValue })
       }
       
-      const content = generateFileContent(options)
+      // For large files, show a warning message
+      if (size > 100 && (unit === FileSizeUnit.MB || unit === FileSizeUnit.GB)) {
+        setError("Generating large file. This may take a moment...")
+      }
+      
+      const blob = generateFileContent(options)
       
       // Create download URL
-      const { url } = generateFileDownloadUrl(content, ext)
+      const { url } = generateFileDownloadUrl(blob, ext)
       
       // Update state
       setDownloadUrl(url)
       setError(null)
+      
+      // Generate shareable URL
+      generateShareableLink()
       
       // Trigger download immediately
       if (downloadLinkRef.current) {
@@ -301,6 +412,16 @@ export default function FileGenerator() {
     } catch (error) {
       setError((error as Error).message)
       setDownloadUrl(null)
+    }
+  }
+  
+  // Handle extension dropdown change
+  const handleExtensionChange = (value: string) => {
+    if (value === "custom") {
+      setShowCustomExtension(true)
+    } else {
+      setExtension(value)
+      setShowCustomExtension(false)
     }
   }
   
@@ -326,34 +447,31 @@ export default function FileGenerator() {
               {/* Size Controls */}
               <div>
                 <Label htmlFor="size" className="block mb-2">File Size</Label>
-                <div className="flex flex-wrap gap-4 mb-4">
-                  <div className="w-full sm:w-1/2">
-                    <Input
-                      id="size"
-                      type="number"
-                      min="1"
-                      step="1"
-                      value={selectedSize}
-                      onChange={(e) => setSelectedSize(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
+                <div className="flex gap-4 mb-4 w-full">
+                  <Input
+                    id="size"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    className="flex-grow"
+                  />
                   
-                  <div className="w-full sm:w-1/3">
-                    <Select 
-                      value={unit} 
-                      onValueChange={(value) => setUnit(value as FileSizeUnit)}
-                    >
-                      <SelectTrigger id="unit">
-                        <SelectValue placeholder="Select unit" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={FileSizeUnit.Bytes}>Bytes</SelectItem>
-                        <SelectItem value={FileSizeUnit.KB}>KB</SelectItem>
-                        <SelectItem value={FileSizeUnit.MB}>MB</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Select 
+                    value={unit} 
+                    onValueChange={(value) => setUnit(value as FileSizeUnit)}
+                  >
+                    <SelectTrigger id="unit" className="w-[100px]">
+                      <SelectValue placeholder="Select unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={FileSizeUnit.Bytes}>Bytes</SelectItem>
+                      <SelectItem value={FileSizeUnit.KB}>KB</SelectItem>
+                      <SelectItem value={FileSizeUnit.MB}>MB</SelectItem>
+                      <SelectItem value={FileSizeUnit.GB}>GB</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 {/* Size Slider */}
@@ -371,11 +489,10 @@ export default function FileGenerator() {
                 {/* Slider Markers */}
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <span>1 KB</span>
-                  <span>10 KB</span>
                   <span>100 KB</span>
-                  <span>1 MB</span>
                   <span>10 MB</span>
-                  <span>100 MB</span>
+                  <span>1 GB</span>
+                  <span>10 GB</span>
                 </div>
                 
                 <div className="text-sm text-muted-foreground mt-2">
@@ -383,18 +500,27 @@ export default function FileGenerator() {
                 </div>
               </div>
               
-              {/* Extension Controls */}
+              {/* Filename & Extension Controls */}
               <div>
+                <Label htmlFor="filename" className="block mb-2">Filename</Label>
+                <div className="flex flex-wrap gap-4 mb-4">
+                  <div className="w-full">
+                    <Input
+                      id="filename"
+                      placeholder="Custom filename"
+                      value={customFilename}
+                      onChange={(e) => setCustomFilename(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+                
                 <Label htmlFor="extension" className="block mb-2">File Extension</Label>
                 <div className="flex flex-wrap gap-4">
-                  <div className="w-full md:w-2/3">
+                  <div className="w-full">
                     <Select 
-                      value={COMMON_EXTENSIONS.includes(extension) ? extension : "custom"} 
-                      onValueChange={(value) => {
-                        if (value !== "custom") {
-                          setExtension(value)
-                        }
-                      }}
+                      value={showCustomExtension ? "custom" : extension}
+                      onValueChange={handleExtensionChange}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select extension" />
@@ -408,8 +534,8 @@ export default function FileGenerator() {
                     </Select>
                   </div>
                   
-                  {!COMMON_EXTENSIONS.includes(extension) && (
-                    <div className="w-full md:w-2/3">
+                  {showCustomExtension && (
+                    <div className="w-full">
                       <Input
                         placeholder="Custom extension (without dot)"
                         value={extension}
@@ -473,8 +599,8 @@ export default function FileGenerator() {
               </Alert>
             )}
             
-            {/* Generate Button */}
-            <div>
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3">
               <Button 
                 onClick={handleGenerateFile}
                 className="w-full"
@@ -484,6 +610,22 @@ export default function FileGenerator() {
                 <Download className="mr-2 h-4 w-4" />
                 Generate File
               </Button>
+              
+              {shareUrl && (
+                <Button
+                  onClick={copyShareableLink}
+                  variant="outline"
+                  className="w-full"
+                  size="lg"
+                >
+                  {copied ? (
+                    <Check className="mr-2 h-4 w-4" />
+                  ) : (
+                    <Share className="mr-2 h-4 w-4" />
+                  )}
+                  {copied ? "Copied!" : "Copy Share Link"}
+                </Button>
+              )}
             </div>
             
             {/* Hidden link for automatic download */}
