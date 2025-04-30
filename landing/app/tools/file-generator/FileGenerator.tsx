@@ -20,12 +20,15 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { 
   generateFileContent,
   generateFileDownloadUrl,
+  saveFileWithPicker,
+  isFileSystemAccessSupported,
   FileSizeUnit,
   FileContentType,
   COMMON_EXTENSIONS,
 } from "shared"
 import { Slider } from "@/components/ui/slider"
 import { useSearchParams } from "next/navigation"
+import { Progress } from "@/components/ui/progress"
 
 export default function FileGenerator() {
   const searchParams = useSearchParams()
@@ -68,8 +71,18 @@ export default function FileGenerator() {
   const [shareUrl, setShareUrl] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   
+  // Progress state
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [fsApiSupported, setFsApiSupported] = useState(false)
+  
   // Reference to download link
   const downloadLinkRef = useRef<HTMLAnchorElement>(null)
+  
+  // Check if the File System Access API is supported
+  useEffect(() => {
+    setFsApiSupported(isFileSystemAccessSupported())
+  }, [])
   
   // Size presets for slider markers
   const sizePresets = useMemo(() => [
@@ -319,7 +332,7 @@ export default function FileGenerator() {
   }, [downloadUrl])
   
   // Generate shareable link with current parameters
-  const generateShareableLink = () => {
+  const generateShareableLink = useCallback(() => {
     const params = new URLSearchParams()
     params.set("size", selectedSize)
     params.set("unit", unit)
@@ -338,7 +351,7 @@ export default function FileGenerator() {
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`
     setShareUrl(url)
     return url
-  }
+  }, [selectedSize, unit, extension, customFilename, contentType, customHexValue])
   
   // Copy shareable link to clipboard
   const copyShareableLink = () => {
@@ -348,8 +361,69 @@ export default function FileGenerator() {
     setTimeout(() => setCopied(false), 2000)
   }
   
-  // Generate the file with current settings and download it immediately
-  const handleGenerateFile = () => {
+  // Get normalized extension
+  const getNormalizedExtension = (): string => {
+    let ext = extension
+    
+    // Remove leading dot if present
+    if (ext.startsWith('.')) {
+      ext = ext.substring(1)
+    }
+    
+    // Ensure extension is not empty
+    if (!ext) {
+      ext = "bin"
+    }
+    
+    return ext
+  }
+  
+  // Get file generation options
+  const getFileOptions = () => {
+    const size = Number(selectedSize)
+    
+    if (isNaN(size) || size <= 0) {
+      throw new Error("Size must be a positive number")
+    }
+    
+    return {
+      size,
+      unit,
+      extension: getNormalizedExtension(),
+      contentType,
+      ...(contentType === FileContentType.CustomHex && { customHexValue }),
+      onProgress: (value: number) => {
+        setProgress(value)
+      }
+    }
+  }
+  
+  // Generate file using modern File System Access API
+  const generateFileWithFileSystemAPI = async () => {
+    try {
+      setIsGenerating(true)
+      setProgress(0)
+      
+      // Get file options
+      const options = getFileOptions()
+      
+      // First show the file picker (which needs direct user interaction)
+      // Then generate and save the file
+      await saveFileWithPicker(options, downloadFilename)
+      
+      // Generate shareable URL
+      generateShareableLink()
+      
+      setIsGenerating(false)
+      setProgress(100)
+    } catch (error) {
+      setError((error as Error).message)
+      setIsGenerating(false)
+    }
+  }
+  
+  // Generate file with traditional method (fallback)
+  const generateFileTraditional = async () => {
     try {
       // Clean up previous URL
       if (downloadUrl) {
@@ -357,44 +431,17 @@ export default function FileGenerator() {
         setDownloadUrl(null)
       }
       
-      // Get extension
-      let ext = extension
+      setIsGenerating(true)
+      setProgress(0)
       
-      // Remove leading dot if present
-      if (ext.startsWith('.')) {
-        ext = ext.substring(1)
-      }
+      // Get file options
+      const options = getFileOptions()
       
-      // Ensure extension is not empty
-      if (!ext) {
-        ext = "bin"
-      }
-      
-      // Get size
-      const size = Number(selectedSize)
-      
-      if (isNaN(size) || size <= 0) {
-        throw new Error("Size must be a positive number")
-      }
-      
-      // Generate file content
-      const options = {
-        size,
-        unit,
-        extension: ext,
-        contentType,
-        ...(contentType === FileContentType.CustomHex && { customHexValue })
-      }
-      
-      // For large files, show a warning message
-      if (size > 100 && (unit === FileSizeUnit.MB || unit === FileSizeUnit.GB)) {
-        setError("Generating large file. This may take a moment...")
-      }
-      
-      const blob = generateFileContent(options)
+      // Generate file content with progress updates
+      const blob = await generateFileContent(options)
       
       // Create download URL
-      const { url } = generateFileDownloadUrl(blob, ext)
+      const { url } = generateFileDownloadUrl(blob, options.extension)
       
       // Update state
       setDownloadUrl(url)
@@ -403,15 +450,28 @@ export default function FileGenerator() {
       // Generate shareable URL
       generateShareableLink()
       
-      // Trigger download immediately
+      // Trigger download automatically
       if (downloadLinkRef.current) {
         downloadLinkRef.current.href = url
         downloadLinkRef.current.download = downloadFilename
         downloadLinkRef.current.click()
       }
+      
+      setIsGenerating(false)
+      setProgress(100)
     } catch (error) {
       setError((error as Error).message)
       setDownloadUrl(null)
+      setIsGenerating(false)
+    }
+  }
+  
+  // Handle generate file button click
+  const handleGenerateFile = () => {
+    if (fsApiSupported) {
+      generateFileWithFileSystemAPI()
+    } else {
+      generateFileTraditional()
     }
   }
   
@@ -590,11 +650,22 @@ export default function FileGenerator() {
               )}
             </div>
             
+            {/* Progress Bar (shown during generation) */}
+            {isGenerating && (
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">Generating file...</span>
+                  <span className="text-sm text-muted-foreground">{progress}%</span>
+                </div>
+                <Progress value={progress} className="w-full h-2" />
+              </div>
+            )}
+            
             {/* Error Display */}
-            {error && (
-              <Alert variant="destructive">
+            {error && !isGenerating && (
+              <Alert variant={error.includes("This may take") ? "default" : "destructive"}>
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>{error.includes("This may take") ? "Please wait" : "Error"}</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -605,10 +676,10 @@ export default function FileGenerator() {
                 onClick={handleGenerateFile}
                 className="w-full"
                 size="lg"
-                disabled={sizeInBytes === 0 || !!error}
+                disabled={sizeInBytes === 0 || !!error && !error.includes("This may take") || isGenerating}
               >
                 <Download className="mr-2 h-4 w-4" />
-                Generate File
+                {isGenerating ? `Generating (${progress}%)` : fsApiSupported ? "Choose Save Location" : "Generate File"}
               </Button>
               
               {shareUrl && (

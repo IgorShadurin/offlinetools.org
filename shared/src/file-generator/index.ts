@@ -54,6 +54,8 @@ export interface FileGeneratorOptions {
   contentType: FileContentType;
   /** Custom hex value to repeat (for CustomHex content type) */
   customHexValue?: string;
+  /** Progress callback function */
+  onProgress?: (progress: number) => void;
 }
 
 /**
@@ -153,12 +155,12 @@ function createPatternGenerator(contentType: FileContentType, customHexValue?: s
 }
 
 /**
- * Generates file content based on the specified options using streaming
+ * Generates file content in chunks with progress reporting
  * @param options - File generator options
- * @returns Blob with the generated content
+ * @returns Promise that resolves to a Blob with the generated content
  * @throws Error if there are issues with the options
  */
-export function generateFileContent(options: FileGeneratorOptions): Blob {
+export async function generateFileContent(options: FileGeneratorOptions): Promise<Blob> {
   try {
     const sizeInBytes = convertToBytes(options.size, options.unit);
     
@@ -170,48 +172,114 @@ export function generateFileContent(options: FileGeneratorOptions): Blob {
     if (sizeInBytes > 10 * 1024 * 1024 * 1024) {
       throw new Error('File size exceeds the maximum limit of 10GB');
     }
-    
-    // For smaller files (less than 50MB), use the direct approach
-    if (sizeInBytes < 50 * 1024 * 1024) {
-      const buffer = new Uint8Array(sizeInBytes);
-      const generateByte = createPatternGenerator(
-        options.contentType, 
-        options.contentType === FileContentType.CustomHex ? options.customHexValue : undefined
-      );
-      
-      for (let i = 0; i < sizeInBytes; i++) {
-        buffer[i] = generateByte();
-      }
-      
-      return new Blob([buffer], { type: 'application/octet-stream' });
-    }
-    
-    // For larger files, use a chunked approach to avoid memory issues
-    const chunks: Uint8Array[] = [];
-    const chunkSize = Math.min(CHUNK_SIZE, sizeInBytes);
+
     const generateByte = createPatternGenerator(
       options.contentType, 
       options.contentType === FileContentType.CustomHex ? options.customHexValue : undefined
     );
     
-    let remainingBytes = sizeInBytes;
-    
-    while (remainingBytes > 0) {
-      const currentChunkSize = Math.min(chunkSize, remainingBytes);
-      const chunk = new Uint8Array(currentChunkSize);
-      
-      for (let i = 0; i < currentChunkSize; i++) {
-        chunk[i] = generateByte();
+    // For tiny files (under 1MB), don't bother with chunks and progress
+    if (sizeInBytes < CHUNK_SIZE) {
+      const buffer = new Uint8Array(sizeInBytes);
+      for (let i = 0; i < sizeInBytes; i++) {
+        buffer[i] = generateByte();
       }
-      
-      chunks.push(chunk);
-      remainingBytes -= currentChunkSize;
+      return new Blob([buffer], { type: 'application/octet-stream' });
     }
     
-    return new Blob(chunks, { type: 'application/octet-stream' });
-    
+    // For larger files, use a chunked approach with progress reporting
+    return new Promise((resolve, reject) => {
+      const chunks: Uint8Array[] = [];
+      const chunkSize = Math.min(CHUNK_SIZE, sizeInBytes);
+      let bytesGenerated = 0;
+      
+      // Use setTimeout to avoid blocking the UI thread
+      function generateNextChunk() {
+        try {
+          const remainingBytes = sizeInBytes - bytesGenerated;
+          
+          if (remainingBytes <= 0) {
+            const blob = new Blob(chunks, { type: 'application/octet-stream' });
+            resolve(blob);
+            return;
+          }
+          
+          const currentChunkSize = Math.min(chunkSize, remainingBytes);
+          const chunk = new Uint8Array(currentChunkSize);
+          
+          for (let i = 0; i < currentChunkSize; i++) {
+            chunk[i] = generateByte();
+          }
+          
+          chunks.push(chunk);
+          bytesGenerated += currentChunkSize;
+          
+          // Report progress
+          if (options.onProgress) {
+            const progress = Math.min(100, Math.round((bytesGenerated / sizeInBytes) * 100));
+            options.onProgress(progress);
+          }
+          
+          // Schedule the next chunk
+          setTimeout(generateNextChunk, 0);
+        } catch (error) {
+          reject(error);
+        }
+      }
+      
+      // Start generating chunks
+      generateNextChunk();
+    });
   } catch (error) {
     throw new Error(`Failed to generate file content: ${(error as Error).message}`);
+  }
+}
+
+/**
+ * Checks if the File System Access API is supported
+ * @returns Whether the File System Access API is supported
+ */
+export function isFileSystemAccessSupported(): boolean {
+  return typeof window !== 'undefined' && 'showSaveFilePicker' in window;
+}
+
+/**
+ * Saves a file using the File System Access API
+ * @param options - File generator options
+ * @param filename - Suggested filename
+ * @returns Promise that resolves when the file is saved
+ */
+export async function saveFileWithPicker(
+  options: FileGeneratorOptions,
+  filename: string
+): Promise<void> {
+  try {
+    // Get the file handle first (this needs to be directly triggered by user gesture)
+    // @ts-ignore - TypeScript may not know about showSaveFilePicker yet
+    const fileHandle = await window.showSaveFilePicker({
+      suggestedName: filename,
+      types: [{
+        description: 'Files',
+        accept: {
+          'application/octet-stream': [`.${filename.split('.').pop() || 'bin'}`]
+        }
+      }]
+    });
+    
+    // Only after we have the handle, generate the file content
+    const blob = await generateFileContent(options);
+    
+    // Write the content to the file
+    const writable = await fileHandle.createWritable();
+    await writable.write(blob);
+    await writable.close();
+    
+    return;
+  } catch (error) {
+    // User cancelled or API not supported
+    if ((error as Error).name !== 'AbortError') {
+      throw error;
+    }
   }
 }
 
