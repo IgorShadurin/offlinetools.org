@@ -68,8 +68,8 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
           <CardTitle>JSON Format/Validate</CardTitle>
         </CardHeader>
 
-        <CardContent className="flex-1 flex flex-col p-0">
-          <div className="flex items-center justify-between p-4 pb-3">
+        <CardContent className="flex-1 flex flex-col">
+          <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium whitespace-nowrap">
                 Indentation:
@@ -111,7 +111,7 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col md:flex-row gap-6 p-4 min-h-0">
+          <div className="flex-1 flex flex-col md:flex-row gap-6 min-h-0">
             <div className="flex-1 flex flex-col min-h-0">
               <label
                 htmlFor="input"

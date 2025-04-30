@@ -198,18 +198,20 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
   return (
     <div className={`p-4 h-full flex flex-col ${className}`}>
       <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3 flex flex-row items-center justify-between">
-          <CardTitle>Clipboard Detector</CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={readClipboard}
-            disabled={isLoading}
-            title="Refresh clipboard content"
-          >
-            <RefreshCwIcon size={16} className={cn("mr-2", isLoading && "animate-spin")} />
-            Refresh
-          </Button>
+        <CardHeader className="pb-3">
+          <div className="flex flex-row items-center justify-between">
+            <CardTitle>Clipboard Detector</CardTitle>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={readClipboard}
+              disabled={isLoading}
+              title="Refresh clipboard content"
+            >
+              <RefreshCwIcon size={16} className={cn("mr-2", isLoading && "animate-spin")} />
+              Refresh
+            </Button>
+          </div>
         </CardHeader>
 
         <CardContent className="flex-1 flex flex-col gap-4">

@@ -91,6 +91,7 @@ export function Base64Codec({ className = "" }: Base64CodecProps) {
         <CardHeader className="pb-3">
           <CardTitle>Base64 Encoder/Decoder</CardTitle>
         </CardHeader>
+
         <CardContent className="flex-1 flex flex-col">
           <div className="space-y-4 flex-1 flex flex-col">
             {/* Top Section: Mode Selector and URL-safe option */}
