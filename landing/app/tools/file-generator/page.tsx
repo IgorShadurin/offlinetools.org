@@ -1,4 +1,5 @@
 import FileGenerator from "./FileGenerator"
+import { Suspense } from "react"
 
 export const metadata = {
   title: "File Generator",
@@ -6,5 +7,9 @@ export const metadata = {
 }
 
 export default function FileGeneratorPage() {
-  return <FileGenerator />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FileGenerator />
+    </Suspense>
+  )
 } 
