@@ -3,7 +3,6 @@ description:
 globs: 
 alwaysApply: false
 ---
-
 # Shared Feature Development Guidelines
 
 This document provides a step-by-step guide for implementing new shared features in the offlinetools project. Each shared feature should be implemented in the shared library first, then exposed through a dedicated page in the landing site.
@@ -316,6 +315,43 @@ When implementing your tool's UI, follow these consistent layout patterns observ
    - Use consistent height classes (min-h-[250px] for textareas)
    - Add placeholders to all input fields
 
+## Step 4.1: Implement Explanation Card
+
+Each tool should include a detailed explanation card that provides context, use cases, and technical details about the tool. This helps users understand the tool's purpose, capabilities, and potential applications.
+
+### Implementation Structure
+
+1. Create a separate component for the explanation card:
+   - Path: `landing/app/tools/feature-name/FeatureNameExplanation.tsx`
+   - Reference: See `landing/app/tools/file-generator/FileGeneratorExplanation.tsx` for an example
+
+2. Import and include the explanation component in your main tool component:
+   - Add it after the main tool UI with appropriate spacing (e.g., `<div className="mt-12">`)
+   - Reference: See how it's imported in `landing/app/tools/file-generator/FileGenerator.tsx`
+
+### Required Sections
+
+The explanation card should include these standard sections:
+
+1. **Tool Capabilities**:
+   - Overview paragraph of what the tool does
+   - Bulleted list of specific features and capabilities
+
+2. **Common Use Cases**:
+   - Numbered list of 5-10 real-world applications
+   - Each with a bold header and descriptive paragraph
+
+3. **Technical Details**:
+   - Explanation of implementation, algorithms, or APIs
+   - Performance considerations and limitations
+
+### Design Guidelines
+
+- Use consistent styling (`p-6 border rounded-lg bg-card text-card-foreground shadow-sm`)
+- Maintain heading hierarchy (h2 for title, h3 for sections)
+- Use consistent spacing between sections (`space-y-6`)
+- Use appropriate list formatting (unordered for features, ordered for use cases)
+
 ## Step 5: Add the Tool to Online Tools List
 
 Add the new tool to the list in `landing/components/online-tools-grid.tsx`. Make sure to include the title, path, and a concise description that explains what the tool does:
@@ -352,6 +388,42 @@ The same description should be used in two places:
 ## Step 6: Link Related Tools
 
 For each new tool, implement related tool links to enhance navigation and discoverability. Add a "Related tool" component below the SectionHeading that links to 1-2 functionally similar or complementary tools. Use the standardized UI pattern with the LinkIcon from lucide-react and Next.js Link component. Always maintain bi-directional linking - if Tool A links to Tool B, ensure Tool B also links back to Tool A. This cross-linking creates a connected ecosystem that improves user experience, reduces navigation friction, and increases tool usage by helping users discover related functionality they might otherwise miss.
+
+## Step 7: Add Tool to the "What's in the Box?" Section
+
+For significant tools that provide unique value, add the tool to the "What's in the Box?" section on the main page. This increases visibility and helps users discover your tool.
+
+### Implementation Structure
+
+1. Locate the feature boxes component:
+   - Path: `landing/app/page.tsx` 
+   - Look for the section with title "🧰 What's in the Box?"
+   - Reference: See existing feature items in the grid layout
+
+2. Add a new feature item:
+   - Use the `FeatureItem` component from `landing/components/feature-item.tsx`
+   - Include it in the grid within the features section
+
+### Required Properties
+
+Each feature item should include:
+
+1. **Title**:
+   - The name of your tool (e.g., "File Generator", "JSON Formatter")
+
+2. **Description**:
+   - Concise explanation of the tool (50-70 characters ideal)
+   - Focus on the primary value proposition and key capabilities
+
+3. **Icon**:
+   - Path to an appropriate icon image representing the tool's function
+   - Should be consistent with the project's design system
+
+### Placement Guidelines
+
+- Group related tools together in the grid layout
+- Consider the logical organization of tools by function or use case
+- If creating a new category of tool, consider its placement in relation to existing groups
 
 ## Error Handling Best Practices
 
