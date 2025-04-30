@@ -123,10 +123,10 @@ const CHUNK_SIZE = 1024 * 1024;
 function createPatternGenerator(contentType: FileContentType, customHexValue?: string) {
   switch (contentType) {
     case FileContentType.Random:
-      return () => Math.floor(Math.random() * 256);
+      return (): number => Math.floor(Math.random() * 256);
       
     case FileContentType.Zeros:
-      return () => 0;
+      return (): number => 0;
       
     case FileContentType.CustomHex: {
       if (!customHexValue) {
@@ -142,7 +142,7 @@ function createPatternGenerator(contentType: FileContentType, customHexValue?: s
       }
       
       let index = 0;
-      return () => {
+      return (): number => {
         const byte = pattern[index];
         index = (index + 1) % pattern.length;
         return byte;
@@ -194,7 +194,7 @@ export async function generateFileContent(options: FileGeneratorOptions): Promis
       let bytesGenerated = 0;
       
       // Use setTimeout to avoid blocking the UI thread
-      function generateNextChunk() {
+      function generateNextChunk(): void {
         try {
           const remainingBytes = sizeInBytes - bytesGenerated;
           
