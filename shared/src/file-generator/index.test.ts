@@ -48,7 +48,15 @@ describe('File Generator', () => {
   });
 
   describe('generateFileContent', () => {
-    it('should generate random content of correct size', () => {
+    /**
+     * Helper function to convert a Blob to Uint8Array
+     */
+    async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
+      const arrayBuffer = await blob.arrayBuffer();
+      return new Uint8Array(arrayBuffer);
+    }
+
+    it('should generate random content of correct size', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         size: 1024,
@@ -56,7 +64,8 @@ describe('File Generator', () => {
         contentType: FileContentType.Random,
       };
       
-      const content = generateFileContent(options);
+      const blob = await generateFileContent(options);
+      const content = await blobToUint8Array(blob);
       expect(content.length).toBe(1024);
       
       // Test randomness (this is probabilistic but should almost always pass)
@@ -72,7 +81,7 @@ describe('File Generator', () => {
       expect(allSame).toBe(false);
     });
 
-    it('should generate zeros content of correct size', () => {
+    it('should generate zeros content of correct size', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         size: 512,
@@ -80,7 +89,8 @@ describe('File Generator', () => {
         contentType: FileContentType.Zeros,
       };
       
-      const content = generateFileContent(options);
+      const blob = await generateFileContent(options);
+      const content = await blobToUint8Array(blob);
       expect(content.length).toBe(512);
       
       // Verify all bytes are zero
@@ -89,7 +99,7 @@ describe('File Generator', () => {
       }
     });
 
-    it('should generate custom hex content of correct size', () => {
+    it('should generate custom hex content of correct size', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         size: 16,
@@ -98,7 +108,8 @@ describe('File Generator', () => {
         customHexValue: 'ABCD',
       };
       
-      const content = generateFileContent(options);
+      const blob = await generateFileContent(options);
+      const content = await blobToUint8Array(blob);
       expect(content.length).toBe(16);
       
       // Verify the pattern repeats correctly
@@ -108,37 +119,37 @@ describe('File Generator', () => {
       }
     });
 
-    it('should throw error for negative size', () => {
+    it('should throw error for negative size', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         size: -1,
         unit: FileSizeUnit.KB,
       };
       
-      expect(() => generateFileContent(options)).toThrow('File size must be greater than 0');
+      await expect(generateFileContent(options)).rejects.toThrow('File size must be greater than 0');
     });
 
-    it('should throw error for zero size', () => {
+    it('should throw error for zero size', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         size: 0,
         unit: FileSizeUnit.KB,
       };
       
-      expect(() => generateFileContent(options)).toThrow('File size must be greater than 0');
+      await expect(generateFileContent(options)).rejects.toThrow('File size must be greater than 0');
     });
 
-    it('should throw error for missing custom hex value', () => {
+    it('should throw error for missing custom hex value', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         contentType: FileContentType.CustomHex,
         // No customHexValue
       };
       
-      expect(() => generateFileContent(options)).toThrow('Custom hex value is required');
+      await expect(generateFileContent(options)).rejects.toThrow('Custom hex value is required');
     });
 
-    it('should throw error for invalid custom hex value', () => {
+    it('should throw error for invalid custom hex value', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
         contentType: FileContentType.CustomHex,
@@ -147,17 +158,17 @@ describe('File Generator', () => {
       
       // After the validateHexString function runs, this will become an empty string
       // which will then throw "Hex string cannot be empty"
-      expect(() => generateFileContent(options)).toThrow('Hex string cannot be empty');
+      await expect(generateFileContent(options)).rejects.toThrow('Hex string cannot be empty');
     });
 
-    it('should throw error for very large sizes', () => {
+    it('should throw error for very large sizes', async () => {
       const options = {
         ...DEFAULT_FILE_GENERATOR_OPTIONS,
-        size: 101,
-        unit: FileSizeUnit.MB,
+        size: 11,
+        unit: FileSizeUnit.GB,
       };
       
-      expect(() => generateFileContent(options)).toThrow('File size exceeds the maximum limit');
+      await expect(generateFileContent(options)).rejects.toThrow('File size exceeds the maximum limit');
     });
   });
 }); 
