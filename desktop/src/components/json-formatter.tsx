@@ -115,7 +115,7 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
             <div className="flex-1 flex flex-col min-h-0">
               <label
                 htmlFor="input"
-                className="mb-1 text-sm font-medium text-muted-foreground"
+                className="mb-1 text-sm font-medium"
               >
                 Input:
               </label>
@@ -131,7 +131,7 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
             <div className="flex-1 flex flex-col min-h-0">
               <label
                 htmlFor="output"
-                className="mb-1 text-sm font-medium text-muted-foreground"
+                className="mb-1 text-sm font-medium"
               >
                 Output:
               </label>
