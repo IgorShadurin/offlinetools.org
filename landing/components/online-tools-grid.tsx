@@ -36,6 +36,11 @@ export const onlineTools = [
     description: "Generate cryptographic hashes from text using various algorithms including SHA-256, SHA-3, and RIPEMD-160."
   },
   {
+    title: "File Generator",
+    path: "/tools/file-generator",
+    description: "Generate files with specific size and format with random data, zeros, or custom patterns."
+  },
+  {
     title: "Tool 2",
     path: "/tools/tool2",
     description: "Description for Tool 2"

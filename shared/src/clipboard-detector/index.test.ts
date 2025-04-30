@@ -1,53 +1,67 @@
 import { detectClipboardTools, Tool, ClipboardDetectorOptions } from './index';
+import { ClipboardType } from './index';
 
 describe('Clipboard Detector', () => {
   describe('detectClipboardTools', () => {
     // Test photo type
-    it('should return binary-base64-codec and file-hash-compare for photo type', () => {
-      const options: ClipboardDetectorOptions = { type: 'photo' };
+    it('should return binary-base64-codec, file-hash-compare and file-generator for photo type', () => {
+      const options = {
+        type: 'photo' as ClipboardType
+      };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(2);
+      expect(result).toHaveLength(3);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
+      expect(result).toContain(Tool.FILE_GENERATOR);
     });
     
     // Test video type
-    it('should return binary-base64-codec and file-hash-compare for video type', () => {
-      const options: ClipboardDetectorOptions = { type: 'video' };
+    it('should return binary-base64-codec, file-hash-compare and file-generator for video type', () => {
+      const options = {
+        type: 'video' as ClipboardType
+      };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(2);
+      expect(result).toHaveLength(3);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
+      expect(result).toContain(Tool.FILE_GENERATOR);
     });
     
     // Test string type without content
     it('should return all string-compatible tools for string type without content', () => {
-      const options: ClipboardDetectorOptions = { type: 'string' };
+      const options = {
+        type: 'string' as ClipboardType
+      };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(6);
+      expect(result).toHaveLength(7);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.JSON_FORMATTER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
+      expect(result).toContain(Tool.FILE_GENERATOR);
     });
     
     // Test empty string content
     it('should return all string-compatible tools for empty string content', () => {
-      const options: ClipboardDetectorOptions = { type: 'string', content: '' };
+      const options = {
+        type: 'string' as ClipboardType,
+        content: ''
+      };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(6);
+      expect(result).toHaveLength(7);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.JSON_FORMATTER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
+      expect(result).toContain(Tool.FILE_GENERATOR);
     });
     
     // Test JSON content
@@ -193,19 +207,20 @@ describe('Clipboard Detector', () => {
 
     // Test null content (should be treated as undefined)
     it('should handle null content same as undefined content', () => {
-      const options: ClipboardDetectorOptions = { 
-        type: 'string', 
+      const options = {
+        type: 'string' as ClipboardType,
         content: null as unknown as string
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(6);
+      expect(result).toHaveLength(7);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.JSON_FORMATTER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
+      expect(result).toContain(Tool.FILE_GENERATOR);
     });
   });
 }); 

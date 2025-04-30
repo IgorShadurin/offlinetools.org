@@ -12,7 +12,8 @@ export enum Tool {
   FILE_HASH_COMPARE = 'file-hash-compare',
   JSON_FORMATTER = 'json-formatter',
   TEXT_HASH_GENERATOR = 'text-hash-generator',
-  URL_ENCODER = 'url-encoder'
+  URL_ENCODER = 'url-encoder',
+  FILE_GENERATOR = 'file-generator'
 }
 
 /**
@@ -35,15 +36,18 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.FILE_HASH_COMPARE,
     Tool.JSON_FORMATTER,
     Tool.TEXT_HASH_GENERATOR,
-    Tool.URL_ENCODER
+    Tool.URL_ENCODER,
+    Tool.FILE_GENERATOR
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
-    Tool.FILE_HASH_COMPARE
+    Tool.FILE_HASH_COMPARE,
+    Tool.FILE_GENERATOR
   ],
   'video': [
     Tool.BINARY_BASE64_CODEC,
-    Tool.FILE_HASH_COMPARE
+    Tool.FILE_HASH_COMPARE,
+    Tool.FILE_GENERATOR
   ]
 };
 
