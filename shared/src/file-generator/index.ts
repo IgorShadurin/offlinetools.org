@@ -244,9 +244,10 @@ export function isFileSystemAccessSupported(): boolean {
 }
 
 /**
- * Saves a file using the File System Access API
+ * Saves a file using the File System Access API with streaming writes
  * @param options - File generator options
  * @param filename - Suggested filename
+ * @param onProgress - Optional progress callback
  * @returns Promise that resolves when the file is saved
  */
 export async function saveFileWithPicker(
@@ -254,6 +255,17 @@ export async function saveFileWithPicker(
   filename: string
 ): Promise<void> {
   try {
+    const sizeInBytes = convertToBytes(options.size, options.unit);
+    
+    if (sizeInBytes <= 0) {
+      throw new Error('File size must be greater than 0');
+    }
+    
+    // Cap at 10GB
+    if (sizeInBytes > 10 * 1024 * 1024 * 1024) {
+      throw new Error('File size exceeds the maximum limit of 10GB');
+    }
+
     // Get the file handle first (this needs to be directly triggered by user gesture)
     // @ts-ignore - TypeScript may not know about showSaveFilePicker yet
     const fileHandle = await window.showSaveFilePicker({
@@ -266,12 +278,46 @@ export async function saveFileWithPicker(
       }]
     });
     
-    // Only after we have the handle, generate the file content
-    const blob = await generateFileContent(options);
+    // Create the pattern generator function based on content type
+    const generateByte = createPatternGenerator(
+      options.contentType, 
+      options.contentType === FileContentType.CustomHex ? options.customHexValue : undefined
+    );
     
-    // Write the content to the file
+    // Create a writable stream to the file
     const writable = await fileHandle.createWritable();
-    await writable.write(blob);
+    
+    // Use a smaller chunk size for better progress reporting
+    const chunkSize = Math.min(1024 * 1024, sizeInBytes); // 1MB or less
+    let bytesWritten = 0;
+    
+    // Generate and write in chunks
+    while (bytesWritten < sizeInBytes) {
+      // Determine this chunk's size
+      const remainingBytes = sizeInBytes - bytesWritten;
+      const currentChunkSize = Math.min(chunkSize, remainingBytes);
+      
+      // Generate this chunk
+      const chunk = new Uint8Array(currentChunkSize);
+      for (let i = 0; i < currentChunkSize; i++) {
+        chunk[i] = generateByte();
+      }
+      
+      // Write the chunk
+      await writable.write(chunk);
+      bytesWritten += currentChunkSize;
+      
+      // Report progress
+      if (options.onProgress) {
+        const progress = Math.min(100, Math.round((bytesWritten / sizeInBytes) * 100));
+        options.onProgress(progress);
+      }
+      
+      // Let the UI update by waiting for the next animation frame
+      await new Promise(resolve => requestAnimationFrame(resolve));
+    }
+    
+    // Close the file
     await writable.close();
     
     return;
