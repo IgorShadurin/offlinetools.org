@@ -15,7 +15,7 @@ export default function UrlEncoderExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Tool Capabilities</h3>
           <p className="mb-2">
-            This tool performs URL encoding (also known as percent-encoding) and decoding. It converts characters that are not allowed in URLs into their percent-encoded equivalents (e.g., space becomes `%20`) and reverses the process, making URLs safe for transmission and interpretable by web servers and browsers.
+            This tool performs URL encoding (also known as percent-encoding) and decoding. It converts characters that are not allowed in URLs into their percent-encoded equivalents (e.g., space becomes <code>%20</code>) and reverses the process, making URLs safe for transmission and interpretable by web servers and browsers.
           </p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Encodes strings into URL-safe format using percent-encoding</li>
@@ -32,7 +32,7 @@ export default function UrlEncoderExplanation() {
           <ol className="list-decimal pl-6 space-y-3">
             <li>
               <strong>Constructing Query Strings</strong>
-              <p>Encode parameter values containing spaces, `&`, `=`, or other special characters before adding them to a URL query string (e.g., `search?q=hello%20world&lang=en`).</p>
+              <p>Encode parameter values containing spaces, <code>&</code>, <code>=</code>, or other special characters before adding them to a URL query string (e.g., <code>search?q=hello%20world&lang=en</code>).</p>
             </li>
             
             <li>
@@ -56,8 +56,8 @@ export default function UrlEncoderExplanation() {
             </li>
             
             <li>
-              <strong>Encoding Data in `mailto:` Links</strong>
-              <p>Safely encode subject lines or body content containing special characters for use in `mailto:` URLs.</p>
+              <strong>Encoding Data in <code>mailto:</code> Links</strong>
+              <p>Safely encode subject lines or body content containing special characters for use in <code>mailto:</code> URLs.</p>
             </li>
             
             <li>
@@ -67,12 +67,12 @@ export default function UrlEncoderExplanation() {
             
             <li>
               <strong>Preparing URLs for Embedding</strong>
-              <p>Encode URLs before embedding them in text formats like Markdown or HTML where characters like `&` might conflict.</p>
+              <p>Encode URLs before embedding them in text formats like Markdown or HTML where characters like <code>&</code> might conflict.</p>
             </li>
             
             <li>
               <strong>Creating Bookmarklets</strong>
-              <p>Encode JavaScript code containing special characters to create functional bookmarklets (`javascript:...`).</p>
+              <p>Encode JavaScript code containing special characters to create functional bookmarklets (<code>javascript:...</code>).</p>
             </li>
             
             <li>
@@ -85,7 +85,7 @@ export default function UrlEncoderExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            The tool primarily uses the browser&apos;s built-in JavaScript functions: `encodeURIComponent()` for encoding and `decodeURIComponent()` for decoding. `encodeURIComponent()` is typically preferred as it encodes characters like `&`, `=`, `?`, `#`, which have special meaning in URLs. `encodeURI()` exists but encodes fewer characters. The process converts unsafe characters into a `%` followed by their two-digit hexadecimal representation based on their UTF-8 encoding. The decoding process reverses this transformation.
+            The tool primarily uses the browser&apos;s built-in JavaScript functions: <code>encodeURIComponent()</code> for encoding and <code>decodeURIComponent()</code> for decoding. <code>encodeURIComponent()</code> is typically preferred as it encodes characters like <code>&</code>, <code>=</code>, <code>?</code>, <code>#</code>, which have special meaning in URLs. <code>encodeURI()</code> exists but encodes fewer characters. The process converts unsafe characters into a <code>%</code> followed by their two-digit hexadecimal representation based on their UTF-8 encoding. The decoding process reverses this transformation.
           </p>
         </div>
       </div>

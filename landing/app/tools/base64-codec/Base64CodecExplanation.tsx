@@ -47,7 +47,7 @@ export default function Base64CodecExplanation() {
             
             <li>
               <strong>Working with Basic Auth Headers</strong>
-              <p>Decode the credentials part of an HTTP Basic Authentication header (`Authorization: Basic ...`) to see the `username:password`.</p>
+              <p>Decode the credentials part of an HTTP Basic Authentication header (<code>Authorization: Basic ...</code>) to see the <code>username:password</code>.</p>
             </li>
             
             <li>
@@ -85,7 +85,7 @@ export default function Base64CodecExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            This tool uses the browser&apos;s standard `btoa()` function for encoding and `atob()` for decoding. `btoa()` creates a Base64-encoded ASCII string from a string of binary data. Since JavaScript strings are typically UTF-16, the input text is often first encoded to UTF-8, then passed to `btoa()`. Conversely, `atob()` decodes a Base64-encoded string; the result might need to be decoded from UTF-8 back to a standard JavaScript string if the original text contained non-ASCII characters. All processing happens client-side.
+            This tool uses the browser&apos;s standard <code>btoa()</code> function for encoding and <code>atob()</code> for decoding. <code>btoa()</code> creates a Base64-encoded ASCII string from a string of binary data. Since JavaScript strings are typically UTF-16, the input text is often first encoded to UTF-8, then passed to <code>btoa()</code>. Conversely, <code>atob()</code> decodes a Base64-encoded string; the result might need to be decoded from UTF-8 back to a standard JavaScript string if the original text contained non-ASCII characters. All processing happens client-side.
           </p>
         </div>
       </div>

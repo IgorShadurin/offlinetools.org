@@ -85,7 +85,7 @@ export default function TextHashGeneratorExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            The tool utilizes the browser&apos;s built-in `SubtleCrypto` API, part of the Web Cryptography API, to perform hashing. The input text is first encoded into a `Uint8Array` (typically using UTF-8 encoding). This array is then passed to the `SubtleCrypto.digest()` method along with the chosen algorithm (e.g., &apos;SHA-256&apos;). The result is an `ArrayBuffer` containing the raw hash bytes, which is then converted to a hexadecimal string for display. For HMAC, `SubtleCrypto.sign()` is used with a derived key. All cryptographic operations occur securely within the browser.
+            The tool utilizes the browser&apos;s built-in <code>SubtleCrypto</code> API, part of the Web Cryptography API, to perform hashing. The input text is first encoded into a <code>Uint8Array</code> (typically using UTF-8 encoding). This array is then passed to the <code>SubtleCrypto.digest()</code> method along with the chosen algorithm (e.g., <code>SHA-256</code>). The result is an <code>ArrayBuffer</code> containing the raw hash bytes, which is then converted to a hexadecimal string for display. For HMAC, <code>SubtleCrypto.sign()</code> is used with a derived key. All cryptographic operations occur securely within the browser.
           </p>
         </div>
       </div>

@@ -33,7 +33,7 @@ export default function BinaryBase64CodecExplanation() {
           <ol className="list-decimal pl-6 space-y-3">
             <li>
               <strong>Embedding Images in CSS/HTML</strong>
-              <p>Encode small images into Base64 strings to embed directly within CSS `background-image` properties or HTML `img` tags as Data URLs, reducing HTTP requests.</p>
+              <p>Encode small images into Base64 strings to embed directly within CSS <code>background-image</code> properties or HTML <code>img</code> tags as Data URLs, reducing HTTP requests.</p>
             </li>
             
             <li>
@@ -53,7 +53,7 @@ export default function BinaryBase64CodecExplanation() {
             
             <li>
               <strong>Debugging Data URLs</strong>
-              <p>Decode Base64 portions of Data URLs (`data:mime/type;base64,...`) to inspect the raw binary content or save as a file.</p>
+              <p>Decode Base64 portions of Data URLs (<code>data:mime/type;base64,...</code>) to inspect the raw binary content or save as a file.</p>
             </li>
             
             <li>
@@ -73,7 +73,7 @@ export default function BinaryBase64CodecExplanation() {
             
             <li>
               <strong>Transferring Certificates/Keys</strong>
-              <p>Handle certificate files (like `.pem` or `.crt`) or keys that are often distributed or stored in Base64 format.</p>
+              <p>Handle certificate files (like <code>.pem</code> or <code>.crt</code>) or keys that are often distributed or stored in Base64 format.</p>
             </li>
             
             <li>
@@ -86,7 +86,7 @@ export default function BinaryBase64CodecExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            The tool utilizes the browser&apos;s built-in `FileReader` API to read uploaded files as ArrayBuffers for encoding, and the `atob()` and `btoa()` functions (or more robust libraries for Unicode/binary handling) for the Base64 conversion. For encoding, the binary data is read and converted to a Base64 string. For decoding, the Base64 string is converted back into binary data (typically a `Uint8Array`), which is then wrapped in a `Blob` object to allow downloading with the appropriate MIME type if known. All processing happens client-side.
+            The tool utilizes the browser&apos;s built-in <code>FileReader</code> API to read uploaded files as ArrayBuffers for encoding, and the <code>atob()</code> and <code>btoa()</code> functions (or more robust libraries for Unicode/binary handling) for the Base64 conversion. For encoding, the binary data is read and converted to a Base64 string. For decoding, the Base64 string is converted back into binary data (typically a <code>Uint8Array</code>), which is then wrapped in a <code>Blob</code> object to allow downloading with the appropriate MIME type if known. All processing happens client-side.
           </p>
         </div>
       </div>

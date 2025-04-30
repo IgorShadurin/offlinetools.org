@@ -38,7 +38,7 @@ export default function JsonFormatterExplanation() {
             
             <li>
               <strong>Validating Configuration Files</strong>
-              <p>Ensure JSON configuration files (like `package.json` or `.eslintrc.json`) are correctly structured and readable before use.</p>
+              <p>Ensure JSON configuration files (like <code>package.json</code> or <code>.eslintrc.json</code>) are correctly structured and readable before use.</p>
             </li>
             
             <li>
@@ -86,7 +86,7 @@ export default function JsonFormatterExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            The formatter uses the built-in `JSON.parse()` to validate the input and `JSON.stringify()` with appropriate indentation options (spaces or tabs count) to format the output. Error handling pinpoints syntax issues, reporting the position where the parsing failed. The core logic resides in the shared library for potential reuse across different environments (e.g., web, desktop). It&apos;s designed to handle large inputs efficiently within browser memory limits.
+            The formatter uses the built-in <code>JSON.parse()</code> to validate the input and <code>JSON.stringify()</code> with appropriate indentation options (spaces or tabs count) to format the output. Error handling pinpoints syntax issues, reporting the position where the parsing failed. The core logic resides in the shared library for potential reuse across different environments (e.g., web, desktop). It&apos;s designed to handle large inputs efficiently within browser memory limits.
           </p>
         </div>
       </div>

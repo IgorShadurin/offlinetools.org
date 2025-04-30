@@ -86,7 +86,7 @@ export default function HashCompareExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            For files, the tool uses the browser&apos;s `FileReader` API, often in conjunction with the `SubtleCrypto` API (Web Cryptography API), to read the file in chunks (streaming) and progressively calculate the hash. This allows processing large files without loading the entire content into memory. For text input, the text is encoded (typically to UTF-8) and then hashed using `SubtleCrypto.digest()`. The calculated hash (in hexadecimal format) is then compared case-insensitively against the user-provided expected hash. All calculations happen client-side.
+            For files, the tool uses the browser&apos;s <code>FileReader</code> API, often in conjunction with the <code>SubtleCrypto</code> API (Web Cryptography API), to read the file in chunks (streaming) and progressively calculate the hash. This allows processing large files without loading the entire content into memory. For text input, the text is encoded (typically to UTF-8) and then hashed using <code>SubtleCrypto.digest()</code>. The calculated hash (in hexadecimal format) is then compared case-insensitively against the user-provided expected hash. All calculations happen client-side.
           </p>
         </div>
       </div>
