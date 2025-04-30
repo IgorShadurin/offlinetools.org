@@ -6,6 +6,7 @@ import "./globals.css";
 import { FeedbackProvider } from "@/components/feedback-provider";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { StructuredData } from "@/components/structured-data";
+import { generateMetadata, viewport } from "@/lib/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,40 +18,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "OfflineTools - All-in-one Toolbox for Developers",
-  description: "A collection of essential offline developer tools to boost your productivity.",
-  metadataBase: new URL("https://offlinetools.org"),
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/images/logo.png",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://offlinetools.org",
-    title: "OfflineTools - All-in-one Toolbox for Developers",
-    description: "A collection of essential offline developer tools to boost your productivity.",
-    siteName: "OfflineTools",
-    images: [
-      {
-        url: "/images/social-preview.png",
-        width: 1200,
-        height: 630,
-        alt: "OfflineTools - All-in-one Toolbox for Developers",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "OfflineTools - All-in-one Toolbox for Developers",
-    description: "A collection of essential offline developer tools to boost your productivity.",
-    images: ["/images/social-preview.png"],
-  },
-};
+// Use the metadata utility for consistent metadata
+export const metadata: Metadata = generateMetadata();
+
+// Export viewport configuration
+export { viewport };
 
 export default function RootLayout({
   children,
@@ -60,7 +32,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        {/* Improved meta viewport tag with best practices */}
+        <meta 
+          name="viewport" 
+          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, user-scalable=yes" 
+        />
+        {/* Canonical URL to prevent duplicate content issues */}
+        <link rel="canonical" href="https://offlinetools.org" />
+        {/* Adding cache control directives */}
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

@@ -1,10 +1,19 @@
 import BinaryBase64Codec from "./BinaryBase64Codec"
 import { StructuredData } from "@/components/structured-data"
+import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata"
 
-export const metadata = {
-  title: "Binary Base64 Encoder/Decoder",
-  description: "Convert binary files to Base64 or decode Base64 to binary files with URL-safe option.",
-}
+export const metadata = generateMetadata({
+  title: toolTitles.binaryBase64Codec.base,
+  description: toolDescriptions.binaryBase64Codec,
+  openGraph: {
+    title: toolTitles.binaryBase64Codec.extended,
+    description: toolDescriptions.binaryBase64Codec,
+  },
+  twitter: {
+    title: toolTitles.binaryBase64Codec.extended,
+    description: toolDescriptions.binaryBase64Codec,
+  }
+})
 
 export default function BinaryBase64CodecPage() {
   return (

@@ -1,15 +1,22 @@
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
+import { generateMetadata } from "@/lib/metadata"
 
-export const metadata = {
-  /** every child will inherit this title setup */
+export const metadata = generateMetadata({
   title: {
-    default: 'OfflineTools',          // when a page has no own title
-    template: '%s | OfflineTools'     // when it does
+    default: 'Online Developer Tools',
+    template: '%s | OfflineTools'
   },
-  description:
-      'Developer utilities that run completely in the browser'
-}
+  description: "Browse our collection of free, privacy-focused developer tools for JSON formatting, encoding, hashing, and more. All tools process data locally for enhanced security.",
+  openGraph: {
+    title: "Developer Tools Collection | OfflineTools",
+    description: "Browse our collection of free, privacy-focused developer tools for JSON formatting, encoding, hashing, and more."
+  },
+  twitter: {
+    title: "Developer Tools Collection | OfflineTools",
+    description: "Browse our collection of free, privacy-focused developer tools for JSON formatting, encoding, hashing, and more."
+  }
+})
 
 export default function ToolsLayout({
   children,

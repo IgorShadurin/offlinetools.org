@@ -1,10 +1,19 @@
 import JsonFormatter from "./JsonFormatter"
 import { StructuredData } from "@/components/structured-data"
+import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata"
 
-export const metadata = {
-  title: "JSON Formatter",
-  description: "Format and beautify your JSON with customizable indentation options.",
-}
+export const metadata = generateMetadata({
+  title: toolTitles.jsonFormatter.base,
+  description: toolDescriptions.jsonFormatter,
+  openGraph: {
+    title: toolTitles.jsonFormatter.extended,
+    description: toolDescriptions.jsonFormatter,
+  },
+  twitter: {
+    title: toolTitles.jsonFormatter.extended,
+    description: toolDescriptions.jsonFormatter,
+  }
+})
 
 export default function JsonFormatterPage() {
   return (
