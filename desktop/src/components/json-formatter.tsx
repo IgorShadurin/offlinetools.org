@@ -69,7 +69,7 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
         </CardHeader>
 
         <CardContent className="flex-1 flex flex-col p-0">
-          <div className="flex items-center justify-between p-4 pb-3 border-b">
+          <div className="flex items-center justify-between p-4 pb-3">
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium whitespace-nowrap">
                 Indentation:

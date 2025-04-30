@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 import { ClipboardType, Tool, detectClipboardTools } from "../../../shared";
 
 /**
@@ -219,7 +219,7 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
             </Alert>
           ) : (
             <>
-              <div className="space-y-2">
+              <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2">
                   <Clipboard size={16} className="opacity-70" />
                   <h3 className="text-sm font-medium">Detected Content Type:</h3>
@@ -229,7 +229,7 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 mb-4">
                 <h3 className="text-sm font-medium">Content Preview:</h3>
                 <div className="border rounded-md p-3 bg-muted/30 font-mono text-sm overflow-auto max-h-[200px]">
                   {clipboardType === "string" ? (
