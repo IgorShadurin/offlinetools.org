@@ -231,51 +231,59 @@ jobs:
           cd desktop
           pnpm run build -- --linux || true
 
-      - name: Prepare artifacts (macOS)
+      - name: Create distributable directory
+        run: mkdir -p dist-packages
+
+      - name: Collect macOS packages
         if: matrix.os == 'macos-latest'
         run: |
           VERSION="${{ needs.manual-release.outputs.version }}"
-          mkdir -p prepared-artifacts
+          # Only copy the main distributable files
+          find desktop/release/$VERSION -type f -name "desktop_*.dmg" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*.zip" -exec cp {} dist-packages/ \;
+          # Include latest-mac.yml for auto-updates
+          find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages/ \;
           
-          # Find and copy the main distribution files
-          find desktop/release/$VERSION -name "desktop_*.dmg" -o -name "desktop_*.zip" | xargs -I{} cp "{}" prepared-artifacts/ || true
-          
-          # Verify files were copied
-          ls -la prepared-artifacts/
+          # List found packages
+          echo "Found macOS packages:"
+          ls -la dist-packages/
 
-      - name: Prepare artifacts (Windows)
+      - name: Collect Windows packages
         if: matrix.os == 'windows-latest'
         shell: powershell
         run: |
           $VERSION = "${{ needs.manual-release.outputs.version }}"
-          New-Item -Path "prepared-artifacts" -ItemType Directory -Force
           
-          # Copy the main installer and distributable files
-          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "desktop_*.exe","desktop_*.msi","desktop_*.zip" | Copy-Item -Destination "prepared-artifacts" -Force
+          # Only copy the main distributable files and update metadata
+          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "desktop_*.exe" | Copy-Item -Destination "dist-packages" -Force
+          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "latest.yml" | Copy-Item -Destination "dist-packages" -Force
           
-          # Copy the blockmap and update files needed for auto-updates
-          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "*.blockmap","latest.yml" | Copy-Item -Destination "prepared-artifacts" -Force
-          
-          # Verify files were copied
-          Get-ChildItem -Path "prepared-artifacts"
+          # List found packages
+          echo "Found Windows packages:"
+          Get-ChildItem -Path "dist-packages"
 
-      - name: Prepare artifacts (Linux)
+      - name: Collect Linux packages
         if: matrix.os == 'ubuntu-latest'
         run: |
           VERSION="${{ needs.manual-release.outputs.version }}"
-          mkdir -p prepared-artifacts
           
-          # Copy the main distributable files
-          find desktop/release/$VERSION -name "desktop_*.AppImage" -o -name "desktop_*.deb" -o -name "desktop_*.rpm" -o -name "desktop-*.AppImage" -o -name "desktop-*.snap" | xargs -I{} cp "{}" prepared-artifacts/ || true
+          # Only copy the main distributable files
+          find desktop/release/$VERSION -type f -name "desktop-*.AppImage" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*.AppImage" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*.deb" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*.rpm" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*.snap" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "latest-linux.yml" -exec cp {} dist-packages/ \;
           
-          # Verify files were copied
-          ls -la prepared-artifacts/
+          # List found packages
+          echo "Found Linux packages:"
+          ls -la dist-packages/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.os }}
-          path: prepared-artifacts/
+          path: dist-packages/
           if-no-files-found: warn
 
   create-github-release:
@@ -293,8 +301,8 @@ jobs:
 
       - name: List artifacts
         run: |
-          ls -la release-artifacts || true
-          find release-artifacts -type f || echo "No artifacts found"
+          echo "All downloaded artifacts:"
+          find release-artifacts -type f | sort
 
       - name: Create GitHub Release
         id: create_release
@@ -307,20 +315,12 @@ jobs:
             Release version ${{ needs.manual-release.outputs.version }}
             
             This is a binary release of the desktop application for Windows, macOS, and Linux.
-
-            ### Download
             
-            **Windows:** Desktop_${{ needs.manual-release.outputs.version }}.exe
-            **macOS:** Desktop_${{ needs.manual-release.outputs.version }}.dmg
-            **Linux:** Desktop-${{ needs.manual-release.outputs.version }}.AppImage or Desktop_${{ needs.manual-release.outputs.version }}.deb
+            ### Downloads
+            
+            **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
+            **macOS:** desktop_${{ needs.manual-release.outputs.version }}.dmg
+            **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
           draft: true
-          files: |
-            release-artifacts/**/*.exe
-            release-artifacts/**/*.dmg
-            release-artifacts/**/*.zip
-            release-artifacts/**/*.AppImage
-            release-artifacts/**/*.deb
-            release-artifacts/**/*.snap
-            release-artifacts/**/*.blockmap
-            release-artifacts/**/latest.yml
+          files: release-artifacts/**/*
           fail_on_unmatched_files: false 
