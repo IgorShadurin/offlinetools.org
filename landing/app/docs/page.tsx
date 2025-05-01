@@ -33,20 +33,7 @@ export default function DocsPage() {
               </Button>
             </CardContent>
           </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>API Reference</CardTitle>
-              <CardDescription>Detailed API documentation for developers</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4">Our API documentation is currently under development.</p>
-              <Button asChild variant="outline">
-                <Link href="/tools">View Available Tools</Link>
-              </Button>
-            </CardContent>
-          </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>FAQ</CardTitle>
