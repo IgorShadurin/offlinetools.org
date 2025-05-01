@@ -231,11 +231,51 @@ jobs:
           cd desktop
           pnpm run build -- --linux || true
 
+      - name: Prepare artifacts (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          mkdir -p prepared-artifacts
+          
+          # Find and copy the main distribution files
+          find desktop/release/$VERSION -name "desktop_*.dmg" -o -name "desktop_*.zip" | xargs -I{} cp "{}" prepared-artifacts/ || true
+          
+          # Verify files were copied
+          ls -la prepared-artifacts/
+
+      - name: Prepare artifacts (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: powershell
+        run: |
+          $VERSION = "${{ needs.manual-release.outputs.version }}"
+          New-Item -Path "prepared-artifacts" -ItemType Directory -Force
+          
+          # Copy the main installer and distributable files
+          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "desktop_*.exe","desktop_*.msi","desktop_*.zip" | Copy-Item -Destination "prepared-artifacts" -Force
+          
+          # Copy the blockmap and update files needed for auto-updates
+          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "*.blockmap","latest.yml" | Copy-Item -Destination "prepared-artifacts" -Force
+          
+          # Verify files were copied
+          Get-ChildItem -Path "prepared-artifacts"
+
+      - name: Prepare artifacts (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          mkdir -p prepared-artifacts
+          
+          # Copy the main distributable files
+          find desktop/release/$VERSION -name "desktop_*.AppImage" -o -name "desktop_*.deb" -o -name "desktop_*.rpm" -o -name "desktop-*.AppImage" -o -name "desktop-*.snap" | xargs -I{} cp "{}" prepared-artifacts/ || true
+          
+          # Verify files were copied
+          ls -la prepared-artifacts/
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.os }}
-          path: desktop/release/${{ needs.manual-release.outputs.version }}/*
+          path: prepared-artifacts/
           if-no-files-found: warn
 
   create-github-release:
@@ -257,12 +297,30 @@ jobs:
           find release-artifacts -type f || echo "No artifacts found"
 
       - name: Create GitHub Release
+        id: create_release
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ needs.manual-release.outputs.version }}
           name: Release v${{ needs.manual-release.outputs.version }}
-          files: release-artifacts/**/*
-          generate_release_notes: true
-          fail_on_unmatched_files: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          body: |
+            Release version ${{ needs.manual-release.outputs.version }}
+            
+            This is a binary release of the desktop application for Windows, macOS, and Linux.
+
+            ### Download
+            
+            **Windows:** Desktop_${{ needs.manual-release.outputs.version }}.exe
+            **macOS:** Desktop_${{ needs.manual-release.outputs.version }}.dmg
+            **Linux:** Desktop-${{ needs.manual-release.outputs.version }}.AppImage or Desktop_${{ needs.manual-release.outputs.version }}.deb
+          draft: true
+          files: |
+            release-artifacts/**/*.exe
+            release-artifacts/**/*.dmg
+            release-artifacts/**/*.zip
+            release-artifacts/**/*.AppImage
+            release-artifacts/**/*.deb
+            release-artifacts/**/*.snap
+            release-artifacts/**/*.blockmap
+            release-artifacts/**/latest.yml
+          fail_on_unmatched_files: false 
