@@ -88,8 +88,17 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            if [[ "${{ steps.release_please.outputs.release_created }}" == "true" ]]; then
+              MAJOR="${{ steps.release_please.outputs.major }}"
+              MINOR="${{ steps.release_please.outputs.minor }}"
+              PATCH="${{ steps.release_please.outputs.patch }}"
+              VERSION="${MAJOR}.${MINOR}.${PATCH}"
+            else
+              VERSION="0.0.0"  # Default if no release was created
+            fi
           else
-            VERSION="${{ steps.release_please.outputs.major }}.${steps.release_please.outputs.minor }}.${steps.release_please.outputs.patch }}"
+            VERSION="0.0.0"  # Default fallback
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Final version: $VERSION"
