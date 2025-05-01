@@ -293,6 +293,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create source code archives
+        run: |
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          echo "Creating source archives for version $VERSION"
+          
+          # Create a directory for the source archives
+          mkdir -p source-archives
+          
+          # Create ZIP archive
+          zip -r "source-archives/desktop-$VERSION-source.zip" . -x "node_modules/*" -x ".git/*" -x "release/*" -x "dist/*"
+          
+          # Create tarball
+          tar --exclude='.git' --exclude='node_modules' --exclude='release' --exclude='dist' -czf "source-archives/desktop-$VERSION-source.tar.gz" .
+          
+          # List created archives
+          ls -la source-archives/
+
+      - name: Upload source archives as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-archives
+          path: source-archives/
+          if-no-files-found: warn
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -321,6 +347,10 @@ jobs:
             **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
             **macOS:** desktop_${{ needs.manual-release.outputs.version }}.dmg
             **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
-          draft: true
-          files: release-artifacts/**/*
+            
+            Source code archives are also available for developers.
+          draft: false
+          generate_release_notes: true
+          files: |
+            release-artifacts/**/*
           fail_on_unmatched_files: false 
