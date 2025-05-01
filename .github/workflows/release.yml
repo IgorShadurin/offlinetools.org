@@ -144,10 +144,19 @@ jobs:
           
           echo "No conditions met for building - skipping build"
 
-  # Build for all platforms
+  manual-release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    outputs:
+      version: ${{ github.event.inputs.version }}
+    steps:
+      - name: Set up version
+        run: |
+          echo "Building version ${{ github.event.inputs.version }}"
+
   build-platforms:
-    needs: [should-build-release]
-    if: needs.should-build-release.outputs.should_build == 'true'
+    needs: [manual-release]
+    if: github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
@@ -175,7 +184,7 @@ jobs:
       - name: Update version in package.json
         run: |
           cd desktop
-          VERSION="${{ needs.should-build-release.outputs.version }}"
+          VERSION="${{ needs.manual-release.outputs.version }}"
           node -e "const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));pkg.version='$VERSION';fs.writeFileSync('package.json',JSON.stringify(pkg,null,2))"
 
       - name: Install Linux dependencies
@@ -206,25 +215,59 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.os }}
-          path: desktop/release/${{ needs.should-build-release.outputs.version }}/*
+          path: desktop/release/${{ needs.manual-release.outputs.version }}/*
 
-  # Create GitHub release with artifacts
-  create-release:
-    needs: [should-build-release, build-platforms]
-    if: needs.should-build-release.outputs.should_build == 'true'
+  create-github-release:
+    needs: [manual-release, build-platforms]
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: release-artifacts
 
-      - name: Create or update GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ needs.should-build-release.outputs.version }}
-          name: Release v${{ needs.should-build-release.outputs.version }}
-          files: release-artifacts/**/*
-          generate_release_notes: true
+      - name: List artifacts
+        run: |
+          ls -la release-artifacts
+          find release-artifacts -type f
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.manual-release.outputs.version }}
+          release_name: Release v${{ needs.manual-release.outputs.version }}
+          draft: false
+          prerelease: false
+          body: |
+            Release version ${{ needs.manual-release.outputs.version }}
+            
+            Manually triggered release.
+
+      - name: Upload Release Assets
+        run: |
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          TAG="v$VERSION"
+          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+          
+          echo "Uploading assets to $UPLOAD_URL"
+          
+          for file in $(find release-artifacts -type f); do
+            echo "Uploading $file"
+            filename=$(basename "$file")
+            echo "Asset filename: $filename"
+            
+            curl \
+              -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: $(file -b --mime-type $file)" \
+              -H "Accept: application/vnd.github.v3+json" \
+              --data-binary @"$file" \
+              "${UPLOAD_URL%\{*}?name=$filename"
+          done 
