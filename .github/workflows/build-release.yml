@@ -1,0 +1,114 @@
+name: Build and Publish Release
+
+on:
+  repository_dispatch:
+    types: [start-release-build]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd desktop
+          pnpm install
+
+      - name: Update version
+        run: |
+          cd desktop
+          VERSION="${{ github.event.client_payload.version }}"
+          node -e "const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));pkg.version='$VERSION';fs.writeFileSync('package.json',JSON.stringify(pkg,null,2))"
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
+
+      - name: Build for macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd desktop
+          pnpm run build -- --mac
+
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd desktop
+          pnpm run build -- --win
+
+      - name: Build for Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd desktop
+          pnpm run build -- --linux
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-${{ matrix.os }}
+          path: desktop/release/${{ github.event.client_payload.version }}/*
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: release-artifacts
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          CHANGELOG=$(git log $LATEST_TAG..HEAD --pretty=format:"- %s" -- desktop)
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.client_payload.version }}
+          name: Release v${{ github.event.client_payload.version }}
+          body: |
+            ## Release v${{ github.event.client_payload.version }}
+            
+            ${{ env.CHANGELOG }}
+          files: release-artifacts/**/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Git Tag
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION" 

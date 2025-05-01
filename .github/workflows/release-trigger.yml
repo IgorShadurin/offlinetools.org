@@ -1,0 +1,36 @@
+name: Trigger Release Build
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  trigger-release:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from branch name
+        id: get-version
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          if [[ $BRANCH_NAME =~ ^release/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            VERSION="${BASH_REMATCH[1]}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "Could not extract version from branch name: $BRANCH_NAME"
+            exit 1
+          fi
+
+      - name: Trigger matrix builds
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: start-release-build
+          client-payload: '{"version": "${{ steps.get-version.outputs.version }}", "pr_number": "${{ github.event.pull_request.number }}"}' 

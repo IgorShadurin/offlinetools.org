@@ -1,0 +1,106 @@
+name: Release App
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+      - '!.github/workflows/release.yml'
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
+    steps:
+      - name: Release Please
+        id: release
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: desktop
+          path: desktop
+          monorepo-tags: true
+          pull-request-title-pattern: "chore: release ${component} ${version}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false},{"type":"refactor","section":"Refactoring","hidden":false},{"type":"docs","section":"Documentation","hidden":true},{"type":"style","section":"Styling","hidden":true},{"type":"perf","section":"Performance Improvements","hidden":false},{"type":"test","section":"Tests","hidden":true}]'
+
+  build-and-release:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd desktop
+          pnpm install
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
+
+      - name: Build for macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd desktop
+          pnpm run build -- --mac
+
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd desktop
+          pnpm run build -- --win
+
+      - name: Build for Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd desktop
+          pnpm run build -- --linux
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-${{ matrix.os }}
+          path: desktop/release/${{ needs.release-please.outputs.version }}/*
+
+  upload-assets:
+    needs: [release-please, build-and-release]
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: release-artifacts
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          files: release-artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
