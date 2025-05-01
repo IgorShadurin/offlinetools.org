@@ -12,6 +12,12 @@ on:
     types: [closed]
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.2.3)'
+        required: true
+        default: '1.0.0'
 
 permissions:
   contents: write
@@ -70,7 +76,8 @@ jobs:
     needs: [check-release-pr, release-please]
     if: |
       (github.event_name == 'push' && needs.release-please.outputs.release_created == 'true') || 
-      (github.event_name == 'pull_request' && needs.check-release-pr.outputs.is_release_pr == 'true')
+      (github.event_name == 'pull_request' && needs.check-release-pr.outputs.is_release_pr == 'true') ||
+      github.event_name == 'workflow_dispatch'
     outputs:
       version: ${{ steps.set_version.outputs.version }}
     steps:
@@ -82,7 +89,9 @@ jobs:
       - name: Set version
         id: set_version
         run: |
-          if [[ "${{ github.event_name }}" == "push" && "${{ needs.release-please.outputs.release_created }}" == "true" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.event_name }}" == "push" && "${{ needs.release-please.outputs.release_created }}" == "true" ]]; then
             VERSION="${{ needs.release-please.outputs.version }}"
           else
             VERSION="${{ needs.check-release-pr.outputs.version }}"
