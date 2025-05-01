@@ -286,8 +286,8 @@ jobs:
           path: dist-packages/
           if-no-files-found: warn
 
-  create-github-release:
-    needs: [manual-release, build-platforms]
+  create-source-code:
+    needs: [manual-release]
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -304,11 +304,34 @@ jobs:
           # Create a directory for the source archives
           mkdir -p source-archives
           
-          # Create ZIP archive
-          zip -r "source-archives/desktop-$VERSION-source.zip" . -x "node_modules/*" -x ".git/*" -x "release/*" -x "dist/*"
+          # Create ZIP archive - explicitly exclude the source-archives directory
+          zip -r "source-archives/desktop-$VERSION-source.zip" . \
+            -x "node_modules/*" \
+            -x ".git/*" \
+            -x "release/*" \
+            -x "dist/*" \
+            -x "source-archives/*" \
+            -x "desktop/release/*" \
+            -x "desktop/dist/*" \
+            -x "desktop/node_modules/*" \
+            -x "landing/node_modules/*" \
+            -x "landing/.next/*" \
+            -x "*.zip" \
+            -x "*.tar.gz"
           
           # Create tarball
-          tar --exclude='.git' --exclude='node_modules' --exclude='release' --exclude='dist' -czf "source-archives/desktop-$VERSION-source.tar.gz" .
+          tar \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='release' \
+            --exclude='dist' \
+            --exclude='source-archives' \
+            --exclude='desktop/release' \
+            --exclude='desktop/dist' \
+            --exclude='desktop/node_modules' \
+            --exclude='landing/node_modules' \
+            --exclude='landing/.next' \
+            -czf "source-archives/desktop-$VERSION-source.tar.gz" .
           
           # List created archives
           ls -la source-archives/
@@ -319,6 +342,16 @@ jobs:
           name: source-archives
           path: source-archives/
           if-no-files-found: warn
+
+  create-github-release:
+    needs: [manual-release, build-platforms, create-source-code]
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -351,6 +384,5 @@ jobs:
             Source code archives are also available for developers.
           draft: false
           generate_release_notes: true
-          files: |
-            release-artifacts/**/*
+          files: release-artifacts/**/*
           fail_on_unmatched_files: false 
