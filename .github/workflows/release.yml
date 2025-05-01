@@ -24,6 +24,7 @@ permissions:
   pull-requests: write
 
 jobs:
+  # This job will only run for PR events
   check-release-pr:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
@@ -47,23 +48,23 @@ jobs:
             echo "This is not a release PR"
           fi
 
-  release-please:
+  # This job will run for push events and manual triggers
+  determine-version:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && needs.check-release-pr.outputs.is_release_pr != 'true')
-    needs: [check-release-pr]
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
-      version: ${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
+      version: ${{ steps.get_version.outputs.version }}
+      release_created: ${{ steps.release_please.outputs.release_created || steps.manual_version.outputs.release_created }}
+      tag_name: ${{ steps.release_please.outputs.tag_name || steps.manual_version.outputs.tag_name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Release Please
-        id: release
-        if: github.event_name != 'workflow_dispatch'
+      - name: Run Release Please
+        id: release_please
+        if: github.event_name == 'push'
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -72,51 +73,72 @@ jobs:
           skip-labeling: true
           skip-github-release: false
 
-      - name: Set release outputs for manual trigger
+      - name: Set manual version
+        id: manual_version
         if: github.event_name == 'workflow_dispatch'
-        id: manual_release
         run: |
-          echo "release_created=true" >> $GITHUB_OUTPUT
           VERSION="${{ github.event.inputs.version }}"
-          MAJOR=$(echo $VERSION | cut -d. -f1)
-          MINOR=$(echo $VERSION | cut -d. -f2)
-          PATCH=$(echo $VERSION | cut -d. -f3)
-          echo "major=$MAJOR" >> $GITHUB_OUTPUT
-          echo "minor=$MINOR" >> $GITHUB_OUTPUT
-          echo "patch=$PATCH" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "release_created=true" >> $GITHUB_OUTPUT
           echo "tag_name=v$VERSION" >> $GITHUB_OUTPUT
+          echo "Manually triggered release for version $VERSION"
 
-  build-and-release:
-    runs-on: ubuntu-latest
-    needs: release-please
-    if: |
-      github.event_name == 'workflow_dispatch' || 
-      (github.event_name == 'push' && needs.release-please.outputs.release_created == 'true') || 
-      (github.event_name == 'pull_request' && needs.check-release-pr.outputs.is_release_pr == 'true')
-    outputs:
-      version: ${{ steps.set_version.outputs.version }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set version
-        id: set_version
+      - name: Get final version
+        id: get_version
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             VERSION="${{ github.event.inputs.version }}"
-          elif [[ "${{ github.event_name }}" == "push" && "${{ needs.release-please.outputs.release_created }}" == "true" ]]; then
-            VERSION="${{ needs.release-please.outputs.version }}"
-          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            VERSION="${{ needs.check-release-pr.outputs.version }}"
+          else
+            VERSION="${{ steps.release_please.outputs.major }}.${steps.release_please.outputs.minor }}.${steps.release_please.outputs.patch }}"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Building for version: $VERSION"
+          echo "Final version: $VERSION"
 
+  # This decision job determines if we should build and release
+  should-build-release:
+    runs-on: ubuntu-latest
+    needs: [check-release-pr, determine-version]
+    if: always()
+    outputs:
+      should_build: ${{ steps.check.outputs.should_build }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Check build conditions
+        id: check
+        run: |
+          # Default to not building
+          echo "should_build=false" >> $GITHUB_OUTPUT
+          
+          # For manual trigger, always build
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "version=${{ needs.determine-version.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "Manual trigger - will build version ${{ needs.determine-version.outputs.version }}"
+            exit 0
+          fi
+          
+          # For push event with release created by release-please
+          if [[ "${{ github.event_name }}" == "push" && "${{ needs.determine-version.outputs.release_created }}" == "true" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "version=${{ needs.determine-version.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "Release created by release-please - will build version ${{ needs.determine-version.outputs.version }}"
+            exit 0
+          fi
+          
+          # For PR event with release PR
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ needs.check-release-pr.outputs.is_release_pr }}" == "true" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "version=${{ needs.check-release-pr.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "Release PR merged - will build version ${{ needs.check-release-pr.outputs.version }}"
+            exit 0
+          fi
+          
+          echo "No conditions met for building - skipping build"
+
+  # Build for all platforms
   build-platforms:
-    needs: build-and-release
+    needs: [should-build-release]
+    if: needs.should-build-release.outputs.should_build == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -144,7 +166,7 @@ jobs:
       - name: Update version in package.json
         run: |
           cd desktop
-          VERSION="${{ needs.build-and-release.outputs.version }}"
+          VERSION="${{ needs.should-build-release.outputs.version }}"
           node -e "const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));pkg.version='$VERSION';fs.writeFileSync('package.json',JSON.stringify(pkg,null,2))"
 
       - name: Install Linux dependencies
@@ -175,10 +197,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.os }}
-          path: desktop/release/${{ needs.build-and-release.outputs.version }}/*
+          path: desktop/release/${{ needs.should-build-release.outputs.version }}/*
 
-  upload-assets:
-    needs: [build-and-release, build-platforms]
+  # Create GitHub release with artifacts
+  create-release:
+    needs: [should-build-release, build-platforms]
+    if: needs.should-build-release.outputs.should_build == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -189,8 +213,8 @@ jobs:
       - name: Create or update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ needs.build-and-release.outputs.version }}
-          name: Release v${{ needs.build-and-release.outputs.version }}
+          tag_name: v${{ needs.should-build-release.outputs.version }}
+          name: Release v${{ needs.should-build-release.outputs.version }}
           files: release-artifacts/**/*
           generate_release_notes: true
         env:
