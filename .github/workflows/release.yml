@@ -154,13 +154,13 @@ jobs:
         run: |
           echo "Building version ${{ github.event.inputs.version }}"
 
-  build-platforms:
+  build-windows-linux:
     needs: [manual-release]
     if: github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -181,8 +181,8 @@ jobs:
           cd desktop
           pnpm install
 
-      - name: Update version in package.json (Linux/macOS)
-        if: matrix.os != 'windows-latest'
+      - name: Update version in package.json (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           cd desktop
           VERSION="${{ needs.manual-release.outputs.version }}"
@@ -213,13 +213,6 @@ jobs:
           # Install other dependencies, continue even if some fail
           sudo apt-get install -y libnss3 libxss1 || true
 
-      - name: Build for macOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          cd desktop
-          # Build for both Intel and M1 architectures
-          pnpm run build -- --mac --universal
-
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
         run: |
@@ -234,24 +227,6 @@ jobs:
 
       - name: Create distributable directory
         run: mkdir -p dist-packages
-
-      - name: Collect macOS packages
-        if: matrix.os == 'macos-latest'
-        run: |
-          VERSION="${{ needs.manual-release.outputs.version }}"
-          # Copy Universal, Intel, and M1 packages
-          find desktop/release/$VERSION -type f -name "desktop_*.dmg" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*-mac.zip" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*-arm64-mac.dmg" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*-arm64-mac.zip" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.dmg" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.zip" -exec cp {} dist-packages/ \;
-          # Include auto-update metadata
-          find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages/ \;
-          
-          # List found packages
-          echo "Found macOS packages:"
-          ls -la dist-packages/
 
       - name: Collect Windows packages
         if: matrix.os == 'windows-latest'
@@ -289,6 +264,121 @@ jobs:
         with:
           name: release-${{ matrix.os }}
           path: dist-packages/
+          if-no-files-found: warn
+
+  build-macos-intel:
+    needs: [manual-release]
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd desktop
+          pnpm install
+
+      - name: Update version in package.json
+        run: |
+          cd desktop
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          node -e "const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));pkg.version='$VERSION';fs.writeFileSync('package.json',JSON.stringify(pkg,null,2))"
+
+      - name: Build for macOS Intel (x64)
+        run: |
+          cd desktop
+          pnpm run build:mac-intel
+
+      - name: Create distributable directory
+        run: mkdir -p dist-packages-intel
+
+      - name: Collect macOS Intel packages
+        run: |
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          # Copy Intel builds only
+          find desktop/release/$VERSION -type f -name "desktop_*-x64.dmg" -exec cp {} dist-packages-intel/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-x64.zip" -exec cp {} dist-packages-intel/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.dmg" -exec cp {} dist-packages-intel/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.zip" -exec cp {} dist-packages-intel/ \;
+          find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages-intel/ \;
+          
+          # List found packages
+          echo "Found macOS Intel packages:"
+          ls -la dist-packages-intel/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-intel
+          path: dist-packages-intel/
+          if-no-files-found: warn
+
+  build-macos-arm64:
+    needs: [manual-release]
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd desktop
+          pnpm install
+
+      - name: Update version in package.json
+        run: |
+          cd desktop
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          node -e "const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));pkg.version='$VERSION';fs.writeFileSync('package.json',JSON.stringify(pkg,null,2))"
+
+      - name: Build for macOS Apple Silicon (arm64)
+        run: |
+          cd desktop
+          pnpm run build:mac-m1
+
+      - name: Create distributable directory
+        run: mkdir -p dist-packages-arm64
+
+      - name: Collect macOS Apple Silicon packages
+        run: |
+          VERSION="${{ needs.manual-release.outputs.version }}"
+          # Copy arm64 builds only
+          find desktop/release/$VERSION -type f -name "desktop_*-arm64.dmg" -exec cp {} dist-packages-arm64/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-arm64.zip" -exec cp {} dist-packages-arm64/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-arm64-mac.dmg" -exec cp {} dist-packages-arm64/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-arm64-mac.zip" -exec cp {} dist-packages-arm64/ \;
+          
+          # List found packages
+          echo "Found macOS Apple Silicon packages:"
+          ls -la dist-packages-arm64/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-arm64
+          path: dist-packages-arm64/
           if-no-files-found: warn
 
   create-source-code:
@@ -349,7 +439,7 @@ jobs:
           if-no-files-found: warn
 
   create-github-release:
-    needs: [manual-release, build-platforms, create-source-code]
+    needs: [manual-release, build-windows-linux, build-macos-intel, build-macos-arm64, create-source-code]
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -384,9 +474,8 @@ jobs:
             
             **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
             **macOS:**
-            - Universal (Intel + M): desktop_${{ needs.manual-release.outputs.version }}.dmg
-            - Intel only: desktop_${{ needs.manual-release.outputs.version }}-x64-mac.dmg
-            - Apple Silicon (M): desktop_${{ needs.manual-release.outputs.version }}-arm64-mac.dmg
+            - Intel only: desktop_${{ needs.manual-release.outputs.version }}-x64.dmg
+            - Apple Silicon (M): desktop_${{ needs.manual-release.outputs.version }}-arm64.dmg
             **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
             
             Source code archives are also available for developers.
