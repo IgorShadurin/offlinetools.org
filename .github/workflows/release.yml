@@ -378,7 +378,11 @@ jobs:
             ### Downloads
             
             **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
-            **macOS:** desktop_${{ needs.manual-release.outputs.version }}.dmg
+            
+            **macOS:**
+            - Intel (x64): desktop_${{ needs.manual-release.outputs.version }}_x64.dmg
+            - Apple Silicon (arm64): desktop_${{ needs.manual-release.outputs.version }}_arm64.dmg
+            
             **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
             
             Source code archives are also available for developers.

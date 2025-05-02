@@ -101,6 +101,16 @@ jobs:
             ## Release v${{ github.event.client_payload.version }}
             
             ${{ env.CHANGELOG }}
+            
+            ### Downloads
+            
+            **Windows:** desktop_${{ github.event.client_payload.version }}.exe
+            
+            **macOS:**
+            - Intel (x64): desktop_${{ github.event.client_payload.version }}_x64.dmg
+            - Apple Silicon (arm64): desktop_${{ github.event.client_payload.version }}_arm64.dmg
+            
+            **Linux:** desktop-${{ github.event.client_payload.version }}.AppImage or desktop_${{ github.event.client_payload.version }}.deb
           files: release-artifacts/**/*
           draft: false
           prerelease: false
