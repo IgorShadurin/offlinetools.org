@@ -10,7 +10,7 @@
     "dist"
   ],
   "mac": {
-    "artifactName": "${productName}_${version}${arch}.${ext}",
+    "artifactName": "${productName}_${version}-${arch}.${ext}",
     "target": [
       {
         "target": "dmg",

@@ -311,6 +311,10 @@ jobs:
           find desktop/release/$VERSION -type f -name "desktop_*-x64.zip" -exec cp {} dist-packages-intel/ \;
           find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.dmg" -exec cp {} dist-packages-intel/ \;
           find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.zip" -exec cp {} dist-packages-intel/ \;
+          # Debug output
+          echo "Contents of release directory:"
+          ls -la desktop/release/$VERSION/
+          # Include auto-update metadata
           find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages-intel/ \;
           
           # List found packages
@@ -364,6 +368,9 @@ jobs:
       - name: Collect macOS Apple Silicon packages
         run: |
           VERSION="${{ needs.manual-release.outputs.version }}"
+          # Debug output
+          echo "Contents of release directory:"
+          ls -la desktop/release/$VERSION/
           # Copy arm64 builds only
           find desktop/release/$VERSION -type f -name "desktop_*-arm64.dmg" -exec cp {} dist-packages-arm64/ \;
           find desktop/release/$VERSION -type f -name "desktop_*-arm64.zip" -exec cp {} dist-packages-arm64/ \;
@@ -474,8 +481,8 @@ jobs:
             
             **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
             **macOS:**
-            - Intel only: desktop_${{ needs.manual-release.outputs.version }}-x64.dmg
-            - Apple Silicon (M): desktop_${{ needs.manual-release.outputs.version }}-arm64.dmg
+            - Intel (x64): desktop_${{ needs.manual-release.outputs.version }}-x64.dmg
+            - Apple Silicon (M1/M2): desktop_${{ needs.manual-release.outputs.version }}-arm64.dmg
             **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
             
             Source code archives are also available for developers.
