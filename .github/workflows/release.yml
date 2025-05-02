@@ -217,7 +217,8 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           cd desktop
-          pnpm run build -- --mac
+          # Build for both Intel and M1 architectures
+          pnpm run build -- --mac --universal
 
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
@@ -238,10 +239,14 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           VERSION="${{ needs.manual-release.outputs.version }}"
-          # Only copy the main distributable files
+          # Copy Universal, Intel, and M1 packages
           find desktop/release/$VERSION -type f -name "desktop_*.dmg" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*.zip" -exec cp {} dist-packages/ \;
-          # Include latest-mac.yml for auto-updates
+          find desktop/release/$VERSION -type f -name "desktop_*-mac.zip" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-arm64-mac.dmg" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-arm64-mac.zip" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.dmg" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop_*-x64-mac.zip" -exec cp {} dist-packages/ \;
+          # Include auto-update metadata
           find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages/ \;
           
           # List found packages
@@ -378,7 +383,10 @@ jobs:
             ### Downloads
             
             **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
-            **macOS:** desktop_${{ needs.manual-release.outputs.version }}.dmg
+            **macOS:**
+            - Universal (Intel + M): desktop_${{ needs.manual-release.outputs.version }}.dmg
+            - Intel only: desktop_${{ needs.manual-release.outputs.version }}-x64-mac.dmg
+            - Apple Silicon (M): desktop_${{ needs.manual-release.outputs.version }}-arm64-mac.dmg
             **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
             
             Source code archives are also available for developers.
