@@ -215,9 +215,26 @@ jobs:
 
       - name: Build for macOS
         if: matrix.os == 'macos-latest'
+        env:
+          # These would normally be secrets in your repository
+          # For testing, we're setting them as empty which will skip actual signing
+          CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
         run: |
           cd desktop
-          pnpm run build -- --mac
+          
+          # Check if we have valid signing credentials
+          if [ -n "$CSC_LINK" ] && [ -n "$APPLE_ID" ]; then
+            echo "Building with code signing and notarization"
+            # Build with notarization
+            pnpm run build -- --mac --x64 --arm64 -c.mac.notarize=true
+          else
+            echo "Building without code signing (development build)"
+            # Build without notarization for development/testing
+            pnpm run build -- --mac --x64 --arm64
+          fi
 
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
