@@ -231,7 +231,7 @@ jobs:
             # Build with notarization
             pnpm run build -- --mac --x64 --arm64 -c.mac.notarize=true
           else
-            echo "Building without code signing (development build)"
+            echo "Building without code signing (ad-hoc signing only)"
             # Build without notarization for development/testing
             pnpm run build -- --mac --x64 --arm64
           fi
