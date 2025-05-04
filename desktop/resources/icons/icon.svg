@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with blue gradient -->
+  <circle cx="512" cy="512" r="512" fill="url(#blueGradient)"/>
+  
+  <!-- Wifi signals -->
+  <path d="M246 420C362 304 662 304 778 420" stroke="white" stroke-width="80" stroke-linecap="round"/>
+  <path d="M324 500C400 424 624 424 700 500" stroke="white" stroke-width="80" stroke-linecap="round"/>
+  <path d="M406 580C450 536 574 536 618 580" stroke="white" stroke-width="80" stroke-linecap="round"/>
+  
+  <!-- Wifi dot -->
+  <circle cx="512" cy="680" r="40" fill="white"/>
+  
+  <!-- Diagonal line (no wifi) -->
+  <line x1="224" y1="800" x2="800" y2="224" stroke="#1E40AF" stroke-width="80" stroke-linecap="round"/>
+  
+  <!-- Define gradient -->
+  <defs>
+    <linearGradient id="blueGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1E40AF"/>
+    </linearGradient>
+  </defs>
+</svg> 

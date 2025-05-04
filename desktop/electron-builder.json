@@ -12,6 +12,7 @@
   ],
   "mac": {
     "artifactName": "${productName}_${version}_${arch}.${ext}",
+    "icon": "resources/icons/icon.icns",
     "target": [
       {
         "target": "dmg",
@@ -39,7 +40,12 @@
         ]
       }
     ],
-    "artifactName": "${productName}_${version}.${ext}"
+    "artifactName": "${productName}_${version}.${ext}",
+    "icon": "resources/icons/icon_256x256.png"
+  },
+  "linux": {
+    "icon": "resources/icons",
+    "target": ["AppImage", "deb"]
   },
   "nsis": {
     "oneClick": false,
