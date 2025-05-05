@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/container"
 import { Section } from "@/components/ui/section"
 import { PageLayout } from "@/components/page-layout"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, Check, ShoppingCart } from "lucide-react"
+import { Check, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 
 /**
