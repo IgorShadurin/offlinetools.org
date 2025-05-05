@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Download, Apple, MonitorIcon, Terminal } from "lucide-react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { PageLayout } from "@/components/page-layout"
 
 const DOWNLOAD_LINKS = {
   mac_arm64: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_arm64.dmg",
@@ -59,7 +60,7 @@ export default function DownloadPage() {
   }, []);
 
   return (
-    <>
+    <PageLayout>
       <Section>
         <Container>
           <div className="flex flex-col items-center text-center mb-12">
@@ -211,6 +212,6 @@ export default function DownloadPage() {
           </div>
         </Container>
       </Section>
-    </>
+    </PageLayout>
   )
 } 
