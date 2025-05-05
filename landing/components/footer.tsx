@@ -68,6 +68,16 @@ export function Footer() {
                   Careers
                 </Link>
               </li>
+              <li>
+                <a 
+                  href="https://github.com/IgorShadurin/offlinetools.org" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  GitHub
+                </a>
+              </li>
             </ul>
           </div>
           <div className="space-y-4">
@@ -93,6 +103,16 @@ export function Footer() {
         </div>
         <div className="mt-8 border-t pt-8 text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} OfflineTools. All rights reserved.</p>
+          <p className="mt-2">
+            <a 
+              href="https://github.com/IgorShadurin/offlinetools.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-foreground"
+            >
+              View Source Code on GitHub
+            </a>
+          </p>
         </div>
       </Container>
     </footer>
