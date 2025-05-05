@@ -6,6 +6,13 @@ OfflineTools is an all-in-one developer toolbox providing essential utilities fo
 
 OfflineTools aims to provide developers with a suite of commonly used tools that can be accessed offline, eliminating the need for online services when handling potentially sensitive data. The project focuses on performance, privacy, and a modern user interface.
 
+## Download
+
+- **macOS (Apple Silicon)**: [desktop_arm64.dmg](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_arm64.dmg)
+- **macOS (Intel)**: [desktop_x64.dmg](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_x64.dmg)
+- **Windows**: [desktop.exe](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop.exe)
+- **Linux**: [desktop_x86_64.AppImage](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_x86_64.AppImage)
+
 ## Project Architecture
 
 The project follows a monorepo structure with the following main directories:
