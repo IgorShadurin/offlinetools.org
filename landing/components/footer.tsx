@@ -64,11 +64,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-muted-foreground hover:text-foreground">
-                  Careers
-                </Link>
-              </li>
-              <li>
                 <a 
                   href="https://github.com/IgorShadurin/offlinetools.org" 
                   target="_blank" 
