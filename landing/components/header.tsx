@@ -28,13 +28,7 @@ export function Header() {
                 Features
               </Link>
               <Link
-                href="#use-cases"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-              >
-                Use Cases
-              </Link>
-              <Link
-                href="#pricing"
+                href="/pricing"
                 className="text-sm font-medium transition-colors hover:text-foreground/80"
               >
                 Pricing
@@ -94,13 +88,6 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Features
-              </Link>
-              <Link
-                href="#use-cases"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Use Cases
               </Link>
               <Link
                 href="#pricing"
