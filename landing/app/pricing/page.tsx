@@ -28,7 +28,7 @@ export default function PricingPage() {
                 <CardDescription>For developers who value privacy and productivity</CardDescription>
                 
                 <div className="mt-4 flex items-baseline justify-center">
-                  <span className="text-5xl font-extrabold tracking-tight">$7.99</span>
+                  <span className="text-5xl font-extrabold tracking-tight">$19.99</span>
                   <span className="ml-1 text-xl font-normal text-muted-foreground">one-time</span>
                 </div>
               </CardHeader>
@@ -36,14 +36,10 @@ export default function PricingPage() {
               <CardContent className="pt-6">
                 <ul className="space-y-3">
                   {[
-                    "All tools included",
-                    "Lifetime access",
-                    "Free updates forever",
-                    "Cross-platform (macOS, Windows, Linux)",
-                    "Works 100% offline",
-                    "No data collection",
-                    "No subscriptions",
-                    "No hidden costs"
+                    "All tools included with lifetime access",
+                    "1 year of free updates",
+                    "Works on macOS, Windows & Linux (offline)",
+                    "No data collection or hidden costs"
                   ].map((feature) => (
                     <li key={feature} className="flex items-center">
                       <Check className="h-5 w-5 flex-shrink-0 text-green-500" />
@@ -79,7 +75,7 @@ export default function PricingPage() {
               
               <div>
                 <h3 className="text-lg font-medium">Will I get future updates?</h3>
-                <p className="mt-2 text-muted-foreground">Absolutely. Your one-time purchase includes all future updates to the application.</p>
+                <p className="mt-2 text-muted-foreground">Yes, your purchase includes a full year of updates. After that, you can continue using the version you have indefinitely.</p>
               </div>
               
               <div>
