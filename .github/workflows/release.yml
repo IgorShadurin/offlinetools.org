@@ -258,7 +258,6 @@ jobs:
           VERSION="${{ needs.manual-release.outputs.version }}"
           # Only copy the main distributable files
           find desktop/release/$VERSION -type f -name "desktop_*.dmg" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*.zip" -exec cp {} dist-packages/ \;
           # Include latest-mac.yml for auto-updates
           find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages/ \;
           
@@ -273,7 +272,7 @@ jobs:
           $VERSION = "${{ needs.manual-release.outputs.version }}"
           
           # Only copy the main distributable files and update metadata
-          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "desktop_*.exe" | Copy-Item -Destination "dist-packages" -Force
+          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "desktop*.exe" | Copy-Item -Destination "dist-packages" -Force
           Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "latest.yml" | Copy-Item -Destination "dist-packages" -Force
           
           # List found packages
@@ -286,11 +285,10 @@ jobs:
           VERSION="${{ needs.manual-release.outputs.version }}"
           
           # Only copy the main distributable files
-          find desktop/release/$VERSION -type f -name "desktop-*.AppImage" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*.AppImage" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*.deb" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*.rpm" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop_*.snap" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop*.AppImage" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop*.deb" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop*.rpm" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "desktop*.snap" -exec cp {} dist-packages/ \;
           find desktop/release/$VERSION -type f -name "latest-linux.yml" -exec cp {} dist-packages/ \;
           
           # List found packages
@@ -304,65 +302,8 @@ jobs:
           path: dist-packages/
           if-no-files-found: warn
 
-  create-source-code:
-    needs: [manual-release]
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Create source code archives
-        run: |
-          VERSION="${{ needs.manual-release.outputs.version }}"
-          echo "Creating source archives for version $VERSION"
-          
-          # Create a directory for the source archives
-          mkdir -p source-archives
-          
-          # Create ZIP archive - explicitly exclude the source-archives directory
-          zip -r "source-archives/desktop-$VERSION-source.zip" . \
-            -x "node_modules/*" \
-            -x ".git/*" \
-            -x "release/*" \
-            -x "dist/*" \
-            -x "source-archives/*" \
-            -x "desktop/release/*" \
-            -x "desktop/dist/*" \
-            -x "desktop/node_modules/*" \
-            -x "landing/node_modules/*" \
-            -x "landing/.next/*" \
-            -x "*.zip" \
-            -x "*.tar.gz"
-          
-          # Create tarball
-          tar \
-            --exclude='.git' \
-            --exclude='node_modules' \
-            --exclude='release' \
-            --exclude='dist' \
-            --exclude='source-archives' \
-            --exclude='desktop/release' \
-            --exclude='desktop/dist' \
-            --exclude='desktop/node_modules' \
-            --exclude='landing/node_modules' \
-            --exclude='landing/.next' \
-            -czf "source-archives/desktop-$VERSION-source.tar.gz" .
-          
-          # List created archives
-          ls -la source-archives/
-
-      - name: Upload source archives as artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: source-archives
-          path: source-archives/
-          if-no-files-found: warn
-
   create-github-release:
-    needs: [manual-release, build-platforms, create-source-code]
+    needs: [manual-release, build-platforms]
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -395,15 +336,13 @@ jobs:
             
             ### Downloads
             
-            **Windows:** desktop_${{ needs.manual-release.outputs.version }}.exe
+            **Windows:** desktop.exe
             
             **macOS:**
-            - Intel (x64): desktop_${{ needs.manual-release.outputs.version }}_x64.dmg
-            - Apple Silicon (arm64): desktop_${{ needs.manual-release.outputs.version }}_arm64.dmg
+            - Intel (x64): desktop_x64.dmg
+            - Apple Silicon (arm64): desktop_arm64.dmg
             
-            **Linux:** desktop-${{ needs.manual-release.outputs.version }}.AppImage or desktop_${{ needs.manual-release.outputs.version }}.deb
-            
-            Source code archives are also available for developers.
+            **Linux:** desktop_arm64.AppImage or desktop_arm64.deb
           draft: false
           generate_release_notes: true
           files: release-artifacts/**/*

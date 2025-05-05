@@ -11,15 +11,11 @@
     "resources"
   ],
   "mac": {
-    "artifactName": "${productName}_${version}_${arch}.${ext}",
+    "artifactName": "${productName}_${arch}.${ext}",
     "icon": "resources/icons/icon.icns",
     "target": [
       {
         "target": "dmg",
-        "arch": ["x64", "arm64"]
-      },
-      {
-        "target": "zip",
         "arch": ["x64", "arm64"]
       }
     ],
@@ -40,12 +36,13 @@
         ]
       }
     ],
-    "artifactName": "${productName}_${version}.${ext}",
+    "artifactName": "${productName}.${ext}",
     "icon": "resources/icons/icon_256x256.png"
   },
   "linux": {
     "icon": "resources/icons",
-    "target": ["AppImage", "deb"]
+    "target": ["AppImage", "deb"],
+    "artifactName": "${productName}_${arch}.${ext}"
   },
   "nsis": {
     "oneClick": false,

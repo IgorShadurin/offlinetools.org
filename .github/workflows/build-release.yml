@@ -121,13 +121,13 @@ jobs:
             
             ### Downloads
             
-            **Windows:** desktop_${{ github.event.client_payload.version }}.exe
+            **Windows:** desktop.exe
             
             **macOS:**
-            - Intel (x64): desktop_${{ github.event.client_payload.version }}_x64.dmg
-            - Apple Silicon (arm64): desktop_${{ github.event.client_payload.version }}_arm64.dmg
+            - Intel (x64): desktop_x64.dmg
+            - Apple Silicon (arm64): desktop_arm64.dmg
             
-            **Linux:** desktop-${{ github.event.client_payload.version }}.AppImage or desktop_${{ github.event.client_payload.version }}.deb
+            **Linux:** desktop.AppImage or desktop_arm64.deb
           files: release-artifacts/**/*
           draft: false
           prerelease: false
