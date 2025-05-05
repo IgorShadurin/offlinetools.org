@@ -26,8 +26,7 @@ export default function Home() {
               All-in-one Toolbox for Developers
             </h1>
             <p className="max-w-2xl text-lg text-muted-foreground mb-8 md:mb-10">
-              A collection of essential offline developer tools to boost your productivity.
-              Available for macOS, Windows, and Linux.
+              A collection of essential offline developer tools to boost your productivity. Available for macOS, Windows, and Linux.
             </p>
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
               <Button 
@@ -38,9 +37,6 @@ export default function Home() {
                 <Link href="/download" className="flex items-center gap-2">
                   <Download className="h-5 w-5" /> Download Now
                 </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="#features">Learn More</Link>
               </Button>
             </div>
             <div className="mt-12 md:mt-16 relative w-full max-w-5xl aspect-[16/9] rounded-lg overflow-hidden border bg-background/50 shadow-xl">
