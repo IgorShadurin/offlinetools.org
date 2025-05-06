@@ -84,6 +84,16 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Learn how to implement robust JSON validation techniques before formatting to catch errors early and ensure data integrity.",
     slug: "best-practices-for-validating-json-before-formatting",
   },
+  {
+    title: "Line Number References in JSON Error Messages: Why They Matter",
+    description: "Learn why line number references in JSON error messages are crucial for efficient debugging and how to use them to quickly fix syntax errors.",
+    slug: "line-number-references-in-json-error-messages-why-they-matter",
+  },
+  {
+    title: "When Good JSON Goes Bad: Recovering Corrupted JSON Files",
+    description: "Learn effective strategies and techniques for recovering corrupted JSON files and salvaging valuable data from damaged JSON documents.",
+    slug: "when-good-json-goes-bad-recovering-corrupted-json-files",
+  },
   // More articles can be added here
 ];
 
