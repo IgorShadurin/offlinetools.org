@@ -94,6 +94,61 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Learn effective strategies and techniques for recovering corrupted JSON files and salvaging valuable data from damaged JSON documents.",
     slug: "when-good-json-goes-bad-recovering-corrupted-json-files",
   },
+  {
+    title: "Nested Object Errors in JSON: Detection and Resolution",
+    description: "Learn how to identify, troubleshoot and fix errors in deeply nested JSON objects for smoother data processing and validation.",
+    slug: "nested-object-errors-in-json-detection-and-resolution",
+  },
+  {
+    title: "Array Syntax Problems in JSON and How Formatters Handle Them",
+    description: "Explore common JSON array syntax problems and understand how formatters identify and correct these issues for valid JSON output.",
+    slug: "array-syntax-problems-in-json-and-how-formatters-handle-them",
+  },
+  {
+    title: "Converting Invalid JSON to Valid: Automated Repair Tools",
+    description: "Discover automated tools and techniques that can help transform invalid JSON into valid, well-formatted JSON with minimal manual intervention.",
+    slug: "converting-invalid-json-to-valid-automated-repair-tools",
+  },
+  {
+    title: "Key-Value Pair Errors in JSON Formatting",
+    description: "Learn about common key-value pair errors in JSON documents and effective strategies to identify and resolve these formatting issues.",
+    slug: "key-value-pair-errors-in-json-formatting",
+  },
+  {
+    title: "Malformed JSON in API Responses: Handling Strategies",
+    description: "Develop robust strategies for handling malformed JSON in API responses to prevent errors and improve application reliability.",
+    slug: "malformed-json-in-api-responses-handling-strategies",
+  },
+  {
+    title: "The Impact of White Space on JSON Validation",
+    description: "Understand how white space affects JSON validation and learn best practices for handling white space in your JSON documents.",
+    slug: "the-impact-of-white-space-on-json-validation",
+  },
+  {
+    title: "Numerical Value Errors in JSON: Decimal Points and Scientific Notation",
+    description: "Learn how to properly format numerical values in JSON to avoid common errors with decimal points, scientific notation, and other number formats.",
+    slug: "numerical-value-errors-in-json-decimal-points-and-scientific-notation",
+  },
+  {
+    title: "String Delimiter Issues in JSON: Single vs. Double Quotes",
+    description: "Understand the importance of using correct string delimiters in JSON and how to fix common quoting errors in your JSON documents.",
+    slug: "string-delimiter-issues-in-json-single-vs-double-quotes",
+  },
+  {
+    title: "Reserved Words as Keys in JSON: Why They Cause Problems",
+    description: "Explore the complications that arise when using reserved words as keys in JSON and learn strategies to avoid these problems.",
+    slug: "reserved-words-as-keys-in-json-why-they-cause-problems",
+  },
+  {
+    title: "Handling Comments in JSON (Even Though They're Not Supported)",
+    description: "Discover techniques for working with comments in JSON despite the format not officially supporting them, and learn alternative approaches.",
+    slug: "handling-comments-in-json-even-though-theyre-not-supported",
+  },
+  {
+    title: "Duplicate Keys in JSON: Detection and Resolution Strategies",
+    description: "Learn how to identify duplicate keys in JSON documents and implement effective strategies to resolve these issues for valid JSON data.",
+    slug: "duplicate-keys-in-json-detection-and-resolution-strategies",
+  },
   // More articles can be added here
 ];
 
