@@ -154,6 +154,21 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Learn effective strategies for handling errors and optimizing performance when parsing large JSON files across different programming environments.",
     slug: "parsing-large-json-files-error-handling-and-performance",
   },
+  {
+    title: "Error Highlighting Features in Modern JSON Formatters",
+    description: "Explore how modern JSON formatters use advanced error highlighting techniques to help developers quickly identify and fix JSON syntax issues.",
+    slug: "error-highlighting-features-in-modern-json-formatters",
+  },
+  {
+    title: "JSON Schema Validation Errors and Their Meaning",
+    description: "Learn how to interpret JSON Schema validation errors, understand their meaning, and fix common schema validation issues efficiently.",
+    slug: "json-schema-validation-errors-and-their-meaning",
+  },
+  {
+    title: "Circular References in JSON: Why They Break Formatters",
+    description: "Learn why circular references cause JSON formatters to fail, how to identify them, and strategies to handle self-referential data structures.",
+    slug: "circular-references-in-json-why-they-break-formatters",
+  },
   // More articles can be added here
 ];
 
