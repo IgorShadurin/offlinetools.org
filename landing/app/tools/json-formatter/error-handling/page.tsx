@@ -2,6 +2,15 @@ import { Container } from "@/components/ui/container";
 import { ToolArticle, ToolArticlesList } from "@/components/tool-articles-list";
 import { Metadata } from "next";
 import Link from "next/link";
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription 
+} from "@/components/ui/card";
+import { CheckCircle, AlertTriangle, Code, RefreshCw, Download, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 /**
  * Metadata for the JSON Formatter Error Handling page
@@ -101,25 +110,101 @@ export default function JsonFormatterErrorHandlingPage() {
             <h1 className="mt-2 text-3xl font-bold tracking-tight">JSON Formatter Error Handling</h1>
           </div>
         </div>
-        <div className="prose dark:prose-invert max-w-none">
-          <p>
-            This page provides guidance on how to handle common errors when formatting JSON data.
-            Our JSON Formatter tool helps you identify and fix syntax errors in your JSON data.
-          </p>
-          <h2>Common JSON Errors</h2>
-          <p>
-            JSON syntax can be tricky, especially for beginners. Here are some common errors you might encounter:
-          </p>
-          <ul>
-            <li>Missing or extra commas</li>
-            <li>Unclosed brackets or braces</li>
-            <li>Using single quotes instead of double quotes</li>
-            <li>Trailing commas in arrays or objects</li>
-          </ul>
-          <p>
-            For more detailed explanations and solutions to these errors, check out our articles below.
-          </p>
-        </div>
+        
+        <Card className="mb-8 overflow-hidden border-2">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 pb-2">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <AlertTriangle className="text-amber-500" size={24} />
+              Smart JSON Error Detection
+            </CardTitle>
+            <CardDescription>
+              Find and fix JSON syntax errors instantly
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="mt-1 text-blue-600 dark:text-blue-400 shrink-0">
+                    <Code size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-1">Instant Error Highlighting</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Our JSON Formatter automatically detects and highlights syntax errors in your code. Even small 
+                      syntax mistakes can cause validation failures.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <div className="mt-1 text-blue-600 dark:text-blue-400 shrink-0">
+                    <AlertTriangle size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-1">Common Issues Detection</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Identify missing brackets, incorrect quotes, comma problems, and other 
+                      common issues instantly with helpful error messages.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="mt-1 text-green-600 dark:text-green-500 shrink-0">
+                    <RefreshCw size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-1">One-Click Fixes</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Simply paste your JSON text into the formatter, and the tool will automatically 
+                      highlight errors and provide context about what&apos;s wrong.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <div className="mt-1 text-green-600 dark:text-green-500 shrink-0">
+                    <CheckCircle size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-1">Clean Export</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Fix formatting issues with one click and export clean, valid JSON for 
+                      your applications.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 rounded-md bg-muted p-4 text-sm">
+              <div className="flex items-center gap-2 font-medium">
+                <AlertTriangle size={16} className="text-amber-500" />
+                <span>Pro Tip:</span>
+              </div>
+              <p className="mt-1 text-muted-foreground">
+                To quickly identify JSON errors, look for red underlines in the formatter. Hover over highlighted sections to see detailed error explanations.
+              </p>
+            </div>
+            
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link href="/download">
+                  <Download className="mr-2" /> Download Desktop App
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" className="w-full sm:w-auto">
+                <Link href="/tools/json-formatter" className="flex items-center">
+                  <ExternalLink className="mr-2 h-4 w-4" /> Try Online Tool
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       
       <ToolArticlesList 
