@@ -149,6 +149,11 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Learn how to identify duplicate keys in JSON documents and implement effective strategies to resolve these issues for valid JSON data.",
     slug: "duplicate-keys-in-json-detection-and-resolution-strategies",
   },
+  {
+    title: "Parsing Large JSON Files: Error Handling and Performance",
+    description: "Learn effective strategies for handling errors and optimizing performance when parsing large JSON files across different programming environments.",
+    slug: "parsing-large-json-files-error-handling-and-performance",
+  },
   // More articles can be added here
 ];
 
