@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { ArticlePromo } from '@/components/article-promo';
+import { jsonFormatterPromo } from '@/app/tools/json-formatter/error-handling/promo-data';
+import { ArticlePromoProvider } from "@/components/article-promo-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,20 +27,28 @@ export const metadata: Metadata = {
 /**
  * Layout component for the articles section
  */
-export default function ArticlesLayout({
-  children,
-}: Readonly<{
+export default function ArticlesLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable}`}>
-      <Header />
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <article className="prose dark:prose-invert max-w-none">
-          {children}
-        </article>
-      </main>
-      <Footer />
-    </div>
+      <ArticlePromoProvider value={jsonFormatterPromo}>
+        <div className={`${geistSans.variable} ${geistMono.variable}`}>
+          <Header/>
+          <main className="container mx-auto px-4 py-8 max-w-4xl">
+            <article className="prose dark:prose-invert max-w-none">
+              <div className="max-w-3xl mx-auto">
+                <ArticlePromo/>
+
+                {children}
+
+                <div className="mt-10">
+                  <ArticlePromo/>
+                </div>
+              </div>
+            </article>
+          </main>
+          <Footer/>
+        </div>
+      </ArticlePromoProvider>
   );
 } 

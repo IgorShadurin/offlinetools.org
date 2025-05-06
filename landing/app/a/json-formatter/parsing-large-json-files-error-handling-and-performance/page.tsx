@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { ArticlePromoProvider } from "@/components/article-promo-context";
-import { jsonFormatterPromo } from "@/app/tools/json-formatter/error-handling/promo-data";
-import { ArticlePromo } from "@/components/article-promo";
 
 /**
- * Metadata for JSON formatter article about parsing large JSON files
+ * Metadata for the article
  */
 export const metadata: Metadata = {
   title: "Parsing Large JSON Files: Error Handling and Performance | Offline Tools",
@@ -12,15 +9,12 @@ export const metadata: Metadata = {
 };
 
 /**
- * Article page component for parsing large JSON files
+ * Article page component
  */
 export default function ParsingLargeJsonFilesArticle() {
   return (
-    <ArticlePromoProvider value={jsonFormatterPromo}>
-      <div className="max-w-3xl mx-auto">
-        <ArticlePromo />
-        
-        <h1 className="text-3xl font-bold mb-6">Parsing Large JSON Files: Error Handling and Performance</h1>
+    <>
+<h1 className="text-3xl font-bold mb-6">Parsing Large JSON Files: Error Handling and Performance</h1>
         
         <div className="space-y-6">
           <p>
@@ -64,8 +58,7 @@ with open('large-file.json', 'r') as file:
 String jsonString = new String(Files.readAllBytes(Paths.get("large-file.json")));
 JSONObject jsonObject = new JSONObject(jsonString);  // May exceed heap size`}
               </pre>
-            </div>
-          </div>
+            
           
           <h3 className="text-xl font-semibold mt-6">2. Timeout Errors</h3>
           
@@ -84,8 +77,7 @@ app.get('/large-data', (req, res) => {
   res.json(largeData);
 });`}
               </pre>
-            </div>
-          </div>
+            
           
           <h3 className="text-xl font-semibold mt-6">3. Syntax Errors in Large Files</h3>
           
@@ -101,8 +93,7 @@ try {
   // Hard to identify exactly where the error occurred in a large file
 }`}
               </pre>
-            </div>
-          </div>
+            
 
           <h2 className="text-2xl font-semibold mt-8">Strategies for Handling Large JSON Files</h2>
           
@@ -133,8 +124,7 @@ pipeline.on('data', data => {
 
 pipeline.on('end', () => console.log(\`Processed \${count} items\`));`}
               </pre>
-            </div>
-          </div>
+            
           
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
             <h3 className="text-lg font-medium">Python with ijson:</h3>
@@ -153,8 +143,7 @@ with open('large-file.json', 'rb') as f:
         # Just process the email fields from each user
         add_to_mailing_list(email)`}
               </pre>
-            </div>
-          </div>
+            
           
           <h3 className="text-xl font-semibold mt-6">2. Chunked Processing</h3>
           
@@ -191,8 +180,7 @@ async function processLargeJsonLines(filePath) {
 
 processLargeJsonLines('large-data.jsonl');`}
               </pre>
-            </div>
-          </div>
+            
           
           <h3 className="text-xl font-semibold mt-6">3. Pagination for API Responses</h3>
           
@@ -233,8 +221,7 @@ app.get('/api/users', (req, res) => {
   });
 });`}
               </pre>
-            </div>
-          </div>
+            
 
           <h2 className="text-2xl font-semibold mt-8">Error Handling Strategies</h2>
           
@@ -289,8 +276,7 @@ function findJsonErrorLocation(jsonString) {
   }
 }`}
               </pre>
-            </div>
-          </div>
+            
           
           <h3 className="text-xl font-semibold mt-6">2. Try-Parse Pattern</h3>
           
@@ -350,8 +336,7 @@ if (result.success) {
   }
 }`}
               </pre>
-            </div>
-          </div>
+            
 
           <h2 className="text-2xl font-semibold mt-8">Performance Optimization Techniques</h2>
           
@@ -541,8 +526,7 @@ function processData(data) {
   return data;
 }`}
               </pre>
-            </div>
-          </div>
+            
 
           <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
             <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Performance Tips:</h3>
@@ -554,12 +538,6 @@ function processData(data) {
               <li>For frequently accessed data structures, consider pre-parsing and caching</li>
             </ul>
           </div>
-        </div>
-        
-        <div className="mt-10">
-          <ArticlePromo />
-        </div>
-      </div>
-    </ArticlePromoProvider>
+    </>
   );
-} 
+}
