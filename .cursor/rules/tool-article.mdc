@@ -91,9 +91,6 @@ landing/
 
 ```tsx
 import type { Metadata } from "next";
-import { ArticlePromoProvider } from "@/components/article-promo-context";
-import { toolNamePromo } from "@/app/tools/[tool-name]/[category]/promo-data";
-import { ArticlePromo } from "@/components/article-promo";
 
 export const metadata: Metadata = {
   title: "Your Article Title | Offline Tools",
@@ -102,21 +99,13 @@ export const metadata: Metadata = {
 
 export default function ArticleComponentName() {
   return (
-    <ArticlePromoProvider value={toolNamePromo}>
-      <div className="max-w-3xl mx-auto">
-        <ArticlePromo />
-        
-        <h1 className="text-3xl font-bold mb-6">Your Article Title</h1>
-        
-        <div className="space-y-6">
-          {/* Article content goes here */}
-        </div>
-        
-        <div className="mt-10">
-          <ArticlePromo />
-        </div>
+    <>
+      <h1 className="text-3xl font-bold mb-6">Your Article Title</h1>
+      
+      <div className="space-y-6">
+        {/* Article content goes here */}
       </div>
-    </ArticlePromoProvider>
+    </>
   );
 }
 ```
