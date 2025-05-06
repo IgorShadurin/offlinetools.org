@@ -195,6 +195,137 @@ For comparing incorrect and correct approaches:
 </div>
 ```
 
+## Important: Avoiding Common Article Build Errors
+
+When creating articles, certain patterns often cause build errors. Follow these guidelines to avoid common issues.
+
+### 1. Never Use 'use client' with Metadata Exports
+
+In Next.js app router, **never** add `'use client'` to a page with metadata exports:
+
+```tsx
+// INCORRECT - Will cause build error
+'use client';
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Article Title | Offline Tools",
+  description: "Description of article",
+};
+
+// ...rest of component
+```
+
+```tsx
+// CORRECT
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Article Title | Offline Tools",
+  description: "Description of article",
+};
+
+// ...rest of component
+```
+
+### 2. Always Escape Special Characters in JSX
+
+Always use proper HTML entity escaping for special characters in JSX text:
+
+| Character | Escape in JSX | Example |
+|-----------|---------------|---------|
+| `'` (apostrophe) | `&apos;` | `Don&apos;t forget` |
+| `"` (double quote) | `&quot;` | `The &quot;value&quot; is` |
+| `<` | `&lt;` | `5 &lt; 10` |
+| `>` | `&gt;` | `10 &gt; 5` |
+| `{` | `{'{'}` | `Use {'{'} for this` |
+| `}` | `{'}'}` | `Use {'}'} for this` |
+
+Example in practice:
+
+```tsx
+// INCORRECT - Will cause build errors
+<p>Using "quotes" in text and apostrophes like it's shown here will cause errors</p>
+
+// CORRECT
+<p>Using &quot;quotes&quot; in text and apostrophes like it&apos;s shown here is correct</p>
+```
+
+### 3. Proper Handling of Quotes in Code Examples
+
+For displaying code with quotes in it, there are two approaches:
+
+**Option 1**: Use HTML entities inside `<code>` tags:
+
+```tsx
+// INCORRECT - Will cause linting errors
+<code>data["class"]</code>
+
+// CORRECT
+<code>data[&quot;class&quot;]</code>
+```
+
+**Option 2**: Use template literals in `<pre>` blocks (preferred for multi-line code):
+
+```tsx
+// CORRECT
+<pre>
+{`// This works fine
+const data = {
+  "property": "value"
+};`}
+</pre>
+```
+
+### 4. Bracket Notation Around JSX Expression in Template Literals
+
+When you need to use JSX expressions inside template literals, place them in curly braces:
+
+```tsx
+// INCORRECT
+<p>This is how to show the error: Expected property name or "}"</p>
+
+// CORRECT
+<p>This is how to show the error: Expected property name or {'}'}</p>
+```
+
+### 5. Complete Example of Proper JSX Quoting and Escaping
+
+Here's a complete example showing proper escaping:
+
+```tsx
+<div>
+  <h2>Using Quotes and Special Characters</h2>
+  
+  <p>
+    Always escape apostrophes (&apos;) and quotes (&quot;) in regular text.
+  </p>
+  
+  <p>
+    For dynamic JSX content, use curly braces: Error expected {'{'}
+  </p>
+  
+  <div className="code-example">
+    <h3>Code example with quotes:</h3>
+    <code>console.log(data[&quot;property&quot;]);</code>
+    
+    <pre>
+{`// Multi-line code with quotes
+function parseData(json) {
+  const data = JSON.parse(json);
+  return data["propertyName"];
+}`}
+    </pre>
+  </div>
+  
+  <p>
+    Error messages should use JSX expressions for brackets: 
+    Expected {'{'}object{'}'} but received {'{'}string{'}'}
+  </p>
+</div>
+```
+
 ## Avoiding Common TSX Errors
 
 When creating article content, you may encounter JSX parsing errors that can be difficult to debug. Here are specific techniques to avoid these issues:
@@ -218,6 +349,9 @@ Code examples in JSX require special handling to avoid parsing errors:
    
    // CORRECT - use simpler text without HTML entities
    <h3>Error: Expected property name</h3>
+   
+   // ALTERNATIVE CORRECT - use JSX expressions for special characters
+   <h3>Error: Expected property name or {'"}'}</h3>
    ```
 
 3. **Avoid nested JSX expressions** in code examples:
