@@ -18,7 +18,7 @@ export default function MissingBracketsArticle() {
         
         <div className="space-y-6">
           <p>
-            JSON (JavaScript Object Notation) is a lightweight data-interchange format that's both human and machine-readable. 
+            JSON (JavaScript Object Notation) is a lightweight data-interchange format that&apos;s both human and machine-readable. 
             Despite its simplicity, bracket errors are the most common issues developers encounter when working with JSON. 
             Missing brackets can break your entire JSON structure and cause parsing failures in applications.
           </p>
@@ -69,7 +69,7 @@ export default function MissingBracketsArticle() {
 }`}
               </pre>
             </div>
-            <p className="mt-2 text-sm">Error: Expected ',' or '}' after property value in JSON</p>
+            <p className="mt-2 text-sm">Error: Expected comma or closing brace after property value in JSON</p>
           </div>
           
           <h3 className="text-xl font-medium mt-6">3. Missing Inner Object Closing Bracket</h3>
@@ -89,7 +89,7 @@ export default function MissingBracketsArticle() {
 }`}
               </pre>
             </div>
-            <p className="mt-2 text-sm">Error: Expected '}' after property value in JSON</p>
+            <p className="mt-2 text-sm">Error: Expected comma or closing brace after property value in JSON</p>
           </div>
           
           <h2 className="text-2xl font-semibold mt-8">How to Spot and Fix Missing Brackets</h2>
@@ -112,7 +112,7 @@ export default function MissingBracketsArticle() {
             <li>Highlight syntax errors and pinpoint their location</li>
             <li>Show line numbers to help you locate the issue</li>
             <li>Format the JSON to make the structure visually clearer</li>
-            <li>Provide error messages explaining what's wrong</li>
+            <li>Provide error messages explaining what&apos;s wrong</li>
           </ul>
           
           <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
@@ -204,8 +204,8 @@ export default function MissingBracketsArticle() {
           
           <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
           <p>
-            Missing brackets are the most common JSON syntax errors, but they're also among the easiest to identify and fix 
-            with the right tools. By understanding JSON's structure and using formatters or validators, you can quickly 
+            Missing brackets are the most common JSON syntax errors, but they&apos;re also among the easiest to identify and fix 
+            with the right tools. By understanding JSON&apos;s structure and using formatters or validators, you can quickly 
             diagnose and resolve these issues. Remember that a well-formed JSON document has perfectly balanced brackets, 
             with each opening bracket paired with a corresponding closing bracket.
           </p>

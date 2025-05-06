@@ -19,14 +19,14 @@ export default function DebuggingInvalidJsonArticle() {
         <div className="space-y-6">
           <p>
             Working with JSON data is a common task for developers, but invalid JSON can quickly halt your progress. 
-            Whether you're dealing with API responses, configuration files, or data exchange, knowing how to 
+            Whether you&apos;re dealing with API responses, configuration files, or data exchange, knowing how to 
             efficiently debug and fix invalid JSON is an essential skill. This article explores the best tools 
             and techniques to help you identify and resolve JSON syntax errors quickly.
           </p>
 
           <h2 className="text-2xl font-semibold mt-8">Understanding JSON Validation</h2>
           <p>
-            Before diving into debugging tools, it's important to understand what makes JSON valid or invalid:
+            Before diving into debugging tools, it&apos;s important to understand what makes JSON valid or invalid:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>JSON must start with either an object <code>{`{}`}</code> or an array <code>{`[]`}</code></li>
@@ -158,7 +158,7 @@ jsonlint data.json`}
           <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
             <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Pro Tip:</h3>
             <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-              When generating JSON programmatically, use your language's built-in JSON serialization methods 
+              When generating JSON programmatically, use your language&apos;s built-in JSON serialization methods 
               rather than string concatenation. These methods handle escaping and formatting automatically, 
               reducing the risk of syntax errors.
             </p>
@@ -314,7 +314,7 @@ function validateWithSchema(jsonData, schema) {
           
           <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
           <p>
-            Debugging invalid JSON doesn't have to be a frustrating experience. With the right tools and methodical 
+            Debugging invalid JSON doesn&apos;t have to be a frustrating experience. With the right tools and methodical 
             approach, you can quickly identify and fix syntax errors. JSON formatters are invaluable for pinpointing 
             issues, while techniques like binary search and incremental building help tackle more complex problems.
           </p>
@@ -322,7 +322,7 @@ function validateWithSchema(jsonData, schema) {
           <p>
             Remember that prevention is better than cure – using proper serialization libraries, schema validation, and 
             automated testing can help you avoid JSON errors in the first place. By incorporating these debugging tools 
-            and techniques into your workflow, you'll be able to handle JSON errors efficiently and keep your applications 
+            and techniques into your workflow, you&apos;ll be able to handle JSON errors efficiently and keep your applications 
             running smoothly.
           </p>
         </div>

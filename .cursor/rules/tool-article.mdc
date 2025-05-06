@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 # Tool Article Creation Guide
@@ -347,3 +347,47 @@ See these existing articles for reference:
 - `landing/app/a/json-formatter/common-json-syntax-errors-and-how-to-fix-them/page.tsx`
 - `landing/app/a/json-formatter/why-your-json-formatter-shows-a-red-error-message-troubleshooting-guide/page.tsx`
 - `landing/app/a/json-formatter/handling-trailing-commas-in-json-a-formatters-approach/page.tsx`
+
+### Escaping Data in TSX Files
+
+When working with TSX (`.tsx`) files in React projects (like those using Next.js), correctly escaping special characters is crucial to prevent rendering issues and satisfy linters, particularly the `react/no-unescaped-entities` rule. This primarily applies to characters within JSX text content.
+
+Here are common characters and their escaped forms:
+
+*   **Apostrophe (')**:
+    *   Use `&apos;` (e.g., `It&apos;s time`)
+    *   Alternatively: `&#39;`, `&lsquo;`, `&rsquo;`
+*   **Double Quote (")**:
+    *   Use `&quot;` (e.g., `He said &quot;Hello&quot;`)
+    *   Alternatively: `&#34;`, `&ldquo;`, `&rdquo;`
+*   **Curly Braces ({})**:
+    *   For literal curly braces in text: `{'{'}` or `&#123;` for `{`, and `{'}'}` or `&#125;` for `}`.
+    *   Example: `The style is &#123; color: &quot;red&quot; &#125;`
+*   **Angle Brackets (< >)**:
+    *   Use `&lt;` for `<` (e.g., `5 &lt; 10`)
+    *   Use `&gt;` for `>` (e.g., `10 &gt; 5`)
+
+**Example in TSX:**
+
+```tsx
+function MyComponent() {
+  return (
+    <div>
+      <p>This is a paragraph with an apostrophe: It&apos;s important.</p>
+      <p>This shows a quote: She said, &quot;Let&apos;s go!&quot;</p>
+      <p>Mathematical expression: 5 &lt; 10 &amp;&amp; 20 &gt; 15</p>
+      <p>Displaying code: <code>function foo() &#123; return &quot;bar&quot;; &#125;</code></p>
+    </div>
+  );
+}
+```
+
+**Important Considerations:**
+
+*   **JavaScript Strings vs. JSX Text**: Standard JavaScript string escaping (e.g., `\'`,`\"`, `\n`) applies to strings within the JavaScript/TypeScript parts of your code, not directly to JSX text nodes.
+    ```typescript
+    const message = 'It\\'s a string with a JavaScript-escaped apostrophe.';
+    const title = "Chapter 1: \\"The Beginning\"";
+    ```
+*   **Comments**: While JavaScript/JSX comments are typically not rendered, aggressive linters might still scan them for unescaped entities, as seen in some edge cases. If such lint errors occur in comments, applying HTML entities (like `&quot;` for `"` within a comment) or rephrasing the comment might be necessary.
+*   **Linters**: Always pay attention to your ESLint or other linter messages, as they will guide you on specific escaping needs for your project's configuration.

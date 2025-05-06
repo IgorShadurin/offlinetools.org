@@ -45,6 +45,36 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Discover essential tools and effective techniques for debugging invalid JSON data and resolving syntax errors efficiently.",
     slug: "debugging-invalid-json-tools-and-techniques",
   },
+  {
+    title: "How JSON Formatters Detect and Display Syntax Errors",
+    description: "Learn the technical process behind how JSON formatters identify, analyze, and display syntax errors in your JSON documents.",
+    slug: "how-json-formatters-detect-and-display-syntax-errors",
+  },
+  {
+    title: "The Psychology of JSON Error Messages: Making Them User-Friendly",
+    description: "Learn how well-designed JSON error messages can reduce frustration, speed up debugging, and improve the user experience for developers.",
+    slug: "the-psychology-of-json-error-messages-making-them-user-friendly",
+  },
+  {
+    title: "Resolving Unicode Character Issues in JSON Documents",
+    description: "Learn how to identify, troubleshoot, and fix Unicode character problems in your JSON data for error-free parsing and display.",
+    slug: "resolving-unicode-character-issues-in-json-documents",
+  },
+  {
+    title: "JSON Parse Errors in Different Programming Languages",
+    description: "Compare how different programming languages handle JSON parsing errors and learn language-specific techniques for better error handling.",
+    slug: "json-parse-errors-in-different-programming-languages",
+  },
+  {
+    title: "Handling Escaped Characters in JSON Formatters",
+    description: "Learn how to properly handle and troubleshoot escaped characters in JSON documents to avoid syntax errors and ensure correct data formatting.",
+    slug: "handling-escaped-characters-in-json-formatters",
+  },
+  {
+    title: "Best Practices for Validating JSON Before Formatting",
+    description: "Learn how to implement robust JSON validation techniques before formatting to catch errors early and ensure data integrity.",
+    slug: "best-practices-for-validating-json-before-formatting",
+  },
   // More articles can be added here
 ];
 
