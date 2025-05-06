@@ -25,6 +25,11 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Understand why JSON formatters display red error messages and how to effectively troubleshoot common JSON syntax issues.",
     slug: "why-your-json-formatter-shows-a-red-error-message-troubleshooting-guide",
   },
+  {
+    title: "Handling Trailing Commas in JSON - A Formatter's Approach",
+    description: "Learn how to properly handle trailing commas in JSON, why they cause errors, and techniques to manage them in development and production.",
+    slug: "handling-trailing-commas-in-json-a-formatters-approach",
+  },
   // More articles can be added here
 ];
 
