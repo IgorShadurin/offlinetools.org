@@ -1,0 +1,349 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Tool Article Creation Guide
+
+This document outlines the process for creating and adding new articles to tool sections on offlinetools.org. Articles provide valuable content for users of our tools and help with SEO.
+
+## Article Structure and Style Guidelines
+
+### Article Quality Standards
+
+- **Comprehensive content**: Articles should thoroughly cover the topic with practical examples
+- **Educational value**: Focus on teaching concepts, not just listing features
+- **Code examples**: Include relevant, syntax-highlighted code examples
+- **Visual hierarchy**: Use headings, lists, and callouts to organize content
+- **Mobile-friendly**: All content should be readable on mobile devices
+
+### Article Structure Template
+
+Each article should follow this general structure:
+
+1. **Introduction**: Brief overview of the topic and why it matters
+2. **Core concept explanation**: Detailed explanation of the main topic
+3. **Examples**: Practical examples with code snippets
+4. **Best practices**: Tips and recommendations
+5. **Common problems and solutions**: Troubleshooting advice
+6. **Advanced techniques**: For more experienced users
+7. **Conclusion**: Summarize key points and next steps
+
+### Style Guidelines
+
+- **Headers**: Use semantic hierarchy (h1 for title, h2 for sections, h3 for subsections)
+- **Code blocks**: Always use syntax highlighting with pre/code tags
+- **Callouts**: Use colored background boxes for important notes or warnings
+- **Before/After examples**: Show incorrect examples and their corrections
+- **Lists**: Use bulleted lists for related items, numbered lists for sequences or steps
+- **Links**: Link to relevant tools and other related articles
+- **Mobile-first**: Test all content on mobile viewports
+
+## File Structure and Organization
+
+Articles are organized by tool category. Each tool can have multiple articles. Here's the file structure using JSON Formatter as an example:
+
+```
+landing/
+├── app/
+│   ├── a/
+│   │   └── json-formatter/
+│   │       ├── common-json-syntax-errors-and-how-to-fix-them/
+│   │       │   └── page.tsx
+│   │       ├── why-your-json-formatter-shows-a-red-error-message-troubleshooting-guide/
+│   │       │   └── page.tsx
+│   │       └── handling-trailing-commas-in-json-a-formatters-approach/
+│   │           └── page.tsx
+│   └── tools/
+│       └── json-formatter/
+│           └── error-handling/
+│               ├── page.tsx       # Lists all articles for this tool category
+│               └── promo-data.ts  # Contains promo data for articles
+```
+
+For other tools, the path structure would be similar but with the tool name:
+
+```
+landing/
+├── app/
+│   ├── a/
+│   │   ├── json-formatter/...
+│   │   ├── base64-codec/...      # For Base64 Codec articles
+│   │   ├── url-encoder/...       # For URL Encoder articles 
+│   │   └── text-hash-generator/...   # For Text Hash Generator articles
+│   └── tools/
+│       ├── json-formatter/...
+│       ├── base64-codec/...
+│       ├── url-encoder/...
+│       └── text-hash-generator/...
+```
+
+## Creating a New Article
+
+### Step 1: Create the Article File
+
+1. Create a new directory for your article in the appropriate tool directory:
+   ```
+   landing/app/a/[tool-name]/[article-slug]/page.tsx
+   ```
+
+2. Use this template to structure your article:
+
+```tsx
+import type { Metadata } from "next";
+import { ArticlePromoProvider } from "@/components/article-promo-context";
+import { toolNamePromo } from "@/app/tools/[tool-name]/[category]/promo-data";
+import { ArticlePromo } from "@/components/article-promo";
+
+export const metadata: Metadata = {
+  title: "Your Article Title | Offline Tools",
+  description: "Concise, keyword-rich description of the article content",
+};
+
+export default function ArticleComponentName() {
+  return (
+    <ArticlePromoProvider value={toolNamePromo}>
+      <div className="max-w-3xl mx-auto">
+        <ArticlePromo />
+        
+        <h1 className="text-3xl font-bold mb-6">Your Article Title</h1>
+        
+        <div className="space-y-6">
+          {/* Article content goes here */}
+        </div>
+        
+        <div className="mt-10">
+          <ArticlePromo />
+        </div>
+      </div>
+    </ArticlePromoProvider>
+  );
+}
+```
+
+### Step 2: Add the Article to the Tool's Category Page
+
+Find the category page for the tool (e.g., `landing/app/tools/json-formatter/error-handling/page.tsx`) and add your article to the `toolArticles` array:
+
+```tsx
+const toolArticles: ToolArticle[] = [
+  // Existing articles...
+  {
+    title: "Your New Article Title",
+    description: "Brief description of your article content.",
+    slug: "your-article-slug",
+  },
+  // More articles can be added here
+];
+```
+
+## Article Content Components
+
+### Code Examples
+
+For code examples, use this structure:
+
+```tsx
+<div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+  <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Example title:</h3>
+  <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+    <pre>
+{`// Your code example here
+const example = {
+  property: "value"
+};`}
+    </pre>
+  </div>
+  <p className="mt-2 text-sm">Optional explanation of the code</p>
+</div>
+```
+
+### Warning/Note Callouts
+
+For important notes or warnings:
+
+```tsx
+<div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
+  <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
+  <p className="mt-2 text-yellow-700 dark:text-yellow-200">
+    Your important note text here.
+  </p>
+</div>
+```
+
+### Before/After Examples
+
+For comparing incorrect and correct approaches:
+
+```tsx
+<div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+  <h3 className="text-lg font-medium">Before/After Examples:</h3>
+  
+  <div className="mt-4">
+    <h4 className="text-md font-medium text-red-600 dark:text-red-400">Incorrect:</h4>
+    <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+      <pre>{`// Incorrect code`}</pre>
+    </div>
+  </div>
+  
+  <div className="mt-4">
+    <h4 className="text-md font-medium text-green-600 dark:text-green-400">Correct:</h4>
+    <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+      <pre>{`// Correct code`}</pre>
+    </div>
+  </div>
+</div>
+```
+
+## Avoiding Common TSX Errors
+
+When creating article content, you may encounter JSX parsing errors that can be difficult to debug. Here are specific techniques to avoid these issues:
+
+### Working with Code Examples in JSX
+
+Code examples in JSX require special handling to avoid parsing errors:
+
+1. **Always use template literals** for code examples:
+   ```tsx
+   <pre>
+   {`// Your code here
+   const example = true;`}
+   </pre>
+   ```
+
+2. **Never use HTML entities in template literals** inside JSX:
+   ```tsx
+   // WRONG - will cause parsing errors
+   <h3>Error: Expected property name or &quot;}&quot;</h3>
+   
+   // CORRECT - use simpler text without HTML entities
+   <h3>Error: Expected property name</h3>
+   ```
+
+3. **Avoid nested JSX expressions** in code examples:
+   ```tsx
+   // WRONG - will cause parsing errors
+   <pre>
+   {`const element = <Component prop={someValue} />`}
+   </pre>
+   
+   // CORRECT - escape braces or use alternative syntax
+   <pre>
+   {`const element = <Component prop={someValue} />`}
+   </pre>
+   ```
+
+4. **For JSON examples with curly braces**, avoid complex nesting that might confuse the JSX parser:
+   ```tsx
+   // SIMPLIFIED APPROACH - avoids parser confusion
+   <pre>
+   {`{
+     "user": {
+       "name": "John"
+     }
+   }`}
+   </pre>
+   ```
+
+5. **For code with quotes**, simplify whenever possible:
+   ```tsx
+   // INSTEAD OF
+   <li>Missing closing brace after <code>&quot;timeout&quot;: 30</code></li>
+   
+   // USE
+   <li>Missing closing brace after <code>timeout: 30</code></li>
+   ```
+
+### Real Examples of TSX Error Fixes
+
+Here are real examples of fixes that resolved TSX parsing errors:
+
+1. **Simplifying error message examples** that contained quotation marks and brackets:
+
+   ```tsx
+   // ERROR-PRONE
+   <h3 className="text-lg font-medium text-red-600">Error: Expected property name or &quot;}&quot;</h3>
+   
+   // SIMPLIFIED - WORKS
+   <h3 className="text-lg font-medium text-red-600">Error: Expected property name</h3>
+   ```
+
+2. **Removing HTML entities** from examples:
+
+   ```tsx
+   // ERROR-PRONE
+   <li>Single quotes around <code>&apos;name&apos;</code> and <code>&apos;Admin&apos;</code></li>
+   
+   // SIMPLIFIED - WORKS
+   <li>Single quotes around <code>name</code> and <code>Admin</code></li>
+   ```
+
+3. **Using div + pre instead of direct template literals** for complex code:
+
+   ```tsx
+   // ERROR-PRONE
+   <pre className="bg-white rounded overflow-x-auto">
+   {`{...}`}
+   </pre>
+   
+   // MORE RELIABLE
+   <div className="bg-white p-3 rounded overflow-x-auto">
+     <pre>
+   {`{...}`}
+     </pre>
+   </div>
+   ```
+
+### Diagnosing TSX Errors
+
+When you encounter a TSX error:
+
+1. First, check exactly which line is causing the error with:
+   ```bash
+   sed -n "99p" path/to/file.tsx  # Replace 99 with the line number
+   ```
+
+2. Look for these common culprits:
+   - HTML entities (&quot;, &apos;, etc.)
+   - Nested curly braces in template literals
+   - Quotes within JSX that create parsing ambiguity
+
+3. Simplify the problematic line by:
+   - Removing HTML entities
+   - Simplifying content inside code tags
+   - Breaking complex examples into simpler components
+
+## Testing and Publishing Articles
+
+After creating a new article:
+
+1. Run linting and type checking:
+   ```
+   pnpm run lint && pnpm run types:check
+   ```
+
+2. Build the application to verify all pages build correctly:
+   ```
+   pnpm run build
+   ```
+
+3. Fix any errors found during the build process
+
+4. Test the article on different viewports to ensure mobile compatibility
+
+## Best Practices for SEO
+
+- Use descriptive, keyword-rich titles that clearly state what the article covers
+- Include the main keyword in the URL slug
+- Use h1 for the main title and h2, h3 for section headings
+- Include code examples that users might search for
+- Link to related articles and tools when relevant
+- Use metadata description that summarizes the article content in 150-160 characters
+
+## Examples
+
+See these existing articles for reference:
+
+- `landing/app/a/json-formatter/common-json-syntax-errors-and-how-to-fix-them/page.tsx`
+- `landing/app/a/json-formatter/why-your-json-formatter-shows-a-red-error-message-troubleshooting-guide/page.tsx`
+- `landing/app/a/json-formatter/handling-trailing-commas-in-json-a-formatters-approach/page.tsx`
