@@ -30,6 +30,21 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Learn how to properly handle trailing commas in JSON, why they cause errors, and techniques to manage them in development and production.",
     slug: "handling-trailing-commas-in-json-a-formatters-approach",
   },
+  {
+    title: "Missing Brackets: The Most Common JSON Error and Its Solutions",
+    description: "Learn how to identify and fix missing brackets in JSON documents, the most common JSON syntax error faced by developers.",
+    slug: "missing-brackets-the-most-common-json-error-and-its-solutions",
+  },
+  {
+    title: "Unexpected End of JSON Input: Causes and Fixes",
+    description: "Learn what causes the 'Unexpected end of JSON input' error and discover practical solutions to fix this common JSON parsing problem.",
+    slug: "unexpected-end-of-json-input-causes-and-fixes",
+  },
+  {
+    title: "Debugging Invalid JSON: Tools and Techniques",
+    description: "Discover essential tools and effective techniques for debugging invalid JSON data and resolving syntax errors efficiently.",
+    slug: "debugging-invalid-json-tools-and-techniques",
+  },
   // More articles can be added here
 ];
 
