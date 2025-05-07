@@ -1,372 +1,537 @@
 import type { Metadata } from "next";
 
+/**
+ * Metadata for JSON formatter article
+ */
 export const metadata: Metadata = {
   title: "Resolving Unicode Character Issues in JSON Documents | Offline Tools",
-  description:
-    "Learn how to identify, troubleshoot, and fix Unicode character problems in your JSON data for error-free parsing and display.",
+  description: "Learn how to identify, troubleshoot, and fix Unicode character problems in your JSON data for error-free parsing and display.",
 };
 
-export default function ResolvingUnicodeIssuesArticle() {
+/**
+ * Article page component for JSON formatter article
+ */
+export default function JsonFormatterArticle() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6">Resolving Unicode Character Issues in JSON Documents</h1>
 
       <div className="space-y-6">
         <p>
-          JSON documents frequently contain text in multiple languages, symbols, emojis, and special characters.
-          Handling these Unicode characters correctly is essential for data integrity, but it&apos;s also a common
-          source of parsing errors and display problems. This article explores how to identify, troubleshoot, and
-          resolve Unicode-related issues in your JSON data.
+          Unicode characters in JSON documents can create subtle and challenging issues that are difficult to debug. 
+          From encoding problems to improper escaping, Unicode-related errors often cause JSON parsing failures that 
+          can be frustrating to resolve. This article explores common Unicode issues in JSON and provides practical 
+          strategies for identifying and fixing them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Understanding Unicode in JSON</h2>
         <p>
-          The JSON specification (RFC 8259) requires that JSON text be encoded in Unicode, with UTF-8 being the default
-          encoding. Here&apos;s what you need to know about Unicode in JSON:
+          The JSON specification (ECMA-404 and RFC 8259) fully supports Unicode. However, there are specific rules for 
+          how Unicode characters should be represented in JSON strings.
         </p>
 
-        <h3 className="text-xl font-medium mt-6">Unicode Basics</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Unicode assigns a unique code point to every character, regardless of language or symbol system</li>
-          <li>Code points are typically written as U+XXXX (e.g., U+00A9 for the copyright symbol ©)</li>
-          <li>UTF-8 is a variable-width encoding that represents each Unicode code point as 1-4 bytes</li>
-          <li>JSON strings may contain any Unicode character except for a few control characters</li>
-        </ul>
-
-        <h3 className="text-xl font-medium mt-6">Unicode Escape Sequences</h3>
-        <p>JSON allows two ways to represent Unicode characters:</p>
-        <ol className="list-decimal pl-6 space-y-2">
-          <li>
-            <strong>Direct embedding</strong> - Including the actual character directly in the string
-          </li>
-          <li>
-            <strong>Escape sequences</strong> - Using the <code>\uXXXX</code> notation to represent a character by its
-            code point
-          </li>
-        </ol>
-
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example of Unicode in JSON:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "direct": "Hello, 世界! 😊",
-  "escaped": "Hello, \\u4e16\\u754c! \\ud83d\\ude0a"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            Both &quot;direct&quot; and &quot;escaped&quot; strings are identical when parsed.
+          <h3 className="text-lg font-medium">Unicode Representation in JSON:</h3>
+          <ul className="list-disc pl-6 space-y-2 mt-2">
+            <li>
+              <strong>Direct representation</strong> - Unicode characters can be included directly in JSON strings (e.g., "Hello, 世界")
+            </li>
+            <li>
+              <strong>Escape sequences</strong> - Unicode characters can be represented with escape sequences (e.g., "\u4E16\u754C" for "世界")
+            </li>
+            <li>
+              <strong>Control characters</strong> - Control characters (U+0000 to U+001F) must always be escaped in JSON
+            </li>
+          </ul>
+        </div>
+
+        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">JSON Encoding Requirements:</h3>
+          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
+            JSON documents must be encoded in UTF-8, UTF-16, or UTF-32. While the specification allows all three, 
+            UTF-8 is by far the most commonly used encoding for JSON in practice.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Common Unicode Issues in JSON</h2>
 
-        <h3 className="text-xl font-medium mt-6">1. Encoding Mismatches</h3>
+        <h3 className="text-xl font-medium mt-6">1. Incorrect Encoding</h3>
         <p>
-          One of the most common issues occurs when the character encoding of the JSON document doesn&apos;t match what
-          the parser expects:
+          Using the wrong character encoding is one of the most common sources of Unicode issues in JSON.
         </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problem Example:</h3>
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Encoding Problem Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// JSON saved in Windows-1252 encoding but parsed as UTF-8
+{`// JSON saved with ISO-8859-1 (Latin-1) encoding instead of UTF-8
 {
-  "name": "François Müller"
+  "name": "Café" // 'é' is encoded differently in ISO-8859-1 vs UTF-8
+}
+
+// When parsed with UTF-8 expectation, this can result in:
+// SyntaxError: Unexpected token 'C' at position 10`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            When JSON containing non-ASCII characters is saved with the wrong encoding, those characters get misinterpreted during parsing.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">2. Unpaired Surrogate Characters</h3>
+        <p>
+          Surrogate pairs are used to represent characters outside the Basic Multilingual Plane (BMP) in UTF-16.
+          Issues occur when these pairs are improperly split or handled.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Surrogate Pair Issue:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+{`// Incorrect: Unpaired high surrogate
+{
+  "emoji": "\\uD83D"
+}
+
+// Correct: Complete surrogate pair for '😀' (U+1F600)
+{
+  "emoji": "\\uD83D\\uDE00"
 }`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            Result: Characters like &quot;ç&quot; and &quot;ü&quot; may appear as &quot;Ã§&quot; and &quot;Ã¼&quot; or
-            cause parsing errors.
+            Certain characters like emoji require surrogate pairs in UTF-16. Incomplete pairs cause parsing errors.
           </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Invalid Escape Sequences</h3>
-        <p>Improperly formatted Unicode escape sequences will cause parsing errors:</p>
+        <h3 className="text-xl font-medium mt-6">3. Byte Order Mark (BOM) Issues</h3>
+        <p>
+          The Byte Order Mark (BOM) is a special Unicode character that can appear at the beginning of a file to indicate its encoding.
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problem Example:</h3>
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">BOM Issue Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`{
-  "text": "Star symbol: \\u2605"   // Valid
-  "text2": "Star symbol: \\u26"     // Invalid - incomplete
-  "text3": "Star symbol: \\u260G"   // Invalid - not a hex sequence
-}`}
+{`// File starts with a UTF-8 BOM (not visible here, but present in the file)
+﻿{
+  "property": "value"
+}
+
+// This can cause errors like:
+// SyntaxError: Unexpected token '' in JSON at position 0`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">Error: Invalid Unicode escape sequence</p>
+          <p className="mt-2 text-sm">
+            While some parsers handle BOMs correctly, others interpret them as part of the JSON content, causing syntax errors.
+          </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Surrogate Pair Issues</h3>
-        <p>Some Unicode characters (like many emojis) require two \u escape sequences called surrogate pairs:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problem Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "correct": "Thumbs up: \\ud83d\\udc4d",  // Complete surrogate pair
-  "incorrect": "Thumbs up: \\ud83d"         // Incomplete surrogate pair
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Error: Incomplete Unicode surrogate pair</p>
-        </div>
+        <h3 className="text-xl font-medium mt-6">4. Escape Sequence Errors</h3>
+        <p>
+          Improper formatting of Unicode escape sequences is another common issue.
+        </p>
 
-        <h3 className="text-xl font-medium mt-6">4. Byte Order Mark (BOM)</h3>
-        <p>Some text editors add an invisible BOM character at the beginning of UTF-8 files:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problem:</h3>
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Escape Sequence Errors:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// File begins with an invisible BOM (U+FEFF)
+{`// Incorrect: Missing leading zeros (must be 4 hex digits)
 {
-  "key": "value"
+  "symbol": "\\u3A"
+}
+
+// Correct:
+{
+  "symbol": "\\u003A"
+}
+
+// Incorrect: Invalid hexadecimal character
+{
+  "value": "\\uGHIJ"
+}
+
+// Correct (if intended as text): 
+{
+  "value": "\\\\uGHIJ"
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">Error: Unexpected token at the start of the JSON file</p>
+          <p className="mt-2 text-sm">
+            Unicode escape sequences in JSON must be exactly 4 hexadecimal digits. If you want to represent the literal sequence &quot;\uGHIJ&quot;, the backslash itself must be escaped.
+          </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">5. Control Characters</h3>
-        <p>JSON doesn&apos;t allow unescaped control characters (U+0000 through U+001F):</p>
+        <p>
+          JSON requires that all control characters (U+0000 to U+001F) be escaped with special sequences.
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problem Example:</h3>
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Control Character Issue:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`{
-  "text": "Line 1↵Line 2"  // Where ↵ is the actual newline character
+{`// Incorrect: Contains literal newline and tab characters
+{
+  "description": "First line
+  Second line	indented"
+}
+
+// Correct: Using escape sequences
+{
+  "description": "First line\\nSecond line\\tindented"
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">Error: Control characters must be escaped</p>
-        </div>
-
-        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
-          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            While JSON requires control characters to be escaped, it allows for newlines, tabs, and other whitespace
-            characters to appear unescaped outside string values, i.e., for formatting the JSON itself.
+          <p className="mt-2 text-sm">
+            Literal control characters in JSON strings cause syntax errors. They must be represented with their escape sequences.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Diagnosing Unicode Issues</h2>
+        <h2 className="text-2xl font-semibold mt-8">Detecting Unicode Issues in JSON</h2>
 
-        <h3 className="text-xl font-medium mt-6">1. Recognizing Unicode-Related Errors</h3>
-        <p>Look for these common error messages, which often indicate Unicode problems:</p>
+        <h3 className="text-xl font-medium mt-6">1. Check Error Messages</h3>
+        <p>
+          Parse errors related to Unicode issues often have specific characteristics:
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium">Typical Unicode-Related Error Messages:</h4>
+          <table className="min-w-full text-sm mt-2">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-700">
+                <th className="px-4 py-2 text-left">Error Message Pattern</th>
+                <th className="px-4 py-2 text-left">Likely Unicode Issue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">&quot;Unexpected token &apos;&apos; at position 0&quot;</td>
+                <td className="px-4 py-2">BOM or encoding mismatch</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">&quot;Invalid Unicode escape sequence&quot;</td>
+                <td className="px-4 py-2">Malformed \u escape</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">&quot;Unexpected token at position X&quot;</td>
+                <td className="px-4 py-2">Character encoding issue</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">&quot;Unexpected end of input&quot;</td>
+                <td className="px-4 py-2">Unpaired surrogate character</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">&quot;Invalid character&quot;</td>
+                <td className="px-4 py-2">Control character or invalid byte</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">2. Visual Inspection</h3>
+        <p>
+          Sometimes, Unicode issues are visible when you examine the JSON:
+        </p>
+
         <ul className="list-disc pl-6 space-y-2">
-          <li>&quot;Invalid UTF-8 character&quot; or &quot;Invalid UTF-8 sequence&quot;</li>
-          <li>&quot;Invalid Unicode escape sequence&quot;</li>
-          <li>&quot;Unexpected token&quot; at the beginning of the file (possible BOM issue)</li>
-          <li>&quot;Unterminated string&quot; (when a multi-byte character is corrupted mid-sequence)</li>
-          <li>&quot;Invalid control character&quot; (for unescaped control characters)</li>
+          <li>Look for question marks, boxes, or other placeholder characters that indicate encoding problems</li>
+          <li>Watch for &quot;mojibake&quot; (garbled text) where characters don&apos;t display as expected</li>
+          <li>Check for unexpected characters at the beginning of the file (potential BOM)</li>
         </ul>
 
-        <h3 className="text-xl font-medium mt-6">2. Examining the Raw Data</h3>
-        <p>To diagnose Unicode issues, sometimes you need to look at the raw bytes:</p>
+        <h3 className="text-xl font-medium mt-6">3. Use Specialized Tools</h3>
+        <p>
+          Various tools can help identify Unicode issues in JSON:
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Tools for Examining Raw Data:</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Use a hex editor to view the actual bytes</li>
+          <h4 className="text-lg font-medium">Helpful Tools:</h4>
+          <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              Command-line tools like <code>xxd</code> or <code>hexdump</code>
+              <strong>Hex editors</strong> - Show the actual byte values, revealing encoding issues
             </li>
-            <li>Encoding detection tools that analyze file contents</li>
+            <li>
+              <strong>Encoding detectors</strong> - Tools like chardet (Python) can identify the actual encoding used
+            </li>
+            <li>
+              <strong>Unicode inspectors</strong> - Display detailed information about each character
+            </li>
+            <li>
+              <strong>JSON validators</strong> - Many provide specific Unicode-related error messages
+            </li>
           </ul>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Finding Character Encoding Issues</h3>
-        <p>Look for these telltale signs of encoding problems:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Characters displaying as two or more incorrect characters</li>
-          <li>Question marks or replacement characters () appearing</li>
-          <li>Asian, Cyrillic or other non-Latin scripts appearing as gibberish</li>
-          <li>Latin characters with accents displaying incorrectly</li>
-        </ul>
+        <h2 className="text-2xl font-semibold mt-8">Resolving Unicode Issues in JSON</h2>
 
-        <h2 className="text-2xl font-semibold mt-8">Solving Unicode Issues in JSON</h2>
+        <h3 className="text-xl font-medium mt-6">1. Fix Encoding Issues</h3>
+        <p>
+          Ensure your JSON is saved with the correct encoding:
+        </p>
 
-        <h3 className="text-xl font-medium mt-6">1. Fixing Encoding Mismatches</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Solution Steps:</h3>
-          <ol className="list-decimal pl-6 space-y-2">
-            <li>Identify the current encoding of your JSON file</li>
-            <li>Use a text editor or tool that supports encoding conversion</li>
-            <li>Save or convert the file to UTF-8 without BOM</li>
-            <li>Verify the conversion by checking special characters</li>
-          </ol>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-4">
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">JavaScript Example:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`# Using iconv to convert encoding (Linux/Mac)
-iconv -f ISO-8859-1 -t UTF-8 input.json > output.json
+{`// Node.js example to read and save with explicit UTF-8 encoding
+const fs = require('fs');
 
-# Using PowerShell (Windows)
-Get-Content -Encoding Latin1 -Path input.json | Set-Content -Encoding UTF8 -Path output.json`}
+// Reading with explicit encoding
+const jsonString = fs.readFileSync('data.json', 'utf8');
+
+// Process the JSON...
+const data = JSON.parse(jsonString);
+
+// Save with explicit UTF-8 encoding
+fs.writeFileSync('fixed.json', JSON.stringify(data, null, 2), 'utf8');`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Properly Escaping Unicode Characters</h3>
+        <h3 className="text-xl font-medium mt-6">2. Handle BOMs Correctly</h3>
+        <p>
+          If your JSON files have a BOM, you can either remove it or ensure your parser handles it:
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Solution:</h3>
-          <p className="mt-2">When manually creating JSON with Unicode characters, ensure proper escaping:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-4">
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">BOM Removal Example:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// JavaScript example
-const data = {
-  message: "Hello, 世界! 😊"
-};
-
-// Properly escaped JSON
-const json = JSON.stringify(data);
-console.log(json);
-// eslint-disable-next-line react/no-unescaped-entities
-// Output: {&quot;message&quot;:&quot;Hello, 世界!&quot;}
-
-// With forced escaping for transport/debugging
-const escapedJson = JSON.stringify(data, null, 2).replace(
-  /[\u007F-\uFFFF]/g, 
-  char => '\\u' + ('0000' + char.charCodeAt(0).toString(16)).slice(-4)
-);
-// eslint-disable-next-line react/no-unescaped-entities
-console.log(escapedJson);
-/* Output:
-{
-  &#34;message&#34;: &#34;Hello, \\u4e16\\u754c! \\ud83d\\ude0a&#34;
+{`// JavaScript: Remove BOM if present
+function removeBOM(str) {
+  if (str.charCodeAt(0) === 0xFEFF) {
+    return str.slice(1);
+  }
+  return str;
 }
-*/`}
+
+// Read JSON from file
+const jsonWithBOM = fs.readFileSync('data.json', 'utf8');
+const jsonWithoutBOM = removeBOM(jsonWithBOM);
+
+// Now parse
+const data = JSON.parse(jsonWithoutBOM);`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Removing the BOM</h3>
+        <h3 className="text-xl font-medium mt-6">3. Properly Escape Unicode Characters</h3>
+        <p>
+          For maximum compatibility, consider escaping non-ASCII characters:
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Solution:</h3>
-          <ol className="list-decimal pl-6 space-y-2">
-            <li>Save files as &quot;UTF-8 without BOM&quot; in your text editor</li>
-            <li>Or use tools to strip the BOM from existing files</li>
-          </ol>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-4">
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Unicode Escaping Example:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`# Using sed to remove BOM (Linux/Mac)
-sed '1s/^\\xEF\\xBB\\xBF//' input.json > output.json
+{`// JavaScript function to escape all non-ASCII characters
+function escapeNonAscii(str) {
+  return str.replace(/[^\\x00-\\x7F]/g, function(char) {
+    const code = char.charCodeAt(0);
+    // For characters outside BMP (needs surrogate pairs)
+    if (code > 0xFFFF) {
+      const highSurrogate = Math.floor((code - 0x10000) / 0x400) + 0xD800;
+      const lowSurrogate = ((code - 0x10000) % 0x400) + 0xDC00;
+      return '\\\\u' + highSurrogate.toString(16).toUpperCase() + 
+             '\\\\u' + lowSurrogate.toString(16).toUpperCase();
+    }
+    // Simple case for BMP characters
+    return '\\\\u' + ('0000' + code.toString(16).toUpperCase()).slice(-4);
+  });
+}
 
-# Using PowerShell (Windows)
-(Get-Content input.json -Raw).Replace("\\ufeff", "") | Set-Content output.json -NoNewline`}
+// Convert an object with Unicode characters to escaped JSON
+function safeStringify(obj) {
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'string') {
+      return escapeNonAscii(value);
+    }
+    return value;
+  });
+}
+
+// Example
+const data = { message: "Hello, 世界!" };
+const safeJson = safeStringify(data);
+// Result: {"message":"Hello, \\u4E16\\u754C!"}`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">4. Handling Control Characters</h3>
+        <h3 className="text-xl font-medium mt-6">4. Fix Surrogate Pair Issues</h3>
+        <p>
+          If you need to handle surrogate pairs manually:
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Solution:</h3>
-          <p className="mt-2">Always escape control characters in JSON strings:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-4">
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Surrogate Pair Validation:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// Common escaped control characters
-"\\n"    // Line feed
-"\\r"    // Carriage return
-"\\t"    // Tab
-"\\b"    // Backspace
-"\\f"    // Form feed
+{`// JavaScript function to check for unpaired surrogates in JSON strings
+function detectUnpairedSurrogates(str) {
+  const issues = [];
+  
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i);
+    
+    // Check for high surrogates (0xD800 to 0xDBFF)
+    if (code >= 0xD800 && code <= 0xDBFF) {
+      // A high surrogate should be followed by a low surrogate
+      if (i + 1 >= str.length || 
+          str.charCodeAt(i + 1) < 0xDC00 || 
+          str.charCodeAt(i + 1) > 0xDFFF) {
+        issues.push({
+          position: i,
+          issue: 'Unpaired high surrogate',
+          code: code.toString(16)
+        });
+      } else {
+        // Skip the next character as it's a valid low surrogate
+        i++;
+      }
+    }
+    
+    // Check for isolated low surrogates (0xDC00 to 0xDFFF)
+    else if (code >= 0xDC00 && code <= 0xDFFF) {
+      issues.push({
+        position: i,
+        issue: 'Isolated low surrogate',
+        code: code.toString(16)
+      });
+    }
+  }
+  
+  return issues;
+}
 
-// Example of properly escaped multi-line text in JSON
-{
-  "multilineText": "Line 1\\nLine 2\\nLine 3"
-}`}
+// Example usage
+const jsonString = '{"emoji": "\\uD83D"}'; // Incomplete surrogate pair
+const obj = JSON.parse(jsonString);
+const issues = detectUnpairedSurrogates(obj.emoji);
+console.log(issues);`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">5. Ensuring Proper Surrogate Pairs</h3>
+        <h3 className="text-xl font-medium mt-6">5. Normalize Unicode Representations</h3>
+        <p>
+          Some Unicode characters can be represented in multiple ways, which can cause comparison issues:
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Solution:</h3>
-          <p className="mt-2">
-            When manually creating JSON with characters outside the Basic Multilingual Plane (BMP), ensure surrogate
-            pairs are complete:
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Unicode Normalization:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+{`// JavaScript example using Unicode Normalization Form C (NFC)
+function normalizeJson(jsonString) {
+  const obj = JSON.parse(jsonString);
+  
+  // Recursively normalize all string values
+  function normalizeObject(obj) {
+    if (typeof obj === 'string') {
+      return obj.normalize('NFC');
+    } else if (Array.isArray(obj)) {
+      return obj.map(normalizeObject);
+    } else if (obj !== null && typeof obj === 'object') {
+      const result = {};
+      for (const key of Object.keys(obj)) {
+        // Normalize both keys and values
+        const normalizedKey = typeof key === 'string' ? key.normalize('NFC') : key;
+        result[normalizedKey] = normalizeObject(obj[key]);
+      }
+      return result;
+    }
+    return obj;
+  }
+  
+  const normalizedObj = normalizeObject(obj);
+  return JSON.stringify(normalizedObj);
+}
+
+// Example with accent characters
+const json = '{"café": "résumé"}';
+const normalized = normalizeJson(json);`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            Unicode normalization ensures consistent representation of characters that can be written in multiple ways (like accented characters).
           </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-4">
-            <pre>
-              {`// Using a proper JSON serializer handles surrogate pairs automatically
-const data = { emoji: "🚀" };
-const json = JSON.stringify(data);
-console.log(json);  // {&quot;emoji&quot;:&quot;an emoji&quot;}
-
-// Manual inspection of the escaped sequence:
-console.log(JSON.stringify(data.emoji).slice(1, -1));  // &#34;\\ud83d\\ude80&#34;`}
-            </pre>
-          </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Best Practices for Unicode in JSON</h2>
+        <h2 className="text-2xl font-semibold mt-8">Prevention Strategies</h2>
+        <p>
+          Follow these best practices to prevent Unicode issues in your JSON:
+        </p>
 
-        <h3 className="text-xl font-medium mt-6">1. Always Use UTF-8 Encoding</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Configure your editor to default to UTF-8 without BOM</li>
+        <ol className="list-decimal pl-6 space-y-3 mt-4">
           <li>
-            Specify UTF-8 in HTTP Content-Type headers (<code>application/json; charset=utf-8</code>)
+            <strong>Always specify encoding explicitly</strong> when reading or writing JSON files
           </li>
-          <li>Add encoding declarations in HTML/XML files that embed JSON</li>
-        </ul>
+          <li>
+            <strong>Use UTF-8 without BOM</strong> as your standard encoding for JSON files
+          </li>
+          <li>
+            <strong>Validate JSON after generation</strong>, especially if it contains non-ASCII characters
+          </li>
+          <li>
+            <strong>Consider escaping all non-ASCII characters</strong> for maximum compatibility
+          </li>
+          <li>
+            <strong>Use a library that handles Unicode correctly</strong> rather than manually constructing JSON
+          </li>
+          <li>
+            <strong>Include charset=utf-8 in Content-Type headers</strong> when serving JSON over HTTP
+          </li>
+        </ol>
 
-        <h3 className="text-xl font-medium mt-6">2. Use JSON Libraries Instead of Manual Escaping</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Let language-standard JSON libraries handle Unicode escaping</li>
-          <li>Avoid manual string concatenation to build JSON</li>
-          <li>Use proper JSON serializers/deserializers in your programming language</li>
-        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
+          <h3 className="text-lg font-medium">HTTP Header Example:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+{`Content-Type: application/json; charset=utf-8`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            Always specify the character encoding when serving JSON via HTTP to ensure proper interpretation.
+          </p>
+        </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Validate Before Transmitting or Storing</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Validate JSON syntax including Unicode handling</li>
-          <li>Consider normalizing text using Unicode normalization (NFC or NFD)</li>
-          <li>Test with full international character sets if your application is multilingual</li>
-        </ul>
+        <h2 className="text-2xl font-semibold mt-8">Language-Specific Considerations</h2>
 
-        <h3 className="text-xl font-medium mt-6">4. Sanitize User Input</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Be cautious with user-provided strings that may contain control characters</li>
-          <li>Consider normalizing or sanitizing text before encoding to JSON</li>
-          <li>Be especially careful with data coming from legacy systems with different encodings</li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Troubleshooting Table for Common Unicode Issues</h2>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-hidden overflow-x-auto">
-          <table className="min-w-full">
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Unicode Handling by Language:</h3>
+          <table className="min-w-full text-sm mt-2">
             <thead>
-              <tr className="bg-gray-200 dark:bg-gray-700">
-                <th className="p-2 text-left">Symptom</th>
-                <th className="p-2 text-left">Likely Cause</th>
-                <th className="p-2 text-left">Solution</th>
+              <tr className="bg-gray-50 dark:bg-gray-700">
+                <th className="px-4 py-2 text-left">Language</th>
+                <th className="px-4 py-2 text-left">Unicode Handling in JSON</th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-900">
-              <tr className="border-t dark:border-gray-700">
-                <td className="p-2">Accented characters appear as multiple characters</td>
-                <td className="p-2">UTF-8 interpreted as different encoding</td>
-                <td className="p-2">Convert the document to UTF-8 correctly</td>
+            <tbody>
+              <tr className="border-t">
+                <td className="px-4 py-2">JavaScript</td>
+                <td className="px-4 py-2">Good native support, but surrogate pair issues can occur with <code>String.fromCharCode</code></td>
               </tr>
-              <tr className="border-t dark:border-gray-700">
-                <td className="p-2">Error at start of file with no visible problem</td>
-                <td className="p-2">Byte Order Mark (BOM) present</td>
-                <td className="p-2">Remove the BOM or save as &quot;UTF-8 without BOM&quot;</td>
+              <tr className="border-t">
+                <td className="px-4 py-2">Python</td>
+                <td className="px-4 py-2">Excellent Unicode support; specify encoding with <code>open(file, encoding='utf-8')</code></td>
               </tr>
-              <tr className="border-t dark:border-gray-700">
-                <td className="p-2">Invalid Unicode escape sequence</td>
-                <td className="p-2">Malformed \u escape sequence</td>
-                <td className="p-2">Ensure each \u is followed by exactly 4 hex digits</td>
+              <tr className="border-t">
+                <td className="px-4 py-2">Java</td>
+                <td className="px-4 py-2">Good support; use <code>InputStreamReader</code> with correct charset</td>
               </tr>
-              <tr className="border-t dark:border-gray-700">
-                <td className="p-2">Emojis or certain characters broken in output</td>
-                <td className="p-2">Incomplete surrogate pairs</td>
-                <td className="p-2">Let JSON libraries handle encoding or ensure complete pairs</td>
+              <tr className="border-t">
+                <td className="px-4 py-2">Ruby</td>
+                <td className="px-4 py-2">Strong Unicode handling; specify <code>File.read(file, encoding: 'utf-8')</code></td>
               </tr>
-              <tr className="border-t dark:border-gray-700">
-                <td className="p-2">Control character errors</td>
-                <td className="p-2">Unescaped newlines/tabs in strings</td>
-                <td className="p-2">Use \n, \t, etc. for control characters in strings</td>
+              <tr className="border-t">
+                <td className="px-4 py-2">PHP</td>
+                <td className="px-4 py-2">Uneven support; use <code>json_encode</code> with <code>JSON_UNESCAPED_UNICODE</code> flag</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2">C#</td>
+                <td className="px-4 py-2">Good native support; prefer <code>Encoding.UTF8</code> for file operations</td>
               </tr>
             </tbody>
           </table>
@@ -374,17 +539,17 @@ console.log(JSON.stringify(data.emoji).slice(1, -1));  // &#34;\\ud83d\\ude80&#3
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Unicode support in JSON is robust, but encoding issues, escape sequence errors, and improper handling of
-          special characters can lead to frustrating parsing problems. By understanding how Unicode works in JSON,
-          recognizing common issues, and implementing the solutions outlined in this article, you can ensure your JSON
-          documents handle international text correctly and reliably.
+          Unicode character issues in JSON documents can be complex to diagnose and fix, but understanding 
+          the common problems and their solutions will help you handle these situations effectively. 
+          By following encoding best practices, properly escaping characters when needed, and using the right 
+          tools for detection and validation, you can prevent most Unicode-related JSON errors.
         </p>
-
-        <p>
-          Remember that prevention is key—using the right tools, consistently applying UTF-8 encoding, and letting
-          established JSON libraries handle the serialization will help you avoid most Unicode-related issues. When
-          problems do occur, a methodical approach to diagnosis and the targeted solutions provided here will help you
-          resolve them quickly.
+        
+        <p className="mt-4">
+          Remember that JSON&apos;s simplicity as a data format depends on correct handling of Unicode. 
+          Taking the time to ensure your JSON is properly encoded and formatted will save you from 
+          difficult debugging sessions and ensure your data flows smoothly between systems, regardless 
+          of what languages or special characters it contains.
         </p>
       </div>
     </>

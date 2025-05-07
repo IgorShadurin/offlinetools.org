@@ -169,6 +169,61 @@ const jsonFormatterArticles: ToolArticle[] = [
     description: "Learn why circular references cause JSON formatters to fail, how to identify them, and strategies to handle self-referential data structures.",
     slug: "circular-references-in-json-why-they-break-formatters",
   },
+  {
+    title: "Error Handling When Converting Between JSON and Other Formats",
+    description: "Learn effective strategies for handling errors when converting between JSON and other data formats, including XML, CSV, and YAML.",
+    slug: "error-handling-when-converting-between-json-and-other-formats",
+  },
+  {
+    title: "Automatic Error Correction in Smart JSON Formatters",
+    description: "Explore how advanced JSON formatters can automatically detect and correct common syntax errors in your JSON documents.",
+    slug: "automatic-error-correction-in-smart-json-formatters",
+  },
+  {
+    title: "Browser Compatibility Issues with JSON Parsing",
+    description: "Understand JSON parsing differences across browsers and how to ensure your JSON documents work correctly in all environments.",
+    slug: "browser-compatibility-issues-with-json-parsing",
+  },
+  {
+    title: "Handling Special Characters in JSON Strings",
+    description: "Learn best practices for correctly escaping and handling special characters in JSON strings to prevent parsing errors.",
+    slug: "handling-special-characters-in-json-strings",
+  },
+  {
+    title: "Error Logs from JSON Formatters: How to Interpret Them",
+    description: "Decipher complex error logs from JSON formatters and learn how to quickly resolve the underlying issues in your JSON documents.",
+    slug: "error-logs-from-json-formatters-how-to-interpret-them",
+  },
+  {
+    title: "Troubleshooting JSON.parse() Failures",
+    description: "Learn how to diagnose and fix common causes of JSON.parse() failures across different programming environments.",
+    slug: "troubleshooting-json-parse-failures",
+  },
+  {
+    title: "When JSON Formatters Disagree: Differences in Error Reporting",
+    description: "Understand why different JSON formatters might report different errors for the same document and how to reconcile these differences.",
+    slug: "when-json-formatters-disagree-differences-in-error-reporting",
+  },
+  {
+    title: "Case Sensitivity Issues in JSON Formatting",
+    description: "Learn about case sensitivity challenges in JSON formatting and validation, and how to avoid common pitfalls in property naming.",
+    slug: "case-sensitivity-issues-in-json-formatting",
+  },
+  {
+    title: "Handling Forbidden Characters in JSON Property Names",
+    description: "Discover which characters are forbidden in JSON property names, why they cause problems, and how to work around these limitations.",
+    slug: "handling-forbidden-characters-in-json-property-names",
+  },
+  {
+    title: "Deep Nesting Errors: When Your JSON Is Too Complex",
+    description: "Learn how to identify, prevent, and resolve errors caused by excessively nested JSON structures that exceed parser capabilities.",
+    slug: "deep-nesting-errors-when-your-json-is-too-complex",
+  },
+  {
+    title: "Line Break Problems in Multi-line JSON Strings",
+    description: "Understand how to properly handle line breaks in JSON strings to avoid parsing errors and ensure compatibility across different systems.",
+    slug: "line-break-problems-in-multi-line-json-strings",
+  },
   // More articles can be added here
 ];
 
