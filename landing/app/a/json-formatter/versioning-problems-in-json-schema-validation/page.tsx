@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Versioning Problems in JSON Schema Validation | Offline Tools",
-  description: "Learn how to identify and resolve versioning problems in JSON Schema validation and maintain backward compatibility in evolving APIs",
+  description:
+    "Learn how to identify and resolve versioning problems in JSON Schema validation and maintain backward compatibility in evolving APIs",
 };
 
 /**
@@ -18,43 +19,65 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON Schema has become the standard for validating JSON documents, ensuring that data structures conform to 
-          expected formats. However, as applications evolve, schemas must evolve with them—leading to versioning challenges. 
-          This article explores common versioning problems in JSON Schema validation and provides strategies for maintaining 
-          compatibility across schema versions.
+          JSON Schema has become the standard for validating JSON documents, ensuring that data structures conform to
+          expected formats. However, as applications evolve, schemas must evolve with them—leading to versioning
+          challenges. This article explores common versioning problems in JSON Schema validation and provides strategies
+          for maintaining compatibility across schema versions.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. Understanding JSON Schema Versioning</h2>
         <p>
-          JSON Schema itself has multiple specification versions (Draft 4, 6, 7, 2019-09, 2020-12), 
-          but equally important is how you version your own schemas as your data models evolve. 
-          Let's explore both dimensions of this versioning challenge.
+          JSON Schema itself has multiple specification versions (Draft 4, 6, 7, 2019-09, 2020-12), but equally
+          important is how you version your own schemas as your data models evolve. Let's explore both dimensions of
+          this versioning challenge.
         </p>
 
         <h3 className="text-xl font-medium mt-6">1.1 JSON Schema Specification Versions</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium">Evolution of JSON Schema:</h4>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Draft 3</strong> (2010) - Early version, now obsolete</li>
-            <li><strong>Draft 4</strong> (2013) - Widely implemented and still commonly used</li>
-            <li><strong>Draft 6</strong> (2016) - Added features like <code>const</code> and <code>contains</code></li>
-            <li><strong>Draft 7</strong> (2017) - Added <code>if/then/else</code> and more string formats</li>
-            <li><strong>Draft 2019-09</strong> - Introduced <code>unevaluatedProperties</code> and <code>unevaluatedItems</code></li>
-            <li><strong>Draft 2020-12</strong> - Latest version with improved dynamic references and schema evaluation</li>
+            <li>
+              <strong>Draft 3</strong> (2010) - Early version, now obsolete
+            </li>
+            <li>
+              <strong>Draft 4</strong> (2013) - Widely implemented and still commonly used
+            </li>
+            <li>
+              <strong>Draft 6</strong> (2016) - Added features like <code>const</code> and <code>contains</code>
+            </li>
+            <li>
+              <strong>Draft 7</strong> (2017) - Added <code>if/then/else</code> and more string formats
+            </li>
+            <li>
+              <strong>Draft 2019-09</strong> - Introduced <code>unevaluatedProperties</code> and{" "}
+              <code>unevaluatedItems</code>
+            </li>
+            <li>
+              <strong>Draft 2020-12</strong> - Latest version with improved dynamic references and schema evaluation
+            </li>
           </ul>
         </div>
 
         <h3 className="text-xl font-medium mt-6">1.2 Your Schema's Versioning</h3>
         <p>
-          Independent of the JSON Schema specification version, your own schemas need versioning as your data models evolve:
+          Independent of the JSON Schema specification version, your own schemas need versioning as your data models
+          evolve:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium">Common Versioning Approaches:</h4>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>URL-based versioning</strong> - Incorporating version in the schema's <code>$id</code></li>
-            <li><strong>Version property</strong> - Adding explicit version properties to the schema</li>
-            <li><strong>Directory structure</strong> - Organizing schemas by version in your repository</li>
-            <li><strong>Semantic versioning</strong> - Following semver principles for breaking vs. non-breaking changes</li>
+            <li>
+              <strong>URL-based versioning</strong> - Incorporating version in the schema's <code>$id</code>
+            </li>
+            <li>
+              <strong>Version property</strong> - Adding explicit version properties to the schema
+            </li>
+            <li>
+              <strong>Directory structure</strong> - Organizing schemas by version in your repository
+            </li>
+            <li>
+              <strong>Semantic versioning</strong> - Following semver principles for breaking vs. non-breaking changes
+            </li>
           </ul>
         </div>
 
@@ -67,26 +90,36 @@ export default function JsonFormatterArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium text-red-600 dark:text-red-400">Breaking Changes:</h4>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li>Adding <code>required</code> properties</li>
-            <li>Removing properties from <code>properties</code></li>
-            <li>Making validation rules more restrictive (e.g., tighter <code>minLength</code>)</li>
+            <li>
+              Adding <code>required</code> properties
+            </li>
+            <li>
+              Removing properties from <code>properties</code>
+            </li>
+            <li>
+              Making validation rules more restrictive (e.g., tighter <code>minLength</code>)
+            </li>
             <li>Changing property types</li>
-            <li>Removing items from <code>enum</code></li>
+            <li>
+              Removing items from <code>enum</code>
+            </li>
           </ul>
           <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Non-Breaking Changes:</h4>
           <ul className="list-disc pl-6 space-y-1 mt-2">
             <li>Adding optional properties</li>
-            <li>Removing properties from <code>required</code></li>
+            <li>
+              Removing properties from <code>required</code>
+            </li>
             <li>Making validation rules less restrictive</li>
-            <li>Adding items to <code>enum</code></li>
+            <li>
+              Adding items to <code>enum</code>
+            </li>
             <li>Adding new formats</li>
           </ul>
         </div>
 
         <h3 className="text-xl font-medium mt-6">2.2 Schema Dependencies and References</h3>
-        <p>
-          One of the most challenging versioning issues occurs with schema references and dependencies:
-        </p>
+        <p>One of the most challenging versioning issues occurs with schema references and dependencies:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium text-red-600 dark:text-red-400">Problematic Reference Example:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -128,9 +161,7 @@ export default function JsonFormatterArticle() {
         </div>
 
         <h3 className="text-xl font-medium mt-6">2.3 Incompatibilities Between Schema Versions</h3>
-        <p>
-          Different JSON Schema draft versions have different features and behaviors:
-        </p>
+        <p>Different JSON Schema draft versions have different features and behaviors:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium">Version-Specific Features:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -156,9 +187,7 @@ export default function JsonFormatterArticle() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">3. Real-World Example: API Evolution</h2>
-        <p>
-          Let's examine a real-world scenario of schema versioning in an evolving API:
-        </p>
+        <p>Let's examine a real-world scenario of schema versioning in an evolving API:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Customer API Evolution:</h3>
@@ -249,9 +278,7 @@ Accept: application/vnd.example.v2+json`}
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">4. Strategies for Schema Versioning</h2>
-        <p>
-          Let's explore effective approaches to handle schema versioning:
-        </p>
+        <p>Let's explore effective approaches to handle schema versioning:</p>
 
         <h3 className="text-xl font-medium mt-6">4.1 Explicit Schema Identifiers</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -265,7 +292,8 @@ Accept: application/vnd.example.v2+json`}
 }`}
           </pre>
           <p className="mt-2">
-            <strong>Benefits:</strong> Clear versioning, explicit schema identification, supports centralized schema repositories
+            <strong>Benefits:</strong> Clear versioning, explicit schema identification, supports centralized schema
+            repositories
           </p>
         </div>
 
@@ -406,9 +434,7 @@ function checkBackwardCompatibility(oldSchema, newSchema) {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">5. Handling Multiple Versions Simultaneously</h2>
-        <p>
-          In real-world scenarios, you'll often need to support multiple schema versions simultaneously:
-        </p>
+        <p>In real-world scenarios, you'll often need to support multiple schema versions simultaneously:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Multi-Version Support Strategies:</h3>
@@ -526,18 +552,26 @@ function transformV2ToV1(customer) {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">6. Schema Deprecation and Sunset Policies</h2>
-        <p>
-          Effectively managing the end-of-life for schema versions is as important as introducing new ones:
-        </p>
+        <p>Effectively managing the end-of-life for schema versions is as important as introducing new ones:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Schema Lifecycle Management:</h3>
           <ol className="list-decimal pl-6 space-y-2 mt-2">
-            <li><strong>Deprecation notice</strong> - Inform clients that a schema version will be sunset</li>
-            <li><strong>Grace period</strong> - Provide sufficient time for migration (e.g., 6-12 months)</li>
-            <li><strong>Documentation</strong> - Clearly document migration paths and deadlines</li>
-            <li><strong>Migration tooling</strong> - Provide tools for transforming between versions</li>
-            <li><strong>Monitoring</strong> - Track usage of deprecated versions to inform decisions</li>
+            <li>
+              <strong>Deprecation notice</strong> - Inform clients that a schema version will be sunset
+            </li>
+            <li>
+              <strong>Grace period</strong> - Provide sufficient time for migration (e.g., 6-12 months)
+            </li>
+            <li>
+              <strong>Documentation</strong> - Clearly document migration paths and deadlines
+            </li>
+            <li>
+              <strong>Migration tooling</strong> - Provide tools for transforming between versions
+            </li>
+            <li>
+              <strong>Monitoring</strong> - Track usage of deprecated versions to inform decisions
+            </li>
           </ol>
         </div>
 
@@ -587,9 +621,9 @@ Link: <https://api.example.com/schemas/customer/v2>; rel="successor-version"
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Pro Tip</h3>
           <p>
-            Consider adopting a "tolerant reader" pattern in your applications, where your code is more permissive 
-            in what it accepts than what it produces. This approach makes your applications more resilient to 
-            schema changes and reduces the friction of version transitions.
+            Consider adopting a "tolerant reader" pattern in your applications, where your code is more permissive in
+            what it accepts than what it produces. This approach makes your applications more resilient to schema
+            changes and reduces the friction of version transitions.
           </p>
         </div>
 
@@ -598,36 +632,53 @@ Link: <https://api.example.com/schemas/customer/v2>; rel="successor-version"
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
             <h3 className="text-lg font-medium">Schema Registries:</h3>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li><strong>Confluent Schema Registry</strong> - Primarily for Avro, but supports JSON Schema</li>
-              <li><strong>Apicurio Registry</strong> - Open-source schema registry with JSON Schema support</li>
-              <li><strong>AWS Glue Schema Registry</strong> - For AWS environments</li>
-              <li><strong>Azure Schema Registry</strong> - Schema registry for Azure Event Hubs</li>
+              <li>
+                <strong>Confluent Schema Registry</strong> - Primarily for Avro, but supports JSON Schema
+              </li>
+              <li>
+                <strong>Apicurio Registry</strong> - Open-source schema registry with JSON Schema support
+              </li>
+              <li>
+                <strong>AWS Glue Schema Registry</strong> - For AWS environments
+              </li>
+              <li>
+                <strong>Azure Schema Registry</strong> - Schema registry for Azure Event Hubs
+              </li>
             </ul>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
             <h3 className="text-lg font-medium">Compatibility Tools:</h3>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li><strong>json-schema-diff-validator</strong> - Compare schemas for compatibility</li>
-              <li><strong>jsonschemadiff</strong> - Visual diff tool for JSON Schemas</li>
-              <li><strong>openapi-diff</strong> - For OpenAPI schemas (which use JSON Schema)</li>
-              <li><strong>SchemaStore</strong> - Collection of common JSON schemas</li>
+              <li>
+                <strong>json-schema-diff-validator</strong> - Compare schemas for compatibility
+              </li>
+              <li>
+                <strong>jsonschemadiff</strong> - Visual diff tool for JSON Schemas
+              </li>
+              <li>
+                <strong>openapi-diff</strong> - For OpenAPI schemas (which use JSON Schema)
+              </li>
+              <li>
+                <strong>SchemaStore</strong> - Collection of common JSON schemas
+              </li>
             </ul>
           </div>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">9. Conclusion</h2>
         <p>
-          JSON Schema versioning is a crucial aspect of API and data model evolution. By implementing a thoughtful 
+          JSON Schema versioning is a crucial aspect of API and data model evolution. By implementing a thoughtful
           versioning strategy, you can safely evolve your schemas while maintaining compatibility for existing clients.
-          Remember that schema versioning isn't just a technical concern—it's a usability and developer experience issue 
+          Remember that schema versioning isn't just a technical concern—it's a usability and developer experience issue
           that impacts how effectively consumers can use your APIs and services.
         </p>
 
         <p className="mt-3">
-          The key takeaway is to plan for change from the beginning. Design your schemas, APIs, and applications with 
-          the expectation that schemas will evolve, and implement practices that make these transitions as seamless as possible.
+          The key takeaway is to plan for change from the beginning. Design your schemas, APIs, and applications with
+          the expectation that schemas will evolve, and implement practices that make these transitions as seamless as
+          possible.
         </p>
       </div>
     </>
   );
-} 
+}

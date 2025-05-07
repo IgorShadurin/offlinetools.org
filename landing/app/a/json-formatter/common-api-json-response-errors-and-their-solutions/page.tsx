@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Common API JSON Response Errors and Their Solutions | Offline Tools",
-  description: "Learn about common API JSON response errors and effective solutions to handle them in your applications",
+  description:
+    "Learn about common API JSON response errors and effective solutions to handle them in your applications",
 };
 
 /**
@@ -19,13 +20,13 @@ export default function JsonFormatterArticle() {
       <div className="space-y-6">
         <p>
           When working with APIs, handling JSON response errors effectively is crucial for building robust applications.
-          From malformed responses to unexpected structures, API JSON errors can occur in various forms. This article 
+          From malformed responses to unexpected structures, API JSON errors can occur in various forms. This article
           explores the most common API JSON response errors and provides practical solutions to handle them properly.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. Malformed JSON Responses</h2>
         <p>
-          One of the most frequent API issues is receiving malformed JSON that fails to parse. This typically happens 
+          One of the most frequent API issues is receiving malformed JSON that fails to parse. This typically happens
           when the API returns invalid syntax or incomplete data.
         </p>
 
@@ -115,7 +116,8 @@ function normalizeApiError(response) {
 
         <h2 className="text-2xl font-semibold mt-8">3. Unexpected NULL Values</h2>
         <p>
-          APIs often return NULL for optional fields, which can cause issues if your code expects values to always be present.
+          APIs often return NULL for optional fields, which can cause issues if your code expects values to always be
+          present.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -152,7 +154,8 @@ const phoneNumber = safeGet(response, 'user.phone', 'No phone provided');`}
 
         <h2 className="text-2xl font-semibold mt-8">4. Empty or Missing Arrays</h2>
         <p>
-          When an API should return a collection of items but finds none, it might return an empty array, null, or omit the field entirely.
+          When an API should return a collection of items but finds none, it might return an empty array, null, or omit
+          the field entirely.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -197,7 +200,8 @@ items.forEach(item => {
 
         <h2 className="text-2xl font-semibold mt-8">5. Type Mismatches</h2>
         <p>
-          API responses sometimes return data types different from what you expect, such as strings instead of numbers or booleans as strings.
+          API responses sometimes return data types different from what you expect, such as strings instead of numbers
+          or booleans as strings.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -231,7 +235,8 @@ console.log(typeof normalizedUser.active); // "boolean"`}
 
         <h2 className="text-2xl font-semibold mt-8">6. HTTP Status Codes Not Matching Response Content</h2>
         <p>
-          Some APIs return success status codes (200 OK) even when errors occur, putting the actual error details in the response body.
+          Some APIs return success status codes (200 OK) even when errors occur, putting the actual error details in the
+          response body.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -272,36 +277,43 @@ try {
         <h2 className="text-2xl font-semibold mt-8">7. Best Practices for Handling API JSON Errors</h2>
         <ol className="list-decimal pl-6 space-y-2">
           <li>
-            <strong>Implement comprehensive error handling:</strong> Always use try-catch blocks when parsing JSON and making API calls.
+            <strong>Implement comprehensive error handling:</strong> Always use try-catch blocks when parsing JSON and
+            making API calls.
           </li>
           <li>
-            <strong>Normalize responses:</strong> Create utility functions to standardize different error formats from various endpoints.
+            <strong>Normalize responses:</strong> Create utility functions to standardize different error formats from
+            various endpoints.
           </li>
           <li>
-            <strong>Validate data types:</strong> Type-check important values and convert them if necessary before using them in your application.
+            <strong>Validate data types:</strong> Type-check important values and convert them if necessary before using
+            them in your application.
           </li>
           <li>
             <strong>Use default values:</strong> Always have fallbacks for missing or null fields.
           </li>
           <li>
-            <strong>Log detailed errors:</strong> Include the raw response when logging API errors to facilitate debugging.
+            <strong>Log detailed errors:</strong> Include the raw response when logging API errors to facilitate
+            debugging.
           </li>
           <li>
-            <strong>Retry with exponential backoff:</strong> Implement retry mechanisms for transient errors, with increasing delays between attempts.
+            <strong>Retry with exponential backoff:</strong> Implement retry mechanisms for transient errors, with
+            increasing delays between attempts.
           </li>
           <li>
-            <strong>Provide user-friendly messages:</strong> Translate technical API errors into understandable messages for end-users.
+            <strong>Provide user-friendly messages:</strong> Translate technical API errors into understandable messages
+            for end-users.
           </li>
         </ol>
 
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Pro Tip</h3>
           <p>
-            Consider using a dedicated API client library or creating a custom wrapper that handles common JSON error patterns
-            for your specific APIs. This centralizes error handling logic and promotes consistency across your application.
+            Consider using a dedicated API client library or creating a custom wrapper that handles common JSON error
+            patterns for your specific APIs. This centralizes error handling logic and promotes consistency across your
+            application.
           </p>
         </div>
       </div>
     </>
   );
-} 
+}

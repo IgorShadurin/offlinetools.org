@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Handling Forbidden Characters in JSON Property Names | Offline Tools",
-  description: "Learn about the restrictions on JSON property names, how to handle special characters, and techniques for working with problematic property names in different environments.",
+  description:
+    "Learn about the restrictions on JSON property names, how to handle special characters, and techniques for working with problematic property names in different environments.",
 };
 
 /**
@@ -18,47 +19,65 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become a ubiquitous data interchange format, used everywhere from API responses to configuration files. While JSON is generally flexible, it does impose some restrictions on property names that can cause confusion and errors for developers.
+          JSON (JavaScript Object Notation) has become a ubiquitous data interchange format, used everywhere from API
+          responses to configuration files. While JSON is generally flexible, it does impose some restrictions on
+          property names that can cause confusion and errors for developers.
         </p>
 
         <p>
-          In this article, we&apos;ll explore the rules governing JSON property names, common issues with forbidden characters, and practical strategies for working with challenging property names across different environments.
+          In this article, we&apos;ll explore the rules governing JSON property names, common issues with forbidden
+          characters, and practical strategies for working with challenging property names across different
+          environments.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">JSON Property Name Rules and Restrictions</h2>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Official JSON Specification</h3>
         <p>
-          According to the <a href="https://www.rfc-editor.org/rfc/rfc8259" className="text-blue-600 hover:underline">RFC 8259</a> (the JSON specification), a property name must be a string. The spec states:
+          According to the{" "}
+          <a href="https://www.rfc-editor.org/rfc/rfc8259" className="text-blue-600 hover:underline">
+            RFC 8259
+          </a>{" "}
+          (the JSON specification), a property name must be a string. The spec states:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
-          <p className="italic">
-            &quot;The names within an object SHOULD be unique&quot;
-          </p>
-          <p className="mt-2">
-            And more importantly for our discussion:
-          </p>
+          <p className="italic">&quot;The names within an object SHOULD be unique&quot;</p>
+          <p className="mt-2">And more importantly for our discussion:</p>
           <p className="italic mt-2">
-            &quot;An object member is represented as a pair of the member name's character string representation and the member's value. The member name is delineated by a quotation mark character.&quot;
+            &quot;An object member is represented as a pair of the member name's character string representation and the
+            member's value. The member name is delineated by a quotation mark character.&quot;
           </p>
         </div>
 
         <p className="mt-4">
-          While the specification doesn&apos;t explicitly forbid specific characters within property names, it does require that property names be valid strings enclosed in double quotes. This has some important implications.
+          While the specification doesn&apos;t explicitly forbid specific characters within property names, it does
+          require that property names be valid strings enclosed in double quotes. This has some important implications.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Characters That Must Be Escaped</h3>
-        <p>
-          Within JSON property names, certain characters must be escaped with a backslash:
-        </p>
+        <p>Within JSON property names, certain characters must be escaped with a backslash:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li><code>\"</code> - Double quote</li>
-          <li><code>\\</code> - Backslash</li>
-          <li><code>\b</code> - Backspace</li>
-          <li><code>\f</code> - Form feed</li>
-          <li><code>\n</code> - New line</li>
-          <li><code>\r</code> - Carriage return</li>
-          <li><code>\t</code> - Tab</li>
+          <li>
+            <code>\"</code> - Double quote
+          </li>
+          <li>
+            <code>\\</code> - Backslash
+          </li>
+          <li>
+            <code>\b</code> - Backspace
+          </li>
+          <li>
+            <code>\f</code> - Form feed
+          </li>
+          <li>
+            <code>\n</code> - New line
+          </li>
+          <li>
+            <code>\r</code> - Carriage return
+          </li>
+          <li>
+            <code>\t</code> - Tab
+          </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-md">
@@ -74,9 +93,7 @@ export default function JsonFormatterArticle() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Unicode Characters in Property Names</h3>
-        <p>
-          JSON property names can include Unicode characters, either directly or using Unicode escape sequences:
-        </p>
+        <p>JSON property names can include Unicode characters, either directly or using Unicode escape sequences:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`{
@@ -90,7 +107,8 @@ export default function JsonFormatterArticle() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">1. Using Reserved Words or Special Characters</h3>
         <p>
-          While not forbidden by JSON itself, using characters like dots, spaces, or characters that have special meaning in programming languages can cause issues when working with JSON data:
+          While not forbidden by JSON itself, using characters like dots, spaces, or characters that have special
+          meaning in programming languages can cause issues when working with JSON data:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -116,7 +134,8 @@ console.log(user.user-id);    // Will perform subtraction!`}
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Starting with Numbers or Special Characters</h3>
         <p>
-          Property names that start with numbers or special characters can cause issues in some programming languages and frameworks:
+          Property names that start with numbers or special characters can cause issues in some programming languages
+          and frameworks:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -130,7 +149,8 @@ console.log(user.user-id);    // Will perform subtraction!`}
 
         <h3 className="text-xl font-semibold mt-6 mb-3">3. Control Characters and Invisible Characters</h3>
         <p>
-          Control characters (ASCII 0-31) can be particularly problematic, as they may not be visible in editors but can cause parsing errors:
+          Control characters (ASCII 0-31) can be particularly problematic, as they may not be visible in editors but can
+          cause parsing errors:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -142,9 +162,7 @@ console.log(user.user-id);    // Will perform subtraction!`}
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">4. Empty Property Names</h3>
-        <p>
-          While technically valid in JSON, empty property names can cause issues in many programming environments:
-        </p>
+        <p>While technically valid in JSON, empty property names can cause issues in many programming environments:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`{
@@ -179,9 +197,7 @@ console.log(data["123numeric"]);`}
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Python</h3>
-        <p>
-          In Python, dictionary keys with special characters work similarly to JavaScript:
-        </p>
+        <p>In Python, dictionary keys with special characters work similarly to JavaScript:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`import json
@@ -195,21 +211,23 @@ print(data["123"])`}
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Databases</h3>
-        <p>
-          When storing JSON in databases, property names may face additional restrictions:
-        </p>
+        <p>When storing JSON in databases, property names may face additional restrictions:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>MongoDB allows almost any character in field names but reserves field names starting with <code>$</code> and containing <code>.</code> for special operations</li>
-          <li>PostgreSQL&apos;s JSONB type allows most characters but accessing them may require special handling in SQL queries</li>
+          <li>
+            MongoDB allows almost any character in field names but reserves field names starting with <code>$</code> and
+            containing <code>.</code> for special operations
+          </li>
+          <li>
+            PostgreSQL&apos;s JSONB type allows most characters but accessing them may require special handling in SQL
+            queries
+          </li>
           <li>SQL Server&apos;s JSON functions may have limitations when property names contain certain characters</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">Strategies for Handling Problematic Property Names</h2>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">1. Use Safe Naming Conventions</h3>
-        <p>
-          The simplest approach is to avoid problematic characters altogether by following safe naming conventions:
-        </p>
+        <p>The simplest approach is to avoid problematic characters altogether by following safe naming conventions:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Use only letters, numbers, and underscores</li>
           <li>Start property names with a letter</li>
@@ -219,7 +237,8 @@ print(data["123"])`}
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Property Name Transformation</h3>
         <p>
-          When working with external systems that produce problematic property names, transform them to safer alternatives:
+          When working with external systems that produce problematic property names, transform them to safer
+          alternatives:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -245,9 +264,7 @@ const safeData = transformKeys(problematicData);`}
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">3. Use Property Mapping</h3>
-        <p>
-          Create explicit mappings between problematic property names and their safe alternatives:
-        </p>
+        <p>Create explicit mappings between problematic property names and their safe alternatives:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`// Define mapping
@@ -275,9 +292,7 @@ const mappedData = mapProperties(originalData, propertyMap);`}
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">4. Custom Accessor Functions</h3>
-        <p>
-          Implement helper functions to safely access properties with problematic names:
-        </p>
+        <p>Implement helper functions to safely access properties with problematic names:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`// JavaScript example
@@ -294,9 +309,7 @@ const firstName = getNestedProperty(data, "user.personal.first.name");`}
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">JSON Schema Validation for Property Names</h2>
 
-        <p>
-          When designing APIs or data models, you can use JSON Schema to enforce rules about property names:
-        </p>
+        <p>When designing APIs or data models, you can use JSON Schema to enforce rules about property names:</p>
 
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -312,16 +325,15 @@ const firstName = getNestedProperty(data, "user.personal.first.name");`}
 }`}
           </pre>
           <p className="mt-2">
-            This schema ensures all property names start with a letter and only contain letters, numbers, and underscores.
+            This schema ensures all property names start with a letter and only contain letters, numbers, and
+            underscores.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">Edge Cases and Special Scenarios</h2>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">1. Reserved Words in Different Languages</h3>
-        <p>
-          Be cautious about using language-specific reserved words as property names:
-        </p>
+        <p>Be cautious about using language-specific reserved words as property names:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`{
@@ -334,9 +346,7 @@ const firstName = getNestedProperty(data, "user.personal.first.name");`}
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Numeric Property Names</h3>
-        <p>
-          Numeric keys are valid in JSON but may behave unexpectedly in different environments:
-        </p>
+        <p>Numeric keys are valid in JSON but may behave unexpectedly in different environments:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`{
@@ -356,9 +366,7 @@ console.log(data["0"]); // "zero" - also works
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">3. JSON in URL Parameters</h3>
-        <p>
-          When including JSON in URL parameters, properties with certain characters need special URL encoding:
-        </p>
+        <p>When including JSON in URL parameters, properties with certain characters need special URL encoding:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`// Original JSON
@@ -373,15 +381,22 @@ https://api.example.com/search?filter=%7B%22search%20query%22%3A%22example%20ter
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
         <p>
-          While JSON property names offer considerable flexibility, they can create challenges when they contain special characters, spaces, or other problematic elements. By understanding the rules and limitations, and by implementing appropriate strategies for handling such property names, you can work effectively with JSON data from various sources.
+          While JSON property names offer considerable flexibility, they can create challenges when they contain special
+          characters, spaces, or other problematic elements. By understanding the rules and limitations, and by
+          implementing appropriate strategies for handling such property names, you can work effectively with JSON data
+          from various sources.
         </p>
         <p>
-          When you have control over the JSON structure, the best approach is to follow safe naming conventions that work well across all environments. When working with external data sources, implement transformation or mapping strategies to convert problematic property names into safer alternatives.
+          When you have control over the JSON structure, the best approach is to follow safe naming conventions that
+          work well across all environments. When working with external data sources, implement transformation or
+          mapping strategies to convert problematic property names into safer alternatives.
         </p>
         <p>
-          Remember that the goal is to create JSON that is not only syntactically valid but also practical for use in your specific application context. Tools like Offline Tools&apos; JSON Formatter can help validate your JSON and identify potential issues with property names before they cause problems in your application.
+          Remember that the goal is to create JSON that is not only syntactically valid but also practical for use in
+          your specific application context. Tools like Offline Tools&apos; JSON Formatter can help validate your JSON
+          and identify potential issues with property names before they cause problems in your application.
         </p>
       </div>
     </>
   );
-} 
+}

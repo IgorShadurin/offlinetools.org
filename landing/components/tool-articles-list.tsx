@@ -36,29 +36,22 @@ export function ToolArticlesList({ toolName, toolSlug, articles }: ToolArticlesL
     <div className="space-y-6">
       <div className="space-y-1">
         <h2 className="text-2xl font-bold tracking-tight">{toolName} Articles</h2>
-        <p className="text-muted-foreground">
-          Learn more about how to use {toolName} effectively.
-        </p>
+        <p className="text-muted-foreground">Learn more about how to use {toolName} effectively.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (
           <Card key={article.slug} className="overflow-hidden transition-all hover:shadow-md">
             <CardHeader className="pb-3">
               <CardTitle className="text-xl">
-                <Link 
-                  href={`/a/${toolSlug}/${article.slug}`} 
-                  className="hover:text-primary transition-colors"
-                >
+                <Link href={`/a/${toolSlug}/${article.slug}`} className="hover:text-primary transition-colors">
                   {article.title}
                 </Link>
               </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground">
-                1 min read
-              </CardDescription>
+              <CardDescription className="text-xs text-muted-foreground">1 min read</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground line-clamp-2">{article.description}</p>
-              <Link 
+              <Link
                 href={`/a/${toolSlug}/${article.slug}`}
                 className="text-sm font-medium text-primary hover:underline mt-4 inline-block"
               >
@@ -69,13 +62,10 @@ export function ToolArticlesList({ toolName, toolSlug, articles }: ToolArticlesL
         ))}
       </div>
       <div className="text-center pt-4">
-        <Link 
-          href="/a" 
-          className="text-sm font-medium text-primary hover:underline"
-        >
+        <Link href="/a" className="text-sm font-medium text-primary hover:underline">
           View all articles →
         </Link>
       </div>
     </div>
   );
-} 
+}

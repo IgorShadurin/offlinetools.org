@@ -1,16 +1,16 @@
-import { Metadata } from "next"
-import { Container } from "@/components/ui/container"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { Section, SectionHeading } from "@/components/ui/section"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import ContactForm from "@/components/contact-form"
-import { Mail } from "lucide-react"
+import { Metadata } from "next";
+import { Container } from "@/components/ui/container";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { Section, SectionHeading } from "@/components/ui/section";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ContactForm from "@/components/contact-form";
+import { Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact Us | OfflineTools",
   description: "Get in touch with the OfflineTools team for support, feedback, or inquiries.",
-}
+};
 
 /**
  * Contact page component that renders using SSR
@@ -24,9 +24,9 @@ export default function ContactPage() {
           <Container>
             <SectionHeading
               title="Contact Us"
-              description="We&apos;d love to hear from you. Fill out the form below or use the contact option."
+              description="We'd love to hear from you. Fill out the form below or use the contact option."
             />
-            
+
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {/* Contact Information */}
               <div className="lg:col-span-1">
@@ -50,15 +50,13 @@ export default function ContactPage() {
                   </Card>
                 </div>
               </div>
-              
+
               {/* Contact Form */}
               <div className="lg:col-span-2">
                 <Card>
                   <CardHeader>
                     <CardTitle>Send us a message</CardTitle>
-                    <CardDescription>
-                      We&apos;ll respond to your inquiry as soon as possible.
-                    </CardDescription>
+                    <CardDescription>We&apos;ll respond to your inquiry as soon as possible.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ContactForm />
@@ -71,5 +69,5 @@ export default function ContactPage() {
       </main>
       <Footer />
     </div>
-  )
-} 
+  );
+}

@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Custom Error Templates for JSON Formatter Applications | Offline Tools",
-  description: "Learn how to design and implement custom error templates for JSON formatter applications to improve user experience and error handling",
+  description:
+    "Learn how to design and implement custom error templates for JSON formatter applications to improve user experience and error handling",
 };
 
 /**
@@ -18,32 +19,44 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Well-designed error templates are essential for JSON formatters, helping users quickly identify and 
-          fix issues in their data. This article explores how to create custom error templates that enhance 
-          user experience, increase error resolution speed, and make your JSON formatter more user-friendly.
+          Well-designed error templates are essential for JSON formatters, helping users quickly identify and fix issues
+          in their data. This article explores how to create custom error templates that enhance user experience,
+          increase error resolution speed, and make your JSON formatter more user-friendly.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. The Anatomy of Effective JSON Error Templates</h2>
         <p>
-          Before diving into implementation, it's important to understand what makes an error template effective. 
-          A good JSON error template should include several key components.
+          Before diving into implementation, it's important to understand what makes an error template effective. A good
+          JSON error template should include several key components.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400">Key Components:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><strong>Error Type Identification</strong> - Clear categorization of the error (syntax, schema, etc.)</li>
-            <li><strong>Error Location</strong> - Precise line and column numbers where the error occurred</li>
-            <li><strong>Visual Context</strong> - Snippet of code surrounding the error with highlighting</li>
-            <li><strong>Error Description</strong> - Plain language explanation of what went wrong</li>
-            <li><strong>Correction Suggestion</strong> - Actionable guidance on how to fix the issue</li>
-            <li><strong>Documentation Link</strong> - Reference to more detailed explanations for complex errors</li>
+            <li>
+              <strong>Error Type Identification</strong> - Clear categorization of the error (syntax, schema, etc.)
+            </li>
+            <li>
+              <strong>Error Location</strong> - Precise line and column numbers where the error occurred
+            </li>
+            <li>
+              <strong>Visual Context</strong> - Snippet of code surrounding the error with highlighting
+            </li>
+            <li>
+              <strong>Error Description</strong> - Plain language explanation of what went wrong
+            </li>
+            <li>
+              <strong>Correction Suggestion</strong> - Actionable guidance on how to fix the issue
+            </li>
+            <li>
+              <strong>Documentation Link</strong> - Reference to more detailed explanations for complex errors
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">2. Implementing Error Template System Architecture</h2>
         <p>
-          A flexible error template system allows for customization while maintaining consistency. Here's a basic 
+          A flexible error template system allows for customization while maintaining consistency. Here's a basic
           architecture for implementing custom error templates in a JSON formatter.
         </p>
 
@@ -124,8 +137,8 @@ class ErrorTemplateManager {
 
         <h2 className="text-2xl font-semibold mt-8">3. Context-Aware Error Highlighting</h2>
         <p>
-          One of the most valuable features of custom error templates is the ability to show errors in context. 
-          This helps users quickly identify and fix issues.
+          One of the most valuable features of custom error templates is the ability to show errors in context. This
+          helps users quickly identify and fix issues.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -171,8 +184,8 @@ class ErrorTemplateManager {
 
         <h2 className="text-2xl font-semibold mt-8">4. Error Template Customization Options</h2>
         <p>
-          Allowing users to customize error templates can help them adapt the formatter to their specific needs 
-          and workflows.
+          Allowing users to customize error templates can help them adapt the formatter to their specific needs and
+          workflows.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -225,25 +238,38 @@ function ErrorTemplateSettings({
         <p>
           Creating specialized templates for the most common JSON errors can significantly improve the user experience.
         </p>
-        
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Missing Brackets Error Template:</h3>
-          
+
           <div className="border border-gray-300 rounded-lg overflow-hidden mt-4 dark:border-gray-700">
             <div className="bg-red-100 dark:bg-red-900/30 border-b border-gray-300 dark:border-gray-700 px-4 py-2 flex items-center">
-              <svg className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              <svg
+                className="w-5 h-5 text-red-600 dark:text-red-400 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                ></path>
               </svg>
               <span className="font-medium text-red-800 dark:text-red-300">Syntax Error: Missing Closing Bracket</span>
             </div>
-            
+
             <div className="p-4 bg-white dark:bg-gray-900">
               <p className="text-gray-700 dark:text-gray-300 mb-3">
                 The JSON structure is incomplete. A closing bracket ']' was expected but not found.
               </p>
-              
+
               <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 font-mono text-sm mb-3 relative overflow-x-auto">
-                <div className="absolute top-0 left-0 p-1 text-xs text-gray-500 dark:text-gray-400">Line 4, Column 7</div>
+                <div className="absolute top-0 left-0 p-1 text-xs text-gray-500 dark:text-gray-400">
+                  Line 4, Column 7
+                </div>
                 <pre className="pt-5">
                   {`"items": [
   "apple",
@@ -254,12 +280,14 @@ function ErrorTemplateSettings({
                 <div className="border-b border-red-500 w-full"></div>
                 <div className="text-red-500 text-center">^ Missing closing bracket ']' expected here</div>
               </div>
-              
+
               <div className="bg-blue-50 p-3 rounded dark:bg-blue-900/20 mb-3">
                 <span className="font-medium text-blue-700 dark:text-blue-300">Suggestion: </span>
-                <span className="text-blue-600 dark:text-blue-300">Add a closing bracket ']' after the last array item.</span>
+                <span className="text-blue-600 dark:text-blue-300">
+                  Add a closing bracket ']' after the last array item.
+                </span>
               </div>
-              
+
               <div className="bg-green-50 p-3 rounded dark:bg-green-900/20">
                 <span className="font-medium text-green-700 dark:text-green-300">Correct syntax: </span>
                 <pre className="text-green-600 dark:text-green-300 mt-1">
@@ -276,8 +304,8 @@ function ErrorTemplateSettings({
 
         <h2 className="text-2xl font-semibold mt-8">6. Integrating Error Templates with IDE-like Features</h2>
         <p>
-          Advanced JSON formatters can integrate error templates with IDE-like features such as inline fixes, 
-          code completion, and quick actions.
+          Advanced JSON formatters can integrate error templates with IDE-like features such as inline fixes, code
+          completion, and quick actions.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -338,9 +366,7 @@ function applyQuickFix(fix: QuickFix, jsonString: string, position: number): voi
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">7. Error Template Analytics and Improvements</h2>
-        <p>
-          Collecting and analyzing error data can help improve templates over time and identify common user issues.
-        </p>
+        <p>Collecting and analyzing error data can help improve templates over time and identify common user issues.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Error Analytics Implementation:</h3>
@@ -388,18 +414,18 @@ function analyzeErrorPatterns(): ErrorAnalysisReport {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Custom error templates are a powerful way to enhance the user experience of JSON formatter applications. 
-          By providing clear, context-aware error messages with actionable suggestions, you can help users 
-          quickly identify and fix issues in their JSON data. Implementing a flexible template system allows 
-          for customization and continuous improvement based on user needs and behaviors.
+          Custom error templates are a powerful way to enhance the user experience of JSON formatter applications. By
+          providing clear, context-aware error messages with actionable suggestions, you can help users quickly identify
+          and fix issues in their JSON data. Implementing a flexible template system allows for customization and
+          continuous improvement based on user needs and behaviors.
         </p>
-        
+
         <p>
-          The key to effective error templates is combining technical accuracy with user-friendly presentation.
-          By focusing on both aspects, you can create a JSON formatter that not only detects errors but also 
-          educates users and helps them improve their JSON skills over time.
+          The key to effective error templates is combining technical accuracy with user-friendly presentation. By
+          focusing on both aspects, you can create a JSON formatter that not only detects errors but also educates users
+          and helps them improve their JSON skills over time.
         </p>
       </div>
     </>
   );
-} 
+}

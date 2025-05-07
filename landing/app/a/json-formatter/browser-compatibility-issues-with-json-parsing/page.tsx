@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Browser Compatibility Issues with JSON Parsing | Offline Tools",
-  description: "Understand JSON parsing differences across browsers and how to ensure your JSON documents work correctly in all environments.",
+  description:
+    "Understand JSON parsing differences across browsers and how to ensure your JSON documents work correctly in all environments.",
 };
 
 /**
@@ -18,31 +19,31 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          While JSON is a standardized format, its implementation in browsers can vary, leading to inconsistent
-          parsing behavior across different environments. This article examines common browser compatibility issues
-          with JSON parsing and offers strategies to ensure consistent results across platforms.
+          While JSON is a standardized format, its implementation in browsers can vary, leading to inconsistent parsing
+          behavior across different environments. This article examines common browser compatibility issues with JSON
+          parsing and offers strategies to ensure consistent results across platforms.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Evolving JSON Standard</h2>
         <p>
-          JSON was first formalized by Douglas Crockford in the early 2000s and later standardized as 
-          ECMA-404 and RFC 8259. However, browser implementations have evolved over time, leading to 
-          disparities in how JSON is handled across different browsers and versions.
+          JSON was first formalized by Douglas Crockford in the early 2000s and later standardized as ECMA-404 and RFC
+          8259. However, browser implementations have evolved over time, leading to disparities in how JSON is handled
+          across different browsers and versions.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Common Browser-Specific JSON Parsing Issues</h2>
 
         <h3 className="text-xl font-medium mt-6">1. Large Number Handling</h3>
         <p>
-          JavaScript has limitations with large integers, as all numbers are represented as 64-bit floating point values.
-          This causes issues with numbers that exceed 2^53-1 (9,007,199,254,740,991).
+          JavaScript has limitations with large integers, as all numbers are represented as 64-bit floating point
+          values. This causes issues with numbers that exceed 2^53-1 (9,007,199,254,740,991).
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Large Integer Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// JSON with large number
+              {`// JSON with large number
 {
   "id": 9007199254740993
 }
@@ -65,7 +66,7 @@ export default function JsonFormatterArticle() {
             <tbody>
               <tr className="border-t">
                 <td className="px-4 py-2">Modern Chrome/Firefox/Safari</td>
-                <td className="px-4 py-2">Precision loss occurs for integers {'>'}2^53-1</td>
+                <td className="px-4 py-2">Precision loss occurs for integers {">"}2^53-1</td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2">Internet Explorer</td>
@@ -81,15 +82,15 @@ export default function JsonFormatterArticle() {
 
         <h3 className="text-xl font-medium mt-6">2. Unicode Character Handling</h3>
         <p>
-          Different browsers handle escaped Unicode sequences and surrogate pairs differently,
-          especially in older versions.
+          Different browsers handle escaped Unicode sequences and surrogate pairs differently, especially in older
+          versions.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Unicode Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// JSON with Unicode escape sequences
+              {`// JSON with Unicode escape sequences
 {
   "text": "\\u2728 Star \\uD83D\\uDE00 Emoji"
 }
@@ -102,15 +103,15 @@ export default function JsonFormatterArticle() {
 
         <h3 className="text-xl font-medium mt-6">3. Date Parsing Inconsistencies</h3>
         <p>
-          JSON doesn&apos;t have a native date type, so dates are typically represented as strings. 
-          Different browsers parse date strings differently.
+          JSON doesn&apos;t have a native date type, so dates are typically represented as strings. Different browsers
+          parse date strings differently.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Date Handling Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// JSON with a date
+              {`// JSON with a date
 {
   "created": "2023-04-15T14:30:00Z"
 }
@@ -145,15 +146,15 @@ var date = new Date(dateStr);`}
         </div>
 
         <h3 className="text-xl font-medium mt-6">4. Trailing Commas</h3>
-        <p>
-          Standard JSON doesn&apos;t allow trailing commas, but some environments are more forgiving.
-        </p>
+        <p>Standard JSON doesn&apos;t allow trailing commas, but some environments are more forgiving.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-amber-600 dark:text-amber-400">Non-standard JSON with trailing commas:</h4>
+          <h4 className="text-lg font-medium text-amber-600 dark:text-amber-400">
+            Non-standard JSON with trailing commas:
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "name": "Product",
   "categories": [
     "Electronics",
@@ -189,13 +190,13 @@ var date = new Date(dateStr);`}
         </div>
 
         <h3 className="text-xl font-medium mt-6">5. Error Reporting Differences</h3>
-        <p>
-          Different browsers provide very different error messages for the same JSON parsing errors.
-        </p>
+        <p>Different browsers provide very different error messages for the same JSON parsing errors.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Error Reporting Example:</h4>
-          <p>For the invalid JSON: <code>{`{"name": "Test", "value": 123,}`}</code></p>
+          <p>
+            For the invalid JSON: <code>{`{"name": "Test", "value": 123,}`}</code>
+          </p>
           <table className="min-w-full text-sm mt-4">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-700">
@@ -206,11 +207,13 @@ var date = new Date(dateStr);`}
             <tbody>
               <tr className="border-t">
                 <td className="px-4 py-2">Chrome</td>
-                <td className="px-4 py-2">&quot;Unexpected token {'}'} in JSON at position 27&quot;</td>
+                <td className="px-4 py-2">&quot;Unexpected token {"}"} in JSON at position 27&quot;</td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2">Firefox</td>
-                <td className="px-4 py-2">&quot;JSON.parse: unexpected character at line 1 column 28 of the JSON data&quot;</td>
+                <td className="px-4 py-2">
+                  &quot;JSON.parse: unexpected character at line 1 column 28 of the JSON data&quot;
+                </td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2">Internet Explorer</td>
@@ -223,16 +226,16 @@ var date = new Date(dateStr);`}
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Browser-specific JSON parsing issues can be particularly challenging because they may only appear 
-            in certain environments, making them difficult to reproduce and debug. Always test your JSON 
-            handling in all target browsers.
+            Browser-specific JSON parsing issues can be particularly challenging because they may only appear in certain
+            environments, making them difficult to reproduce and debug. Always test your JSON handling in all target
+            browsers.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">JSON.parse() vs eval()</h2>
         <p>
-          In older code, you might encounter <code>eval()</code> being used to parse JSON, which has both
-          security and compatibility implications.
+          In older code, you might encounter <code>eval()</code> being used to parse JSON, which has both security and
+          compatibility implications.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -247,12 +250,16 @@ var date = new Date(dateStr);`}
             </thead>
             <tbody>
               <tr className="border-t">
-                <td className="px-4 py-2"><code>JSON.parse()</code></td>
+                <td className="px-4 py-2">
+                  <code>JSON.parse()</code>
+                </td>
                 <td className="px-4 py-2">IE 8+, all modern browsers</td>
                 <td className="px-4 py-2">Safe, validates input</td>
               </tr>
               <tr className="border-t">
-                <td className="px-4 py-2"><code>eval()</code></td>
+                <td className="px-4 py-2">
+                  <code>eval()</code>
+                </td>
                 <td className="px-4 py-2">All browsers</td>
                 <td className="px-4 py-2">Dangerous, executes any JavaScript</td>
               </tr>
@@ -301,7 +308,7 @@ var date = new Date(dateStr);`}
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Check for native JSON support and fall back to a polyfill
+              {`// Check for native JSON support and fall back to a polyfill
 if (typeof JSON === 'undefined') {
   // Load JSON polyfill
   loadScript('path/to/json-polyfill.js');
@@ -317,7 +324,7 @@ var obj = JSON.parse(jsonString);`}
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// For modern browsers that support BigInt
+              {`// For modern browsers that support BigInt
 const jsonString = '{"id": 9007199254740993}';
 
 // Option 1: Parse as string
@@ -341,7 +348,7 @@ const obj2 = JSON.parse(jsonString, (key, value) => {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Serialize dates consistently
+              {`// Serialize dates consistently
 const data = {
   timestamp: new Date()
 };
@@ -377,14 +384,14 @@ const parsedData = JSON.parse(json, (key, value) => {
 
         <h3 className="text-xl font-medium mt-6">4. Use Schema Validation</h3>
         <p>
-          Validate JSON against a schema to ensure it meets your application&apos;s requirements,
-          regardless of browser quirks.
+          Validate JSON against a schema to ensure it meets your application&apos;s requirements, regardless of browser
+          quirks.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Using a library like Ajv for validation
+              {`// Using a library like Ajv for validation
 const validate = ajv.compile({
   type: "object",
   properties: {
@@ -410,14 +417,12 @@ try {
         </div>
 
         <h3 className="text-xl font-medium mt-6">5. Comprehensive Error Handling</h3>
-        <p>
-          Given the differences in error reporting, implement comprehensive error handling.
-        </p>
+        <p>Given the differences in error reporting, implement comprehensive error handling.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`function safeJsonParse(jsonString) {
+              {`function safeJsonParse(jsonString) {
   try {
     return {
       data: JSON.parse(jsonString),
@@ -457,13 +462,12 @@ try {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Testing JSON Across Browsers</h2>
-        <p>
-          To ensure your JSON handling works consistently across browsers, implement a testing strategy:
-        </p>
+        <p>To ensure your JSON handling works consistently across browsers, implement a testing strategy:</p>
 
         <ol className="list-decimal pl-6 space-y-3 mt-4">
           <li>
-            <strong>Automated tests with different browsers</strong> - Use tools like Karma, Cypress, or Selenium to test JSON parsing in different browsers
+            <strong>Automated tests with different browsers</strong> - Use tools like Karma, Cypress, or Selenium to
+            test JSON parsing in different browsers
           </li>
           <li>
             <strong>Test edge cases</strong> - Large numbers, Unicode characters, dates, deeply nested structures
@@ -472,24 +476,24 @@ try {
             <strong>Test error scenarios</strong> - Ensure your error handling works across browsers
           </li>
           <li>
-            <strong>Browser compatibility libraries</strong> - Consider using libraries like Browserstack to test in a wide range of browsers
+            <strong>Browser compatibility libraries</strong> - Consider using libraries like Browserstack to test in a
+            wide range of browsers
           </li>
         </ol>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          While JSON itself is a standardized format, browser implementations can introduce inconsistencies
-          in how JSON is parsed and handled. By understanding these differences and implementing the best practices
-          outlined in this article, you can ensure your applications handle JSON data reliably across all browsers
-          and environments.
+          While JSON itself is a standardized format, browser implementations can introduce inconsistencies in how JSON
+          is parsed and handled. By understanding these differences and implementing the best practices outlined in this
+          article, you can ensure your applications handle JSON data reliably across all browsers and environments.
         </p>
 
         <p className="mt-4">
           Remember that JSON parsing is just one aspect of browser compatibility. For complete cross-browser
-          compatibility, also consider differences in JavaScript engines, DOM implementations, and CSS rendering.
-          Using modern formatters and validators can help identify potential issues before they affect users.
+          compatibility, also consider differences in JavaScript engines, DOM implementations, and CSS rendering. Using
+          modern formatters and validators can help identify potential issues before they affect users.
         </p>
       </div>
     </>
   );
-} 
+}

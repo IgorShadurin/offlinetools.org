@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from "react";
 
 /**
  * Article promo data structure
@@ -37,11 +37,7 @@ export function ArticlePromoProvider({
   children: ReactNode;
   value?: ArticlePromoData;
 }) {
-  return (
-    <ArticlePromoContext.Provider value={value}>
-      {children}
-    </ArticlePromoContext.Provider>
-  );
+  return <ArticlePromoContext.Provider value={value}>{children}</ArticlePromoContext.Provider>;
 }
 
 /**
@@ -49,4 +45,4 @@ export function ArticlePromoProvider({
  */
 export function useArticlePromo() {
   return useContext(ArticlePromoContext);
-} 
+}

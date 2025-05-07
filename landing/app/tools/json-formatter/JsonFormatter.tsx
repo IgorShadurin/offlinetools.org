@@ -1,79 +1,73 @@
-"use client"
+"use client";
 
-import { Container } from "@/components/ui/container"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { formatJson, JsonIndentationType } from "shared"
-import { useState } from "react"
-import { AlertCircle, Check, Copy } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import JsonFormatterExplanation from "./JsonFormatterExplanation"
-import JsonFormatterCategories from "./JsonFormatterCategories"
+import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { formatJson, JsonIndentationType } from "shared";
+import { useState } from "react";
+import { AlertCircle, Check, Copy } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import JsonFormatterExplanation from "./JsonFormatterExplanation";
+import JsonFormatterCategories from "./JsonFormatterCategories";
 
 export default function JsonFormatter() {
-  const [inputJson, setInputJson] = useState("")
-  const [outputJson, setOutputJson] = useState("")
-  const [indentation, setIndentation] = useState<JsonIndentationType>(JsonIndentationType.TwoSpaces)
-  const [error, setError] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [inputJson, setInputJson] = useState("");
+  const [outputJson, setOutputJson] = useState("");
+  const [indentation, setIndentation] = useState<JsonIndentationType>(JsonIndentationType.TwoSpaces);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleFormat = () => {
     try {
-      const formatted = formatJson(inputJson, { indentation })
-      setOutputJson(formatted)
-      setError(null)
+      const formatted = formatJson(inputJson, { indentation });
+      setOutputJson(formatted);
+      setError(null);
     } catch (error) {
-      setError((error as Error).message)
-      setOutputJson("")
+      setError((error as Error).message);
+      setOutputJson("");
     }
-  }
+  };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(outputJson)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(outputJson);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSelectChange = (value: string) => {
     switch (value) {
       case "2-spaces":
-        setIndentation(JsonIndentationType.TwoSpaces)
-        break
+        setIndentation(JsonIndentationType.TwoSpaces);
+        break;
       case "4-spaces":
-        setIndentation(JsonIndentationType.FourSpaces)
-        break
+        setIndentation(JsonIndentationType.FourSpaces);
+        break;
       case "1-tab":
-        setIndentation(JsonIndentationType.OneTab)
-        break
+        setIndentation(JsonIndentationType.OneTab);
+        break;
       case "minified":
-        setIndentation(JsonIndentationType.Minified)
-        break
+        setIndentation(JsonIndentationType.Minified);
+        break;
     }
-  }
+  };
 
   const getSelectValue = () => {
     switch (indentation) {
       case JsonIndentationType.TwoSpaces:
-        return "2-spaces"
+        return "2-spaces";
       case JsonIndentationType.FourSpaces:
-        return "4-spaces"
+        return "4-spaces";
       case JsonIndentationType.OneTab:
-        return "1-tab"
+        return "1-tab";
       case JsonIndentationType.Minified:
-        return "minified"
+        return "minified";
       default:
-        return "2-spaces"
+        return "2-spaces";
     }
-  }
+  };
 
   return (
     <>
@@ -89,7 +83,7 @@ export default function JsonFormatter() {
             {/* Input Section Header */}
             <div className="w-full md:w-1/2 flex items-center justify-between flex-wrap gap-2">
               <Label htmlFor="input-json">Input JSON</Label>
-              
+
               {/* Mobile: Dropdown Select */}
               <div className="md:hidden w-full sm:w-auto">
                 <Select value={getSelectValue()} onValueChange={handleSelectChange}>
@@ -104,7 +98,7 @@ export default function JsonFormatter() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               {/* Desktop: Radio Buttons */}
               <RadioGroup
                 value={indentation}
@@ -113,19 +107,27 @@ export default function JsonFormatter() {
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={JsonIndentationType.TwoSpaces} id="two-spaces" />
-                  <Label htmlFor="two-spaces" className="text-sm cursor-pointer">2 spaces</Label>
+                  <Label htmlFor="two-spaces" className="text-sm cursor-pointer">
+                    2 spaces
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={JsonIndentationType.FourSpaces} id="four-spaces" />
-                  <Label htmlFor="four-spaces" className="text-sm cursor-pointer">4 spaces</Label>
+                  <Label htmlFor="four-spaces" className="text-sm cursor-pointer">
+                    4 spaces
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={JsonIndentationType.OneTab} id="one-tab" />
-                  <Label htmlFor="one-tab" className="text-sm cursor-pointer">1 tab</Label>
+                  <Label htmlFor="one-tab" className="text-sm cursor-pointer">
+                    1 tab
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={JsonIndentationType.Minified} id="minified" />
-                  <Label htmlFor="minified" className="text-sm cursor-pointer">Minified</Label>
+                  <Label htmlFor="minified" className="text-sm cursor-pointer">
+                    Minified
+                  </Label>
                 </div>
               </RadioGroup>
             </div>
@@ -135,12 +137,7 @@ export default function JsonFormatter() {
               <Label htmlFor="output-json">Formatted JSON</Label>
               <div className="min-w-[85px] h-8 flex justify-end">
                 {outputJson ? (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex items-center gap-1"
-                    onClick={handleCopy}
-                  >
+                  <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleCopy}>
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copied ? "Copied!" : "Copy"}
                   </Button>
@@ -185,11 +182,11 @@ export default function JsonFormatter() {
           {/* Button Row */}
           <div className="flex flex-wrap md:flex-nowrap gap-8">
             <div className="w-full md:w-1/2">
-              <Button onClick={handleFormat} className="w-full">Format JSON</Button>
+              <Button onClick={handleFormat} className="w-full">
+                Format JSON
+              </Button>
             </div>
-            <div className="w-full md:w-1/2">
-              {/* Empty space to align with button */}
-            </div>
+            <div className="w-full md:w-1/2">{/* Empty space to align with button */}</div>
           </div>
         </div>
       </Container>
@@ -204,5 +201,5 @@ export default function JsonFormatter() {
         <JsonFormatterCategories />
       </Container>
     </>
-  )
-} 
+  );
+}

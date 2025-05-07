@@ -1,5 +1,5 @@
-import Link from "next/link"
-import React from "react"
+import Link from "next/link";
+import React from "react";
 
 /**
  * Online tools data with titles and URLs
@@ -8,39 +8,40 @@ export const onlineTools = [
   {
     title: "JSON Formatter",
     path: "/tools/json-formatter",
-    description: "Format and beautify your JSON with customizable indentation options."
+    description: "Format and beautify your JSON with customizable indentation options.",
   },
   {
     title: "Base64 Encoder/Decoder",
     path: "/tools/base64-codec",
-    description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
+    description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option.",
   },
   {
     title: "Binary Base64 Encoder/Decoder",
     path: "/tools/binary-base64-codec",
-    description: "Convert binary files to Base64 or decode Base64 to binary files."
+    description: "Convert binary files to Base64 or decode Base64 to binary files.",
   },
   {
     title: "URL Encoder/Decoder",
     path: "/tools/url-encoder",
-    description: "Encode text for use in URLs or decode URL-encoded text."
+    description: "Encode text for use in URLs or decode URL-encoded text.",
   },
   {
     title: "File & Text Hash Compare",
     path: "/tools/file-hash-compare",
-    description: "Compare hashes of files or text strings using different algorithms."
+    description: "Compare hashes of files or text strings using different algorithms.",
   },
   {
     title: "Text Hash Generator",
     path: "/tools/text-hash-generator",
-    description: "Generate cryptographic hashes from text using various algorithms including SHA-256, SHA-3, and RIPEMD-160."
+    description:
+      "Generate cryptographic hashes from text using various algorithms including SHA-256, SHA-3, and RIPEMD-160.",
   },
   {
     title: "File Generator",
     path: "/tools/file-generator",
-    description: "Generate files with specific size and format with random data, zeros, or custom patterns."
-  }
-]
+    description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
+  },
+];
 
 /**
  * A flexible grid component for displaying online tools
@@ -66,5 +67,5 @@ export function OnlineToolsGrid() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

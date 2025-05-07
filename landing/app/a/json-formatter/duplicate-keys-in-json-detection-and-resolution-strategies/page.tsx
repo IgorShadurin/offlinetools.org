@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Duplicate Keys in JSON: Detection and Resolution Strategies | Offline Tools",
-  description: "Learn how to identify duplicate keys in JSON documents and implement effective strategies to resolve these issues for valid JSON data.",
+  description:
+    "Learn how to identify duplicate keys in JSON documents and implement effective strategies to resolve these issues for valid JSON data.",
 };
 
 /**
@@ -18,25 +19,24 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          One of the more subtle issues that can arise in JSON documents is the presence of duplicate keys
-          within the same object. While many JSON formatters will parse such documents without error, 
-          duplicate keys can lead to unpredictable results and data loss. This article explores 
-          how duplicate keys are handled in different environments, how to detect them, and strategies 
-          for resolving these issues.
+          One of the more subtle issues that can arise in JSON documents is the presence of duplicate keys within the
+          same object. While many JSON formatters will parse such documents without error, duplicate keys can lead to
+          unpredictable results and data loss. This article explores how duplicate keys are handled in different
+          environments, how to detect them, and strategies for resolving these issues.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Problem with Duplicate Keys</h2>
         <p>
-          According to the JSON specification (ECMA-404 and RFC 8259), names within a JSON object 
-          SHOULD be unique, but the standard does not explicitly forbid duplicate keys. This has led to 
-          inconsistent handling across different parsers and environments.
+          According to the JSON specification (ECMA-404 and RFC 8259), names within a JSON object SHOULD be unique, but
+          the standard does not explicitly forbid duplicate keys. This has led to inconsistent handling across different
+          parsers and environments.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Simple Example of Duplicate Keys:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "user": "alice",
   "score": 42,
   "user": "bob"    // Duplicate key: "user"
@@ -44,12 +44,13 @@ export default function JsonFormatterArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            In this example, the key &quot;user&quot; appears twice. While syntactically valid, this creates ambiguity about which value should be used.
+            In this example, the key &quot;user&quot; appears twice. While syntactically valid, this creates ambiguity
+            about which value should be used.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">How Different Environments Handle Duplicates</h2>
-        
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Behavior Across Environments:</h3>
           <table className="min-w-full text-sm mt-2">
@@ -91,24 +92,22 @@ export default function JsonFormatterArticle() {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Warning:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Even though many environments &quot;accept&quot; duplicate keys, relying on this behavior is dangerous.
-            The same JSON may be interpreted differently across systems, leading to subtle bugs and security vulnerabilities.
-            Always ensure your JSON has unique keys.
+            Even though many environments &quot;accept&quot; duplicate keys, relying on this behavior is dangerous. The
+            same JSON may be interpreted differently across systems, leading to subtle bugs and security
+            vulnerabilities. Always ensure your JSON has unique keys.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Real-World Issues Caused by Duplicate Keys</h2>
 
         <h3 className="text-xl font-medium mt-6">1. Data Loss</h3>
-        <p>
-          When a parser encounters duplicate keys, one value inevitably overrides the other, causing data loss.
-        </p>
+        <p>When a parser encounters duplicate keys, one value inevitably overrides the other, causing data loss.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Data Loss Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Original JSON with duplicate keys
+              {`// Original JSON with duplicate keys
 {
   "settings": {
     "notifications": true,
@@ -130,14 +129,15 @@ export default function JsonFormatterArticle() {
 
         <h3 className="text-xl font-medium mt-6">2. Security Vulnerabilities</h3>
         <p>
-          Duplicate keys can be exploited to create security vulnerabilities, especially in systems that use JSON for configuration.
+          Duplicate keys can be exploited to create security vulnerabilities, especially in systems that use JSON for
+          configuration.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Security Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Configuration JSON
+              {`// Configuration JSON
 {
   "user": {
     "role": "user",
@@ -148,27 +148,27 @@ export default function JsonFormatterArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            If the system parses this JSON and uses the last value for &quot;role&quot;, it could result in unauthorized privilege escalation.
+            If the system parses this JSON and uses the last value for &quot;role&quot;, it could result in unauthorized
+            privilege escalation.
           </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">3. Inconsistent Cross-Platform Behavior</h3>
         <p>
-          When the same JSON is processed by different systems, duplicate keys can lead to inconsistent application behavior.
+          When the same JSON is processed by different systems, duplicate keys can lead to inconsistent application
+          behavior.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Detecting Duplicate Keys</h2>
 
         <h3 className="text-xl font-medium mt-6">1. Using Linters and Validators</h3>
-        <p>
-          Many JSON linters and validators can detect duplicate keys during the validation process.
-        </p>
+        <p>Many JSON linters and validators can detect duplicate keys during the validation process.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">JSON Lint Example Output:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre className="text-red-600 dark:text-red-400">
-{`Error: Duplicate key 'user' on line 5
+              {`Error: Duplicate key 'user' on line 5
 Parse error on line 5:
 ...  "role": "user",  "permissions":
 ----------------------^
@@ -178,15 +178,13 @@ Expecting 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['`}
         </div>
 
         <h3 className="text-xl font-medium mt-6">2. Programmatic Detection</h3>
-        <p>
-          You can write custom code to detect duplicate keys during parsing or validation.
-        </p>
+        <p>You can write custom code to detect duplicate keys during parsing or validation.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-green-600 dark:text-green-400">JavaScript Detection Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`function detectDuplicateKeys(jsonString) {
+              {`function detectDuplicateKeys(jsonString) {
   const duplicates = [];
   
   // Use a reviver function with JSON.parse
@@ -228,14 +226,15 @@ Expecting 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['`}
 
         <h3 className="text-xl font-medium mt-6">3. Custom JSON Parsers</h3>
         <p>
-          For more complex scenarios, you may need to implement or configure a custom JSON parser that explicitly checks for duplicates.
+          For more complex scenarios, you may need to implement or configure a custom JSON parser that explicitly checks
+          for duplicates.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Jackson Configuration (Java):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`ObjectMapper mapper = new ObjectMapper();
+              {`ObjectMapper mapper = new ObjectMapper();
 mapper.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
 
 try {
@@ -260,7 +259,7 @@ try {
           <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Before Deduplication:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "product": "Laptop",
   "price": 999.99,
   "inStock": true,
@@ -271,7 +270,7 @@ try {
           <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">After Deduplication:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "product": "Laptop",
   "price": 899.99,  // Kept the last/newer price
   "inStock": true
@@ -279,20 +278,19 @@ try {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            In this example, we manually resolved the duplicate &quot;price&quot; key by keeping only the last occurrence.
+            In this example, we manually resolved the duplicate &quot;price&quot; key by keeping only the last
+            occurrence.
           </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">2. Automated Merging</h3>
-        <p>
-          For more complex cases, you might want to merge the values of duplicate keys according to specific rules.
-        </p>
+        <p>For more complex cases, you might want to merge the values of duplicate keys according to specific rules.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-green-600 dark:text-green-400">JavaScript Merging Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`function mergeJsonWithDuplicateKeys(jsonString) {
+              {`function mergeJsonWithDuplicateKeys(jsonString) {
   const result = {};
   const tempObj = {};
   
@@ -343,15 +341,13 @@ try {
         </div>
 
         <h3 className="text-xl font-medium mt-6">3. Key Renaming</h3>
-        <p>
-          Sometimes the best strategy is to rename duplicate keys to make them unique while preserving all values.
-        </p>
+        <p>Sometimes the best strategy is to rename duplicate keys to make them unique while preserving all values.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Before Renaming:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "address": "123 Main St",
   "address": "Apt 4B"
 }`}
@@ -360,7 +356,7 @@ try {
           <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">After Renaming:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "addressLine1": "123 Main St",
   "addressLine2": "Apt 4B"
 }`}
@@ -369,15 +365,13 @@ try {
         </div>
 
         <h3 className="text-xl font-medium mt-6">4. Array Transformation</h3>
-        <p>
-          For cases where all values should be retained, convert duplicate keys into an array.
-        </p>
+        <p>For cases where all values should be retained, convert duplicate keys into an array.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Before Transformation:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "tag": "important",
   "tag": "urgent",
   "tag": "review"
@@ -387,7 +381,7 @@ try {
           <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">After Transformation:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "tags": ["important", "urgent", "review"]
 }`}
             </pre>
@@ -421,7 +415,7 @@ try {
           <h3 className="text-lg font-medium">JSON Schema Example for Validation:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`{
+              {`{
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "required": ["product", "price"],
@@ -441,22 +435,22 @@ try {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            Using a JSON Schema with <code>additionalProperties: false</code> helps ensure only defined properties are allowed,
-            effectively preventing duplicate keys with different names.
+            Using a JSON Schema with <code>additionalProperties: false</code> helps ensure only defined properties are
+            allowed, effectively preventing duplicate keys with different names.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Duplicate keys in JSON documents are a subtle but significant issue that can lead to data integrity 
-          problems, security vulnerabilities, and inconsistent application behavior. While JSON parsers may 
-          handle duplicates differently, best practice is to ensure keys are unique within each object.
+          Duplicate keys in JSON documents are a subtle but significant issue that can lead to data integrity problems,
+          security vulnerabilities, and inconsistent application behavior. While JSON parsers may handle duplicates
+          differently, best practice is to ensure keys are unique within each object.
         </p>
         <p className="mt-4">
-          By implementing proper detection mechanisms and following the resolution strategies outlined in this 
-          article, you can maintain the integrity of your JSON data across different systems and avoid the 
-          pitfalls associated with duplicate keys. As with many aspects of software development, prevention 
-          through validation and good tooling is ultimately more efficient than fixing problems after they occur.
+          By implementing proper detection mechanisms and following the resolution strategies outlined in this article,
+          you can maintain the integrity of your JSON data across different systems and avoid the pitfalls associated
+          with duplicate keys. As with many aspects of software development, prevention through validation and good
+          tooling is ultimately more efficient than fixing problems after they occur.
         </p>
       </div>
     </>

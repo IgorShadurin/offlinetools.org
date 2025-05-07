@@ -8,4 +8,4 @@ export const urlEncoderPromo: ArticlePromoData = {
   description: "Try our URL Encoder tool to properly encode URLs and query parameters.",
   linkText: "URL Encoder tool",
   linkUrl: "/tools/url-encoder",
-}; 
+};

@@ -1,40 +1,35 @@
-"use client"
+"use client";
 
-import { ReactNode } from "react"
-import Link from "next/link"
-import { Card } from "./card"
-import { cn } from "@/lib/utils"
+import { ReactNode } from "react";
+import Link from "next/link";
+import { Card } from "./card";
+import { cn } from "@/lib/utils";
 
 export interface ToolCategory {
-  title: string
-  slug: string
-  description: string
-  icon: ReactNode
-  url: string
+  title: string;
+  slug: string;
+  description: string;
+  icon: ReactNode;
+  url: string;
 }
 
 export interface ToolCategoriesProps {
-  categories: ToolCategory[]
-  baseUrl: string
-  className?: string
-  columns?: 2 | 3 | 4
+  categories: ToolCategory[];
+  baseUrl: string;
+  className?: string;
+  columns?: 2 | 3 | 4;
 }
 
 /**
  * A reusable component for displaying tool categories in a grid layout.
  * Each category is represented as a card with an icon, title, and description.
  */
-export function ToolCategories({
-  categories,
-  baseUrl,
-  className,
-  columns = 3,
-}: ToolCategoriesProps) {
+export function ToolCategories({ categories, baseUrl, className, columns = 3 }: ToolCategoriesProps) {
   const gridCols = {
     2: "grid-cols-1 sm:grid-cols-2",
     3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
     4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
-  }
+  };
 
   return (
     <div className={cn("w-full", className)}>
@@ -48,18 +43,14 @@ export function ToolCategories({
           >
             <Card className="h-full overflow-hidden hover:border-primary/50 transition-colors">
               <div className="p-6 flex flex-col h-full">
-                <div className="mb-4 text-primary">
-                  {category.icon}
-                </div>
+                <div className="mb-4 text-primary">{category.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{category.title}</h3>
-                <p className="text-muted-foreground text-sm flex-grow">
-                  {category.description}
-                </p>
+                <p className="text-muted-foreground text-sm flex-grow">{category.description}</p>
               </div>
             </Card>
           </Link>
         ))}
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Error Highlighting Features in Modern JSON Formatters | Offline Tools",
-  description: "Explore how modern JSON formatters use advanced error highlighting techniques to help developers quickly identify and fix JSON syntax issues",
+  description:
+    "Explore how modern JSON formatters use advanced error highlighting techniques to help developers quickly identify and fix JSON syntax issues",
 };
 
 /**
@@ -18,12 +19,17 @@ export default function JsonFormatterErrorHighlightingArticle() {
 
       <div className="space-y-6">
         <p>
-          Modern JSON formatters have evolved far beyond simple pretty-printing capabilities. Today&apos;s tools incorporate sophisticated error highlighting features that make identifying and fixing JSON syntax issues faster and more intuitive than ever before. Let&apos;s explore these features and how they enhance the development experience.
+          Modern JSON formatters have evolved far beyond simple pretty-printing capabilities. Today&apos;s tools
+          incorporate sophisticated error highlighting features that make identifying and fixing JSON syntax issues
+          faster and more intuitive than ever before. Let&apos;s explore these features and how they enhance the
+          development experience.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Line-Specific Error Highlighting</h2>
         <p>
-          One of the most valuable features in modern JSON formatters is line-specific error highlighting. Rather than simply indicating that an error exists somewhere in your JSON, advanced formatters pinpoint the exact line where the problem occurs.
+          One of the most valuable features in modern JSON formatters is line-specific error highlighting. Rather than
+          simply indicating that an error exists somewhere in your JSON, advanced formatters pinpoint the exact line
+          where the problem occurs.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -35,12 +41,15 @@ export default function JsonFormatterErrorHighlightingArticle() {
   "role": "Developer"
 }`}
           </pre>
-          <p className="mt-2 text-sm">A modern formatter would highlight line 3, indicating the missing comma after &quot;John Doe&quot;.</p>
+          <p className="mt-2 text-sm">
+            A modern formatter would highlight line 3, indicating the missing comma after &quot;John Doe&quot;.
+          </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Character-Level Precision</h2>
         <p>
-          Advanced formatters go beyond line-level highlighting to provide character-level precision. They can underline or highlight the exact character position where an error occurs or is expected.
+          Advanced formatters go beyond line-level highlighting to provide character-level precision. They can underline
+          or highlight the exact character position where an error occurs or is expected.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -58,37 +67,58 @@ export default function JsonFormatterErrorHighlightingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Contextual Error Messages</h2>
         <p>
-          Modern JSON formatters don&apos;t just highlight errors; they provide meaningful contextual error messages that explain what went wrong and often suggest how to fix it.
+          Modern JSON formatters don&apos;t just highlight errors; they provide meaningful contextual error messages
+          that explain what went wrong and often suggest how to fix it.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Contextual Error Message Examples</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><strong>Generic error:</strong> &quot;Invalid JSON&quot;</li>
-            <li><strong>Contextual error:</strong> &quot;Expected comma after property at line 3, column 25&quot;</li>
-            <li><strong>Even better:</strong> &quot;Missing comma after value &apos;John Doe&apos; at line 3&quot;</li>
+            <li>
+              <strong>Generic error:</strong> &quot;Invalid JSON&quot;
+            </li>
+            <li>
+              <strong>Contextual error:</strong> &quot;Expected comma after property at line 3, column 25&quot;
+            </li>
+            <li>
+              <strong>Even better:</strong> &quot;Missing comma after value &apos;John Doe&apos; at line 3&quot;
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Color-Coded Syntax Highlighting</h2>
         <p>
-          Color-coded syntax highlighting is a fundamental feature that helps visualize the structure of JSON data. Different colors for keys, values, strings, numbers, and symbols make the data easier to read and understand.
+          Color-coded syntax highlighting is a fundamental feature that helps visualize the structure of JSON data.
+          Different colors for keys, values, strings, numbers, and symbols make the data easier to read and understand.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Typical Color Scheme in Modern Formatters</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><span className="text-blue-600 dark:text-blue-400">Property names</span> - usually in blue</li>
-            <li><span className="text-green-600 dark:text-green-400">String values</span> - often in green</li>
-            <li><span className="text-purple-600 dark:text-purple-400">Numbers</span> - commonly in purple or red</li>
-            <li><span className="text-yellow-600 dark:text-yellow-400">Booleans and null</span> - frequently in yellow or orange</li>
-            <li><span className="text-gray-600 dark:text-gray-400">Structural elements</span> (brackets, braces, commas) - typically in gray or the default text color</li>
+            <li>
+              <span className="text-blue-600 dark:text-blue-400">Property names</span> - usually in blue
+            </li>
+            <li>
+              <span className="text-green-600 dark:text-green-400">String values</span> - often in green
+            </li>
+            <li>
+              <span className="text-purple-600 dark:text-purple-400">Numbers</span> - commonly in purple or red
+            </li>
+            <li>
+              <span className="text-yellow-600 dark:text-yellow-400">Booleans and null</span> - frequently in yellow or
+              orange
+            </li>
+            <li>
+              <span className="text-gray-600 dark:text-gray-400">Structural elements</span> (brackets, braces, commas) -
+              typically in gray or the default text color
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Error Type Classification</h2>
         <p>
-          Advanced JSON formatters categorize errors by type, making them easier to understand and fix, especially for beginners.
+          Advanced JSON formatters categorize errors by type, making them easier to understand and fix, especially for
+          beginners.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -96,22 +126,29 @@ export default function JsonFormatterErrorHighlightingArticle() {
           <ul className="list-disc pl-6 space-y-4 mt-2">
             <li>
               <strong className="text-red-600 dark:text-red-400">Structural Errors</strong>
-              <p className="text-sm mt-1">Missing or extra brackets, braces, or array elements that break the JSON structure.</p>
+              <p className="text-sm mt-1">
+                Missing or extra brackets, braces, or array elements that break the JSON structure.
+              </p>
             </li>
             <li>
               <strong className="text-amber-600 dark:text-amber-400">Syntax Errors</strong>
-              <p className="text-sm mt-1">Incorrect syntax like missing commas, using single quotes, or unquoted property names.</p>
+              <p className="text-sm mt-1">
+                Incorrect syntax like missing commas, using single quotes, or unquoted property names.
+              </p>
             </li>
             <li>
               <strong className="text-blue-600 dark:text-blue-400">Value Errors</strong>
-              <p className="text-sm mt-1">Issues with the values themselves, such as invalid number formats or improperly escaped strings.</p>
+              <p className="text-sm mt-1">
+                Issues with the values themselves, such as invalid number formats or improperly escaped strings.
+              </p>
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Interactive Error Navigation</h2>
         <p>
-          Many modern formatters offer interactive navigation between errors, particularly helpful for large JSON documents with multiple issues.
+          Many modern formatters offer interactive navigation between errors, particularly helpful for large JSON
+          documents with multiple issues.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -126,7 +163,8 @@ export default function JsonFormatterErrorHighlightingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Real-Time Validation</h2>
         <p>
-          Real-time validation is a powerful feature found in advanced JSON formatters. As you type, the formatter continuously analyzes your JSON and immediately highlights errors.
+          Real-time validation is a powerful feature found in advanced JSON formatters. As you type, the formatter
+          continuously analyzes your JSON and immediately highlights errors.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -141,7 +179,8 @@ export default function JsonFormatterErrorHighlightingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Auto-Fix Suggestions</h2>
         <p>
-          Some advanced formatters go beyond highlighting errors to suggest or even automatically implement fixes for common issues.
+          Some advanced formatters go beyond highlighting errors to suggest or even automatically implement fixes for
+          common issues.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -158,24 +197,31 @@ export default function JsonFormatterErrorHighlightingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Formatters with Advanced Error Highlighting</h2>
         <p>
-          Several modern JSON formatters offer these advanced error highlighting features. Our Offline Tools JSON Formatter implements many of these capabilities, with the added benefit of working entirely offline.
+          Several modern JSON formatters offer these advanced error highlighting features. Our Offline Tools JSON
+          Formatter implements many of these capabilities, with the added benefit of working entirely offline.
         </p>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Privacy Advantage:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Using an offline JSON formatter with advanced error highlighting ensures that your potentially sensitive JSON data never leaves your device, providing both sophisticated error detection and complete privacy.
+            Using an offline JSON formatter with advanced error highlighting ensures that your potentially sensitive
+            JSON data never leaves your device, providing both sophisticated error detection and complete privacy.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Error highlighting features in modern JSON formatters have transformed the debugging experience from frustrating guesswork to a streamlined, visual process. By precisely identifying errors, providing helpful context, and even suggesting fixes, these tools significantly reduce the time and effort required to produce valid JSON.
+          Error highlighting features in modern JSON formatters have transformed the debugging experience from
+          frustrating guesswork to a streamlined, visual process. By precisely identifying errors, providing helpful
+          context, and even suggesting fixes, these tools significantly reduce the time and effort required to produce
+          valid JSON.
         </p>
         <p className="mt-4">
-          Whether you&apos;re a beginner still learning the intricacies of JSON syntax or an experienced developer working with complex data structures, the advanced error highlighting features in today&apos;s formatters make working with JSON more efficient and less error-prone.
+          Whether you&apos;re a beginner still learning the intricacies of JSON syntax or an experienced developer
+          working with complex data structures, the advanced error highlighting features in today&apos;s formatters make
+          working with JSON more efficient and less error-prone.
         </p>
       </div>
     </>
   );
-} 
+}

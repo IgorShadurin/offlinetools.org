@@ -1,53 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Send } from "lucide-react"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Send } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 /**
  * Schema for contact form validation
  */
 const contactFormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  message: z.string()
+  message: z
+    .string()
     .min(3, "Message must be at least 3 characters")
     .max(2000, "Message cannot exceed 2000 characters"),
-})
+});
 
 /**
  * Type for contact form values
  */
-type ContactFormValues = z.infer<typeof contactFormSchema>
+type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 /**
  * Contact form component with validation and submission handling
  */
 export default function ContactForm() {
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       email: "",
       message: "",
     },
-  })
-  
-  const isSubmitting = form.formState.isSubmitting
+  });
+
+  const isSubmitting = form.formState.isSubmitting;
 
   /**
    * Handles form submission
@@ -55,50 +49,48 @@ export default function ContactForm() {
    */
   const onSubmit = async (values: ContactFormValues) => {
     try {
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
+      const response = await fetch("/api/feedback", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
-      })
-      
-      const data = await response.json()
-      
+      });
+
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to send message')
+        throw new Error(data.error || "Failed to send message");
       }
-      
+
       // Reset form after successful submission
-      form.reset()
-      setIsSubmitted(true)
+      form.reset();
+      setIsSubmitted(true);
     } catch (error) {
       // Handle submission error
-      console.error("Form submission error:", error)
+      console.error("Form submission error:", error);
     }
-  }
+  };
 
   if (isSubmitted) {
     return (
       <div className="text-center py-8">
         <div className="inline-flex items-center justify-center rounded-full bg-green-100 p-2 dark:bg-green-900 mb-4">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="h-8 w-8 text-green-600 dark:text-green-300" 
-            fill="none" 
-            viewBox="0 0 24 24" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 text-green-600 dark:text-green-300"
+            fill="none"
+            viewBox="0 0 24 24"
             stroke="currentColor"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <h3 className="text-xl font-medium mb-2">Thank you for your message!</h3>
-        <p className="text-muted-foreground mb-6">
-          We&apos;ve received your message and will get back to you soon.
-        </p>
+        <p className="text-muted-foreground mb-6">We&apos;ve received your message and will get back to you soon.</p>
         <Button onClick={() => setIsSubmitted(false)}>Send another message</Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -117,7 +109,7 @@ export default function ContactForm() {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="message"
@@ -133,20 +125,27 @@ export default function ContactForm() {
                 />
               </FormControl>
               <FormMessage />
-              <div className="text-xs text-muted-foreground text-right">
-                {field.value.length}/2000
-              </div>
+              <div className="text-xs text-muted-foreground text-right">{field.value.length}/2000</div>
             </FormItem>
           )}
         />
-        
+
         <div>
           <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Sending...
               </>
@@ -160,5 +159,5 @@ export default function ContactForm() {
         </div>
       </form>
     </Form>
-  )
-} 
+  );
+}

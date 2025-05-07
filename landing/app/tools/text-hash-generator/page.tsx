@@ -1,6 +1,6 @@
-import TextHashGenerator from "./TextHashGenerator"
-import { StructuredData } from "@/components/structured-data"
-import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata"
+import TextHashGenerator from "./TextHashGenerator";
+import { StructuredData } from "@/components/structured-data";
+import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata";
 
 export const metadata = generateMetadata({
   title: toolTitles.textHashGenerator.base,
@@ -12,14 +12,14 @@ export const metadata = generateMetadata({
   twitter: {
     title: toolTitles.textHashGenerator.extended,
     description: toolDescriptions.textHashGenerator,
-  }
-})
+  },
+});
 
 export default function TextHashGeneratorPage() {
   return (
     <>
-      <StructuredData 
-        type="tool" 
+      <StructuredData
+        type="tool"
         toolName={toolTitles.textHashGenerator.base}
         toolDescription={toolDescriptions.textHashGenerator}
         toolUrl="/tools/text-hash-generator"
@@ -27,5 +27,5 @@ export default function TextHashGeneratorPage() {
       />
       <TextHashGenerator />
     </>
-  )
-} 
+  );
+}

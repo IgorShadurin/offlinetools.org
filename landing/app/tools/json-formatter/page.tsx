@@ -1,6 +1,6 @@
-import JsonFormatter from "./JsonFormatter"
-import { StructuredData } from "@/components/structured-data"
-import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata"
+import JsonFormatter from "./JsonFormatter";
+import { StructuredData } from "@/components/structured-data";
+import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata";
 
 export const metadata = generateMetadata({
   title: toolTitles.jsonFormatter.base,
@@ -12,14 +12,14 @@ export const metadata = generateMetadata({
   twitter: {
     title: toolTitles.jsonFormatter.extended,
     description: toolDescriptions.jsonFormatter,
-  }
-})
+  },
+});
 
 export default function JsonFormatterPage() {
   return (
     <>
-      <StructuredData 
-        type="tool" 
+      <StructuredData
+        type="tool"
         toolName="JSON Formatter"
         toolDescription="Format, validate, and beautify JSON data with customizable indentation options for better readability and debugging."
         toolUrl="/tools/json-formatter"
@@ -27,5 +27,5 @@ export default function JsonFormatterPage() {
       />
       <JsonFormatter />
     </>
-  )
-} 
+  );
+}

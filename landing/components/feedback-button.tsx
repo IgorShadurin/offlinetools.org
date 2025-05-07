@@ -4,13 +4,7 @@ import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FeedbackForm } from "@/components/feedback-form";
 
 /**
@@ -69,22 +63,20 @@ export function FeedbackButton() {
       <Dialog open={isOpen} onOpenChange={handleDialogChange}>
         <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {formStatus === "success" ? "Thank You!" : "We Value Your Feedback"}
-            </DialogTitle>
+            <DialogTitle>{formStatus === "success" ? "Thank You!" : "We Value Your Feedback"}</DialogTitle>
             <DialogDescription>
-              {formStatus === "success" 
+              {formStatus === "success"
                 ? "Your feedback has been submitted successfully. We appreciate your input!"
                 : "Help us improve by sharing your thoughts, suggestions, or reporting issues."}
             </DialogDescription>
           </DialogHeader>
-          
+
           {formStatus === "error" && (
             <div className="bg-destructive/15 text-destructive rounded-md p-3 mb-4">
               <p className="text-sm font-medium">Failed to submit feedback: {errorMessage}</p>
             </div>
           )}
-          
+
           {formStatus === "success" ? (
             <div className="flex items-center justify-center p-4">
               <div className="bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 rounded-full p-3">
@@ -92,13 +84,10 @@ export function FeedbackButton() {
               </div>
             </div>
           ) : (
-            <FeedbackForm 
-              onSuccess={handleSuccess} 
-              onError={handleError} 
-            />
+            <FeedbackForm onSuccess={handleSuccess} onError={handleError} />
           )}
         </DialogContent>
       </Dialog>
     </>
   );
-} 
+}

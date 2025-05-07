@@ -26,7 +26,7 @@ interface FeedbackFormProps {
  */
 export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackFormSchema),
     defaultValues: {
@@ -41,7 +41,7 @@ export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
    */
   const onSubmit = async (values: FeedbackFormValues) => {
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch("/api/feedback", {
         method: "POST",
@@ -50,13 +50,13 @@ export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
         },
         body: JSON.stringify(values),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || "Failed to submit feedback");
       }
-      
+
       // Reset form on success
       form.reset();
       onSuccess?.();
@@ -78,17 +78,13 @@ export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
             <FormItem>
               <FormLabel>Email (optional)</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="your@email.com" 
-                  {...field} 
-                  disabled={isSubmitting}
-                />
+                <Input placeholder="your@email.com" {...field} disabled={isSubmitting} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="message"
@@ -96,23 +92,23 @@ export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
             <FormItem>
               <FormLabel>Message</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Your feedback message (max 2000 characters)" 
-                  className="min-h-32 resize-none" 
-                  {...field} 
+                <Textarea
+                  placeholder="Your feedback message (max 2000 characters)"
+                  className="min-h-32 resize-none"
+                  {...field}
                   disabled={isSubmitting}
                 />
               </FormControl>
               <FormMessage />
-              <div className="text-xs text-muted-foreground text-right">
-                {field.value.length}/2000
-              </div>
+              <div className="text-xs text-muted-foreground text-right">{field.value.length}/2000</div>
             </FormItem>
           )}
         />
-        
+
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : (
+          {isSubmitting ? (
+            "Sending..."
+          ) : (
             <>
               <Send className="mr-2 h-4 w-4" />
               Send Feedback
@@ -122,4 +118,4 @@ export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
       </form>
     </Form>
   );
-} 
+}

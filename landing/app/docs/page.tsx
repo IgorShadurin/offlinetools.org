@@ -19,7 +19,7 @@ export default function DocsPage() {
             Comprehensive guides and references for all Offline Tools features
           </p>
         </div>
-        
+
         <div className="mx-auto max-w-5xl mt-10 md:mt-16 grid gap-6">
           <Card>
             <CardHeader>
@@ -50,4 +50,4 @@ export default function DocsPage() {
       </Container>
     </PageLayout>
   );
-} 
+}

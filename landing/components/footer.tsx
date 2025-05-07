@@ -1,6 +1,6 @@
-import { Container } from "@/components/ui/container"
-import Link from "next/link"
-import React from "react"
+import { Container } from "@/components/ui/container";
+import Link from "next/link";
+import React from "react";
 
 /**
  * Footer component with links and copyright information
@@ -64,10 +64,10 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a 
-                  href="https://github.com/IgorShadurin/offlinetools.org" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://github.com/IgorShadurin/offlinetools.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground"
                 >
                   GitHub
@@ -99,9 +99,9 @@ export function Footer() {
         <div className="mt-8 border-t pt-8 text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} OfflineTools. All rights reserved.</p>
           <p className="mt-2">
-            <a 
-              href="https://github.com/IgorShadurin/offlinetools.org" 
-              target="_blank" 
+            <a
+              href="https://github.com/IgorShadurin/offlinetools.org"
+              target="_blank"
               rel="noopener noreferrer"
               className="hover:text-foreground"
             >
@@ -111,5 +111,5 @@ export function Footer() {
         </div>
       </Container>
     </footer>
-  )
-} 
+  );
+}

@@ -8,4 +8,4 @@ export const jsonFormatterPromo: ArticlePromoData = {
   description: "Try our JSON Formatter tool to automatically identify and fix syntax errors in your JSON.",
   linkText: "JSON Formatter tool",
   linkUrl: "/tools/json-formatter",
-}; 
+};

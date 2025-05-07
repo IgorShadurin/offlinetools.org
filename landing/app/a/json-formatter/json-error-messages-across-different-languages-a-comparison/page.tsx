@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "JSON Error Messages Across Different Languages: A Comparison | Offline Tools",
-  description: "Compare JSON parsing error messages across different programming languages and learn how to effectively interpret them for faster debugging",
+  description:
+    "Compare JSON parsing error messages across different programming languages and learn how to effectively interpret them for faster debugging",
 };
 
 /**
@@ -18,16 +19,14 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          When working with JSON data across different programming languages, understanding error messages can be a 
-          challenge. Each language implements JSON parsing differently, resulting in varied error messages that can 
-          range from cryptic to highly descriptive. This article compares JSON error reporting across popular 
+          When working with JSON data across different programming languages, understanding error messages can be a
+          challenge. Each language implements JSON parsing differently, resulting in varied error messages that can
+          range from cryptic to highly descriptive. This article compares JSON error reporting across popular
           programming languages to help you interpret these messages more effectively.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. Common JSON Parsing Errors</h2>
-        <p>
-          Before diving into language specifics, let's identify the most common JSON parsing errors:
-        </p>
+        <p>Before diving into language specifics, let's identify the most common JSON parsing errors:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Mismatched brackets or braces</li>
           <li>Missing or extra commas</li>
@@ -43,7 +42,7 @@ export default function JsonFormatterArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">2. Error Message Comparison</h2>
         <p>
-          Let's examine how different languages report the same JSON errors. For our comparison, we'll use this 
+          Let's examine how different languages report the same JSON errors. For our comparison, we'll use this
           intentionally problematic JSON:
         </p>
 
@@ -63,14 +62,15 @@ export default function JsonFormatterArticle() {
 }`}
           </pre>
           <p className="mt-2">
-            <em>Issues: Single quotes around 'description', trailing comma after "item3", and unquoted property name status</em>
+            <em>
+              Issues: Single quotes around 'description', trailing comma after "item3", and unquoted property name
+              status
+            </em>
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">3. JavaScript (Browser)</h2>
-        <p>
-          JavaScript's JSON parser provides concise but helpful error messages, focusing on position information:
-        </p>
+        <p>JavaScript's JSON parser provides concise but helpful error messages, focusing on position information:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Error for single quotes:</h3>
@@ -107,15 +107,23 @@ export default function JsonFormatterArticle() {
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">JavaScript Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Concise, includes position information, easily accessible in try/catch blocks</li>
-            <li><strong>Weaknesses:</strong> No context about the expected structure, no line/column info in browsers</li>
-            <li><strong>Best practice:</strong> Add your own context by showing the problematic section using the position value</li>
+            <li>
+              <strong>Strengths:</strong> Concise, includes position information, easily accessible in try/catch blocks
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> No context about the expected structure, no line/column info in browsers
+            </li>
+            <li>
+              <strong>Best practice:</strong> Add your own context by showing the problematic section using the position
+              value
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">4. Python</h2>
         <p>
-          Python's json module provides error messages with line and column information, making it easier to locate problems:
+          Python's json module provides error messages with line and column information, making it easier to locate
+          problems:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -152,16 +160,21 @@ except json.JSONDecodeError as e:
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Python Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Detailed error messages, line/column information, specific exception type</li>
-            <li><strong>Weaknesses:</strong> Sometimes the error appears after the actual problem location</li>
-            <li><strong>Best practice:</strong> Use the exception's lineno, colno, and pos attributes to pinpoint the error</li>
+            <li>
+              <strong>Strengths:</strong> Detailed error messages, line/column information, specific exception type
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> Sometimes the error appears after the actual problem location
+            </li>
+            <li>
+              <strong>Best practice:</strong> Use the exception's lineno, colno, and pos attributes to pinpoint the
+              error
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">5. Java</h2>
-        <p>
-          Java's JSON libraries like Jackson provide detailed error messages with path information:
-        </p>
+        <p>Java's JSON libraries like Jackson provide detailed error messages with path information:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Jackson error for single quotes:</h3>
@@ -203,16 +216,22 @@ try {
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Java Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Very detailed error messages, stack traces, line/column information, path details</li>
-            <li><strong>Weaknesses:</strong> Verbosity can be overwhelming, different libraries have different formats</li>
-            <li><strong>Best practice:</strong> Extract the line/column information and use it to highlight the problematic section</li>
+            <li>
+              <strong>Strengths:</strong> Very detailed error messages, stack traces, line/column information, path
+              details
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> Verbosity can be overwhelming, different libraries have different formats
+            </li>
+            <li>
+              <strong>Best practice:</strong> Extract the line/column information and use it to highlight the
+              problematic section
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">6. C#/.NET</h2>
-        <p>
-          C#'s System.Text.Json provides moderately detailed error messages:
-        </p>
+        <p>C#'s System.Text.Json provides moderately detailed error messages:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Error for single quotes:</h3>
@@ -259,15 +278,24 @@ catch (JsonException ex)
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">C#/.NET Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Structured exceptions with path, line, and position properties, clear explanation</li>
-            <li><strong>Weaknesses:</strong> BytePositionInLine can be confusing for Unicode characters</li>
-            <li><strong>Best practice:</strong> Use the JsonException properties to pinpoint and display the error location</li>
+            <li>
+              <strong>Strengths:</strong> Structured exceptions with path, line, and position properties, clear
+              explanation
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> BytePositionInLine can be confusing for Unicode characters
+            </li>
+            <li>
+              <strong>Best practice:</strong> Use the JsonException properties to pinpoint and display the error
+              location
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">7. PHP</h2>
         <p>
-          PHP's json_decode() function doesn't provide detailed error messages by default, requiring extra steps for useful information:
+          PHP's json_decode() function doesn't provide detailed error messages by default, requiring extra steps for
+          useful information:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -340,16 +368,21 @@ if ($result['error']) {
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">PHP Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Simple error system with standard error codes</li>
-            <li><strong>Weaknesses:</strong> Very minimal error details, no position information by default</li>
-            <li><strong>Best practice:</strong> Implement custom error detection as shown above to pinpoint the exact error location</li>
+            <li>
+              <strong>Strengths:</strong> Simple error system with standard error codes
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> Very minimal error details, no position information by default
+            </li>
+            <li>
+              <strong>Best practice:</strong> Implement custom error detection as shown above to pinpoint the exact
+              error location
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">8. Ruby</h2>
-        <p>
-          Ruby's JSON parser provides moderately helpful error messages:
-        </p>
+        <p>Ruby's JSON parser provides moderately helpful error messages:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Error for single quotes:</h3>
@@ -393,16 +426,21 @@ end`}
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Ruby Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Specific exception type, includes position information</li>
-            <li><strong>Weaknesses:</strong> Error message format is less structured, requiring regex to extract position</li>
-            <li><strong>Best practice:</strong> Parse the error message to extract position and display context around the error</li>
+            <li>
+              <strong>Strengths:</strong> Specific exception type, includes position information
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> Error message format is less structured, requiring regex to extract position
+            </li>
+            <li>
+              <strong>Best practice:</strong> Parse the error message to extract position and display context around the
+              error
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">9. Go</h2>
-        <p>
-          Go's encoding/json package provides precise error messages:
-        </p>
+        <p>Go's encoding/json package provides precise error messages:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Error for single quotes:</h3>
@@ -459,16 +497,21 @@ func main() {
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Go Error Characteristics</h3>
           <ul className="list-disc pl-6 space-y-1 mt-2">
-            <li><strong>Strengths:</strong> Clean error messages, provides byte offset for syntax errors</li>
-            <li><strong>Weaknesses:</strong> Only provides byte offset, requiring calculation for line/column</li>
-            <li><strong>Best practice:</strong> Type assert to *json.SyntaxError to access the Offset field and display context</li>
+            <li>
+              <strong>Strengths:</strong> Clean error messages, provides byte offset for syntax errors
+            </li>
+            <li>
+              <strong>Weaknesses:</strong> Only provides byte offset, requiring calculation for line/column
+            </li>
+            <li>
+              <strong>Best practice:</strong> Type assert to *json.SyntaxError to access the Offset field and display
+              context
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">10. Unified Error Handling Strategy</h2>
-        <p>
-          Regardless of the language, a good error handling strategy should:
-        </p>
+        <p>Regardless of the language, a good error handling strategy should:</p>
 
         <ol className="list-decimal pl-6 space-y-2">
           <li>
@@ -561,9 +604,7 @@ function suggestJsonFix(errorInfo, jsonString) {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">11. Best Practices for Cross-Language JSON Usage</h2>
-        <p>
-          When working with JSON across multiple languages:
-        </p>
+        <p>When working with JSON across multiple languages:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -584,41 +625,63 @@ function suggestJsonFix(errorInfo, jsonString) {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">12. Language-Specific JSON Validation Libraries</h2>
-        <p>
-          Many languages offer specialized JSON validation libraries with superior error reporting:
-        </p>
+        <p>Many languages offer specialized JSON validation libraries with superior error reporting:</p>
 
         <div className="grid md:grid-cols-2 gap-4 mt-4">
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
             <h3 className="text-lg font-medium">JavaScript:</h3>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li><strong>jsonlint</strong> - Detailed error messages with line/column</li>
-              <li><strong>ajv</strong> - Advanced schema validation with descriptive errors</li>
-              <li><strong>json-schema-validator</strong> - Path-based error reporting</li>
+              <li>
+                <strong>jsonlint</strong> - Detailed error messages with line/column
+              </li>
+              <li>
+                <strong>ajv</strong> - Advanced schema validation with descriptive errors
+              </li>
+              <li>
+                <strong>json-schema-validator</strong> - Path-based error reporting
+              </li>
             </ul>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
             <h3 className="text-lg font-medium">Python:</h3>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li><strong>jsonschema</strong> - Advanced schema validation</li>
-              <li><strong>json-validator</strong> - Visual error indicators</li>
-              <li><strong>pydantic</strong> - Combines parsing with validation</li>
+              <li>
+                <strong>jsonschema</strong> - Advanced schema validation
+              </li>
+              <li>
+                <strong>json-validator</strong> - Visual error indicators
+              </li>
+              <li>
+                <strong>pydantic</strong> - Combines parsing with validation
+              </li>
             </ul>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
             <h3 className="text-lg font-medium">Java:</h3>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li><strong>Everit JSON Schema</strong> - Detailed validation errors</li>
-              <li><strong>json-schema-validator</strong> - Path-based reporting</li>
-              <li><strong>jsonassert</strong> - Specialized for testing JSON equality</li>
+              <li>
+                <strong>Everit JSON Schema</strong> - Detailed validation errors
+              </li>
+              <li>
+                <strong>json-schema-validator</strong> - Path-based reporting
+              </li>
+              <li>
+                <strong>jsonassert</strong> - Specialized for testing JSON equality
+              </li>
             </ul>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
             <h3 className="text-lg font-medium">Go:</h3>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li><strong>gojsonschema</strong> - Schema validation with detailed errors</li>
-              <li><strong>validator</strong> - General validation including JSON</li>
-              <li><strong>go-playground/validator</strong> - Struct validation</li>
+              <li>
+                <strong>gojsonschema</strong> - Schema validation with detailed errors
+              </li>
+              <li>
+                <strong>validator</strong> - General validation including JSON
+              </li>
+              <li>
+                <strong>go-playground/validator</strong> - Struct validation
+              </li>
             </ul>
           </div>
         </div>
@@ -626,24 +689,26 @@ function suggestJsonFix(errorInfo, jsonString) {
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Pro Tip</h3>
           <p>
-            When developing APIs consumed by multiple language clients, include a "debug" mode that returns 
-            more verbose JSON error messages. This helps clients identify issues more quickly regardless of 
-            their language's native error reporting capabilities.
+            When developing APIs consumed by multiple language clients, include a "debug" mode that returns more verbose
+            JSON error messages. This helps clients identify issues more quickly regardless of their language's native
+            error reporting capabilities.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">13. Conclusion</h2>
         <p>
           Understanding JSON error messages across different programming languages allows you to debug more efficiently
-          in polyglot environments. While each language has its own error reporting style, the fundamental JSON specification
-          remains the same. By leveraging language-specific error details and applying consistent error handling strategies,
-          you can quickly pinpoint and resolve JSON parsing issues regardless of your technology stack.
+          in polyglot environments. While each language has its own error reporting style, the fundamental JSON
+          specification remains the same. By leveraging language-specific error details and applying consistent error
+          handling strategies, you can quickly pinpoint and resolve JSON parsing issues regardless of your technology
+          stack.
         </p>
         <p className="mt-2">
-          Remember that good error messages are not just about reporting failures—they should guide users toward solutions.
-          Investing time in better error handling pays dividends in reduced debugging time and improved developer experience.
+          Remember that good error messages are not just about reporting failures—they should guide users toward
+          solutions. Investing time in better error handling pays dividends in reduced debugging time and improved
+          developer experience.
         </p>
       </div>
     </>
   );
-} 
+}

@@ -8,4 +8,4 @@ export const base64CodecPromo: ArticlePromoData = {
   description: "Try our Base64 Codec tool to easily encode and decode your data.",
   linkText: "Base64 Codec tool",
   linkUrl: "/tools/base64-codec",
-}; 
+};

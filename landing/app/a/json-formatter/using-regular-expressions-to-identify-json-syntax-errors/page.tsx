@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Using Regular Expressions to Identify JSON Syntax Errors | Offline Tools",
-  description: "Learn how to use regular expressions to identify and diagnose common JSON syntax errors in your data structures",
+  description:
+    "Learn how to use regular expressions to identify and diagnose common JSON syntax errors in your data structures",
 };
 
 /**
@@ -18,15 +19,15 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          While full JSON parsing is the most reliable way to validate JSON, regular expressions can be powerful tools for quickly
-          identifying and diagnosing common syntax errors. This article explores how to use targeted regular expressions to spot
-          specific JSON syntax issues before they cause problems in your applications.
+          While full JSON parsing is the most reliable way to validate JSON, regular expressions can be powerful tools
+          for quickly identifying and diagnosing common syntax errors. This article explores how to use targeted regular
+          expressions to spot specific JSON syntax issues before they cause problems in your applications.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. Finding Unbalanced Brackets and Braces</h2>
         <p>
-          One of the most common JSON syntax errors involves unbalanced brackets, braces, or parentheses. Regular expressions
-          can help identify these issues with proper pattern matching.
+          One of the most common JSON syntax errors involves unbalanced brackets, braces, or parentheses. Regular
+          expressions can help identify these issues with proper pattern matching.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -223,8 +224,8 @@ if (invalidProps.unquotedProperties.length > 0 || invalidProps.singleQuotedPrope
 
         <h2 className="text-2xl font-semibold mt-8">5. Finding Trailing Commas</h2>
         <p>
-          JSON doesn't allow trailing commas after the last element in arrays or objects. Regular expressions
-          can help identify these invalid commas that would cause parsing to fail.
+          JSON doesn't allow trailing commas after the last element in arrays or objects. Regular expressions can help
+          identify these invalid commas that would cause parsing to fail.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -275,8 +276,8 @@ if (trailingCommas.objectTrailingCommas.length > 0 || trailingCommas.arrayTraili
 
         <h2 className="text-2xl font-semibold mt-8">6. Creating a Comprehensive JSON Pre-validator</h2>
         <p>
-          While regular expressions cannot fully validate JSON, they can serve as a first line of defense to catch common
-          syntax errors before attempting to parse the JSON.
+          While regular expressions cannot fully validate JSON, they can serve as a first line of defense to catch
+          common syntax errors before attempting to parse the JSON.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -355,9 +356,10 @@ if (!validationResult.valid) {
 
         <h2 className="text-2xl font-semibold mt-8">Limitations of Regular Expressions for JSON Validation</h2>
         <p>
-          It's important to understand that regular expressions should complement, not replace, proper JSON parsing. Here are some limitations:
+          It's important to understand that regular expressions should complement, not replace, proper JSON parsing.
+          Here are some limitations:
         </p>
-        
+
         <ul className="list-disc pl-6 space-y-2">
           <li>Regular expressions cannot fully validate nested structures in complex JSON.</li>
           <li>They may produce false positives or miss certain subtle syntax errors.</li>
@@ -367,12 +369,13 @@ if (!validationResult.valid) {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Regular expressions provide a valuable toolset for quickly identifying common JSON syntax errors before attempting 
-          a full parse. While they shouldn't replace proper parsing libraries, they can offer fast initial validation, 
-          clearer error messages, and help pinpoint issues in large JSON documents. By using targeted regular expressions for 
-          specific error patterns, you can build more robust JSON handling with better error reporting in your applications.
+          Regular expressions provide a valuable toolset for quickly identifying common JSON syntax errors before
+          attempting a full parse. While they shouldn't replace proper parsing libraries, they can offer fast initial
+          validation, clearer error messages, and help pinpoint issues in large JSON documents. By using targeted
+          regular expressions for specific error patterns, you can build more robust JSON handling with better error
+          reporting in your applications.
         </p>
       </div>
     </>
   );
-} 
+}

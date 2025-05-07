@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Resolving Mixed Data Type Errors in JSON | Offline Tools",
-  description: "Learn how to identify, troubleshoot, and fix mixed data type errors in JSON to ensure data consistency and proper validation",
+  description:
+    "Learn how to identify, troubleshoot, and fix mixed data type errors in JSON to ensure data consistency and proper validation",
 };
 
 /**
@@ -18,10 +19,10 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Working with JSON data often involves dealing with mixed data types—scenarios where the same property 
-          contains different types of values across multiple objects or records. These inconsistencies can lead to parsing errors, 
-          validation failures, and unexpected behavior in applications. This article explores common mixed data type errors
-          in JSON and provides practical solutions for resolving them.
+          Working with JSON data often involves dealing with mixed data types—scenarios where the same property contains
+          different types of values across multiple objects or records. These inconsistencies can lead to parsing
+          errors, validation failures, and unexpected behavior in applications. This article explores common mixed data
+          type errors in JSON and provides practical solutions for resolving them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. Understanding Mixed Data Type Errors</h2>
@@ -38,9 +39,7 @@ export default function JsonFormatterArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">2. Common Mixed Data Type Scenarios</h2>
-        <p>
-          Let's explore some common scenarios where mixed data types create problems:
-        </p>
+        <p>Let's explore some common scenarios where mixed data types create problems:</p>
 
         <h3 className="text-xl font-medium mt-6">2.1 Numbers as Strings</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -85,8 +84,8 @@ export default function JsonFormatterArticle() {
 }`}
           </pre>
           <p className="mt-2">
-            <strong>Problem:</strong> The first user has tags as an array, but the second user has a single string.
-            This inconsistency breaks code that expects to iterate over the tags array.
+            <strong>Problem:</strong> The first user has tags as an array, but the second user has a single string. This
+            inconsistency breaks code that expects to iterate over the tags array.
           </p>
         </div>
 
@@ -141,19 +140,18 @@ export default function JsonFormatterArticle() {
 }`}
           </pre>
           <p className="mt-2">
-            <strong>Problem:</strong> The boolean "enabled" property is represented as a boolean, string, and number
-            in different objects, making consistent feature flag checking difficult.
+            <strong>Problem:</strong> The boolean "enabled" property is represented as a boolean, string, and number in
+            different objects, making consistent feature flag checking difficult.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">3. Impact of Mixed Data Type Errors</h2>
-        <p>
-          These inconsistencies can have significant effects on your applications:
-        </p>
+        <p>These inconsistencies can have significant effects on your applications:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Runtime errors</strong> when code expects a specific type (e.g., <code>array.forEach()</code> on a string)
+            <strong>Runtime errors</strong> when code expects a specific type (e.g., <code>array.forEach()</code> on a
+            string)
           </li>
           <li>
             <strong>Incorrect calculations</strong> (e.g., "1" + "2" = "12" instead of 3)
@@ -173,9 +171,7 @@ export default function JsonFormatterArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">4. Strategies for Detecting Mixed Data Types</h2>
-        <p>
-          Before fixing mixed data type issues, you need to identify them:
-        </p>
+        <p>Before fixing mixed data type issues, you need to identify them:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">4.1 Using Schema Validation</h3>
@@ -269,14 +265,10 @@ function detectMixedTypes(data, parentPath = '') {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">5. Solutions for Resolving Mixed Data Types</h2>
-        <p>
-          Let's explore various approaches to fix mixed data type issues:
-        </p>
+        <p>Let's explore various approaches to fix mixed data type issues:</p>
 
         <h3 className="text-xl font-medium mt-6">5.1 Type Normalization</h3>
-        <p>
-          Normalizing data types ensures consistency across your dataset:
-        </p>
+        <p>Normalizing data types ensures consistency across your dataset:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium text-green-600 dark:text-green-400">Normalizing Numbers:</h4>
@@ -410,9 +402,7 @@ const data = normalizeBooleanFields(jsonData, ['enabled', 'active', 'isAdmin']);
         </div>
 
         <h3 className="text-xl font-medium mt-6">5.2 Handling Missing or Null Values</h3>
-        <p>
-          Consistent handling of missing values is crucial:
-        </p>
+        <p>Consistent handling of missing values is crucial:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium text-green-600 dark:text-green-400">Normalizing Null and Undefined:</h4>
@@ -468,9 +458,7 @@ const data = normalizeMissingValues(jsonData, {
         </div>
 
         <h3 className="text-xl font-medium mt-6">5.3 Implementing Type Conversion at Boundaries</h3>
-        <p>
-          Enforcing types at application boundaries helps maintain consistency:
-        </p>
+        <p>Enforcing types at application boundaries helps maintain consistency:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium text-green-600 dark:text-green-400">API Response Processing:</h4>
@@ -513,9 +501,7 @@ async function fetchData() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">6. Preventing Mixed Data Types at Source</h2>
-        <p>
-          The best solution is to prevent type inconsistencies from occurring in the first place:
-        </p>
+        <p>The best solution is to prevent type inconsistencies from occurring in the first place:</p>
 
         <div className="grid md:grid-cols-2 gap-4 mt-4">
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
@@ -539,9 +525,7 @@ async function fetchData() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">7. Example: Complete Type Consistency System</h2>
-        <p>
-          Here's a comprehensive approach to managing data types in a JSON-based system:
-        </p>
+        <p>Here's a comprehensive approach to managing data types in a JSON-based system:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Type Definition and Enforcement:</h3>
@@ -599,16 +583,20 @@ try {
         <h2 className="text-2xl font-semibold mt-8">8. Best Practices for Data Type Management</h2>
         <ol className="list-decimal pl-6 space-y-2">
           <li>
-            <strong>Document expected types:</strong> Clearly specify the expected type for each field in your API documentation.
+            <strong>Document expected types:</strong> Clearly specify the expected type for each field in your API
+            documentation.
           </li>
           <li>
-            <strong>Use schema validation:</strong> Implement JSON Schema or equivalent validation at every data entry point.
+            <strong>Use schema validation:</strong> Implement JSON Schema or equivalent validation at every data entry
+            point.
           </li>
           <li>
-            <strong>Create type boundary layers:</strong> Normalize data types at application boundaries (API clients, data access layers).
+            <strong>Create type boundary layers:</strong> Normalize data types at application boundaries (API clients,
+            data access layers).
           </li>
           <li>
-            <strong>Be consistent with missing values:</strong> Decide whether to use null values or omit properties, and stick to it.
+            <strong>Be consistent with missing values:</strong> Decide whether to use null values or omit properties,
+            and stick to it.
           </li>
           <li>
             <strong>Write defensive code:</strong> Always check types before performing type-specific operations.
@@ -620,27 +608,28 @@ try {
             <strong>Implement automated tests:</strong> Create tests specifically for checking data type consistency.
           </li>
           <li>
-            <strong>Consider data migrations:</strong> When schema changes occur, migrate existing data to maintain consistency.
+            <strong>Consider data migrations:</strong> When schema changes occur, migrate existing data to maintain
+            consistency.
           </li>
         </ol>
 
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Pro Tip</h3>
           <p>
-            When working with third-party APIs or legacy systems that might send inconsistent data types, implement an 
-            "adapter layer" that normalizes incoming data before it reaches your core application logic. This creates a 
+            When working with third-party APIs or legacy systems that might send inconsistent data types, implement an
+            "adapter layer" that normalizes incoming data before it reaches your core application logic. This creates a
             clean boundary that shields your application from external inconsistencies.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">9. Conclusion</h2>
         <p>
-          Mixed data type errors in JSON can cause subtle bugs that are difficult to track down. By implementing 
-          consistent type detection, normalization, and validation strategies, you can ensure your application handles 
-          JSON data reliably regardless of its source. Remember that prevention is always better than cure—enforce 
+          Mixed data type errors in JSON can cause subtle bugs that are difficult to track down. By implementing
+          consistent type detection, normalization, and validation strategies, you can ensure your application handles
+          JSON data reliably regardless of its source. Remember that prevention is always better than cure—enforce
           strict typing at all data entry points to minimize the need for type fixing later.
         </p>
       </div>
     </>
   );
-} 
+}

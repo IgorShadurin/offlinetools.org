@@ -18,7 +18,7 @@ export default function NotFound() {
       if (typeof window !== "undefined" && window.gtag) {
         window.gtag("event", "404_error", {
           page_location: window.location.href,
-          page_path: window.location.pathname
+          page_path: window.location.pathname,
         });
       }
     } catch {
@@ -48,15 +48,25 @@ export default function NotFound() {
         <div className="bg-muted/50 p-6 rounded-lg mb-10 max-w-2xl">
           <h3 className="text-xl font-medium mb-3">Why Use Offline Tools?</h3>
           <div className="text-left space-y-3">
-            <p>
-              Using offline tools on your PC offers significant advantages over online alternatives:
-            </p>
+            <p>Using offline tools on your PC offers significant advantages over online alternatives:</p>
             <ul className="list-disc pl-5 space-y-2">
-              <li><strong>Enhanced Privacy:</strong> Your data never leaves your computer, keeping sensitive information secure.</li>
-              <li><strong>Improved Security:</strong> No risk of data interception or exposure through internet transmission.</li>
-              <li><strong>Better Performance:</strong> Work without internet latency or connection issues.</li>
-              <li><strong>Always Available:</strong> Access your tools anytime, even without internet connectivity.</li>
-              <li><strong>No Usage Limits:</strong> Process data without size restrictions or API rate limits.</li>
+              <li>
+                <strong>Enhanced Privacy:</strong> Your data never leaves your computer, keeping sensitive information
+                secure.
+              </li>
+              <li>
+                <strong>Improved Security:</strong> No risk of data interception or exposure through internet
+                transmission.
+              </li>
+              <li>
+                <strong>Better Performance:</strong> Work without internet latency or connection issues.
+              </li>
+              <li>
+                <strong>Always Available:</strong> Access your tools anytime, even without internet connectivity.
+              </li>
+              <li>
+                <strong>No Usage Limits:</strong> Process data without size restrictions or API rate limits.
+              </li>
             </ul>
             <p className="mt-4">
               Download our desktop application to access all tools offline, directly on your computer.
@@ -115,4 +125,4 @@ export default function NotFound() {
       </Container>
     </PageLayout>
   );
-} 
+}

@@ -1,57 +1,57 @@
-"use client"
+"use client";
 
-import { Container } from "@/components/ui/container"
-import { SectionHeading } from "@/components/ui/section"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Switch } from "@/components/ui/switch"
-import { encodeBase64, decodeBase64 } from "shared"
-import { useState } from "react"
-import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import Link from "next/link"
-import Base64CodecExplanation from "./Base64CodecExplanation"
+import { Container } from "@/components/ui/container";
+import { SectionHeading } from "@/components/ui/section";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { encodeBase64, decodeBase64 } from "shared";
+import { useState } from "react";
+import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
+import Base64CodecExplanation from "./Base64CodecExplanation";
 
 export default function Base64Codec() {
-  const [input, setInput] = useState("")
-  const [output, setOutput] = useState("")
-  const [mode, setMode] = useState<"encode" | "decode">("encode")
-  const [urlSafe, setUrlSafe] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+  const [mode, setMode] = useState<"encode" | "decode">("encode");
+  const [urlSafe, setUrlSafe] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleProcess = () => {
     try {
-      let result = ""
-      
+      let result = "";
+
       if (mode === "encode") {
-        result = encodeBase64(input, { urlSafe })
+        result = encodeBase64(input, { urlSafe });
       } else {
-        result = decodeBase64(input, { urlSafe })
+        result = decodeBase64(input, { urlSafe });
       }
-      
-      setOutput(result)
-      setError(null)
+
+      setOutput(result);
+      setError(null);
     } catch (error) {
-      setError((error as Error).message)
-      setOutput("")
+      setError((error as Error).message);
+      setOutput("");
     }
-  }
+  };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleTabChange = (value: string) => {
-    setMode(value as "encode" | "decode")
-    setInput("")
-    setOutput("")
-    setError(null)
-  }
+    setMode(value as "encode" | "decode");
+    setInput("");
+    setOutput("");
+    setError(null);
+  };
 
   return (
     <>
@@ -60,26 +60,18 @@ export default function Base64Codec() {
           title="Base64 Encoder/Decoder"
           description="Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
         />
-        
+
         <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
           <LinkIcon className="h-4 w-4" />
           <span>Related tool: </span>
-          <Link 
-            href="/tools/binary-base64-codec" 
-            className="text-primary hover:underline"
-          >
+          <Link href="/tools/binary-base64-codec" className="text-primary hover:underline">
             Binary Base64 Encoder/Decoder
           </Link>
         </div>
 
         <div className="space-y-6">
           {/* Tabs for Encode/Decode */}
-          <Tabs 
-            defaultValue="encode" 
-            className="w-full" 
-            value={mode} 
-            onValueChange={handleTabChange}
-          >
+          <Tabs defaultValue="encode" className="w-full" value={mode} onValueChange={handleTabChange}>
             <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
               <TabsTrigger value="encode">Encode</TabsTrigger>
               <TabsTrigger value="decode">Decode</TabsTrigger>
@@ -88,11 +80,7 @@ export default function Base64Codec() {
 
           {/* URL-safe option */}
           <div className="flex items-center space-x-2">
-            <Switch 
-              id="url-safe" 
-              checked={urlSafe} 
-              onCheckedChange={setUrlSafe}
-            />
+            <Switch id="url-safe" checked={urlSafe} onCheckedChange={setUrlSafe} />
             <Label htmlFor="url-safe">URL-safe mode (replace + with - and / with _)</Label>
           </div>
 
@@ -100,24 +88,15 @@ export default function Base64Codec() {
           <div className="flex flex-wrap md:flex-nowrap gap-8">
             {/* Input Section Header */}
             <div className="w-full md:w-1/2 flex items-center justify-between">
-              <Label htmlFor="input-text">
-                {mode === "encode" ? "Text to encode" : "Base64 to decode"}
-              </Label>
+              <Label htmlFor="input-text">{mode === "encode" ? "Text to encode" : "Base64 to decode"}</Label>
             </div>
 
             {/* Output Section Header */}
             <div className="w-full md:w-1/2 flex items-center justify-between h-9">
-              <Label htmlFor="output-text">
-                {mode === "encode" ? "Base64 encoded" : "Decoded text"}
-              </Label>
+              <Label htmlFor="output-text">{mode === "encode" ? "Base64 encoded" : "Decoded text"}</Label>
               <div className="min-w-[85px] h-8 flex justify-end">
                 {output ? (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex items-center gap-1"
-                    onClick={handleCopy}
-                  >
+                  <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleCopy}>
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copied ? "Copied!" : "Copy"}
                   </Button>
@@ -151,7 +130,9 @@ export default function Base64Codec() {
                 <Textarea
                   id="output-text"
                   className="min-h-[300px] font-mono w-full"
-                  placeholder={mode === "encode" ? "Encoded Base64 will appear here..." : "Decoded text will appear here..."}
+                  placeholder={
+                    mode === "encode" ? "Encoded Base64 will appear here..." : "Decoded text will appear here..."
+                  }
                   value={output}
                   readOnly
                 />
@@ -166,9 +147,7 @@ export default function Base64Codec() {
                 {mode === "encode" ? "Encode to Base64" : "Decode from Base64"}
               </Button>
             </div>
-            <div className="w-full md:w-1/2">
-              {/* Empty space to align with button */}
-            </div>
+            <div className="w-full md:w-1/2">{/* Empty space to align with button */}</div>
           </div>
         </div>
       </Container>
@@ -178,5 +157,5 @@ export default function Base64Codec() {
         <Base64CodecExplanation />
       </Container>
     </>
-  )
-} 
+  );
+}

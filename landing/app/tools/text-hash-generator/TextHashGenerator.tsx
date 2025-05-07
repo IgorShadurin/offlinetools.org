@@ -1,78 +1,78 @@
-"use client"
+"use client";
 
-import { useState, useCallback, useRef } from "react"
-import { 
-  generateHash, 
+import { useState, useCallback, useRef } from "react";
+import {
+  generateHash,
   generateAllHashes,
   verifyTextHash,
   TextHashAlgorithm as HashAlgorithm,
-  HASH_ALGORITHM_GROUPS
-} from "shared"
-import { Container } from "@/components/ui/container"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Check, Copy, AlertCircle, Link as LinkIcon } from "lucide-react"
-import Link from "next/link"
-import TextHashGeneratorExplanation from "./TextHashGeneratorExplanation"
+  HASH_ALGORITHM_GROUPS,
+} from "shared";
+import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Check, Copy, AlertCircle, Link as LinkIcon } from "lucide-react";
+import Link from "next/link";
+import TextHashGeneratorExplanation from "./TextHashGeneratorExplanation";
 
 export default function TextHashGenerator() {
-  const [text, setText] = useState("")
-  const [algorithm, setAlgorithm] = useState<HashAlgorithm>(HashAlgorithm.SHA256)
-  const [hashOutput, setHashOutput] = useState("")
-  const [verifyHash, setVerifyHash] = useState("")
-  const [verificationResult, setVerificationResult] = useState<boolean | null>(null)
-  const [allHashesOutput, setAllHashesOutput] = useState<Record<HashAlgorithm, string> | null>(null)
-  const [uppercase, setUppercase] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  
+  const [text, setText] = useState("");
+  const [algorithm, setAlgorithm] = useState<HashAlgorithm>(HashAlgorithm.SHA256);
+  const [hashOutput, setHashOutput] = useState("");
+  const [verifyHash, setVerifyHash] = useState("");
+  const [verificationResult, setVerificationResult] = useState<boolean | null>(null);
+  const [allHashesOutput, setAllHashesOutput] = useState<Record<HashAlgorithm, string> | null>(null);
+  const [uppercase, setUppercase] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   /**
    * Generates a hash based on the current text and selected algorithm
    */
   const generateHashOutput = useCallback(() => {
-    if (!text) return
-    
+    if (!text) return;
+
     try {
-      const hash = generateHash(text, { algorithm, uppercase })
-      setHashOutput(hash)
+      const hash = generateHash(text, { algorithm, uppercase });
+      setHashOutput(hash);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }, [text, algorithm, uppercase])
+  }, [text, algorithm, uppercase]);
 
   /**
    * Generates hashes using all available algorithms
    */
   const generateAllHashesOutput = useCallback(() => {
-    if (!text) return
-    
+    if (!text) return;
+
     try {
-      const hashes = generateAllHashes(text, uppercase)
-      setAllHashesOutput(hashes)
+      const hashes = generateAllHashes(text, uppercase);
+      setAllHashesOutput(hashes);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }, [text, uppercase])
+  }, [text, uppercase]);
 
   /**
    * Verifies if the input text produces the expected hash
    */
   const verifyTextHashOutput = useCallback(() => {
-    if (!text || !verifyHash) return
-    
+    if (!text || !verifyHash) return;
+
     try {
-      const result = verifyTextHash(text, verifyHash, algorithm)
-      setVerificationResult(result)
+      const result = verifyTextHash(text, verifyHash, algorithm);
+      setVerificationResult(result);
     } catch (error) {
-      console.error(error)
-      setVerificationResult(false)
+      console.error(error);
+      setVerificationResult(false);
     }
-  }, [text, verifyHash, algorithm])
+  }, [text, verifyHash, algorithm]);
 
   /**
    * Copies text to clipboard and shows a success indicator
@@ -80,18 +80,18 @@ export default function TextHashGenerator() {
    */
   const copyToClipboard = useCallback((textToCopy: string) => {
     navigator.clipboard.writeText(textToCopy).then(() => {
-      setCopied(true)
-      
+      setCopied(true);
+
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+        clearTimeout(timeoutRef.current);
       }
-      
+
       timeoutRef.current = setTimeout(() => {
-        setCopied(false)
-        timeoutRef.current = null
-      }, 2000)
-    })
-  }, [])
+        setCopied(false);
+        timeoutRef.current = null;
+      }, 2000);
+    });
+  }, []);
 
   /**
    * Renders algorithm buttons grouped by category
@@ -114,26 +114,23 @@ export default function TextHashGenerator() {
           ))}
         </div>
       </div>
-    ))
-  }, [algorithm])
+    ));
+  }, [algorithm]);
 
   return (
     <>
       <Container className="py-6 md:py-8">
         <h1 className="text-2xl font-bold mb-2">Text Hash Generator</h1>
         <p className="mb-6 text-gray-500">Generate cryptographic hashes from text using various algorithms.</p>
-        
+
         <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
           <LinkIcon className="h-4 w-4" />
           <span>Related tool: </span>
-          <Link 
-            href="/tools/file-hash-compare" 
-            className="text-primary hover:underline"
-          >
+          <Link href="/tools/file-hash-compare" className="text-primary hover:underline">
             File & Text Hash Compare
           </Link>
         </div>
-        
+
         <Tabs defaultValue="generate" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="generate">Generate</TabsTrigger>
@@ -159,14 +156,12 @@ export default function TextHashGenerator() {
                       onChange={(e) => setText(e.target.value)}
                     />
                   </div>
-                  
+
                   <div>
                     <Label className="block mb-2">Select Algorithm</Label>
-                    <div className="max-h-48 overflow-y-auto pr-2 pb-2">
-                      {renderAlgorithmButtons()}
-                    </div>
+                    <div className="max-h-48 overflow-y-auto pr-2 pb-2">{renderAlgorithmButtons()}</div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Label htmlFor="uppercase" className="cursor-pointer">
                       Uppercase Output
@@ -179,14 +174,14 @@ export default function TextHashGenerator() {
                       className="rounded"
                     />
                   </div>
-                  
+
                   <Button onClick={generateHashOutput} className="w-full">
                     Generate Hash
                   </Button>
                 </div>
               </CardContent>
             </Card>
-            
+
             {hashOutput && (
               <Card className="mt-6">
                 <CardHeader>
@@ -195,12 +190,10 @@ export default function TextHashGenerator() {
                 </CardHeader>
                 <CardContent>
                   <div className="relative">
-                    <div className="p-4 bg-gray-100 rounded font-mono text-xs md:text-sm break-all">
-                      {hashOutput}
-                    </div>
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
+                    <div className="p-4 bg-gray-100 rounded font-mono text-xs md:text-sm break-all">{hashOutput}</div>
+                    <Button
+                      size="icon"
+                      variant="ghost"
                       className="absolute top-2 right-2"
                       onClick={() => copyToClipboard(hashOutput)}
                     >
@@ -230,7 +223,7 @@ export default function TextHashGenerator() {
                       onChange={(e) => setText(e.target.value)}
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="verify-hash">Expected Hash</Label>
                     <Input
@@ -241,14 +234,12 @@ export default function TextHashGenerator() {
                       onChange={(e) => setVerifyHash(e.target.value)}
                     />
                   </div>
-                  
+
                   <div>
                     <Label className="block mb-2">Algorithm</Label>
-                    <div className="max-h-32 overflow-y-auto pr-2 pb-2">
-                      {renderAlgorithmButtons()}
-                    </div>
+                    <div className="max-h-32 overflow-y-auto pr-2 pb-2">{renderAlgorithmButtons()}</div>
                   </div>
-                  
+
                   <Button onClick={verifyTextHashOutput} className="w-full">
                     Verify Hash
                   </Button>
@@ -256,15 +247,15 @@ export default function TextHashGenerator() {
                   {verificationResult !== null && (
                     <Alert variant={verificationResult ? "default" : "destructive"} className="mt-4">
                       <div className="flex items-center gap-2">
-                        {verificationResult ? 
-                          <Check className="h-4 w-4 text-green-500" /> :
+                        {verificationResult ? (
+                          <Check className="h-4 w-4 text-green-500" />
+                        ) : (
                           <AlertCircle className="h-4 w-4" />
-                        }
+                        )}
                         <AlertDescription>
-                          {verificationResult ? 
-                            "Hash verification successful! The text produces the expected hash." :
-                            "Hash verification failed. The text does not produce the expected hash."
-                          }
+                          {verificationResult
+                            ? "Hash verification successful! The text produces the expected hash."
+                            : "Hash verification failed. The text does not produce the expected hash."}
                         </AlertDescription>
                       </div>
                     </Alert>
@@ -292,7 +283,7 @@ export default function TextHashGenerator() {
                       onChange={(e) => setText(e.target.value)}
                     />
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Label htmlFor="uppercase-all" className="cursor-pointer">
                       Uppercase Output
@@ -305,14 +296,14 @@ export default function TextHashGenerator() {
                       className="rounded"
                     />
                   </div>
-                  
+
                   <Button onClick={generateAllHashesOutput} className="w-full">
                     Generate All Hashes
                   </Button>
                 </div>
               </CardContent>
             </Card>
-            
+
             {allHashesOutput && (
               <div className="mt-6 space-y-4">
                 {Object.entries(HASH_ALGORITHM_GROUPS).map(([groupName, groupData]) => (
@@ -326,11 +317,7 @@ export default function TextHashGenerator() {
                           <div key={alg}>
                             <div className="flex items-center justify-between mb-1">
                               <p className="text-sm font-medium">{alg}</p>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => copyToClipboard(allHashesOutput[alg])}
-                              >
+                              <Button size="sm" variant="ghost" onClick={() => copyToClipboard(allHashesOutput[alg])}>
                                 <Copy className="h-4 w-4 mr-1" />
                                 Copy
                               </Button>
@@ -354,5 +341,5 @@ export default function TextHashGenerator() {
         <TextHashGeneratorExplanation />
       </Container>
     </>
-  )
-} 
+  );
+}

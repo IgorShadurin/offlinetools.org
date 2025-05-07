@@ -33,18 +33,16 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         {/* Improved meta viewport tag with best practices */}
-        <meta 
-          name="viewport" 
-          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, user-scalable=yes" 
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, user-scalable=yes"
         />
         {/* Canonical URL to prevent duplicate content issues */}
         <link rel="canonical" href="https://offlinetools.org" />
         {/* Adding cache control directives */}
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <FeedbackProvider>{children}</FeedbackProvider>
         <Analytics />
         <GoogleAnalytics />

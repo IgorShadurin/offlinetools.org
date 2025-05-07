@@ -6,7 +6,8 @@ import { Metadata, Viewport } from "next";
 export const siteConfig = {
   name: "OfflineTools",
   url: "https://offlinetools.org",
-  description: "A collection of essential developer tools that prioritize privacy and offline functionality. Process data locally without server transmission.",
+  description:
+    "A collection of essential developer tools that prioritize privacy and offline functionality. Process data locally without server transmission.",
   ogImage: "/images/social-preview.png",
 };
 
@@ -135,19 +136,27 @@ export function generateMetadata(overrides?: Partial<Metadata>): Metadata {
  * Optimized meta descriptions for specific tool categories
  */
 export const toolDescriptions = {
-  jsonFormatter: "Format, validate, and beautify JSON data with custom indentation. All processing happens locally for enhanced privacy and security.",
-  
-  base64Codec: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option. Securely process data in your browser without server communication.",
-  
-  binaryBase64Codec: "Convert binary files (images, PDFs, etc.) to Base64 or decode Base64 to binary files with URL-safe option. All processing happens locally on your device.",
-  
-  textHashGenerator: "Generate secure cryptographic hashes from text using multiple algorithms (MD5, SHA-1, SHA-256, etc.). Compare and verify text integrity offline.",
-  
-  urlEncoder: "Encode text for safe URL usage or decode URL-encoded strings. Supports both modern and legacy encoding methods with complete privacy.",
-  
-  fileGenerator: "Quickly create files with custom content, size, and format for testing and development purposes. Generate locally without any network transmission.",
-  
-  fileHashCompare: "Calculate and compare file hashes to verify file integrity and authenticity. Supports multiple hash algorithms for comprehensive verification.",
+  jsonFormatter:
+    "Format, validate, and beautify JSON data with custom indentation. All processing happens locally for enhanced privacy and security.",
 
-  common: "Process data securely in your browser without server transmission. Works offline with our desktop app for complete privacy and security."
-}; 
+  base64Codec:
+    "Convert text to Base64 or decode Base64 to plaintext with URL-safe option. Securely process data in your browser without server communication.",
+
+  binaryBase64Codec:
+    "Convert binary files (images, PDFs, etc.) to Base64 or decode Base64 to binary files with URL-safe option. All processing happens locally on your device.",
+
+  textHashGenerator:
+    "Generate secure cryptographic hashes from text using multiple algorithms (MD5, SHA-1, SHA-256, etc.). Compare and verify text integrity offline.",
+
+  urlEncoder:
+    "Encode text for safe URL usage or decode URL-encoded strings. Supports both modern and legacy encoding methods with complete privacy.",
+
+  fileGenerator:
+    "Quickly create files with custom content, size, and format for testing and development purposes. Generate locally without any network transmission.",
+
+  fileHashCompare:
+    "Calculate and compare file hashes to verify file integrity and authenticity. Supports multiple hash algorithms for comprehensive verification.",
+
+  common:
+    "Process data securely in your browser without server transmission. Works offline with our desktop app for complete privacy and security.",
+};

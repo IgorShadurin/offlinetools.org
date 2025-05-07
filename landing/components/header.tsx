@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Container } from "@/components/ui/container"
-import Link from "next/link"
-import React, { useState } from "react"
-import { Download } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
+import Link from "next/link";
+import React, { useState } from "react";
+import { Download } from "lucide-react";
 
 /**
  * Header component with navigation links and download button
  */
 export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
@@ -21,35 +21,25 @@ export function Header() {
               <span className="text-xl font-bold">OfflineTools</span>
             </Link>
             <nav className="hidden gap-6 md:flex">
-              <Link
-                href="#features"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-              >
+              <Link href="#features" className="text-sm font-medium transition-colors hover:text-foreground/80">
                 Features
               </Link>
-              <Link
-                href="/pricing"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-              >
+              <Link href="/pricing" className="text-sm font-medium transition-colors hover:text-foreground/80">
                 Pricing
               </Link>
-              <Link
-                href="/tools"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-              >
+              <Link href="/tools" className="text-sm font-medium transition-colors hover:text-foreground/80">
                 Online Tools
               </Link>
-              <Link
-                href="/contact"
-                className="text-sm font-medium transition-colors hover:text-foreground/80"
-              >
+              <Link href="/contact" className="text-sm font-medium transition-colors hover:text-foreground/80">
                 Contact
               </Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">
             <Button asChild size="sm" className="hidden md:flex">
-              <Link href="/download"><Download /> Download</Link>
+              <Link href="/download">
+                <Download /> Download
+              </Link>
             </Button>
             <Button
               variant="outline"
@@ -77,7 +67,7 @@ export function Header() {
             </Button>
           </div>
         </div>
-        
+
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t">
@@ -112,7 +102,9 @@ export function Header() {
               </Link>
               <div className="pt-2">
                 <Button asChild size="sm" className="w-full">
-                  <Link href="/download"><Download /> Download</Link>
+                  <Link href="/download">
+                    <Download /> Download
+                  </Link>
                 </Button>
               </div>
             </nav>
@@ -120,5 +112,5 @@ export function Header() {
         )}
       </Container>
     </header>
-  )
-} 
+  );
+}

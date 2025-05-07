@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Troubleshooting JSON.parse() Failures | Offline Tools",
-  description: "Learn how to diagnose and fix common JSON.parse() errors with practical examples and step-by-step troubleshooting techniques.",
+  description:
+    "Learn how to diagnose and fix common JSON.parse() errors with practical examples and step-by-step troubleshooting techniques.",
 };
 
 /**
@@ -18,14 +19,18 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          The <code>JSON.parse()</code> method is a fundamental JavaScript function used to convert JSON text into a JavaScript object. While it may seem straightforward, developers frequently encounter parsing failures that can be challenging to diagnose. This article explores common causes of <code>JSON.parse()</code> failures and provides practical troubleshooting techniques.
+          The <code>JSON.parse()</code> method is a fundamental JavaScript function used to convert JSON text into a
+          JavaScript object. While it may seem straightforward, developers frequently encounter parsing failures that
+          can be challenging to diagnose. This article explores common causes of <code>JSON.parse()</code> failures and
+          provides practical troubleshooting techniques.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">Common Causes of JSON.parse() Failures</h2>
-        
+
         <h3 className="text-xl font-semibold mt-6 mb-3">1. Syntactically Invalid JSON</h3>
         <p>
-          The most common reason for <code>JSON.parse()</code> failures is simply that the input string isn&apos;t valid JSON. This can happen for several reasons:
+          The most common reason for <code>JSON.parse()</code> failures is simply that the input string isn&apos;t valid
+          JSON. This can happen for several reasons:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Missing or mismatched braces, brackets, or quotes</li>
@@ -49,7 +54,8 @@ export default function JsonFormatterArticle() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Control Characters and Invisible Characters</h3>
         <p>
-          JSON is sensitive to invisible characters like line breaks, tabs, and special control characters. When copying JSON from various sources, invisible characters can sneak in and cause parsing errors.
+          JSON is sensitive to invisible characters like line breaks, tabs, and special control characters. When copying
+          JSON from various sources, invisible characters can sneak in and cause parsing errors.
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <h4 className="font-semibold mb-2">Common Error:</h4>
@@ -63,7 +69,8 @@ export default function JsonFormatterArticle() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">3. Numeric Precision Issues</h3>
         <p>
-          JavaScript has limitations in handling very large numbers. When parsing JSON with large integers (beyond the safe integer range of ±2^53), precision can be lost.
+          JavaScript has limitations in handling very large numbers. When parsing JSON with large integers (beyond the
+          safe integer range of ±2^53), precision can be lost.
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <h4 className="font-semibold mb-2">Example:</h4>
@@ -79,13 +86,13 @@ console.log(parsed.id); // May not represent the exact number`}
 
         <h3 className="text-xl font-semibold mt-6 mb-3">1. Use JSON Validators</h3>
         <p>
-          Before attempting to debug code, use online JSON validators or the JSON formatter in Offline Tools to check if your JSON is structurally valid. These tools usually provide detailed error messages with line and column references.
+          Before attempting to debug code, use online JSON validators or the JSON formatter in Offline Tools to check if
+          your JSON is structurally valid. These tools usually provide detailed error messages with line and column
+          references.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Examine Error Messages Carefully</h3>
-        <p>
-          JSON.parse() errors typically include position information that can help identify the issue:
-        </p>
+        <p>JSON.parse() errors typically include position information that can help identify the issue:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`SyntaxError: Unexpected token , in JSON at position 28`}
@@ -113,7 +120,8 @@ console.log(parsed.id); // May not represent the exact number`}
 
         <h3 className="text-xl font-semibold mt-6 mb-3">4. Log the Raw JSON</h3>
         <p>
-          When debugging, log the actual string being parsed. This can help identify if the JSON is getting corrupted before reaching <code>JSON.parse()</code>:
+          When debugging, log the actual string being parsed. This can help identify if the JSON is getting corrupted
+          before reaching <code>JSON.parse()</code>:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -128,7 +136,8 @@ try {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">5. Use JSON.parse() with Reviver Function</h3>
         <p>
-          The <code>JSON.parse()</code> method accepts a second parameter called a reviver function that can help handle special cases:
+          The <code>JSON.parse()</code> method accepts a second parameter called a reviver function that can help handle
+          special cases:
         </p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
@@ -146,7 +155,8 @@ try {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">API Response Parsing Failures</h3>
         <p>
-          When working with APIs, sometimes the response isn&apos;t valid JSON despite the Content-Type header suggesting it is. Common issues include:
+          When working with APIs, sometimes the response isn&apos;t valid JSON despite the Content-Type header
+          suggesting it is. Common issues include:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Error responses with HTML instead of JSON</li>
@@ -154,7 +164,8 @@ try {
           <li>JSON with JavaScript comments</li>
         </ul>
         <p className="mt-2">
-          Solution: Inspect the raw response before parsing. Some HTTP clients allow you to examine the exact content received from the server.
+          Solution: Inspect the raw response before parsing. Some HTTP clients allow you to examine the exact content
+          received from the server.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">LocalStorage Parsing Issues</h3>
@@ -182,7 +193,8 @@ try {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Using JSON5 for More Lenient Parsing</h3>
         <p>
-          For development purposes, you might consider using the JSON5 library, which is more forgiving than standard JSON:
+          For development purposes, you might consider using the JSON5 library, which is more forgiving than standard
+          JSON:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Allows comments</li>
@@ -195,9 +207,7 @@ try {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Creating Custom JSON Sanitizers</h3>
-        <p>
-          For consistently problematic JSON, you might create a sanitization function:
-        </p>
+        <p>For consistently problematic JSON, you might create a sanitization function:</p>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="bg-white p-3 rounded overflow-x-auto">
             {`function sanitizeJson(jsonString) {
@@ -217,12 +227,16 @@ try {
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
         <p>
-          Troubleshooting <code>JSON.parse()</code> failures is a common task for developers working with JSON data. By understanding the common causes and applying systematic debugging techniques, most parsing issues can be quickly identified and resolved. Remember that prevention is better than cure—validating JSON before attempting to parse it can save considerable debugging time.
+          Troubleshooting <code>JSON.parse()</code> failures is a common task for developers working with JSON data. By
+          understanding the common causes and applying systematic debugging techniques, most parsing issues can be
+          quickly identified and resolved. Remember that prevention is better than cure—validating JSON before
+          attempting to parse it can save considerable debugging time.
         </p>
         <p>
-          For complex JSON documents, consider using a specialized JSON formatter tool that helps identify and fix errors automatically, making the debugging process much more efficient.
+          For complex JSON documents, consider using a specialized JSON formatter tool that helps identify and fix
+          errors automatically, making the debugging process much more efficient.
         </p>
       </div>
     </>
   );
-} 
+}

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Script from 'next/script';
+import Script from "next/script";
 
 /**
  * GoogleAnalytics component that loads Google Analytics tracking scripts
@@ -9,10 +9,7 @@ import Script from 'next/script';
 export function GoogleAnalytics() {
   return (
     <>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-XGGHRP0JGM"
-        strategy="afterInteractive"
-      />
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-XGGHRP0JGM" strategy="afterInteractive" />
       <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
@@ -23,4 +20,4 @@ export function GoogleAnalytics() {
       </Script>
     </>
   );
-} 
+}

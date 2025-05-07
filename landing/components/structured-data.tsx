@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   OrganizationSchema,
@@ -7,12 +7,12 @@ import {
   BreadcrumbSchema,
   ToolPageSchema,
   FAQPageSchema,
-  ArticleSchema
-} from '@/lib/structured-data';
-import { usePathname } from 'next/navigation';
+  ArticleSchema,
+} from "@/lib/structured-data";
+import { usePathname } from "next/navigation";
 
 type StructuredDataProps = {
-  type?: 'home' | 'tools' | 'tool' | 'faq' | 'article';
+  type?: "home" | "tools" | "tool" | "faq" | "article";
   toolName?: string;
   toolDescription?: string;
   toolUrl?: string;
@@ -38,29 +38,29 @@ export function StructuredData({
   toolUrl,
   toolCategory,
   faqs,
-  articleData
+  articleData,
 }: StructuredDataProps) {
   const pathname = usePathname();
-  
+
   // Generate breadcrumb data based on the current URL path
   const getBreadcrumbItems = () => {
-    const pathSegments = pathname.split('/').filter(Boolean);
-    const breadcrumbItems = [{ name: 'Home', url: 'https://offlinetools.org' }];
-    
-    let cumulativePath = '';
+    const pathSegments = pathname.split("/").filter(Boolean);
+    const breadcrumbItems = [{ name: "Home", url: "https://offlinetools.org" }];
+
+    let cumulativePath = "";
     pathSegments.forEach((segment) => {
       cumulativePath += `/${segment}`;
       const formattedName = segment
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+
       breadcrumbItems.push({
         name: formattedName,
-        url: `https://offlinetools.org${cumulativePath}`
+        url: `https://offlinetools.org${cumulativePath}`,
       });
     });
-    
+
     return breadcrumbItems;
   };
 
@@ -68,29 +68,27 @@ export function StructuredData({
   return (
     <>
       <OrganizationSchema />
-      
+
       {/* Generate breadcrumbs for all pages except home */}
-      {pathname !== '/' && <BreadcrumbSchema items={getBreadcrumbItems()} />}
-      
+      {pathname !== "/" && <BreadcrumbSchema items={getBreadcrumbItems()} />}
+
       {/* Render specific structured data based on page type */}
-      {(type === 'home' || pathname === '/') && <WebApplicationSchema />}
-      
-      {(type === 'tools' || pathname === '/tools') && <ToolsSoftwareApplicationSchema />}
-      
-      {type === 'tool' && toolName && toolDescription && toolUrl && toolCategory && (
-        <ToolPageSchema 
+      {(type === "home" || pathname === "/") && <WebApplicationSchema />}
+
+      {(type === "tools" || pathname === "/tools") && <ToolsSoftwareApplicationSchema />}
+
+      {type === "tool" && toolName && toolDescription && toolUrl && toolCategory && (
+        <ToolPageSchema
           toolName={toolName}
           toolDescription={toolDescription}
           toolUrl={toolUrl}
           toolCategory={toolCategory}
         />
       )}
-      
-      {type === 'faq' && faqs && faqs.length > 0 && (
-        <FAQPageSchema faqs={faqs} />
-      )}
-      
-      {type === 'article' && articleData && (
+
+      {type === "faq" && faqs && faqs.length > 0 && <FAQPageSchema faqs={faqs} />}
+
+      {type === "article" && articleData && (
         <ArticleSchema
           title={articleData.title}
           description={articleData.description}
@@ -102,4 +100,4 @@ export function StructuredData({
       )}
     </>
   );
-} 
+}

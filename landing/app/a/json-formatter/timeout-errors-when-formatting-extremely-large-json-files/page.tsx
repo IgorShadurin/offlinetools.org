@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Timeout Errors When Formatting Extremely Large JSON Files | Offline Tools",
-  description: "Learn strategies to overcome timeout errors when formatting extremely large JSON files and optimize your JSON processing workflow",
+  description:
+    "Learn strategies to overcome timeout errors when formatting extremely large JSON files and optimize your JSON processing workflow",
 };
 
 /**
@@ -25,28 +26,35 @@ export default function JsonFormatterArticle() {
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">1. Understanding JSON Timeout Errors</h2>
-        <p>
-          When working with large JSON files, you might encounter several types of timeout errors:
-        </p>
+        <p>When working with large JSON files, you might encounter several types of timeout errors:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Common Timeout Errors:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><strong>Browser Script Timeouts:</strong> "Script took too long to execute"</li>
-            <li><strong>Server-Side Timeouts:</strong> "504 Gateway Timeout" or "Request timed out"</li>
-            <li><strong>Memory Limits:</strong> "Out of memory" or "JavaScript heap out of memory"</li>
-            <li><strong>Parser Failures:</strong> "JSON.parse: unexpected end of data"</li>
-            <li><strong>UI Freezing:</strong> Browser becomes unresponsive during parsing/formatting</li>
+            <li>
+              <strong>Browser Script Timeouts:</strong> "Script took too long to execute"
+            </li>
+            <li>
+              <strong>Server-Side Timeouts:</strong> "504 Gateway Timeout" or "Request timed out"
+            </li>
+            <li>
+              <strong>Memory Limits:</strong> "Out of memory" or "JavaScript heap out of memory"
+            </li>
+            <li>
+              <strong>Parser Failures:</strong> "JSON.parse: unexpected end of data"
+            </li>
+            <li>
+              <strong>UI Freezing:</strong> Browser becomes unresponsive during parsing/formatting
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">2. Why JSON Formatting Can Time Out</h2>
-        <p>
-          JSON formatting operations can time out for several reasons:
-        </p>
+        <p>JSON formatting operations can time out for several reasons:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Single-Threaded JavaScript:</strong> In browsers, JSON parsing runs on the main thread, blocking other operations
+            <strong>Single-Threaded JavaScript:</strong> In browsers, JSON parsing runs on the main thread, blocking
+            other operations
           </li>
           <li>
             <strong>Memory Consumption:</strong> Large JSON objects can consume significant memory during parsing
@@ -78,8 +86,8 @@ const formattedJson = JSON.stringify(JSON.parse(jsonText), null, 2);
 
         <h2 className="text-2xl font-semibold mt-8">3. Chunked Processing Approach</h2>
         <p>
-          One of the most effective ways to handle large JSON files is to break the processing into smaller chunks
-          and yield control back to the browser between chunks.
+          One of the most effective ways to handle large JSON files is to break the processing into smaller chunks and
+          yield control back to the browser between chunks.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -136,9 +144,7 @@ async function chunkFormatJson(jsonString, chunkSize = 100000) {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">4. Web Workers for Background Processing</h2>
-        <p>
-          Web Workers allow you to move JSON processing off the main thread, keeping your UI responsive.
-        </p>
+        <p>Web Workers allow you to move JSON processing off the main thread, keeping your UI responsive.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Main Script (app.js):</h3>
@@ -264,9 +270,7 @@ function processLargeJsonFile(filePath, targetPath) {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">6. Server-Side Processing Solutions</h2>
-        <p>
-          When browser-based solutions aren't enough, consider server-side processing for large JSON files.
-        </p>
+        <p>When browser-based solutions aren't enough, consider server-side processing for large JSON files.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Example Node.js Server Endpoint:</h3>
@@ -313,17 +317,23 @@ app.listen(3000, () => {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">7. Offline Tools for Large Files</h2>
-        <p>
-          For extremely large JSON files, dedicated offline tools often outperform browser-based solutions.
-        </p>
+        <p>For extremely large JSON files, dedicated offline tools often outperform browser-based solutions.</p>
 
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-4">
           <h3 className="text-lg font-medium">Recommended Tools:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><strong>Offline Desktop JSON Formatters:</strong> Process files locally without browser limitations</li>
-            <li><strong>Command-Line Tools:</strong> jq, fx, or json_pp for terminal-based formatting</li>
-            <li><strong>IDE Extensions:</strong> Use VS Code or other editor extensions with optimized JSON handling</li>
-            <li><strong>Specialized Big Data Tools:</strong> For JSON files in the gigabyte range</li>
+            <li>
+              <strong>Offline Desktop JSON Formatters:</strong> Process files locally without browser limitations
+            </li>
+            <li>
+              <strong>Command-Line Tools:</strong> jq, fx, or json_pp for terminal-based formatting
+            </li>
+            <li>
+              <strong>IDE Extensions:</strong> Use VS Code or other editor extensions with optimized JSON handling
+            </li>
+            <li>
+              <strong>Specialized Big Data Tools:</strong> For JSON files in the gigabyte range
+            </li>
           </ul>
         </div>
 
@@ -342,9 +352,7 @@ jq --stream -c . large-file.json`}
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">8. Preventative Strategies</h2>
-        <p>
-          The best approach to handling timeout errors is to prevent them from occurring in the first place.
-        </p>
+        <p>The best approach to handling timeout errors is to prevent them from occurring in the first place.</p>
 
         <ol className="list-decimal pl-6 space-y-2">
           <li>
@@ -368,7 +376,9 @@ jq --stream -c . large-file.json`}
         </ol>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Implementing Progressive JSON Viewer:</h3>
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">
+            Implementing Progressive JSON Viewer:
+          </h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             {`/**
  * Create a collapsible JSON viewer that only formats visible nodes
@@ -480,12 +490,12 @@ function createProgressiveJsonViewer(json, container) {
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
           <h3 className="text-lg font-medium">Pro Tip</h3>
           <p>
-            For production applications dealing with large JSON files regularly, consider implementing a 
-            hybrid approach: use quick client-side formatting for smaller files, but automatically offload 
-            to server-side processing when file size exceeds a certain threshold.
+            For production applications dealing with large JSON files regularly, consider implementing a hybrid
+            approach: use quick client-side formatting for smaller files, but automatically offload to server-side
+            processing when file size exceeds a certain threshold.
           </p>
         </div>
       </div>
     </>
   );
-} 
+}

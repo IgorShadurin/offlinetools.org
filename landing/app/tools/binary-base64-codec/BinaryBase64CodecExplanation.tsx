@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React from "react"
+import React from "react";
 
 /**
  * Renders an explanation card for the Binary Base64 Codec tool, detailing its capabilities,
@@ -10,12 +10,14 @@ export default function BinaryBase64CodecExplanation() {
   return (
     <div className="p-6 border rounded-lg bg-card text-card-foreground shadow-sm">
       <h2 className="text-2xl font-bold mb-4">About Binary Base64 Codec</h2>
-      
+
       <div className="space-y-6">
         <div>
           <h3 className="text-xl font-semibold mb-2">Tool Capabilities</h3>
           <p className="mb-2">
-            This tool allows you to encode binary files (like images, PDFs, or archives) into Base64 strings and decode Base64 strings back into their original binary file format. It&apos;s essential for scenarios where binary data needs to be transmitted or stored in text-based systems.
+            This tool allows you to encode binary files (like images, PDFs, or archives) into Base64 strings and decode
+            Base64 strings back into their original binary file format. It&apos;s essential for scenarios where binary
+            data needs to be transmitted or stored in text-based systems.
           </p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Encodes uploaded binary files to Base64 strings</li>
@@ -27,69 +29,99 @@ export default function BinaryBase64CodecExplanation() {
             <li>Operates entirely offline within your browser for privacy</li>
           </ul>
         </div>
-        
+
         <div>
           <h3 className="text-xl font-semibold mb-2">Common Use Cases</h3>
           <ol className="list-decimal pl-6 space-y-3">
             <li>
               <strong>Embedding Images in CSS/HTML</strong>
-              <p>Encode small images into Base64 strings to embed directly within CSS <code>background-image</code> properties or HTML <code>img</code> tags as Data URLs, reducing HTTP requests.</p>
+              <p>
+                Encode small images into Base64 strings to embed directly within CSS <code>background-image</code>{" "}
+                properties or HTML <code>img</code> tags as Data URLs, reducing HTTP requests.
+              </p>
             </li>
-            
+
             <li>
               <strong>Transmitting Binary Data via JSON/XML</strong>
-              <p>Encode files to include them within JSON payloads or XML documents where raw binary data is not allowed.</p>
+              <p>
+                Encode files to include them within JSON payloads or XML documents where raw binary data is not allowed.
+              </p>
             </li>
-            
+
             <li>
               <strong>Email Attachments (Understanding)</strong>
-              <p>Understand how email systems encode binary attachments using Base64 for transmission through text-based protocols.</p>
+              <p>
+                Understand how email systems encode binary attachments using Base64 for transmission through text-based
+                protocols.
+              </p>
             </li>
-            
+
             <li>
               <strong>Storing Binary Data in Text Databases</strong>
-              <p>Encode binary data for storage in database fields that only accept text (consider storage implications).</p>
+              <p>
+                Encode binary data for storage in database fields that only accept text (consider storage implications).
+              </p>
             </li>
-            
+
             <li>
               <strong>Debugging Data URLs</strong>
-              <p>Decode Base64 portions of Data URLs (<code>data:mime/type;base64,...</code>) to inspect the raw binary content or save as a file.</p>
+              <p>
+                Decode Base64 portions of Data URLs (<code>data:mime/type;base64,...</code>) to inspect the raw binary
+                content or save as a file.
+              </p>
             </li>
-            
+
             <li>
               <strong>Extracting Embedded Files</strong>
-              <p>Decode Base64 strings found in source code or data files to retrieve the original embedded binary file (e.g., scripts, logs).</p>
+              <p>
+                Decode Base64 strings found in source code or data files to retrieve the original embedded binary file
+                (e.g., scripts, logs).
+              </p>
             </li>
-            
+
             <li>
               <strong>API Interactions</strong>
-              <p>Decode Base64-encoded files received from APIs (e.g., generated PDFs, images) or encode files to send to APIs requiring Base64 input.</p>
+              <p>
+                Decode Base64-encoded files received from APIs (e.g., generated PDFs, images) or encode files to send to
+                APIs requiring Base64 input.
+              </p>
             </li>
-            
+
             <li>
               <strong>Creating Self-Contained HTML</strong>
-              <p>Embed images, fonts, or other small assets directly into an HTML file using Base64 Data URLs for easy sharing.</p>
+              <p>
+                Embed images, fonts, or other small assets directly into an HTML file using Base64 Data URLs for easy
+                sharing.
+              </p>
             </li>
-            
+
             <li>
               <strong>Transferring Certificates/Keys</strong>
-              <p>Handle certificate files (like <code>.pem</code> or <code>.crt</code>) or keys that are often distributed or stored in Base64 format.</p>
+              <p>
+                Handle certificate files (like <code>.pem</code> or <code>.crt</code>) or keys that are often
+                distributed or stored in Base64 format.
+              </p>
             </li>
-            
+
             <li>
               <strong>Verifying Base64 Data</strong>
               <p>Ensure a Base64 string represents valid data by attempting to decode it back into its binary form.</p>
             </li>
           </ol>
         </div>
-        
+
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            The tool utilizes the browser&apos;s built-in <code>FileReader</code> API to read uploaded files as ArrayBuffers for encoding, and the <code>atob()</code> and <code>btoa()</code> functions (or more robust libraries for Unicode/binary handling) for the Base64 conversion. For encoding, the binary data is read and converted to a Base64 string. For decoding, the Base64 string is converted back into binary data (typically a <code>Uint8Array</code>), which is then wrapped in a <code>Blob</code> object to allow downloading with the appropriate MIME type if known. All processing happens client-side.
+            The tool utilizes the browser&apos;s built-in <code>FileReader</code> API to read uploaded files as
+            ArrayBuffers for encoding, and the <code>atob()</code> and <code>btoa()</code> functions (or more robust
+            libraries for Unicode/binary handling) for the Base64 conversion. For encoding, the binary data is read and
+            converted to a Base64 string. For decoding, the Base64 string is converted back into binary data (typically
+            a <code>Uint8Array</code>), which is then wrapped in a <code>Blob</code> object to allow downloading with
+            the appropriate MIME type if known. All processing happens client-side.
           </p>
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}
