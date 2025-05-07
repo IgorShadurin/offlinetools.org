@@ -40,10 +40,6 @@ export default function BlogPage() {
             </Card>
           ))}
         </div>
-
-        <div className="flex justify-center mt-12">
-          <p className="text-center text-muted-foreground">More blog posts coming soon!</p>
-        </div>
       </Container>
     </PageLayout>
   );
@@ -57,5 +53,13 @@ const blogPosts = [
       "Discover the best offline developer tools that ensure privacy, reliability, and productivity without constant internet connectivity. Compare online solutions with our desktop alternatives.",
     date: "2025-05-07",
     slug: "/blog/what-developer-tools-can-be-used-offline",
+  },
+  {
+    id: "2",
+    title: "Jolt Offline JSON Formatter: Process JSON Locally",
+    excerpt:
+      "Learn why processing JSON data offline provides better security, privacy, and performance. Discover how offline JSON formatters like OfflineTools protect sensitive information and improve workflow.",
+    date: "2025-05-07",
+    slug: "/blog/jolt-offline-json-formatter",
   },
 ];
