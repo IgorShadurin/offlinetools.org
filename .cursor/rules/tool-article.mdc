@@ -514,3 +514,4 @@ function MyComponent() {
     ```
 *   **Comments**: While JavaScript/JSX comments are typically not rendered, aggressive linters might still scan them for unescaped entities, as seen in some edge cases. If such lint errors occur in comments, applying HTML entities (like `&quot;` for `"` within a comment) or rephrasing the comment might be necessary.
 *   **Linters**: Always pay attention to your ESLint or other linter messages, as they will guide you on specific escaping needs for your project's configuration.
+In case of errors like this:  Error: Parsing error: Unexpected token. Did you mean `{'}'}` or `&rbrace;`? just replace `}` with `&rbrace;

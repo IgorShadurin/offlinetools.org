@@ -57,12 +57,12 @@ export default function JsonFormatterArticle() {
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2">Context Snippet</td>
-                <td className="px-4 py-2 font-mono">&quot;name&quot;: &quot;value&quot;,}</td>
+                <td className="px-4 py-2 font-mono">&quot;name&quot;: &quot;value&quot;,&rbrace;</td>
                 <td className="px-4 py-2">Shows the problematic section of code</td>
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2">Expected/Found</td>
-                <td className="px-4 py-2 font-mono">Expected &apos;,&apos; or &apos;]&apos; but found &apos;}&apos;</td>
+                <td className="px-4 py-2 font-mono">Expected &apos;,&apos; or &apos;]&apos; but found &apos;&rbrace;&apos;</td>
                 <td className="px-4 py-2">Explains what the parser expected versus what it found</td>
               </tr>
             </tbody>
@@ -148,7 +148,7 @@ export default function JsonFormatterArticle() {
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Expected Property Name or &lsquo;}&rsquo;</h3>
+        <h3 className="text-xl font-medium mt-6">3. Expected Property Name or &lsquo;&rbrace;&rsquo;</h3>
         <p>
           This error often occurs when there&apos;s an issue with a property name or a missing closing brace.
         </p>
