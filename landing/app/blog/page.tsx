@@ -22,7 +22,9 @@ export default function BlogPage() {
         </div>
 
         <div className="mx-auto max-w-5xl mt-10 md:mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {blogPosts.map((post) => (
+          {[...blogPosts]
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .map((post) => (
             <Card key={post.id} className="flex flex-col">
               <CardHeader className="flex-1">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
@@ -61,5 +63,13 @@ const blogPosts = [
       "Learn why processing JSON data offline provides better security, privacy, and performance. Discover how offline JSON formatters like OfflineTools protect sensitive information and improve workflow.",
     date: "2025-05-07",
     slug: "/blog/jolt-offline-json-formatter",
+  },
+  {
+    id: "3",
+    title: "Offline JSON Query Tool",
+    excerpt:
+      "JSON query tools let you search, filter, and transform JSON data efficiently. But what happens when you're working offline or with sensitive data? Here's why you need offline JSON tools in your developer toolkit.",
+    date: "2025-05-07",
+    slug: "/blog/offline-json-query-tool",
   },
 ];
