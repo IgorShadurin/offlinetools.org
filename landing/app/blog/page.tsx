@@ -50,6 +50,14 @@ export default function BlogPage() {
 const blogPosts = [
   {
     id: "1",
+    title: "Hash Encode Decode Offline",
+    excerpt:
+      "Hash encoding and decoding are essential for data verification, security, and integrity. Learn how to work with hashes offline for secure, reliable operations without internet dependency.",
+    date: "2025-05-08",
+    slug: "/blog/hash-encode-decode-offline",
+  },
+  {
+    id: "2",
     title: "Base64 Decode Offline",
     excerpt:
       "Base64 decoding is essential for working with encoded data in development and web applications. Learn how to decode Base64 strings offline to protect sensitive data and ensure uninterrupted workflows.",
@@ -57,7 +65,7 @@ const blogPosts = [
     slug: "/blog/base64-decode-offline",
   },
   {
-    id: "2",
+    id: "3",
     title: "What Developer Tools Can Be Used Offline",
     excerpt:
       "Discover the best offline developer tools that ensure privacy, reliability, and productivity without constant internet connectivity. Compare online solutions with our desktop alternatives.",
@@ -65,7 +73,7 @@ const blogPosts = [
     slug: "/blog/what-developer-tools-can-be-used-offline",
   },
   {
-    id: "3",
+    id: "4",
     title: "Jolt Offline JSON Formatter: Process JSON Locally",
     excerpt:
       "Learn why processing JSON data offline provides better security, privacy, and performance. Discover how offline JSON formatters like OfflineTools protect sensitive information and improve workflow.",
@@ -73,7 +81,7 @@ const blogPosts = [
     slug: "/blog/jolt-offline-json-formatter",
   },
   {
-    id: "4",
+    id: "5",
     title: "Offline JSON Query Tool",
     excerpt:
       "JSON query tools let you search, filter, and transform JSON data efficiently. But what happens when you're working offline or with sensitive data? Here's why you need offline JSON tools in your developer toolkit.",
