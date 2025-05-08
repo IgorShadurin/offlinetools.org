@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Export Options in JSON Formatters: Beyond Plain Text | Offline Tools",
-  description: "Discover the various export formats and options that modern JSON formatters offer for data interchange and documentation",
+  description:
+    "Discover the various export formats and options that modern JSON formatters offer for data interchange and documentation",
 };
 
 export default function ExportOptionsArticle() {
@@ -12,17 +13,17 @@ export default function ExportOptionsArticle() {
 
       <div className="space-y-6">
         <p>
-          Advanced JSON formatters offer far more than just the ability to view and edit JSON data—they 
-          provide sophisticated export capabilities that bridge JSON with other formats, systems, and 
-          workflows. This article explores the range of export options available in modern formatters, 
-          from basic file exports to complex conversions and integrations.
+          Advanced JSON formatters offer far more than just the ability to view and edit JSON data—they provide
+          sophisticated export capabilities that bridge JSON with other formats, systems, and workflows. This article
+          explores the range of export options available in modern formatters, from basic file exports to complex
+          conversions and integrations.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Value of Diverse Export Options</h2>
-        
+
         <p>
-          Before diving into specific formats, it&apos;s worth understanding why comprehensive export 
-          functionality is crucial in JSON tools:
+          Before diving into specific formats, it&apos;s worth understanding why comprehensive export functionality is
+          crucial in JSON tools:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Workflow Integration</h3>
@@ -31,13 +32,15 @@ export default function ExportOptionsArticle() {
             <strong>Cross-tool compatibility:</strong> Enabling JSON data to flow into various development tools
           </li>
           <li>
-            <strong>Documentation incorporation:</strong> Supporting multiple formats for inclusion in technical documentation
+            <strong>Documentation incorporation:</strong> Supporting multiple formats for inclusion in technical
+            documentation
           </li>
           <li>
             <strong>Backend-frontend exchange:</strong> Facilitating data exchange between different system components
           </li>
           <li>
-            <strong>Testing infrastructure:</strong> Generating test fixtures in formats appropriate for different testing frameworks
+            <strong>Testing infrastructure:</strong> Generating test fixtures in formats appropriate for different
+            testing frameworks
           </li>
         </ul>
 
@@ -60,18 +63,16 @@ export default function ExportOptionsArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Real-World Scenario:</h3>
           <p className="mt-2">
-            A developer working with an API response might need to: save the raw JSON for reference, 
-            convert part of it to CSV for data analysis, transform another section to YAML for a 
-            configuration file, and export key values as environment variables for testing. Advanced 
-            export options streamline these tasks without requiring multiple tools.
+            A developer working with an API response might need to: save the raw JSON for reference, convert part of it
+            to CSV for data analysis, transform another section to YAML for a configuration file, and export key values
+            as environment variables for testing. Advanced export options streamline these tasks without requiring
+            multiple tools.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Common Export Formats</h2>
 
-        <p>
-          Modern JSON formatters support a wide range of export formats, each serving specific use cases:
-        </p>
+        <p>Modern JSON formatters support a wide range of export formats, each serving specific use cases:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Text-Based Formats</h3>
         <ul className="list-disc pl-6 space-y-2">
@@ -141,13 +142,13 @@ export default function ExportOptionsArticle() {
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Format Comparison Example:</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
             <div>
               <p className="text-sm font-medium mb-2">Original JSON:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`{
+                  {`{
   "user": {
     "name": "John Smith",
     "age": 32,
@@ -157,12 +158,12 @@ export default function ExportOptionsArticle() {
                 </pre>
               </div>
             </div>
-            
+
             <div>
               <p className="text-sm font-medium mb-2">As YAML:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`user:
+                  {`user:
   name: John Smith
   age: 32
   roles:
@@ -172,13 +173,13 @@ export default function ExportOptionsArticle() {
               </div>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
             <div>
               <p className="text-sm font-medium mb-2">As TypeScript Interface:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`interface User {
+                  {`interface User {
   name: string;
   age: number;
   roles: string[];
@@ -190,12 +191,12 @@ interface RootObject {
                 </pre>
               </div>
             </div>
-            
+
             <div>
               <p className="text-sm font-medium mb-2">As CSV (flattened):</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`user.name,user.age,user.roles
+                  {`user.name,user.age,user.roles
 "John Smith",32,"admin,editor"`}
                 </pre>
               </div>
@@ -206,10 +207,8 @@ interface RootObject {
         <h2 className="text-2xl font-semibold mt-8">Advanced Export Functionality</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Selective Export Options</h3>
-        <p>
-          High-quality JSON formatters provide fine-grained control over what gets exported:
-        </p>
-        
+        <p>High-quality JSON formatters provide fine-grained control over what gets exported:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Subtree export:</strong> Exporting only a selected node or branch of the JSON tree
@@ -229,10 +228,8 @@ interface RootObject {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Export Customization</h3>
-        <p>
-          Advanced tools offer extensive configuration for export operations:
-        </p>
-        
+        <p>Advanced tools offer extensive configuration for export operations:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Format-specific options:</strong> Configuring details like indentation, quotes, and delimiters
@@ -252,10 +249,8 @@ interface RootObject {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Integration Capabilities</h3>
-        <p>
-          The most sophisticated formatters offer direct integration with external systems:
-        </p>
-        
+        <p>The most sophisticated formatters offer direct integration with external systems:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Direct API posting:</strong> Exporting directly as HTTP requests to APIs
@@ -277,18 +272,16 @@ interface RootObject {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Format Selection Tip:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            When choosing an export format, consider not just the immediate use case but also future 
-            needs. For data that might need further processing, prefer structured formats like YAML 
-            or language-specific objects. For final presentation, formats like HTML or Markdown often 
-            work better. For archiving, consider both human readability and storage efficiency.
+            When choosing an export format, consider not just the immediate use case but also future needs. For data
+            that might need further processing, prefer structured formats like YAML or language-specific objects. For
+            final presentation, formats like HTML or Markdown often work better. For archiving, consider both human
+            readability and storage efficiency.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Code Generation From JSON</h2>
 
-        <p>
-          One particularly valuable export category is automatic code generation:
-        </p>
+        <p>One particularly valuable export category is automatic code generation:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Schema and Type Definitions</h3>
         <ul className="list-disc pl-6 space-y-2">
@@ -354,7 +347,7 @@ interface RootObject {
               <p className="text-sm font-medium mb-2">Original JSON:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`{
+                  {`{
   "products": [
     {
       "id": 123,
@@ -374,12 +367,12 @@ interface RootObject {
                 </pre>
               </div>
             </div>
-            
+
             <div>
               <p className="text-sm font-medium mb-2">Generated TypeScript interfaces:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`interface Stock {
+                  {`interface Stock {
   warehouse: number;
   retail: number;
 }
@@ -408,9 +401,7 @@ interface RootObject {
 
         <h2 className="text-2xl font-semibold mt-8">Export for Visualization and Analysis</h2>
 
-        <p>
-          JSON formatters increasingly offer exports targeted at visualization and analysis tools:
-        </p>
+        <p>JSON formatters increasingly offer exports targeted at visualization and analysis tools:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Data Analysis Formats</h3>
         <ul className="list-disc pl-6 space-y-2">
@@ -453,10 +444,8 @@ interface RootObject {
         <h2 className="text-2xl font-semibold mt-8">Implementation Considerations</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Technical Challenges</h3>
-        <p>
-          Implementing robust export functionality presents several challenges:
-        </p>
-        
+        <p>Implementing robust export functionality presents several challenges:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Format complexity:</strong> Handling the nuances of each target format correctly
@@ -468,7 +457,8 @@ interface RootObject {
             <strong>Character encoding:</strong> Ensuring proper encoding especially for international text
           </li>
           <li>
-            <strong>Format-specific limitations:</strong> Managing constraints of target formats (e.g., CSV column limits)
+            <strong>Format-specific limitations:</strong> Managing constraints of target formats (e.g., CSV column
+            limits)
           </li>
           <li>
             <strong>Error handling:</strong> Gracefully managing conversion failures and edge cases
@@ -476,10 +466,8 @@ interface RootObject {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. User Experience Design</h3>
-        <p>
-          Creating an intuitive export interface requires careful design:
-        </p>
-        
+        <p>Creating an intuitive export interface requires careful design:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Format selection:</strong> Organizing many export options in an accessible way
@@ -499,10 +487,8 @@ interface RootObject {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Export Performance</h3>
-        <p>
-          For a responsive experience, export operations must be optimized:
-        </p>
-        
+        <p>For a responsive experience, export operations must be optimized:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Async processing:</strong> Handling exports in background threads to prevent UI freezing
@@ -538,9 +524,7 @@ interface RootObject {
 
         <h2 className="text-2xl font-semibold mt-8">Mobile Considerations</h2>
 
-        <p>
-          Export functionality on mobile devices presents unique challenges:
-        </p>
+        <p>Export functionality on mobile devices presents unique challenges:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Storage and Sharing Options</h3>
         <ul className="list-disc pl-6 space-y-2">
@@ -583,10 +567,8 @@ interface RootObject {
         <h2 className="text-2xl font-semibold mt-8">Future Directions in JSON Export</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Intelligent Export Suggestions</h3>
-        <p>
-          Next-generation JSON tools will offer smarter export recommendations:
-        </p>
-        
+        <p>Next-generation JSON tools will offer smarter export recommendations:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Content-aware format suggestions:</strong> Recommending export formats based on JSON content
@@ -606,10 +588,8 @@ interface RootObject {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Enhanced Ecosystem Integration</h3>
-        <p>
-          Export capabilities will become more connected to broader development ecosystems:
-        </p>
-        
+        <p>Export capabilities will become more connected to broader development ecosystems:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>CI/CD pipeline integration:</strong> Exporting directly into build and deployment processes
@@ -630,19 +610,19 @@ interface RootObject {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Export functionality represents a critical capability in modern JSON formatters, extending 
-          their utility far beyond simple viewing and editing. By offering diverse export formats and 
-          options, these tools become central hubs in development workflows, enabling smooth transitions 
-          between different systems, languages, and presentation contexts.
+          Export functionality represents a critical capability in modern JSON formatters, extending their utility far
+          beyond simple viewing and editing. By offering diverse export formats and options, these tools become central
+          hubs in development workflows, enabling smooth transitions between different systems, languages, and
+          presentation contexts.
         </p>
 
         <p>
-          As JSON continues to dominate as a data interchange format, formatter tools that provide 
-          comprehensive, flexible, and intuitive export capabilities deliver significant productivity 
-          benefits. They help bridge the gaps between different technologies and tools, allowing 
-          developers to focus on their core work rather than manual data transformation tasks.
+          As JSON continues to dominate as a data interchange format, formatter tools that provide comprehensive,
+          flexible, and intuitive export capabilities deliver significant productivity benefits. They help bridge the
+          gaps between different technologies and tools, allowing developers to focus on their core work rather than
+          manual data transformation tasks.
         </p>
       </div>
     </>
   );
-} 
+}

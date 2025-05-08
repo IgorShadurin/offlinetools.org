@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Keyboard Shortcuts for Efficient JSON Formatting | Offline Tools",
-  description: "Learn how keyboard shortcuts can dramatically improve efficiency when working with JSON formatting tools",
+  description:
+    "Learn how keyboard shortcuts can dramatically improve efficiency when working with JSON formatting tools",
 };
 
 export default function KeyboardShortcutsArticle() {
@@ -12,13 +13,12 @@ export default function KeyboardShortcutsArticle() {
 
       <div className="space-y-6">
         <p>
-          Keyboard shortcuts are essential for maximizing productivity in JSON formatters. By learning 
-          key combinations for common tasks, developers can work faster, maintain focus, and reduce strain 
-          from excessive mouse usage.
+          Keyboard shortcuts are essential for maximizing productivity in JSON formatters. By learning key combinations
+          for common tasks, developers can work faster, maintain focus, and reduce strain from excessive mouse usage.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Common Keyboard Shortcuts</h2>
-        
+
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
@@ -96,8 +96,8 @@ export default function KeyboardShortcutsArticle() {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Learning Tip:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Start by learning 3-5 frequently used shortcuts rather than trying to memorize all at once.
-            Add more to your workflow gradually as each set becomes second nature.
+            Start by learning 3-5 frequently used shortcuts rather than trying to memorize all at once. Add more to your
+            workflow gradually as each set becomes second nature.
           </p>
         </div>
 
@@ -119,18 +119,16 @@ export default function KeyboardShortcutsArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Advanced Shortcut Techniques</h2>
-        
+
         <p>
-          Beyond basic shortcuts, advanced users can leverage more sophisticated techniques 
-          to further enhance productivity.
+          Beyond basic shortcuts, advanced users can leverage more sophisticated techniques to further enhance
+          productivity.
         </p>
-        
+
         <h3 className="text-xl font-semibold mt-6">Shortcut Combinations</h3>
-        
-        <p>
-          Chaining multiple shortcuts together can create powerful workflows. For example:
-        </p>
-        
+
+        <p>Chaining multiple shortcuts together can create powerful workflows. For example:</p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Combined Workflow Example:</h4>
           <ol className="list-decimal pl-6 mt-2 space-y-1">
@@ -140,16 +138,18 @@ export default function KeyboardShortcutsArticle() {
             <li>Expand only that node (Navigate + Enter)</li>
             <li>Copy that property path (Ctrl+Shift+C / ⌘+Shift+C)</li>
           </ol>
-          <p className="mt-2 text-sm">This sequence takes seconds with shortcuts but much longer with mouse-only navigation.</p>
+          <p className="mt-2 text-sm">
+            This sequence takes seconds with shortcuts but much longer with mouse-only navigation.
+          </p>
         </div>
-        
+
         <h3 className="text-xl font-semibold mt-6">Customizing Shortcuts</h3>
-        
+
         <p>
-          Many advanced JSON formatters allow users to customize keyboard shortcuts to match personal preferences
-          or align with shortcuts used in other development tools.
+          Many advanced JSON formatters allow users to customize keyboard shortcuts to match personal preferences or
+          align with shortcuts used in other development tools.
         </p>
-        
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Common Customization Options:</h4>
           <ul className="list-disc pl-6 mt-2 space-y-1">
@@ -159,19 +159,19 @@ export default function KeyboardShortcutsArticle() {
             <li>Creating shortcut profiles (e.g., for different projects)</li>
           </ul>
         </div>
-        
+
         <p>
-          When customizing shortcuts, try to maintain consistency with other tools in your workflow
-          to reduce cognitive load when switching between applications.
+          When customizing shortcuts, try to maintain consistency with other tools in your workflow to reduce cognitive
+          load when switching between applications.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Keyboard Navigation Within JSON</h2>
-        
+
         <p>
-          Navigating large JSON structures efficiently is just as important as executing commands quickly.
-          Well-designed JSON formatters offer keyboard-based navigation options:
+          Navigating large JSON structures efficiently is just as important as executing commands quickly. Well-designed
+          JSON formatters offer keyboard-based navigation options:
         </p>
-        
+
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
@@ -208,46 +208,58 @@ export default function KeyboardShortcutsArticle() {
             </tbody>
           </table>
         </div>
-        
+
         <h3 className="text-xl font-semibold mt-6">Tree Navigation Techniques</h3>
-        
-        <p>
-          For deeply nested JSON, effective tree navigation techniques can save significant time:
-        </p>
-        
+
+        <p>For deeply nested JSON, effective tree navigation techniques can save significant time:</p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Depth Navigation Tips:</h4>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>Use <strong>Ctrl+G / ⌘+G</strong> to jump to a specific line number in JSON</li>
-            <li>Use <strong>Alt+Right / Option+Right</strong> to expand a node and all its children</li>
-            <li>Use <strong>/ (slash)</strong> in some formatters to start a quick search</li>
-            <li>Use <strong>Ctrl+[ and Ctrl+] / ⌘+[ and ⌘+]</strong> to jump between matching brackets</li>
+            <li>
+              Use <strong>Ctrl+G / ⌘+G</strong> to jump to a specific line number in JSON
+            </li>
+            <li>
+              Use <strong>Alt+Right / Option+Right</strong> to expand a node and all its children
+            </li>
+            <li>
+              Use <strong>/ (slash)</strong> in some formatters to start a quick search
+            </li>
+            <li>
+              Use <strong>Ctrl+[ and Ctrl+] / ⌘+[ and ⌘+]</strong> to jump between matching brackets
+            </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Shortcut Patterns Across Different JSON Formatters</h2>
-        
+
         <p>
-          While exact shortcuts vary between tools, many JSON formatters follow similar patterns.
-          Understanding these patterns makes it easier to adapt to new tools:
+          While exact shortcuts vary between tools, many JSON formatters follow similar patterns. Understanding these
+          patterns makes it easier to adapt to new tools:
         </p>
-        
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Common Shortcut Patterns:</h4>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li><strong>Ctrl/⌘ + F</strong> - Almost universally used for find/search</li>
-            <li><strong>Ctrl/⌘ + directional keys</strong> - Often used for structural navigation</li>
-            <li><strong>Ctrl/⌘ + Shift</strong> - Typically indicates an operation on the entire document</li>
-            <li><strong>Alt/Option + key</strong> - Often used for secondary or alternate operations</li>
+            <li>
+              <strong>Ctrl/⌘ + F</strong> - Almost universally used for find/search
+            </li>
+            <li>
+              <strong>Ctrl/⌘ + directional keys</strong> - Often used for structural navigation
+            </li>
+            <li>
+              <strong>Ctrl/⌘ + Shift</strong> - Typically indicates an operation on the entire document
+            </li>
+            <li>
+              <strong>Alt/Option + key</strong> - Often used for secondary or alternate operations
+            </li>
           </ul>
         </div>
-        
+
         <h3 className="text-xl font-semibold mt-6">Tool-Specific Shortcut Examples</h3>
-        
-        <p>
-          Let&apos;s examine shortcut variations across popular JSON formatting tools:
-        </p>
-        
+
+        <p>Let&apos;s examine shortcut variations across popular JSON formatting tools:</p>
+
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
@@ -289,72 +301,77 @@ export default function KeyboardShortcutsArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Mobile Considerations</h2>
 
-        <p>
-          While traditional keyboard shortcuts work best on desktop, mobile alternatives include:
-        </p>
+        <p>While traditional keyboard shortcuts work best on desktop, mobile alternatives include:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>Touch gestures (swipes, double-taps, long-press)</li>
           <li>External keyboard support for tablets</li>
           <li>Customizable quick action buttons</li>
         </ul>
-        
+
         <h3 className="text-xl font-semibold mt-6">Mobile-Specific Gesture Patterns</h3>
-        
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Common Mobile Gestures:</h4>
           <ul className="list-disc pl-6 mt-2">
-            <li><strong>Pinch to zoom</strong> - Adjust text size or zoom level</li>
-            <li><strong>Double-tap on node</strong> - Expand/collapse node</li>
-            <li><strong>Swipe left/right</strong> - Navigate between tabs or views</li>
-            <li><strong>Two-finger swipe</strong> - Scroll horizontally in wide JSON</li>
-            <li><strong>Long-press</strong> - Show context menu for additional options</li>
-            <li><strong>Three-finger swipe</strong> - Some apps use this for undo/redo operations</li>
+            <li>
+              <strong>Pinch to zoom</strong> - Adjust text size or zoom level
+            </li>
+            <li>
+              <strong>Double-tap on node</strong> - Expand/collapse node
+            </li>
+            <li>
+              <strong>Swipe left/right</strong> - Navigate between tabs or views
+            </li>
+            <li>
+              <strong>Two-finger swipe</strong> - Scroll horizontally in wide JSON
+            </li>
+            <li>
+              <strong>Long-press</strong> - Show context menu for additional options
+            </li>
+            <li>
+              <strong>Three-finger swipe</strong> - Some apps use this for undo/redo operations
+            </li>
           </ul>
         </div>
-        
+
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Accessibility Tip:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Many mobile JSON formatters now offer voice command support as an alternative input method.
-            This can be particularly useful for hands-free operation or users with motor disabilities.
+            Many mobile JSON formatters now offer voice command support as an alternative input method. This can be
+            particularly useful for hands-free operation or users with motor disabilities.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Best Practices for Shortcut Efficiency</h2>
-        
-        <p>
-          To maximize your productivity with JSON formatting shortcuts, consider these best practices:
-        </p>
-        
+
+        <p>To maximize your productivity with JSON formatting shortcuts, consider these best practices:</p>
+
         <ol className="list-decimal pl-6 space-y-3 mt-4">
           <li>
-            <strong>Start with the essentials</strong>: Begin by mastering the most frequently used shortcuts 
-            (format, find, expand/collapse, copy)
+            <strong>Start with the essentials</strong>: Begin by mastering the most frequently used shortcuts (format,
+            find, expand/collapse, copy)
           </li>
           <li>
-            <strong>Practice deliberately</strong>: Set aside time to practice using shortcuts 
-            without falling back to mouse operations
+            <strong>Practice deliberately</strong>: Set aside time to practice using shortcuts without falling back to
+            mouse operations
           </li>
           <li>
-            <strong>Use cheat sheets</strong>: Create or download a keyboard shortcut cheat sheet 
-            and keep it visible until shortcuts become muscle memory
+            <strong>Use cheat sheets</strong>: Create or download a keyboard shortcut cheat sheet and keep it visible
+            until shortcuts become muscle memory
           </li>
           <li>
-            <strong>Customize for ergonomics</strong>: Remap shortcuts that cause hand strain 
-            or are difficult to reach
+            <strong>Customize for ergonomics</strong>: Remap shortcuts that cause hand strain or are difficult to reach
           </li>
           <li>
-            <strong>Create shortcut consistency</strong>: Try to use similar shortcuts across 
-            different tools in your workflow
+            <strong>Create shortcut consistency</strong>: Try to use similar shortcuts across different tools in your
+            workflow
           </li>
         </ol>
-        
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Practice Exercise:</h4>
-          <p className="mt-2">
-            Try this 5-minute daily exercise to build muscle memory for JSON formatting shortcuts:
-          </p>
+          <p className="mt-2">Try this 5-minute daily exercise to build muscle memory for JSON formatting shortcuts:</p>
           <ol className="list-decimal pl-6 mt-2">
             <li>Open a complex JSON file</li>
             <li>Format it using keyboard shortcuts</li>
@@ -363,17 +380,13 @@ export default function KeyboardShortcutsArticle() {
             <li>Copy specific values and their paths</li>
             <li>Collapse and expand sections</li>
           </ol>
-          <p className="mt-2 text-sm">
-            With daily practice, these actions will become automatic within 1-2 weeks.
-          </p>
+          <p className="mt-2 text-sm">With daily practice, these actions will become automatic within 1-2 weeks.</p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Troubleshooting Shortcut Issues</h2>
-        
-        <p>
-          Sometimes keyboard shortcuts may not work as expected. Here are common issues and solutions:
-        </p>
-        
+
+        <p>Sometimes keyboard shortcuts may not work as expected. Here are common issues and solutions:</p>
+
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
@@ -406,22 +419,21 @@ export default function KeyboardShortcutsArticle() {
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
 
         <p className="mt-6">
-          By investing time to learn keyboard shortcuts, developers can transform their JSON formatting 
-          experience from tedious to fluid, focusing on the data itself rather than the mechanics of the tool.
+          By investing time to learn keyboard shortcuts, developers can transform their JSON formatting experience from
+          tedious to fluid, focusing on the data itself rather than the mechanics of the tool.
         </p>
-        
+
         <p>
-          Whether you&apos;re a casual JSON user or someone who works with complex data structures daily,
-          mastering keyboard shortcuts will significantly boost your productivity. Start with a few essential
-          shortcuts, practice regularly, and gradually expand your repertoire as each set becomes second nature.
+          Whether you&apos;re a casual JSON user or someone who works with complex data structures daily, mastering
+          keyboard shortcuts will significantly boost your productivity. Start with a few essential shortcuts, practice
+          regularly, and gradually expand your repertoire as each set becomes second nature.
         </p>
-        
+
         <p>
-          Remember that the goal of shortcuts is not just speed, but also to minimize the cognitive
-          load of tool interaction, allowing you to focus more deeply on the actual JSON data and the
-          problems you&apos;re solving.
+          Remember that the goal of shortcuts is not just speed, but also to minimize the cognitive load of tool
+          interaction, allowing you to focus more deeply on the actual JSON data and the problems you&apos;re solving.
         </p>
       </div>
     </>
   );
-} 
+}

@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "The Anatomy of a Modern JSON Formatter UI | Offline Tools",
-  description: "Explore the essential components and design principles that make up effective JSON formatter user interfaces",
+  description:
+    "Explore the essential components and design principles that make up effective JSON formatter user interfaces",
 };
 
 /**
@@ -20,21 +21,21 @@ export default function JsonFormatterAnatomyArticle() {
         <p>
           JSON formatters have become essential tools for developers working with JSON data. A well-designed JSON
           formatter UI combines functionality with usability to help developers efficiently validate, format, and
-          analyze JSON data. This article breaks down the key components that make up a modern JSON formatter
-          interface and explains the design principles behind them.
+          analyze JSON data. This article breaks down the key components that make up a modern JSON formatter interface
+          and explains the design principles behind them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Core Components of a Modern JSON Formatter</h2>
-        
+
         <p>
-          The most effective JSON formatter interfaces typically include these essential components, each serving
-          a specific purpose in the data formatting workflow:
+          The most effective JSON formatter interfaces typically include these essential components, each serving a
+          specific purpose in the data formatting workflow:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Input Area</h3>
         <p>
-          The input area is where users paste or type their JSON data. Modern JSON formatters offer several key
-          features in this area:
+          The input area is where users paste or type their JSON data. Modern JSON formatters offer several key features
+          in this area:
         </p>
 
         <ul className="list-disc pl-6 space-y-2">
@@ -60,7 +61,7 @@ export default function JsonFormatterAnatomyArticle() {
           <h3 className="text-lg font-medium">Example: Input Area Features</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Input Area with:
+              {`// Input Area with:
 // - Syntax highlighting (different colors for keys, values, etc.)
 // - Line numbers (visible on the left side)
 // - Collapsible sections (▶ icons next to objects)
@@ -98,9 +99,7 @@ export default function JsonFormatterAnatomyArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Error Display</h3>
-        <p>
-          A critical component that helps users identify and fix JSON syntax issues:
-        </p>
+        <p>A critical component that helps users identify and fix JSON syntax issues:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -121,15 +120,15 @@ export default function JsonFormatterAnatomyArticle() {
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Error Display Best Practices:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
             Effective error messages should be specific, descriptive, and actionable. Instead of simply stating
-            &quot;Invalid JSON,&quot; a good error display might say &quot;Expected property name at line 15, column 3&quot;
-            with the exact location highlighted.
+            &quot;Invalid JSON,&quot; a good error display might say &quot;Expected property name at line 15, column
+            3&quot; with the exact location highlighted.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">4. Tree View Visualization</h3>
         <p>
-          Many modern JSON formatters provide a hierarchical tree view that makes it easier to navigate complex
-          JSON structures:
+          Many modern JSON formatters provide a hierarchical tree view that makes it easier to navigate complex JSON
+          structures:
         </p>
 
         <ul className="list-disc pl-6 space-y-2">
@@ -148,9 +147,7 @@ export default function JsonFormatterAnatomyArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">5. Output Options</h3>
-        <p>
-          After formatting, users need ways to use their formatted JSON:
-        </p>
+        <p>After formatting, users need ways to use their formatted JSON:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -168,28 +165,27 @@ export default function JsonFormatterAnatomyArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Design Principles for Effective JSON Formatters</h2>
-        
-        <p>
-          The best JSON formatter interfaces adhere to these key design principles:
-        </p>
+
+        <p>The best JSON formatter interfaces adhere to these key design principles:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Real-time Feedback</h3>
         <p>
-          Modern JSON formatters provide immediate validation feedback as users type or paste JSON data. This
-          real-time approach helps catch errors early and provides a smoother user experience than validators that
-          only check when a button is clicked.
+          Modern JSON formatters provide immediate validation feedback as users type or paste JSON data. This real-time
+          approach helps catch errors early and provides a smoother user experience than validators that only check when
+          a button is clicked.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">2. Progressive Disclosure</h3>
         <p>
           Advanced features are organized to avoid overwhelming users. Basic functions (format, validate) are
-          prominently displayed, while more advanced options (schema validation, transformation) are available but
-          not intrusive.
+          prominently displayed, while more advanced options (schema validation, transformation) are available but not
+          intrusive.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">3. Keyboard Accessibility</h3>
         <p>
-          Modern JSON formatter tools implement keyboard shortcuts to streamline the workflow. Here are common keyboard shortcuts implemented in popular JSON formatting software:
+          Modern JSON formatter tools implement keyboard shortcuts to streamline the workflow. Here are common keyboard
+          shortcuts implemented in popular JSON formatting software:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -197,46 +193,46 @@ export default function JsonFormatterAnatomyArticle() {
           <div className="grid grid-cols-2 gap-2 mt-2">
             <div className="font-semibold">Visual Studio Code</div>
             <div></div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">Alt+Shift+F</span>
             </div>
             <div>Format document (including JSON)</div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">Ctrl+K Ctrl+J / Cmd+K Cmd+J</span>
             </div>
             <div>Unfold/expand all regions</div>
-            
+
             <div className="font-semibold mt-3">JetBrains WebStorm</div>
             <div></div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">Ctrl+Alt+L / Cmd+Option+L</span>
             </div>
             <div>Reformat code (including JSON)</div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">Ctrl+Shift+- / Cmd+Shift+-</span>
             </div>
             <div>Collapse all regions</div>
-            
+
             <div className="font-semibold mt-3">JSONBuddy</div>
             <div></div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">F6</span>
             </div>
             <div>Format JSON</div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">Ctrl+M / Cmd+M</span>
             </div>
             <div>Minify JSON</div>
-            
+
             <div className="font-semibold mt-3">Chrome DevTools</div>
             <div></div>
-            
+
             <div className="p-2 bg-white rounded dark:bg-gray-900">
               <span className="font-mono">Ctrl+Shift+I / Cmd+Option+I</span>
             </div>
@@ -246,14 +242,12 @@ export default function JsonFormatterAnatomyArticle() {
 
         <h3 className="text-xl font-semibold mt-6">4. Responsive Design</h3>
         <p>
-          Modern JSON formatters adapt their layout for different screen sizes and devices. For mobile users,
-          interfaces provide touch-friendly controls and optimize screen space.
+          Modern JSON formatters adapt their layout for different screen sizes and devices. For mobile users, interfaces
+          provide touch-friendly controls and optimize screen space.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">5. Visual Hierarchy</h3>
-        <p>
-          Effective formatters use visual hierarchy to highlight important information:
-        </p>
+        <p>Effective formatters use visual hierarchy to highlight important information:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>Error messages are prominently displayed (often in red)</li>
@@ -263,27 +257,25 @@ export default function JsonFormatterAnatomyArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Advanced Features in Modern JSON Formatters</h2>
-        
-        <p>
-          Beyond basic formatting, leading-edge JSON formatters now include:
-        </p>
+
+        <p>Beyond basic formatting, leading-edge JSON formatters now include:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. JSON Schema Validation</h3>
         <p>
-          Advanced formatters allow users to validate JSON against a schema, ensuring the data not only has valid
-          syntax but also follows a specific structure.
+          Advanced formatters allow users to validate JSON against a schema, ensuring the data not only has valid syntax
+          but also follows a specific structure.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">2. Data Visualization</h3>
         <p>
-          Some JSON formatters include visualization capabilities, transforming numeric data into charts or
-          geographic data into maps.
+          Some JSON formatters include visualization capabilities, transforming numeric data into charts or geographic
+          data into maps.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">3. Diff Comparison</h3>
         <p>
-          Comparing two JSON documents side-by-side with differences highlighted helps users understand changes
-          between versions.
+          Comparing two JSON documents side-by-side with differences highlighted helps users understand changes between
+          versions.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">4. Query Capabilities</h3>
@@ -293,9 +285,10 @@ export default function JsonFormatterAnatomyArticle() {
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Top 10 JSON Formatter Tools Comparison</h2>
-        
+
         <p>
-          Here&apos;s a comparison of the leading JSON formatter tools available today, highlighting their key features and capabilities:
+          Here&apos;s a comparison of the leading JSON formatter tools available today, highlighting their key features
+          and capabilities:
         </p>
 
         <div className="overflow-x-auto mt-4">
@@ -312,7 +305,9 @@ export default function JsonFormatterAnatomyArticle() {
               <tr>
                 <td className="border px-4 py-2 font-medium">OfflineTools</td>
                 <td className="border px-4 py-2">Web, Desktop (Windows, macOS, Linux)</td>
-                <td className="border px-4 py-2">Full offline functionality, tree view, schema validation, dark mode</td>
+                <td className="border px-4 py-2">
+                  Full offline functionality, tree view, schema validation, dark mode
+                </td>
                 <td className="border px-4 py-2">Developers working without internet access or with sensitive data</td>
               </tr>
               <tr>
@@ -374,10 +369,8 @@ export default function JsonFormatterAnatomyArticle() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Mobile-First Considerations</h2>
-        
-        <p>
-          Modern JSON formatters increasingly support mobile users with:
-        </p>
+
+        <p>Modern JSON formatters increasingly support mobile users with:</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -395,7 +388,7 @@ export default function JsonFormatterAnatomyArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
-        
+
         <p>
           A well-designed JSON formatter combines powerful functionality with intuitive usability. The most effective
           formatters provide immediate feedback, clear error messages, and multiple ways to visualize and interact with
@@ -404,12 +397,11 @@ export default function JsonFormatterAnatomyArticle() {
         </p>
 
         <p>
-          The evolution of JSON formatters continues as they adapt to new development workflows, larger datasets,
-          and the growing importance of JSON in web and API development. The best tools strike a balance between
-          powerful features and a clean, accessible interface that makes working with JSON data efficient and
-          even enjoyable.
+          The evolution of JSON formatters continues as they adapt to new development workflows, larger datasets, and
+          the growing importance of JSON in web and API development. The best tools strike a balance between powerful
+          features and a clean, accessible interface that makes working with JSON data efficient and even enjoyable.
         </p>
       </div>
     </>
   );
-} 
+}

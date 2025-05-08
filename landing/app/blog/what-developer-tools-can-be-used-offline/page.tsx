@@ -6,8 +6,7 @@ import { ShareButtons } from "./ShareButtons";
 
 export const metadata = {
   title: "What Developer Tools Can Be Used Offline | Offline Tools",
-  description:
-    "A comprehensive guide to offline developer tools that work without an internet connection.",
+  description: "A comprehensive guide to offline developer tools that work without an internet connection.",
 };
 
 export default function DeveloperToolsOfflinePage() {
@@ -42,13 +41,14 @@ export default function DeveloperToolsOfflinePage() {
                 Security
               </span>
             </div>
-            
+
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="lead text-xl md:text-2xl font-medium text-foreground/80">
-                Internet connectivity isn't always guaranteed. When working offline or valuing privacy, developers need reliable tools that work without a connection.
+                Internet connectivity isn't always guaranteed. When working offline or valuing privacy, developers need
+                reliable tools that work without a connection.
               </p>
             </div>
-            
+
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link
                 href="/download"
@@ -69,13 +69,20 @@ export default function DeveloperToolsOfflinePage() {
         {/* Main Blog Post Content */}
         <article className="prose prose-lg dark:prose-invert max-w-none mb-10">
           <h2 className="text-3xl font-bold mb-6">The Essential Guide to Offline Development Tools</h2>
-          
-          <p className="mb-4">In an increasingly connected world, reliable internet access isn't always guaranteed. Whether you're coding on a flight, working in a remote area, or simply prefer to keep your data private, offline development tools are essential for maintaining productivity without connectivity.</p>
-          
+
+          <p className="mb-4">
+            In an increasingly connected world, reliable internet access isn't always guaranteed. Whether you're coding
+            on a flight, working in a remote area, or simply prefer to keep your data private, offline development tools
+            are essential for maintaining productivity without connectivity.
+          </p>
+
           <h3 className="mt-10 text-2xl font-semibold mb-4">The Online Dependency Challenge</h3>
-          
-          <p className="mb-4">Many popular development tools now rely heavily on cloud infrastructure, creating potential workflow disruptions when you're offline:</p>
-          
+
+          <p className="mb-4">
+            Many popular development tools now rely heavily on cloud infrastructure, creating potential workflow
+            disruptions when you're offline:
+          </p>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
             <div className="border rounded-lg p-4 bg-muted/10">
               <h4 className="text-lg font-medium mb-2 text-red-500 dark:text-red-400">Online-Only Features</h4>
@@ -88,7 +95,9 @@ export default function DeveloperToolsOfflinePage() {
               </ul>
             </div>
             <div className="border rounded-lg p-4 bg-muted/10">
-              <h4 className="text-lg font-medium mb-2 text-green-600 dark:text-green-400">Offline-Capable Alternatives</h4>
+              <h4 className="text-lg font-medium mb-2 text-green-600 dark:text-green-400">
+                Offline-Capable Alternatives
+              </h4>
               <ul className="space-y-2">
                 <li>Local LLMs (LLama, Ollama)</li>
                 <li>Local package mirrors</li>
@@ -98,38 +107,81 @@ export default function DeveloperToolsOfflinePage() {
               </ul>
             </div>
           </div>
-          
-          <p className="mb-4">While AI tools like ChatGPT and GitHub Copilot have transformed development workflows, they require constant internet connectivity. However, the growing local LLM ecosystem provides alternatives that can run entirely on your machine, offering privacy benefits and offline functionality.</p>
-          
+
+          <p className="mb-4">
+            While AI tools like ChatGPT and GitHub Copilot have transformed development workflows, they require constant
+            internet connectivity. However, the growing local LLM ecosystem provides alternatives that can run entirely
+            on your machine, offering privacy benefits and offline functionality.
+          </p>
+
           <h3 className="mt-10 text-2xl font-semibold mb-4">OfflineTools Desktop: Your Privacy-First Toolkit</h3>
-          
+
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 p-6 rounded-lg border border-blue-100 dark:border-blue-800 my-8">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="md:w-2/3">
                 <h4 className="text-xl font-semibold mb-3">OfflineTools Desktop App</h4>
-                <p className="text-sm md:text-base">Our desktop application provides essential developer utilities that work 100% offline. Process your data without the fear of leakage, with guaranteed functionality even without internet access.</p>
+                <p className="text-sm md:text-base">
+                  Our desktop application provides essential developer utilities that work 100% offline. Process your
+                  data without the fear of leakage, with guaranteed functionality even without internet access.
+                </p>
                 <ul className="mt-4 space-y-2">
                   <li className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-green-600 dark:text-green-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>Base64 Encoding/Decoding</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-green-600 dark:text-green-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>JSON Formatting</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-green-600 dark:text-green-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>URL Encoding/Decoding</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-green-600 dark:text-green-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>File Hash Generation/Comparison</span>
                   </li>
@@ -145,22 +197,38 @@ export default function DeveloperToolsOfflinePage() {
               </div>
               <div className="md:w-1/3 flex justify-center">
                 <div className="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-32 w-32 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-32 w-32 text-blue-600 dark:text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
                   </svg>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <h3 className="mt-10 text-2xl font-semibold mb-4">Vibe Coding: Offline Coding Environment</h3>
-          
-          <p className="mb-4">Vibe Coding provides a comprehensive offline development environment that includes code editors, compilers, and debugging tools for multiple programming languages. It's designed to function entirely offline while offering features comparable to many online IDEs, making it ideal for scenarios where internet access is limited or security requirements mandate air-gapped systems.</p>
-          
+
+          <p className="mb-4">
+            Vibe Coding provides a comprehensive offline development environment that includes code editors, compilers,
+            and debugging tools for multiple programming languages. It's designed to function entirely offline while
+            offering features comparable to many online IDEs, making it ideal for scenarios where internet access is
+            limited or security requirements mandate air-gapped systems.
+          </p>
+
           <h3 className="mt-10 text-2xl font-semibold mb-4">20 Essential Offline Developer Tools</h3>
-          
+
           <p className="mb-4">Beyond our solutions, many powerful developer tools can operate entirely offline:</p>
-          
+
           <div className="overflow-x-auto my-8">
             <table className="min-w-full border-collapse">
               <thead>
@@ -240,46 +308,90 @@ export default function DeveloperToolsOfflinePage() {
               </tbody>
             </table>
           </div>
-          
+
           <h3 className="mt-10 text-2xl font-semibold mb-4">Benefits of Offline Developer Tools</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
             <div className="border rounded-lg p-5 bg-muted/10">
               <div className="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
               </div>
               <h4 className="text-lg font-medium text-center mb-2">Enhanced Privacy</h4>
-              <p className="text-sm text-center">Work with sensitive data without worrying about network exposure or third-party data collection.</p>
+              <p className="text-sm text-center">
+                Work with sensitive data without worrying about network exposure or third-party data collection.
+              </p>
             </div>
             <div className="border rounded-lg p-5 bg-muted/10">
               <div className="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-green-600 dark:text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                  />
                 </svg>
               </div>
               <h4 className="text-lg font-medium text-center mb-2">Reliability</h4>
-              <p className="text-sm text-center">Continue working regardless of internet connectivity issues or service outages.</p>
+              <p className="text-sm text-center">
+                Continue working regardless of internet connectivity issues or service outages.
+              </p>
             </div>
             <div className="border rounded-lg p-5 bg-muted/10">
               <div className="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-purple-600 dark:text-purple-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
               <h4 className="text-lg font-medium text-center mb-2">Performance</h4>
-              <p className="text-sm text-center">Offline tools often run faster without network latency and can better utilize local hardware resources.</p>
+              <p className="text-sm text-center">
+                Offline tools often run faster without network latency and can better utilize local hardware resources.
+              </p>
             </div>
           </div>
-          
+
           <h3 className="mt-10 text-2xl font-semibold mb-4">Conclusion</h3>
-          
-          <p className="mb-4">While the development world increasingly moves toward cloud-based solutions, offline tools remain critically important for reliability, privacy, and flexibility. By incorporating offline-capable tools into your workflow, you can ensure productivity regardless of connectivity status.</p>
-          
+
+          <p className="mb-4">
+            While the development world increasingly moves toward cloud-based solutions, offline tools remain critically
+            important for reliability, privacy, and flexibility. By incorporating offline-capable tools into your
+            workflow, you can ensure productivity regardless of connectivity status.
+          </p>
+
           <div className="bg-gradient-to-r from-blue-50/30 to-indigo-50/30 dark:from-blue-950/40 dark:to-indigo-950/40 p-6 rounded-lg border border-blue-100/30 dark:border-blue-800/30 my-8">
-            <p className="mb-0 text-lg">OfflineTools Desktop offers a comprehensive suite of developer utilities that work entirely offline, preserving your privacy while providing essential functionality for everyday development tasks. <span className="font-medium">Download today and experience the benefits of a connectivity-independent workflow.</span></p>
-            
+            <p className="mb-0 text-lg">
+              OfflineTools Desktop offers a comprehensive suite of developer utilities that work entirely offline,
+              preserving your privacy while providing essential functionality for everyday development tasks.{" "}
+              <span className="font-medium">
+                Download today and experience the benefits of a connectivity-independent workflow.
+              </span>
+            </p>
+
             <div className="mt-4">
               <Link
                 href="/download"
@@ -293,12 +405,12 @@ export default function DeveloperToolsOfflinePage() {
 
         <div className="mt-12 pt-8 border-t">
           <h3 className="text-lg font-medium mb-4">Share this article</h3>
-          <ShareButtons 
-            url="https://offlinetools.org/blog/what-developer-tools-can-be-used-offline" 
-            title="What Developer Tools Can Be Used Offline" 
+          <ShareButtons
+            url="https://offlinetools.org/blog/what-developer-tools-can-be-used-offline"
+            title="What Developer Tools Can Be Used Offline"
           />
         </div>
-        
+
         <div className="mt-12">
           <Link href="/blog" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
             ← Back to Blog

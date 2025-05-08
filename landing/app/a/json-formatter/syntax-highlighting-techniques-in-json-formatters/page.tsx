@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Syntax Highlighting Techniques in JSON Formatters | Offline Tools",
-  description: "Explore how modern JSON formatters implement syntax highlighting to improve readability, error detection, and data visualization",
+  description:
+    "Explore how modern JSON formatters implement syntax highlighting to improve readability, error detection, and data visualization",
 };
 
 export default function SyntaxHighlightingTechniquesArticle() {
@@ -12,31 +13,30 @@ export default function SyntaxHighlightingTechniquesArticle() {
 
       <div className="space-y-6">
         <p>
-          Syntax highlighting is a fundamental feature of any high-quality JSON formatter, transforming plain 
-          text into visually structured data that improves readability and comprehension. This article explores 
-          how modern JSON formatters implement highlighting techniques to enhance the user experience and facilitate 
-          data analysis.
+          Syntax highlighting is a fundamental feature of any high-quality JSON formatter, transforming plain text into
+          visually structured data that improves readability and comprehension. This article explores how modern JSON
+          formatters implement highlighting techniques to enhance the user experience and facilitate data analysis.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Core Elements of JSON Syntax Highlighting</h2>
-        
+
         <p>
-          Effective syntax highlighting in JSON formatters relies on precise identification and visual 
-          differentiation of key structural elements:
+          Effective syntax highlighting in JSON formatters relies on precise identification and visual differentiation
+          of key structural elements:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Structural Elements</h3>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Brackets and braces:</strong> Highlighting the <code>{}</code> and <code>[]</code> characters that 
+            <strong>Brackets and braces:</strong> Highlighting the <code>{}</code> and <code>[]</code> characters that
             define objects and arrays
           </li>
           <li>
-            <strong>Colons and commas:</strong> Visual distinction for the punctuation that separates properties 
-            and values
+            <strong>Colons and commas:</strong> Visual distinction for the punctuation that separates properties and
+            values
           </li>
           <li>
-            <strong>Indentation levels:</strong> Using whitespace and sometimes subtle background colors to indicate 
+            <strong>Indentation levels:</strong> Using whitespace and sometimes subtle background colors to indicate
             nesting depth
           </li>
           <li>
@@ -113,10 +113,8 @@ export default function SyntaxHighlightingTechniquesArticle() {
         <h2 className="text-2xl font-semibold mt-8">Advanced Highlighting Techniques</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Depth-Based Highlighting</h3>
-        <p>
-          Advanced formatters implement depth-aware highlighting to further clarify JSON structure:
-        </p>
-        
+        <p>Advanced formatters implement depth-aware highlighting to further clarify JSON structure:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Alternating background colors:</strong> Different background shades for nested objects and arrays
@@ -133,16 +131,16 @@ export default function SyntaxHighlightingTechniquesArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Context-Aware Highlighting</h3>
-        <p>
-          Modern formatters go beyond basic syntax to highlight based on content and context:
-        </p>
-        
+        <p>Modern formatters go beyond basic syntax to highlight based on content and context:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Special string detection:</strong> Recognizing and highlighting URLs, dates, UUIDs, and other patterns
+            <strong>Special string detection:</strong> Recognizing and highlighting URLs, dates, UUIDs, and other
+            patterns
           </li>
           <li>
-            <strong>Schema-based highlighting:</strong> Using JSON Schema to validate and highlight data according to expected types
+            <strong>Schema-based highlighting:</strong> Using JSON Schema to validate and highlight data according to
+            expected types
           </li>
           <li>
             <strong>Value magnitude indication:</strong> Visual cues for very large numbers or extremely long strings
@@ -153,10 +151,8 @@ export default function SyntaxHighlightingTechniquesArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Error and Warning Highlighting</h3>
-        <p>
-          Syntax highlighting plays a crucial role in error detection and communication:
-        </p>
-        
+        <p>Syntax highlighting plays a crucial role in error detection and communication:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Syntax error indicators:</strong> Red underlines or highlights for syntax errors
@@ -175,19 +171,17 @@ export default function SyntaxHighlightingTechniquesArticle() {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Implementation Note:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Error highlighting should be distinct from regular syntax highlighting to ensure users can 
-            immediately identify issues. Common approaches include red underlines, background highlighting, 
-            or margin indicators combined with detailed error messages on hover.
+            Error highlighting should be distinct from regular syntax highlighting to ensure users can immediately
+            identify issues. Common approaches include red underlines, background highlighting, or margin indicators
+            combined with detailed error messages on hover.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Implementation Approaches</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Tokenization and Parsing</h3>
-        <p>
-          The foundation of syntax highlighting begins with breaking JSON into meaningful tokens:
-        </p>
-        
+        <p>The foundation of syntax highlighting begins with breaking JSON into meaningful tokens:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Lexical analysis:</strong> Breaking JSON text into tokens (strings, numbers, keywords, delimiters)
@@ -204,10 +198,8 @@ export default function SyntaxHighlightingTechniquesArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Client-Side Rendering Techniques</h3>
-        <p>
-          Web-based JSON formatters use various approaches to render highlighted syntax:
-        </p>
-        
+        <p>Web-based JSON formatters use various approaches to render highlighted syntax:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>CSS-based highlighting:</strong> Using HTML structure and CSS classes for highlighting
@@ -224,10 +216,8 @@ export default function SyntaxHighlightingTechniquesArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Performance Optimization</h3>
-        <p>
-          Efficient highlighting is crucial for large JSON documents:
-        </p>
-        
+        <p>Efficient highlighting is crucial for large JSON documents:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Virtualized rendering:</strong> Only rendering the visible portion of very large documents
@@ -246,10 +236,8 @@ export default function SyntaxHighlightingTechniquesArticle() {
         <h2 className="text-2xl font-semibold mt-8">Customization and Accessibility</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. User-Configurable Themes</h3>
-        <p>
-          Advanced formatters offer customization options for syntax highlighting:
-        </p>
-        
+        <p>Advanced formatters offer customization options for syntax highlighting:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Theme libraries:</strong> Predefined themes matching popular code editors (Monokai, Solarized, etc.)
@@ -266,16 +254,15 @@ export default function SyntaxHighlightingTechniquesArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Accessibility Considerations</h3>
-        <p>
-          High-quality highlighting implementations prioritize accessibility:
-        </p>
-        
+        <p>High-quality highlighting implementations prioritize accessibility:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Color contrast compliance:</strong> Ensuring WCAG 2.1 AA or AAA contrast ratios
           </li>
           <li>
-            <strong>Color blindness support:</strong> Alternative themes optimized for different types of color vision deficiency
+            <strong>Color blindness support:</strong> Alternative themes optimized for different types of color vision
+            deficiency
           </li>
           <li>
             <strong>Non-color differentiation:</strong> Using font styles, weights, or symbols alongside colors
@@ -289,8 +276,12 @@ export default function SyntaxHighlightingTechniquesArticle() {
           <h3 className="text-lg font-medium">Example: Accessible Highlighting Alternatives</h3>
           <p className="mb-3">Instead of relying solely on colors, accessible JSON formatters might use:</p>
           <ul className="list-disc pl-6 space-y-1">
-            <li><strong>Bold text</strong> for property names</li>
-            <li><em>Italic text</em> for string values</li>
+            <li>
+              <strong>Bold text</strong> for property names
+            </li>
+            <li>
+              <em>Italic text</em> for string values
+            </li>
             <li>Underlines for numbers</li>
             <li>Different background patterns for nested levels</li>
             <li>Distinct symbols or icons next to different data types</li>
@@ -299,9 +290,7 @@ export default function SyntaxHighlightingTechniquesArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Mobile Considerations</h2>
 
-        <p>
-          JSON formatters must adapt their highlighting for mobile devices:
-        </p>
+        <p>JSON formatters must adapt their highlighting for mobile devices:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Responsive Design Challenges</h3>
         <ul className="list-disc pl-6 space-y-2">
@@ -337,14 +326,13 @@ export default function SyntaxHighlightingTechniquesArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Future Directions in JSON Syntax Highlighting</h2>
 
-        <p>
-          The field continues to evolve with new approaches to make JSON more understandable:
-        </p>
+        <p>The field continues to evolve with new approaches to make JSON more understandable:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. AI-Enhanced Highlighting</h3>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Content-aware highlighting:</strong> Using machine learning to identify important data based on context
+            <strong>Content-aware highlighting:</strong> Using machine learning to identify important data based on
+            context
           </li>
           <li>
             <strong>Anomaly detection:</strong> Highlighting unusual values or patterns that might indicate errors
@@ -375,19 +363,19 @@ export default function SyntaxHighlightingTechniquesArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Syntax highlighting is much more than a cosmetic feature in JSON formatters—it fundamentally transforms 
-          how users perceive, navigate, and understand data structures. By implementing thoughtful highlighting 
-          techniques that go beyond basic syntax coloring, formatter developers can significantly enhance 
-          usability, reduce errors, and improve efficiency.
+          Syntax highlighting is much more than a cosmetic feature in JSON formatters—it fundamentally transforms how
+          users perceive, navigate, and understand data structures. By implementing thoughtful highlighting techniques
+          that go beyond basic syntax coloring, formatter developers can significantly enhance usability, reduce errors,
+          and improve efficiency.
         </p>
 
         <p>
-          The most effective JSON formatters recognize highlighting as a core communication tool, using color, 
-          typography, and interactive elements to reveal structure, identify patterns, and expose errors. As JSON 
-          continues to dominate data interchange, sophisticated highlighting techniques will remain essential for 
+          The most effective JSON formatters recognize highlighting as a core communication tool, using color,
+          typography, and interactive elements to reveal structure, identify patterns, and expose errors. As JSON
+          continues to dominate data interchange, sophisticated highlighting techniques will remain essential for
           helping users make sense of increasingly complex data structures.
         </p>
       </div>
     </>
   );
-} 
+}

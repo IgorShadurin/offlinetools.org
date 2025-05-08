@@ -1,6 +1,13 @@
 import { Container } from "@/components/ui/container";
 import { PageLayout } from "@/components/page-layout";
-import { CalendarIcon, DownloadIcon, LockClosedIcon, CodeIcon, LightningBoltIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import {
+  CalendarIcon,
+  DownloadIcon,
+  LockClosedIcon,
+  CodeIcon,
+  LightningBoltIcon,
+  MagnifyingGlassIcon,
+} from "@radix-ui/react-icons";
 import Link from "next/link";
 import { ShareButtons } from "../what-developer-tools-can-be-used-offline/ShareButtons";
 
@@ -39,13 +46,15 @@ export default function OfflineJsonQueryToolPage() {
                 Data Manipulation
               </span>
             </div>
-            
+
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="lead text-xl md:text-2xl font-medium text-foreground/80">
-                JSON query tools let you search, filter, and transform JSON data efficiently. But what happens when you're working offline or with sensitive data? Here's why you need offline JSON tools in your developer toolkit.
+                JSON query tools let you search, filter, and transform JSON data efficiently. But what happens when
+                you're working offline or with sensitive data? Here's why you need offline JSON tools in your developer
+                toolkit.
               </p>
             </div>
-            
+
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link
                 href="/download"
@@ -69,13 +78,16 @@ export default function OfflineJsonQueryToolPage() {
             <CodeIcon className="h-6 w-6 text-blue-500" />
             What Is a JSON Query Tool?
           </h2>
-          
+
           <p className="mb-6">
-            JSON (JavaScript Object Notation) has become the standard format for exchanging data between web services, storing configurations, and more. A JSON query tool helps developers search, filter, and transform JSON data - essential tasks when working with APIs, logs, or configuration files.
+            JSON (JavaScript Object Notation) has become the standard format for exchanging data between web services,
+            storing configurations, and more. A JSON query tool helps developers search, filter, and transform JSON data
+            - essential tasks when working with APIs, logs, or configuration files.
           </p>
-          
+
           <p className="mb-6">
-            Unlike basic text editors, dedicated JSON query tools understand the structure of JSON data, allowing for precise operations like:
+            Unlike basic text editors, dedicated JSON query tools understand the structure of JSON data, allowing for
+            precise operations like:
           </p>
 
           <ul className="mb-8 space-y-2">
@@ -88,10 +100,9 @@ export default function OfflineJsonQueryToolPage() {
 
           <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-8">
             <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300">
-              "jq is like sed for JSON data - you can use it to slice and filter and map and transform structured data with the same ease that sed, awk, grep and friends let you play with text."
-              <footer className="text-sm mt-2 text-gray-600 dark:text-gray-400">
-                — jqlang.github.io/jq
-              </footer>
+              "jq is like sed for JSON data - you can use it to slice and filter and map and transform structured data
+              with the same ease that sed, awk, grep and friends let you play with text."
+              <footer className="text-sm mt-2 text-gray-600 dark:text-gray-400">— jqlang.github.io/jq</footer>
             </blockquote>
           </div>
 
@@ -99,9 +110,10 @@ export default function OfflineJsonQueryToolPage() {
             <DownloadIcon className="h-6 w-6 text-blue-500" />
             OfflineTools: Desktop vs. Online
           </h2>
-          
+
           <p className="mb-6">
-            OfflineTools provides two versions of its JSON processing tools: a web-based online version and a downloadable desktop application.
+            OfflineTools provides two versions of its JSON processing tools: a web-based online version and a
+            downloadable desktop application.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
@@ -128,52 +140,84 @@ export default function OfflineJsonQueryToolPage() {
           </div>
 
           <p className="mb-6">
-            While the online version is convenient for quick tasks, the desktop version offers significant advantages for professional developers:
+            While the online version is convenient for quick tasks, the desktop version offers significant advantages
+            for professional developers:
           </p>
 
           <ul className="mb-8 space-y-2">
-            <li><strong>Privacy:</strong> Your data never leaves your computer</li>
-            <li><strong>Reliability:</strong> Work without internet connectivity</li>
-            <li><strong>Performance:</strong> Process larger JSON files more efficiently</li>
-            <li><strong>Integration:</strong> Fits into your local development workflow</li>
-            <li><strong>Security:</strong> Keep sensitive data like API keys and credentials secure</li>
+            <li>
+              <strong>Privacy:</strong> Your data never leaves your computer
+            </li>
+            <li>
+              <strong>Reliability:</strong> Work without internet connectivity
+            </li>
+            <li>
+              <strong>Performance:</strong> Process larger JSON files more efficiently
+            </li>
+            <li>
+              <strong>Integration:</strong> Fits into your local development workflow
+            </li>
+            <li>
+              <strong>Security:</strong> Keep sensitive data like API keys and credentials secure
+            </li>
           </ul>
 
           <h2 className="text-3xl font-bold mt-12 mb-6 flex items-center gap-2">
-            <LockClosedIcon className="h-6 w-6 text-blue-500" />
-            5 Common Problems with JSON Query Tools
+            <LockClosedIcon className="h-6 w-6 text-blue-500" />5 Common Problems with JSON Query Tools
           </h2>
 
           <div className="space-y-8 mb-10">
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">1. Offline Access Limitations</h3>
-              <p>Many JSON query tools require internet connectivity to function, forcing developers to upload potentially sensitive data to third-party servers. This creates security risks and prevents working in offline environments or restricted networks.</p>
+              <p>
+                Many JSON query tools require internet connectivity to function, forcing developers to upload
+                potentially sensitive data to third-party servers. This creates security risks and prevents working in
+                offline environments or restricted networks.
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">2. Poor Performance with Large Files</h3>
-              <p>Browser-based tools often struggle with large JSON files, leading to sluggish performance or crashes. As one developer reports, "None of the other tools was practical for 10MB JSON files," highlighting a common limitation with web-based solutions.</p>
+              <p>
+                Browser-based tools often struggle with large JSON files, leading to sluggish performance or crashes. As
+                one developer reports, "None of the other tools was practical for 10MB JSON files," highlighting a
+                common limitation with web-based solutions.
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">3. Complex Query Syntax</h3>
-              <p>Many JSON query tools use specialized syntax that creates a steep learning curve. While powerful, tools like jq require significant time investment to master their query languages, slowing down development workflows for newcomers.</p>
+              <p>
+                Many JSON query tools use specialized syntax that creates a steep learning curve. While powerful, tools
+                like jq require significant time investment to master their query languages, slowing down development
+                workflows for newcomers.
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">4. Limited Format Support</h3>
-              <p>Most JSON tools handle only standard JSON, but real-world data often comes in variations like JSON Lines, NDJSON, or with comments. Limited format support forces developers to pre-process data before querying it.</p>
+              <p>
+                Most JSON tools handle only standard JSON, but real-world data often comes in variations like JSON
+                Lines, NDJSON, or with comments. Limited format support forces developers to pre-process data before
+                querying it.
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">5. Lack of Integration Options</h3>
-              <p>Standalone JSON tools often don't integrate well with other development tools and workflows. This creates friction when trying to incorporate JSON processing into automated scripts, build processes, or other parts of the development lifecycle.</p>
+              <p>
+                Standalone JSON tools often don't integrate well with other development tools and workflows. This
+                creates friction when trying to incorporate JSON processing into automated scripts, build processes, or
+                other parts of the development lifecycle.
+              </p>
             </div>
           </div>
 
           <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-10">
             <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300">
-              "When you paste JSON into an online formatter, you're potentially exposing API credentials and tokens, customer information and PII, proprietary business logic, internal system structures, and database connection details."
+              "When you paste JSON into an online formatter, you're potentially exposing API credentials and tokens,
+              customer information and PII, proprietary business logic, internal system structures, and database
+              connection details."
               <footer className="text-sm mt-2 text-gray-600 dark:text-gray-400">
                 — Juha-Matti Santala, hamatti.org
               </footer>
@@ -181,53 +225,88 @@ export default function OfflineJsonQueryToolPage() {
           </div>
 
           <h2 className="text-3xl font-bold mt-12 mb-6 flex items-center gap-2">
-            <MagnifyingGlassIcon className="h-6 w-6 text-blue-500" />
-            5 Other JSON Query Tools
+            <MagnifyingGlassIcon className="h-6 w-6 text-blue-500" />5 Other JSON Query Tools
           </h2>
 
           <div className="space-y-8 mb-10">
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">1. jq</h3>
-              <p className="mb-4">A lightweight command-line JSON processor with its own specialized query language. It excels at slicing, filtering, and transforming JSON data through Unix-style pipes.</p>
-              <p className="mb-2"><strong>Platform:</strong> Linux, macOS, Windows (command line)</p>
-              <p><strong>Best for:</strong> Command-line enthusiasts and script automation</p>
+              <p className="mb-4">
+                A lightweight command-line JSON processor with its own specialized query language. It excels at slicing,
+                filtering, and transforming JSON data through Unix-style pipes.
+              </p>
+              <p className="mb-2">
+                <strong>Platform:</strong> Linux, macOS, Windows (command line)
+              </p>
+              <p>
+                <strong>Best for:</strong> Command-line enthusiasts and script automation
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">2. Dadroit JSON Viewer</h3>
-              <p className="mb-4">A high-performance desktop application designed specifically for large JSON files. It features a tree-based viewer, search functionality, and format conversion tools.</p>
-              <p className="mb-2"><strong>Platform:</strong> Windows, macOS, Linux</p>
-              <p><strong>Best for:</strong> Working with large JSON datasets</p>
+              <p className="mb-4">
+                A high-performance desktop application designed specifically for large JSON files. It features a
+                tree-based viewer, search functionality, and format conversion tools.
+              </p>
+              <p className="mb-2">
+                <strong>Platform:</strong> Windows, macOS, Linux
+              </p>
+              <p>
+                <strong>Best for:</strong> Working with large JSON datasets
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">3. JSONBox</h3>
-              <p className="mb-4">An Electron-based JSON formatting tool with multi-tab support. Offers paste-to-format functionality, syntax highlighting, and export to various formats.</p>
-              <p className="mb-2"><strong>Platform:</strong> Windows, macOS, Linux</p>
-              <p><strong>Best for:</strong> Multi-file JSON editing</p>
+              <p className="mb-4">
+                An Electron-based JSON formatting tool with multi-tab support. Offers paste-to-format functionality,
+                syntax highlighting, and export to various formats.
+              </p>
+              <p className="mb-2">
+                <strong>Platform:</strong> Windows, macOS, Linux
+              </p>
+              <p>
+                <strong>Best for:</strong> Multi-file JSON editing
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">4. JSON Explorer</h3>
-              <p className="mb-4">A React-based application for navigating JSON structures with interactive key highlighting. Allows for easy copying of subsections and displays key paths for complex JSON objects.</p>
-              <p className="mb-2"><strong>Platform:</strong> Web-based (can be run locally)</p>
-              <p><strong>Best for:</strong> Visual JSON navigation</p>
+              <p className="mb-4">
+                A React-based application for navigating JSON structures with interactive key highlighting. Allows for
+                easy copying of subsections and displays key paths for complex JSON objects.
+              </p>
+              <p className="mb-2">
+                <strong>Platform:</strong> Web-based (can be run locally)
+              </p>
+              <p>
+                <strong>Best for:</strong> Visual JSON navigation
+              </p>
             </div>
 
             <div className="border rounded-lg p-6 bg-muted/10">
               <h3 className="text-xl font-medium mb-2">5. JSON Previewer</h3>
-              <p className="mb-4">A progressive web app that works offline. It offers validation, formatting, minification, and downloading of JSON data with a clean interface.</p>
-              <p className="mb-2"><strong>Platform:</strong> Web-based (works offline after initial load)</p>
-              <p><strong>Best for:</strong> Basic JSON formatting tasks</p>
+              <p className="mb-4">
+                A progressive web app that works offline. It offers validation, formatting, minification, and
+                downloading of JSON data with a clean interface.
+              </p>
+              <p className="mb-2">
+                <strong>Platform:</strong> Web-based (works offline after initial load)
+              </p>
+              <p>
+                <strong>Best for:</strong> Basic JSON formatting tasks
+              </p>
             </div>
           </div>
 
           <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-10">
             <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300">
-              "For developers working with sensitive information, using an offline JSON formatter isn't just a preference—it's a security necessity. Development teams working on financial applications, healthcare systems, or any product handling personal data should consider offline processing tools as part of their security best practices."
-              <footer className="text-sm mt-2 text-gray-600 dark:text-gray-400">
-                — prowebscraper.com
-              </footer>
+              "For developers working with sensitive information, using an offline JSON formatter isn't just a
+              preference—it's a security necessity. Development teams working on financial applications, healthcare
+              systems, or any product handling personal data should consider offline processing tools as part of their
+              security best practices."
+              <footer className="text-sm mt-2 text-gray-600 dark:text-gray-400">— prowebscraper.com</footer>
             </blockquote>
           </div>
 
@@ -235,43 +314,100 @@ export default function OfflineJsonQueryToolPage() {
             <LightningBoltIcon className="h-6 w-6 text-blue-500" />
             OfflineTools: The Complete JSON Query Solution
           </h2>
-          
+
           <p className="mb-6">
-            OfflineTools Desktop provides a comprehensive solution for JSON querying that addresses all the common problems faced by developers:
+            OfflineTools Desktop provides a comprehensive solution for JSON querying that addresses all the common
+            problems faced by developers:
           </p>
 
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 p-6 rounded-lg border border-blue-100 dark:border-blue-800 my-8">
             <h3 className="text-xl font-semibold mb-4">OfflineTools JSON Query Features</h3>
             <ul className="space-y-3 mb-6">
               <li className="flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span><strong>Complete Offline Operation:</strong> Work with JSON data without internet connectivity</span>
+                <span>
+                  <strong>Complete Offline Operation:</strong> Work with JSON data without internet connectivity
+                </span>
               </li>
               <li className="flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span><strong>Intuitive Query Interface:</strong> Simple syntax for filtering and transforming JSON</span>
+                <span>
+                  <strong>Intuitive Query Interface:</strong> Simple syntax for filtering and transforming JSON
+                </span>
               </li>
               <li className="flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span><strong>Large File Support:</strong> Efficiently process JSON files of any size</span>
+                <span>
+                  <strong>Large File Support:</strong> Efficiently process JSON files of any size
+                </span>
               </li>
               <li className="flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span><strong>Multiple Format Support:</strong> Handle standard JSON, JSON Lines, and other variants</span>
+                <span>
+                  <strong>Multiple Format Support:</strong> Handle standard JSON, JSON Lines, and other variants
+                </span>
               </li>
               <li className="flex items-start gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
-                <span><strong>Integration with Other Tools:</strong> Part of a complete suite of offline development utilities</span>
+                <span>
+                  <strong>Integration with Other Tools:</strong> Part of a complete suite of offline development
+                  utilities
+                </span>
               </li>
             </ul>
             <p className="mb-6">Plus, OfflineTools offers additional utilities that complement JSON processing:</p>
@@ -294,18 +430,27 @@ export default function OfflineJsonQueryToolPage() {
           </div>
 
           <h2 className="text-3xl font-bold mt-12 mb-6">Conclusion</h2>
-          
+
           <p className="mb-6">
-            For developers who need to work with JSON data regularly, an offline JSON query tool is essential. OfflineTools Desktop offers the perfect balance of security, performance, and features, ensuring you can efficiently manipulate JSON data without compromising privacy or performance.
+            For developers who need to work with JSON data regularly, an offline JSON query tool is essential.
+            OfflineTools Desktop offers the perfect balance of security, performance, and features, ensuring you can
+            efficiently manipulate JSON data without compromising privacy or performance.
           </p>
-          
+
           <p className="mb-6">
-            Whether you're working with API responses, configuration files, or large datasets, OfflineTools provides the capabilities you need to query, transform, and analyze JSON data completely offline.
+            Whether you're working with API responses, configuration files, or large datasets, OfflineTools provides the
+            capabilities you need to query, transform, and analyze JSON data completely offline.
           </p>
-          
+
           <div className="bg-gradient-to-r from-blue-50/30 to-indigo-50/30 dark:from-blue-950/40 dark:to-indigo-950/40 p-6 rounded-lg border border-blue-100/30 dark:border-blue-800/30 my-8">
-            <p className="mb-0 text-lg">Ready to enhance your JSON workflow with a secure, offline solution? <Link href="/download" className="text-blue-600 dark:text-blue-400 no-underline hover:underline">Download OfflineTools Desktop</Link> today and experience the difference of processing your JSON data locally.</p>
-            
+            <p className="mb-0 text-lg">
+              Ready to enhance your JSON workflow with a secure, offline solution?{" "}
+              <Link href="/download" className="text-blue-600 dark:text-blue-400 no-underline hover:underline">
+                Download OfflineTools Desktop
+              </Link>{" "}
+              today and experience the difference of processing your JSON data locally.
+            </p>
+
             <div className="mt-6">
               <Link
                 href="/download"
@@ -319,12 +464,9 @@ export default function OfflineJsonQueryToolPage() {
 
         <div className="mt-12 pt-8 border-t">
           <h3 className="text-lg font-medium mb-4">Share this article</h3>
-          <ShareButtons 
-            url="https://offlinetools.org/blog/offline-json-query-tool" 
-            title="Offline JSON Query Tool" 
-          />
+          <ShareButtons url="https://offlinetools.org/blog/offline-json-query-tool" title="Offline JSON Query Tool" />
         </div>
-        
+
         <div className="mt-12">
           <Link href="/blog" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
             ← Back to Blog
@@ -333,4 +475,4 @@ export default function OfflineJsonQueryToolPage() {
       </Container>
     </PageLayout>
   );
-} 
+}

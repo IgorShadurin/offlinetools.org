@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "JSON Path Query Support in Advanced Formatters | Offline Tools",
-  description: "Learn how JSON Path query support in advanced formatters enables powerful data extraction and manipulation capabilities for developers",
+  description:
+    "Learn how JSON Path query support in advanced formatters enables powerful data extraction and manipulation capabilities for developers",
 };
 
 export default function JsonPathQuerySupportArticle() {
@@ -12,40 +13,43 @@ export default function JsonPathQuerySupportArticle() {
 
       <div className="space-y-6">
         <p>
-          As JSON documents grow in complexity, finding specific data within them becomes challenging.
-          Advanced JSON formatters address this by implementing JSON Path query support, a powerful
-          feature that enables users to extract, filter, and manipulate JSON data with precision.
-          This article explores how JSON Path queries work and their implementation in modern JSON formatters.
+          As JSON documents grow in complexity, finding specific data within them becomes challenging. Advanced JSON
+          formatters address this by implementing JSON Path query support, a powerful feature that enables users to
+          extract, filter, and manipulate JSON data with precision. This article explores how JSON Path queries work and
+          their implementation in modern JSON formatters.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Understanding JSON Path</h2>
-        
+
         <p>
-          JSON Path is a query language for JSON, similar to how XPath is used for XML. It provides a way to
-          navigate and select elements within JSON structures using a standardized path expression syntax.
+          JSON Path is a query language for JSON, similar to how XPath is used for XML. It provides a way to navigate
+          and select elements within JSON structures using a standardized path expression syntax.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Basic Syntax and Components</h3>
         <p>
-          JSON Path expressions use a simple dot notation for navigating object properties and bracket
-          notation for array elements:
+          JSON Path expressions use a simple dot notation for navigating object properties and bracket notation for
+          array elements:
         </p>
-        
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>$ symbol:</strong> The root object/element
           </li>
           <li>
-            <strong>. notation:</strong> Child operator (e.g., <code>$.store.book</code> selects the book property of the store object)
+            <strong>. notation:</strong> Child operator (e.g., <code>$.store.book</code> selects the book property of
+            the store object)
           </li>
           <li>
-            <strong>[] notation:</strong> Subscript operator for array elements (e.g., <code>$.store.book[0]</code> selects the first book)
+            <strong>[] notation:</strong> Subscript operator for array elements (e.g., <code>$.store.book[0]</code>{" "}
+            selects the first book)
           </li>
           <li>
             <strong>* wildcard:</strong> Selects all elements within an object or array
           </li>
           <li>
-            <strong>.. notation:</strong> Recursive descent (e.g., <code>$..author</code> finds all author properties at any level)
+            <strong>.. notation:</strong> Recursive descent (e.g., <code>$..author</code> finds all author properties at
+            any level)
           </li>
         </ul>
 
@@ -56,7 +60,7 @@ export default function JsonPathQuerySupportArticle() {
               <p className="font-medium mb-2">Example JSON:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`{
+                  {`{
   "store": {
     "book": [
       {
@@ -83,21 +87,29 @@ export default function JsonPathQuerySupportArticle() {
             <div>
               <p className="font-medium mb-2">JSON Path Examples:</p>
               <ul className="space-y-1">
-                <li><code>$.store.book[0].title</code> → &quot;The Great Gatsby&quot;</li>
-                <li><code>$.store.book[*].author</code> → All book authors</li>
-                <li><code>$..price</code> → All prices in the document</li>
-                <li><code>$.store.book[?(@.price &lt; 10)]</code> → Books cheaper than $10</li>
-                <li><code>$.store.book[?(@.author =~ /Melville/)]</code> → Books by Melville</li>
+                <li>
+                  <code>$.store.book[0].title</code> → &quot;The Great Gatsby&quot;
+                </li>
+                <li>
+                  <code>$.store.book[*].author</code> → All book authors
+                </li>
+                <li>
+                  <code>$..price</code> → All prices in the document
+                </li>
+                <li>
+                  <code>$.store.book[?(@.price &lt; 10)]</code> → Books cheaper than $10
+                </li>
+                <li>
+                  <code>$.store.book[?(@.author =~ /Melville/)]</code> → Books by Melville
+                </li>
               </ul>
             </div>
           </div>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">Filter Expressions</h3>
-        <p>
-          Advanced JSON Path implementations support filter expressions, which allow for conditional selection:
-        </p>
-        
+        <p>Advanced JSON Path implementations support filter expressions, which allow for conditional selection:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>?() operator:</strong> Contains a filter expression that returns matching elements
@@ -106,7 +118,8 @@ export default function JsonPathQuerySupportArticle() {
             <strong>@ symbol:</strong> References the current element being processed
           </li>
           <li>
-            <strong>Comparison operators:</strong> <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>
+            <strong>Comparison operators:</strong> <code>==</code>, <code>!=</code>, <code>&lt;</code>,{" "}
+            <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>
           </li>
           <li>
             <strong>Logical operators:</strong> <code>&amp;&amp;</code> (AND), <code>||</code> (OR)
@@ -119,19 +132,16 @@ export default function JsonPathQuerySupportArticle() {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Implementation Note:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            While the basic JSON Path syntax is widely standardized, filter expressions may vary across
-            implementations. High-quality JSON formatters should document their specific JSON Path dialect
-            and capabilities.
+            While the basic JSON Path syntax is widely standardized, filter expressions may vary across implementations.
+            High-quality JSON formatters should document their specific JSON Path dialect and capabilities.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Benefits of JSON Path in Formatters</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Targeted Data Extraction</h3>
-        <p>
-          JSON Path enables users to extract precisely the data they need from complex structures:
-        </p>
-        
+        <p>JSON Path enables users to extract precisely the data they need from complex structures:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Focused views:</strong> Extract only specific portions of large documents
@@ -148,10 +158,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. API Response Analysis</h3>
-        <p>
-          For developers working with APIs, JSON Path queries provide powerful tools:
-        </p>
-        
+        <p>For developers working with APIs, JSON Path queries provide powerful tools:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Field validation:</strong> Quickly check if expected fields exist and have correct values
@@ -168,10 +176,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Advanced Debugging</h3>
-        <p>
-          JSON Path empowers developers with better debugging capabilities:
-        </p>
-        
+        <p>JSON Path empowers developers with better debugging capabilities:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Property comparison:</strong> Extract similar properties to identify inconsistencies
@@ -190,10 +196,8 @@ export default function JsonPathQuerySupportArticle() {
         <h2 className="text-2xl font-semibold mt-8">Implementation Features in Advanced Formatters</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Interactive Query Builders</h3>
-        <p>
-          Modern JSON formatters often include visual interfaces for constructing JSON Path queries:
-        </p>
-        
+        <p>Modern JSON formatters often include visual interfaces for constructing JSON Path queries:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Point-and-click path building:</strong> Generate paths by clicking on elements in the JSON tree
@@ -210,10 +214,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Real-Time Results Preview</h3>
-        <p>
-          Immediate feedback as users construct queries enhances usability:
-        </p>
-        
+        <p>Immediate feedback as users construct queries enhances usability:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Live results:</strong> Update matching elements as the query is typed
@@ -230,10 +232,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Result Manipulation</h3>
-        <p>
-          Advanced formatters allow users to work with query results:
-        </p>
-        
+        <p>Advanced formatters allow users to work with query results:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Extraction to new document:</strong> Create a new JSON document containing only query results
@@ -253,7 +253,8 @@ export default function JsonPathQuerySupportArticle() {
           <h3 className="text-lg font-medium">JSON Path Result Handling Example:</h3>
           <div className="space-y-4">
             <p>
-              After executing a query like <code>$.store.book[?(@.price &lt; 10)]</code>, advanced formatters might offer:
+              After executing a query like <code>$.store.book[?(@.price &lt; 10)]</code>, advanced formatters might
+              offer:
             </p>
             <ul className="list-disc pl-6 space-y-1">
               <li>Extract the matching books to a new document</li>
@@ -268,10 +269,8 @@ export default function JsonPathQuerySupportArticle() {
         <h2 className="text-2xl font-semibold mt-8">Advanced Query Capabilities</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Script Expressions</h3>
-        <p>
-          Some advanced formatters support embedded script expressions within JSON Path:
-        </p>
-        
+        <p>Some advanced formatters support embedded script expressions within JSON Path:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Custom functions:</strong> Allow users to define and use custom functions in queries
@@ -283,15 +282,14 @@ export default function JsonPathQuerySupportArticle() {
             <strong>String manipulations:</strong> Operations like substring, concatenation, or case conversion
           </li>
           <li>
-            <strong>Aggregation functions:</strong> <code>sum()</code>, <code>avg()</code>, <code>min()</code>, <code>max()</code>, <code>count()</code>
+            <strong>Aggregation functions:</strong> <code>sum()</code>, <code>avg()</code>, <code>min()</code>,{" "}
+            <code>max()</code>, <code>count()</code>
           </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Union and Intersection Operations</h3>
-        <p>
-          For complex data extraction needs:
-        </p>
-        
+        <p>For complex data extraction needs:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Union operations:</strong> Combine results of multiple JSON Path expressions
@@ -308,10 +306,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Result Formatting and Templating</h3>
-        <p>
-          Advanced features for result presentation:
-        </p>
-        
+        <p>Advanced features for result presentation:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Custom output templates:</strong> Format query results using user-defined templates
@@ -329,15 +325,11 @@ export default function JsonPathQuerySupportArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Performance Considerations</h2>
 
-        <p>
-          Implementing JSON Path in formatters requires careful attention to performance:
-        </p>
+        <p>Implementing JSON Path in formatters requires careful attention to performance:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Query Optimization</h3>
-        <p>
-          Efficient query execution is critical for large documents:
-        </p>
-        
+        <p>Efficient query execution is critical for large documents:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Path indexing:</strong> Create indexes for frequently queried paths
@@ -354,10 +346,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Memory Management</h3>
-        <p>
-          For very large JSON documents:
-        </p>
-        
+        <p>For very large JSON documents:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Streaming evaluation:</strong> Process JSON as a stream to avoid loading the entire document
@@ -376,22 +366,18 @@ export default function JsonPathQuerySupportArticle() {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Performance Tip:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            For web-based JSON formatters, consider using Web Workers to run complex JSON Path queries
-            in a background thread, keeping the UI responsive even during intensive query operations.
+            For web-based JSON formatters, consider using Web Workers to run complex JSON Path queries in a background
+            thread, keeping the UI responsive even during intensive query operations.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Educational and Documentation Features</h2>
 
-        <p>
-          The best JSON formatters not only implement JSON Path but also help users learn and use it effectively:
-        </p>
+        <p>The best JSON formatters not only implement JSON Path but also help users learn and use it effectively:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Interactive Tutorials</h3>
-        <p>
-          Help users understand JSON Path concepts:
-        </p>
-        
+        <p>Help users understand JSON Path concepts:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Step-by-step guides:</strong> Walk users through basic to advanced query techniques
@@ -408,10 +394,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Reference Documentation</h3>
-        <p>
-          Comprehensive documentation enhances usability:
-        </p>
-        
+        <p>Comprehensive documentation enhances usability:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Syntax reference:</strong> Complete reference for all supported JSON Path features
@@ -429,15 +413,11 @@ export default function JsonPathQuerySupportArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Developer Integration Features</h2>
 
-        <p>
-          For developers who want to integrate JSON Path queries into their workflows:
-        </p>
+        <p>For developers who want to integrate JSON Path queries into their workflows:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Code Generation</h3>
-        <p>
-          Generate programming code that implements the current query:
-        </p>
-        
+        <p>Generate programming code that implements the current query:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Multiple languages:</strong> Generate code for JavaScript, Python, Java, etc.
@@ -454,10 +434,8 @@ export default function JsonPathQuerySupportArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. API Integration</h3>
-        <p>
-          Support for external API workflows:
-        </p>
-        
+        <p>Support for external API workflows:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Query sharing:</strong> Create shareable links to specific queries
@@ -475,18 +453,18 @@ export default function JsonPathQuerySupportArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON Path query support transforms JSON formatters from simple viewers into powerful data analysis tools.
-          By implementing this feature with attention to usability, performance, and educational aspects, formatter
+          JSON Path query support transforms JSON formatters from simple viewers into powerful data analysis tools. By
+          implementing this feature with attention to usability, performance, and educational aspects, formatter
           developers can provide significant value to users working with complex JSON data structures.
         </p>
 
         <p>
-          As JSON continues to dominate as a data interchange format, JSON Path capabilities will become
-          increasingly essential for developers working with APIs, configuration files, and data pipelines.
-          Advanced formatters that offer comprehensive JSON Path support empower users to efficiently navigate,
-          extract, and manipulate JSON data, significantly enhancing productivity and understanding.
+          As JSON continues to dominate as a data interchange format, JSON Path capabilities will become increasingly
+          essential for developers working with APIs, configuration files, and data pipelines. Advanced formatters that
+          offer comprehensive JSON Path support empower users to efficiently navigate, extract, and manipulate JSON
+          data, significantly enhancing productivity and understanding.
         </p>
       </div>
     </>
   );
-} 
+}

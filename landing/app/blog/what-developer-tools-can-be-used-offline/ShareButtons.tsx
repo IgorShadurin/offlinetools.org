@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 interface ShareButtonsProps {
   url: string;
@@ -10,12 +10,12 @@ interface ShareButtonsProps {
 export function ShareButtons({ url, title }: ShareButtonsProps) {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
+    alert("Link copied to clipboard!");
   };
 
   return (
     <div className="flex flex-wrap gap-4">
-      <a 
+      <a
         href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noopener noreferrer"
@@ -39,4 +39,4 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
       </button>
     </div>
   );
-} 
+}

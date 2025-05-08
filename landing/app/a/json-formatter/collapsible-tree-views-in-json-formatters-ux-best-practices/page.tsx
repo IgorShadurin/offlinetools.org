@@ -5,7 +5,8 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   title: "Collapsible Tree Views in JSON Formatters: UX Best Practices | Offline Tools",
-  description: "Learn UX best practices for implementing collapsible tree views in JSON formatters to enhance data navigation and visualization",
+  description:
+    "Learn UX best practices for implementing collapsible tree views in JSON formatters to enhance data navigation and visualization",
 };
 
 /**
@@ -18,13 +19,13 @@ export default function CollapsibleTreeViewsArticle() {
 
       <div className="space-y-6">
         <p>
-          Collapsible tree views are a cornerstone feature of modern JSON formatters, enabling users to navigate
-          complex data structures efficiently. This article explores UX best practices for implementing tree views
-          that enhance readability, navigation, and overall user experience when working with JSON data.
+          Collapsible tree views are a cornerstone feature of modern JSON formatters, enabling users to navigate complex
+          data structures efficiently. This article explores UX best practices for implementing tree views that enhance
+          readability, navigation, and overall user experience when working with JSON data.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Tree Views Are Essential for JSON</h2>
-        
+
         <p>
           JSON&apos;s nested structure naturally lends itself to hierarchical visualization. Tree views offer several
           key benefits that make them indispensable for JSON formatters:
@@ -32,27 +33,27 @@ export default function CollapsibleTreeViewsArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. Managing Complexity</h3>
         <p>
-          Complex JSON objects can contain hundreds or thousands of lines with deeply nested structures.
-          Collapsible trees allow users to hide irrelevant sections and focus only on data of interest.
+          Complex JSON objects can contain hundreds or thousands of lines with deeply nested structures. Collapsible
+          trees allow users to hide irrelevant sections and focus only on data of interest.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">2. Improved Scanning</h3>
         <p>
-          Tree views enable quick scanning of top-level keys before diving into specific sections,
-          creating a natural information hierarchy that mirrors how humans process information.
+          Tree views enable quick scanning of top-level keys before diving into specific sections, creating a natural
+          information hierarchy that mirrors how humans process information.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">3. Spatial Memory Enhancement</h3>
         <p>
-          The visual hierarchy of a tree view helps users build a mental model of the data structure,
-          making it easier to remember where specific information is located.
+          The visual hierarchy of a tree view helps users build a mental model of the data structure, making it easier
+          to remember where specific information is located.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">JSON Structure Visualization:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Tree View Example with Collapsible Nodes
+              {`// Tree View Example with Collapsible Nodes
 {
   "user": {      // <- Collapsible node
     "profile": {  // <- Nested collapsible node
@@ -84,10 +85,8 @@ export default function CollapsibleTreeViewsArticle() {
         <h2 className="text-2xl font-semibold mt-8">Core UX Elements of Effective Tree Views</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Expand/Collapse Controls</h3>
-        <p>
-          The basic interactive elements that allow users to show or hide nested content.
-        </p>
-        
+        <p>The basic interactive elements that allow users to show or hide nested content.</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Clear iconography:</strong> Commonly using triangles (▶ for collapsed, ▼ for expanded) or
@@ -105,10 +104,8 @@ export default function CollapsibleTreeViewsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Indentation and Visual Hierarchy</h3>
-        <p>
-          Proper indentation is crucial for conveying the hierarchical relationships in JSON data.
-        </p>
-        
+        <p>Proper indentation is crucial for conveying the hierarchical relationships in JSON data.</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Consistent spacing:</strong> Use consistent indentation levels (typically 2-4 spaces)
@@ -117,8 +114,8 @@ export default function CollapsibleTreeViewsArticle() {
             <strong>Vertical lines:</strong> Consider using vertical guide lines to connect related levels
           </li>
           <li>
-            <strong>Alternating row backgrounds:</strong> For very complex structures, subtle alternating
-            backgrounds can help track horizontal levels
+            <strong>Alternating row backgrounds:</strong> For very complex structures, subtle alternating backgrounds
+            can help track horizontal levels
           </li>
           <li>
             <strong>Responsive indentation:</strong> Adapt indentation to screen size while maintaining clarity
@@ -132,7 +129,7 @@ export default function CollapsibleTreeViewsArticle() {
               <p className="font-medium mb-2">Effective Indentation:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`{
+                  {`{
   "user": {
     "name": "John",
     "address": {
@@ -151,7 +148,7 @@ export default function CollapsibleTreeViewsArticle() {
               <p className="font-medium mb-2">Poor Indentation:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-{`{
+                  {`{
 "user": {
 "name": "John",
   "address": {
@@ -170,10 +167,8 @@ export default function CollapsibleTreeViewsArticle() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6">3. Visual Cues for Data Types</h3>
-        <p>
-          Effective tree views use visual cues to distinguish between different JSON data types:
-        </p>
-        
+        <p>Effective tree views use visual cues to distinguish between different JSON data types:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Color coding:</strong> Different colors for strings, numbers, booleans, null values
@@ -190,13 +185,12 @@ export default function CollapsibleTreeViewsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">4. Object and Array Size Indicators</h3>
-        <p>
-          Including size information helps users gauge the complexity of collapsed nodes:
-        </p>
-        
+        <p>Including size information helps users gauge the complexity of collapsed nodes:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Count indicators:</strong> Showing the number of children (e.g., &quot;Array[42]&quot; or &quot;Object{5}&quot;)
+            <strong>Count indicators:</strong> Showing the number of children (e.g., &quot;Array[42]&quot; or
+            &quot;Object{5}&quot;)
           </li>
           <li>
             <strong>Size previews:</strong> Providing a snippet or summary of collapsed content
@@ -209,18 +203,17 @@ export default function CollapsibleTreeViewsArticle() {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">UX Tip:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            For large arrays or objects, show a preview of the first few items alongside the count (e.g., &quot;Array[1000]: [1, 2, 3, ...]&quot;).
-            This gives users a glimpse of the content without requiring expansion.
+            For large arrays or objects, show a preview of the first few items alongside the count (e.g.,
+            &quot;Array[1000]: [1, 2, 3, ...]&quot;). This gives users a glimpse of the content without requiring
+            expansion.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Best Practices for Tree View Interactions</h2>
 
         <h3 className="text-xl font-semibold mt-6">1. Expand/Collapse Shortcuts and Controls</h3>
-        <p>
-          Efficient tree view implementations provide multiple ways to interact with the collapsible structure:
-        </p>
-        
+        <p>Efficient tree view implementations provide multiple ways to interact with the collapsible structure:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Keyboard shortcuts:</strong> Common shortcuts include:
@@ -243,10 +236,8 @@ export default function CollapsibleTreeViewsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. State Persistence</h3>
-        <p>
-          Remembering the expansion state of nodes enhances user experience in several scenarios:
-        </p>
-        
+        <p>Remembering the expansion state of nodes enhances user experience in several scenarios:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Session persistence:</strong> Maintaining expansion state during a formatting session
@@ -260,10 +251,8 @@ export default function CollapsibleTreeViewsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Search Integration</h3>
-        <p>
-          Tree views should integrate with search functionality to help users locate specific content:
-        </p>
-        
+        <p>Tree views should integrate with search functionality to help users locate specific content:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Auto-expansion:</strong> Automatically expanding nodes that contain search matches
@@ -280,10 +269,8 @@ export default function CollapsibleTreeViewsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">4. Path Display and Navigation</h3>
-        <p>
-          Showing the current path helps users understand their location within complex structures:
-        </p>
-        
+        <p>Showing the current path helps users understand their location within complex structures:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Breadcrumb trail:</strong> Displaying the full path to the current selection
@@ -303,7 +290,7 @@ export default function CollapsibleTreeViewsArticle() {
           <h3 className="text-lg font-medium">Path Navigation Example:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-{`// Breadcrumb Navigation
+              {`// Breadcrumb Navigation
 root > users[0] > addresses[2] > city
 
 // JSON Path
@@ -318,15 +305,15 @@ Enter path: users[0].addresses[2].city`}
         <h2 className="text-2xl font-semibold mt-8">Performance Considerations</h2>
 
         <p>
-          Tree views for large JSON files can face performance challenges. Here are best practices to ensure
-          smooth performance even with large datasets:
+          Tree views for large JSON files can face performance challenges. Here are best practices to ensure smooth
+          performance even with large datasets:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Virtualization</h3>
         <p>
           For large JSON files, rendering only the visible portion of the tree view dramatically improves performance:
         </p>
-        
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Windowed rendering:</strong> Only render nodes currently visible in the viewport
@@ -340,10 +327,8 @@ Enter path: users[0].addresses[2].city`}
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Intelligent Collapsing</h3>
-        <p>
-          Smart default collapse states improve initial load performance:
-        </p>
-        
+        <p>Smart default collapse states improve initial load performance:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Auto-collapsing:</strong> Automatically collapse arrays or objects above a certain size
@@ -357,10 +342,8 @@ Enter path: users[0].addresses[2].city`}
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">3. Progressive Enhancement</h3>
-        <p>
-          Ensuring basic functionality works for all users while enhancing for modern browsers:
-        </p>
-        
+        <p>Ensuring basic functionality works for all users while enhancing for modern browsers:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Fallback rendering:</strong> Provide basic indented text view for older browsers
@@ -375,15 +358,11 @@ Enter path: users[0].addresses[2].city`}
 
         <h2 className="text-2xl font-semibold mt-8">Mobile-Friendly Tree View Considerations</h2>
 
-        <p>
-          With increasing mobile usage, JSON formatters need to adapt tree views for touch interfaces:
-        </p>
+        <p>With increasing mobile usage, JSON formatters need to adapt tree views for touch interfaces:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Touch Targets</h3>
-        <p>
-          Ensure expand/collapse controls are large enough for comfortable touch interaction:
-        </p>
-        
+        <p>Ensure expand/collapse controls are large enough for comfortable touch interaction:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Minimum target size:</strong> At least 44×44 pixels for touch targets
@@ -397,10 +376,8 @@ Enter path: users[0].addresses[2].city`}
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Responsive Layout</h3>
-        <p>
-          Adapt the tree view layout for different screen sizes:
-        </p>
-        
+        <p>Adapt the tree view layout for different screen sizes:</p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Horizontal scrolling:</strong> Implement smooth horizontal scrolling for deeply nested structures
@@ -424,17 +401,18 @@ Enter path: users[0].addresses[2].city`}
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           Collapsible tree views are essential for making JSON data navigable and understandable. By implementing
-          thoughtful UX patterns—clear visual hierarchy, intuitive interaction models, and performance optimizations—JSON
-          formatters can significantly enhance the user experience of working with complex data structures.
+          thoughtful UX patterns—clear visual hierarchy, intuitive interaction models, and performance
+          optimizations—JSON formatters can significantly enhance the user experience of working with complex data
+          structures.
         </p>
 
         <p>
-          The best JSON formatter tree views balance visual clarity with interactive power, enabling users to
-          quickly navigate, understand, and manipulate data regardless of its complexity. Whether for debugging API
-          responses, configuring applications, or simply exploring data, well-designed tree views make JSON more
-          accessible and useful for developers and non-developers alike.
+          The best JSON formatter tree views balance visual clarity with interactive power, enabling users to quickly
+          navigate, understand, and manipulate data regardless of its complexity. Whether for debugging API responses,
+          configuring applications, or simply exploring data, well-designed tree views make JSON more accessible and
+          useful for developers and non-developers alike.
         </p>
       </div>
     </>
   );
-} 
+}
