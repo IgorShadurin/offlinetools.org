@@ -54,19 +54,19 @@ export default function Base64DecodeOfflinePage() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <a 
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4" 
-                href="/tools/base64-codec"
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Link
+                  href="/download"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-green-600 text-white hover:bg-green-700 h-10 py-2 px-4"
               >
-                Try Online Base64 Decoder
-              </a>
-              <a 
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-green-600 text-white hover:bg-green-700 h-10 py-2 px-4" 
-                href="/download"
+                Download
+              </Link>
+              <Link
+                  href="/tools"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4"
               >
-                Download Offline Tools
-              </a>
+                Online Tools
+              </Link>
             </div>
           </div>
         </div>
@@ -598,179 +598,58 @@ export default function Base64DecodeOfflinePage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            <div className="border rounded-lg p-5 bg-muted/5 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13 7H7v6h6V7z" />
-                    <path fillRule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-blue-700 dark:text-blue-300">1. CyberChef</h3>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 space-x-2">
-                    <span className="inline-flex items-center bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded text-xs font-medium text-blue-700 dark:text-blue-400">
-                      Multi-purpose
-                    </span>
-                    <span className="inline-flex items-center bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-medium text-green-700 dark:text-green-400">
-                      Offline capable
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <p className="mb-3 flex-1">
+            <div className="border rounded-lg p-4 bg-muted/5 hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-medium text-blue-700 dark:text-blue-300 mb-2">1. CyberChef</h3>
+              <p className="text-sm mb-2">
                 An open-source data conversion tool that can be used offline. It includes Base64 decoding along with
-                hundreds of other operations that can be chained together for complex transformations.
+                hundreds of other operations for complex transformations.
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-auto text-sm">
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Platform</div>
-                  <div className="text-gray-600 dark:text-gray-400">Browser-based (can be downloaded for offline use)</div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Best for</div>
-                  <div className="text-gray-600 dark:text-gray-400">Multi-step data processing workflows</div>
-                </div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                Browser-based • Multi-step data processing workflows
               </div>
             </div>
 
-            <div className="border rounded-lg p-5 bg-muted/5 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-blue-700 dark:text-blue-300">2. Base64 Decoder (Windows App)</h3>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 space-x-2">
-                    <span className="inline-flex items-center bg-gray-50 dark:bg-gray-900/20 px-2 py-0.5 rounded text-xs font-medium text-gray-700 dark:text-gray-400">
-                      Windows
-                    </span>
-                    <span className="inline-flex items-center bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded text-xs font-medium text-amber-700 dark:text-amber-400">
-                      Dedicated app
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <p className="mb-3 flex-1">
+            <div className="border rounded-lg p-4 bg-muted/5 hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-medium text-blue-700 dark:text-blue-300 mb-2">2. Base64 Decoder (Windows App)</h3>
+              <p className="text-sm mb-2">
                 A simple, dedicated Windows application for encoding and decoding Base64 text and files, with clipboard
                 integration and batch processing capabilities.
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-auto text-sm">
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Platform</div>
-                  <div className="text-gray-600 dark:text-gray-400">Windows</div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Best for</div>
-                  <div className="text-gray-600 dark:text-gray-400">Windows users needing quick Base64 conversions</div>
-                </div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                Windows • Quick Base64 conversions
               </div>
             </div>
 
-            <div className="border rounded-lg p-5 bg-muted/5 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-blue-700 dark:text-blue-300">3. Base64 Utility</h3>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 space-x-2">
-                    <span className="inline-flex items-center bg-gray-50 dark:bg-gray-900/20 px-2 py-0.5 rounded text-xs font-medium text-gray-700 dark:text-gray-400">
-                      macOS
-                    </span>
-                    <span className="inline-flex items-center bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded text-xs font-medium text-amber-700 dark:text-amber-400">
-                      System integration
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <p className="mb-3 flex-1">
+            <div className="border rounded-lg p-4 bg-muted/5 hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-medium text-blue-700 dark:text-blue-300 mb-2">3. Base64 Utility</h3>
+              <p className="text-sm mb-2">
                 A macOS application that provides Base64 encoding and decoding with drag-and-drop file support and
                 integration with macOS services.
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-auto text-sm">
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Platform</div>
-                  <div className="text-gray-600 dark:text-gray-400">macOS</div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Best for</div>
-                  <div className="text-gray-600 dark:text-gray-400">Mac users wanting seamless system integration</div>
-                </div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                macOS • Seamless system integration
               </div>
             </div>
 
-            <div className="border rounded-lg p-5 bg-muted/5 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-blue-700 dark:text-blue-300">4. Base64 Command Line Tools</h3>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 space-x-2">
-                    <span className="inline-flex items-center bg-purple-50 dark:bg-purple-900/20 px-2 py-0.5 rounded text-xs font-medium text-purple-700 dark:text-purple-400">
-                      Cross-platform
-                    </span>
-                    <span className="inline-flex items-center bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded text-xs font-medium text-amber-700 dark:text-amber-400">
-                      Automation-friendly
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <p className="mb-3 flex-1">
+            <div className="border rounded-lg p-4 bg-muted/5 hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-medium text-blue-700 dark:text-blue-300 mb-2">4. Base64 Command Line Tools</h3>
+              <p className="text-sm mb-2">
                 Standard utilities like base64 (Linux/macOS) and certutil (Windows) that provide Base64 encoding and
                 decoding capabilities directly from the command line.
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-auto text-sm">
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Platform</div>
-                  <div className="text-gray-600 dark:text-gray-400">Linux, macOS, Windows (Command Line)</div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Best for</div>
-                  <div className="text-gray-600 dark:text-gray-400">Terminal users and automated scripts</div>
-                </div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                Linux, macOS, Windows • Terminal users and automated scripts
               </div>
             </div>
 
-            <div className="border rounded-lg p-5 bg-muted/5 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-blue-700 dark:text-blue-300">5. Base64 Browser Extensions</h3>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 space-x-2">
-                    <span className="inline-flex items-center bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-medium text-green-700 dark:text-green-400">
-                      Browser integration
-                    </span>
-                    <span className="inline-flex items-center bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded text-xs font-medium text-amber-700 dark:text-amber-400">
-                      Quick access
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <p className="mb-3 flex-1">
-                Various browser extensions for Chrome, Firefox, and Edge that add Base64 decoding functionality directly
-                within the browser interface.
+            <div className="border rounded-lg p-4 bg-muted/5 hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-medium text-blue-700 dark:text-blue-300 mb-2">5. Base64 Browser Extensions</h3>
+              <p className="text-sm mb-2">
+                Various browser extensions for Chrome, Firefox, and Edge that add Base64 decoding functionality
+                directly within your browser for quick access.
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-auto text-sm">
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Platform</div>
-                  <div className="text-gray-600 dark:text-gray-400">Web browsers</div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-700 dark:text-gray-300">Best for</div>
-                  <div className="text-gray-600 dark:text-gray-400">Web developers needing quick access to Base64 tools</div>
-                </div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                Browser extensions • Quick in-browser conversions
               </div>
             </div>
           </div>
