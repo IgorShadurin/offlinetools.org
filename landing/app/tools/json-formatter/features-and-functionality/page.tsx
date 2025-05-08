@@ -19,6 +19,61 @@ export const metadata: Metadata = {
  */
 const jsonFormatterArticles: ToolArticle[] = [
   {
+    title: "Dark Mode in JSON Formatters: Implementation and Benefits",
+    description: "Explore the benefits of dark mode in JSON formatters, implementation techniques, and how it improves developer experience.",
+    slug: "dark-mode-in-json-formatters-implementation-and-benefits",
+  },
+  {
+    title: "Collapsible Tree Views in JSON Formatters: UX Best Practices",
+    description: "Learn UX best practices for implementing collapsible tree views in JSON formatters to enhance data navigation and visualization.",
+    slug: "collapsible-tree-views-in-json-formatters-ux-best-practices",
+  },
+  {
+    title: "Search Functionality in JSON Formatters: Finding Needles in Haystacks",
+    description: "Learn how effective search capabilities in JSON formatters help navigate and analyze complex data structures efficiently.",
+    slug: "search-functionality-in-json-formatters-finding-needles-in-haystacks",
+  },
+  {
+    title: "JSON Path Query Support in Advanced Formatters",
+    description: "Learn how JSON Path query support in advanced formatters enables powerful data extraction and manipulation capabilities for developers.",
+    slug: "json-path-query-support-in-advanced-formatters",
+  },
+  {
+    title: "Syntax Highlighting Techniques in JSON Formatters",
+    description: "Explore how modern JSON formatters implement syntax highlighting to improve readability, error detection, and data visualization.",
+    slug: "syntax-highlighting-techniques-in-json-formatters",
+  },
+  {
+    title: "Custom Indentation Options in JSON Formatting Tools",
+    description: "Discover how custom indentation options enhance JSON readability and meet diverse formatting standards and preferences.",
+    slug: "custom-indentation-options-in-json-formatting-tools",
+  },
+  {
+    title: "Comparing JSON Documents: Diff Functionality in Formatters",
+    description: "Learn how diff functionality in JSON formatters helps developers compare documents and identify changes with precision.",
+    slug: "comparing-json-documents-diff-functionality-in-formatters",
+  },
+  {
+    title: "JSON Beautification vs. Minification: Tools for Both",
+    description: "Understanding the differences between JSON beautification and minification, and when to use each in your development workflow.",
+    slug: "json-beautification-vs-minification-tools-for-both",
+  },
+  {
+    title: "Copy-to-Clipboard Functionality in JSON Formatters",
+    description: "Explore how smart copy-to-clipboard features improve workflow efficiency and data sharing in JSON formatter tools.",
+    slug: "copy-to-clipboard-functionality-in-json-formatters",
+  },
+  {
+    title: "Export Options in JSON Formatters: Beyond Plain Text",
+    description: "Discover the various export formats and options that modern JSON formatters offer for data interchange and documentation.",
+    slug: "export-options-in-json-formatters-beyond-plain-text",
+  },
+  {
+    title: "Keyboard Shortcuts for Efficient JSON Formatting",
+    description: "Learn how keyboard shortcuts can dramatically improve efficiency when working with JSON formatting tools.",
+    slug: "keyboard-shortcuts-for-efficient-json-formatting",
+  },
+  {
     title: "The Anatomy of a Modern JSON Formatter UI",
     description: "Explore the essential components and design principles behind effective JSON formatter user interfaces.",
     slug: "the-anatomy-of-a-modern-json-formatter-ui",
