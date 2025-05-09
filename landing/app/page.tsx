@@ -8,10 +8,23 @@ import { Header } from "@/components/header";
 import { Section } from "@/components/ui/section";
 import { Download } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { StructuredData } from "@/components/structured-data";
 import { onlineTools } from "@/components/online-tools-grid";
+import { ImageModal } from "@/components/ui/modal";
+import { useState } from "react";
 
 export default function Home() {
+  const [modalImage, setModalImage] = useState<{src: string; alt: string} | null>(null);
+  
+  const openModal = (src: string, alt: string) => {
+    setModalImage({ src, alt });
+  };
+  
+  const closeModal = () => {
+    setModalImage(null);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -36,9 +49,19 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-            <div className="mt-12 md:mt-16 relative w-full max-w-5xl aspect-[16/9] rounded-lg overflow-hidden border bg-background/50 shadow-xl">
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-                <p className="text-muted-foreground">App Screenshot Placeholder</p>
+            <div className="mt-12 md:mt-16 relative w-full max-w-5xl rounded-lg overflow-hidden">
+              <div 
+                className="cursor-pointer transition-transform hover:scale-[1.01]" 
+                onClick={() => openModal("/screenshots/1.jpeg", "OfflineTools Application Screenshot")}
+              >
+                <Image 
+                  src="/screenshots/1.jpeg" 
+                  alt="OfflineTools Application Screenshot" 
+                  width={1280} 
+                  height={720}
+                  className="w-full h-auto" 
+                  priority
+                />
               </div>
             </div>
           </Container>
@@ -72,30 +95,53 @@ export default function Home() {
         </Section>
 
         {/* Use Cases */}
-        <Section id="use-cases">
+        <Section id="use-cases" className="bg-gray-50 dark:bg-gray-900/50">
           <Container>
             <h2 className="text-3xl font-bold text-center mb-4">For every developer workflow</h2>
             <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
               OfflineTools adapts to how you work, whether you&apos;re a frontend developer, backend engineer, or DevOps
               specialist.
             </p>
-            <div className="grid gap-10 md:grid-cols-2">
-              <div className="rounded-lg border bg-background p-6 shadow-sm">
-                <h3 className="text-2xl font-semibold mb-4">Frontend Developers</h3>
-                <div className="aspect-[16/10] mb-4 bg-gray-100 dark:bg-gray-800 flex items-center justify-center rounded-md">
-                  <p className="text-muted-foreground">Screenshot Placeholder</p>
+            <div className="grid gap-10 max-w-3xl mx-auto">
+              <div className="rounded-lg border bg-background p-8 shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-2xl font-semibold mb-4 text-primary">Frontend Developers</h3>
+                <div className="aspect-[16/9] mb-6 overflow-hidden rounded-lg">
+                  <div 
+                    className="cursor-pointer transition-transform hover:scale-[1.02]" 
+                    onClick={() => openModal("/screenshots/4.jpeg", "Frontend Developer Tools Screenshot")}
+                  >
+                    <Image 
+                      src="/screenshots/4.jpeg" 
+                      alt="Frontend Developer Tools Screenshot" 
+                      width={640} 
+                      height={360}
+                      className="w-full h-auto" 
+                    />
+                  </div>
                 </div>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-center max-w-lg mx-auto">
                   Streamline your frontend workflow with tools for JSON, CSS, color manipulation, and more, all
                   integrated in one application.
                 </p>
               </div>
-              <div className="rounded-lg border bg-background p-6 shadow-sm">
-                <h3 className="text-2xl font-semibold mb-4">Backend Engineers</h3>
-                <div className="aspect-[16/10] mb-4 bg-gray-100 dark:bg-gray-800 flex items-center justify-center rounded-md">
-                  <p className="text-muted-foreground">Screenshot Placeholder</p>
+              
+              <div className="rounded-lg border bg-background p-8 shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-2xl font-semibold mb-4 text-primary">Backend Engineers</h3>
+                <div className="aspect-[16/9] mb-6 overflow-hidden rounded-lg">
+                  <div 
+                    className="cursor-pointer transition-transform hover:scale-[1.02]" 
+                    onClick={() => openModal("/screenshots/5.jpeg", "Backend Developer Tools Screenshot")}
+                  >
+                    <Image 
+                      src="/screenshots/5.jpeg" 
+                      alt="Backend Developer Tools Screenshot" 
+                      width={640} 
+                      height={360}
+                      className="w-full h-auto" 
+                    />
+                  </div>
                 </div>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-center max-w-lg mx-auto">
                   Decode JWTs, generate UUIDs, hash strings, and test regular expressions without leaving your desktop
                   or exposing sensitive data online.
                 </p>
@@ -120,6 +166,14 @@ export default function Home() {
             </div>
           </Container>
         </Section>
+        
+        {/* Image Modal */}
+        <ImageModal 
+          isOpen={!!modalImage} 
+          onClose={closeModal} 
+          src={modalImage?.src || ''} 
+          alt={modalImage?.alt || ''}
+        />
       </main>
       <Footer />
     </div>
