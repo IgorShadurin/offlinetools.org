@@ -49,6 +49,14 @@ export default function BlogPage() {
 
 const blogPosts = [
   {
+    id: "6",
+    title: "Navigating Code Structure: Best Offline Tools for Code Hierarchy",
+    excerpt:
+      "Discover the best offline tools for code hierarchy visualization and navigation. Learn how these tools enhance code understanding, improve productivity, and work reliably without internet connectivity.",
+    date: "2025-05-08",
+    slug: "/blog/offline-code-hierarchy-tools",
+  },
+  {
     id: "1",
     title: "Hash Encode Decode Offline",
     excerpt:
