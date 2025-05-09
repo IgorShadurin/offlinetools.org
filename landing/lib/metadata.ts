@@ -51,9 +51,9 @@ export const toolTitles = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1.0,
-  maximumScale: 5.0,
+  maximumScale: 1.0,
   minimumScale: 1.0,
-  userScalable: true,
+  userScalable: false,
   viewportFit: "cover",
   colorScheme: "light dark",
 };

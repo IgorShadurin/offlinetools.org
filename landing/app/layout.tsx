@@ -35,7 +35,7 @@ export default function RootLayout({
         {/* Improved meta viewport tag with best practices */}
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, user-scalable=yes"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
         />
         {/* Canonical URL to prevent duplicate content issues */}
         <link rel="canonical" href="https://offlinetools.org" />
