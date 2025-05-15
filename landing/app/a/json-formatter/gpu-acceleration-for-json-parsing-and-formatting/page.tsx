@@ -3,7 +3,6 @@ import {
   Gpu,
   Cpu,
   Bolt,
-  // Speedometer, // Incorrect import
   Database,
   FileJson,
   Wrench,
@@ -23,7 +22,7 @@ import {
   Waypoints,
   Blocks,
   Split,
-  Gauge, // Corrected import for a speed-related icon
+  Gauge,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -243,8 +242,10 @@ Parallel Value Conversion:
           <ul className="list-disc pl-6 space-y-2 mt-4">
              <li className="flex items-start">
               <CircleX className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-red-500" />
-              <p>
-                <strong>Data Transfer Overhead:</strong> Moving data from CPU memory to GPU memory (and results back) takes time. This overhead can easily outweigh the benefits of GPU processing for smaller JSON files.
+              <div>
+                <p>
+                  <strong>Data Transfer Overhead:</strong> Moving data from CPU memory to GPU memory (and results back) takes time. This overhead can easily outweigh the benefits of GPU processing for smaller JSON files.
+                </p>
                 <div className="flex items-center space-x-2 mt-2 text-sm text-gray-700 dark:text-gray-300">
                     <Cpu className="w-5 h-5" />
                     <ArrowRight className="w-4 h-4" />
@@ -258,8 +259,8 @@ Parallel Value Conversion:
                     <span>Download from GPU</span>
                     <ArrowRight className="w-4 h-4" />
                     <Cpu className="w-5 h-5" />
-                  </div>
-              </p>
+                </div>
+              </div>
             </li>
             <li className="flex items-start">
               <CircleX className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-red-500" />

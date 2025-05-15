@@ -6,11 +6,11 @@ import {
   Sparkles,
   ListTree,
   CodeXml,
-  Minimize2, // Corrected icon name
+  Minimize2,
   ListOrdered,
   CircleAlert,
   ClipboardCheck,
-  Image,
+  Image as ImageIcon, // Renamed to avoid confusion
   CircleX,
   RefreshCcw,
 } from "lucide-react";
@@ -205,7 +205,7 @@ export default function JsonFormatterManualDesignArticle() {
           <li>
             <strong>Visual Aids:</strong> Screenshots are invaluable for showing where controls are located in a UI. Diagrams could explain complex workflows if any exist (though less common for simple formatters).
             <div className="flex items-center space-x-2 mt-2">
-              <Image className="w-5 h-5" />
+              <ImageIcon className="w-5 h-5" aria-hidden="true" />
               <span>Include screenshots of the interface.</span>
             </div>
           </li>
