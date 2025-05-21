@@ -41,6 +41,11 @@ export const onlineTools = [
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
+  {
+    title: "Password Generator",
+    path: "/tools/password-generator",
+    description: "Generate secure passwords with customizable options for length and character types.",
+  },
 ];
 
 /**

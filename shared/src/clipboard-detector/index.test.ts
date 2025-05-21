@@ -36,7 +36,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(7);
+      expect(result).toHaveLength(8);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -54,7 +54,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(7);
+      expect(result).toHaveLength(8);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -213,7 +213,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(7);
+      expect(result).toHaveLength(8);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -221,6 +221,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.PASSWORD_GENERATOR);
     });
   });
-}); 
+});   

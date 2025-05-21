@@ -13,7 +13,8 @@ export enum Tool {
   JSON_FORMATTER = 'json-formatter',
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
-  FILE_GENERATOR = 'file-generator'
+  FILE_GENERATOR = 'file-generator',
+  PASSWORD_GENERATOR = 'password-generator'
 }
 
 /**
@@ -37,7 +38,8 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.JSON_FORMATTER,
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
-    Tool.FILE_GENERATOR
+    Tool.FILE_GENERATOR,
+    Tool.PASSWORD_GENERATOR
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
@@ -191,4 +193,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-} 
+}  

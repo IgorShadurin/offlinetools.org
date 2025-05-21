@@ -61,3 +61,6 @@ export {
   textToFileHashFormat,
   type HashGeneratorOptions,
 };
+
+// Export Password Generator
+export * from './password-generator';
