@@ -61,3 +61,6 @@ export {
   textToFileHashFormat,
   type HashGeneratorOptions,
 };
+
+// Export QR Code Generator/Reader
+export * from './qr-code';

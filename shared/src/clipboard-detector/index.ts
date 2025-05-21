@@ -13,7 +13,8 @@ export enum Tool {
   JSON_FORMATTER = 'json-formatter',
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
-  FILE_GENERATOR = 'file-generator'
+  FILE_GENERATOR = 'file-generator',
+  QR_CODE = 'qr-code'
 }
 
 /**
@@ -37,12 +38,14 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.JSON_FORMATTER,
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
-    Tool.FILE_GENERATOR
+    Tool.FILE_GENERATOR,
+    Tool.QR_CODE
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
     Tool.FILE_HASH_COMPARE,
-    Tool.FILE_GENERATOR
+    Tool.FILE_GENERATOR,
+    Tool.QR_CODE
   ],
   'video': [
     Tool.BINARY_BASE64_CODEC,
@@ -132,6 +135,19 @@ function isLikelyUrl(content: string): boolean {
 }
 
 /**
+ * Checks if a string appears to be a QR code data URL
+ * @param content - String to check
+ * @returns Whether the string appears to be a QR code data URL
+ */
+function isLikelyQRCode(content: string): boolean {
+  if (!content.startsWith('data:image/')) {
+    return false;
+  }
+  
+  return content.length > 100;
+}
+
+/**
  * Detect compatible tools based on clipboard content type and content
  * @param clipboardData - Clipboard data containing type and content
  * @returns Array of compatible tools sorted by relevance
@@ -166,6 +182,10 @@ export function detectClipboardTools(clipboardData: {
       prioritizedTools.push(Tool.BASE64_CODEC);
     }
     
+    if (isLikelyQRCode(content)) {
+      prioritizedTools.push(Tool.QR_CODE);
+    }
+    
     // Add the other general tools that weren't specifically matched
     compatibleTools.forEach(tool => {
       // Don't duplicate specialized tools that were already matched
@@ -174,7 +194,8 @@ export function detectClipboardTools(clipboardData: {
         if (
           (tool === Tool.JSON_FORMATTER && !isLikelyJson(content)) ||
           (tool === Tool.URL_ENCODER && !isLikelyUrl(content)) ||
-          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content))
+          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content)) ||
+          (tool === Tool.QR_CODE && !isLikelyQRCode(content))
         ) {
           // Skip this tool
         } else {
@@ -191,4 +212,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-} 
+}        
