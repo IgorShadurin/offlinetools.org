@@ -10,6 +10,7 @@ export enum Tool {
   BASE64_CODEC = 'base64-codec',
   BINARY_BASE64_CODEC = 'binary-base64-codec',
   FILE_HASH_COMPARE = 'file-hash-compare',
+  HTML_TEXT_EXTRACTOR = 'html-text-extractor',
   JSON_FORMATTER = 'json-formatter',
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
@@ -34,6 +35,7 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.BASE64_CODEC,
     Tool.BINARY_BASE64_CODEC,
     Tool.FILE_HASH_COMPARE,
+    Tool.HTML_TEXT_EXTRACTOR,
     Tool.JSON_FORMATTER,
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
@@ -65,6 +67,11 @@ const BASE64_REGEX = /^[A-Za-z0-9+/=]+$/;
  * URL detection regex
  */
 const URL_REGEX = /^(https?:\/\/|www\.)[^\s/$.?#].[^\s]*$/i;
+
+/**
+ * Import HTML detection function
+ */
+import { isLikelyHtml } from '../html-text-extractor';
 
 /**
  * Checks if a string appears to be valid JSON
@@ -158,6 +165,10 @@ export function detectClipboardTools(clipboardData: {
       prioritizedTools.push(Tool.JSON_FORMATTER);
     }
     
+    if (isLikelyHtml(content)) {
+      prioritizedTools.push(Tool.HTML_TEXT_EXTRACTOR);
+    }
+    
     if (isLikelyUrl(content) && !prioritizedTools.includes(Tool.URL_ENCODER)) {
       prioritizedTools.push(Tool.URL_ENCODER);
     }
@@ -173,6 +184,7 @@ export function detectClipboardTools(clipboardData: {
         // Filter out specialized tools that didn't match the content
         if (
           (tool === Tool.JSON_FORMATTER && !isLikelyJson(content)) ||
+          (tool === Tool.HTML_TEXT_EXTRACTOR && !isLikelyHtml(content)) ||
           (tool === Tool.URL_ENCODER && !isLikelyUrl(content)) ||
           (tool === Tool.BASE64_CODEC && !isLikelyBase64(content))
         ) {
@@ -191,4 +203,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-} 
+}  

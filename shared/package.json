@@ -9,13 +9,16 @@
     "types:check": "tsc --noEmit"
   },
   "dependencies": {
+    "html-to-text": "^9.0.5",
     "js-md5": "^0.8.3",
     "js-sha1": "^0.7.0",
     "js-sha256": "^0.11.0",
     "js-sha3": "^0.9.3"
   },
   "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
     "@types/jest": "^29.5.12",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
     "@typescript-eslint/parser": "^8.30.1",
     "eslint": "^9",

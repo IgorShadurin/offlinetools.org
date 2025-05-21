@@ -11,6 +11,11 @@ export const onlineTools = [
     description: "Format and beautify your JSON with customizable indentation options.",
   },
   {
+    title: "HTML Text Extractor",
+    path: "/tools/html-text-extractor",
+    description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+  },
+  {
     title: "Base64 Encoder/Decoder",
     path: "/tools/base64-codec",
     description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option.",
