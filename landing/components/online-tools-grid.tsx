@@ -41,6 +41,11 @@ export const onlineTools = [
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
+  {
+    title: "Speech Length Estimator",
+    path: "/tools/speech-length-estimator",
+    description: "Calculate how long it will take to speak a text with adjustable speed settings.",
+  },
 ];
 
 /**

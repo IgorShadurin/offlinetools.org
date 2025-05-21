@@ -61,3 +61,6 @@ export {
   textToFileHashFormat,
   type HashGeneratorOptions,
 };
+
+// Export Speech Length Estimator
+export * from './speech-length-estimator';
