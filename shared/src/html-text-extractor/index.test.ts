@@ -153,13 +153,16 @@ describe('HTML Text Extractor', () => {
     });
     
     it('should throw an error for invalid input that causes error', () => {
-      jest.mock('html-to-text', () => ({
-        convert: (): string => { throw new Error('Test error'); }
-      }));
+      const originalConvert = require('html-to-text').convert;
+      require('html-to-text').convert = jest.fn().mockImplementation(() => {
+        throw new Error('Test error');
+      });
       
       expect(() => {
         extractTextFromHtml('<invalid>html</with unclosed tags');
       }).toThrow('HTML text extraction failed');
+      
+      require('html-to-text').convert = originalConvert;
     });
   });
   

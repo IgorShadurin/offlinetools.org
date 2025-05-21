@@ -1,6 +1,8 @@
 /**
  * HTML text extractor options
  */
+import { convert } from 'html-to-text';
+
 export enum HtmlLinkHandlingOption {
   /** Remove links completely */
   Remove = 'Remove',
@@ -56,8 +58,6 @@ export function extractTextFromHtml(
   try {
     if (!htmlString) return "";
     
-    const { convert } = require('html-to-text');
-    
     type FormatElement = {
       attribs: Record<string, string>;
       children: Array<{ data?: string }>;
@@ -112,7 +112,7 @@ export function extractTextFromHtml(
           ): void => {
             const href = elem.attribs.href;
             const content = elem.children
-              .map((child: { data?: string }) => convert(child.data || '', convertOptions))
+              .map((child: { data?: string }) => child.data || '')
               .join('')
               .trim();
             builder.addInline(`${content}(${href})`);
@@ -143,7 +143,7 @@ export function extractTextFromHtml(
       };
     }
     
-    return convert(htmlString, convertOptions);
+    return convert(htmlString, convertOptions as any);
   } catch (error) {
     throw new Error(`HTML text extraction failed: ${(error as Error).message}`);
   }
