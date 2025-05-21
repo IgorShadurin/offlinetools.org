@@ -45,7 +45,7 @@ export const toolTitles = {
   },
   uuidGenerator: {
     base: "UUID Generator",
-    extended: "UUID Generator - Create RFC9562 Compliant UUIDs",
+    extended: "UUID Generator - Create RFC4122 Compliant UUIDs",
   },
 };
 
