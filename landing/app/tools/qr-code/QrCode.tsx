@@ -72,9 +72,9 @@ export default function QrCode() {
   };
   
   const handleDownload = () => {
-    let filename = "qrcode";
-    let data = qrCodeOutput;
-    let mimeType = "image/svg+xml";
+    const filename = "qrcode";
+    const data = qrCodeOutput;
+    const mimeType = "image/svg+xml";
     
     if (outputFormat === QRCodeOutputFormat.DATA_URL) {
       filename += ".png";
@@ -131,7 +131,8 @@ export default function QrCode() {
       
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const dataUrl = e.target?.result as string;
+        // We don't need to use dataUrl here since we're simulating the scan
+        // const dataUrl = e.target?.result as string;
         
         try {
           

@@ -90,7 +90,7 @@ describe('QR Code Generator', () => {
     
     it('should throw an error for invalid options', async () => {
       await expect(async () => {
-        await generateQRCode('test', { outputFormat: 'invalid' as any });
+        await generateQRCode('test', { outputFormat: 'invalid' as unknown as QRCodeOutputFormat });
       }).rejects.toThrow('QR code generation failed');
     });
   });
