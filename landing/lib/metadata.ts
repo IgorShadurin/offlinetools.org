@@ -43,6 +43,10 @@ export const toolTitles = {
     base: "File Hash Compare",
     extended: "File Hash Compare - Verify File Integrity and Security",
   },
+  uuidGenerator: {
+    base: "UUID Generator",
+    extended: "UUID Generator - Create RFC9562 Compliant UUIDs",
+  },
 };
 
 /**
@@ -156,6 +160,9 @@ export const toolDescriptions = {
 
   fileHashCompare:
     "Calculate and compare file hashes to verify file integrity and authenticity. Supports multiple hash algorithms for comprehensive verification.",
+
+  uuidGenerator:
+    "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7). Create, validate, and format UUIDs with complete privacy.",
 
   common:
     "Process data securely in your browser without server transmission. Works offline with our desktop app for complete privacy and security.",

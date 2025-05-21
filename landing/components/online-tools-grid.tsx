@@ -41,6 +41,11 @@ export const onlineTools = [
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
+  {
+    title: "UUID Generator",
+    path: "/tools/uuid-generator",
+    description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",
+  },
 ];
 
 /**

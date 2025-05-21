@@ -61,3 +61,6 @@ export {
   textToFileHashFormat,
   type HashGeneratorOptions,
 };
+
+// Export UUID Generator
+export * from './uuid-generator';
