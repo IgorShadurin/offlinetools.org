@@ -13,7 +13,6 @@ import {
   generateUUID, 
   generateMultipleUUIDs, 
   validateUUID,
-  formatUUID,
   UUIDVersion, 
   UUIDNamespace 
 } from "shared";
