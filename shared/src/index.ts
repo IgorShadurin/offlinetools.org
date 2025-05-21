@@ -39,6 +39,9 @@ export * from './clipboard-detector';
 // Export File Generator
 export * from './file-generator';
 
+// Export Regex Tester
+export * from './regex-tester';
+
 // Export Text Hash Generator with renamed exports to avoid conflicts
 import {
   HashAlgorithm as TextHashAlgorithm,

@@ -13,7 +13,8 @@ export enum Tool {
   JSON_FORMATTER = 'json-formatter',
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
-  FILE_GENERATOR = 'file-generator'
+  FILE_GENERATOR = 'file-generator',
+  REGEX_TESTER = 'regex-tester'
 }
 
 /**
@@ -37,7 +38,8 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.JSON_FORMATTER,
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
-    Tool.FILE_GENERATOR
+    Tool.FILE_GENERATOR,
+    Tool.REGEX_TESTER
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
@@ -65,6 +67,11 @@ const BASE64_REGEX = /^[A-Za-z0-9+/=]+$/;
  * URL detection regex
  */
 const URL_REGEX = /^(https?:\/\/|www\.)[^\s/$.?#].[^\s]*$/i;
+
+/**
+ * Regex detection pattern
+ */
+const REGEX_PATTERN = /^\s*\/[\w\W]*\/[gimsuy]*\s*$/;
 
 /**
  * Checks if a string appears to be valid JSON
@@ -132,6 +139,23 @@ function isLikelyUrl(content: string): boolean {
 }
 
 /**
+ * Checks if a string appears to be a valid regex pattern
+ * @param content - String to check
+ * @returns Whether the string appears to be a valid regex pattern
+ */
+function isLikelyRegexPattern(content: string): boolean {
+  if (!REGEX_PATTERN.test(content)) {
+    return false;
+  }
+  
+  if (!(/[\\[\](){}^$*+?.|]/.test(content))) {
+    return false;
+  }
+  
+  return true;
+}
+
+/**
  * Detect compatible tools based on clipboard content type and content
  * @param clipboardData - Clipboard data containing type and content
  * @returns Array of compatible tools sorted by relevance
@@ -166,6 +190,10 @@ export function detectClipboardTools(clipboardData: {
       prioritizedTools.push(Tool.BASE64_CODEC);
     }
     
+    if (isLikelyRegexPattern(content)) {
+      prioritizedTools.push(Tool.REGEX_TESTER);
+    }
+    
     // Add the other general tools that weren't specifically matched
     compatibleTools.forEach(tool => {
       // Don't duplicate specialized tools that were already matched
@@ -174,7 +202,8 @@ export function detectClipboardTools(clipboardData: {
         if (
           (tool === Tool.JSON_FORMATTER && !isLikelyJson(content)) ||
           (tool === Tool.URL_ENCODER && !isLikelyUrl(content)) ||
-          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content))
+          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content)) ||
+          (tool === Tool.REGEX_TESTER && !isLikelyRegexPattern(content))
         ) {
           // Skip this tool
         } else {
@@ -191,4 +220,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-} 
+}  

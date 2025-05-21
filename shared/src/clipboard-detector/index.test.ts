@@ -196,6 +196,36 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.URL_ENCODER);
     });
     
+    it('should include regex-tester for regex pattern content', () => {
+      const options: ClipboardDetectorOptions = { 
+        type: 'string', 
+        content: '/\\d+/g'  // Number pattern with global flag
+      };
+      const result = detectClipboardTools(options);
+      
+      expect(result).toContain(Tool.REGEX_TESTER);
+    });
+    
+    it('should include regex-tester for complex regex patterns', () => {
+      const options: ClipboardDetectorOptions = { 
+        type: 'string', 
+        content: '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/'  // Email pattern
+      };
+      const result = detectClipboardTools(options);
+      
+      expect(result).toContain(Tool.REGEX_TESTER);
+    });
+    
+    it('should not include regex-tester for non-regex content', () => {
+      const options: ClipboardDetectorOptions = { 
+        type: 'string', 
+        content: 'Just normal text'
+      };
+      const result = detectClipboardTools(options);
+      
+      expect(result).not.toContain(Tool.REGEX_TESTER);
+    });
+    
     // Test null options
     it('should throw an error for null options', () => {
       const badOptions = null as unknown as ClipboardDetectorOptions;
@@ -223,4 +253,4 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.FILE_GENERATOR);
     });
   });
-}); 
+});  

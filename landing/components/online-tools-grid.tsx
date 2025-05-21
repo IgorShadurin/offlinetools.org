@@ -41,6 +41,11 @@ export const onlineTools = [
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
+  {
+    title: "Regex Tester",
+    path: "/tools/regex-tester",
+    description: "Test and debug regular expressions with visual match highlighting and support for various regex flags.",
+  },
 ];
 
 /**
