@@ -1,6 +1,6 @@
 import PasswordGenerator from "./PasswordGenerator";
 import { StructuredData } from "@/components/structured-data";
-import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata";
+import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata({
   title: "Password Generator",

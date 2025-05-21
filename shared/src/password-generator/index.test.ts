@@ -57,7 +57,9 @@ describe('Password Generator', () => {
     it('should exclude similar characters when specified', () => {
       const password = generatePassword({
         excludeSimilarCharacters: true,
+        length: 20,
       });
+      
       expect(password).not.toMatch(/[il1Lo0O]/);
     });
 

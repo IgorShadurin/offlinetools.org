@@ -63,7 +63,22 @@ export function generatePassword(
       throw new Error('At least one character type must be selected');
     }
     
-    return generator.generate(mergedOptions);
+    let password = generator.generate(mergedOptions);
+    
+    if (mergedOptions.excludeSimilarCharacters) {
+      const similarChars = 'il1Lo0O';
+      
+      if ([...similarChars].some(char => password.includes(char))) {
+        const newOptions = {
+          ...mergedOptions,
+          exclude: (mergedOptions.exclude || '') + similarChars
+        };
+        
+        password = generator.generate(newOptions);
+      }
+    }
+    
+    return password;
   } catch (error) {
     throw new Error(`Password generation failed: ${(error as Error).message}`);
   }
