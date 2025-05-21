@@ -43,6 +43,10 @@ export const toolTitles = {
     base: "File Hash Compare",
     extended: "File Hash Compare - Verify File Integrity and Security",
   },
+  regexTester: {
+    base: "Regex Tester",
+    extended: "Regex Tester - Test and Debug Regular Expressions",
+  },
 };
 
 /**
@@ -156,6 +160,9 @@ export const toolDescriptions = {
 
   fileHashCompare:
     "Calculate and compare file hashes to verify file integrity and authenticity. Supports multiple hash algorithms for comprehensive verification.",
+
+  regexTester:
+    "Test and debug regular expressions with a visual match highlighter. Support for various regex flags and capture group visualization.",
 
   common:
     "Process data securely in your browser without server transmission. Works offline with our desktop app for complete privacy and security.",
