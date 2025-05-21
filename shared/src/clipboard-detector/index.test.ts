@@ -10,10 +10,11 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(3);
+      expect(result).toHaveLength(4);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.QR_CODE);
     });
     
     // Test video type
@@ -36,7 +37,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(7);
+      expect(result).toHaveLength(8);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -44,6 +45,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.QR_CODE);
     });
     
     // Test empty string content
@@ -54,7 +56,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(7);
+      expect(result).toHaveLength(8);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -62,6 +64,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.QR_CODE);
     });
     
     // Test JSON content
@@ -213,7 +216,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(7);
+      expect(result).toHaveLength(8);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -221,6 +224,13 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.QR_CODE);
+    });
+    
+    it('should detect QR code data URLs', () => {
+      const mockDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+      const result = detectClipboardTools({ type: 'string', content: mockDataUrl });
+      expect(result).toContain(Tool.QR_CODE);
     });
   });
-}); 
+});     

@@ -6,6 +6,11 @@ import React from "react";
  */
 export const onlineTools = [
   {
+    title: "QR Code",
+    path: "/tools/qr-code",
+    description: "Create QR codes from text or scan QR codes from images with customizable options.",
+  },
+  {
     title: "JSON Formatter",
     path: "/tools/json-formatter",
     description: "Format and beautify your JSON with customizable indentation options.",

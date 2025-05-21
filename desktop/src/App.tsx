@@ -3,7 +3,8 @@ import {
   BracketsIcon, 
   Hash,
   Link2Icon,
-  ClipboardIcon
+  ClipboardIcon,
+  QrCode
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -13,6 +14,7 @@ import { UrlEncoder } from './components/url-encoder'
 import { TrayNotification } from './components/ui/tray-notification'
 import { ClipboardDetector } from './components/clipboard-detector'
 import { ClipboardDebug } from './components/clipboard-debug'
+import QrCodeTool from './components/qr-code'
 
 // List of tools
 const tools: Tool[] = [
@@ -20,6 +22,7 @@ const tools: Tool[] = [
   { id: 'json-formatter', name: 'JSON Format/Validate', icon: <BracketsIcon size={16} /> },
   { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
+  { id: 'qr-code', name: 'QR Code Generator/Scanner', icon: <QrCode size={16} /> },
 ]
 
 /**
@@ -104,6 +107,8 @@ function App() {
           <Base64Codec className="min-h-full" />
         ) : selectedTool === 'url-encoder' ? (
           <UrlEncoder className="min-h-full" />
+        ) : selectedTool === 'qr-code' ? (
+          <QrCodeTool className="min-h-full" />
         ) : (
           <ToolPlaceholder 
             title={tools.find(t => t.id === selectedTool)?.name || ''}
