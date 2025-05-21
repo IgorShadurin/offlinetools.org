@@ -6,7 +6,7 @@ export default function UuidGeneratorExplanation() {
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Tool Capabilities</h3>
         <p>
-          The UUID Generator creates universally unique identifiers following the RFC9562 standard. 
+          The UUID Generator creates universally unique identifiers following the RFC4122 standard. 
           UUIDs are 128-bit identifiers that are guaranteed to be unique across space and time, 
           making them ideal for distributed systems where unique identification is critical.
         </p>
