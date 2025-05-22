@@ -11,6 +11,11 @@ export const onlineTools = [
     description: "Format and beautify your JSON with customizable indentation options.",
   },
   {
+    title: "HTML Text Extractor",
+    path: "/tools/html-text-extractor",
+    description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+  },
+  {
     title: "Base64 Encoder/Decoder",
     path: "/tools/base64-codec",
     description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option.",
@@ -45,6 +50,16 @@ export const onlineTools = [
     title: "Password Generator",
     path: "/tools/password-generator",
     description: "Generate secure passwords with customizable options for length and character types.",
+  },
+  {
+    title: "UUID Generator",
+    path: "/tools/uuid-generator",
+    description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",
+  },
+  {
+    title: "Speech Length Estimator",
+    path: "/tools/speech-length-estimator",
+    description: "Calculate how long it will take to speak a text with adjustable speed settings.",
   },
 ];
 
