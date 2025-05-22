@@ -61,11 +61,22 @@ export default function Base64Codec() {
           description="Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
         />
 
-        <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
-          <LinkIcon className="h-4 w-4" />
-          <span>Related tool: </span>
-          <Link href="/tools/binary-base64-codec" className="text-primary hover:underline">
-            Binary Base64 Encoder/Decoder
+        {/* Related Tools Section */}
+        <div className="mt-4 mb-8 flex flex-wrap gap-x-4 gap-y-2 items-center">
+          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            Related Tools:
+          </h3>
+          <Link
+            href="/tools/binary-base64-codec"
+            className="text-sm text-blue-600 hover:underline dark:text-blue-400 flex items-center gap-1"
+          >
+            <LinkIcon size={16} /> Binary Base64 Encoder/Decoder
+          </Link>
+          <Link
+            href="/tools/gzip-codec"
+            className="text-sm text-blue-600 hover:underline dark:text-blue-400 flex items-center gap-1"
+          >
+            <LinkIcon size={16} /> Gzip Codec
           </Link>
         </div>
 

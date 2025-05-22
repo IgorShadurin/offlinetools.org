@@ -36,7 +36,8 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(10);
+      expect(result).toHaveLength(11); // Updated count
+      expect(result).toContain(Tool.GZIP_CODEC); // Added check for GZIP_CODEC
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -57,7 +58,8 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(10);
+      expect(result).toHaveLength(11); // Updated count
+      expect(result).toContain(Tool.GZIP_CODEC); // Added check for GZIP_CODEC
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -239,7 +241,8 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(10);
+      expect(result).toHaveLength(11); // Updated count
+      expect(result).toContain(Tool.GZIP_CODEC); // Added check for GZIP_CODEC
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -279,6 +282,16 @@ describe('Clipboard Detector', () => {
         const result = detectClipboardTools(options);
         expect(result).not.toContain(Tool.UUID_GENERATOR);
       });
+    });
+
+    // Test Gzip Codec for string content
+    it('should include GZIP_CODEC for any non-special string content', () => {
+      const options: ClipboardDetectorOptions = {
+        type: 'string',
+        content: 'This is some text to be gzipped.'
+      };
+      const result = detectClipboardTools(options);
+      expect(result).toContain(Tool.GZIP_CODEC);
     });
   });
 });        

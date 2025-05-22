@@ -16,7 +16,8 @@ export enum Tool {
   URL_ENCODER = 'url-encoder',
   FILE_GENERATOR = 'file-generator',
   UUID_GENERATOR = 'uuid-generator',
-  SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator'
+  SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator',
+  GZIP_CODEC = 'gzip-codec'
 }
 
 /**
@@ -43,7 +44,8 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.URL_ENCODER,
     Tool.FILE_GENERATOR,
     Tool.UUID_GENERATOR,
-    Tool.SPEECH_LENGTH_ESTIMATOR
+    Tool.SPEECH_LENGTH_ESTIMATOR,
+    Tool.GZIP_CODEC
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,

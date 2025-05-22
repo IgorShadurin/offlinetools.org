@@ -70,3 +70,6 @@ export * from './uuid-generator';
 
 // Export Speech Length Estimator
 export * from './speech-length-estimator';
+
+// Export Gzip codec
+export * from './gzip-codec';

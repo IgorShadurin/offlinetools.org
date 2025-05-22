@@ -26,6 +26,11 @@ export const onlineTools = [
     description: "Convert binary files to Base64 or decode Base64 to binary files.",
   },
   {
+    title: "Gzip Codec",
+    path: "/tools/gzip-codec",
+    description: "Compress (pack) or decompress (extract) data using Gzip. Handles both text and files efficiently in your browser."
+  },
+  {
     title: "URL Encoder/Decoder",
     path: "/tools/url-encoder",
     description: "Encode text for use in URLs or decode URL-encoded text.",

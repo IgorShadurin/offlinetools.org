@@ -162,11 +162,22 @@ export default function BinaryBase64Codec() {
           description="Convert binary files to Base64 or decode Base64 to binary files."
         />
 
-        <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
-          <LinkIcon className="h-4 w-4" />
-          <span>Related tool: </span>
-          <Link href="/tools/base64-codec" className="text-primary hover:underline">
-            Text Base64 Encoder/Decoder
+        {/* Related Tools Section */}
+        <div className="mt-4 mb-8 flex flex-wrap gap-x-4 gap-y-2 items-center">
+          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            Related Tools:
+          </h3>
+          <Link
+            href="/tools/base64-codec"
+            className="text-sm text-blue-600 hover:underline dark:text-blue-400 flex items-center gap-1"
+          >
+            <LinkIcon size={16} /> Text Base64 Encoder/Decoder
+          </Link>
+          <Link
+            href="/tools/gzip-codec"
+            className="text-sm text-blue-600 hover:underline dark:text-blue-400 flex items-center gap-1"
+          >
+            <LinkIcon size={16} /> Gzip Codec
           </Link>
         </div>
 
