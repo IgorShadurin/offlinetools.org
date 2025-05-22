@@ -41,6 +41,11 @@ export const onlineTools = [
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
+  {
+    title: "Person Generator",
+    path: "/tools/person-generator",
+    description: "Generate realistic person data with customizable fields in multiple formats.",
+  },
 ];
 
 /**

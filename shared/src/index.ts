@@ -61,3 +61,6 @@ export {
   textToFileHashFormat,
   type HashGeneratorOptions,
 };
+
+// Export Person Generator
+export * from './person-generator';
