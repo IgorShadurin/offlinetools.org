@@ -1,7 +1,7 @@
 /**
  * HTML text extractor options
  */
-import { convert } from 'html-to-text';
+import { convert, HtmlToTextOptions } from 'html-to-text';
 
 export enum HtmlLinkHandlingOption {
   /** Remove links completely */
@@ -67,18 +67,7 @@ export function extractTextFromHtml(
       addInline: (text: string) => void;
     };
     
-    interface ConvertOptions {
-      wordwrap: number;
-      preserveNewlines: boolean;
-      selectors: Array<{
-        selector: string;
-        format?: string;
-        options?: Record<string, boolean>;
-      }>;
-      formatters?: Record<string, unknown>;
-    }
-    
-    const convertOptions: ConvertOptions = {
+    const convertOptions: HtmlToTextOptions = {
       wordwrap: options.wordwrap,
       preserveNewlines: options.preserveNewlines,
       selectors: [],
@@ -104,15 +93,10 @@ export function extractTextFromHtml(
           }
         ];
         convertOptions.formatters = {
-          linkFormat: (
-            elem: FormatElement, 
-            walk: (elements: unknown[], builder: FormatBuilder) => void, 
-            builder: FormatBuilder, 
-            formatOptions: Record<string, unknown>
-          ): void => {
+          linkFormat: function(elem, walk, builder) {
             const href = elem.attribs.href;
             const content = elem.children
-              .map((child: { data?: string }) => child.data || '')
+              .map((child: any) => child.data || '')
               .join('')
               .trim();
             builder.addInline(`${content}(${href})`);
@@ -130,12 +114,7 @@ export function extractTextFromHtml(
       
       convertOptions.formatters = {
         ...(convertOptions.formatters || {}),
-        imageFormat: (
-          elem: FormatElement, 
-          walk: (elements: unknown[], builder: FormatBuilder) => void, 
-          builder: FormatBuilder, 
-          formatOptions: Record<string, unknown>
-        ): void => {
+        imageFormat: function(elem, walk, builder) {
           if (options.includeImageAlt && elem.attribs.alt) {
             builder.addInline(`[Image: ${elem.attribs.alt}]`);
           }
@@ -143,7 +122,7 @@ export function extractTextFromHtml(
       };
     }
     
-    return convert(htmlString, convertOptions as any);
+    return convert(htmlString, convertOptions);
   } catch (error) {
     throw new Error(`HTML text extraction failed: ${(error as Error).message}`);
   }
