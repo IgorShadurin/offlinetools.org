@@ -21,7 +21,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Tool name constants
 const TOOL_BUTTON_NAME = 'Clipboard Detector';
@@ -94,11 +94,12 @@ describe('Clipboard Detector tests', async () => {
     // Find and click the refresh button
     const refreshButton = await findButtonByText(page, 'Refresh');
     expect(refreshButton).not.toBeNull();
-    await refreshButton?.click();
+    if (!refreshButton) throw new Error('Refresh button not found');
+    await refreshButton.click();
 
     // Take screenshot after refresh
     await takeScreenshot(page, 'clipboard-detector', 'after-refresh');
     
     // The test passes if we've reached this point without errors
   });
-}); 
+});                

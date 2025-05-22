@@ -24,7 +24,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Tool name constants
 const TOOL_BUTTON_NAME = 'URL Encoder/Decoder';
@@ -85,7 +85,9 @@ describe('URL Encoder/Decoder tests', async () => {
     await fillTextareaInput(page, testData);
     
     // Click the Encode URL button
-    await (await findButtonByText(page, 'Encode URL')).click();
+    const encodeButton = await findButtonByText(page, 'Encode URL');
+    if (!encodeButton) throw new Error('Encode URL button not found');
+    await encodeButton.click();
     
     // Wait for result containing encoded spaces (the contains option confirms %20 is present)
     await waitForTextareaOutput(page, { contains: '%20' });
@@ -101,7 +103,9 @@ describe('URL Encoder/Decoder tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Switch to Decode tab
-    await (await findButtonByText(page, 'Decode')).click();
+    const decodeTabButton = await findButtonByText(page, 'Decode');
+    if (!decodeTabButton) throw new Error('Decode tab button not found');
+    await decodeTabButton.click();
     
     // Take a screenshot of the decode tab
     await takeScreenshot(page, 'url-decoder', 'decode-tab-view');
@@ -112,7 +116,9 @@ describe('URL Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'url-decoder', 'after-input');
     
     // Click the Decode URL button
-    await (await findButtonByText(page, 'Decode URL')).click();
+    const decodeButton = await findButtonByText(page, 'Decode URL');
+    if (!decodeButton) throw new Error('Decode URL button not found');
+    await decodeButton.click();
     
     // Wait for result containing decoded content (the contains option confirms example.com is present)
     await waitForTextareaOutput(page, { contains: 'example.com' });
@@ -120,4 +126,4 @@ describe('URL Encoder/Decoder tests', async () => {
     // Take a screenshot of the decoded result
     await takeScreenshot(page, 'url-decoder', 'after-decoding', true);
   });
-}); 
+});                

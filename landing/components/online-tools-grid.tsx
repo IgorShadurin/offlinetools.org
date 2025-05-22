@@ -47,6 +47,11 @@ export const onlineTools = [
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
   {
+    title: "Password Generator",
+    path: "/tools/password-generator",
+    description: "Generate secure passwords with customizable options for length and character types.",
+  },
+  {
     title: "UUID Generator",
     path: "/tools/uuid-generator",
     description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",

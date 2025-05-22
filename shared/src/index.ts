@@ -65,6 +65,9 @@ export {
   type HashGeneratorOptions,
 };
 
+// Export Password Generator
+export * from './password-generator';
+
 // Export UUID Generator
 export * from './uuid-generator';
 

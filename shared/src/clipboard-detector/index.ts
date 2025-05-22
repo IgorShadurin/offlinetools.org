@@ -15,6 +15,7 @@ export enum Tool {
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
   FILE_GENERATOR = 'file-generator',
+  PASSWORD_GENERATOR = 'password-generator',
   UUID_GENERATOR = 'uuid-generator',
   SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator'
 }
@@ -42,6 +43,7 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
     Tool.FILE_GENERATOR,
+    Tool.PASSWORD_GENERATOR,
     Tool.UUID_GENERATOR,
     Tool.SPEECH_LENGTH_ESTIMATOR
   ],
@@ -227,4 +229,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-}    
+}

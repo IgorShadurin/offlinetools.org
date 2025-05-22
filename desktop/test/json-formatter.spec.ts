@@ -25,7 +25,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Tool name constants
 const TOOL_BUTTON_NAME = 'JSON Format/Validate';
@@ -97,7 +97,9 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'unformatted-input');
     
     // Click format button
-    await (await findButtonByText(page, 'Format JSON')).click();
+    const formatButton = await findButtonByText(page, 'Format JSON');
+    if (!formatButton) throw new Error('Format JSON button not found');
+    await formatButton.click();
     
     // Wait for output textarea to update with formatted content
     const formattedOutput = await waitForTextareaOutput(page, { hasLineBreaks: true });
@@ -121,7 +123,9 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'invalid-json-input');
     
     // Click format button
-    await (await findButtonByText(page, 'Format JSON')).click();
+    const formatButton = await findButtonByText(page, 'Format JSON');
+    if (!formatButton) throw new Error('Format JSON button not found');
+    await formatButton.click();
     
     // Wait for output textarea to update with error message
     await waitForTextareaOutput(page, { hasError: true });
@@ -140,7 +144,9 @@ describe('JSON Format/Validate tests', async () => {
     await fillTextareaInput(page, '{"test": "data"}');
     
     // Format to get output
-    await (await findButtonByText(page, 'Format JSON')).click();
+    const formatButton = await findButtonByText(page, 'Format JSON');
+    if (!formatButton) throw new Error('Format JSON button not found');
+    await formatButton.click();
     
     // Wait for output textarea to update
     await waitForTextareaOutput(page, { notEmpty: true });
@@ -153,7 +159,9 @@ describe('JSON Format/Validate tests', async () => {
     await takeScreenshot(page, 'json-formatter', 'before-clear');
     
     // Click Clear button
-    await (await findButtonByText(page, 'Clear')).click();
+    const clearButton = await findButtonByText(page, 'Clear');
+    if (!clearButton) throw new Error('Clear button not found');
+    await clearButton.click();
     
     // Wait for textareas to be cleared
     await page.waitForFunction(() => {
@@ -170,4 +178,4 @@ describe('JSON Format/Validate tests', async () => {
     expect(await getTextareaOutput(page, 0)).toBe('');
     expect(await getTextareaOutput(page, 1)).toBe('');
   });
-}); 
+});                              

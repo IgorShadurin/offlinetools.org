@@ -30,6 +30,7 @@ const TOOL_ID_MAPPING: Record<string, string> = {
   [Tool.JSON_FORMATTER]: "json-formatter",
   [Tool.BASE64_CODEC]: "base64-string",
   [Tool.URL_ENCODER]: "url-encoder",
+  [Tool.PASSWORD_GENERATOR]: "password-generator",
 };
 
 /**
@@ -39,6 +40,7 @@ const IMPLEMENTED_TOOLS = [
   Tool.JSON_FORMATTER,
   Tool.BASE64_CODEC,
   Tool.URL_ENCODER,
+  Tool.PASSWORD_GENERATOR,
 ];
 
 /**
@@ -85,6 +87,7 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
       [Tool.FILE_HASH_COMPARE]: "File Hash Compare",
       [Tool.TEXT_HASH_GENERATOR]: "Text Hash Generator",
       [Tool.URL_ENCODER]: "URL Encoder/Decoder",
+      [Tool.PASSWORD_GENERATOR]: "Password Generator",
     };
     
     return toolNames[toolId] || toolId;
@@ -272,4 +275,4 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
       </Card>
     </div>
   );
-} 
+}  

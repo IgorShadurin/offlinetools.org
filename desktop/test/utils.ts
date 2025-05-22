@@ -32,14 +32,26 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
       // Launch with more generous timeout in CI
       const launchTimeout = isCI ? 60000 : 15000;
       
+      const electronArgs = [
+        '.',
+        '--no-sandbox',
+        '--disable-gpu',
+        '--disable-dev-shm-usage'
+      ];
+      
+      // In CI, we're using xvfb-run which sets up DISPLAY automatically
+      const displayEnv = isCI 
+        ? process.env.DISPLAY || ':99.0'  // In CI, use the provided DISPLAY or default to :99.0
+        : process.env.DISPLAY || ':0.0';  // Locally, use the provided DISPLAY or default to :0.0
+      
       const app = await electron.launch({
-        args: ['.', '--no-sandbox'],
+        args: electronArgs,
         cwd: root,
         env: { 
           ...process.env, 
           NODE_ENV: 'test',
           ELECTRON_ENABLE_LOGGING: '1',
-          DISPLAY: isCI ? process.env.DISPLAY || ':99.0' : undefined, // For xvfb in CI
+          DISPLAY: displayEnv,
         },
         timeout: launchTimeout,
       });
@@ -47,6 +59,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
       return app;
     } catch (error) {
       lastError = error as Error;
+      console.warn(`Electron launch attempt ${attempt + 1}/${maxRetries} failed: ${(error as Error).message}`);
     }
   }
   
@@ -231,7 +244,7 @@ export interface WaitForOutputOptions {
  * @param {Page} page - Playwright page object
  * @param {string} text - The text to input
  * @param {number} index - Optional index of the textarea (default: 0 for input)
- * @returns {Promise<any>} Promise resolving to the filled textarea element
+ * @returns {Promise<any>} Promise resolving to the filled textarea element or null if page is null
  */
 export async function fillTextareaInput(page: Page, text: string, index = 0): Promise<any> {
   if (!page) {
@@ -261,7 +274,7 @@ export async function fillTextareaInput(page: Page, text: string, index = 0): Pr
  * Gets the value from a textarea
  * @param {Page} page - Playwright page object
  * @param {number} index - Index of the textarea (default: 1 for output)
- * @returns {Promise<string>} Promise resolving to the textarea content
+ * @returns {Promise<string>} Promise resolving to the textarea content or empty string if page is null
  */
 export async function getTextareaOutput(page: Page, index = 1): Promise<string> {
   if (!page) {
@@ -282,14 +295,14 @@ export async function getTextareaOutput(page: Page, index = 1): Promise<string> 
   }
   
   // Get the content of the textarea
-  return textareas[index].inputValue();
+  return await textareas[index].inputValue();
 }
 
 /**
  * Waits for output to appear in a textarea with various conditions
  * @param {Page} page - Playwright page object
  * @param {WaitForOutputOptions} options - Options for what to wait for
- * @returns {Promise<string>} Promise that resolves to the output text when the condition is met
+ * @returns {Promise<string>} Promise that resolves to the output text when the condition is met or empty string if page is null
  */
 export async function waitForTextareaOutput(page: Page, options: WaitForOutputOptions = {}): Promise<string> {
   if (!page) {
@@ -330,4 +343,4 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
     console.error('Error waiting for textarea output:', error);
     throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
   }
-} 
+}                             

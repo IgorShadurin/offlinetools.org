@@ -16,7 +16,7 @@ import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './uti
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';

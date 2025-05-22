@@ -24,7 +24,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Tool name constants
 const TOOL_BUTTON_NAME = 'Base64 String Encode/Decode';
@@ -82,7 +82,9 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'base64-encode', 'after-input');
     
     // Encode the input and wait for result
-    await (await findButtonByText(page, 'Encode to Base64')).click();
+    const encodeButton = await findButtonByText(page, 'Encode to Base64');
+    if (!encodeButton) throw new Error('Encode to Base64 button not found');
+    await encodeButton.click();
     
     // Wait for content to update
     await waitForTextareaOutput(page, { notEmpty: true });
@@ -104,14 +106,20 @@ describe('Base64 Encoder/Decoder tests', async () => {
     await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Switch to decode mode
-    await (await findButtonByText(page, 'Decode')).click();
+    const decodeTabButton = await findButtonByText(page, 'Decode');
+    if (!decodeTabButton) throw new Error('Decode tab button not found');
+    await decodeTabButton.click();
     
     // Input test data
     await fillTextareaInput(page, 'SGVsbG8gV29ybGQh');
     await takeScreenshot(page, 'base64-decode', 'after-input');
-    await (await findButtonByText(page, 'Decode from Base64')).click();
+    
+    const decodeButton = await findButtonByText(page, 'Decode from Base64');
+    if (!decodeButton) throw new Error('Decode from Base64 button not found');
+    await decodeButton.click();
+    
     await waitForTextareaOutput(page, { notEmpty: true });
     // Capture final state
     await takeScreenshot(page, 'base64-decode', 'after-decoding', true);
   });
-}); 
+});                
