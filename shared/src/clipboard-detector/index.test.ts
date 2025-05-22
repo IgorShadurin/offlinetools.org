@@ -36,10 +36,11 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(9);
+      expect(result).toHaveLength(10);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
+      expect(result).toContain(Tool.HTML_TEXT_EXTRACTOR);
       expect(result).toContain(Tool.JSON_FORMATTER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
@@ -56,10 +57,11 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(9);
+      expect(result).toHaveLength(10);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
+      expect(result).toContain(Tool.HTML_TEXT_EXTRACTOR);
       expect(result).toContain(Tool.JSON_FORMATTER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
@@ -174,6 +176,26 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.URL_ENCODER);
     });
     
+    it('should include html-text-extractor for valid HTML content', () => {
+      const options: ClipboardDetectorOptions = { 
+        type: 'string', 
+        content: '<div><p>This is HTML content</p></div>'
+      };
+      const result = detectClipboardTools(options);
+      
+      expect(result).toContain(Tool.HTML_TEXT_EXTRACTOR);
+    });
+    
+    it('should not include html-text-extractor for non-HTML content', () => {
+      const options: ClipboardDetectorOptions = { 
+        type: 'string', 
+        content: 'This is plain text without any HTML tags'
+      };
+      const result = detectClipboardTools(options);
+      
+      expect(result).not.toContain(Tool.HTML_TEXT_EXTRACTOR);
+    });
+    
     // Test plain text content
     it('should include URL_ENCODER plus text-hash-generator, file-hash-compare and binary-base64-codec for any string content', () => {
       const options: ClipboardDetectorOptions = { 
@@ -217,10 +239,11 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(9);
+      expect(result).toHaveLength(10);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
+      expect(result).toContain(Tool.HTML_TEXT_EXTRACTOR);
       expect(result).toContain(Tool.JSON_FORMATTER);
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
@@ -258,4 +281,4 @@ describe('Clipboard Detector', () => {
       });
     });
   });
-}); 
+});        

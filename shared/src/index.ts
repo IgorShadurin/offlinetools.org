@@ -39,6 +39,9 @@ export * from './clipboard-detector';
 // Export File Generator
 export * from './file-generator';
 
+// Export HTML Text Extractor
+export * from './html-text-extractor';
+
 // Export Text Hash Generator with renamed exports to avoid conflicts
 import {
   HashAlgorithm as TextHashAlgorithm,
@@ -64,7 +67,6 @@ export {
 
 // Export UUID Generator
 export * from './uuid-generator';
-
 
 // Export Speech Length Estimator
 export * from './speech-length-estimator';
