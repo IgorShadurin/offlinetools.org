@@ -18,8 +18,10 @@ import { useState, useRef, useEffect } from "react";
 import { AlertCircle, Check, Copy, Download, Upload, Link, FileText } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import QrCodeExplanation from "./QrCodeExplanation";
+import Image from "next/image";
 
 export default function QrCode() {
+  // State for generator
   const [input, setInput] = useState("");
   const [qrCodeOutput, setQrCodeOutput] = useState("");
   const [errorCorrection, setErrorCorrection] = useState<QRCodeErrorCorrectionLevel>(
@@ -35,10 +37,12 @@ export default function QrCode() {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState("generate");
   
+  // Reference to file input for scanner
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [scanResult, setScanResult] = useState("");
   const [scanError, setScanError] = useState<string | null>(null);
   
+  // Generate QR code
   const handleGenerate = async () => {
     try {
       if (!input) {
@@ -63,6 +67,7 @@ export default function QrCode() {
     }
   };
   
+  // Handle copy to clipboard
   const handleCopy = () => {
     navigator.clipboard.writeText(
       outputFormat === QRCodeOutputFormat.SVG ? qrCodeOutput : input
@@ -71,43 +76,46 @@ export default function QrCode() {
     setTimeout(() => setCopied(false), 2000);
   };
   
+  // Handle download
   const handleDownload = () => {
-    const filename = "qrcode";
-    const data = qrCodeOutput;
-    const mimeType = "image/svg+xml";
-    
     if (outputFormat === QRCodeOutputFormat.DATA_URL) {
-      filename += ".png";
+      const downloadFilename = "qrcode.png";
       const blob = dataURLtoBlob(qrCodeOutput);
       const url = URL.createObjectURL(blob);
       
       const a = document.createElement("a");
       a.href = url;
-      a.download = filename;
+      a.download = downloadFilename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       return;
-    } else if (outputFormat === QRCodeOutputFormat.SVG) {
-      filename += ".svg";
+    } 
+    
+    let downloadFilename = "qrcode";
+    let downloadMimeType = "image/svg+xml";
+    
+    if (outputFormat === QRCodeOutputFormat.SVG) {
+      downloadFilename += ".svg";
     } else {
-      filename += ".txt";
-      mimeType = "text/plain";
+      downloadFilename += ".txt";
+      downloadMimeType = "text/plain";
     }
     
-    const blob = new Blob([data], { type: mimeType });
+    const blob = new Blob([qrCodeOutput], { type: downloadMimeType });
     const url = URL.createObjectURL(blob);
     
     const a = document.createElement("a");
     a.href = url;
-    a.download = filename;
+    a.download = downloadFilename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
   
+  // Convert data URL to Blob
   const dataURLtoBlob = (dataURL: string): Blob => {
     const arr = dataURL.split(',');
     const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
@@ -122,6 +130,7 @@ export default function QrCode() {
     return new Blob([u8arr], { type: mime });
   };
   
+  // Handle file upload for scanning
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -130,12 +139,10 @@ export default function QrCode() {
       setScanError(null);
       
       const reader = new FileReader();
-      reader.onload = async (e) => {
+      reader.onload = () => {
         // We don't need to use dataUrl here since we're simulating the scan
-        // const dataUrl = e.target?.result as string;
         
         try {
-          
           setTimeout(() => {
             setScanResult("https://offlinetools.org");
           }, 500);
@@ -157,6 +164,7 @@ export default function QrCode() {
     }
   };
   
+  // Clear file input when changing tabs
   useEffect(() => {
     if (activeTab === "scan" && fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -310,7 +318,16 @@ export default function QrCode() {
                         <div dangerouslySetInnerHTML={{ __html: qrCodeOutput }} />
                       )}
                       {outputFormat === QRCodeOutputFormat.DATA_URL && (
-                        <img src={qrCodeOutput} alt="QR Code" className="max-w-full max-h-[300px]" />
+                        <div className="max-w-full max-h-[300px]">
+                          {/* Using next/image instead of img tag */}
+                          <Image 
+                            src={qrCodeOutput} 
+                            alt="QR Code" 
+                            width={size} 
+                            height={size} 
+                            style={{ maxWidth: '100%', maxHeight: '300px' }}
+                          />
+                        </div>
                       )}
                       {outputFormat === QRCodeOutputFormat.UTF8 && (
                         <pre className="font-mono text-xs whitespace-pre">{qrCodeOutput}</pre>
