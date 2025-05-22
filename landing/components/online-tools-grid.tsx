@@ -46,6 +46,11 @@ export const onlineTools = [
     path: "/tools/uuid-generator",
     description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",
   },
+  {
+    title: "Speech Length Estimator",
+    path: "/tools/speech-length-estimator",
+    description: "Calculate how long it will take to speak a text with adjustable speed settings.",
+  },
 ];
 
 /**

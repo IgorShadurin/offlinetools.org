@@ -36,7 +36,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(8);
+      expect(result).toHaveLength(9);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -45,6 +45,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
+      expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
     });
     
     // Test empty string content
@@ -55,7 +56,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(8);
+      expect(result).toHaveLength(9);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -64,6 +65,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
+      expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
     });
     
     // Test JSON content
@@ -215,7 +217,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(8);
+      expect(result).toHaveLength(9);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -224,8 +226,9 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
+      expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
     });
-    
+
     describe('UUID detection', () => {
       it('should detect v4 UUID', () => {
         const options = {
@@ -235,7 +238,7 @@ describe('Clipboard Detector', () => {
         const result = detectClipboardTools(options);
         expect(result).toContain(Tool.UUID_GENERATOR);
       });
-      
+
       it('should detect v1 UUID', () => {
         const options = {
           type: 'string' as ClipboardType,
@@ -244,7 +247,7 @@ describe('Clipboard Detector', () => {
         const result = detectClipboardTools(options);
         expect(result).toContain(Tool.UUID_GENERATOR);
       });
-      
+
       it('should not detect invalid UUID', () => {
         const options = {
           type: 'string' as ClipboardType,
@@ -255,4 +258,4 @@ describe('Clipboard Detector', () => {
       });
     });
   });
-});   
+}); 

@@ -14,7 +14,8 @@ export enum Tool {
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
   FILE_GENERATOR = 'file-generator',
-  UUID_GENERATOR = 'uuid-generator'
+  UUID_GENERATOR = 'uuid-generator',
+  SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator'
 }
 
 /**
@@ -39,7 +40,8 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
     Tool.FILE_GENERATOR,
-    Tool.UUID_GENERATOR
+    Tool.UUID_GENERATOR,
+    Tool.SPEECH_LENGTH_ESTIMATOR
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
@@ -186,7 +188,7 @@ export function detectClipboardTools(clipboardData: {
     if (isLikelyUuid(content)) {
       prioritizedTools.push(Tool.UUID_GENERATOR);
     }
-    
+
     // Add the other general tools that weren't specifically matched
     compatibleTools.forEach(tool => {
       // Don't duplicate specialized tools that were already matched
@@ -213,4 +215,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-}      
+} 
