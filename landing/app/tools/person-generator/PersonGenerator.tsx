@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+// import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox"
 import { 
   Select, 
@@ -141,7 +141,7 @@ export default function PersonGenerator() {
                 <Checkbox 
                   id="includeLabels" 
                   checked={includeLabels}
-                  onCheckedChange={(checked) => setIncludeLabels(checked === true)}
+                  onCheckedChange={(checked: boolean | "indeterminate") => setIncludeLabels(checked === true)}
                 />
                 <Label htmlFor="includeLabels">Include field labels in text output</Label>
               </div>
