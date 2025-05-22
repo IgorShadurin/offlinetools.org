@@ -14,29 +14,29 @@ import {
 } from 'vitest'
 import { 
   launchElectronWithRetry, 
+  findButtonByText, 
   takeScreenshot, 
+  navigateToTool, 
   waitForComponentTitle,
-  findButtonByText
+  fillTextareaInput,
+  waitForTextareaOutput,
+  getTextareaOutput
 } from './utils'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
 let page: Page | null = null
 
-// Tool name constants
-const TOOL_BUTTON_NAME = 'Clipboard Detector';
-const COMPONENT_TITLE = 'Clipboard Detector';
+const TOOL_BUTTON_NAME = 'Password Generator';
+const COMPONENT_TITLE = 'Password Generator';
 
-// Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
 
-describe('Clipboard Detector tests', async () => {
+describe('Password Generator tests', async () => {
   beforeAll(async () => {
     try {
-      // Launch Electron with retry logic
       electronApp = await launchElectronWithRetry();
       
-      // Get the first window
       page = await electronApp.firstWindow();
       
       if (!page) {
@@ -44,7 +44,6 @@ describe('Clipboard Detector tests', async () => {
         return;
       }
       
-      // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
       await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
@@ -67,46 +66,40 @@ describe('Clipboard Detector tests', async () => {
     }
   });
 
-  test('should load the clipboard detector component by default', async () => {
+  test('should navigate to Password Generator', async () => {
     expect(page).not.toBeNull();
     if (!page) return;
     
-    // Take screenshot of initial state
-    await takeScreenshot(page, 'clipboard-detector', 'initial-view');
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    // Wait for the sidebar to be visible
-    await page.waitForSelector('div.w-64', { state: 'visible' });
-
-    // Verify the clipboard detector is the first tool and selected by default
-    const firstTool = await page.locator('button:has-text("Clipboard Detector")').first();
-    expect(await firstTool.isVisible()).toBe(true);
+    await takeScreenshot(page, 'password-generator', 'initial-view');
     
-    const className = await firstTool.getAttribute('class');
-    expect(className).toContain('bg-primary/10');
-
-    // Verify the component title is visible
     await waitForComponentTitle(page, COMPONENT_TITLE);
     
-    // Take screenshot of loaded component
-    await takeScreenshot(page, 'clipboard-detector', 'component-loaded');
+    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    
+    await takeScreenshot(page, 'password-generator', 'component-loaded');
   });
 
-  test('should refresh clipboard when clicking the refresh button', async () => {
+  test('should generate password when clicking button', async () => {
     expect(page).not.toBeNull();
     if (!page) return;
     
-    // Wait for the component to load
-    await waitForComponentTitle(page, COMPONENT_TITLE);
-
-    // Find and click the refresh button
-    const refreshButton = await findButtonByText(page, 'Refresh');
-    expect(refreshButton).not.toBeNull();
-    if (!refreshButton) throw new Error('Refresh button not found');
-    await refreshButton.click();
-
-    // Take screenshot after refresh
-    await takeScreenshot(page, 'clipboard-detector', 'after-refresh');
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    // The test passes if we've reached this point without errors
+    await takeScreenshot(page, 'password-generator', 'before-generate');
+    
+    const generateButton = await findButtonByText(page, 'Generate Password');
+    expect(generateButton).not.toBeNull();
+    if (!generateButton) throw new Error('Generate Password button not found');
+    await generateButton.click();
+    
+    await waitForTextareaOutput(page, { notEmpty: true });
+    
+    const generatedPassword = await getTextareaOutput(page);
+    
+    expect(generatedPassword).not.toBe('');
+    
+    await takeScreenshot(page, 'password-generator', 'after-generate', true);
   });
-});      
+});
