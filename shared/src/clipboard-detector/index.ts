@@ -14,7 +14,9 @@ export enum Tool {
   JSON_FORMATTER = 'json-formatter',
   TEXT_HASH_GENERATOR = 'text-hash-generator',
   URL_ENCODER = 'url-encoder',
-  FILE_GENERATOR = 'file-generator'
+  FILE_GENERATOR = 'file-generator',
+  UUID_GENERATOR = 'uuid-generator',
+  SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator'
 }
 
 /**
@@ -39,7 +41,9 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.JSON_FORMATTER,
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
-    Tool.FILE_GENERATOR
+    Tool.FILE_GENERATOR,
+    Tool.UUID_GENERATOR,
+    Tool.SPEECH_LENGTH_ESTIMATOR
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
@@ -72,6 +76,20 @@ const URL_REGEX = /^(https?:\/\/|www\.)[^\s/$.?#].[^\s]*$/i;
  * Import HTML detection function
  */
 import { isLikelyHtml } from '../html-text-extractor';
+
+/**
+ * UUID detection regex
+ */
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/**
+ * Checks if a string appears to be a valid UUID
+ * @param content - String to check
+ * @returns Whether the string appears to be a valid UUID
+ */
+function isLikelyUuid(content: string): boolean {
+  return UUID_REGEX.test(content);
+}
 
 /**
  * Checks if a string appears to be valid JSON
@@ -177,6 +195,11 @@ export function detectClipboardTools(clipboardData: {
       prioritizedTools.push(Tool.BASE64_CODEC);
     }
     
+    // Check for UUID format
+    if (isLikelyUuid(content)) {
+      prioritizedTools.push(Tool.UUID_GENERATOR);
+    }
+
     // Add the other general tools that weren't specifically matched
     compatibleTools.forEach(tool => {
       // Don't duplicate specialized tools that were already matched
@@ -186,7 +209,8 @@ export function detectClipboardTools(clipboardData: {
           (tool === Tool.JSON_FORMATTER && !isLikelyJson(content)) ||
           (tool === Tool.HTML_TEXT_EXTRACTOR && !isLikelyHtml(content)) ||
           (tool === Tool.URL_ENCODER && !isLikelyUrl(content)) ||
-          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content))
+          (tool === Tool.BASE64_CODEC && !isLikelyBase64(content)) ||
+          (tool === Tool.UUID_GENERATOR && !isLikelyUuid(content))
         ) {
           // Skip this tool
         } else {
@@ -203,4 +227,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-}  
+}    

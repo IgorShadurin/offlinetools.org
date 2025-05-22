@@ -64,3 +64,9 @@ export {
   textToFileHashFormat,
   type HashGeneratorOptions,
 };
+
+// Export UUID Generator
+export * from './uuid-generator';
+
+// Export Speech Length Estimator
+export * from './speech-length-estimator';
