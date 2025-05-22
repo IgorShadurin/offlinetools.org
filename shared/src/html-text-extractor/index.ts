@@ -93,10 +93,10 @@ export function extractTextFromHtml(
           }
         ];
         convertOptions.formatters = {
-          linkFormat: function(elem, walk, builder) {
+          linkFormat: function(elem, walk, builder): void {
             const href = elem.attribs.href;
             const content = elem.children
-              .map((child: any) => child.data || '')
+              .map((child) => child.data || '')
               .join('')
               .trim();
             builder.addInline(`${content}(${href})`);
@@ -114,7 +114,7 @@ export function extractTextFromHtml(
       
       convertOptions.formatters = {
         ...(convertOptions.formatters || {}),
-        imageFormat: function(elem, walk, builder) {
+        imageFormat: function(elem, walk, builder): void {
           if (options.includeImageAlt && elem.attribs.alt) {
             builder.addInline(`[Image: ${elem.attribs.alt}]`);
           }

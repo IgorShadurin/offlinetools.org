@@ -36,13 +36,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-<<<<<<< HEAD
-      expect(result).toHaveLength(8);
-||||||| 1292e9c
-      expect(result).toHaveLength(7);
-=======
-      expect(result).toHaveLength(9);
->>>>>>> master
+      expect(result).toHaveLength(10);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -63,13 +57,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-<<<<<<< HEAD
-      expect(result).toHaveLength(8);
-||||||| 1292e9c
-      expect(result).toHaveLength(7);
-=======
-      expect(result).toHaveLength(9);
->>>>>>> master
+      expect(result).toHaveLength(10);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -251,13 +239,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-<<<<<<< HEAD
-      expect(result).toHaveLength(8);
-||||||| 1292e9c
-      expect(result).toHaveLength(7);
-=======
-      expect(result).toHaveLength(9);
->>>>>>> master
+      expect(result).toHaveLength(10);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -299,4 +281,4 @@ describe('Clipboard Detector', () => {
       });
     });
   });
-});    
+});        
