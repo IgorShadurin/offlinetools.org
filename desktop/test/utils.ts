@@ -63,18 +63,6 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
     }
   }
   
-  if (!isCI) {
-    console.error('All Electron launch attempts failed in local environment. Tests will be skipped.');
-    // Return a mock Electron application that will allow tests to be skipped gracefully
-    return {
-      close: async () => {},
-      firstWindow: async () => null as any,
-      browserWindow: async () => null as any,
-      evaluate: async () => null as any,
-      evaluateHandle: async () => null as any,
-    } as unknown as ElectronApplication;
-  }
-  
   console.error('All Electron launch attempts failed');
   throw new Error(`Failed to launch Electron after ${maxRetries} attempts: ${lastError?.message}`);
 }
@@ -188,28 +176,22 @@ export async function takeScreenshot(
  */
 export async function navigateToTool(page: Page, toolName: string, componentTitle?: string): Promise<void> {
   if (!page) {
-    console.warn(`Skipping navigation to ${toolName} because page is null`);
-    return;
+    throw new Error('Page object is null or undefined');
   }
   
-  try {
-    // Find and click the tool button in the sidebar
-    const button = await findButtonByText(page, toolName);
-    if (!button) {
-      console.warn(`Tool button "${toolName}" not found in sidebar - skipping test`);
-      return;
-    }
-    
-    await button.click();
-    
-    // Use provided componentTitle or fallback to toolName
-    const titleToWaitFor = componentTitle || toolName;
-    
-    // Wait for the component title to appear
-    await waitForComponentTitle(page, titleToWaitFor);
-  } catch (error) {
-    console.warn(`Error navigating to ${toolName}: ${(error as Error).message}`);
+  // Find and click the tool button in the sidebar
+  const button = await findButtonByText(page, toolName);
+  if (!button) {
+    throw new Error(`Tool button "${toolName}" not found in sidebar`);
   }
+  
+  await button.click();
+  
+  // Use provided componentTitle or fallback to toolName
+  const titleToWaitFor = componentTitle || toolName;
+  
+  // Wait for the component title to appear
+  await waitForComponentTitle(page, titleToWaitFor);
 }
 
 /**
@@ -221,8 +203,7 @@ export async function navigateToTool(page: Page, toolName: string, componentTitl
  */
 export async function waitForComponentTitle(page: Page, title: string, timeout?: number): Promise<void> {
   if (!page) {
-    console.warn(`Skipping wait for component title "${title}" because page is null`);
-    return;
+    throw new Error('Page object is null or undefined');
   }
   
   // Adjust timeout for CI environment if not specified
@@ -237,7 +218,8 @@ export async function waitForComponentTitle(page: Page, title: string, timeout?:
       timeout
     });
   } catch (error) {
-    console.warn(`Error waiting for component title "${title}": ${(error as Error).message}`);
+    console.error(`Error waiting for component title "${title}":`, error);
+    throw new Error(`Component with title "${title}" did not appear within timeout`);
   }
 }
 
@@ -266,33 +248,26 @@ export interface WaitForOutputOptions {
  */
 export async function fillTextareaInput(page: Page, text: string, index = 0): Promise<any> {
   if (!page) {
-    console.warn(`Skipping fillTextareaInput because page is null`);
-    return null;
+    throw new Error('Page object is null or undefined');
   }
   
-  try {
-    // Wait for textareas to be available
-    await page.waitForSelector('textarea', { 
-      state: 'visible',
-      timeout: process.env.CI === 'true' ? 10000 : 5000
-    });
-    
-    // Get all textareas and select the one at the specified index
-    const textareas = await page.$$('textarea');
-    
-    if (!textareas || textareas.length <= index) {
-      console.warn(`No textarea found at index ${index}`);
-      return null;
-    }
-    
-    // Fill the textarea with the provided text
-    await textareas[index].fill(text);
-    
-    return textareas[index];
-  } catch (error) {
-    console.warn(`Error filling textarea: ${(error as Error).message}`);
-    return null;
+  // Wait for textareas to be available
+  await page.waitForSelector('textarea', { 
+    state: 'visible',
+    timeout: process.env.CI === 'true' ? 10000 : 5000
+  });
+  
+  // Get all textareas and select the one at the specified index
+  const textareas = await page.$$('textarea');
+  
+  if (!textareas || textareas.length <= index) {
+    throw new Error(`No textarea found at index ${index}`);
   }
+  
+  // Fill the textarea with the provided text
+  await textareas[index].fill(text);
+  
+  return textareas[index];
 }
 
 /**
@@ -303,31 +278,24 @@ export async function fillTextareaInput(page: Page, text: string, index = 0): Pr
  */
 export async function getTextareaOutput(page: Page, index = 1): Promise<string> {
   if (!page) {
-    console.warn(`Skipping getTextareaOutput because page is null`);
-    return '';
+    throw new Error('Page object is null or undefined');
   }
   
-  try {
-    // Wait for textareas to be available
-    await page.waitForSelector('textarea', { 
-      state: 'visible',
-      timeout: process.env.CI === 'true' ? 10000 : 5000
-    });
-    
-    // Get all textareas and select the one at the specified index
-    const textareas = await page.$$('textarea');
-    
-    if (!textareas || textareas.length <= index) {
-      console.warn(`No textarea found at index ${index}`);
-      return '';
-    }
-    
-    // Get the content of the textarea
-    return await textareas[index].inputValue();
-  } catch (error) {
-    console.warn(`Error getting textarea output: ${(error as Error).message}`);
-    return '';
+  // Wait for textareas to be available
+  await page.waitForSelector('textarea', { 
+    state: 'visible',
+    timeout: process.env.CI === 'true' ? 10000 : 5000
+  });
+  
+  // Get all textareas and select the one at the specified index
+  const textareas = await page.$$('textarea');
+  
+  if (!textareas || textareas.length <= index) {
+    throw new Error(`No textarea found at index ${index}`);
   }
+  
+  // Get the content of the textarea
+  return await textareas[index].inputValue();
 }
 
 /**
@@ -338,8 +306,7 @@ export async function getTextareaOutput(page: Page, index = 1): Promise<string> 
  */
 export async function waitForTextareaOutput(page: Page, options: WaitForOutputOptions = {}): Promise<string> {
   if (!page) {
-    console.warn(`Skipping waitForTextareaOutput because page is null`);
-    return '';
+    throw new Error('Page object is null or undefined');
   }
   
   // Set default timeout based on CI environment
@@ -373,7 +340,7 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
     // Return the output text
     return await getTextareaOutput(page);
   } catch (error) {
-    console.warn(`Error waiting for textarea output: ${(error as Error).message}`);
-    return '';
+    console.error('Error waiting for textarea output:', error);
+    throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
   }
-}               
+}                             

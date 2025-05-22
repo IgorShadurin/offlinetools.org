@@ -21,7 +21,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Tool name constants
 const TOOL_BUTTON_NAME = 'Clipboard Detector';
@@ -39,11 +39,6 @@ describe('Clipboard Detector tests', async () => {
       // Get the first window
       page = await electronApp.firstWindow();
       
-      if (!page) {
-        console.warn('Page is null after launching Electron - tests will be skipped');
-        return;
-      }
-      
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
       await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
@@ -54,7 +49,7 @@ describe('Clipboard Detector tests', async () => {
       });
     } catch (error) {
       console.error('Setup failed:', error);
-      console.warn('Tests will be skipped due to setup failure');
+      throw error; // Make sure the test fails properly if setup fails
     }
   });
 
@@ -69,7 +64,6 @@ describe('Clipboard Detector tests', async () => {
 
   test('should load the clipboard detector component by default', async () => {
     expect(page).not.toBeNull();
-    if (!page) return;
     
     // Take screenshot of initial state
     await takeScreenshot(page, 'clipboard-detector', 'initial-view');
@@ -93,7 +87,6 @@ describe('Clipboard Detector tests', async () => {
 
   test('should refresh clipboard when clicking the refresh button', async () => {
     expect(page).not.toBeNull();
-    if (!page) return;
     
     // Wait for the component to load
     await waitForComponentTitle(page, COMPONENT_TITLE);
@@ -109,4 +102,4 @@ describe('Clipboard Detector tests', async () => {
     
     // The test passes if we've reached this point without errors
   });
-});      
+});                

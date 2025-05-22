@@ -24,7 +24,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Tool name constants
 const TOOL_BUTTON_NAME = 'URL Encoder/Decoder';
@@ -42,11 +42,6 @@ describe('URL Encoder/Decoder tests', async () => {
       // Get the first window
       page = await electronApp.firstWindow();
       
-      if (!page) {
-        console.warn('Page is null after launching Electron - tests will be skipped');
-        return;
-      }
-      
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
       await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
@@ -57,7 +52,7 @@ describe('URL Encoder/Decoder tests', async () => {
       });
     } catch (error) {
       console.error('Setup failed:', error);
-      console.warn('Tests will be skipped due to setup failure');
+      throw error; // Make sure the test fails properly if setup fails
     }
   });
 
@@ -72,7 +67,6 @@ describe('URL Encoder/Decoder tests', async () => {
 
   test('should properly render URL Encoder/Decoder', async () => {
     expect(page).not.toBeNull();
-    if (!page) return;
     
     // Take a screenshot of the initial state
     await takeScreenshot(page, 'url-encoder', 'initial-state');
@@ -104,7 +98,6 @@ describe('URL Encoder/Decoder tests', async () => {
 
   test('should decode URL encoded text', async () => {
     expect(page).not.toBeNull();
-    if (!page) return;
     
     // Navigate to URL Encoder/Decoder
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
@@ -133,4 +126,4 @@ describe('URL Encoder/Decoder tests', async () => {
     // Take a screenshot of the decoded result
     await takeScreenshot(page, 'url-decoder', 'after-decoding', true);
   });
-});      
+});                

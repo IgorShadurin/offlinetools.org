@@ -25,7 +25,7 @@ import {
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 const TOOL_BUTTON_NAME = 'Password Generator';
 const COMPONENT_TITLE = 'Password Generator';
@@ -39,11 +39,6 @@ describe('Password Generator tests', async () => {
       
       page = await electronApp.firstWindow();
       
-      if (!page) {
-        console.warn('Page is null after launching Electron - tests will be skipped');
-        return;
-      }
-      
       const loadTimeout = isCI ? 30000 : 10000;
       await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
@@ -53,7 +48,7 @@ describe('Password Generator tests', async () => {
       });
     } catch (error) {
       console.error('Setup failed:', error);
-      console.warn('Tests will be skipped due to setup failure');
+      throw error; // Make sure the test fails properly if setup fails
     }
   });
 
@@ -68,7 +63,6 @@ describe('Password Generator tests', async () => {
 
   test('should navigate to Password Generator', async () => {
     expect(page).not.toBeNull();
-    if (!page) return;
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
@@ -83,7 +77,6 @@ describe('Password Generator tests', async () => {
 
   test('should generate password when clicking button', async () => {
     expect(page).not.toBeNull();
-    if (!page) return;
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     

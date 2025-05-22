@@ -16,7 +16,7 @@ import { launchElectronWithRetry, findButtonByText, takeScreenshot } from './uti
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
-let page: Page | null = null
+let page: Page
 
 // Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
@@ -30,11 +30,6 @@ describe('[electron-vite-react] e2e tests', async () => {
       // Get the first window
       page = await electronApp.firstWindow();
       
-      if (!page) {
-        console.warn('Page is null after launching Electron - tests will be skipped');
-        return;
-      }
-      
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
       await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
@@ -45,7 +40,7 @@ describe('[electron-vite-react] e2e tests', async () => {
       });
     } catch (error) {
       console.error('Setup failed:', error);
-      console.warn('Tests will be skipped due to setup failure');
+      throw error; // Make sure the test fails properly if setup fails
     }
   });
 
@@ -61,7 +56,6 @@ describe('[electron-vite-react] e2e tests', async () => {
   test('startup', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
-    if (!page) return;
     
     // Take initial screenshot
     await takeScreenshot(page, 'e2e-startup', 'initial-view');
@@ -73,7 +67,6 @@ describe('[electron-vite-react] e2e tests', async () => {
   test('should load the tools sidebar correctly', async () => {
     // Make sure the page is initialized
     expect(page).not.toBeNull();
-    if (!page) return;
     
     // Use longer timeout in CI
     const waitTimeout = isCI ? 15000 : 5000;
