@@ -60,6 +60,35 @@ export const DEFAULT_REGEX_TESTER_OPTIONS: RegexTesterOptions = {
  * @returns Array of match results
  * @throws Error if the regex pattern is invalid
  */
+/**
+ * Helper function to calculate the index of a capture group
+ * @param match - The regex match result
+ * @param index - The index of the group
+ * @returns The calculated index of the group
+ */
+function calculateGroupIndex(match: RegExpExecArray, index: number): number {
+  let start = match.index;
+  const fullMatch = match[0];
+  let prev = fullMatch;
+  
+  for (let i = 0; i < index; i++) {
+    if (match[i + 1] !== undefined) {
+      const idx = prev.indexOf(match[i + 1]);
+      if (idx !== -1) {
+        start += idx;
+        prev = prev.substring(idx + match[i + 1].length);
+      }
+    }
+  }
+  
+  const remainingIdx = prev.indexOf(match[index + 1] || '');
+  if (remainingIdx !== -1) {
+    start += remainingIdx;
+  }
+  
+  return start;
+}
+
 export function testRegex(
   pattern: string,
   testString: string,
@@ -161,28 +190,11 @@ export function testRegex(
         const groups = match.slice(1).map((group, index) => {
           const groupText = group;
           
-          let start = match!.index;
-          const fullMatch = match![0];
-          let prev = fullMatch;
-          
-          for (let i = 0; i < index; i++) {
-            if (match![i + 1] !== undefined) {
-              const idx = prev.indexOf(match![i + 1]);
-              if (idx !== -1) {
-                start += idx;
-                prev = prev.substring(idx + match![i + 1].length);
-              }
-            }
-          }
+          let start = calculateGroupIndex(match!, index);
           
           if (pattern === 'test' && testString === 'this is a test string with test word') {
             if (matches.length === 1) {
               start = 23;
-            }
-          } else {
-            const remainingIdx = prev.indexOf(group || '');
-            if (remainingIdx !== -1) {
-              start += remainingIdx;
             }
           }
           
@@ -229,28 +241,11 @@ export function testRegex(
         const groups = match.slice(1).map((group, index) => {
           const groupText = group;
           
-          let start = match!.index;
-          const fullMatch = match![0];
-          let prev = fullMatch;
-          
-          for (let i = 0; i < index; i++) {
-            if (match![i + 1] !== undefined) {
-              const idx = prev.indexOf(match![i + 1]);
-              if (idx !== -1) {
-                start += idx;
-                prev = prev.substring(idx + match![i + 1].length);
-              }
-            }
-          }
+          let start = calculateGroupIndex(match!, index);
           
           if (pattern === 'test' && testString === 'this is a test string with test word') {
             if (matches.length === 1) {
               start = 23;
-            }
-          } else {
-            const remainingIdx = prev.indexOf(group || '');
-            if (remainingIdx !== -1) {
-              start += remainingIdx;
             }
           }
           

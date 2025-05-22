@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { testRegex, RegexFlag, RegexMatch } from "shared";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
@@ -29,10 +29,10 @@ export default function RegexTester() {
     [RegexFlag.STICKY]: false,
   });
 
-  const handleTest = () => {
+  const handleTest = useCallback(() => {
     try {
       const activeFlags = Object.entries(flags)
-        .filter(([_, isActive]) => isActive)
+        .filter(([, isActive]) => isActive)
         .map(([flag]) => flag as RegexFlag);
 
       const results = testRegex(pattern, testString, { flags: activeFlags });
@@ -42,7 +42,7 @@ export default function RegexTester() {
       setError((error as Error).message);
       setMatches([]);
     }
-  };
+  }, [flags, pattern, testString]);
 
   const toggleFlag = (flag: RegexFlag) => {
     setFlags(prevFlags => ({
@@ -100,6 +100,12 @@ export default function RegexTester() {
     return <div className="whitespace-pre-wrap">{segments}</div>;
   };
 
+  const activeFlags = Object.entries(flags)
+    .filter(([, isActive]) => isActive)
+    .map(([flag]) => flag as RegexFlag);
+  
+  const activeFlagsString = activeFlags.join('');
+  
   useEffect(() => {
     if (pattern && testString) {
       handleTest();
@@ -107,7 +113,7 @@ export default function RegexTester() {
       setMatches([]);
       setError(null);
     }
-  }, [pattern, testString, flags]);
+  }, [pattern, testString, activeFlagsString, handleTest]);  // Include handleTest in dependencies
 
   const renderMatchDetails = () => {
     if (matches.length === 0) {
