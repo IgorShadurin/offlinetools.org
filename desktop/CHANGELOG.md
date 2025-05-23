@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/IgorShadurin/offlinetools.org/compare/desktop-v1.3.0...desktop-v1.4.0) (2025-05-23)
+
+
+### Features
+
+* add icons for macOS and Linux builds in electron-builder configuration ([6c4875d](https://github.com/IgorShadurin/offlinetools.org/commit/6c4875da9114768e57ebf2d5277c1aa1a2153ef7))
+* add macOS entitlements plist and update build configuration for resource paths ([d603dd4](https://github.com/IgorShadurin/offlinetools.org/commit/d603dd4dedfbcc8c11c850d357e1d7f689fb8431))
+* implement code signing and notarization for macOS builds with detailed setup instructions in README ([1e7c2f0](https://github.com/IgorShadurin/offlinetools.org/commit/1e7c2f0687ce1f3e743ab6d1308666e7e7dd78c2))
+* simplify artifact naming and update release configurations for Windows, macOS, and Linux ([58ef57c](https://github.com/IgorShadurin/offlinetools.org/commit/58ef57cbb96985f17b859b9231c47d7a93c9d594))
+* update build scripts to clarify ad-hoc signing in development builds ([8f15a8d](https://github.com/IgorShadurin/offlinetools.org/commit/8f15a8d36053bbcdc04f22a163f04e174a1791da))
+* update lucide-react to version 0.510.0 and react/react-dom to version 19.1.0 ([1292e9c](https://github.com/IgorShadurin/offlinetools.org/commit/1292e9cbaa1600b77387a5cbca1b973440407281))
+* update release workflows to include detailed download instructions for macOS and enhance artifact naming ([dc9a00e](https://github.com/IgorShadurin/offlinetools.org/commit/dc9a00e189b3ee51d13961dd610dbd321e5d4c60))
+
 ## [1.3.0](https://github.com/IgorShadurin/offlinetools.org/compare/desktop-v1.2.0...desktop-v1.3.0) (2025-05-01)
 
 
