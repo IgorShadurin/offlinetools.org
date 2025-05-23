@@ -13,6 +13,7 @@ import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import Base64CodecExplanation from "./Base64CodecExplanation";
+import Base64CodecCategories from "./Base64CodecCategories";
 
 export default function Base64Codec() {
   const [input, setInput] = useState("");
@@ -155,6 +156,12 @@ export default function Base64Codec() {
       {/* Add the explanation section */}
       <Container className="py-8 md:py-12">
         <Base64CodecExplanation />
+      </Container>
+
+      {/* Add the categories section */}
+      <Container className="py-8 md:py-12">
+        <h2 className="text-3xl font-bold text-center mb-8">Explore Base64 Topics</h2>
+        <Base64CodecCategories />
       </Container>
     </>
   );

@@ -21,7 +21,7 @@
   </g>
   
   <!-- Tagline -->
-  <text x="600" y="280" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="36" fill="white" text-anchor="middle" opacity="0.9">All-in-one Toolbox for Developers</text>
+  <text x="600" y="280" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="36" fill="white" text-anchor="middle" opacity="0.9">One-Stop Developer Toolbox</text>
   
   <!-- Features icons -->
   <g>

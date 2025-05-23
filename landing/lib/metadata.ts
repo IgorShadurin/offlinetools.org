@@ -71,7 +71,7 @@ export function generateMetadata(overrides?: Partial<Metadata>): Metadata {
   return {
     metadataBase: new URL(siteConfig.url),
     title: {
-      default: `${siteConfig.name} - All-in-one Toolbox for Developers`,
+      default: `${siteConfig.name} - One-Stop Developer Toolbox`,
       template: `%s | ${siteConfig.name}`,
     },
     description: siteConfig.description,
@@ -114,7 +114,7 @@ export function generateMetadata(overrides?: Partial<Metadata>): Metadata {
       type: "website",
       locale: "en_US",
       url: siteConfig.url,
-      title: `${siteConfig.name} - All-in-one Toolbox for Developers`,
+      title: `${siteConfig.name} - One-Stop Developer Toolbox`,
       description: siteConfig.description,
       siteName: siteConfig.name,
       images: [
@@ -122,13 +122,13 @@ export function generateMetadata(overrides?: Partial<Metadata>): Metadata {
           url: siteConfig.ogImage,
           width: 1200,
           height: 630,
-          alt: `${siteConfig.name} - All-in-one Toolbox for Developers`,
+          alt: `${siteConfig.name} - One-Stop Developer Toolbox`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${siteConfig.name} - All-in-one Toolbox for Developers`,
+      title: `${siteConfig.name} - One-Stop Developer Toolbox`,
       description: siteConfig.description,
       images: [siteConfig.ogImage],
     },

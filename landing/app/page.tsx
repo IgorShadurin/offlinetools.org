@@ -36,7 +36,7 @@ export default function Home() {
         <section className="relative py-20 md:py-28">
           <Container className="flex flex-col items-center text-center">
             <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6">
-              All-in-one Toolbox for Developers
+              One-Stop Developer Toolbox
             </h1>
             <p className="max-w-2xl text-lg text-muted-foreground mb-8 md:mb-10">
               A collection of essential offline developer tools to boost your productivity. Available for macOS,
