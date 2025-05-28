@@ -13,7 +13,7 @@ import { StructuredData } from "@/components/structured-data";
 import { onlineTools } from "@/components/online-tools-grid";
 import { ImageModal } from "@/components/ui/modal";
 import { useState } from "react";
-import { RecentlyVisitedTools } from "@/components/recently-visited-tools"; // Import the new component
+import { RecentlyVisitedTools } from "@/components/recently-visited-tools";
 
 export default function Home() {
   const [modalImage, setModalImage] = useState<{src: string; alt: string} | null>(null);
@@ -50,8 +50,7 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-            {/* Recently Visited Tools Section */}
-            <div className="w-full max-w-2xl mt-6"> {/* Added a container for sizing and spacing */}
+            <div className="w-full max-w-2xl mt-6">
               <RecentlyVisitedTools />
             </div>
             <div className="mt-12 md:mt-16 relative w-full max-w-5xl rounded-lg overflow-hidden">

@@ -2,8 +2,8 @@
 
 import { useRecentlyVisitedTools, RecentTool } from '@/lib/hooks/useRecentlyVisitedTools';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button'; // Assuming a Button component is available
-import { Trash2, History } from 'lucide-react'; // Icons for clear button and title
+import { Button } from '@/components/ui/button';
+import { Trash2, History } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"; // Assuming an AlertDialog is available
+} from "@/components/ui/alert-dialog";
 
 export const RecentlyVisitedTools: React.FC = () => {
   const { tools, clearTools, isLoading } = useRecentlyVisitedTools();
@@ -28,7 +28,7 @@ export const RecentlyVisitedTools: React.FC = () => {
   }
 
   if (tools.length === 0) {
-    return null; // Don't render anything if there are no recent tools
+    return null;
   }
 
   const handleClearTools = () => {
