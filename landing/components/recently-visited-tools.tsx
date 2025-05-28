@@ -1,20 +1,9 @@
 "use client";
 
-import { useRecentlyVisitedTools, RecentTool } from '@/lib/hooks/useRecentlyVisitedTools';
+import { useRecentlyVisitedTools } from '@/lib/hooks/useRecentlyVisitedTools';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Trash2, History } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 export const RecentlyVisitedTools: React.FC = () => {
   const { tools, clearTools, isLoading } = useRecentlyVisitedTools();
@@ -31,8 +20,10 @@ export const RecentlyVisitedTools: React.FC = () => {
     return null;
   }
 
-  const handleClearTools = () => {
-    clearTools();
+  const handleClearToolsWithConfirm = () => {
+    if (window.confirm("Are you sure you want to clear all recently visited tools? This action cannot be undone.")) {
+      clearTools();
+    }
   };
 
   return (
@@ -42,27 +33,9 @@ export const RecentlyVisitedTools: React.FC = () => {
           <History className="w-5 h-5 mr-2 text-primary" />
           Recently Visited Tools
         </h3>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" size="sm" disabled={tools.length === 0}>
-              <Trash2 className="w-4 h-4 mr-1" /> Clear All
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action will clear all your recently visited tools. This cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleClearTools}>
-                Clear
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <Button variant="outline" size="sm" disabled={tools.length === 0} onClick={handleClearToolsWithConfirm}>
+          <Trash2 className="w-4 h-4 mr-1" /> Clear All
+        </Button>
       </div>
       <ul className="space-y-2">
         {tools.map((tool) => (
