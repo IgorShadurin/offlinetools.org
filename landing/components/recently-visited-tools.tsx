@@ -8,14 +8,13 @@ import { Trash2, History } from 'lucide-react';
 export const RecentlyVisitedTools: React.FC = () => {
   const { tools, clearTools, isLoading } = useRecentlyVisitedTools();
 
+  // If loading, render nothing to prevent flicker on initial load.
+  // Content will appear once isLoading is false.
   if (isLoading) {
-    return (
-      <div className="mt-8 p-4 border rounded-lg shadow-sm bg-background">
-        <p className="text-muted-foreground">Loading recent tools...</p>
-      </div>
-    );
+    return null;
   }
 
+  // After loading, if there are no tools, render nothing.
   if (tools.length === 0) {
     return null;
   }
