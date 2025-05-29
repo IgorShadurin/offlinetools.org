@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const MAX_RECENT_TOOLS = 10;
+const MAX_RECENT_TOOLS = 5;
 const LOCAL_STORAGE_KEY = 'recentlyVisitedTools';
 
 export interface RecentTool {

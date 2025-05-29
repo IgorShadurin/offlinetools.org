@@ -8,13 +8,10 @@ import { Trash2, History } from 'lucide-react';
 export const RecentlyVisitedTools: React.FC = () => {
   const { tools, clearTools, isLoading } = useRecentlyVisitedTools();
 
-  // If loading, render nothing to prevent flicker on initial load.
-  // Content will appear once isLoading is false.
   if (isLoading) {
     return null;
   }
 
-  // After loading, if there are no tools, render nothing.
   if (tools.length === 0) {
     return null;
   }
@@ -36,15 +33,18 @@ export const RecentlyVisitedTools: React.FC = () => {
           <Trash2 className="w-4 h-4 mr-1" /> Clear All
         </Button>
       </div>
-      <ul className="space-y-2">
+      {/* Horizontal list using flexbox */}
+      <div className="flex flex-wrap gap-2"> {/* 'flex-wrap' allows items to wrap to next line if space is tight, 'gap-2' adds space between items */}
         {tools.map((tool) => (
-          <li key={tool.url}>
-            <Link href={tool.url} className="text-sm text-blue-600 hover:underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
-              {tool.title || 'Untitled Tool'}
-            </Link>
-          </li>
+          <Link
+            key={tool.url}
+            href={tool.url}
+            className="inline-block bg-muted hover:bg-muted/80 text-muted-foreground text-sm px-3 py-1 rounded-full transition-colors whitespace-nowrap" // Badge-like styling
+          >
+            {tool.title || 'Untitled Tool'}
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
