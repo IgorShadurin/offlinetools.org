@@ -1,6 +1,7 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { generateMetadata } from "@/lib/metadata";
+import { ToolVisitTracker } from "@/components/tool-visit-tracker"; // Import the new tracker component
 
 export const metadata = generateMetadata({
   title: {
@@ -27,6 +28,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <ToolVisitTracker /> {/* Add the tracker component here */}
     </div>
   );
 }
