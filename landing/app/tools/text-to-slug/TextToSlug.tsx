@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { textToSlug, SeparatorType, TextToSlugOptions, DEFAULT_TEXT_TO_SLUG_OPTIONS } from "shared";
+import { textToSlug, SeparatorType, TextToSlugOptions } from "shared";
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import TextToSlugExplanation from "./TextToSlugExplanation";
