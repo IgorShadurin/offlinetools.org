@@ -5,7 +5,6 @@ import { SectionHeading } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { convertEthereumUnit, EthereumUnit } from "shared";
 import { useState } from "react";
 import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
