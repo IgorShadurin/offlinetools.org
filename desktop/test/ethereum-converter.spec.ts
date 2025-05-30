@@ -81,11 +81,9 @@ describe('Ethereum Unit Converter tests', async () => {
     const etherInput = etherTextareas[4]; // Ether is the 5th input (0-indexed)
     await etherInput.fill('1');
     
-    await page.waitForFunction(() => {
-      const textareas = document.querySelectorAll('textarea');
-      return textareas.length >= 5 && 
-             textareas[0].value === '1000000000000000000'; // Wei is the 1st input (0-indexed)
-    }, { timeout: 2000 });
+    await page.waitForSelector('textarea:nth-of-type(1)', { timeout: 2000 });
+    const weiValue = await page.locator('textarea').nth(0).inputValue();
+    expect(weiValue).toBe('1000000000000000000');
     
     await takeScreenshot(page, 'ethereum-converter', 'ether-to-wei-conversion');
   });
@@ -100,11 +98,9 @@ describe('Ethereum Unit Converter tests', async () => {
     const gweiInput = gweiTextareas[1]; // Gwei is the 2nd input (0-indexed)
     await gweiInput.fill('1');
     
-    await page.waitForFunction(() => {
-      const textareas = document.querySelectorAll('textarea');
-      return textareas.length >= 5 && 
-             textareas[4].value === '0.000000001'; // Ether is the 5th input (0-indexed)
-    }, { timeout: 2000 });
+    await page.waitForSelector('textarea:nth-of-type(5)', { timeout: 2000 });
+    const etherValue = await page.locator('textarea').nth(4).inputValue();
+    expect(etherValue).toBe('0.000000001');
     
     await takeScreenshot(page, 'ethereum-converter', 'gwei-to-ether-conversion');
   });
