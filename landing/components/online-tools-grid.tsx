@@ -6,6 +6,11 @@ import React from "react";
  */
 export const onlineTools = [
   {
+    title: "Ethereum Unit Converter",
+    path: "/tools/ethereum-converter",
+    description: "Convert between Ethereum units including Wei, Gwei, Ether, Finney, and Szabo with precision.",
+  },
+  {
     title: "JSON Formatter",
     path: "/tools/json-formatter",
     description: "Format and beautify your JSON with customizable indentation options.",

@@ -73,3 +73,6 @@ export * from './speech-length-estimator';
 
 // Export Text to Slug
 export * from './text-to-slug';
+
+// Export Ethereum Converter
+export * from './ethereum-converter';
