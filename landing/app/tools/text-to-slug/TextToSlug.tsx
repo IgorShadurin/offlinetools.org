@@ -79,13 +79,23 @@ export default function TextToSlug() {
             </div>
           </div>
 
+          {/* Button Row */}
+          <div className="flex flex-wrap md:flex-nowrap gap-8">
+            <div className="w-full md:w-1/2">
+              <Button onClick={handleGenerate} className="w-full cursor-pointer">
+                Generate Slug
+              </Button>
+            </div>
+            <div className="w-full md:w-1/2">{/* Empty space to align with button */}</div>
+          </div>
+
           {/* Textareas Row */}
           <div className="flex flex-wrap md:flex-nowrap gap-8">
             {/* Input Textarea */}
             <div className="w-full md:w-1/2">
               <Textarea
                 id="input-text"
-                className="min-h-[300px] w-full"
+                className="min-h-[240px] w-full"
                 placeholder="Enter your text here..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
@@ -96,7 +106,7 @@ export default function TextToSlug() {
             <div className="w-full md:w-1/2">
               <Textarea
                 id="output-slug"
-                className="min-h-[300px] font-mono w-full"
+                className="min-h-[240px] font-mono w-full"
                 placeholder="Generated slug will appear here..."
                 value={outputSlug}
                 readOnly
@@ -195,15 +205,7 @@ export default function TextToSlug() {
             <div className="w-full md:w-1/2">{/* Empty space to align with options */}</div>
           </div>
 
-          {/* Button Row */}
-          <div className="flex flex-wrap md:flex-nowrap gap-8">
-            <div className="w-full md:w-1/2">
-              <Button onClick={handleGenerate} className="w-full">
-                Generate Slug
-              </Button>
-            </div>
-            <div className="w-full md:w-1/2">{/* Empty space to align with button */}</div>
-          </div>
+
         </div>
       </Container>
 
