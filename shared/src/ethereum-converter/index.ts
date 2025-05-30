@@ -102,7 +102,7 @@ export function convertEthereumUnit(
     const result = scaledValue / toFactor;
     const remainder = scaledValue % toFactor;
     
-    if (remainder === 0n) {
+    if (remainder.toString() === '0') {
       return result.toString();
     } else {
       const remainderStr = remainder.toString();
