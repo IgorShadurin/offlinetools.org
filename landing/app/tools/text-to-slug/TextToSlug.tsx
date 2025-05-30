@@ -79,16 +79,6 @@ export default function TextToSlug() {
             </div>
           </div>
 
-          {/* Button Row */}
-          <div className="flex flex-wrap md:flex-nowrap gap-8">
-            <div className="w-full md:w-1/2">
-              <Button onClick={handleGenerate} className="w-full cursor-pointer">
-                Generate Slug
-              </Button>
-            </div>
-            <div className="w-full md:w-1/2">{/* Empty space to align with button */}</div>
-          </div>
-
           {/* Textareas Row */}
           <div className="flex flex-wrap md:flex-nowrap gap-8">
             {/* Input Textarea */}
@@ -112,6 +102,16 @@ export default function TextToSlug() {
                 readOnly
               />
             </div>
+          </div>
+
+          {/* Button Row */}
+          <div className="flex flex-wrap md:flex-nowrap gap-8">
+            <div className="w-full md:w-1/2">
+              <Button onClick={handleGenerate} className="w-full cursor-pointer">
+                Generate Slug
+              </Button>
+            </div>
+            <div className="w-full md:w-1/2">{/* Empty space to align with button */}</div>
           </div>
 
           {/* Options Row */}
