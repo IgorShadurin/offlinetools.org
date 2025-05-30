@@ -77,12 +77,11 @@ describe('Ethereum Unit Converter tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const etherTextareas = await page.locator('textarea').all();
-    const etherInput = etherTextareas[4]; // Ether is the 5th input (0-indexed)
+    const etherInput = await page.locator('textarea[data-unit="Ether"]');
     await etherInput.fill('1');
     
-    await page.waitForSelector('textarea:nth-of-type(1)', { timeout: 2000 });
-    const weiValue = await page.locator('textarea').nth(0).inputValue();
+    await page.waitForSelector('textarea[data-unit="Wei"]', { timeout: 5000 });
+    const weiValue = await page.locator('textarea[data-unit="Wei"]').inputValue();
     expect(weiValue).toBe('1000000000000000000');
     
     await takeScreenshot(page, 'ethereum-converter', 'ether-to-wei-conversion');
@@ -94,12 +93,11 @@ describe('Ethereum Unit Converter tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const gweiTextareas = await page.locator('textarea').all();
-    const gweiInput = gweiTextareas[1]; // Gwei is the 2nd input (0-indexed)
+    const gweiInput = await page.locator('textarea[data-unit="Gwei"]');
     await gweiInput.fill('1');
     
-    await page.waitForSelector('textarea:nth-of-type(5)', { timeout: 2000 });
-    const etherValue = await page.locator('textarea').nth(4).inputValue();
+    await page.waitForSelector('textarea[data-unit="Ether"]', { timeout: 5000 });
+    const etherValue = await page.locator('textarea[data-unit="Ether"]').inputValue();
     expect(etherValue).toBe('0.000000001');
     
     await takeScreenshot(page, 'ethereum-converter', 'gwei-to-ether-conversion');
@@ -111,8 +109,7 @@ describe('Ethereum Unit Converter tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const etherTextareas = await page.locator('textarea').all();
-    const etherInput = etherTextareas[4]; // Ether is the 5th input (0-indexed)
+    const etherInput = await page.locator('textarea[data-unit="Ether"]');
     await etherInput.fill('invalid');
     
     await page.waitForSelector('.text-destructive', { timeout: 2000 });

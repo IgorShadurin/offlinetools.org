@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AlertCircle, Check, Copy } from "lucide-react";
-import { convertEthereumUnit, EthereumUnit } from "shared";
+import { convertEthereumUnit, EthereumUnit } from "shared/ethereum-converter";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -70,7 +70,7 @@ export function EthereumConverter({ className = "" }: EthereumConverterProps) {
       
       newValues[unit] = value;
       
-      Object.values(EthereumUnit).forEach((toUnit) => {
+      Object.values(EthereumUnit).forEach((toUnit: EthereumUnit) => {
         if (toUnit !== unit) {
           newValues[toUnit] = convertEthereumUnit(value, unit, toUnit);
         }
@@ -107,7 +107,7 @@ export function EthereumConverter({ className = "" }: EthereumConverterProps) {
               </div>
             )}
 
-            {Object.values(EthereumUnit).map((unit) => (
+            {Object.values(EthereumUnit).map((unit: EthereumUnit) => (
               <div key={unit} className="flex items-center gap-2">
                 <div className="w-16 text-sm font-medium">{unit}</div>
                 <Textarea
@@ -115,6 +115,7 @@ export function EthereumConverter({ className = "" }: EthereumConverterProps) {
                   placeholder={`Enter ${unit} value...`}
                   value={values[unit]}
                   onChange={(e) => handleValueChange(e.target.value, unit)}
+                  data-unit={unit}
                 />
                 {values[unit] && (
                   <Button

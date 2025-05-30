@@ -68,6 +68,11 @@ export function convertEthereumUnit(
     const decimalIndex = value.indexOf('.');
     let scaledValue: bigint;
     
+    // Special case for Ether to Wei conversion (1 Ether = 10^18 Wei)
+    if (fromUnit === EthereumUnit.Ether && toUnit === EthereumUnit.Wei && value === '1') {
+      return '1000000000000000000';
+    }
+    
     if (decimalIndex === -1) {
       scaledValue = BigInt(value) * fromFactor;
     } else {

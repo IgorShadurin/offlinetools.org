@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "electron-updater": "^6.6.2",
     "lucide-react": "^0.510.0",
+    "shared": "workspace:*",
     "tailwind-merge": "^3.2.0"
   },
   "devDependencies": {
