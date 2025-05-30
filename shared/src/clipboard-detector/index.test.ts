@@ -36,7 +36,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(10);
+      expect(result).toHaveLength(11);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -47,6 +47,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.FILE_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
       expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
+      expect(result).toContain(Tool.TEXT_TO_SLUG);
     });
     
     // Test empty string content
@@ -57,7 +58,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(10);
+      expect(result).toHaveLength(11);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -68,6 +69,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.FILE_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
       expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
+      expect(result).toContain(Tool.TEXT_TO_SLUG);
     });
     
     // Test JSON content
@@ -239,7 +241,7 @@ describe('Clipboard Detector', () => {
       };
       const result = detectClipboardTools(options);
       
-      expect(result).toHaveLength(10);
+      expect(result).toHaveLength(11);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -250,6 +252,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.FILE_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
       expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
+      expect(result).toContain(Tool.TEXT_TO_SLUG);
     });
 
     describe('UUID detection', () => {
@@ -281,4 +284,4 @@ describe('Clipboard Detector', () => {
       });
     });
   });
-});        
+});                

@@ -56,6 +56,11 @@ export const onlineTools = [
     path: "/tools/speech-length-estimator",
     description: "Calculate how long it will take to speak a text with adjustable speed settings.",
   },
+  {
+    title: "Text to Slug",
+    path: "/tools/text-to-slug",
+    description: "Convert text to URL-friendly slugs with customizable separators and character handling.",
+  },
 ];
 
 /**

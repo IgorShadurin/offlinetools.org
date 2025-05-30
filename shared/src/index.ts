@@ -70,3 +70,6 @@ export * from './uuid-generator';
 
 // Export Speech Length Estimator
 export * from './speech-length-estimator';
+
+// Export Text to Slug
+export * from './text-to-slug';
