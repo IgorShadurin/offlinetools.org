@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.5.0](https://github.com/IgorShadurin/offlinetools.org/compare/desktop-v1.4.0...desktop-v1.5.0) (2025-05-31)
+
+
+### Features
+
+* add icons for macOS and Linux builds in electron-builder configuration ([6c4875d](https://github.com/IgorShadurin/offlinetools.org/commit/6c4875da9114768e57ebf2d5277c1aa1a2153ef7))
+* add macOS entitlements plist and update build configuration for resource paths ([d603dd4](https://github.com/IgorShadurin/offlinetools.org/commit/d603dd4dedfbcc8c11c850d357e1d7f689fb8431))
+* implement code signing and notarization for macOS builds with detailed setup instructions in README ([1e7c2f0](https://github.com/IgorShadurin/offlinetools.org/commit/1e7c2f0687ce1f3e743ab6d1308666e7e7dd78c2))
+* implement Ethereum Unit Converter feature ([7bb1aaf](https://github.com/IgorShadurin/offlinetools.org/commit/7bb1aafe1996f5986e55505ba4668ea5b423e196))
+* simplify artifact naming and update release configurations for Windows, macOS, and Linux ([58ef57c](https://github.com/IgorShadurin/offlinetools.org/commit/58ef57cbb96985f17b859b9231c47d7a93c9d594))
+* update build scripts to clarify ad-hoc signing in development builds ([8f15a8d](https://github.com/IgorShadurin/offlinetools.org/commit/8f15a8d36053bbcdc04f22a163f04e174a1791da))
+* update lucide-react to version 0.510.0 and react/react-dom to version 19.1.0 ([1292e9c](https://github.com/IgorShadurin/offlinetools.org/commit/1292e9cbaa1600b77387a5cbca1b973440407281))
+* update release workflows to include detailed download instructions for macOS and enhance artifact naming ([dc9a00e](https://github.com/IgorShadurin/offlinetools.org/commit/dc9a00e189b3ee51d13961dd610dbd321e5d4c60))
+
+
+### Bug Fixes
+
+* replace page.waitForFunction with safer selector patterns to avoid CSP violations ([c27cc83](https://github.com/IgorShadurin/offlinetools.org/commit/c27cc83a93ffe4d5c78523cfc962faf26a8f53cd))
+* resolve decimal precision bug and implement desktop version ([5ba6bd2](https://github.com/IgorShadurin/offlinetools.org/commit/5ba6bd20edf85277917c9183f4fa52e321ffb466))
+* resolve desktop TypeScript imports and test environment issues ([a6f764e](https://github.com/IgorShadurin/offlinetools.org/commit/a6f764ed5d33283831e52820d7e6eeec6aed279b))
+* restore DISPLAY environment variable for Xvfb compatibility in CI ([55b0992](https://github.com/IgorShadurin/offlinetools.org/commit/55b0992313b630e2178a782627229f2702a47710))
+
 ## [1.4.0](https://github.com/IgorShadurin/offlinetools.org/compare/desktop-v1.3.0...desktop-v1.4.0) (2025-05-31)
 
 
