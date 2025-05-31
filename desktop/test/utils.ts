@@ -39,7 +39,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
           ...process.env, 
           NODE_ENV: 'test',
           ELECTRON_ENABLE_LOGGING: '1',
-          DISPLAY: isCI ? process.env.DISPLAY || ':99.0' : undefined, // For xvfb in CI
+          ...(isCI ? { ELECTRON_ENABLE_SECURITY_WARNINGS: 'false', DISPLAY: ':99' } : {}),
         },
         timeout: launchTimeout,
       });
@@ -330,4 +330,4 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
     console.error('Error waiting for textarea output:', error);
     throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
   }
-} 
+}    

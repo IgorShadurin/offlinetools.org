@@ -17,7 +17,8 @@ export enum Tool {
   FILE_GENERATOR = 'file-generator',
   UUID_GENERATOR = 'uuid-generator',
   SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator',
-  TEXT_TO_SLUG = 'text-to-slug'
+  TEXT_TO_SLUG = 'text-to-slug',
+  ETHEREUM_CONVERTER = 'ethereum-converter'
 }
 
 /**
@@ -45,7 +46,8 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.FILE_GENERATOR,
     Tool.UUID_GENERATOR,
     Tool.SPEECH_LENGTH_ESTIMATOR,
-    Tool.TEXT_TO_SLUG
+    Tool.TEXT_TO_SLUG,
+    Tool.ETHEREUM_CONVERTER
   ],
   'photo': [
     Tool.BINARY_BASE64_CODEC,
@@ -85,12 +87,52 @@ import { isLikelyHtml } from '../html-text-extractor';
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /**
+ * Ethereum address detection regex
+ */
+const ETHEREUM_ADDRESS_REGEX = /^(0x)?[0-9a-f]{40}$/i;
+
+/**
+ * Ethereum value detection regex (large numbers that might be Wei values)
+ */
+const ETHEREUM_VALUE_REGEX = /^[0-9]{10,78}$/;
+
+/**
  * Checks if a string appears to be a valid UUID
  * @param content - String to check
  * @returns Whether the string appears to be a valid UUID
  */
 function isLikelyUuid(content: string): boolean {
   return UUID_REGEX.test(content);
+}
+
+/**
+ * Checks if a string appears to be related to Ethereum (address or value)
+ * @param content - String to check
+ * @returns Whether the string appears to be Ethereum-related
+ */
+function isLikelyEthereum(content: string): boolean {
+  // Check for Ethereum address
+  if (ETHEREUM_ADDRESS_REGEX.test(content)) {
+    return true;
+  }
+  
+  // Check for large numbers that might be Wei values
+  if (ETHEREUM_VALUE_REGEX.test(content)) {
+    return true;
+  }
+  
+  // Check for common Ethereum unit mentions
+  const lowerContent = content.toLowerCase();
+  if (
+    lowerContent.includes('eth') || 
+    lowerContent.includes('wei') || 
+    lowerContent.includes('gwei') ||
+    lowerContent.includes('ether')
+  ) {
+    return true;
+  }
+  
+  return false;
 }
 
 /**
@@ -201,6 +243,11 @@ export function detectClipboardTools(clipboardData: {
     if (isLikelyUuid(content)) {
       prioritizedTools.push(Tool.UUID_GENERATOR);
     }
+    
+    // Check for Ethereum-related content
+    if (isLikelyEthereum(content)) {
+      prioritizedTools.push(Tool.ETHEREUM_CONVERTER);
+    }
 
     // Add the other general tools that weren't specifically matched
     compatibleTools.forEach(tool => {
@@ -212,7 +259,8 @@ export function detectClipboardTools(clipboardData: {
           (tool === Tool.HTML_TEXT_EXTRACTOR && !isLikelyHtml(content)) ||
           (tool === Tool.URL_ENCODER && !isLikelyUrl(content)) ||
           (tool === Tool.BASE64_CODEC && !isLikelyBase64(content)) ||
-          (tool === Tool.UUID_GENERATOR && !isLikelyUuid(content))
+          (tool === Tool.UUID_GENERATOR && !isLikelyUuid(content)) ||
+          (tool === Tool.ETHEREUM_CONVERTER && !isLikelyEthereum(content))
         ) {
           // Skip this tool
         } else {
@@ -229,4 +277,4 @@ export function detectClipboardTools(clipboardData: {
   }
 
   return compatibleTools;
-}        
+}                
