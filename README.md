@@ -8,10 +8,10 @@ OfflineTools aims to provide developers with a suite of commonly used tools that
 
 ## Download
 
-- **macOS (Apple Silicon)**: [desktop_arm64.dmg](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_arm64.dmg)
-- **macOS (Intel)**: [desktop_x64.dmg](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_x64.dmg)
-- **Windows**: [desktop.exe](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop.exe)
-- **Linux**: [desktop_x86_64.AppImage](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_x86_64.AppImage)
+- **macOS (Apple Silicon)**: [OfflineTools_arm64.dmg](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_arm64.dmg)
+- **macOS (Intel)**: [OfflineTools_x64.dmg](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_x64.dmg)
+- **Windows**: [OfflineTools.exe](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools.exe)
+- **Linux**: [OfflineTools_x86_64.AppImage](https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_x86_64.AppImage)
 
 ## Project Architecture
 
