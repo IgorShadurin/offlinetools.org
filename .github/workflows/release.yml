@@ -257,7 +257,7 @@ jobs:
         run: |
           VERSION="${{ needs.manual-release.outputs.version }}"
           # Only copy the main distributable files
-          find desktop/release/$VERSION -type f -name "desktop_*.dmg" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "OfflineTools_*.dmg" -exec cp {} dist-packages/ \;
           # Include latest-mac.yml for auto-updates
           find desktop/release/$VERSION -type f -name "latest-mac.yml" -exec cp {} dist-packages/ \;
           
@@ -272,7 +272,7 @@ jobs:
           $VERSION = "${{ needs.manual-release.outputs.version }}"
           
           # Only copy the main distributable files and update metadata
-          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "desktop*.exe" | Copy-Item -Destination "dist-packages" -Force
+          Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "OfflineTools*.exe" | Copy-Item -Destination "dist-packages" -Force
           Get-ChildItem -Path "desktop/release/$VERSION" -Recurse -Include "latest.yml" | Copy-Item -Destination "dist-packages" -Force
           
           # List found packages
@@ -285,10 +285,10 @@ jobs:
           VERSION="${{ needs.manual-release.outputs.version }}"
           
           # Only copy the main distributable files
-          find desktop/release/$VERSION -type f -name "desktop*.AppImage" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop*.deb" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop*.rpm" -exec cp {} dist-packages/ \;
-          find desktop/release/$VERSION -type f -name "desktop*.snap" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "OfflineTools*.AppImage" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "OfflineTools*.deb" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "OfflineTools*.rpm" -exec cp {} dist-packages/ \;
+          find desktop/release/$VERSION -type f -name "OfflineTools*.snap" -exec cp {} dist-packages/ \;
           find desktop/release/$VERSION -type f -name "latest-linux.yml" -exec cp {} dist-packages/ \;
           
           # List found packages
@@ -336,14 +336,14 @@ jobs:
             
             ### Downloads
             
-            **Windows:** desktop.exe
+            **Windows:** OfflineTools.exe
             
             **macOS:**
-            - Intel (x64): desktop_x64.dmg
-            - Apple Silicon (arm64): desktop_arm64.dmg
+            - Intel (x64): OfflineTools_x64.dmg
+            - Apple Silicon (arm64): OfflineTools_arm64.dmg
             
-            **Linux:** desktop_arm64.AppImage or desktop_arm64.deb
+            **Linux:** OfflineTools_arm64.AppImage or OfflineTools_arm64.deb
           draft: false
           generate_release_notes: true
           files: release-artifacts/**/*
-          fail_on_unmatched_files: false 
+          fail_on_unmatched_files: false  

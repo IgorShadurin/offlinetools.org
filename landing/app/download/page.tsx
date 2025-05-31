@@ -10,10 +10,10 @@ import Link from "next/link";
 import { PageLayout } from "@/components/page-layout";
 
 const DOWNLOAD_LINKS = {
-  mac_arm64: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_arm64.dmg",
-  mac_x64: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_x64.dmg",
-  linux: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop_x86_64.AppImage",
-  windows: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/desktop.exe",
+  mac_arm64: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_arm64.dmg",
+  mac_x64: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_x64.dmg",
+  linux: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_x86_64.AppImage",
+  windows: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools.exe",
 };
 
 /**
@@ -202,10 +202,10 @@ export default function DownloadPage() {
                 <ol className="list-decimal list-inside space-y-2 pl-4">
                   <li>Download the .AppImage file</li>
                   <li>
-                    Make the AppImage executable with: <code>chmod +x desktop_x86_64.AppImage</code>
+                    Make the AppImage executable with: <code>chmod +x OfflineTools_x86_64.AppImage</code>
                   </li>
                   <li>
-                    Run the application with: <code>./desktop_x86_64.AppImage</code>
+                    Run the application with: <code>./OfflineTools_x86_64.AppImage</code>
                   </li>
                 </ol>
               </div>

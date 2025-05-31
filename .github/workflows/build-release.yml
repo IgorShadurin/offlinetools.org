@@ -121,13 +121,13 @@ jobs:
             
             ### Downloads
             
-            **Windows:** desktop.exe
+            **Windows:** OfflineTools.exe
             
             **macOS:**
-            - Intel (x64): desktop_x64.dmg
-            - Apple Silicon (arm64): desktop_arm64.dmg
+            - Intel (x64): OfflineTools_x64.dmg
+            - Apple Silicon (arm64): OfflineTools_arm64.dmg
             
-            **Linux:** desktop.AppImage or desktop_arm64.deb
+            **Linux:** OfflineTools.AppImage or OfflineTools_arm64.deb
           files: release-artifacts/**/*
           draft: false
           prerelease: false
@@ -138,4 +138,4 @@ jobs:
         run: |
           VERSION="${{ github.event.client_payload.version }}"
           git tag -a "v$VERSION" -m "Release v$VERSION"
-          git push origin "v$VERSION" 
+          git push origin "v$VERSION"  
