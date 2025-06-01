@@ -72,20 +72,32 @@ const Update = () => {
     }))
   }, [])
 
+  const onShowUpdateDialog = useCallback(() => {
+    setModalOpen(true)
+  }, [])
+
+  const onUpdateTrayNotification = useCallback((_: Electron.IpcRendererEvent, { hasUpdate, version }: { hasUpdate: boolean, version?: string }) => {
+    window.ipcRenderer.invoke('update-tray-notification', { hasUpdate, version })
+  }, [])
+
   useEffect(() => {
     // Get version information and whether to update
     window.ipcRenderer.on('update-can-available', onUpdateCanAvailable)
     window.ipcRenderer.on('update-error', onUpdateError)
     window.ipcRenderer.on('download-progress', onDownloadProgress)
     window.ipcRenderer.on('update-downloaded', onUpdateDownloaded)
+    window.ipcRenderer.on('show-update-dialog', onShowUpdateDialog)
+    window.ipcRenderer.on('update-tray-notification', onUpdateTrayNotification)
 
     return () => {
       window.ipcRenderer.off('update-can-available', onUpdateCanAvailable)
       window.ipcRenderer.off('update-error', onUpdateError)
       window.ipcRenderer.off('download-progress', onDownloadProgress)
       window.ipcRenderer.off('update-downloaded', onUpdateDownloaded)
+      window.ipcRenderer.off('show-update-dialog', onShowUpdateDialog)
+      window.ipcRenderer.off('update-tray-notification', onUpdateTrayNotification)
     }
-  }, [])
+  }, [onUpdateCanAvailable, onUpdateError, onDownloadProgress, onUpdateDownloaded, onShowUpdateDialog, onUpdateTrayNotification])
 
   return (
     <>
