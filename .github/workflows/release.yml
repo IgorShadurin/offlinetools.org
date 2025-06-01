@@ -223,6 +223,7 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd desktop
           
@@ -239,12 +240,16 @@ jobs:
 
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd desktop
           pnpm run build -- --win
 
       - name: Build for Linux
         if: matrix.os == 'ubuntu-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd desktop
           pnpm run build -- --linux || true
@@ -346,4 +351,4 @@ jobs:
           draft: false
           generate_release_notes: true
           files: release-artifacts/**/*
-          fail_on_unmatched_files: false  
+          fail_on_unmatched_files: false    

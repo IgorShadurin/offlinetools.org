@@ -18,7 +18,8 @@
   },
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Igor Shadurin <igor.shadurin@gmail.com>",
+  "homepage": "https://offlinetools.org",
   "license": "ISC",
   "packageManager": "pnpm@10.8.1",
   "dependencies": {
