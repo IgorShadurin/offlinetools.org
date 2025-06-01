@@ -3,7 +3,7 @@ import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
-import { update } from './update'
+import { update, startAutoUpdateChecker, stopAutoUpdateChecker } from './update'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -146,6 +146,7 @@ async function createWindow() {
 
   // Auto update
   update(win)
+  startAutoUpdateChecker(win)
 }
 
 /**
@@ -390,6 +391,7 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   win = null
+  stopAutoUpdateChecker()
   if (process.platform !== 'darwin') app.quit()
 })
 
@@ -464,3 +466,66 @@ ipcMain.handle('update-tray-menu', (_, items) => {
     tray.setContextMenu(contextMenu)
   }
 })
+
+// Handle tray update notifications
+ipcMain.handle('update-tray-notification', (_, { hasUpdate, version }) => {
+  updateTrayWithUpdateNotification(hasUpdate, version)
+})
+
+function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) {
+  if (!tray) return
+
+  const updateMenuItem = hasUpdate ? {
+    label: `Update Available (v${version})`,
+    click: () => {
+      if (win) {
+        win.show()
+        win.focus()
+        win.webContents.send('show-update-dialog')
+      } else {
+        createWindow()
+      }
+    }
+  } : null
+
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Open App', 
+      click: () => {
+        if (win) {
+          win.show()
+          win.focus()
+        } else {
+          createWindow()
+        }
+      } 
+    },
+    ...(updateMenuItem ? [{ type: 'separator' as const }, updateMenuItem] : []),
+    { type: 'separator' as const },
+    { 
+      label: 'Test Button 1', 
+      click: () => {
+        if (win) {
+          win.webContents.send('tray-action', 'test-button-1')
+        }
+      } 
+    },
+    { 
+      label: 'Test Button 2', 
+      click: () => {
+        if (win) {
+          win.webContents.send('tray-action', 'test-button-2')
+        }
+      } 
+    },
+    { type: 'separator' as const },
+    { 
+      label: 'Exit', 
+      click: () => {
+        app.quit()
+      } 
+    }
+  ])
+  
+  tray.setContextMenu(contextMenu)
+}

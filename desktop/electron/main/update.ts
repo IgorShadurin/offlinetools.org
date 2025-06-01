@@ -20,10 +20,12 @@ export function update(win: Electron.BrowserWindow) {
   // update available
   autoUpdater.on('update-available', (arg: UpdateInfo) => {
     win.webContents.send('update-can-available', { update: true, version: app.getVersion(), newVersion: arg?.version })
+    win.webContents.send('update-tray-notification', { hasUpdate: true, version: arg?.version })
   })
   // update not available
   autoUpdater.on('update-not-available', (arg: UpdateInfo) => {
     win.webContents.send('update-can-available', { update: false, version: app.getVersion(), newVersion: arg?.version })
+    win.webContents.send('update-tray-notification', { hasUpdate: false })
   })
 
   // Checking for updates
@@ -73,4 +75,43 @@ function startDownload(
   autoUpdater.on('error', (error: Error) => callback(error, null))
   autoUpdater.on('update-downloaded', complete)
   autoUpdater.downloadUpdate()
+}
+
+let updateCheckInterval: NodeJS.Timeout | null = null
+
+export function startAutoUpdateChecker(win: Electron.BrowserWindow) {
+  setTimeout(() => {
+    checkForUpdatesAutomatically(win)
+  }, 5000)
+
+  updateCheckInterval = setInterval(() => {
+    checkForUpdatesAutomatically(win)
+  }, 2 * 60 * 60 * 1000)
+}
+
+export function stopAutoUpdateChecker() {
+  if (updateCheckInterval) {
+    clearInterval(updateCheckInterval)
+    updateCheckInterval = null
+  }
+}
+
+async function checkForUpdatesAutomatically(win: Electron.BrowserWindow) {
+  if (!app.isPackaged) {
+    console.log('Auto-update: Skipping check in development mode')
+    return
+  }
+
+  try {
+    console.log('Auto-update: Checking for updates...')
+    const result = await autoUpdater.checkForUpdatesAndNotify()
+    
+    if (result?.updateInfo) {
+      console.log('Auto-update: Update available:', result.updateInfo.version)
+    } else {
+      console.log('Auto-update: No updates available')
+    }
+  } catch (error) {
+    console.error('Auto-update: Error checking for updates:', error)
+  }
 }
