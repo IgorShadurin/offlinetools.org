@@ -476,7 +476,7 @@ function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) 
   if (!tray) return
 
   const updateMenuItem = hasUpdate ? {
-    label: `Update Available (v${version})`,
+    label: `Update Available${version ? ` (v${version})` : ''}`,
     click: () => {
       if (win) {
         win.show()
