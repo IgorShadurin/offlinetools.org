@@ -191,25 +191,25 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                     <label className="text-sm font-medium mb-2 block">UUID Version</label>
                     <div className="space-y-2">
                       {[
-                        { value: UUIDVersion.V4, label: "v4 (Random)" },
-                        { value: UUIDVersion.V1, label: "v1 (Timestamp)" },
-                        { value: UUIDVersion.V6, label: "v6 (Timestamp, reordered)" },
-                        { value: UUIDVersion.V7, label: "v7 (Random with timestamp)" },
-                        { value: UUIDVersion.V5, label: "v5 (Namespace with SHA-1)" },
-                        { value: UUIDVersion.NIL, label: "NIL (All zeros)" },
-                        { value: UUIDVersion.MAX, label: "MAX (All ones)" },
+                        { value: UUIDVersion.V4, label: "v4 (Random)", testId: "v4" },
+                        { value: UUIDVersion.V1, label: "v1 (Timestamp)", testId: "v1" },
+                        { value: UUIDVersion.V6, label: "v6 (Timestamp, reordered)", testId: "v6" },
+                        { value: UUIDVersion.V7, label: "v7 (Random with timestamp)", testId: "v7" },
+                        { value: UUIDVersion.V5, label: "v5 (Namespace with SHA-1)", testId: "v5" },
+                        { value: UUIDVersion.NIL, label: "NIL (All zeros)", testId: "nil" },
+                        { value: UUIDVersion.MAX, label: "MAX (All ones)", testId: "max" },
                       ].map((option) => (
                         <div key={option.value} className="flex items-center space-x-2">
                           <input
                             type="radio"
-                            id={`uuid-${option.value}`}
+                            id={`uuid-${option.testId}`}
                             name="uuidVersion"
                             value={option.value}
                             checked={uuidVersion === option.value}
                             onChange={(e) => setUuidVersion(e.target.value as UUIDVersion)}
                             className="h-4 w-4"
                           />
-                          <label htmlFor={`uuid-${option.value}`} className="text-sm">
+                          <label htmlFor={`uuid-${option.testId}`} className="text-sm">
                             {option.label}
                           </label>
                         </div>
@@ -237,21 +237,21 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                         <label className="text-sm font-medium mb-2 block">Namespace</label>
                         <div className="space-y-2">
                           {[
-                            { value: UUIDNamespace.URL, label: "URL" },
-                            { value: UUIDNamespace.DNS, label: "DNS" },
-                            { value: UUIDNamespace.CUSTOM, label: "Custom" },
+                            { value: UUIDNamespace.URL, label: "URL", testId: "url" },
+                            { value: UUIDNamespace.DNS, label: "DNS", testId: "dns" },
+                            { value: UUIDNamespace.CUSTOM, label: "Custom", testId: "custom" },
                           ].map((option) => (
                             <div key={option.value} className="flex items-center space-x-2">
                               <input
                                 type="radio"
-                                id={`namespace-${option.value}`}
+                                id={`namespace-${option.testId}`}
                                 name="namespace"
                                 value={option.value}
                                 checked={namespace === option.value}
                                 onChange={(e) => setNamespace(e.target.value)}
                                 className="h-4 w-4"
                               />
-                              <label htmlFor={`namespace-${option.value}`} className="text-sm">
+                              <label htmlFor={`namespace-${option.testId}`} className="text-sm">
                                 {option.label}
                               </label>
                             </div>
