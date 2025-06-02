@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertCircle, Check, Copy, RefreshCw } from "lucide-react";
+import { AlertCircle, Check, Copy } from "lucide-react";
 import { 
   generateUUID, 
   generateMultipleUUIDs, 
@@ -333,8 +333,7 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                 </div>
 
                 <div className="flex justify-end my-2">
-                  <Button onClick={handleGenerate} className="flex items-center gap-2">
-                    <RefreshCw className="h-4 w-4" />
+                  <Button onClick={handleGenerate} size="default">
                     {count > 1 ? 'Generate UUIDs' : 'Generate UUID'}
                   </Button>
                 </div>
@@ -394,7 +393,7 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                 </div>
 
                 <div className="flex justify-end my-2">
-                  <Button onClick={handleValidate}>
+                  <Button onClick={handleValidate} size="default">
                     Validate UUID
                   </Button>
                 </div>
