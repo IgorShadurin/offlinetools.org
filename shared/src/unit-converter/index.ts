@@ -307,7 +307,7 @@ export function getUnitsForCategory(category: UnitCategory): string[] {
 /**
  * Get unit enum for a specific category
  */
-export function getUnitEnumForCategory(category: UnitCategory) {
+export function getUnitEnumForCategory(category: UnitCategory): typeof LengthUnit | typeof WeightUnit | typeof TemperatureUnit | typeof VolumeUnit | typeof AreaUnit | typeof EnergyUnit | typeof PowerUnit {
   switch (category) {
     case UnitCategory.Length:
       return LengthUnit;
