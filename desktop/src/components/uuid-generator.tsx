@@ -319,12 +319,12 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
 
                 <div className="flex-1 flex flex-col min-h-0">
                   <div className="mb-1 flex justify-between">
-                    <label htmlFor="input-display" className="text-sm font-medium">
+                    <label htmlFor="input-text" className="text-sm font-medium">
                       Configuration
                     </label>
                   </div>
                   <Textarea
-                    id="input-display"
+                    id="input-text"
                     className="flex-1 min-h-[150px] font-mono text-sm"
                     placeholder="UUID generation settings will be displayed here..."
                     value={getConfigurationDisplay()}
@@ -340,7 +340,7 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
 
                 <div className="flex-1 flex flex-col min-h-0">
                   <div className="mb-1 flex justify-between">
-                    <label htmlFor="output" className="text-sm font-medium">
+                    <label htmlFor="output-text" className="text-sm font-medium">
                       Generated UUID{count > 1 ? 's' : ''}
                     </label>
                     {output && (
@@ -366,7 +366,7 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                     </div>
                   ) : (
                     <Textarea
-                      id="output"
+                      id="output-text"
                       className="flex-1 min-h-[150px] font-mono text-sm"
                       placeholder="Generated UUIDs will appear here..."
                       value={output}
@@ -379,12 +379,12 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
               <div className="flex-1 flex flex-col space-y-4">
                 <div className="flex-1 flex flex-col min-h-0">
                   <div className="mb-1 flex justify-between">
-                    <label htmlFor="validateInput" className="text-sm font-medium">
+                    <label htmlFor="input-text" className="text-sm font-medium">
                       UUID to Validate
                     </label>
                   </div>
                   <Textarea
-                    id="validateInput"
+                    id="input-text"
                     className="flex-1 min-h-[150px] font-mono text-sm"
                     placeholder="Enter a UUID to validate..."
                     value={validateInput}
@@ -400,7 +400,7 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
 
                 <div className="flex-1 flex flex-col min-h-0">
                   <div className="mb-1 flex justify-between">
-                    <label className="text-sm font-medium">Validation Result</label>
+                    <label htmlFor="output-text" className="text-sm font-medium">Validation Result</label>
                   </div>
                   
                   {error ? (
@@ -411,20 +411,15 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                       </div>
                       <div className="mt-2 text-sm">{error}</div>
                     </div>
-                  ) : validationResult !== null ? (
-                    <div className={`rounded-md p-3 ${validationResult ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                      <div className="flex items-center gap-2">
-                        <div className="font-medium">{validationResult ? 'Valid UUID' : 'Invalid UUID'}</div>
-                      </div>
-                      <div className="mt-2 text-sm">
-                        {validationResult ? 'The string is a valid UUID.' : 'The string is not a valid UUID.'}
-                      </div>
-                    </div>
                   ) : (
                     <Textarea
+                      id="output-text"
                       className="flex-1 min-h-[150px] font-mono text-sm"
                       placeholder="Validation results will appear here..."
-                      value="Enter a UUID above and click Validate to check if it's valid."
+                      value={validationResult !== null ? 
+                        (validationResult ? 'Valid UUID\nThe string is a valid UUID.' : 'Invalid UUID\nThe string is not a valid UUID.') : 
+                        'Enter a UUID above and click Validate to check if it\'s valid.'
+                      }
                       readOnly
                     />
                   )}
