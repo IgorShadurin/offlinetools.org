@@ -10,7 +10,7 @@ import { JsonFormatter } from './components/json-formatter'
 import { ToolPlaceholder } from './components/tool-placeholder'
 import { Base64Codec } from './components/base64-codec'
 import { UrlEncoder } from './components/url-encoder'
-import { TrayNotification } from './components/ui/tray-notification'
+
 import { ClipboardDetector } from './components/clipboard-detector'
 import { ClipboardDebug } from './components/clipboard-debug'
 import { EthereumConverter } from './components/ethereum-converter'
@@ -120,8 +120,7 @@ function App() {
         )}
       </div>
       
-      {/* Tray notification component */}
-      <TrayNotification />
+
       
       {/* Debug panel - toggle with Ctrl+Shift+D or Cmd+Shift+D or from menu */}
       <ClipboardDebug isVisible={isDebugVisible} />
