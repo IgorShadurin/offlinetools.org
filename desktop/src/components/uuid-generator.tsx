@@ -33,6 +33,18 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    setCount(1);
+    setOutput("");
+    setError(null);
+    setValidationResult(null);
+    setUuidVersion(UUIDVersion.V4);
+    setUppercase(false);
+    setHyphens(true);
+    setNamespace(UUIDNamespace.URL);
+    setCustomNamespace("");
+    setName("");
+    setValidateInput("");
+    
     const clipboardContent = localStorage.getItem('clipboard-content-for-tool');
     if (clipboardContent) {
       if (mode === "validate") {
@@ -48,12 +60,14 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
       }
       localStorage.removeItem('clipboard-content-for-tool');
     }
-    
+  }, [mode]);
+
+  useEffect(() => {
     setCount(1);
     setOutput("");
     setError(null);
     setValidationResult(null);
-  }, [mode]);
+  }, []);
 
   const handleGenerate = () => {
     try {
