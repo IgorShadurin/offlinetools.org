@@ -48,6 +48,11 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
       }
       localStorage.removeItem('clipboard-content-for-tool');
     }
+    
+    setCount(1);
+    setOutput("");
+    setError(null);
+    setValidationResult(null);
   }, [mode]);
 
   const handleGenerate = () => {
@@ -316,7 +321,7 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                 <div className="flex justify-end my-2">
                   <Button onClick={handleGenerate} className="flex items-center gap-2">
                     <RefreshCw className="h-4 w-4" />
-                    Generate UUID
+                    {count > 1 ? 'Generate UUIDs' : 'Generate UUID'}
                   </Button>
                 </div>
 
