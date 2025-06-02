@@ -75,14 +75,14 @@ describe('Unit Converter tests', async () => {
     const categoryValue = await categorySelect.inputValue();
     expect(categoryValue).toBe('Length');
 
-    const meterInput = page.locator('textarea').filter({ hasText: /Enter m value/ }).first();
+    const meterInput = page.locator('textarea[data-unit="m"]');
     await meterInput.fill('1');
 
-    const cmInput = page.locator('textarea').filter({ hasText: /Enter cm value/ }).first();
+    const cmInput = page.locator('textarea[data-unit="cm"]');
     const cmValue = await cmInput.inputValue();
     expect(cmValue).toBe('100');
 
-    const inchInput = page.locator('textarea').filter({ hasText: /Enter in value/ }).first();
+    const inchInput = page.locator('textarea[data-unit="in"]');
     const inchValue = await inchInput.inputValue();
     expect(parseFloat(inchValue)).toBeCloseTo(39.37, 1);
 
@@ -98,14 +98,14 @@ describe('Unit Converter tests', async () => {
     const categorySelect = page.locator('select#category');
     await categorySelect.selectOption('Temperature');
 
-    const celsiusInput = page.locator('textarea').filter({ hasText: /Enter °C value/ }).first();
+    const celsiusInput = page.locator('textarea[data-unit="°C"]');
     await celsiusInput.fill('0');
 
-    const fahrenheitInput = page.locator('textarea').filter({ hasText: /Enter °F value/ }).first();
+    const fahrenheitInput = page.locator('textarea[data-unit="°F"]');
     const fahrenheitValue = await fahrenheitInput.inputValue();
     expect(fahrenheitValue).toBe('32');
 
-    const kelvinInput = page.locator('textarea').filter({ hasText: /Enter K value/ }).first();
+    const kelvinInput = page.locator('textarea[data-unit="K"]');
     const kelvinValue = await kelvinInput.inputValue();
     expect(parseFloat(kelvinValue)).toBeCloseTo(273.15, 2);
 
@@ -118,7 +118,7 @@ describe('Unit Converter tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
 
-    const meterInput = page.locator('textarea').filter({ hasText: /Enter m value/ }).first();
+    const meterInput = page.locator('textarea[data-unit="m"]');
     await meterInput.fill('1');
 
     const copyButton = page.locator('button:has-text("Copy")').first();
@@ -136,7 +136,7 @@ describe('Unit Converter tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
 
-    const meterInput = page.locator('textarea').filter({ hasText: /Enter m value/ }).first();
+    const meterInput = page.locator('textarea[data-unit="m"]');
     await meterInput.fill('invalid');
 
     const errorAlert = page.locator('[role="alert"]');
@@ -159,12 +159,12 @@ describe('Unit Converter tests', async () => {
 
     await categorySelect.selectOption('Weight');
 
-    const gramInput = page.locator('textarea').filter({ hasText: /Enter g value/ }).first();
-    await page.waitForSelector('textarea', { state: 'visible', timeout: 5000 });
+    const gramInput = page.locator('textarea[data-unit="g"]');
+    await page.waitForSelector('textarea[data-unit="g"]', { state: 'visible', timeout: 5000 });
     const gramVisible = await gramInput.isVisible();
     expect(gramVisible).toBe(true);
 
-    const kgInput = page.locator('textarea').filter({ hasText: /Enter kg value/ }).first();
+    const kgInput = page.locator('textarea[data-unit="kg"]');
     const kgVisible = await kgInput.isVisible();
     expect(kgVisible).toBe(true);
 

@@ -143,6 +143,7 @@ export function UnitConverter({ className }: UnitConverterProps) {
                     value={values[unit] || ''}
                     onChange={(e) => handleValueChange(e.target.value, unit)}
                     placeholder={`Enter ${unit} value...`}
+                    data-unit={unit}
                     className={cn(
                       "font-mono text-sm resize-none h-10 min-h-0",
                       activeUnit === unit ? 'border-primary' : ''
