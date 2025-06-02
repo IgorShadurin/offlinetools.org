@@ -72,6 +72,9 @@ describe('Unit Converter tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
 
     const categorySelect = page.locator('select#category');
+    await categorySelect.selectOption('Length');
+    await page.waitForTimeout(500);
+    
     const categoryValue = await categorySelect.inputValue();
     expect(categoryValue).toBe('Length');
 
@@ -118,6 +121,10 @@ describe('Unit Converter tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
 
+    const categorySelect = page.locator('select#category');
+    await categorySelect.selectOption('Length');
+    await page.waitForTimeout(500);
+
     const meterInput = page.locator('textarea[data-unit="m"]');
     await meterInput.fill('1');
 
@@ -135,6 +142,10 @@ describe('Unit Converter tests', async () => {
     if (!page) return;
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+
+    const categorySelect = page.locator('select#category');
+    await categorySelect.selectOption('Length');
+    await page.waitForTimeout(500);
 
     const meterInput = page.locator('textarea[data-unit="m"]');
     await meterInput.fill('invalid');
@@ -154,6 +165,9 @@ describe('Unit Converter tests', async () => {
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
 
     const categorySelect = page.locator('select#category');
+    await categorySelect.selectOption('Length');
+    await page.waitForTimeout(500);
+    
     const categoryValue = await categorySelect.inputValue();
     expect(categoryValue).toBe('Length');
 
