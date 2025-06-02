@@ -197,18 +197,14 @@ function createTray() {
     },
     { type: 'separator' },
     { 
-      label: 'Test Button 1', 
+      label: 'Check for Updates', 
       click: () => {
         if (win) {
-          win.webContents.send('tray-action', 'test-button-1')
-        }
-      } 
-    },
-    { 
-      label: 'Test Button 2', 
-      click: () => {
-        if (win) {
-          win.webContents.send('tray-action', 'test-button-2')
+          win.show()
+          win.focus()
+          win.webContents.send('show-update-dialog')
+        } else {
+          createWindow()
         }
       } 
     },
@@ -472,6 +468,13 @@ ipcMain.handle('update-tray-notification', (_, { hasUpdate, version }) => {
   updateTrayWithUpdateNotification(hasUpdate, version)
 })
 
+// Handle manual update check from tray menu
+ipcMain.handle('trigger-update-check', () => {
+  if (win) {
+    win.webContents.send('show-update-dialog')
+  }
+})
+
 function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) {
   if (!tray) return
 
@@ -503,18 +506,14 @@ function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) 
     ...(updateMenuItem ? [{ type: 'separator' as const }, updateMenuItem] : []),
     { type: 'separator' as const },
     { 
-      label: 'Test Button 1', 
+      label: 'Check for Updates', 
       click: () => {
         if (win) {
-          win.webContents.send('tray-action', 'test-button-1')
-        }
-      } 
-    },
-    { 
-      label: 'Test Button 2', 
-      click: () => {
-        if (win) {
-          win.webContents.send('tray-action', 'test-button-2')
+          win.show()
+          win.focus()
+          win.webContents.send('show-update-dialog')
+        } else {
+          createWindow()
         }
       } 
     },
