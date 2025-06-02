@@ -66,6 +66,11 @@ export const onlineTools = [
     path: "/tools/text-to-slug",
     description: "Convert text to URL-friendly slugs with customizable separators and character handling.",
   },
+  {
+    title: "Unit Converter",
+    path: "/tools/unit-converter",
+    description: "Convert between units of length, weight, temperature, volume, area, energy, and power with precision.",
+  },
 ];
 
 /**
