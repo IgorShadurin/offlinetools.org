@@ -356,35 +356,25 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                     )}
                   </div>
 
-                  {error ? (
-                    <div className="rounded-md bg-destructive/15 p-3 text-destructive">
-                      <div className="flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4" />
-                        <div className="font-medium">Error</div>
-                      </div>
-                      <div className="mt-2 text-sm">{error}</div>
-                    </div>
-                  ) : (
-                    <Textarea
-                      id="output-text"
-                      className="flex-1 min-h-[150px] font-mono text-sm"
-                      placeholder="Generated UUIDs will appear here..."
-                      value={output}
-                      readOnly
-                    />
-                  )}
+                  <Textarea
+                    id="output-text"
+                    className="flex-1 min-h-[150px] font-mono text-sm"
+                    placeholder="Generated UUIDs will appear here..."
+                    value={error ? `Error: ${error}` : output}
+                    readOnly
+                  />
                 </div>
               </div>
             ) : (
               <div className="flex-1 flex flex-col space-y-4">
                 <div className="flex-1 flex flex-col min-h-0">
                   <div className="mb-1 flex justify-between">
-                    <label htmlFor="input-text" className="text-sm font-medium">
+                    <label htmlFor="validateInput" className="text-sm font-medium">
                       UUID to Validate
                     </label>
                   </div>
                   <Textarea
-                    id="input-text"
+                    id="validateInput"
                     className="flex-1 min-h-[150px] font-mono text-sm"
                     placeholder="Enter a UUID to validate..."
                     value={validateInput}
@@ -403,26 +393,19 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                     <label htmlFor="output-text" className="text-sm font-medium">Validation Result</label>
                   </div>
                   
-                  {error ? (
-                    <div className="rounded-md bg-destructive/15 p-3 text-destructive">
-                      <div className="flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4" />
-                        <div className="font-medium">Error</div>
-                      </div>
-                      <div className="mt-2 text-sm">{error}</div>
-                    </div>
-                  ) : (
-                    <Textarea
-                      id="output-text"
-                      className="flex-1 min-h-[150px] font-mono text-sm"
-                      placeholder="Validation results will appear here..."
-                      value={validationResult !== null ? 
+                  <Textarea
+                    id="output-text"
+                    className="flex-1 min-h-[150px] font-mono text-sm"
+                    placeholder="Validation results will appear here..."
+                    value={error ? 
+                      `Error: ${error}` :
+                      (validationResult !== null ? 
                         (validationResult ? 'Valid UUID\nThe string is a valid UUID.' : 'Invalid UUID\nThe string is not a valid UUID.') : 
                         'Enter a UUID above and click Validate to check if it\'s valid.'
-                      }
-                      readOnly
-                    />
-                  )}
+                      )
+                    }
+                    readOnly
+                  />
                 </div>
               </div>
             )}
