@@ -115,6 +115,30 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
     setValidationResult(null);
   };
 
+  const getConfigurationDisplay = () => {
+    const config = [
+      `Version: ${uuidVersion}`,
+      `Count: ${count}`,
+      `Uppercase: ${uppercase ? 'Yes' : 'No'}`,
+      `Hyphens: ${hyphens ? 'Yes' : 'No'}`,
+      ...(needsNameInput ? [`Name: ${name || '(required)'}`, `Namespace: ${namespace}`] : []),
+      ...(needsCustomNamespace ? [`Custom Namespace: ${customNamespace || '(required)'}` ] : [])
+    ];
+    return config.join('\n');
+  };
+
+  const getValidationDisplay = () => {
+    if (error) {
+      return `Error: ${error}`;
+    }
+    if (validationResult !== null) {
+      return validationResult 
+        ? "✓ Valid UUID\nThe string is a valid UUID."
+        : "✗ Invalid UUID\nThe string is not a valid UUID.";
+    }
+    return "Enter a UUID above and click Validate to check if it's valid.";
+  };
+
   const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value > 0 && value <= 100) {
@@ -279,6 +303,19 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                   </div>
 
                   <div className="flex flex-col">
+                    <label htmlFor="input-display" className="text-sm font-medium mb-2">
+                      Configuration
+                    </label>
+                    <Textarea
+                      id="input-display"
+                      className="flex-1 min-h-[300px] font-mono text-sm"
+                      placeholder="UUID generation settings will be displayed here..."
+                      value={getConfigurationDisplay()}
+                      readOnly
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
                     <div className="flex items-center justify-between mb-2">
                       <label htmlFor="output" className="text-sm font-medium">
                         Generated UUID{count > 1 ? 's' : ''}
@@ -337,42 +374,12 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
 
                   <div className="flex flex-col">
                     <label className="text-sm font-medium mb-2">Validation Result</label>
-                    {error ? (
-                      <div className="rounded-md bg-destructive/15 p-3 text-destructive">
-                        <div className="flex items-center gap-2">
-                          <AlertCircle className="h-4 w-4" />
-                          <div className="font-medium">Error</div>
-                        </div>
-                        <div className="mt-2 text-sm">{error}</div>
-                      </div>
-                    ) : validationResult !== null ? (
-                      <div className={cn(
-                        "rounded-md p-3",
-                        validationResult 
-                          ? "bg-green-50 text-green-700 border border-green-200" 
-                          : "bg-destructive/15 text-destructive"
-                      )}>
-                        <div className="flex items-center gap-2">
-                          {validationResult ? (
-                            <Check className="h-4 w-4" />
-                          ) : (
-                            <AlertCircle className="h-4 w-4" />
-                          )}
-                          <div className="font-medium">
-                            {validationResult ? "Valid UUID" : "Invalid UUID"}
-                          </div>
-                        </div>
-                        <div className="mt-2 text-sm">
-                          {validationResult
-                            ? "The string is a valid UUID."
-                            : "The string is not a valid UUID."}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-muted-foreground text-sm">
-                        Enter a UUID above and click Validate to check if it's valid.
-                      </div>
-                    )}
+                    <Textarea
+                      className="flex-1 min-h-[200px] font-mono text-sm"
+                      placeholder="Validation results will appear here..."
+                      value={getValidationDisplay()}
+                      readOnly
+                    />
                   </div>
                 </div>
               </div>
