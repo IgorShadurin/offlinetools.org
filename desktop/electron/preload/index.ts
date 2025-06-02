@@ -125,6 +125,8 @@ function validateChannel(channel: string): boolean {
 
 // Log that the preload script is running
 console.log('Preload script is running - initializing clipboard API via IPC')
+console.log('Preload: Context isolation enabled:', process.contextIsolated)
+console.log('Preload: Setting up IPC communication channels...')
 
 // Define our electron API with clipboard support
 const electronAPIForRenderer = {
@@ -144,6 +146,7 @@ if (process.contextIsolated) {
     // Expose api for backward compatibility
     contextBridge.exposeInMainWorld('api', safeIpcRenderer)
     console.log('Preload script loaded successfully (context isolated)')
+    console.log('Preload: Exposed electron API to main world')
   } catch (error) {
     console.error('Error exposing APIs:', error)
   }
@@ -155,10 +158,12 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = safeIpcRenderer
   console.log('Preload script loaded successfully (no context isolation)')
+  console.log('Preload: Attached electron API to window object')
 }
 
 // Log that the clipboard API has been exposed
 console.log('IPC-based clipboard API exposed to renderer process')
+console.log('Preload: All APIs successfully initialized')
 
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
