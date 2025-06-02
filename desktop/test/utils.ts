@@ -26,6 +26,7 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
     try {
       // Add some delay between retries
       if (attempt > 0) {
+        console.log(`Electron launch attempt ${attempt + 1}/${maxRetries} after ${retryDelay}ms delay`);
         await new Promise(resolve => setTimeout(resolve, retryDelay));
       }
       
@@ -33,20 +34,26 @@ export async function launchElectronWithRetry(maxRetries = 6, retryDelay = 2000)
       const launchTimeout = isCI ? 60000 : 15000;
       
       const app = await electron.launch({
-        args: ['.', '--no-sandbox'],
+        args: ['.', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
         cwd: root,
         env: { 
           ...process.env, 
           NODE_ENV: 'test',
           ELECTRON_ENABLE_LOGGING: '1',
-          ...(isCI ? { ELECTRON_ENABLE_SECURITY_WARNINGS: 'false', DISPLAY: ':99' } : {}),
+          ...(isCI ? { 
+            ELECTRON_ENABLE_SECURITY_WARNINGS: 'false', 
+            DISPLAY: ':99',
+            ELECTRON_DISABLE_SANDBOX: '1'
+          } : {}),
         },
         timeout: launchTimeout,
       });
       
+      console.log(`Electron launched successfully on attempt ${attempt + 1}`);
       return app;
     } catch (error) {
       lastError = error as Error;
+      console.error(`Electron launch attempt ${attempt + 1} failed:`, error.message);
     }
   }
   
@@ -330,4 +337,4 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
     console.error('Error waiting for textarea output:', error);
     throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
   }
-}    
+}        

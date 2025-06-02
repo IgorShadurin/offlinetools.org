@@ -14,6 +14,7 @@ import { TrayNotification } from './components/ui/tray-notification'
 import { ClipboardDetector } from './components/clipboard-detector'
 import { ClipboardDebug } from './components/clipboard-debug'
 import { EthereumConverter } from './components/ethereum-converter'
+import { UnitConverter } from './components/unit-converter'
 
 // List of tools
 const tools: Tool[] = [
@@ -22,6 +23,7 @@ const tools: Tool[] = [
   { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
+  { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
 ]
 
 /**
@@ -108,6 +110,8 @@ function App() {
           <UrlEncoder className="min-h-full" />
         ) : selectedTool === 'ethereum-converter' ? (
           <EthereumConverter className="min-h-full" />
+        ) : selectedTool === 'unit-converter' ? (
+          <UnitConverter className="min-h-full" />
         ) : (
           <ToolPlaceholder 
             title={tools.find(t => t.id === selectedTool)?.name || ''}
