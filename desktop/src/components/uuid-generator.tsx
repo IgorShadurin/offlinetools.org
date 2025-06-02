@@ -167,98 +167,98 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
 
             {mode === "generate" ? (
               <div className="flex-1 flex flex-col space-y-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">UUID Version</label>
-                      <div className="space-y-2">
-                        {[
-                          { value: UUIDVersion.V4, label: "v4 (Random)" },
-                          { value: UUIDVersion.V1, label: "v1 (Timestamp)" },
-                          { value: UUIDVersion.V6, label: "v6 (Timestamp, reordered)" },
-                          { value: UUIDVersion.V7, label: "v7 (Random with timestamp)" },
-                          { value: UUIDVersion.V5, label: "v5 (Namespace with SHA-1)" },
-                          { value: UUIDVersion.NIL, label: "NIL (All zeros)" },
-                          { value: UUIDVersion.MAX, label: "MAX (All ones)" },
-                        ].map((option) => (
-                          <div key={option.value} className="flex items-center space-x-2">
-                            <input
-                              type="radio"
-                              id={`uuid-${option.value}`}
-                              name="uuidVersion"
-                              value={option.value}
-                              checked={uuidVersion === option.value}
-                              onChange={(e) => setUuidVersion(e.target.value as UUIDVersion)}
-                              className="h-4 w-4"
-                            />
-                            <label htmlFor={`uuid-${option.value}`} className="text-sm">
-                              {option.label}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">UUID Version</label>
+                    <div className="space-y-2">
+                      {[
+                        { value: UUIDVersion.V4, label: "v4 (Random)" },
+                        { value: UUIDVersion.V1, label: "v1 (Timestamp)" },
+                        { value: UUIDVersion.V6, label: "v6 (Timestamp, reordered)" },
+                        { value: UUIDVersion.V7, label: "v7 (Random with timestamp)" },
+                        { value: UUIDVersion.V5, label: "v5 (Namespace with SHA-1)" },
+                        { value: UUIDVersion.NIL, label: "NIL (All zeros)" },
+                        { value: UUIDVersion.MAX, label: "MAX (All ones)" },
+                      ].map((option) => (
+                        <div key={option.value} className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            id={`uuid-${option.value}`}
+                            name="uuidVersion"
+                            value={option.value}
+                            checked={uuidVersion === option.value}
+                            onChange={(e) => setUuidVersion(e.target.value as UUIDVersion)}
+                            className="h-4 w-4"
+                          />
+                          <label htmlFor={`uuid-${option.value}`} className="text-sm">
+                            {option.label}
+                          </label>
+                        </div>
+                      ))}
                     </div>
+                  </div>
 
-                    {needsNameInput && (
-                      <>
+                  {needsNameInput && (
+                    <>
+                      <div>
+                        <label htmlFor="name" className="text-sm font-medium mb-1 block">
+                          Name (required for v5)
+                        </label>
+                        <input
+                          id="name"
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                          placeholder="Enter name for v5 UUID"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Namespace</label>
+                        <div className="space-y-2">
+                          {[
+                            { value: UUIDNamespace.URL, label: "URL" },
+                            { value: UUIDNamespace.DNS, label: "DNS" },
+                            { value: UUIDNamespace.CUSTOM, label: "Custom" },
+                          ].map((option) => (
+                            <div key={option.value} className="flex items-center space-x-2">
+                              <input
+                                type="radio"
+                                id={`namespace-${option.value}`}
+                                name="namespace"
+                                value={option.value}
+                                checked={namespace === option.value}
+                                onChange={(e) => setNamespace(e.target.value)}
+                                className="h-4 w-4"
+                              />
+                              <label htmlFor={`namespace-${option.value}`} className="text-sm">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {needsCustomNamespace && (
                         <div>
-                          <label htmlFor="name" className="text-sm font-medium mb-1 block">
-                            Name (required for v5)
+                          <label htmlFor="customNamespace" className="text-sm font-medium mb-1 block">
+                            Custom Namespace UUID
                           </label>
                           <input
-                            id="name"
+                            id="customNamespace"
                             type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={customNamespace}
+                            onChange={(e) => setCustomNamespace(e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md text-sm"
-                            placeholder="Enter name for v5 UUID"
+                            placeholder="Enter a valid UUID for custom namespace"
                           />
                         </div>
+                      )}
+                    </>
+                  )}
 
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Namespace</label>
-                          <div className="space-y-2">
-                            {[
-                              { value: UUIDNamespace.URL, label: "URL" },
-                              { value: UUIDNamespace.DNS, label: "DNS" },
-                              { value: UUIDNamespace.CUSTOM, label: "Custom" },
-                            ].map((option) => (
-                              <div key={option.value} className="flex items-center space-x-2">
-                                <input
-                                  type="radio"
-                                  id={`namespace-${option.value}`}
-                                  name="namespace"
-                                  value={option.value}
-                                  checked={namespace === option.value}
-                                  onChange={(e) => setNamespace(e.target.value)}
-                                  className="h-4 w-4"
-                                />
-                                <label htmlFor={`namespace-${option.value}`} className="text-sm">
-                                  {option.label}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {needsCustomNamespace && (
-                          <div>
-                            <label htmlFor="customNamespace" className="text-sm font-medium mb-1 block">
-                              Custom Namespace UUID
-                            </label>
-                            <input
-                              id="customNamespace"
-                              type="text"
-                              value={customNamespace}
-                              onChange={(e) => setCustomNamespace(e.target.value)}
-                              className="w-full px-3 py-2 border border-input rounded-md text-sm"
-                              placeholder="Enter a valid UUID for custom namespace"
-                            />
-                          </div>
-                        )}
-                      </>
-                    )}
-
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="count" className="text-sm font-medium mb-1 block">
                         Number of UUIDs
@@ -273,114 +273,143 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
                         className="w-full px-3 py-2 border border-input rounded-md text-sm"
                       />
                     </div>
-
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="uppercase"
-                        checked={uppercase}
-                        onChange={(e) => setUppercase(e.target.checked)}
-                        className="h-4 w-4"
-                      />
-                      <label htmlFor="uppercase" className="text-sm">Uppercase</label>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="uppercase"
+                          checked={uppercase}
+                          onChange={(e) => setUppercase(e.target.checked)}
+                          className="h-4 w-4"
+                        />
+                        <label htmlFor="uppercase" className="text-sm">Uppercase</label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="hyphens"
+                          checked={hyphens}
+                          onChange={(e) => setHyphens(e.target.checked)}
+                          className="h-4 w-4"
+                        />
+                        <label htmlFor="hyphens" className="text-sm">Include hyphens</label>
+                      </div>
                     </div>
-
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="hyphens"
-                        checked={hyphens}
-                        onChange={(e) => setHyphens(e.target.checked)}
-                        className="h-4 w-4"
-                      />
-                      <label htmlFor="hyphens" className="text-sm">Include hyphens</label>
-                    </div>
-
-                    <Button onClick={handleGenerate} className="w-full flex items-center gap-2">
-                      <RefreshCw className="h-4 w-4" />
-                      Generate UUID{count > 1 ? 's' : ''}
-                    </Button>
                   </div>
+                </div>
 
-                  <div className="flex flex-col">
-                    <label htmlFor="input-display" className="text-sm font-medium mb-2">
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className="mb-1 flex justify-between">
+                    <label htmlFor="input-display" className="text-sm font-medium">
                       Configuration
                     </label>
-                    <Textarea
-                      id="input-display"
-                      className="flex-1 min-h-[300px] font-mono text-sm"
-                      placeholder="UUID generation settings will be displayed here..."
-                      value={getConfigurationDisplay()}
-                      readOnly
-                    />
                   </div>
+                  <Textarea
+                    id="input-display"
+                    className="flex-1 min-h-[150px] font-mono text-sm"
+                    placeholder="UUID generation settings will be displayed here..."
+                    value={getConfigurationDisplay()}
+                    readOnly
+                  />
+                </div>
 
-                  <div className="flex flex-col">
-                    <div className="flex items-center justify-between mb-2">
-                      <label htmlFor="output" className="text-sm font-medium">
-                        Generated UUID{count > 1 ? 's' : ''}
-                      </label>
-                      {output && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex items-center gap-1 h-7 px-2 text-xs"
-                          onClick={handleCopy}
-                        >
-                          {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                          {copied ? "Copied!" : "Copy"}
-                        </Button>
-                      )}
-                    </div>
+                <div className="flex justify-end my-2">
+                  <Button onClick={handleGenerate} className="flex items-center gap-2">
+                    <RefreshCw className="h-4 w-4" />
+                    Generate UUID
+                  </Button>
+                </div>
 
-                    {error ? (
-                      <div className="rounded-md bg-destructive/15 p-3 text-destructive">
-                        <div className="flex items-center gap-2">
-                          <AlertCircle className="h-4 w-4" />
-                          <div className="font-medium">Error</div>
-                        </div>
-                        <div className="mt-2 text-sm">{error}</div>
-                      </div>
-                    ) : (
-                      <Textarea
-                        id="output"
-                        className="flex-1 min-h-[300px] font-mono text-sm"
-                        placeholder="Generated UUIDs will appear here..."
-                        value={output}
-                        readOnly
-                      />
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className="mb-1 flex justify-between">
+                    <label htmlFor="output" className="text-sm font-medium">
+                      Generated UUID{count > 1 ? 's' : ''}
+                    </label>
+                    {output && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex items-center gap-1 h-7 px-2 text-xs"
+                        onClick={handleCopy}
+                      >
+                        {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                        {copied ? "Copied!" : "Copy"}
+                      </Button>
                     )}
                   </div>
+
+                  {error ? (
+                    <div className="rounded-md bg-destructive/15 p-3 text-destructive">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <div className="font-medium">Error</div>
+                      </div>
+                      <div className="mt-2 text-sm">{error}</div>
+                    </div>
+                  ) : (
+                    <Textarea
+                      id="output"
+                      className="flex-1 min-h-[150px] font-mono text-sm"
+                      placeholder="Generated UUIDs will appear here..."
+                      value={output}
+                      readOnly
+                    />
+                  )}
                 </div>
               </div>
             ) : (
               <div className="flex-1 flex flex-col space-y-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div className="flex flex-col">
-                    <label htmlFor="validateInput" className="text-sm font-medium mb-2">
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className="mb-1 flex justify-between">
+                    <label htmlFor="validateInput" className="text-sm font-medium">
                       UUID to Validate
                     </label>
-                    <Textarea
-                      id="validateInput"
-                      className="flex-1 min-h-[200px] font-mono text-sm"
-                      placeholder="Enter a UUID to validate..."
-                      value={validateInput}
-                      onChange={(e) => setValidateInput(e.target.value)}
-                    />
-                    <Button onClick={handleValidate} className="w-full mt-4">
-                      Validate UUID
-                    </Button>
                   </div>
+                  <Textarea
+                    id="validateInput"
+                    className="flex-1 min-h-[150px] font-mono text-sm"
+                    placeholder="Enter a UUID to validate..."
+                    value={validateInput}
+                    onChange={(e) => setValidateInput(e.target.value)}
+                  />
+                </div>
 
-                  <div className="flex flex-col">
-                    <label className="text-sm font-medium mb-2">Validation Result</label>
+                <div className="flex justify-end my-2">
+                  <Button onClick={handleValidate}>
+                    Validate UUID
+                  </Button>
+                </div>
+
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className="mb-1 flex justify-between">
+                    <label className="text-sm font-medium">Validation Result</label>
+                  </div>
+                  
+                  {error ? (
+                    <div className="rounded-md bg-destructive/15 p-3 text-destructive">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <div className="font-medium">Error</div>
+                      </div>
+                      <div className="mt-2 text-sm">{error}</div>
+                    </div>
+                  ) : validationResult !== null ? (
+                    <div className={`rounded-md p-3 ${validationResult ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                      <div className="flex items-center gap-2">
+                        <div className="font-medium">{validationResult ? 'Valid UUID' : 'Invalid UUID'}</div>
+                      </div>
+                      <div className="mt-2 text-sm">
+                        {validationResult ? 'The string is a valid UUID.' : 'The string is not a valid UUID.'}
+                      </div>
+                    </div>
+                  ) : (
                     <Textarea
-                      className="flex-1 min-h-[200px] font-mono text-sm"
+                      className="flex-1 min-h-[150px] font-mono text-sm"
                       placeholder="Validation results will appear here..."
-                      value={getValidationDisplay()}
+                      value="Enter a UUID above and click Validate to check if it's valid."
                       readOnly
                     />
-                  </div>
+                  )}
                 </div>
               </div>
             )}
