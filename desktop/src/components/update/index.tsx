@@ -22,25 +22,39 @@ const Update = () => {
   })
 
   const checkUpdate = async () => {
+    console.log('UpdateComponent: Manual update check initiated by user')
     setChecking(true)
     /**
      * @type {import('electron-updater').UpdateCheckResult | null | { message: string, error: Error }}
      */
-    const result = await window.ipcRenderer.invoke('check-update')
-    setProgressInfo({ percent: 0 })
-    setChecking(false)
-    setModalOpen(true)
-    if (result?.error) {
-      setUpdateAvailable(false)
-      setUpdateError(result?.error)
+    try {
+      console.log('UpdateComponent: Calling IPC check-update...')
+      const result = await window.ipcRenderer.invoke('check-update')
+      console.log('UpdateComponent: IPC check-update result:', result)
+      setProgressInfo({ percent: 0 })
+      setChecking(false)
+      setModalOpen(true)
+      if (result?.error) {
+        console.error('UpdateComponent: Update check returned error:', result.error)
+        setUpdateAvailable(false)
+        setUpdateError(result?.error)
+      } else {
+        console.log('UpdateComponent: Update check completed successfully')
+      }
+    } catch (error) {
+      console.error('UpdateComponent: Error during update check:', error)
+      setChecking(false)
+      setUpdateError({ message: 'IPC communication error', error: error as Error })
     }
   }
 
   const onUpdateCanAvailable = useCallback((_event: Electron.IpcRendererEvent, arg1: VersionInfo) => {
+    console.log('UpdateComponent: Received update-can-available event:', arg1)
     setVersionInfo(arg1)
     setUpdateError(undefined)
     // Can be update
     if (arg1.update) {
+      console.log('UpdateComponent: Update is available, showing update dialog')
       setModalBtn(state => ({
         ...state,
         cancelText: 'Cancel',
@@ -49,6 +63,7 @@ const Update = () => {
       }))
       setUpdateAvailable(true)
     } else {
+      console.log('UpdateComponent: No update available')
       setUpdateAvailable(false)
     }
   }, [])
