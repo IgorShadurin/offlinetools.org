@@ -91,5 +91,9 @@ export * from './speech-length-estimator/clipboard-registration';
 export * from './text-to-slug/clipboard-registration';
 export * from './ethereum-converter/clipboard-registration';
 
+// Export Person Generator
+export * from './person-generator';
+export * from './person-generator/clipboard-registration';
+
 // Export Unit Converter
 export * from './unit-converter';

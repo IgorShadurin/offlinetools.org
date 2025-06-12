@@ -71,6 +71,11 @@ export const onlineTools = [
     path: "/tools/unit-converter",
     description: "Convert between units of length, weight, temperature, volume, area, energy, and power with precision.",
   },
+  {
+    title: "Person Generator",
+    path: "/tools/person-generator",
+    description: "Create sample people with selected fields in your preferred format.",
+  },
 ];
 
 /**
