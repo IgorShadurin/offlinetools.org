@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { cn } from "../lib/utils";
 
 /**
@@ -27,14 +27,24 @@ interface SidebarProps {
 export function Sidebar({ tools, selectedTool, onSelectTool }: SidebarProps) {
   const [query, setQuery] = useState("");
 
-  const filteredTools = tools.filter((tool) =>
-    tool.name.toLowerCase().includes(query.toLowerCase()),
-  );
+  const filteredTools = useMemo(() => {
+    const lowerQuery = query.toLowerCase();
+    if (!lowerQuery) {
+      return tools;
+    }
+    return tools.filter((tool) =>
+      tool.name.toLowerCase().includes(lowerQuery),
+    );
+  }, [tools, query]);
 
   return (
     <div className="w-64 border-r border-border bg-card/50 text-card-foreground h-screen overflow-y-auto shrink-0">
       <div className="p-2">
+        <label htmlFor="tool-search-sidebar" className="sr-only">
+          Search tools
+        </label>
         <input
+          id="tool-search-sidebar"
           type="text"
           placeholder="Search tools..."
           value={query}
