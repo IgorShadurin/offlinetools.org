@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import Update from "./update";
 import Progress from "./update/Progress";
 import { Button } from "./ui/button";
 import type { ProgressInfo } from "electron-updater";
+
+const BYTES_IN_MEGABYTE = 1024 * 1024;
 
 interface UpdatesPageProps {
   className?: string;
@@ -63,15 +64,21 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
     log('Starting update via autoUpdater');
     setUpdating(true);
     setProgress(null);
-    const result = await window.ipcRenderer.invoke('check-update');
-    if (result?.updateInfo) {
-      log(`Update ${result.updateInfo.version} found, downloading...`);
-      await window.ipcRenderer.invoke('start-download');
-    } else if (result?.error) {
-      log(`Error: ${result.error.message || result.error}`);
-      setUpdating(false);
-    } else {
-      log('No update available');
+    try {
+      const result = await window.ipcRenderer.invoke('check-update');
+      if (result?.updateInfo) {
+        log(`Update ${result.updateInfo.version} found, downloading...`);
+        await window.ipcRenderer.invoke('start-download');
+        // setUpdating(false) will be handled by download listeners
+      } else if (result?.error) {
+        log(`Error checking for update: ${result.error.message || result.error}`);
+        setUpdating(false);
+      } else {
+        log('No update available');
+        setUpdating(false);
+      }
+    } catch (error: any) {
+      log(`Failed to initiate update process: ${error.message || error}`);
       setUpdating(false);
     }
   };
@@ -79,8 +86,8 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
   useEffect(() => {
     const handleProgress = (_: any, info: ProgressInfo) => {
       setProgress(info);
-      const transferred = (info.transferred / 1048576).toFixed(2);
-      const total = (info.total / 1048576).toFixed(2);
+      const transferred = (info.transferred / BYTES_IN_MEGABYTE).toFixed(2);
+      const total = (info.total / BYTES_IN_MEGABYTE).toFixed(2);
       log(`Downloading ${transferred}/${total} MB (${info.percent.toFixed(1)}%)`);
     };
     const handleDownloaded = () => {
@@ -123,8 +130,8 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
         <div className="mb-2 flex items-center gap-2 text-sm">
           <Progress percent={progress.percent} />
           <span>
-            {(progress.transferred / 1048576).toFixed(2)} /{' '}
-            {(progress.total / 1048576).toFixed(2)} MB
+            {(progress.transferred / BYTES_IN_MEGABYTE).toFixed(2)} /{' '}
+            {(progress.total / BYTES_IN_MEGABYTE).toFixed(2)} MB
           </span>
         </div>
       )}
@@ -133,8 +140,6 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
           {logs.join('\n')}
         </pre>
       )}
-      {/* Hidden Update component for progress modal */}
-      <Update showCheckButton={false} />
     </div>
   );
 }
