@@ -77,5 +77,19 @@ export * from './text-to-slug';
 // Export Ethereum Converter
 export * from './ethereum-converter';
 
+// Clipboard tool registrations
+export * from './base64-codec/clipboard-registration';
+export * from './binary-base64-codec/clipboard-registration';
+export * from './file-hash-compare/clipboard-registration';
+export * from './html-text-extractor/clipboard-registration';
+export * from './json-formatter/clipboard-registration';
+export * from './text-hash-generator/clipboard-registration';
+export * from './url-encoder/clipboard-registration';
+export * from './file-generator/clipboard-registration';
+export * from './uuid-generator/clipboard-registration';
+export * from './speech-length-estimator/clipboard-registration';
+export * from './text-to-slug/clipboard-registration';
+export * from './ethereum-converter/clipboard-registration';
+
 // Export Unit Converter
 export * from './unit-converter';

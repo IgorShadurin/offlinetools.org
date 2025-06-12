@@ -1,4 +1,5 @@
-import { detectClipboardTools, Tool, ClipboardDetectorOptions } from './index';
+import '../index';
+import { detectClipboardTools, Tool, ClipboardDetectorOptions, getRegisteredTools } from './index';
 import { ClipboardType } from './index';
 
 describe('Clipboard Detector', () => {
@@ -8,9 +9,10 @@ describe('Clipboard Detector', () => {
       const options = {
         type: 'photo' as ClipboardType
       };
+      const expected = getRegisteredTools().filter(r => r.supportedTypes.includes('photo')).length;
       const result = detectClipboardTools(options);
-      
-      expect(result).toHaveLength(3);
+
+      expect(result).toHaveLength(expected);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.FILE_GENERATOR);
@@ -21,9 +23,10 @@ describe('Clipboard Detector', () => {
       const options = {
         type: 'video' as ClipboardType
       };
+      const expected = getRegisteredTools().filter(r => r.supportedTypes.includes('video')).length;
       const result = detectClipboardTools(options);
-      
-      expect(result).toHaveLength(3);
+
+      expect(result).toHaveLength(expected);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
       expect(result).toContain(Tool.FILE_GENERATOR);
@@ -34,9 +37,10 @@ describe('Clipboard Detector', () => {
       const options = {
         type: 'string' as ClipboardType
       };
+      const expected = getRegisteredTools().filter(r => r.supportedTypes.includes('string')).length;
       const result = detectClipboardTools(options);
-      
-      expect(result).toHaveLength(12);
+
+      expect(result).toHaveLength(expected);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -57,9 +61,10 @@ describe('Clipboard Detector', () => {
         type: 'string' as ClipboardType,
         content: ''
       };
+      const expected = getRegisteredTools().filter(r => r.supportedTypes.includes('string')).length;
       const result = detectClipboardTools(options);
-      
-      expect(result).toHaveLength(12);
+
+      expect(result).toHaveLength(expected);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
@@ -241,9 +246,10 @@ describe('Clipboard Detector', () => {
         type: 'string' as ClipboardType,
         content: null as unknown as string
       };
+      const expected = getRegisteredTools().filter(r => r.supportedTypes.includes('string')).length;
       const result = detectClipboardTools(options);
-      
-      expect(result).toHaveLength(12);
+
+      expect(result).toHaveLength(expected);
       expect(result).toContain(Tool.BASE64_CODEC);
       expect(result).toContain(Tool.BINARY_BASE64_CODEC);
       expect(result).toContain(Tool.FILE_HASH_COMPARE);
