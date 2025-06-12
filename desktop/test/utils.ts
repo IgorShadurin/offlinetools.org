@@ -302,39 +302,30 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
   if (!page) {
     throw new Error('Page object is null or undefined');
   }
-  
+
   // Set default timeout based on CI environment
   const timeout = options.timeout || (process.env.CI === 'true' ? 10000 : 2000);
-  
-  try {
-    // Create a condition function based on the provided options
-    await page.waitForFunction((opts) => {
-      const textareas = document.querySelectorAll('textarea');
-      
-      // We need at least 2 textareas (input and output)
-      if (textareas.length < 2) return false;
-      
-      // Get the output textarea (usually the second one, index 1)
-      const outputTextarea = textareas[1];
-      const outputValue = outputTextarea.value;
-      
-      // If no output yet, condition is not met
-      if (!outputValue) return false;
-      
-      // Check specific conditions
-      if (opts.contains && !outputValue.includes(opts.contains)) return false;
-      if (opts.notEmpty && outputValue.trim() === '') return false;
-      if (opts.hasError && !outputValue.includes('Error')) return false;
-      if (opts.hasLineBreaks && !outputValue.includes('\n')) return false;
-      
-      // All checks passed
-      return true;
-    }, options, { timeout });
-    
-    // Return the output text
-    return await getTextareaOutput(page);
-  } catch (error) {
-    console.error('Error waiting for textarea output:', error);
-    throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
+
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    const output = await getTextareaOutput(page).catch(() => '');
+
+    if (output) {
+      if (options.contains && !output.includes(options.contains)) {
+        // continue waiting
+      } else if (options.notEmpty && output.trim() === '') {
+        // continue waiting
+      } else if (options.hasError && !output.includes('Error')) {
+        // continue waiting
+      } else if (options.hasLineBreaks && !output.includes('\n')) {
+        // continue waiting
+      } else {
+        return output;
+      }
+    }
+
+    await page.waitForTimeout(100);
   }
-}        
+
+  throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
+}
