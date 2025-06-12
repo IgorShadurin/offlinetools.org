@@ -18,6 +18,7 @@ export default defineConfig({
     sequence: {
       concurrent: false,
     },
+    fileParallelism: false,
     poolOptions: {
       threads: {
         singleThread: true,
