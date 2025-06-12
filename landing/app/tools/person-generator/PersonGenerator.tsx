@@ -24,19 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import PersonGeneratorExplanation from "./PersonGeneratorExplanation";
 
-const ALL_FIELDS = [
-  PersonField.FirstName,
-  PersonField.LastName,
-  PersonField.FullName,
-  PersonField.Email,
-  PersonField.Phone,
-  PersonField.Address,
-  PersonField.City,
-  PersonField.State,
-  PersonField.Country,
-  PersonField.Zip,
-  PersonField.JobTitle
-];
+const ALL_FIELDS = Object.values(PersonField);
 
 export default function PersonGenerator() {
   const [count, setCount] = useState<number>(DEFAULT_PERSON_GENERATOR_OPTIONS.count);

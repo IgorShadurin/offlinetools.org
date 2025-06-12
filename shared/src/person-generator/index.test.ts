@@ -33,6 +33,26 @@ describe('Person Generator', () => {
     expect(parsed.length).toBe(2)
   })
 
+  it('should format output as XML', () => {
+    const persons = generatePersons({ count: 1, fields: [PersonField.FirstName] })
+    const output = formatPersons(persons, PersonOutputFormat.XML)
+    expect(output.startsWith('<persons>')).toBe(true)
+    expect(output.includes('<person>')).toBe(true)
+  })
+
+  it('should format output as YAML', () => {
+    const persons = generatePersons({ count: 1, fields: [PersonField.Email] })
+    const output = formatPersons(persons, PersonOutputFormat.YAML)
+    expect(output).toContain('email:')
+  })
+
+  it('should format output as HTML', () => {
+    const persons = generatePersons({ count: 1, fields: [PersonField.FullName] })
+    const output = formatPersons(persons, PersonOutputFormat.HTML)
+    expect(output.startsWith('<table>')).toBe(true)
+    expect(output).toContain('<td>')
+  })
+
   it('should format output as text', () => {
     const persons = generatePersons({ count: 1, fields: [PersonField.FullName] })
     const output = formatPersons(persons, PersonOutputFormat.TXT)

@@ -491,10 +491,21 @@ export default function FileGenerator() {
           description="Generate files with specific size and format with random data, zeros, or custom patterns."
         />
 
-        <div className="flex items-center space-x-2 mb-6">
-          <LinkIcon className="h-4 w-4" />
-          <Link href="/tools/file-hash-compare" className="text-sm text-blue-500 hover:underline">
-            Related tool: File Hash Compare
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-sm text-muted-foreground">Related tools:</span>
+          <Link
+            href="/tools/file-hash-compare"
+            className="text-sm inline-flex items-center gap-1 hover:underline"
+          >
+            <LinkIcon className="h-3.5 w-3.5" />
+            File Hash Compare
+          </Link>
+          <Link
+            href="/tools/person-generator"
+            className="text-sm inline-flex items-center gap-1 hover:underline"
+          >
+            <LinkIcon className="h-3.5 w-3.5" />
+            Person Generator
           </Link>
         </div>
 

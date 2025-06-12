@@ -66,6 +66,11 @@ const COUNTRIES = ['USA', 'Canada', 'UK', 'Australia', 'Germany'];
 const JOB_TITLES = ['Developer', 'Designer', 'Manager', 'Analyst', 'Engineer'];
 const ZIPS = ['12345', '23456', '34567', '45678', '56789'];
 
+interface SaveFileHandle {
+  createWritable(): Promise<{ write(data: string): Promise<void>; close(): Promise<void> }>;
+}
+
+
 function randomOf<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -131,6 +136,62 @@ export function generatePersons(
   return persons;
 }
 
+function formatPersonsAsJson(persons: Record<string, string>[]): string {
+  return JSON.stringify(persons, null, 2);
+}
+
+function formatPersonsAsXml(persons: Record<string, string>[]): string {
+  return (
+    '<persons>' +
+    persons
+      .map((p) => {
+        const fields = Object.entries(p)
+          .map(([k, v]) => `<${k}>${v}</${k}>`)
+          .join('');
+        return `<person>${fields}</person>`;
+      })
+      .join('') +
+    '</persons>'
+  );
+}
+
+function formatPersonsAsYaml(persons: Record<string, string>[]): string {
+  return persons
+    .map((p) =>
+      Object.entries(p)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join('\n')
+    )
+    .join('\n-\n');
+}
+
+function formatPersonsAsHtml(persons: Record<string, string>[]): string {
+  return (
+    '<table><thead><tr>' +
+    Object.keys(persons[0] || {})
+      .map((h) => `<th>${h}</th>`)
+      .join('') +
+    '</tr></thead><tbody>' +
+    persons
+      .map(
+        (p) =>
+          '<tr>' +
+          Object.values(p)
+            .map((v) => `<td>${v}</td>`)
+            .join('') +
+          '</tr>'
+      )
+      .join('') +
+    '</tbody></table>'
+  );
+}
+
+function formatPersonsAsTxt(persons: Record<string, string>[]): string {
+  return persons
+    .map((p) => Object.values(p).join(', '))
+    .join('\n');
+}
+
 /**
  * Format generated persons as a string in the given format
  * @param persons - Array of persons
@@ -143,53 +204,17 @@ export function formatPersons(
 ): string {
   switch (format) {
     case PersonOutputFormat.JSON:
-      return JSON.stringify(persons, null, 2);
+      return formatPersonsAsJson(persons);
     case PersonOutputFormat.XML:
-      return (
-        '<persons>' +
-        persons
-          .map((p) => {
-            const fields = Object.entries(p)
-              .map(([k, v]) => `<${k}>${v}</${k}>`)
-              .join('');
-            return `<person>${fields}</person>`;
-          })
-          .join('') +
-        '</persons>'
-      );
+      return formatPersonsAsXml(persons);
     case PersonOutputFormat.YAML:
-      return persons
-        .map((p) =>
-          Object.entries(p)
-            .map(([k, v]) => `${k}: ${v}`)
-            .join('\n')
-        )
-        .join('\n-\n');
+      return formatPersonsAsYaml(persons);
     case PersonOutputFormat.HTML:
-      return (
-        '<table><thead><tr>' +
-        Object.keys(persons[0] || {})
-          .map((h) => `<th>${h}</th>`)
-          .join('') +
-        '</tr></thead><tbody>' +
-        persons
-          .map(
-            (p) =>
-              '<tr>' +
-              Object.values(p)
-                .map((v) => `<td>${v}</td>`)
-                .join('') +
-              '</tr>'
-          )
-          .join('') +
-        '</tbody></table>'
-      );
+      return formatPersonsAsHtml(persons);
     case PersonOutputFormat.TXT:
-      return persons
-        .map((p) => Object.values(p).join(', '))
-        .join('\n');
+      return formatPersonsAsTxt(persons);
     default:
-      return JSON.stringify(persons, null, 2);
+      return formatPersonsAsJson(persons);
   }
 }
 
@@ -208,8 +233,7 @@ export function isSavePickerSupported(): boolean {
  */
 export async function saveTextWithPicker(data: string, filename: string): Promise<void> {
   try {
-    // @ts-ignore
-    const handle = await window.showSaveFilePicker({
+    const handle = await (window as unknown as { showSaveFilePicker: (options: unknown) => Promise<SaveFileHandle> }).showSaveFilePicker({
       suggestedName: filename,
       types: [{ accept: { 'text/plain': ['.txt'] } }]
     });
