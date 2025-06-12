@@ -13,5 +13,6 @@ export default defineConfig({
       }),
     },
     retry: process.env.CI === 'true' ? 2 : 0,
+    maxConcurrency: 1,
   },
 })
