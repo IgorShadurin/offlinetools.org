@@ -93,3 +93,9 @@ export * from './ethereum-converter/clipboard-registration';
 
 // Export Unit Converter
 export * from './unit-converter';
+
+// Export Person Generator
+export * from './person-generator';
+
+// Clipboard registration for Person Generator
+export * from './person-generator/clipboard-registration';

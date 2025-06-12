@@ -52,6 +52,11 @@ export const onlineTools = [
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
   {
+    title: "Person Generator",
+    path: "/tools/person-generator",
+    description: "Create fake person data with chosen fields in multiple formats.",
+  },
+  {
     title: "UUID Generator",
     path: "/tools/uuid-generator",
     description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",
