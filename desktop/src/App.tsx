@@ -5,7 +5,8 @@ import {
   Link2Icon,
   ClipboardIcon,
   Clock,
-  Fingerprint
+  Fingerprint,
+  RefreshCw
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -19,6 +20,7 @@ import { ClipboardDebug } from './components/clipboard-debug'
 import { EthereumConverter } from './components/ethereum-converter'
 import { UnitConverter } from './components/unit-converter'
 import { SpeechLengthEstimator } from './components/speech-length-estimator'
+import UpdatesPage from './components/updates-page'
 
 // List of tools
 const tools: Tool[] = [
@@ -30,6 +32,7 @@ const tools: Tool[] = [
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
+  { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
 
 /**
@@ -122,6 +125,8 @@ function App() {
           <EthereumConverter className="min-h-full" />
         ) : selectedTool === 'unit-converter' ? (
           <UnitConverter className="min-h-full" />
+        ) : selectedTool === 'updates' ? (
+          <UpdatesPage className="min-h-full" />
         ) : (
           <ToolPlaceholder 
             title={tools.find(t => t.id === selectedTool)?.name || ''}

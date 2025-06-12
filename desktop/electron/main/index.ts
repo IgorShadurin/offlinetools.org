@@ -432,6 +432,11 @@ ipcMain.handle('minimize-to-tray', () => {
   }
 })
 
+// Provide application version to renderer
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion()
+})
+
 // Update tray menu dynamically
 ipcMain.handle('update-tray-menu', (_, items) => {
   if (tray) {
