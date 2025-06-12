@@ -62,5 +62,6 @@ alwaysApply: false
      3. Input: Test with valid and invalid inputs
      4. Verification: Wait for and verify correct output
      5. Error handling: Verify appropriate error messages
-   - Use utilities from `/desktop/test/utils.ts` to handle waiting
-   - Run with `pnpm run test`
+  - Use utilities from `/desktop/test/utils.ts` to handle waiting
+  - Run tests locally with `pnpm run test`
+  - Use `pnpm run test:no-screen` to run tests on devices without a screen (wraps Vitest with `xvfb-run`)
