@@ -57,6 +57,11 @@ export const onlineTools = [
     description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",
   },
   {
+    title: "Person Generator",
+    path: "/tools/person-generator",
+    description: "Generate realistic person data in JSON, XML, YAML, HTML, or text format.",
+  },
+  {
     title: "Speech Length Estimator",
     path: "/tools/speech-length-estimator",
     description: "Calculate how long it will take to speak a text with adjustable speed settings.",

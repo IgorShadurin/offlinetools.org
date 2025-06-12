@@ -18,7 +18,8 @@ export enum Tool {
   UUID_GENERATOR = 'uuid-generator',
   SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator',
   TEXT_TO_SLUG = 'text-to-slug',
-  ETHEREUM_CONVERTER = 'ethereum-converter'
+  ETHEREUM_CONVERTER = 'ethereum-converter',
+  PERSON_GENERATOR = 'person-generator'
 }
 
 /**
@@ -44,6 +45,7 @@ const TOOL_COMPATIBILITY: Record<ClipboardType, Tool[]> = {
     Tool.TEXT_HASH_GENERATOR,
     Tool.URL_ENCODER,
     Tool.FILE_GENERATOR,
+    Tool.PERSON_GENERATOR,
     Tool.UUID_GENERATOR,
     Tool.SPEECH_LENGTH_ESTIMATOR,
     Tool.TEXT_TO_SLUG,

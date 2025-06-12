@@ -79,3 +79,6 @@ export * from './ethereum-converter';
 
 // Export Unit Converter
 export * from './unit-converter';
+
+// Export Person Generator
+export * from './person-generator';
