@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react'
-import { 
-  BracketsIcon, 
+import {
+  BracketsIcon,
   Hash,
   Link2Icon,
   ClipboardIcon,
-  Clock
+  Clock,
+  Fingerprint
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
 import { ToolPlaceholder } from './components/tool-placeholder'
 import { Base64Codec } from './components/base64-codec'
 import { UrlEncoder } from './components/url-encoder'
+import { UuidGenerator } from './components/uuid-generator'
 
 import { ClipboardDetector } from './components/clipboard-detector'
 import { ClipboardDebug } from './components/clipboard-debug'
@@ -24,6 +26,7 @@ const tools: Tool[] = [
   { id: 'json-formatter', name: 'JSON Format/Validate', icon: <BracketsIcon size={16} /> },
   { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
+  { id: 'uuid-generator', name: 'UUID Generator', icon: <Fingerprint size={16} /> },
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
@@ -111,6 +114,8 @@ function App() {
           <Base64Codec className="min-h-full" />
         ) : selectedTool === 'url-encoder' ? (
           <UrlEncoder className="min-h-full" />
+        ) : selectedTool === 'uuid-generator' ? (
+          <UuidGenerator className="min-h-full" />
         ) : selectedTool === 'speech-length-estimator' ? (
           <SpeechLengthEstimator className="min-h-full" />
         ) : selectedTool === 'ethereum-converter' ? (
