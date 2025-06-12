@@ -59,4 +59,10 @@ describe('Person Generator', () => {
     expect(typeof output).toBe('string')
     expect(output.length).toBeGreaterThan(0)
   })
+
+  it('should format output using a custom template', () => {
+    const persons = generatePersons({ count: 1, fields: [PersonField.FirstName] })
+    const output = formatPersons(persons, PersonOutputFormat.CUSTOM, 'Name: {{firstName}}')
+    expect(output.startsWith('Name: ')).toBe(true)
+  })
 })

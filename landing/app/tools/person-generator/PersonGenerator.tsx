@@ -16,11 +16,20 @@ import {
   isSavePickerSupported,
   saveTextWithPicker,
   generateTextDownloadUrl,
-  DEFAULT_PERSON_GENERATOR_OPTIONS
+  DEFAULT_PERSON_GENERATOR_OPTIONS,
+  DEFAULT_CUSTOM_TEMPLATE
 } from "shared";
 import { useState, useEffect } from "react";
 import { AlertCircle, Check, Copy, Download, Link as LinkIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 import PersonGeneratorExplanation from "./PersonGeneratorExplanation";
 
@@ -34,12 +43,18 @@ export default function PersonGenerator() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [fsSupported, setFsSupported] = useState(false);
+  const [templateOpen, setTemplateOpen] = useState(false);
+  const [customTemplate, setCustomTemplate] = useState<string>(
+    DEFAULT_CUSTOM_TEMPLATE
+  );
   const STORAGE_KEY = "personGeneratorFields";
+  const TEMPLATE_KEY = "personGeneratorTemplate";
 
   useEffect(() => {
     setFsSupported(isSavePickerSupported());
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(STORAGE_KEY);
+      const template = localStorage.getItem(TEMPLATE_KEY);
       if (stored) {
         try {
           const parsed = JSON.parse(stored) as PersonField[];
@@ -50,14 +65,18 @@ export default function PersonGenerator() {
           // ignore
         }
       }
+      if (template) {
+        setCustomTemplate(template);
+      }
     }
   }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(fields));
+      localStorage.setItem(TEMPLATE_KEY, customTemplate);
     }
-  }, [fields]);
+  }, [fields, customTemplate]);
 
   const toggleField = (field: PersonField) => {
     setFields((prev) =>
@@ -68,7 +87,7 @@ export default function PersonGenerator() {
   const handleGenerate = () => {
     try {
       const persons = generatePersons({ count, fields });
-      const formatted = formatPersons(persons, format);
+      const formatted = formatPersons(persons, format, customTemplate);
       setOutput(formatted);
       setError(null);
     } catch (err) {
@@ -158,8 +177,29 @@ export default function PersonGenerator() {
                   <SelectItem value={PersonOutputFormat.YAML}>YAML</SelectItem>
                   <SelectItem value={PersonOutputFormat.HTML}>HTML</SelectItem>
                   <SelectItem value={PersonOutputFormat.TXT}>Text</SelectItem>
+                  <SelectItem value={PersonOutputFormat.CUSTOM}>Custom</SelectItem>
                 </SelectContent>
               </Select>
+              {format === PersonOutputFormat.CUSTOM && (
+                <Dialog open={templateOpen} onOpenChange={setTemplateOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="mt-2">Edit Template</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Custom Template</DialogTitle>
+                      <DialogDescription>
+                        Use placeholders like {"{{firstName}}"} in your template.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Textarea
+                      value={customTemplate}
+                      onChange={(e) => setCustomTemplate(e.target.value)}
+                      className="font-mono mt-2"
+                    />
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
 
             {error && (
@@ -175,22 +215,33 @@ export default function PersonGenerator() {
                 Generate
               </Button>
               {output && (
-                <>
-                  <Button onClick={handleCopy} variant="outline" className="w-full" size="lg">
-                    {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-                    {copied ? "Copied!" : "Copy"}
-                  </Button>
-                  <Button onClick={handleDownload} variant="outline" className="w-full" size="lg">
-                    <Download className="mr-2 h-4 w-4" /> Save File
-                  </Button>
-                </>
+                <Button onClick={handleDownload} variant="outline" className="w-full" size="lg">
+                  <Download className="mr-2 h-4 w-4" /> Save File
+                </Button>
               )}
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="output">Output</Label>
-            <Textarea id="output" value={output} readOnly className="min-h-[250px] font-mono" />
+            <div className="relative">
+              <Textarea
+                id="output"
+                value={output}
+                readOnly
+                className="min-h-[250px] font-mono pr-10"
+              />
+              {output && (
+                <Button
+                  onClick={handleCopy}
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2"
+                >
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 

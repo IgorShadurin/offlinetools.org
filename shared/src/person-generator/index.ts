@@ -23,7 +23,8 @@ export enum PersonOutputFormat {
   XML = 'xml',
   YAML = 'yml',
   HTML = 'html',
-  TXT = 'txt'
+  TXT = 'txt',
+  CUSTOM = 'custom'
 }
 
 /**
@@ -55,6 +56,10 @@ export const DEFAULT_PERSON_GENERATOR_OPTIONS: PersonGeneratorOptions = {
   count: 1,
   fields: DEFAULT_PERSON_FIELDS
 };
+
+/** Default template for custom output */
+export const DEFAULT_CUSTOM_TEMPLATE =
+  '{{firstName}} {{lastName}} - {{email}}';
 
 // sample data for random generation
 const FIRST_NAMES = ['Alice', 'Bob', 'Carol', 'David', 'Eve', 'Frank', 'Grace', 'Helen', 'Ivan', 'Judy'];
@@ -192,6 +197,24 @@ function formatPersonsAsTxt(persons: Record<string, string>[]): string {
     .join('\n');
 }
 
+function applyTemplate(
+  template: string,
+  person: Record<string, string>
+): string {
+  return Object.entries(person).reduce(
+    (acc, [key, value]) =>
+      acc.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), value),
+    template
+  );
+}
+
+function formatPersonsAsCustom(
+  persons: Record<string, string>[],
+  template: string
+): string {
+  return persons.map((p) => applyTemplate(template, p)).join('\n');
+}
+
 /**
  * Format generated persons as a string in the given format
  * @param persons - Array of persons
@@ -200,7 +223,8 @@ function formatPersonsAsTxt(persons: Record<string, string>[]): string {
  */
 export function formatPersons(
   persons: Record<string, string>[],
-  format: PersonOutputFormat
+  format: PersonOutputFormat,
+  customTemplate?: string
 ): string {
   switch (format) {
     case PersonOutputFormat.JSON:
@@ -213,6 +237,11 @@ export function formatPersons(
       return formatPersonsAsHtml(persons);
     case PersonOutputFormat.TXT:
       return formatPersonsAsTxt(persons);
+    case PersonOutputFormat.CUSTOM:
+      return formatPersonsAsCustom(
+        persons,
+        customTemplate || DEFAULT_CUSTOM_TEMPLATE
+      );
     default:
       return formatPersonsAsJson(persons);
   }
