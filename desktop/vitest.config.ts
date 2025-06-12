@@ -13,5 +13,10 @@ export default defineConfig({
       }),
     },
     retry: process.env.CI === 'true' ? 2 : 0,
+    // Run tests sequentially to avoid parallel Electron launches
+    maxConcurrency: 1,
+    sequence: {
+      concurrent: false,
+    },
   },
 })
