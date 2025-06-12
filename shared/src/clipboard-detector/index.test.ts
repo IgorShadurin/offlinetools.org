@@ -49,6 +49,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.PERSON_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
       expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
       expect(result).toContain(Tool.TEXT_TO_SLUG);
@@ -73,6 +74,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.PERSON_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
       expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
       expect(result).toContain(Tool.TEXT_TO_SLUG);
@@ -258,6 +260,7 @@ describe('Clipboard Detector', () => {
       expect(result).toContain(Tool.TEXT_HASH_GENERATOR);
       expect(result).toContain(Tool.URL_ENCODER);
       expect(result).toContain(Tool.FILE_GENERATOR);
+      expect(result).toContain(Tool.PERSON_GENERATOR);
       expect(result).toContain(Tool.UUID_GENERATOR);
       expect(result).toContain(Tool.SPEECH_LENGTH_ESTIMATOR);
       expect(result).toContain(Tool.TEXT_TO_SLUG);

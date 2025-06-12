@@ -18,7 +18,8 @@ export enum Tool {
   UUID_GENERATOR = 'uuid-generator',
   SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator',
   TEXT_TO_SLUG = 'text-to-slug',
-  ETHEREUM_CONVERTER = 'ethereum-converter'
+  ETHEREUM_CONVERTER = 'ethereum-converter',
+  PERSON_GENERATOR = 'person-generator'
 }
 
 /**
