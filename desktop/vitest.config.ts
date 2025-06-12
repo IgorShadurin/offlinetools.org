@@ -18,5 +18,10 @@ export default defineConfig({
     sequence: {
       concurrent: false,
     },
+    poolOptions: {
+      threads: {
+        singleThread: true,
+      },
+    },
   },
 })
