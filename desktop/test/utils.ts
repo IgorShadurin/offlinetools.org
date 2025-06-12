@@ -310,12 +310,11 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
     // Create a condition function based on the provided options
     await page.waitForFunction((opts) => {
       const textareas = document.querySelectorAll('textarea');
-      
-      // We need at least 2 textareas (input and output)
-      if (textareas.length < 2) return false;
-      
-      // Get the output textarea (usually the second one, index 1)
-      const outputTextarea = textareas[1];
+
+      if (textareas.length === 0) return false;
+
+      // Use the last textarea on the page as output
+      const outputTextarea = textareas[textareas.length - 1];
       const outputValue = outputTextarea.value;
       
       // If no output yet, condition is not met
@@ -337,4 +336,14 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
     console.error('Error waiting for textarea output:', error);
     throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);
   }
-}        
+}
+
+/**
+ * Waits for text content to appear on the page
+ * @param {Page} page - Playwright page object
+ * @param {string} text - The text to wait for
+ * @param {number} timeout - Timeout in milliseconds
+ */
+export async function waitForText(page: Page, text: string, timeout = 5000): Promise<void> {
+  await page.waitForSelector(`text=${text}`, { timeout });
+}
