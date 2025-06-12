@@ -4,7 +4,11 @@ import Modal from '@/components/update/Modal'
 import Progress from '@/components/update/Progress'
 import './update.css'
 
-const Update = () => {
+interface UpdateProps {
+  showCheckButton?: boolean
+}
+
+const Update = ({ showCheckButton = true }: UpdateProps) => {
   const [checking, setChecking] = useState(false)
   const [updateAvailable, setUpdateAvailable] = useState(false)
   const [versionInfo, setVersionInfo] = useState<VersionInfo>()
@@ -149,9 +153,11 @@ const Update = () => {
               )}
         </div>
       </Modal>
-      <button disabled={checking} onClick={checkUpdate}>
-        {checking ? 'Checking...' : 'Check update'}
-      </button>
+      {showCheckButton && (
+        <button disabled={checking} onClick={checkUpdate}>
+          {checking ? 'Checking...' : 'Check update'}
+        </button>
+      )}
     </>
   )
 }
