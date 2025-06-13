@@ -1,8 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "./ui/button";
-// import type { ProgressInfo } from "electron-updater"; // No longer needed
-
-// const BYTES_IN_MEGABYTE = 1024 * 1024; // Removed as it's no longer used
 
 interface UpdatesPageProps {
   className?: string;
@@ -35,11 +32,10 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
     const url = "https://api.github.com/repos/IgorShadurin/offlinetools.org/releases/latest";
     setChecking(true);
     setUpdateInfo(null);
-    setDownloadUrl(null); // Reset download URL
+    setDownloadUrl(null);
     setLogs([]);
     log('Starting update check...');
     try {
-      log('Getting OS information...');
       const osInfo: { platform: string, arch: string } | null = await window.ipcRenderer.invoke('get-os-arch');
       if (!osInfo || !osInfo.platform || !osInfo.arch) {
         log('Error: Could not get OS information.');
@@ -55,7 +51,6 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
       const resp = await fetch(url);
       log(`Status: ${resp.status}`);
       const data = await resp.json();
-      // log(`Response: ${JSON.stringify(data)}`); // Can be very verbose
       const latest = (data.tag_name || data.name || '').replace(/^v/, '');
 
       if (latest && compareVersions(latest, current) > 0) {
@@ -64,8 +59,7 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
         if (data.assets && Array.isArray(data.assets)) {
           for (const asset of data.assets) {
             const assetName = asset.name.toLowerCase();
-            // More robust checking for platform and arch within asset names
-            if (platform === 'darwin') { // macOS
+            if (platform === 'darwin') {
               if (arch === 'arm64' && (assetName.includes('arm64') || assetName.includes('aarch64')) && (assetName.endsWith('.dmg') || assetName.endsWith('.zip'))) {
                 foundAsset = asset;
                 break;
@@ -73,18 +67,17 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
                 foundAsset = asset;
                 break;
               }
-            } else if (platform === 'win32' && (arch === 'x64' || arch === 'x86_64')) { // Windows 64-bit
+            } else if (platform === 'win32' && (arch === 'x64' || arch === 'x86_64')) {
               if ((assetName.includes('win') || assetName.includes('windows')) && (assetName.includes('x64') || assetName.includes('amd64')) && (assetName.endsWith('.exe') || assetName.endsWith('.msi') || assetName.endsWith('.zip'))) {
                 foundAsset = asset;
                 break;
               }
-            } else if (platform === 'linux' && (arch === 'x64' || arch === 'x86_64')) { // Linux 64-bit
+            } else if (platform === 'linux' && (arch === 'x64' || arch === 'x86_64')) {
               if ((assetName.includes('linux')) && (assetName.includes('x64') || assetName.includes('amd64')) && (assetName.endsWith('.appimage') || assetName.endsWith('.deb') || assetName.endsWith('.tar.gz') || assetName.endsWith('.zip'))) {
                 foundAsset = asset;
                 break;
               }
             }
-            // Add more platform/arch combinations as needed
           }
         }
 
@@ -124,9 +117,8 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
   };
 
   useEffect(() => {
-    // Cleaned up IPC listeners
     return () => {
-      // Ensure any remaining listeners are cleaned up if necessary in the future
+      // Potential future cleanup for this component instance if needed
     };
   }, [log]);
 
@@ -146,7 +138,6 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
           {showLogs ? 'Hide Logs' : 'Show Logs'}
         </Button>
       </div>
-      {/* Removed progress bar related to old electron-updater */}
       {showLogs && (
         <pre className="flex-1 overflow-auto rounded bg-muted/50 p-2 text-xs whitespace-pre-wrap">
           {logs.join('\n')}
