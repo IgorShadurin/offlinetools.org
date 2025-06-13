@@ -111,7 +111,7 @@ function setupClipboardHandlers() {
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    icon: path.join(process.env.APP_ROOT, 'resources', 'icons', 'icon_256x256.png'),
+    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
     width: 1270,
     height: 640,
     webPreferences: {
@@ -154,7 +154,7 @@ async function createWindow() {
  */
 function createTray() {
   // Use a fallback icon if the favicon.ico is not found
-  let iconPath = path.join(process.env.APP_ROOT, 'resources', 'icons', 'icon_256x256.png')
+  let iconPath = path.join(process.env.VITE_PUBLIC, 'favicon.ico')
   let trayIcon;
   
   // Fallback to app.getAppPath() if the icon doesn't exist
