@@ -14,7 +14,14 @@ import {
   QrCodeOptions,
 } from "shared";
 import { useState, useRef } from "react";
-import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  Copy,
+  Download,
+  HelpCircle,
+  Link as LinkIcon,
+} from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 
@@ -68,10 +75,16 @@ export default function QrCodeTool() {
   };
 
   const handleCopy = () => {
-    const text = mode === "generate" ? qrDataUrl : decodeResult;
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(decodeResult);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownload = () => {
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = "qr-code.png";
+    a.click();
   };
 
   const handleTabChange = (value: string) => {
@@ -112,7 +125,7 @@ export default function QrCodeTool() {
           {mode === "generate" ? (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="qr-input">Text / URL</Label>
+                <Label htmlFor="qr-input" className="block mb-2">Text / URL</Label>
                 <Textarea
                   id="qr-input"
                   className="w-full"
@@ -123,7 +136,7 @@ export default function QrCodeTool() {
               </div>
               <div className="flex flex-wrap gap-4 items-end">
                 <div>
-                  <Label htmlFor="size">Size (px)</Label>
+                  <Label htmlFor="size" className="block mb-2">Size (px)</Label>
                   <Input
                     id="size"
                     type="number"
@@ -135,7 +148,15 @@ export default function QrCodeTool() {
                   />
                 </div>
                 <div>
-                  <Label>Error Correction</Label>
+                  <div className="flex items-center gap-1 mb-2">
+                    <Label>Error Correction</Label>
+                    <span
+                      title="Higher levels keep data readable even if the QR code is partially damaged"
+                      className="inline-flex"
+                    >
+                      <HelpCircle className="h-4 w-4 cursor-help text-muted-foreground" />
+                    </span>
+                  </div>
                   <RadioGroup
                     value={errorCorrection}
                     onValueChange={(v) => setErrorCorrection(v as QrCodeOptions["errorCorrectionLevel"])}
@@ -178,10 +199,10 @@ export default function QrCodeTool() {
                     size="sm"
                     variant="outline"
                     className="flex items-center gap-1"
-                    onClick={handleCopy}
+                    onClick={handleDownload}
                   >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    {copied ? "Copied!" : "Copy Image URL"}
+                    <Download className="h-4 w-4" />
+                    Download
                   </Button>
                 </div>
               )}
@@ -197,7 +218,7 @@ export default function QrCodeTool() {
               {decodeResult && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="decode-output">Decoded Text</Label>
+                    <Label htmlFor="decode-output" className="block mb-2">Decoded Text</Label>
                     <Button
                       size="sm"
                       variant="outline"
