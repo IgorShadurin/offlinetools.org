@@ -36,6 +36,11 @@ export const onlineTools = [
     description: "Encode text for use in URLs or decode URL-encoded text.",
   },
   {
+    title: "QR Code Tool",
+    path: "/tools/qr-code",
+    description: "Generate QR codes or decode them from uploaded images.",
+  },
+  {
     title: "File & Text Hash Compare",
     path: "/tools/file-hash-compare",
     description: "Compare hashes of files or text strings using different algorithms.",

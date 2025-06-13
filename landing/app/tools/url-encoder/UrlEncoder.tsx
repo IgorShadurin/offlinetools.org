@@ -10,8 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { encodeUrl, decodeUrl } from "shared";
 import { useState } from "react";
-import { AlertCircle, Check, Copy } from "lucide-react";
+import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
 import UrlEncoderExplanation from "./UrlEncoderExplanation";
 
 export default function UrlEncoder() {
@@ -57,6 +58,13 @@ export default function UrlEncoder() {
           title="URL Encoder/Decoder"
           description="Encode text for use in URLs or decode URL-encoded text. Supports both modern and legacy encoding methods."
         />
+        <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
+          <LinkIcon className="h-4 w-4" />
+          <span>Related tool: </span>
+          <Link href="/tools/qr-code" className="text-primary hover:underline">
+            QR Code Tool
+          </Link>
+        </div>
 
         <div className="space-y-4">
           {/* Tabs */}
