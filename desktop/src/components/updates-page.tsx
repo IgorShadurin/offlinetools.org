@@ -54,7 +54,7 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
       const latest = (data.tag_name || data.name || '').replace(/^v/, '');
 
       if (latest && compareVersions(latest, current) > 0) {
-        log(`Update available: v${latest}`);
+        log(`Yes, an update is available: v${latest}`);
         let foundAsset = null;
         if (data.assets && Array.isArray(data.assets)) {
           for (const asset of data.assets) {
@@ -89,7 +89,7 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
           log(`Update v${latest} is available, but no suitable download found for your platform (${platform}) and architecture (${arch}).`);
         }
       } else {
-        log(`Current version v${current} is up-to-date or newer than latest release (${latest}).`);
+        log(`No, an update is not available. Current version v${current} is up-to-date or newer than the latest release (${latest}).`);
       }
     } catch (e: any) {
       log(`Error: ${e.message}`);
@@ -135,7 +135,10 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
         )}
       </div>
       <div className="mb-4 flex items-center gap-2 flex-wrap">
-        <span className="text-sm">{logs[logs.length - 1] ?? 'Idle'}</span>
+        <span className="text-sm">
+          {logs[logs.length - 1] ??
+            'Click "Check for Updates" to get the latest information.'}
+        </span>
         <Button className="ml-auto" variant="ghost" size="sm" onClick={() => setShowLogs(v => !v)}>
           {showLogs ? 'Hide Logs' : 'Show Logs'}
         </Button>
