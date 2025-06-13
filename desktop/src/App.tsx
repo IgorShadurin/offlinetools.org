@@ -79,13 +79,21 @@ function App() {
     const setupIpcListener = () => {
       // Check if we're in Electron environment
       if (window.electron?.ipcRenderer) {
-        // Listen for toggle debug message from main process
-        const removeListener = window.electron.ipcRenderer.on('toggle-debug-panel', () => {
+        // Listener for toggle debug message
+        const removeDebugListener = window.electron.ipcRenderer.on('toggle-debug-panel', () => {
           toggleDebugPanel();
         });
+
+        // Listener for showing the update dialog/page
+        const removeShowUpdateListener = window.electron.ipcRenderer.on('show-update-dialog', () => {
+          setSelectedTool('updates');
+        });
         
-        // Clean up listener when component unmounts
-        return removeListener;
+        // Clean up listeners when component unmounts
+        return () => {
+          removeDebugListener?.();
+          removeShowUpdateListener?.();
+        };
       }
       return undefined;
     };
@@ -93,13 +101,13 @@ function App() {
     // Register keyboard listener
     window.addEventListener('keydown', handleKeyDown);
     
-    // Register IPC listener
-    const removeIpcListener = setupIpcListener();
+    // Register IPC listeners
+    const cleanupIpcListeners = setupIpcListener();
 
     // Clean up event listeners
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      if (removeIpcListener) removeIpcListener();
+      if (cleanupIpcListeners) cleanupIpcListeners();
     };
   }, []);
 

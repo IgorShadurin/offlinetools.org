@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import Progress from "./update/Progress";
 import { Button } from "./ui/button";
-import type { ProgressInfo } from "electron-updater";
+// import type { ProgressInfo } from "electron-updater"; // No longer needed
 
-const BYTES_IN_MEGABYTE = 1024 * 1024;
+// const BYTES_IN_MEGABYTE = 1024 * 1024; // Removed as it's no longer used
 
 interface UpdatesPageProps {
   className?: string;
@@ -24,8 +23,7 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
   const [logs, setLogs] = useState<string[]>([]);
   const [checking, setChecking] = useState(false);
   const [updateInfo, setUpdateInfo] = useState<{ current: string; latest: string } | null>(null);
-  const [updating, setUpdating] = useState(false);
-  const [progress, setProgress] = useState<ProgressInfo | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [showLogs, setShowLogs] = useState(false);
 
   const log = useCallback((msg: string) => {
@@ -37,21 +35,68 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
     const url = "https://api.github.com/repos/IgorShadurin/offlinetools.org/releases/latest";
     setChecking(true);
     setUpdateInfo(null);
+    setDownloadUrl(null); // Reset download URL
     setLogs([]);
-    log(`Fetching ${url}`);
+    log('Starting update check...');
     try {
+      log('Getting OS information...');
+      const osInfo: { platform: string, arch: string } | null = await window.ipcRenderer.invoke('get-os-arch');
+      if (!osInfo || !osInfo.platform || !osInfo.arch) {
+        log('Error: Could not get OS information.');
+        setChecking(false);
+        return;
+      }
+      const { platform, arch } = osInfo;
+      log(`OS Info: Platform: ${platform}, Arch: ${arch}`);
+
       const current: string = await window.ipcRenderer.invoke('get-app-version');
       log(`Current version: ${current}`);
+      log(`Fetching release information from ${url}`);
       const resp = await fetch(url);
       log(`Status: ${resp.status}`);
       const data = await resp.json();
-      log(`Response: ${JSON.stringify(data)}`);
+      // log(`Response: ${JSON.stringify(data)}`); // Can be very verbose
       const latest = (data.tag_name || data.name || '').replace(/^v/, '');
+
       if (latest && compareVersions(latest, current) > 0) {
-        setUpdateInfo({ current, latest });
         log(`Update available: v${latest}`);
+        let foundAsset = null;
+        if (data.assets && Array.isArray(data.assets)) {
+          for (const asset of data.assets) {
+            const assetName = asset.name.toLowerCase();
+            // More robust checking for platform and arch within asset names
+            if (platform === 'darwin') { // macOS
+              if (arch === 'arm64' && (assetName.includes('arm64') || assetName.includes('aarch64')) && (assetName.endsWith('.dmg') || assetName.endsWith('.zip'))) {
+                foundAsset = asset;
+                break;
+              } else if ((arch === 'x64' || arch === 'x86_64') && (assetName.includes('x64') || assetName.includes('intel') || assetName.includes('amd64')) && !assetName.includes('arm64') && (assetName.endsWith('.dmg') || assetName.endsWith('.zip'))) {
+                foundAsset = asset;
+                break;
+              }
+            } else if (platform === 'win32' && (arch === 'x64' || arch === 'x86_64')) { // Windows 64-bit
+              if ((assetName.includes('win') || assetName.includes('windows')) && (assetName.includes('x64') || assetName.includes('amd64')) && (assetName.endsWith('.exe') || assetName.endsWith('.msi') || assetName.endsWith('.zip'))) {
+                foundAsset = asset;
+                break;
+              }
+            } else if (platform === 'linux' && (arch === 'x64' || arch === 'x86_64')) { // Linux 64-bit
+              if ((assetName.includes('linux')) && (assetName.includes('x64') || assetName.includes('amd64')) && (assetName.endsWith('.appimage') || assetName.endsWith('.deb') || assetName.endsWith('.tar.gz') || assetName.endsWith('.zip'))) {
+                foundAsset = asset;
+                break;
+              }
+            }
+            // Add more platform/arch combinations as needed
+          }
+        }
+
+        if (foundAsset) {
+          setDownloadUrl(foundAsset.browser_download_url);
+          setUpdateInfo({ current, latest });
+          log(`Found download URL for v${latest}: ${foundAsset.browser_download_url}`);
+        } else {
+          log(`Update v${latest} is available, but no suitable download found for your platform (${platform}) and architecture (${arch}).`);
+        }
       } else {
-        log('No update available');
+        log(`Current version v${current} is up-to-date or newer than latest release (${latest}).`);
       }
     } catch (e: any) {
       log(`Error: ${e.message}`);
@@ -60,65 +105,40 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
     }
   };
 
-  const startUpdate = async () => {
-    log('Starting update via autoUpdater');
-    setUpdating(true);
-    setProgress(null);
-    try {
-      const result = await window.ipcRenderer.invoke('check-update');
-      if (result?.updateInfo) {
-        log(`Update ${result.updateInfo.version} found, downloading...`);
-        await window.ipcRenderer.invoke('start-download');
-        // setUpdating(false) will be handled by download listeners
-      } else if (result?.error) {
-        log(`Error checking for update: ${result.error.message || result.error}`);
-        setUpdating(false);
-      } else {
-        log('No update available');
-        setUpdating(false);
+  const openDownloadLink = async () => {
+    if (downloadUrl) {
+      log(`Opening download link: ${downloadUrl}`);
+      try {
+        const result = await window.ipcRenderer.invoke('open-external-url', downloadUrl);
+        if (result && result.success) {
+          log('Download link opened successfully.');
+        } else {
+          log(`Failed to open download link: ${result?.error || 'Unknown error'}`);
+        }
+      } catch (error: any) {
+        log(`Error opening download link via IPC: ${error.message || error}`);
       }
-    } catch (error: any) {
-      log(`Failed to initiate update process: ${error.message || error}`);
-      setUpdating(false);
+    } else {
+      log('No download URL available to open.');
     }
   };
 
   useEffect(() => {
-    const handleProgress = (_: any, info: ProgressInfo) => {
-      setProgress(info);
-      const transferred = (info.transferred / BYTES_IN_MEGABYTE).toFixed(2);
-      const total = (info.total / BYTES_IN_MEGABYTE).toFixed(2);
-      log(`Downloading ${transferred}/${total} MB (${info.percent.toFixed(1)}%)`);
-    };
-    const handleDownloaded = () => {
-      log('Download complete');
-      setUpdating(false);
-    };
-    const handleError = (_: any, err: { message: string }) => {
-      log(`Update error: ${err.message}`);
-      setUpdating(false);
-    };
-    window.ipcRenderer.on('download-progress', handleProgress);
-    window.ipcRenderer.on('update-downloaded', handleDownloaded);
-    window.ipcRenderer.on('update-error', handleError);
+    // Cleaned up IPC listeners
     return () => {
-      window.ipcRenderer.off('download-progress', handleProgress);
-      window.ipcRenderer.off('update-downloaded', handleDownloaded);
-      window.ipcRenderer.off('update-error', handleError);
+      // Ensure any remaining listeners are cleaned up if necessary in the future
     };
   }, [log]);
 
   return (
     <div className={`p-4 flex flex-col h-full ${className}`}>
       <div className="mb-4 flex items-center gap-2 flex-wrap">
-        <Button onClick={checkForUpdates} disabled={checking || updating}>
+        <Button onClick={checkForUpdates} disabled={checking}>
           {checking ? 'Checking...' : 'Check for Updates'}
         </Button>
-        {updateInfo && (
-          <Button onClick={startUpdate} variant="secondary" disabled={updating}>
-            {updating && progress
-              ? `Downloading ${progress.percent.toFixed(1)}%`
-              : `Update to v${updateInfo.latest}`}
+        {updateInfo && downloadUrl && (
+          <Button onClick={openDownloadLink} variant="secondary" disabled={checking || !downloadUrl}>
+            {`Update to v${updateInfo.latest}`}
           </Button>
         )}
         <span className="ml-auto text-sm">{logs[logs.length - 1] ?? 'Idle'}</span>
@@ -126,15 +146,7 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
           {showLogs ? 'Hide Logs' : 'Show Logs'}
         </Button>
       </div>
-      {updating && progress && (
-        <div className="mb-2 flex items-center gap-2 text-sm">
-          <Progress percent={progress.percent} />
-          <span>
-            {(progress.transferred / BYTES_IN_MEGABYTE).toFixed(2)} /{' '}
-            {(progress.total / BYTES_IN_MEGABYTE).toFixed(2)} MB
-          </span>
-        </div>
-      )}
+      {/* Removed progress bar related to old electron-updater */}
       {showLogs && (
         <pre className="flex-1 overflow-auto rounded bg-muted/50 p-2 text-xs whitespace-pre-wrap">
           {logs.join('\n')}

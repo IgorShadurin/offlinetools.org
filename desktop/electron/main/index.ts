@@ -195,19 +195,7 @@ function createTray() {
         }
       } 
     },
-    { type: 'separator' },
-    { 
-      label: 'Check for Updates', 
-      click: () => {
-        if (win) {
-          win.show()
-          win.focus()
-          win.webContents.send('show-update-dialog')
-        } else {
-          createWindow()
-        }
-      } 
-    },
+    // Removed "Check for Updates" and its separator
     { type: 'separator' },
     { 
       label: 'Exit', 
@@ -437,6 +425,22 @@ ipcMain.handle('get-app-version', () => {
   return app.getVersion()
 })
 
+// Handler to get OS platform and architecture
+ipcMain.handle('get-os-arch', () => {
+  return { platform: process.platform, arch: process.arch };
+});
+
+// Handler to open a URL in the default external browser
+ipcMain.handle('open-external-url', async (_event, url: string) => {
+  try {
+    await shell.openExternal(url);
+    return { success: true };
+  } catch (error: any) {
+    console.error(`Failed to open external URL: ${url}`, error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Update tray menu dynamically
 ipcMain.handle('update-tray-menu', (_, items) => {
   if (tray) {
@@ -509,19 +513,14 @@ function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) 
       } 
     },
     ...(updateMenuItem ? [{ type: 'separator' as const }, updateMenuItem] : []),
-    { type: 'separator' as const },
-    { 
-      label: 'Check for Updates', 
-      click: () => {
-        if (win) {
-          win.show()
-          win.focus()
-          win.webContents.send('show-update-dialog')
-        } else {
-          createWindow()
-        }
-      } 
-    },
+    // Removed "Check for Updates" and its separator from here as well
+    // Ensure there's a separator before Exit if updateMenuItem is not present or if it is.
+    // If updateMenuItem is present, it adds its own separator before it.
+    // So, a single separator before "Exit" should be fine, or none if updateMenuItem is the last dynamic item.
+    // Let's ensure one separator before Exit, unless updateMenuItem itself was the last one.
+    // The original logic had two separators if updateMenuItem was null (one after it, one before "Check for Updates").
+    // And two if it was present.
+    // The goal is: Open App | [Update Available] | Exit, with separators.
     { type: 'separator' as const },
     { 
       label: 'Exit', 
