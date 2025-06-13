@@ -1,29 +1,41 @@
 import { marked, type MarkedOptions } from 'marked';
+import DOMPurify from 'dompurify';
 
 /**
- * Renders Markdown string to HTML.
+ * Renders Markdown string to HTML, with sanitization.
  * @param markdown The Markdown string to render.
  * @param options Optional marked options.
- * @returns The rendered HTML string.
+ * @returns The sanitized HTML string.
  */
-export function renderMarkdown(markdown: string, options?: MarkedOptions): string {
-  if (!markdown) {
+export function renderMarkdown(markdown: string, customOptions?: MarkedOptions): string {
+  if (typeof markdown !== 'string' || markdown.trim() === '') {
     return '';
   }
+
+  if (typeof window === 'undefined') {
+    throw new Error('Markdown rendering requires a DOM environment (window object) for HTML sanitization.');
+  }
+
+  // Define DEFAULT_MARKDOWN_OPTIONS if not already defined elsewhere or passed in
+  // For now, assuming it might be defined globally or should be defined here if not.
+  // Let's define a simple default here if not provided.
+  const DEFAULT_MARKDOWN_OPTIONS: MarkedOptions = {
+    // Common default options can go here, e.g., gfm: true
+    gfm: true,
+  };
+
+  const options: MarkedOptions = { ...DEFAULT_MARKDOWN_OPTIONS, ...customOptions };
+
+  if (options.async) {
+    throw new Error('Asynchronous Markdown rendering (options.async=true) is not supported by this function. Use a dedicated asynchronous parsing method if needed.');
+  }
+
+  // This subtask focuses on adding sanitization to synchronous rendering.
+
   try {
-    // Use marked.parse() for synchronous parsing
-    const result = marked.parse(markdown, options);
-    if (typeof result === 'string') {
-      return result;
-    }
-    // If marked.parse() ever returns a promise with current versions and no async options,
-    // this would be unexpected. For now, we assume it's string based on typical usage.
-    // If it can be a promise, the function signature and tests would need to change.
-    // However, the current error TS2322 suggests the type system thinks 'marked()' can return a promise.
-    // 'marked.parse()' is explicitly synchronous.
-    return String(result); // Fallback, though .parse should be string.
+    const rawHtml = marked.parse(markdown, options) as string; // Assuming synchronous parse
+    return DOMPurify.sanitize(rawHtml);
   } catch (error) {
-    console.error('Error rendering Markdown:', error);
     throw new Error(`Failed to render Markdown: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
@@ -49,9 +61,12 @@ export function loadMarkdownFile(file: File): Promise<string> {
       }
     };
 
-    reader.onerror = (error): void => {
-      console.error('Error reading file:', error);
-      reject(new Error(`Failed to read file: ${error.target?.error?.message || String(error)}`));
+    reader.onerror = (errorEvent): void => {
+      // The 'error' property of FileReader is a DOMException.
+      // The event itself (ProgressEvent) might not directly have a verbose error message.
+      // Accessing errorEvent.target.error is the standard way.
+      const errorMessage = errorEvent.target?.error?.message || 'Unknown file reading error';
+      reject(new Error(`Error reading file: ${errorMessage}`));
     };
 
     reader.readAsText(file);
@@ -72,8 +87,7 @@ export function saveMarkdownFile(markdown: string, filename: string): void {
       typeof URL === 'undefined' || // Check if URL itself is defined
       !URL.createObjectURL ||
       !URL.revokeObjectURL) {
-    console.warn('saveMarkdownFile is intended for browser environments only.');
-    return;
+    throw new Error('saveMarkdownFile is intended for browser environments only.');
   }
 
   try {
@@ -86,8 +100,9 @@ export function saveMarkdownFile(markdown: string, filename: string): void {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('Error saving Markdown file:', error);
-    throw new Error(`Failed to save Markdown file: ${error instanceof Error ? error.message : String(error)}`);
+  } catch (e) {
+    // Keep throwing a new error to standardize, but use the original message
+    const err = e as Error;
+    throw new Error(`Failed to save Markdown file: ${err.message}`);
   }
 }
