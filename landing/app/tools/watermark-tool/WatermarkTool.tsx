@@ -105,6 +105,22 @@ export default function WatermarkTool() {
     }
   };
 
+  const calculatePosition = useCallback((canvasWidth: number, canvasHeight: number, watermarkWidth: number, watermarkHeight: number) => {
+    const margin = options.margin;
+    switch (options.position) {
+      case WatermarkPosition.TOP_LEFT:
+        return { x: margin, y: margin };
+      case WatermarkPosition.TOP_RIGHT:
+        return { x: canvasWidth - watermarkWidth - margin, y: margin };
+      case WatermarkPosition.BOTTOM_LEFT:
+        return { x: margin, y: canvasHeight - watermarkHeight - margin };
+      case WatermarkPosition.BOTTOM_RIGHT:
+        return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
+      default:
+        return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
+    }
+  }, [options.margin, options.position]);
+
   const updatePreview = useCallback((targetImg?: HTMLImageElement) => {
     if (!canvasRef.current || !watermarkImage) return;
     
@@ -142,23 +158,7 @@ export default function WatermarkTool() {
     ctx.globalAlpha = options.opacity;
     ctx.drawImage(watermarkImage, x, y, watermarkWidth, watermarkHeight);
     ctx.globalAlpha = 1;
-  }, [watermarkImage, singleTargetImage, options, dragPosition]);
-
-  const calculatePosition = (canvasWidth: number, canvasHeight: number, watermarkWidth: number, watermarkHeight: number) => {
-    const margin = options.margin;
-    switch (options.position) {
-      case WatermarkPosition.TOP_LEFT:
-        return { x: margin, y: margin };
-      case WatermarkPosition.TOP_RIGHT:
-        return { x: canvasWidth - watermarkWidth - margin, y: margin };
-      case WatermarkPosition.BOTTOM_LEFT:
-        return { x: margin, y: canvasHeight - watermarkHeight - margin };
-      case WatermarkPosition.BOTTOM_RIGHT:
-        return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
-      default:
-        return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
-    }
-  };
+  }, [watermarkImage, singleTargetImage, options, dragPosition, calculatePosition]);
 
   useEffect(() => {
     if (mode === "single") {
