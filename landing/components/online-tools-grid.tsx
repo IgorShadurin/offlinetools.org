@@ -81,6 +81,11 @@ export const onlineTools = [
     path: "/tools/password-strength-meter",
     description: "Analyze password strength and get security recommendations based on OWASP industry standards.",
   },
+  {
+    title: "Text Utility",
+    path: "/tools/text-utility",
+    description: "Transform text with line break conversion, case conversion, and line sorting utilities.",
+  },
 ];
 
 /**
