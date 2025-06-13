@@ -118,6 +118,85 @@ export default function TextUtility() {
             <TabsTrigger value={TextUtilityOperation.LINE_SORTING}>Line Sorting</TabsTrigger>
           </TabsList>
 
+          {/* Operation-specific Controls moved here */}
+          {activeTab === TextUtilityOperation.CASE_CONVERSION && (
+            <div className="flex flex-wrap md:flex-nowrap gap-4 items-center">
+              <div className="w-full md:w-1/4">
+                <Label htmlFor="case-type">Case Type</Label>
+              </div>
+              <div className="w-full md:w-2/4">
+                <Select value={caseType} onValueChange={(value) => setCaseType(value as CaseType)}>
+                  <SelectTrigger id="case-type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(CaseType).map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full md:w-1/4">
+                <Button onClick={handleProcess} disabled={!input.trim()}>
+                  Convert
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === TextUtilityOperation.LINE_BREAK_CONVERSION && (
+            <div className="flex flex-wrap md:flex-nowrap gap-4 items-center">
+              <div className="w-full md:w-1/4">
+                <Label htmlFor="line-break-type">Line Break Type</Label>
+              </div>
+              <div className="w-full md:w-2/4">
+                <Select value={lineBreakType} onValueChange={(value) => setLineBreakType(value as LineBreakType)}>
+                  <SelectTrigger id="line-break-type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={LineBreakType.LF}>LF (\n) - Unix/Linux</SelectItem>
+                    <SelectItem value={LineBreakType.CRLF}>CRLF (\r\n) - Windows</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full md:w-1/4">
+                <Button onClick={handleProcess} disabled={!input.trim()}>
+                  Convert
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === TextUtilityOperation.LINE_SORTING && (
+            <div className="flex flex-wrap md:flex-nowrap gap-4 items-center">
+              <div className="w-full md:w-1/4">
+                <Label htmlFor="sort-type">Sort Type</Label>
+              </div>
+              <div className="w-full md:w-2/4">
+                <Select value={sortType} onValueChange={(value) => setSortType(value as SortType)}>
+                  <SelectTrigger id="sort-type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(SortType).map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full md:w-1/4">
+                <Button onClick={handleProcess} disabled={!input.trim()}>
+                  Sort
+                </Button>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Input Section */}
             <div className="space-y-4">
@@ -145,17 +224,16 @@ export default function TextUtility() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Label htmlFor="output-text">Output</Label>
-                {output && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopy}
-                    className="flex items-center gap-1"
-                  >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    {copied ? "Copied!" : "Copy"}
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="flex items-center gap-1"
+                  disabled={!output}
+                >
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copied ? "Copied!" : "Copy"}
+                </Button>
               </div>
               <Textarea
                 id="output-text"
@@ -167,84 +245,7 @@ export default function TextUtility() {
             </div>
           </div>
 
-          {/* Operation-specific Controls */}
-          <TabsContent value={TextUtilityOperation.CASE_CONVERSION} className="space-y-4">
-            <div className="flex flex-wrap md:flex-nowrap gap-4 items-center">
-              <div className="w-full md:w-1/4">
-                <Label htmlFor="case-type">Case Type</Label>
-              </div>
-              <div className="w-full md:w-2/4">
-                <Select value={caseType} onValueChange={(value) => setCaseType(value as CaseType)}>
-                  <SelectTrigger id="case-type">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(CaseType).map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full md:w-1/4">
-                <Button onClick={handleProcess} disabled={!input.trim()}>
-                  Convert
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
 
-          <TabsContent value={TextUtilityOperation.LINE_BREAK_CONVERSION} className="space-y-4">
-            <div className="flex flex-wrap md:flex-nowrap gap-4 items-center">
-              <div className="w-full md:w-1/4">
-                <Label htmlFor="line-break-type">Line Break Type</Label>
-              </div>
-              <div className="w-full md:w-2/4">
-                <Select value={lineBreakType} onValueChange={(value) => setLineBreakType(value as LineBreakType)}>
-                  <SelectTrigger id="line-break-type">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={LineBreakType.LF}>LF (\n) - Unix/Linux</SelectItem>
-                    <SelectItem value={LineBreakType.CRLF}>CRLF (\r\n) - Windows</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full md:w-1/4">
-                <Button onClick={handleProcess} disabled={!input.trim()}>
-                  Convert
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value={TextUtilityOperation.LINE_SORTING} className="space-y-4">
-            <div className="flex flex-wrap md:flex-nowrap gap-4 items-center">
-              <div className="w-full md:w-1/4">
-                <Label htmlFor="sort-type">Sort Type</Label>
-              </div>
-              <div className="w-full md:w-2/4">
-                <Select value={sortType} onValueChange={(value) => setSortType(value as SortType)}>
-                  <SelectTrigger id="sort-type">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(SortType).map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full md:w-1/4">
-                <Button onClick={handleProcess} disabled={!input.trim()}>
-                  Sort
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
         </Tabs>
       </Container>
     </>
