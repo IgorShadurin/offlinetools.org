@@ -152,9 +152,9 @@ export default function QrCodeTool() {
                     <Label>Error Correction</Label>
                     <span
                       title="Higher levels keep data readable even if the QR code is partially damaged"
-                      className="inline-flex"
+                      className="inline-flex cursor-help text-muted-foreground"
                     >
-                      <HelpCircle className="h-4 w-4 cursor-help text-muted-foreground" />
+                      <HelpCircle className="h-4 w-4 pointer-events-none" />
                     </span>
                   </div>
                   <RadioGroup
