@@ -85,7 +85,7 @@ export default function Home() {
                   key={index}
                   title={tool.title}
                   description={tool.description}
-                  icon="/images/placeholder.svg"
+                  icon={tool.icon}
                 >
                   <div className="mt-4">
                     <Button variant="link" asChild className="h-auto p-0">

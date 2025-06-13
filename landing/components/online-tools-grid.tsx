@@ -1,5 +1,22 @@
 import Link from "next/link";
 import React from "react";
+import {
+  FaEthereum,
+  FaJson,
+  FaHtml5,
+  FaLock,
+  FaFileAlt,
+  FaLink,
+  FaHashtag,
+  FaFingerprint,
+  FaFileSignature,
+  FaUserSecret,
+  FaUuid,
+  FaVolumeUp,
+  FaKeyboard,
+  FaRulerCombined,
+} from "react-icons/fa";
+import { GoFileBinary } from "react-icons/go";
 
 /**
  * Online tools data with titles and URLs
@@ -9,72 +26,86 @@ export const onlineTools = [
     title: "Ethereum Unit Converter",
     path: "/tools/ethereum-converter",
     description: "Convert between Ethereum units including Wei, Gwei, Ether, Finney, and Szabo with precision.",
+    icon: FaEthereum,
   },
   {
     title: "JSON Formatter",
     path: "/tools/json-formatter",
     description: "Format and beautify your JSON with customizable indentation options.",
+    icon: FaJson,
   },
   {
     title: "HTML Text Extractor",
     path: "/tools/html-text-extractor",
     description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+    icon: FaHtml5,
   },
   {
     title: "Base64 Encoder/Decoder",
     path: "/tools/base64-codec",
     description: "Convert text to Base64 or decode Base64 to plaintext with URL-safe option.",
+    icon: FaLock,
   },
   {
     title: "Binary Base64 Encoder/Decoder",
     path: "/tools/binary-base64-codec",
     description: "Convert binary files to Base64 or decode Base64 to binary files.",
+    icon: GoFileBinary,
   },
   {
     title: "URL Encoder/Decoder",
     path: "/tools/url-encoder",
     description: "Encode text for use in URLs or decode URL-encoded text.",
+    icon: FaLink,
   },
   {
     title: "File & Text Hash Compare",
     path: "/tools/file-hash-compare",
     description: "Compare hashes of files or text strings using different algorithms.",
+    icon: FaHashtag,
   },
   {
     title: "Text Hash Generator",
     path: "/tools/text-hash-generator",
     description:
       "Generate cryptographic hashes from text using various algorithms including SHA-256, SHA-3, and RIPEMD-160.",
+    icon: FaFingerprint,
   },
   {
     title: "File Generator",
     path: "/tools/file-generator",
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
+    icon: FaFileSignature,
   },
   {
     title: "Person Generator",
     path: "/tools/person-generator",
     description: "Create fake person data with chosen fields in multiple formats.",
+    icon: FaUserSecret,
   },
   {
     title: "UUID Generator",
     path: "/tools/uuid-generator",
     description: "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7).",
+    icon: FaUuid,
   },
   {
     title: "Speech Length Estimator",
     path: "/tools/speech-length-estimator",
     description: "Calculate how long it will take to speak a text with adjustable speed settings.",
+    icon: FaVolumeUp,
   },
   {
     title: "Text to Slug",
     path: "/tools/text-to-slug",
     description: "Convert text to URL-friendly slugs with customizable separators and character handling.",
+    icon: FaKeyboard,
   },
   {
     title: "Unit Converter",
     path: "/tools/unit-converter",
     description: "Convert between units of length, weight, temperature, volume, area, energy, and power with precision.",
+    icon: FaRulerCombined,
   },
 ];
 
