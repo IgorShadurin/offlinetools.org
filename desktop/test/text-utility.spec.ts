@@ -80,7 +80,7 @@ describe('Text Utility tests', async () => {
     
     await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    await page!.click('[data-value="case-conversion"]');
+    await page!.click('[value="case-conversion"]');
     
     const inputText = 'Hello World Test';
     await fillTextareaInput(page!, inputText);
@@ -100,7 +100,7 @@ describe('Text Utility tests', async () => {
     
     await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    await page!.click('[data-value="line-break-conversion"]');
+    await page!.click('[value="line-break-conversion"]');
     
     const inputText = 'line1\r\nline2\rline3\nline4';
     await fillTextareaInput(page!, inputText);
@@ -120,7 +120,7 @@ describe('Text Utility tests', async () => {
     
     await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    await page!.click('[data-value="line-sorting"]');
+    await page!.click('[value="line-sorting"]');
     
     const inputText = 'zebra\napple\nbanana\ncherry';
     await fillTextareaInput(page!, inputText);
