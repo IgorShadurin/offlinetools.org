@@ -133,8 +133,10 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
             {`Update to v${updateInfo.latest}`}
           </Button>
         )}
-        <span className="ml-auto text-sm">{logs[logs.length - 1] ?? 'Idle'}</span>
-        <Button variant="ghost" size="sm" onClick={() => setShowLogs(v => !v)}>
+      </div>
+      <div className="mb-4 flex items-center gap-2 flex-wrap">
+        <span className="text-sm">{logs[logs.length - 1] ?? 'Idle'}</span>
+        <Button className="ml-auto" variant="ghost" size="sm" onClick={() => setShowLogs(v => !v)}>
           {showLogs ? 'Hide Logs' : 'Show Logs'}
         </Button>
       </div>
