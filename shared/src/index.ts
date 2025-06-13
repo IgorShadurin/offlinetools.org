@@ -99,3 +99,6 @@ export * from './person-generator';
 
 // Clipboard registration for Person Generator
 export * from './person-generator/clipboard-registration';
+
+// Export Password Strength Meter
+export * from './password-strength-meter';

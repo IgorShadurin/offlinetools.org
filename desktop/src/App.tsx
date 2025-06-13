@@ -7,7 +7,8 @@ import {
   Clock,
   Fingerprint,
   Users,
-  RefreshCw
+  RefreshCw,
+  ShieldCheck
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -23,6 +24,7 @@ import { UnitConverter } from './components/unit-converter'
 import { SpeechLengthEstimator } from './components/speech-length-estimator'
 import UpdatesPage from './components/updates-page'
 import { PersonGenerator } from './components/person-generator'
+import { PasswordStrengthMeter } from './components/password-strength-meter'
 
 // List of tools
 const tools: Tool[] = [
@@ -35,6 +37,7 @@ const tools: Tool[] = [
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
+  { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
 
@@ -138,6 +141,8 @@ function App() {
           <EthereumConverter className="min-h-full" />
         ) : selectedTool === 'unit-converter' ? (
           <UnitConverter className="min-h-full" />
+        ) : selectedTool === 'password-strength-meter' ? (
+          <PasswordStrengthMeter className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (
