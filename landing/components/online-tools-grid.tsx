@@ -86,6 +86,11 @@ export const onlineTools = [
     path: "/tools/text-utility",
     description: "Transform text with line break conversion, case conversion, and line sorting utilities.",
   },
+  {
+    title: "Markdown Editor",
+    path: "/tools/markdown-editor",
+    description: "Edit and preview Markdown text in real-time. Load and save .md files.",
+  },
 ];
 
 /**

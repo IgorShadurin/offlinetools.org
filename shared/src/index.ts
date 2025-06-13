@@ -106,3 +106,7 @@ export * from './person-generator/clipboard-registration';
 
 // Export Password Strength Meter
 export * from './password-strength-meter';
+
+// Export Markdown Editor
+export * from './markdown-editor';
+export * from './markdown-editor/clipboard-registration';
