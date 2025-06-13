@@ -513,14 +513,6 @@ function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) 
       } 
     },
     ...(updateMenuItem ? [{ type: 'separator' as const }, updateMenuItem] : []),
-    // Removed "Check for Updates" and its separator from here as well
-    // Ensure there's a separator before Exit if updateMenuItem is not present or if it is.
-    // If updateMenuItem is present, it adds its own separator before it.
-    // So, a single separator before "Exit" should be fine, or none if updateMenuItem is the last dynamic item.
-    // Let's ensure one separator before Exit, unless updateMenuItem itself was the last one.
-    // The original logic had two separators if updateMenuItem was null (one after it, one before "Check for Updates").
-    // And two if it was present.
-    // The goal is: Open App | [Update Available] | Exit, with separators.
     { type: 'separator' as const },
     { 
       label: 'Exit', 
