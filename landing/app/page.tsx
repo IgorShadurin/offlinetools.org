@@ -24,11 +24,12 @@ import {
   FaShieldAlt, 
   FaHashtag, 
   FaFileAlt, 
-  FaUser, 
-  FaFingerprint, 
-  FaClock, 
-  FaSlash, 
-  FaRulerCombined 
+  FaUser,
+  FaFingerprint,
+  FaClock,
+  FaSlash,
+  FaRulerCombined,
+  FaImage
 } from 'react-icons/fa';
 
 const getToolIcon = (title: string) => {
@@ -42,6 +43,7 @@ const getToolIcon = (title: string) => {
     "File & Text Hash Compare": <FaShieldAlt />,
     "Text Hash Generator": <FaHashtag />,
     "File Generator": <FaFileAlt />,
+    "Image Resizer": <FaImage />,
     "Person Generator": <FaUser />,
     "UUID Generator": <FaFingerprint />,
     "Speech Length Estimator": <FaClock />,
