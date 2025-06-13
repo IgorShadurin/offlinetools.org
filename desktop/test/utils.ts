@@ -231,6 +231,8 @@ export interface WaitForOutputOptions {
   hasLineBreaks?: boolean;
   /** Maximum time to wait in milliseconds */
   timeout?: number;
+  /** Index of the textarea to check (default: 1 for output) */
+  index?: number;
 }
 
 /**
@@ -305,6 +307,7 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
   
   // Set default timeout based on CI environment
   const timeout = options.timeout || (process.env.CI === 'true' ? 10000 : 2000);
+  const index = options.index ?? 1;
   
   try {
     // Create a condition function based on the provided options
@@ -313,8 +316,9 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
 
       if (textareas.length === 0) return false;
 
-      // Use the last textarea on the page as output
-      const outputTextarea = textareas[textareas.length - 1];
+      // Determine which textarea to use as output
+      const outIdx = opts.index ?? textareas.length - 1;
+      const outputTextarea = textareas[outIdx];
       const outputValue = outputTextarea.value;
       
       // If no output yet, condition is not met
@@ -328,10 +332,10 @@ export async function waitForTextareaOutput(page: Page, options: WaitForOutputOp
       
       // All checks passed
       return true;
-    }, options, { timeout });
-    
+    }, { ...options, index }, { timeout });
+
     // Return the output text
-    return await getTextareaOutput(page);
+    return await getTextareaOutput(page, index);
   } catch (error) {
     console.error('Error waiting for textarea output:', error);
     throw new Error(`Timed out waiting for textarea output: ${JSON.stringify(options)}`);

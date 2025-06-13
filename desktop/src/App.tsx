@@ -6,6 +6,7 @@ import {
   ClipboardIcon,
   Clock,
   Fingerprint,
+  Users,
   RefreshCw
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
@@ -21,6 +22,7 @@ import { EthereumConverter } from './components/ethereum-converter'
 import { UnitConverter } from './components/unit-converter'
 import { SpeechLengthEstimator } from './components/speech-length-estimator'
 import UpdatesPage from './components/updates-page'
+import { PersonGenerator } from './components/person-generator'
 
 // List of tools
 const tools: Tool[] = [
@@ -29,6 +31,7 @@ const tools: Tool[] = [
   { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
   { id: 'uuid-generator', name: 'UUID Generator', icon: <Fingerprint size={16} /> },
+  { id: 'person-generator', name: 'Person Generator', icon: <Users size={16} /> },
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
@@ -119,6 +122,8 @@ function App() {
           <UrlEncoder className="min-h-full" />
         ) : selectedTool === 'uuid-generator' ? (
           <UuidGenerator className="min-h-full" />
+        ) : selectedTool === 'person-generator' ? (
+          <PersonGenerator className="min-h-full" />
         ) : selectedTool === 'speech-length-estimator' ? (
           <SpeechLengthEstimator className="min-h-full" />
         ) : selectedTool === 'ethereum-converter' ? (
