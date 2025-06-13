@@ -55,7 +55,7 @@ describe('Person Generator tests', async () => {
 
     await (await findButtonByText(page, 'Generate'))?.click()
 
-    await waitForTextareaOutput(page, { notEmpty: true })
+    await waitForTextareaOutput(page, { notEmpty: true, index: 0 })
 
     await takeScreenshot(page, 'person-generator', 'generated', true)
   })
