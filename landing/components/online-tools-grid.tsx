@@ -86,6 +86,11 @@ export const onlineTools = [
     path: "/tools/text-utility",
     description: "Transform text with line break conversion, case conversion, and line sorting utilities.",
   },
+  {
+    title: "Watermark Tool",
+    path: "/tools/watermark-tool",
+    description: "Add watermarks to images with customizable positioning and batch processing support.",
+  },
 ];
 
 /**

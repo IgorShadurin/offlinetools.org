@@ -28,7 +28,8 @@ import {
   FaFingerprint, 
   FaClock, 
   FaSlash, 
-  FaRulerCombined 
+  FaRulerCombined,
+  FaImage
 } from 'react-icons/fa';
 
 const getToolIcon = (title: string) => {
@@ -47,6 +48,7 @@ const getToolIcon = (title: string) => {
     "Speech Length Estimator": <FaClock />,
     "Text to Slug": <FaSlash />,
     "Unit Converter": <FaRulerCombined />,
+    "Watermark Tool": <FaImage />,
   };
   return iconMap[title] || <FaCode />;
 };

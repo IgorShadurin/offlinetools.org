@@ -20,7 +20,8 @@ export enum Tool {
   TEXT_TO_SLUG = 'text-to-slug',
   ETHEREUM_CONVERTER = 'ethereum-converter',
   PERSON_GENERATOR = 'person-generator',
-  TEXT_UTILITY = 'text-utility'
+  TEXT_UTILITY = 'text-utility',
+  WATERMARK_TOOL = 'watermark-tool'
 }
 
 /**
