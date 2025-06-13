@@ -415,8 +415,11 @@ Each feature item should include:
    - Focus on the primary value proposition and key capabilities
 
 3. **Icon**:
-   - Path to an appropriate icon image representing the tool's function
-   - Should be consistent with the project's design system
+   - Select a Font Awesome icon from the `react-icons` package
+   - Import the icon in `landing/app/page.tsx` and add a mapping entry in the
+     `getToolIcon` function that returns the icon component for your tool's
+     title
+   - Pass `icon={getToolIcon(tool.title)}` when rendering the `FeatureItem`
 
 ### Placement Guidelines
 
