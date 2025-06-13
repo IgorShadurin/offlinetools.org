@@ -5,7 +5,6 @@ import {
   FaJson,
   FaHtml5,
   FaLock,
-  FaFileAlt,
   FaLink,
   FaHashtag,
   FaFingerprint,
