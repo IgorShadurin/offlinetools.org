@@ -14,8 +14,8 @@ import {
   FaVolumeUp,
   FaKeyboard,
   FaRulerCombined,
-} from "react-icons/fa";
-import { GoFileBinary } from "react-icons/go";
+} from "react-icons/lib/icons/fa";
+import { GoFileBinary } from "react-icons/lib/icons/go";
 
 /**
  * Online tools data with titles and URLs
