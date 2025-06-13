@@ -102,3 +102,5 @@ export * from './person-generator/clipboard-registration';
 
 // Export Password Strength Meter
 export * from './password-strength-meter';
+// Export QR Code
+export * from './qr-code';

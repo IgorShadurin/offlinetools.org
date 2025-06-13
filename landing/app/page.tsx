@@ -44,6 +44,7 @@ const getToolIcon = (title: string) => {
     "File Generator": <FaFileAlt />,
     "Person Generator": <FaUser />,
     "UUID Generator": <FaFingerprint />,
+    "QR Code Tool": <FaLink />,
     "Speech Length Estimator": <FaClock />,
     "Text to Slug": <FaSlash />,
     "Unit Converter": <FaRulerCombined />,
