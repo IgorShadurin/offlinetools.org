@@ -19,7 +19,8 @@ export enum Tool {
   SPEECH_LENGTH_ESTIMATOR = 'speech-length-estimator',
   TEXT_TO_SLUG = 'text-to-slug',
   ETHEREUM_CONVERTER = 'ethereum-converter',
-  PERSON_GENERATOR = 'person-generator'
+  PERSON_GENERATOR = 'person-generator',
+  TEXT_UTILITY = 'text-utility'
 }
 
 /**
