@@ -195,19 +195,7 @@ function createTray() {
         }
       } 
     },
-    { type: 'separator' },
-    { 
-      label: 'Check for Updates', 
-      click: () => {
-        if (win) {
-          win.show()
-          win.focus()
-          win.webContents.send('show-update-dialog')
-        } else {
-          createWindow()
-        }
-      } 
-    },
+    // Removed "Check for Updates" and its separator
     { type: 'separator' },
     { 
       label: 'Exit', 
@@ -437,6 +425,22 @@ ipcMain.handle('get-app-version', () => {
   return app.getVersion()
 })
 
+// Handler to get OS platform and architecture
+ipcMain.handle('get-os-arch', () => {
+  return { platform: process.platform, arch: process.arch };
+});
+
+// Handler to open a URL in the default external browser
+ipcMain.handle('open-external-url', async (_event, url: string) => {
+  try {
+    await shell.openExternal(url);
+    return { success: true };
+  } catch (error: any) {
+    console.error(`Failed to open external URL: ${url}`, error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Update tray menu dynamically
 ipcMain.handle('update-tray-menu', (_, items) => {
   if (tray) {
@@ -509,19 +513,6 @@ function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) 
       } 
     },
     ...(updateMenuItem ? [{ type: 'separator' as const }, updateMenuItem] : []),
-    { type: 'separator' as const },
-    { 
-      label: 'Check for Updates', 
-      click: () => {
-        if (win) {
-          win.show()
-          win.focus()
-          win.webContents.send('show-update-dialog')
-        } else {
-          createWindow()
-        }
-      } 
-    },
     { type: 'separator' as const },
     { 
       label: 'Exit', 
