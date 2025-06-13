@@ -76,6 +76,11 @@ export const onlineTools = [
     path: "/tools/unit-converter",
     description: "Convert between units of length, weight, temperature, volume, area, energy, and power with precision.",
   },
+  {
+    title: "Password Strength Meter",
+    path: "/tools/password-strength-meter",
+    description: "Analyze password strength and get security recommendations based on OWASP industry standards.",
+  },
 ];
 
 /**
