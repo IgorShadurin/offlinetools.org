@@ -14,6 +14,42 @@ import { onlineTools } from "@/components/online-tools-grid";
 import { ImageModal } from "@/components/ui/modal";
 import { useState } from "react";
 import { RecentlyVisitedTools } from "@/components/recently-visited-tools";
+import { 
+  FaEthereum, 
+  FaCode, 
+  FaHtml5, 
+  FaKey, 
+  FaFile, 
+  FaLink, 
+  FaShieldAlt, 
+  FaHashtag, 
+  FaFileAlt, 
+  FaUser, 
+  FaFingerprint, 
+  FaClock, 
+  FaSlash, 
+  FaRulerCombined 
+} from 'react-icons/fa';
+
+const getToolIcon = (title: string) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    "Ethereum Unit Converter": <FaEthereum />,
+    "JSON Formatter": <FaCode />,
+    "HTML Text Extractor": <FaHtml5 />,
+    "Base64 Encoder/Decoder": <FaKey />,
+    "Binary Base64 Encoder/Decoder": <FaFile />,
+    "URL Encoder/Decoder": <FaLink />,
+    "File & Text Hash Compare": <FaShieldAlt />,
+    "Text Hash Generator": <FaHashtag />,
+    "File Generator": <FaFileAlt />,
+    "Person Generator": <FaUser />,
+    "UUID Generator": <FaFingerprint />,
+    "Speech Length Estimator": <FaClock />,
+    "Text to Slug": <FaSlash />,
+    "Unit Converter": <FaRulerCombined />,
+  };
+  return iconMap[title] || <FaCode />;
+};
 
 export default function Home() {
   const [modalImage, setModalImage] = useState<{src: string; alt: string} | null>(null);
@@ -85,7 +121,7 @@ export default function Home() {
                   key={index}
                   title={tool.title}
                   description={tool.description}
-                  icon="/images/placeholder.svg"
+                  icon={getToolIcon(tool.title)}
                 >
                   <div className="mt-4">
                     <Button variant="link" asChild className="h-auto p-0">
