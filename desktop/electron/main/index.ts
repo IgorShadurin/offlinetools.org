@@ -111,7 +111,7 @@ function setupClipboardHandlers() {
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    icon: path.join(process.env.APP_ROOT, 'resources', 'icons', 'icon_256x256.png'),
+    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
     width: 1270,
     height: 640,
     webPreferences: {
@@ -153,36 +153,58 @@ async function createWindow() {
  * Creates the system tray icon and menu
  */
 function createTray() {
-  // Use a fallback icon if the favicon.ico is not found
-  let iconPath = path.join(process.env.APP_ROOT, 'resources', 'icons', 'icon_256x256.png')
   let trayIcon;
   
-  // Fallback to app.getAppPath() if the icon doesn't exist
-  try {
-    if (!require('fs').existsSync(iconPath)) {
-      console.log(`Icon not found at ${iconPath}, using default icon`)
-      iconPath = process.platform === 'win32'
-        ? path.join(app.getAppPath(), 'build', 'icon.ico')
-        : path.join(app.getAppPath(), 'build', 'icon.png')
-    }
+  // For macOS, use a template image with the correct naming convention
+  if (process.platform === 'darwin') {
+    const templateIconPath = path.join(process.env.VITE_PUBLIC, 'iconTemplate.png');
+    const fs = require('fs');
     
-    trayIcon = nativeImage.createFromPath(iconPath)
-    
-    // Check if the icon was loaded successfully
-    if (trayIcon.isEmpty()) {
-      console.log('Icon is empty, using template icon')
-      // Create a minimal template icon
-      trayIcon = createTemplateIcon()
+    // Check if template icon exists and is not empty
+    if (fs.existsSync(templateIconPath) && fs.statSync(templateIconPath).size > 0) {
+      trayIcon = nativeImage.createFromPath(templateIconPath);
+      // Verify the icon was loaded successfully
+      if (!trayIcon.isEmpty()) {
+        trayIcon.setTemplateImage(true);
+      } else {
+        // Template icon exists but is invalid, create from favicon
+        trayIcon = createTemplateIconFromFavicon();
+        trayIcon.setTemplateImage(true);
+      }
+    } else {
+      // Template icon doesn't exist or is empty, create from favicon
+      trayIcon = createTemplateIconFromFavicon();
+      trayIcon.setTemplateImage(true);
     }
-  } catch (err) {
-    console.error('Error loading icon:', err)
-    // Create a minimal template icon as fallback
-    trayIcon = createTemplateIcon()
+  } else {
+    // For other platforms, use the standard icon
+    let iconPath = path.join(process.env.VITE_PUBLIC, 'favicon.ico');
+
+    // Fallback to app.getAppPath() if the icon doesn't exist
+    try {
+      if (!require('fs').existsSync(iconPath)) {
+        console.log(`Icon not found at ${iconPath}, using default icon`);
+        iconPath = process.platform === 'win32'
+          ? path.join(app.getAppPath(), 'build', 'icon.ico')
+          : path.join(app.getAppPath(), 'build', 'icon.png');
+      }
+
+      trayIcon = nativeImage.createFromPath(iconPath);
+
+      // Check if the icon was loaded successfully
+      if (trayIcon.isEmpty()) {
+        console.log('Icon is empty, falling back to generated icon');
+        trayIcon = createTemplateIcon();
+      }
+    } catch (err) {
+      console.error('Error loading icon:', err);
+      trayIcon = createTemplateIcon();
+    }
   }
   
-  tray = new Tray(trayIcon)
-  tray.setToolTip('Offline Tools')
-  
+  tray = new Tray(trayIcon);
+  tray.setToolTip('Offline Tools');
+
   const contextMenu = Menu.buildFromTemplate([
     { 
       label: 'Open App', 
@@ -222,39 +244,72 @@ function createTray() {
 }
 
 /**
+ * Creates a template icon from the favicon.png file
+ * @returns {Electron.NativeImage} A template icon created from favicon
+ */
+function createTemplateIconFromFavicon() {
+  const fs = require('fs');
+  const faviconPath = path.join(process.env.VITE_PUBLIC, 'favicon.png');
+  
+  try {
+    // Check if favicon.png exists
+    if (fs.existsSync(faviconPath) && fs.statSync(faviconPath).size > 0) {
+      // Load the favicon
+      const faviconIcon = nativeImage.createFromPath(faviconPath);
+      
+      if (!faviconIcon.isEmpty()) {
+        // Resize to 16x16 for template icon
+        const templateIcon = faviconIcon.resize({ width: 16, height: 16 });
+        
+        // For template icons, we should ideally convert to monochrome
+        // but since we can't easily do that here, we'll use the resized favicon
+        // and mark it as a template - macOS will handle the appearance
+        return templateIcon;
+      }
+    }
+  } catch (error) {
+    console.error('Error creating template icon from favicon:', error);
+  }
+  
+  // Fallback to the generated template icon
+  return createTemplateIcon();
+}
+
+/**
  * Creates a template icon when no icon file is available
  * @returns {Electron.NativeImage} A template icon
  */
 function createTemplateIcon() {
   // Create a simple 16x16 icon
-  const size = 16
-  const icon = nativeImage.createEmpty()
-  
-  // Create a simple monochrome buffer for a 16x16 icon
+  const size = 16;
+  const icon = nativeImage.createEmpty();
+
+  // Create a buffer for a 16x16 icon
   // Each pixel is represented by 4 bytes (RGBA)
-  const buffer = Buffer.alloc(size * size * 4)
-  
-  // Fill with a square pattern
+  const buffer = Buffer.alloc(size * size * 4);
+
+  // For template images on macOS, we should only use black (with different alpha values)
+  // This ensures the icon will look good in both light and dark menu bars
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
-      const offset = (y * size + x) * 4
-      
-      // Create a simple square pattern
-      const isBorder = x === 0 || y === 0 || x === size - 1 || y === size - 1
-      const isInnerSquare = x > 3 && x < size - 4 && y > 3 && y < size - 4
-      
+      const offset = (y * size + x) * 4;
+
+      // Create a simple icon using just black pixels with different alpha values
+      // For macOS template images, we should only use the alpha channel to define the icon's shape
+      const isBorder = x === 0 || y === 0 || x === size - 1 || y === size - 1;
+      const isInnerSquare = x > 3 && x < size - 4 && y > 3 && y < size - 4;
+
+      // Set all pixels to black (R=0, G=0, B=0)
+      buffer[offset] = 0;     // R
+      buffer[offset + 1] = 0; // G
+      buffer[offset + 2] = 0; // B
+
       if (isBorder || isInnerSquare) {
-        // White pixel
-        buffer[offset] = 255     // R
-        buffer[offset + 1] = 255 // G
-        buffer[offset + 2] = 255 // B
-        buffer[offset + 3] = 255 // A
+        // Full opacity for the icon shape
+        buffer[offset + 3] = 255; // A
       } else {
-        // Black pixel
-        buffer[offset] = 0       // R
-        buffer[offset + 1] = 0   // G
-        buffer[offset + 2] = 0   // B
-        buffer[offset + 3] = 255 // A
+        // Transparent for non-icon areas
+        buffer[offset + 3] = 0;   // A
       }
     }
   }
@@ -265,9 +320,14 @@ function createTemplateIcon() {
     width: size,
     height: size,
     buffer: buffer
-  })
-  
-  return icon
+  });
+
+  // For macOS, we should mark this as a template image
+  if (process.platform === 'darwin') {
+    icon.setTemplateImage(true);
+  }
+
+  return icon;
 }
 
 /**
