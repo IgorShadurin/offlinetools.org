@@ -10,6 +10,7 @@ import {
   RefreshCw,
   ShieldCheck,
   Type,
+  QrCode,
   Image
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
@@ -29,6 +30,7 @@ import { PersonGenerator } from './components/person-generator'
 import { PasswordStrengthMeter } from './components/password-strength-meter'
 import { TextUtility } from './components/text-utility'
 import { WatermarkTool } from './components/watermark-tool'
+import { QrCodeTool } from './components/qr-code'
 
 // List of tools
 const tools: Tool[] = [
@@ -42,6 +44,7 @@ const tools: Tool[] = [
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
   { id: 'text-utility', name: 'Text Utility', icon: <Type size={16} /> },
+  { id: 'qr-code', name: 'QR Code Tool', icon: <QrCode size={16} /> },
   { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
@@ -149,6 +152,8 @@ function App() {
           <UnitConverter className="min-h-full" />
         ) : selectedTool === 'text-utility' ? (
           <TextUtility className="min-h-full" />
+        ) : selectedTool === 'qr-code' ? (
+          <QrCodeTool className="min-h-full" />
         ) : selectedTool === 'password-strength-meter' ? (
           <PasswordStrengthMeter className="min-h-full" />
         ) : selectedTool === 'watermark-tool' ? (
