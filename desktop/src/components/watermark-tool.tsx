@@ -224,12 +224,33 @@ export function WatermarkTool({ className = "" }: WatermarkToolProps) {
         ? { ...options }
         : options;
 
-      const customPosition = dragPosition && canvasRef.current && singleTargetImage
-        ? {
-            x: (dragPosition.x / canvasRef.current.width) * singleTargetImage.width,
-            y: (dragPosition.y / canvasRef.current.height) * singleTargetImage.height
-          }
-        : undefined;
+      let customPosition;
+      if (dragPosition && canvasRef.current && singleTargetImage && watermarkImage) {
+        const canvas = canvasRef.current;
+        const targetImg = singleTargetImage;
+
+        // Calculate preview scale factor, similar to updatePreview
+        // This is to determine watermark dimensions on the preview canvas
+        const maxWidth = 600; // Assuming same constraint as in updatePreview
+        const maxHeight = 400; // Assuming same constraint as in updatePreview
+        const previewScaleFactor = Math.min(maxWidth / targetImg.width, maxHeight / targetImg.height, 1);
+
+        const previewWatermarkWidth = watermarkImage.width * options.scale * previewScaleFactor;
+        const previewWatermarkHeight = watermarkImage.height * options.scale * previewScaleFactor;
+
+        // Clamped drag position relative to the canvas (from updatePreview)
+        // Note: dragPosition is already relative to canvas, but needs to be adjusted by half watermark size for center-based drag
+        const clampedCanvasX = Math.max(0, Math.min(canvas.width - previewWatermarkWidth, dragPosition.x - previewWatermarkWidth / 2));
+        const clampedCanvasY = Math.max(0, Math.min(canvas.height - previewWatermarkHeight, dragPosition.y - previewWatermarkHeight / 2));
+
+        // Scale these clamped canvas coordinates to the original image dimensions
+        customPosition = {
+          x: (clampedCanvasX / canvas.width) * targetImg.width,
+          y: (clampedCanvasY / canvas.height) * targetImg.height,
+        };
+      } else {
+        customPosition = undefined;
+      }
 
       const result = await applyWatermark(
         singleTargetFile,

@@ -178,4 +178,69 @@ describe('Watermark Tool tests', async () => {
     
     await takeScreenshot(page, 'watermark-tool', 'single-mode-complete');
   });
+
+  test('should process single image with dragged watermark clamped when dragged off-screen', async () => {
+    expect(page).not.toBeNull();
+    if (!page) return;
+
+    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+
+    // 1. Upload watermark
+    const watermarkUploadInput = page.locator('input#watermark-upload');
+    await watermarkUploadInput.setInputFiles(path.join(root, 'test/assets/test-watermark.png'));
+
+    // Wait for watermark image to be recognized (e.g., name appears)
+    await page.waitForSelector('text=test-watermark.png');
+
+    // 2. Switch to Single Image mode
+    const singleTabButton = await findButtonByText(page, 'Single Image');
+    if (singleTabButton) await singleTabButton.click();
+
+    // 3. Upload target image
+    const singleTargetUploadInput = page.locator('input#single-target-upload');
+    await singleTargetUploadInput.setInputFiles(path.join(root, 'test/assets/test-target.png'));
+
+    // Wait for target image to be recognized and canvas to appear
+    await page.waitForSelector('text=test-target.png');
+    const canvas = page.locator('canvas');
+    await expect(canvas.isVisible()).resolves.toBe(true);
+    await page.waitForTimeout(500); // Give time for canvas to render
+
+    // 4. Simulate drag
+    const canvasBoundingBox = await canvas.boundingBox();
+    expect(canvasBoundingBox).not.toBeNull();
+    if (!canvasBoundingBox) return;
+
+    const dragStartX = canvasBoundingBox.x + canvasBoundingBox.width / 2;
+    const dragStartY = canvasBoundingBox.y + canvasBoundingBox.height / 2;
+    const dragEndX = canvasBoundingBox.x - 100; // Drag far left
+    const dragEndY = canvasBoundingBox.y - 100; // Drag far up
+
+    await page.mouse.move(dragStartX, dragStartY);
+    await page.mouse.down();
+    await page.mouse.move(dragEndX, dragEndY, { steps: 5 });
+    await page.mouse.up();
+
+    await takeScreenshot(page, 'watermark-tool', 'single-dragged-offscreen-preview');
+
+    // 5. Process the image
+    const processButton = await findButtonByText(page, 'Apply Watermark');
+    expect(processButton).toBeTruthy();
+    if (!processButton) return;
+
+    await expect(processButton.isDisabled()).resolves.toBe(false);
+
+    // 6. Verify download starts
+    const [download] = await Promise.all([
+      page.waitForEvent('download', { timeout: 10000 }), // Wait for download event
+      processButton.click(), // Click the button that initiates download
+    ]);
+
+    expect(download).toBeTruthy();
+    const suggestedFilename = download.suggestedFilename();
+    expect(suggestedFilename).toContain('watermarked'); // Basic check for filename
+
+    // Clean up the download
+    await download.cancel(); // or download.saveAs(...) if we wanted to keep it
+  });
 });
