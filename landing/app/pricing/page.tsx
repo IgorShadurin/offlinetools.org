@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
@@ -5,11 +8,21 @@ import { PageLayout } from "@/components/page-layout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { FeedbackButton } from "@/components/feedback-button";
 
 /**
  * Pricing page component
  */
 export default function PricingPage() {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  /**
+   * Handles Buy Now button click to open feedback modal with pre-filled message
+   */
+  const handleBuyNowClick = () => {
+    setIsFeedbackOpen(true);
+  };
+
   return (
     <PageLayout>
       <Section>
@@ -48,10 +61,8 @@ export default function PricingPage() {
               </CardContent>
 
               <CardFooter className="flex justify-center pb-8">
-                <Button size="lg" asChild>
-                  <Link href="/download" className="flex items-center gap-2">
-                    <ShoppingCart className="h-5 w-5" /> Buy Now
-                  </Link>
+                <Button size="lg" onClick={handleBuyNowClick} className="flex items-center gap-2">
+                  <ShoppingCart className="h-5 w-5" /> Buy Now
                 </Button>
               </CardFooter>
             </Card>
@@ -104,6 +115,16 @@ export default function PricingPage() {
           </div>
         </Container>
       </Section>
+
+      {/* Feedback Modal with pre-filled message */}
+      <FeedbackButton
+        showButton={false}
+        isOpen={isFeedbackOpen}
+        onOpenChange={setIsFeedbackOpen}
+        defaultValues={{
+          message: "I want to buy your product, please contact me by email above."
+        }}
+      />
     </PageLayout>
   );
 }

@@ -17,21 +17,26 @@ import { feedbackFormSchema, type FeedbackFormValues } from "@/lib/validations/f
 interface FeedbackFormProps {
   onSuccess?: () => void;
   onError?: (error: string) => void;
+  defaultValues?: {
+    email?: string;
+    message?: string;
+  };
 }
 
 /**
  * Feedback form component with email and message inputs
  * @param onSuccess - Optional callback when feedback is successfully submitted
  * @param onError - Optional callback when feedback submission fails
+ * @param defaultValues - Optional default values to pre-fill the form
  */
-export function FeedbackForm({ onSuccess, onError }: FeedbackFormProps) {
+export function FeedbackForm({ onSuccess, onError, defaultValues }: FeedbackFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackFormSchema),
     defaultValues: {
-      email: "",
-      message: "",
+      email: defaultValues?.email || "",
+      message: defaultValues?.message || "",
     },
   });
 
