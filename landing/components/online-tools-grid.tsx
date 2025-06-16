@@ -97,6 +97,11 @@ export const onlineTools = [
     description: "Transform text with line break conversion, case conversion, and line sorting utilities.",
   },
   {
+    title: "Markdown Editor",
+    path: "/tools/markdown-editor",
+    description: "Edit and preview Markdown text in real-time. Load and save .md files.",
+  },
+  {
     title: "Watermark Tool",
     path: "/tools/watermark-tool",
     description: "Add watermarks to images with customizable positioning and batch processing support.",

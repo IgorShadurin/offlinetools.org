@@ -21,6 +21,7 @@ export enum Tool {
   ETHEREUM_CONVERTER = 'ethereum-converter',
   PERSON_GENERATOR = 'person-generator',
   TEXT_UTILITY = 'text-utility',
+  MARKDOWN_EDITOR = 'markdown-editor',
   WATERMARK_TOOL = 'watermark-tool'
 }
 

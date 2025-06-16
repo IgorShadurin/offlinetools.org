@@ -116,3 +116,7 @@ export * from './person-generator/clipboard-registration';
 export * from './password-strength-meter';
 // Export QR Code
 export * from './qr-code';
+
+// Export Markdown Editor
+export * from './markdown-editor';
+export * from './markdown-editor/clipboard-registration';

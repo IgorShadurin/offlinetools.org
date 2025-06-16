@@ -29,13 +29,15 @@ import {
   FaClock,
   FaSlash,
   FaRulerCombined,
-  FaImage
+  FaImage,
+  FaMarkdown
 } from 'react-icons/fa';
 
 const getToolIcon = (title: string) => {
   const iconMap: Record<string, React.ReactNode> = {
     "Ethereum Unit Converter": <FaEthereum />,
     "JSON Formatter": <FaCode />,
+    "Markdown Editor": <FaMarkdown />,
     "HTML Text Extractor": <FaHtml5 />,
     "Base64 Encoder/Decoder": <FaKey />,
     "Binary Base64 Encoder/Decoder": <FaFile />,
@@ -52,7 +54,7 @@ const getToolIcon = (title: string) => {
     "Unit Converter": <FaRulerCombined />,
     "Watermark Tool": <FaImage />,
   };
-  return iconMap[title] || <FaCode />;
+  return iconMap[title] || <FaCode />; // Default icon
 };
 
 export default function Home() {
