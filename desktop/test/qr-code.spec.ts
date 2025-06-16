@@ -10,7 +10,7 @@ import {
   navigateToTool,
   waitForComponentTitle
 } from './utils'
-import { generateQrCode } from 'shared/qr-code'
+import { generateQrCode } from '../../shared/src/qr-code'
 
 const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
