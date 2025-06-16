@@ -145,7 +145,7 @@ export async function decryptText(
     const decoder = new TextDecoder();
     return decoder.decode(decryptedBuffer);
   } catch (error) {
-    if (error instanceof Error && error.message.includes('OperationError')) {
+    if (error instanceof DOMException && error.name === 'OperationError') {
       throw new Error('Decryption failed: Invalid password or corrupted data');
     }
     throw new Error(`Decryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -229,7 +229,7 @@ export async function decryptFile(
     
     return new Blob([decryptedBuffer]);
   } catch (error) {
-    if (error instanceof Error && error.message.includes('OperationError')) {
+    if (error instanceof DOMException && error.name === 'OperationError') {
       throw new Error('File decryption failed: Invalid password or corrupted data');
     }
     throw new Error(`File decryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
