@@ -183,120 +183,116 @@ export default function SteganographyTool() {
           </TabsList>
 
           <TabsContent value="embed" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="embed-image">Select Image</Label>
-                    <div className="mt-2">
-                      <input
-                        ref={embedImageInputRef}
-                        id="embed-image"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleEmbedImageChange}
-                        className="hidden"
-                      />
-                      <Button
-                        variant="outline"
-                        onClick={() => embedImageInputRef.current?.click()}
-                        className="w-full h-32 border-dashed"
-                      >
-                        <div className="text-center">
-                          <FileUp className="mx-auto h-8 w-8 mb-2" />
-                          <p className="text-sm">
-                            {embedImageFile ? embedImageFile.name : "Click to select image"}
-                          </p>
-                          {embedImageFile && (
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {formatFileSize(embedImageFile.size)}
-                            </p>
-                          )}
-                        </div>
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="embed-text">Text to Hide</Label>
-                    <Textarea
-                      id="embed-text"
-                      placeholder="Enter any text you want to hide in the image..."
-                      value={embedText}
-                      onChange={handleEmbedTextChange}
-                      className="mt-2 min-h-[120px]"
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="embed-image">Select Image</Label>
+                  <div className="mt-2">
+                    <input
+                      ref={embedImageInputRef}
+                      id="embed-image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleEmbedImageChange}
+                      className="hidden"
                     />
+                    <Button
+                      variant="outline"
+                      onClick={() => embedImageInputRef.current?.click()}
+                      className="w-full h-32 border-dashed"
+                    >
+                      <div className="text-center">
+                        <FileUp className="mx-auto h-8 w-8 mb-2" />
+                        <p className="text-sm">
+                          {embedImageFile ? embedImageFile.name : "Click to select image"}
+                        </p>
+                        {embedImageFile && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {formatFileSize(embedImageFile.size)}
+                          </p>
+                        )}
+                      </div>
+                    </Button>
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="embed-password">Password (Optional)</Label>
-                  <div className="relative mt-2">
-                    <Input
-                      id="embed-password"
-                      type={showEmbedPassword ? "text" : "password"}
-                      placeholder="Enter password for encryption..."
-                      value={embedPassword}
-                      onChange={(e) => setEmbedPassword(e.target.value)}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3"
-                      onClick={() => setShowEmbedPassword(!showEmbedPassword)}
-                    >
-                      {showEmbedPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </Button>
-                  </div>
+                  <Label htmlFor="embed-text">Text to Hide</Label>
+                  <Textarea
+                    id="embed-text"
+                    placeholder="Enter any text you want to hide in the image..."
+                    value={embedText}
+                    onChange={handleEmbedTextChange}
+                    className="mt-2 min-h-[120px]"
+                  />
                 </div>
-
-                <Button
-                  onClick={handleEmbed}
-                  disabled={!embedImageFile || !embedText.trim() || isEmbedding}
-                  className="w-full"
-                >
-                  {isEmbedding ? "Embedding..." : "Embed Text in Image"}
-                </Button>
               </div>
 
-              <div className="space-y-4">
-                {embedError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{embedError}</AlertDescription>
-                  </Alert>
-                )}
-
-                {embedResult?.success && (
-                  <Alert>
-                    <Download className="h-4 w-4" />
-                    <AlertTitle>Success!</AlertTitle>
-                    <AlertDescription>
-                      Text has been successfully embedded in the image.
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {embedResult?.success && embedResult.data && (
-                  <div className="space-y-2">
-                    <Button onClick={handleDownload} className="w-full">
-                      <Download className="mr-2 h-4 w-4" />
-                      Download Steganography Image
-                    </Button>
-                    <p className="text-xs text-muted-foreground text-center">
-                      File: {embedResult.steganographyFileName}
-                    </p>
-                  </div>
-                )}
+              <div>
+                <Label htmlFor="embed-password">Password (Optional)</Label>
+                <div className="relative mt-2">
+                  <Input
+                    id="embed-password"
+                    type={showEmbedPassword ? "text" : "password"}
+                    placeholder="Enter password for encryption..."
+                    value={embedPassword}
+                    onChange={(e) => setEmbedPassword(e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => setShowEmbedPassword(!showEmbedPassword)}
+                  >
+                    {showEmbedPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
               </div>
+
+              {embedError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{embedError}</AlertDescription>
+                </Alert>
+              )}
+
+              {embedResult?.success && (
+                <Alert>
+                  <Download className="h-4 w-4" />
+                  <AlertTitle>Success!</AlertTitle>
+                  <AlertDescription>
+                    Text has been successfully embedded in the image.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {embedResult?.success && embedResult.data && (
+                <div className="space-y-2">
+                  <Button onClick={handleDownload} className="w-full">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Steganography Image
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-center">
+                    File: {embedResult.steganographyFileName}
+                  </p>
+                </div>
+              )}
+
+              <Button
+                onClick={handleEmbed}
+                disabled={!embedImageFile || !embedText.trim() || isEmbedding}
+                className="w-full"
+              >
+                {isEmbedding ? "Embedding..." : "Embed Text in Image"}
+              </Button>
             </div>
           </TabsContent>
 
           <TabsContent value="extract" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="extract-image">Select Image</Label>
                   <div className="mt-2">
@@ -349,55 +345,53 @@ export default function SteganographyTool() {
                     </Button>
                   </div>
                 </div>
-
-                <Button
-                  onClick={handleExtract}
-                  disabled={!extractImageFile || isExtracting}
-                  className="w-full"
-                >
-                  {isExtracting ? "Extracting..." : "Extract Text from Image"}
-                </Button>
               </div>
 
-              <div className="space-y-4">
-                {extractError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{extractError}</AlertDescription>
+              {extractError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{extractError}</AlertDescription>
+                </Alert>
+              )}
+
+              {extractResult?.success && extractResult.data && (
+                <div className="space-y-4">
+                  <Alert>
+                    <Unlock className="h-4 w-4" />
+                    <AlertTitle>Text Extracted Successfully!</AlertTitle>
+                    <AlertDescription>
+                      The hidden text has been extracted from the image.
+                    </AlertDescription>
                   </Alert>
-                )}
 
-                {extractResult?.success && extractResult.data && (
-                  <div className="space-y-4">
-                    <Alert>
-                      <Unlock className="h-4 w-4" />
-                      <AlertTitle>Text Extracted Successfully!</AlertTitle>
-                      <AlertDescription>
-                        The hidden text has been extracted from the image.
-                      </AlertDescription>
-                    </Alert>
-
-                    <div>
-                      <Label htmlFor="extracted-text">Extracted Text</Label>
-                      <Textarea
-                        id="extracted-text"
-                        value={extractResult.data}
-                        readOnly
-                        className="mt-2 min-h-[120px] font-mono"
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(extractResult.data!)}
-                        className="mt-2 w-full"
-                      >
-                        Copy to Clipboard
-                      </Button>
-                    </div>
+                  <div>
+                    <Label htmlFor="extracted-text">Extracted Text</Label>
+                    <Textarea
+                      id="extracted-text"
+                      value={extractResult.data}
+                      readOnly
+                      className="mt-2 min-h-[120px] font-mono"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(extractResult.data!)}
+                      className="mt-2 w-full"
+                    >
+                      Copy to Clipboard
+                    </Button>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+
+              <Button
+                onClick={handleExtract}
+                disabled={!extractImageFile || isExtracting}
+                className="w-full"
+              >
+                {isExtracting ? "Extracting..." : "Extract Text from Image"}
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
