@@ -224,12 +224,38 @@ export function WatermarkTool({ className = "" }: WatermarkToolProps) {
         ? { ...options }
         : options;
 
-      const customPosition = dragPosition && canvasRef.current && singleTargetImage
-        ? {
-            x: (dragPosition.x / canvasRef.current.width) * singleTargetImage.width,
-            y: (dragPosition.y / canvasRef.current.height) * singleTargetImage.height
-          }
-        : undefined;
+      let customPosition;
+      if (dragPosition && canvasRef.current && singleTargetImage && watermarkImage) {
+        const canvas = canvasRef.current;
+        const targetImg = singleTargetImage;
+
+        // Calculate preview scale factor exactly as in updatePreview
+        const maxWidth = 600;
+        const maxHeight = 400;
+        const previewScale = Math.min(maxWidth / targetImg.width, maxHeight / targetImg.height, 1);
+
+        // Calculate watermark dimensions in preview exactly as in updatePreview
+        const watermarkScale = options.scale * previewScale;
+        const watermarkWidth = watermarkImage.width * watermarkScale;
+        const watermarkHeight = watermarkImage.height * watermarkScale;
+
+        // Calculate clamped position exactly as in updatePreview using calculated dimensions
+        const previewCanvasWidth = targetImg.width * previewScale;
+        const previewCanvasHeight = targetImg.height * previewScale;
+        const clampedCanvasX = Math.max(0, Math.min(previewCanvasWidth - watermarkWidth, dragPosition.x - watermarkWidth / 2));
+        const clampedCanvasY = Math.max(0, Math.min(previewCanvasHeight - watermarkHeight, dragPosition.y - watermarkHeight / 2));
+
+        // Convert from preview canvas coordinates to original image coordinates
+        // The preview canvas size is: targetImg.width * previewScale x targetImg.height * previewScale
+        // But the actual canvas size might be different due to CSS styling
+        // So we need to convert based on the preview scale factor and actual image dimensions
+        customPosition = {
+          x: (clampedCanvasX / previewScale),
+          y: (clampedCanvasY / previewScale),
+        };
+      } else {
+        customPosition = undefined;
+      }
 
       const result = await applyWatermark(
         singleTargetFile,
