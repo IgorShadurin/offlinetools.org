@@ -23,7 +23,7 @@ import DataEncryptorExplanation from "./DataEncryptorExplanation";
 
 export default function DataEncryptor() {
   const [mode, setMode] = useState<"encrypt" | "decrypt">("encrypt");
-  const [inputType, setInputType] = useState<"text" | "file">("text");
+  const [inputType, setInputType] = useState<"text" | "file">("file");
   const [textInput, setTextInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -103,6 +103,20 @@ export default function DataEncryptor() {
     navigator.clipboard.writeText(output);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSaveOutput = () => {
+    if (!output) return;
+    
+    const blob = new Blob([output], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = mode === "encrypt" ? "encrypted-data.txt" : "decrypted-data.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const handleTabChange = (value: string) => {
@@ -221,11 +235,17 @@ export default function DataEncryptor() {
                 {mode === "encrypt" ? "Encrypted output" : "Decrypted output"}
               </Label>
               <div className="min-w-[85px] h-8 flex justify-end gap-2">
-                {output && mode === "encrypt" && (
-                  <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleCopy}>
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    {copied ? "Copied!" : "Copy"}
-                  </Button>
+                {output && (
+                  <>
+                    <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleCopy}>
+                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copied ? "Copied!" : "Copy"}
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleSaveOutput}>
+                      <Download className="h-4 w-4" />
+                      Save
+                    </Button>
+                  </>
                 )}
                 {decryptedFile && (
                   <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleDownload}>
