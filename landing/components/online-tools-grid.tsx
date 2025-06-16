@@ -101,6 +101,11 @@ export const onlineTools = [
     path: "/tools/watermark-tool",
     description: "Add watermarks to images with customizable positioning and batch processing support.",
   },
+  {
+    title: "Steganography Tool",
+    path: "/tools/steganography",
+    description: "Hide any text securely within images using advanced steganography techniques.",
+  },
 ];
 
 /**

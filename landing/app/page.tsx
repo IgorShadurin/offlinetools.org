@@ -29,7 +29,8 @@ import {
   FaClock,
   FaSlash,
   FaRulerCombined,
-  FaImage
+  FaImage,
+  FaLock
 } from 'react-icons/fa';
 
 const getToolIcon = (title: string) => {
@@ -51,6 +52,7 @@ const getToolIcon = (title: string) => {
     "Text to Slug": <FaSlash />,
     "Unit Converter": <FaRulerCombined />,
     "Watermark Tool": <FaImage />,
+    "Steganography Tool": <FaLock />,
   };
   return iconMap[title] || <FaCode />;
 };
