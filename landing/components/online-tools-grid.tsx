@@ -101,6 +101,11 @@ export const onlineTools = [
     path: "/tools/watermark-tool",
     description: "Add watermarks to images with customizable positioning and batch processing support.",
   },
+  {
+    title: "Data Encryptor",
+    path: "/tools/data-encryptor",
+    description: "Encrypt and decrypt text or files using password-based AES-256 encryption with secure key derivation.",
+  },
 ];
 
 /**

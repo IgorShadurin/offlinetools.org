@@ -92,6 +92,7 @@ export * from './text-to-slug/clipboard-registration';
 export * from './ethereum-converter/clipboard-registration';
 export * from './text-utility/clipboard-registration';
 export * from './watermark-tool/clipboard-registration';
+export * from './data-encryptor/clipboard-registration';
 
 // Export Unit Converter
 export * from './unit-converter';
@@ -116,3 +117,6 @@ export * from './person-generator/clipboard-registration';
 export * from './password-strength-meter';
 // Export QR Code
 export * from './qr-code';
+
+// Export Data Encryptor
+export * from './data-encryptor';
