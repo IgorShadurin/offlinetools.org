@@ -101,11 +101,7 @@ describe('Timezone Converter tests', async () => {
     const searchInput = await page!.waitForSelector('input[placeholder*="Search timezones"]');
     await searchInput.fill('New York');
     
-    await page!.waitForFunction(() => {
-      const select = document.querySelector('select');
-      const options = Array.from(select?.options || []);
-      return options.some(option => option.textContent?.includes('Eastern Time'));
-    }, { timeout: 5000 });
+    await page!.waitForSelector('select >> nth=0 option:has-text("Eastern Time")', { timeout: 5000 });
     
     const select = await page!.waitForSelector('select >> nth=0');
     const options = await page!.$$eval('select >> nth=0 option', elements => 
@@ -130,11 +126,8 @@ describe('Timezone Converter tests', async () => {
     const swapButton = await page!.waitForSelector('button:has-text("Swap")');
     await swapButton.click();
     
-    await page!.waitForFunction(() => {
-      const fromSelect = document.querySelector('select');
-      const toSelect = document.querySelectorAll('select')[1];
-      return fromSelect?.value === 'Europe/London' && toSelect?.value === 'America/New_York';
-    }, { timeout: 5000 });
+    await page!.waitForSelector('select >> nth=0 option[value="Europe/London"][selected]', { timeout: 5000 });
+    await page!.waitForSelector('select >> nth=1 option[value="America/New_York"][selected]', { timeout: 5000 });
     
     expect(await fromSelect.inputValue()).toBe('Europe/London');
     expect(await toSelect.inputValue()).toBe('America/New_York');
