@@ -1,5 +1,51 @@
 # Changelog
 
+## [1.18.0](https://github.com/IgorShadurin/offlinetools.org/compare/OfflineTools-v1.17.0...OfflineTools-v1.18.0) (2025-06-16)
+
+
+### Features
+
+* add icons for macOS and Linux builds in electron-builder configuration ([6c4875d](https://github.com/IgorShadurin/offlinetools.org/commit/6c4875da9114768e57ebf2d5277c1aa1a2153ef7))
+* add macOS entitlements plist and update build configuration for resource paths ([d603dd4](https://github.com/IgorShadurin/offlinetools.org/commit/d603dd4dedfbcc8c11c850d357e1d7f689fb8431))
+* **desktop:** add person generator ([ece38e6](https://github.com/IgorShadurin/offlinetools.org/commit/ece38e6ba85af7a3812b87f6c12b89639366f677))
+* **desktop:** add QR Code tool ([a43c91b](https://github.com/IgorShadurin/offlinetools.org/commit/a43c91b53c2e560126909234d1364fcc47ea4d58))
+* **desktop:** add update checker page with logs ([c80c255](https://github.com/IgorShadurin/offlinetools.org/commit/c80c255cfc30d3a19e8552da875e05c061725ccc))
+* implement code signing and notarization for macOS builds with detailed setup instructions in README ([1e7c2f0](https://github.com/IgorShadurin/offlinetools.org/commit/1e7c2f0687ce1f3e743ab6d1308666e7e7dd78c2))
+* implement desktop unit converter ([021fafd](https://github.com/IgorShadurin/offlinetools.org/commit/021fafdf82d7a112af4463a69d4e3b1486615fc7))
+* implement desktop unit converter ([f5582e1](https://github.com/IgorShadurin/offlinetools.org/commit/f5582e1ab7f47e17937ac71021f94d7c492a4aee))
+* implement Ethereum Unit Converter feature ([7bb1aaf](https://github.com/IgorShadurin/offlinetools.org/commit/7bb1aafe1996f5986e55505ba4668ea5b423e196))
+* implement Password Strength Meter for web and desktop ([d96a8d3](https://github.com/IgorShadurin/offlinetools.org/commit/d96a8d3db95b41f96565d54e20b965f7acbaa462))
+* implement Password Strength Meter for web and desktop ([6bac4d6](https://github.com/IgorShadurin/offlinetools.org/commit/6bac4d69eb28cc175c0d46729df4f8bb6d2f9a46))
+* implement speech-length-estimator for desktop app ([329a0bc](https://github.com/IgorShadurin/offlinetools.org/commit/329a0bc88e74270ce78b4025e151d8cf5a160ba3))
+* implement speech-length-estimator for desktop app ([5336697](https://github.com/IgorShadurin/offlinetools.org/commit/53366975ccad4069acbe2344e18f67a43dc76ec2))
+* implement text-utility tool for desktop app ([b15ff36](https://github.com/IgorShadurin/offlinetools.org/commit/b15ff36573622aeaee9c6ce8d58a59ba3cd7d04f))
+* implement watermark tool for desktop app ([1fc65d1](https://github.com/IgorShadurin/offlinetools.org/commit/1fc65d1b2135778d22a0078f533f8e3f077684e1))
+* implement watermark tool for desktop app ([7f803fe](https://github.com/IgorShadurin/offlinetools.org/commit/7f803fedd6f14d89b992340cc13cda877ab7b9bc))
+* simplify artifact naming and update release configurations for Windows, macOS, and Linux ([58ef57c](https://github.com/IgorShadurin/offlinetools.org/commit/58ef57cbb96985f17b859b9231c47d7a93c9d594))
+* update build scripts to clarify ad-hoc signing in development builds ([8f15a8d](https://github.com/IgorShadurin/offlinetools.org/commit/8f15a8d36053bbcdc04f22a163f04e174a1791da))
+* update lucide-react to version 0.510.0 and react/react-dom to version 19.1.0 ([1292e9c](https://github.com/IgorShadurin/offlinetools.org/commit/1292e9cbaa1600b77387a5cbca1b973440407281))
+* update release workflows to include detailed download instructions for macOS and enhance artifact naming ([dc9a00e](https://github.com/IgorShadurin/offlinetools.org/commit/dc9a00e189b3ee51d13961dd610dbd321e5d4c60))
+
+
+### Bug Fixes
+
+* change desktop Password Strength Meter title from h1 to h3 ([858de55](https://github.com/IgorShadurin/offlinetools.org/commit/858de554e4cf805fff72147a15b1e6795837e226))
+* correct desktop Password Strength Meter test assertion syntax ([2894e3b](https://github.com/IgorShadurin/offlinetools.org/commit/2894e3bd898bcf3759d303762eb6760c76910203))
+* improve test isolation and Electron launch debugging for desktop unit converter ([1fc6996](https://github.com/IgorShadurin/offlinetools.org/commit/1fc6996c80419bc02350d8a949d69798ac0870ed))
+* replace page.waitForFunction with safer selector patterns to avoid CSP violations ([c27cc83](https://github.com/IgorShadurin/offlinetools.org/commit/c27cc83a93ffe4d5c78523cfc962faf26a8f53cd))
+* resolve decimal precision bug and implement desktop version ([5ba6bd2](https://github.com/IgorShadurin/offlinetools.org/commit/5ba6bd20edf85277917c9183f4fa52e321ffb466))
+* resolve desktop TypeScript imports and test environment issues ([a6f764e](https://github.com/IgorShadurin/offlinetools.org/commit/a6f764ed5d33283831e52820d7e6eeec6aed279b))
+* restore DISPLAY environment variable for Xvfb compatibility in CI ([55b0992](https://github.com/IgorShadurin/offlinetools.org/commit/55b0992313b630e2178a782627229f2702a47710))
+* **ui:** add AlertTitle component ([cea9d30](https://github.com/IgorShadurin/offlinetools.org/commit/cea9d30469f61d48645c9fc3b77e7267e2c34770))
+* update desktop unit converter tests for better reliability ([77032fe](https://github.com/IgorShadurin/offlinetools.org/commit/77032fedb4530c82820d7a762e88aa29ad0db245))
+* update test selectors to match TabsTrigger value props ([fe1aa72](https://github.com/IgorShadurin/offlinetools.org/commit/fe1aa727f33e67468df231e75191d22716eb7a8c))
+* Update UI text on Updates page ([0400a8b](https://github.com/IgorShadurin/offlinetools.org/commit/0400a8bf57b37adb3e85385cff4b2147b453cc75))
+* update unit converter tests to use data-unit attributes ([dac8709](https://github.com/IgorShadurin/offlinetools.org/commit/dac8709855dddceecb2250a18dc1c59b803bf648))
+* update watermark tool test selectors to use correct tab detection ([e5e72ea](https://github.com/IgorShadurin/offlinetools.org/commit/e5e72ea7072b441c21e4d5ac390024931650ad1f))
+* use consistent icons for app window and tray ([0564009](https://github.com/IgorShadurin/offlinetools.org/commit/0564009ad5c3c2bb34f9a93e060adeee59228fb2))
+* Use consistent icons for app window and tray ([8bc8562](https://github.com/IgorShadurin/offlinetools.org/commit/8bc8562b43bfd007b8e79fea1316ac184af3b67d))
+* use findButtonByText for tab clicks instead of selectors ([96df3f7](https://github.com/IgorShadurin/offlinetools.org/commit/96df3f7e16ac2eb4c4a071ccc7f35fec3682f68a))
+
 ## [1.17.0](https://github.com/IgorShadurin/offlinetools.org/compare/OfflineTools-v1.16.0...OfflineTools-v1.17.0) (2025-06-13)
 
 
