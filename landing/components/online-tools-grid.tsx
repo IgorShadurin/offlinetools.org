@@ -104,7 +104,7 @@ export const onlineTools = [
   {
     title: "Steganography Tool",
     path: "/tools/steganography",
-    description: "Hide mnemonic phrases and sensitive text within images using advanced steganography techniques.",
+    description: "Hide any text securely within images using advanced steganography techniques.",
   },
 ];
 

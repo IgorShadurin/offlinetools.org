@@ -14,8 +14,6 @@ import {
   embedTextInImage,
   extractTextFromImage,
   validateImageFile,
-  validateMnemonicPhrase,
-  isMnemonicPhrase,
   type SteganographyOptions,
   type EmbedResult,
   type ExtractResult,
@@ -83,12 +81,6 @@ export default function SteganographyTool() {
   const handleEmbed = useCallback(async () => {
     if (!embedImageFile || !embedText.trim()) {
       setEmbedError("Please select an image and enter text to embed");
-      return;
-    }
-
-    const textValidation = validateMnemonicPhrase(embedText);
-    if (!textValidation.valid) {
-      setEmbedError(textValidation.error || "Invalid mnemonic phrase");
       return;
     }
 
@@ -174,7 +166,7 @@ export default function SteganographyTool() {
     <Container className="py-8">
       <SectionHeading
         title="Steganography Tool"
-        description="Hide mnemonic phrases and sensitive text within images using advanced steganography techniques. All processing happens locally in your browser for maximum security."
+        description="Hide any text securely within images using advanced steganography techniques. All processing happens locally in your browser for maximum security."
       />
 
       <div className="max-w-4xl mx-auto">
@@ -193,51 +185,48 @@ export default function SteganographyTool() {
           <TabsContent value="embed" className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="embed-image">Select Image</Label>
-                  <div className="mt-2">
-                    <input
-                      ref={embedImageInputRef}
-                      id="embed-image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleEmbedImageChange}
-                      className="hidden"
-                    />
-                    <Button
-                      variant="outline"
-                      onClick={() => embedImageInputRef.current?.click()}
-                      className="w-full h-32 border-dashed"
-                    >
-                      <div className="text-center">
-                        <FileUp className="mx-auto h-8 w-8 mb-2" />
-                        <p className="text-sm">
-                          {embedImageFile ? embedImageFile.name : "Click to select image"}
-                        </p>
-                        {embedImageFile && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {formatFileSize(embedImageFile.size)}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="embed-image">Select Image</Label>
+                    <div className="mt-2">
+                      <input
+                        ref={embedImageInputRef}
+                        id="embed-image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleEmbedImageChange}
+                        className="hidden"
+                      />
+                      <Button
+                        variant="outline"
+                        onClick={() => embedImageInputRef.current?.click()}
+                        className="w-full h-32 border-dashed"
+                      >
+                        <div className="text-center">
+                          <FileUp className="mx-auto h-8 w-8 mb-2" />
+                          <p className="text-sm">
+                            {embedImageFile ? embedImageFile.name : "Click to select image"}
                           </p>
-                        )}
-                      </div>
-                    </Button>
+                          {embedImageFile && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {formatFileSize(embedImageFile.size)}
+                            </p>
+                          )}
+                        </div>
+                      </Button>
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <Label htmlFor="embed-text">Mnemonic Phrase</Label>
-                  <Textarea
-                    id="embed-text"
-                    placeholder="Enter your 12 or 24 word mnemonic phrase..."
-                    value={embedText}
-                    onChange={handleEmbedTextChange}
-                    className="mt-2 min-h-[120px]"
-                  />
-                  {embedText && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {isMnemonicPhrase(embedText) ? "✓ Valid mnemonic phrase format" : "⚠ Invalid mnemonic phrase format"}
-                    </p>
-                  )}
+                  <div>
+                    <Label htmlFor="embed-text">Text to Hide</Label>
+                    <Textarea
+                      id="embed-text"
+                      placeholder="Enter any text you want to hide in the image..."
+                      value={embedText}
+                      onChange={handleEmbedTextChange}
+                      className="mt-2 min-h-[120px]"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -427,7 +416,7 @@ export default function SteganographyTool() {
               <strong>Password Protection:</strong> When you provide a password, your text is encrypted using AES encryption before being embedded.
             </p>
             <p>
-              <strong>Mnemonic Phrases:</strong> This tool is optimized for hiding cryptocurrency wallet mnemonic phrases (12 or 24 words).
+              <strong>Text Hiding:</strong> This tool can hide any text content within images, from passwords to private notes.
             </p>
           </div>
         </div>

@@ -9,7 +9,6 @@ import {
   embedTextInImage,
   extractTextFromImage,
   validateImageFile,
-  validateMnemonicPhrase,
   type EmbedResult,
   type ExtractResult,
   type SteganographyOptions,
@@ -71,12 +70,6 @@ export function Steganography({ className }: SteganographyProps) {
   const handleEmbed = useCallback(async () => {
     if (!embedImage || !embedText.trim()) {
       setEmbedError('Please select an image and enter text to embed');
-      return;
-    }
-
-    const textValidation = validateMnemonicPhrase(embedText);
-    if (!textValidation.valid) {
-      setEmbedError(textValidation.error || 'Invalid mnemonic phrase');
       return;
     }
 
@@ -171,7 +164,7 @@ export function Steganography({ className }: SteganographyProps) {
         <div>
           <h1 className="text-2xl font-bold">Steganography Tool</h1>
           <p className="text-muted-foreground">
-            Hide mnemonic phrases securely within images using steganography
+            Hide any text securely within images using steganography
           </p>
         </div>
 
@@ -192,22 +185,41 @@ export function Steganography({ className }: SteganographyProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lock size={20} />
-                  Embed Mnemonic Phrase
+                  Embed Text
                 </CardTitle>
                 <CardDescription>
-                  Hide your mnemonic phrase securely within an image. Optionally protect it with a password.
+                  Hide any text securely within an image. Optionally protect it with a password.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="embed-text" className="block mb-1 text-sm font-medium">Mnemonic Phrase</label>
-                  <Textarea
-                    id="embed-text"
-                    placeholder="Enter your 12 or 24 word mnemonic phrase..."
-                    value={embedText}
-                    onChange={(e) => setEmbedText(e.target.value)}
-                    rows={3}
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="embed-image" className="block mb-1 text-sm font-medium">Select Image</label>
+                    <input
+                      id="embed-image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleEmbedImageSelect}
+                      ref={embedFileInputRef}
+                      className="w-full border rounded h-8 px-2 text-sm"
+                    />
+                    {embedImage && (
+                      <p className="text-sm text-muted-foreground">
+                        Selected: {embedImage.name} ({(embedImage.size / 1024 / 1024).toFixed(2)} MB)
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="embed-text" className="block mb-1 text-sm font-medium">Text to Hide</label>
+                    <Textarea
+                      id="embed-text"
+                      placeholder="Enter any text you want to hide in the image..."
+                      value={embedText}
+                      onChange={(e) => setEmbedText(e.target.value)}
+                      rows={3}
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -231,23 +243,6 @@ export function Steganography({ className }: SteganographyProps) {
                       {showEmbedPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </Button>
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="embed-image" className="block mb-1 text-sm font-medium">Select Image</label>
-                  <input
-                    id="embed-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleEmbedImageSelect}
-                    ref={embedFileInputRef}
-                    className="w-full border rounded h-8 px-2 text-sm"
-                  />
-                  {embedImage && (
-                    <p className="text-sm text-muted-foreground">
-                      Selected: {embedImage.name} ({(embedImage.size / 1024 / 1024).toFixed(2)} MB)
-                    </p>
-                  )}
                 </div>
 
                 {embedError && (
@@ -299,10 +294,10 @@ export function Steganography({ className }: SteganographyProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Unlock size={20} />
-                  Extract Mnemonic Phrase
+                  Extract Text
                 </CardTitle>
                 <CardDescription>
-                  Extract hidden mnemonic phrase from an image. Enter the password if one was used.
+                  Extract hidden text from an image. Enter the password if one was used.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -354,7 +349,7 @@ export function Steganography({ className }: SteganographyProps) {
 
                 {extractResult?.success && extractResult.data && (
                   <div className="space-y-2">
-                    <label className="block mb-1 text-sm font-medium">Extracted Mnemonic Phrase</label>
+                    <label className="block mb-1 text-sm font-medium">Extracted Text</label>
                     <Textarea
                       value={extractResult.data}
                       readOnly

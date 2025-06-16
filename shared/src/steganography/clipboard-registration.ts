@@ -1,5 +1,4 @@
 import { ClipboardType, Tool, ClipboardToolRegistration } from '../clipboard-detector';
-import { isMnemonicPhrase } from './index';
 
 export function registerSteganographyClipboard(): ClipboardToolRegistration {
   return {
@@ -17,7 +16,7 @@ export function registerSteganographyClipboard(): ClipboardToolRegistration {
         return true;
       }
       
-      return isMnemonicPhrase(content);
+      return content.trim().length > 0 && content.trim().length < 10000;
     },
   };
 }

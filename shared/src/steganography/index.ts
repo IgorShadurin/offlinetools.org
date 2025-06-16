@@ -278,31 +278,3 @@ export function validateImageFile(file: File): { valid: boolean; error?: string 
   
   return { valid: true };
 }
-
-export function isMnemonicPhrase(text: string): boolean {
-  const words = text.trim().split(/\s+/);
-  
-  if (words.length !== 12 && words.length !== 24) {
-    return false;
-  }
-  
-  return words.every(word => /^[a-z]+$/.test(word) && word.length >= 3);
-}
-
-export function validateMnemonicPhrase(text: string): { valid: boolean; error?: string } {
-  if (!text.trim()) {
-    return {
-      valid: false,
-      error: 'Mnemonic phrase cannot be empty',
-    };
-  }
-  
-  if (!isMnemonicPhrase(text)) {
-    return {
-      valid: false,
-      error: 'Please enter a valid mnemonic phrase (12 or 24 words)',
-    };
-  }
-  
-  return { valid: true };
-}
