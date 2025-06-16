@@ -96,6 +96,9 @@ export * from './watermark-tool/clipboard-registration';
 // Export Unit Converter
 export * from './unit-converter';
 
+// Export Image Resizer
+export * from './image-resizer';
+
 // Export Text Utility
 export * from './text-utility';
 
