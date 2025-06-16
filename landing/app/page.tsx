@@ -46,9 +46,11 @@ const getToolIcon = (title: string) => {
     "Image Resizer": <FaImage />,
     "Person Generator": <FaUser />,
     "UUID Generator": <FaFingerprint />,
+    "QR Code Tool": <FaLink />,
     "Speech Length Estimator": <FaClock />,
     "Text to Slug": <FaSlash />,
     "Unit Converter": <FaRulerCombined />,
+    "Watermark Tool": <FaImage />,
   };
   return iconMap[title] || <FaCode />;
 };
