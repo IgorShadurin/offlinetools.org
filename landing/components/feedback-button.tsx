@@ -8,12 +8,38 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { FeedbackForm } from "@/components/feedback-form";
 
 /**
- * A floating feedback button component that appears on all pages and opens a feedback form modal
+ * Props for the FeedbackButton component
  */
-export function FeedbackButton() {
-  const [isOpen, setIsOpen] = useState(false);
+interface FeedbackButtonProps {
+  defaultValues?: {
+    email?: string;
+    message?: string;
+  };
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showButton?: boolean;
+}
+
+/**
+ * A floating feedback button component that appears on all pages and opens a feedback form modal
+ * @param defaultValues - Optional default values to pre-fill the form
+ * @param isOpen - Optional external control of modal open state
+ * @param onOpenChange - Optional callback when modal open state changes
+ * @param showButton - Whether to show the floating button (default: true)
+ */
+export function FeedbackButton({ 
+  defaultValues, 
+  isOpen: externalIsOpen, 
+  onOpenChange: externalOnOpenChange,
+  showButton = true 
+}: FeedbackButtonProps = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Use external control if provided, otherwise use internal state
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = externalOnOpenChange || setInternalIsOpen;
 
   /**
    * Handles successful form submission
@@ -52,13 +78,15 @@ export function FeedbackButton() {
 
   return (
     <>
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-12 h-12 rounded-full shadow-lg z-50 flex items-center justify-center p-0 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-all duration-200 hover:scale-105"
-        aria-label="Provide feedback"
-      >
-        <MessageSquare className="h-5 w-5" />
-      </Button>
+      {showButton && (
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-12 h-12 rounded-full shadow-lg z-50 flex items-center justify-center p-0 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-all duration-200 hover:scale-105"
+          aria-label="Provide feedback"
+        >
+          <MessageSquare className="h-5 w-5" />
+        </Button>
+      )}
 
       <Dialog open={isOpen} onOpenChange={handleDialogChange}>
         <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
@@ -84,7 +112,7 @@ export function FeedbackButton() {
               </div>
             </div>
           ) : (
-            <FeedbackForm onSuccess={handleSuccess} onError={handleError} />
+            <FeedbackForm onSuccess={handleSuccess} onError={handleError} defaultValues={defaultValues} />
           )}
         </DialogContent>
       </Dialog>
