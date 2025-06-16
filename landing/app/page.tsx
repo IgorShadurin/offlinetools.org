@@ -24,11 +24,12 @@ import {
   FaShieldAlt, 
   FaHashtag, 
   FaFileAlt, 
-  FaUser, 
-  FaFingerprint, 
-  FaClock, 
-  FaSlash, 
+  FaUser,
+  FaFingerprint,
+  FaClock,
+  FaSlash,
   FaRulerCombined,
+  FaImage,
   FaMarkdown
 } from 'react-icons/fa';
 
@@ -44,11 +45,14 @@ const getToolIcon = (title: string) => {
     "File & Text Hash Compare": <FaShieldAlt />,
     "Text Hash Generator": <FaHashtag />,
     "File Generator": <FaFileAlt />,
+    "Image Resizer": <FaImage />,
     "Person Generator": <FaUser />,
     "UUID Generator": <FaFingerprint />,
+    "QR Code Tool": <FaLink />,
     "Speech Length Estimator": <FaClock />,
     "Text to Slug": <FaSlash />,
     "Unit Converter": <FaRulerCombined />,
+    "Watermark Tool": <FaImage />,
   };
   return iconMap[title] || <FaCode />; // Default icon
 };

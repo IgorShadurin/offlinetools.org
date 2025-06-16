@@ -91,12 +91,20 @@ export * from './speech-length-estimator/clipboard-registration';
 export * from './text-to-slug/clipboard-registration';
 export * from './ethereum-converter/clipboard-registration';
 export * from './text-utility/clipboard-registration';
+export * from './watermark-tool/clipboard-registration';
 
 // Export Unit Converter
 export * from './unit-converter';
 
+// Export Image Resizer
+export * from './image-resizer';
+
 // Export Text Utility
 export * from './text-utility';
+
+// Export Watermark Tool
+export * from './watermark-tool';
+export { registerWatermarkToolClipboard } from './watermark-tool/clipboard-registration';
 
 // Export Person Generator
 export * from './person-generator';
@@ -106,6 +114,8 @@ export * from './person-generator/clipboard-registration';
 
 // Export Password Strength Meter
 export * from './password-strength-meter';
+// Export QR Code
+export * from './qr-code';
 
 // Export Markdown Editor
 export * from './markdown-editor';

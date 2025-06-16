@@ -47,6 +47,14 @@ export const toolTitles = {
     base: "UUID Generator",
     extended: "UUID Generator - Create RFC4122 Compliant UUIDs",
   },
+  imageResizer: {
+    base: "Image Resizer",
+    extended: "Image Resizer - Resize Images Offline in Your Browser",
+  },
+  qrCode: {
+    base: "QR Code Tool",
+    extended: "QR Code Tool - Generate and Read QR Codes",
+  },
 };
 
 /**
@@ -163,6 +171,12 @@ export const toolDescriptions = {
 
   uuidGenerator:
     "Generate universally unique identifiers (UUIDs) in various formats (v1, v4, v5, v6, v7). Create, validate, and format UUIDs with complete privacy.",
+
+  imageResizer:
+    "Resize images to custom dimensions directly in your browser while keeping data private and offline.",
+
+  qrCode:
+    "Generate QR codes from text or decode them from uploaded images directly in your browser. All processing happens locally for full privacy.",
 
   common:
     "Process data securely in your browser without server transmission. Works offline with our desktop app for complete privacy and security.",
