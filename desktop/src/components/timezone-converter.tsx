@@ -115,7 +115,7 @@ export function TimezoneConverter({ className }: TimezoneConverterProps) {
                 <Select
                   value={fromTimezone.id}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    const timezone = POPULAR_TIMEZONES.find((tz: TimezoneInfo) => tz.id === e.target.value);
+                    const timezone = filteredFromTimezones.find((tz: TimezoneInfo) => tz.id === e.target.value);
                     if (timezone) setFromTimezone(timezone);
                   }}
                 >
@@ -151,7 +151,7 @@ export function TimezoneConverter({ className }: TimezoneConverterProps) {
                 <Select
                   value={toTimezone.id}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    const timezone = POPULAR_TIMEZONES.find((tz: TimezoneInfo) => tz.id === e.target.value);
+                    const timezone = filteredToTimezones.find((tz: TimezoneInfo) => tz.id === e.target.value);
                     if (timezone) setToTimezone(timezone);
                   }}
                 >
