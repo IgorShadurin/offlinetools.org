@@ -101,6 +101,11 @@ export const onlineTools = [
     path: "/tools/watermark-tool",
     description: "Add watermarks to images with customizable positioning and batch processing support.",
   },
+  {
+    title: "Timezone Converter",
+    path: "/tools/timezone-converter",
+    description: "Convert time between different timezones around the world with real-time conversion.",
+  },
 ];
 
 /**
