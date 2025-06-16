@@ -57,6 +57,11 @@ export const onlineTools = [
     description: "Generate files with specific size and format with random data, zeros, or custom patterns.",
   },
   {
+    title: "Image Resizer",
+    path: "/tools/image-resizer",
+    description: "Resize images to custom dimensions directly in your browser.",
+  },
+  {
     title: "Person Generator",
     path: "/tools/person-generator",
     description: "Create fake person data with chosen fields in multiple formats.",
