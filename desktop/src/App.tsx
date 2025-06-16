@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   Type,
   QrCode,
-  Image
+  Image,
+  Lock
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -32,6 +33,7 @@ import { TextUtility } from './components/text-utility'
 import { WatermarkTool } from './components/watermark-tool'
 import { QrCodeTool } from './components/qr-code'
 import { ImageResizer } from './components/image-resizer'
+import { Steganography } from './components/steganography'
 
 // List of tools
 const tools: Tool[] = [
@@ -49,6 +51,7 @@ const tools: Tool[] = [
   { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
   { id: 'image-resizer', name: 'Image Resizer', icon: <Image size={16} /> },
+  { id: 'steganography', name: 'Steganography Tool', icon: <Lock size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
 
@@ -162,6 +165,8 @@ function App() {
           <WatermarkTool className="min-h-full" />
         ) : selectedTool === 'image-resizer' ? (
           <ImageResizer className="min-h-full" />
+        ) : selectedTool === 'steganography' ? (
+          <Steganography className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (
