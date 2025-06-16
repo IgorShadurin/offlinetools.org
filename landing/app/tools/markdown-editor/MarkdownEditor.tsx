@@ -8,11 +8,73 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { renderMarkdown, loadMarkdownFile, saveMarkdownFile } from 'shared';
-import { AlertCircle, Check, Copy, FileUp, FileDown, Loader2 } from 'lucide-react';
+import { AlertCircle, Check, Copy, FileUp, FileDown, Loader2, Trash2 } from 'lucide-react';
 import { MarkdownEditorExplanation } from './MarkdownEditorExplanation';
 
+const EXAMPLE_MARKDOWN = `# Welcome to the Markdown Editor
+
+This is a **demonstration** of the Markdown editor. You can see how different elements are rendered:
+
+## Headings
+
+### This is an H3
+#### This is an H4
+##### This is an H5
+###### This is an H6
+
+## Text Formatting
+
+You can make text **bold**, *italic*, or ***both***. You can also ~~strikethrough~~ text.
+
+## Lists
+
+### Unordered List
+- Item 1
+- Item 2
+  - Nested item 2.1
+  - Nested item 2.2
+- Item 3
+
+### Ordered List
+1. First item
+2. Second item
+3. Third item
+
+## Code
+
+Inline code: \`console.log('Hello, World!')\`
+
+Code block:
+\`\`\`javascript
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+\`\`\`
+
+## Links and Images
+
+[Visit OpenAI](https://openai.com)
+
+## Blockquotes
+
+> This is a blockquote.
+> It can span multiple lines.
+
+## Tables
+
+| Feature | Supported |
+|---------|-----------|
+| Headers | ✅ |
+| Lists   | ✅ |
+| Code    | ✅ |
+| Tables  | ✅ |
+
+---
+
+*Delete this example content and start writing your own markdown!*`;
+
 export function MarkdownEditor() {
-  const [markdownInput, setMarkdownInput] = useState<string>('');
+  const [markdownInput, setMarkdownInput] = useState<string>(EXAMPLE_MARKDOWN);
   const [htmlOutput, setHtmlOutput] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [showCopied, setShowCopied] = useState<boolean>(false);
@@ -91,6 +153,11 @@ export function MarkdownEditor() {
     }
   }, [htmlOutput]);
 
+  const handleClearContent = useCallback(() => {
+    setMarkdownInput('');
+    setCurrentFilename('markdown.md');
+  }, []);
+
 
   return (
     <Container className="py-12">
@@ -140,6 +207,10 @@ export function MarkdownEditor() {
               <FileDown className="mr-2 h-4 w-4" />
               Save .md File
             </Button>
+            <Button onClick={handleClearContent} variant="outline">
+              <Trash2 className="mr-2 h-4 w-4" />
+              Clear
+            </Button>
           </div>
         </div>
 
@@ -158,7 +229,7 @@ export function MarkdownEditor() {
           </div>
           <div
             id="html-preview"
-            className="border rounded-md p-4 min-h-[400px] lg:min-h-[600px] bg-muted/20 prose prose-sm dark:prose-invert max-w-none"
+            className="border rounded-md p-4 min-h-[400px] lg:min-h-[600px] bg-muted/20 prose prose-lg dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: htmlOutput }}
             aria-label="HTML Preview"
           />

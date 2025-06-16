@@ -20,8 +20,10 @@ export function renderMarkdown(markdown: string, customOptions?: MarkedOptions):
   // For now, assuming it might be defined globally or should be defined here if not.
   // Let's define a simple default here if not provided.
   const DEFAULT_MARKDOWN_OPTIONS: MarkedOptions = {
-    // Common default options can go here, e.g., gfm: true
+    // GitHub Flavored Markdown support (includes tables, strikethrough, etc.)
     gfm: true,
+    // Support line breaks like GitHub
+    breaks: true,
   };
 
   const options: MarkedOptions = { ...DEFAULT_MARKDOWN_OPTIONS, ...customOptions };
