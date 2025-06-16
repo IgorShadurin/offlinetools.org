@@ -84,16 +84,9 @@ export function calculateWatermarkSize(
   watermarkHeight: number,
   scale: number
 ): { width: number; height: number } {
-  const maxSize = Math.min(imageWidth, imageHeight) * scale;
-  const aspectRatio = watermarkWidth / watermarkHeight;
-  
-  let width = maxSize;
-  let height = maxSize / aspectRatio;
-  
-  if (height > maxSize) {
-    height = maxSize;
-    width = maxSize * aspectRatio;
-  }
+  // Simply scale the watermark by the scale factor
+  const width = watermarkWidth * scale;
+  const height = watermarkHeight * scale;
   
   return { width, height };
 }

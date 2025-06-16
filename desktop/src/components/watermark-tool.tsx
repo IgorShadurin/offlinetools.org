@@ -229,24 +229,29 @@ export function WatermarkTool({ className = "" }: WatermarkToolProps) {
         const canvas = canvasRef.current;
         const targetImg = singleTargetImage;
 
-        // Calculate preview scale factor, similar to updatePreview
-        // This is to determine watermark dimensions on the preview canvas
-        const maxWidth = 600; // Assuming same constraint as in updatePreview
-        const maxHeight = 400; // Assuming same constraint as in updatePreview
-        const previewScaleFactor = Math.min(maxWidth / targetImg.width, maxHeight / targetImg.height, 1);
+        // Calculate preview scale factor exactly as in updatePreview
+        const maxWidth = 600;
+        const maxHeight = 400;
+        const previewScale = Math.min(maxWidth / targetImg.width, maxHeight / targetImg.height, 1);
 
-        const previewWatermarkWidth = watermarkImage.width * options.scale * previewScaleFactor;
-        const previewWatermarkHeight = watermarkImage.height * options.scale * previewScaleFactor;
+        // Calculate watermark dimensions in preview exactly as in updatePreview
+        const watermarkScale = options.scale * previewScale;
+        const watermarkWidth = watermarkImage.width * watermarkScale;
+        const watermarkHeight = watermarkImage.height * watermarkScale;
 
-        // Clamped drag position relative to the canvas (from updatePreview)
-        // Note: dragPosition is already relative to canvas, but needs to be adjusted by half watermark size for center-based drag
-        const clampedCanvasX = Math.max(0, Math.min(canvas.width - previewWatermarkWidth, dragPosition.x - previewWatermarkWidth / 2));
-        const clampedCanvasY = Math.max(0, Math.min(canvas.height - previewWatermarkHeight, dragPosition.y - previewWatermarkHeight / 2));
+        // Calculate clamped position exactly as in updatePreview using calculated dimensions
+        const previewCanvasWidth = targetImg.width * previewScale;
+        const previewCanvasHeight = targetImg.height * previewScale;
+        const clampedCanvasX = Math.max(0, Math.min(previewCanvasWidth - watermarkWidth, dragPosition.x - watermarkWidth / 2));
+        const clampedCanvasY = Math.max(0, Math.min(previewCanvasHeight - watermarkHeight, dragPosition.y - watermarkHeight / 2));
 
-        // Scale these clamped canvas coordinates to the original image dimensions
+        // Convert from preview canvas coordinates to original image coordinates
+        // The preview canvas size is: targetImg.width * previewScale x targetImg.height * previewScale
+        // But the actual canvas size might be different due to CSS styling
+        // So we need to convert based on the preview scale factor and actual image dimensions
         customPosition = {
-          x: (clampedCanvasX / canvas.width) * targetImg.width,
-          y: (clampedCanvasY / canvas.height) * targetImg.height,
+          x: (clampedCanvasX / previewScale),
+          y: (clampedCanvasY / previewScale),
         };
       } else {
         customPosition = undefined;
