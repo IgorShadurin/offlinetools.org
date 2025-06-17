@@ -12,7 +12,8 @@ import {
   Type,
   QrCode,
   Image,
-  Lock
+  Lock,
+  FileText
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -36,6 +37,7 @@ import { ImageResizer } from './components/image-resizer'
 import { TimezoneConverter } from './components/timezone-converter'
 import { Steganography } from './components/steganography'
 import { DataEncryptor } from './components/data-encryptor'
+import { HtmlTextExtractor } from './components/html-text-extractor'
 
 // List of tools
 const tools: Tool[] = [
@@ -43,6 +45,7 @@ const tools: Tool[] = [
   { id: 'json-formatter', name: 'JSON Format/Validate', icon: <BracketsIcon size={16} /> },
   { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
+  { id: 'html-text-extractor', name: 'HTML Text Extractor', icon: <FileText size={16} /> },
   { id: 'uuid-generator', name: 'UUID Generator', icon: <Fingerprint size={16} /> },
   { id: 'person-generator', name: 'Person Generator', icon: <Users size={16} /> },
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
@@ -149,6 +152,8 @@ function App() {
           <Base64Codec className="min-h-full" />
         ) : selectedTool === 'url-encoder' ? (
           <UrlEncoder className="min-h-full" />
+        ) : selectedTool === 'html-text-extractor' ? (
+          <HtmlTextExtractor className="min-h-full" />
         ) : selectedTool === 'uuid-generator' ? (
           <UuidGenerator className="min-h-full" />
         ) : selectedTool === 'person-generator' ? (
