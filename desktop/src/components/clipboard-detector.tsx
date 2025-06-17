@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Clipboard, FileTypeIcon, RefreshCwIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Clipboard, FileTypeIcon, RefreshCwIcon, ClipboardIcon } from "lucide-react";
+
 import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
@@ -199,25 +199,24 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
   }, []);
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <div className="flex flex-row items-center justify-between">
-            <CardTitle>Clipboard Detector</CardTitle>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={readClipboard}
-              disabled={isLoading}
-              title="Refresh clipboard content"
-            >
-              <RefreshCwIcon size={16} className={cn("mr-2", isLoading && "animate-spin")} />
-              Refresh
-            </Button>
-          </div>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col gap-4">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <ClipboardIcon className="h-6 w-6" />
+          <h1 className="text-2xl font-bold">Clipboard Detector</h1>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={readClipboard}
+          disabled={isLoading}
+          title="Refresh clipboard content"
+        >
+          <RefreshCwIcon size={16} className={cn("mr-2", isLoading && "animate-spin")} />
+          Refresh
+        </Button>
+      </div>
           {error ? (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -271,8 +270,6 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
               </div>
             </>
           )}
-        </CardContent>
-      </Card>
     </div>
   );
 } 

@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { AlertCircle, Check, Copy } from "lucide-react";
+import { AlertCircle, Check, Copy, Link2Icon } from "lucide-react";
 import { encodeUrl, decodeUrl } from "shared/url-encoder";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
 /**
@@ -87,12 +86,12 @@ export function UrlEncoder({ className = "" }: UrlEncoderProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>URL Encoder/Decoder</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Link2Icon className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">URL Encoder/Decoder</h1>
+      </div>
           <div className="space-y-4 flex-1 flex flex-col">
             {/* Top Section: Mode Selector and Encoding Method */}
             <div className="flex flex-row justify-between items-center">
@@ -198,8 +197,6 @@ export function UrlEncoder({ className = "" }: UrlEncoderProps) {
               )}
             </div>
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

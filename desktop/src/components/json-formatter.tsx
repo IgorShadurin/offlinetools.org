@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { BracketsIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Select, SelectOption } from "./ui/select";
@@ -62,13 +62,12 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>JSON Format/Validate</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <BracketsIcon className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">JSON Format/Validate</h1>
+      </div>
           <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium whitespace-nowrap">
@@ -144,8 +143,6 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

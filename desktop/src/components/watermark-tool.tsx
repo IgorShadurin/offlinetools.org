@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect, ChangeEvent } from "react";
-import { AlertCircle, Image as ImageIcon, FileUp, Download } from "lucide-react";
+import { AlertCircle, Image as ImageIcon, FileUp, Download, Image } from "lucide-react";
 import {
   WatermarkPosition,
   DEFAULT_WATERMARK_OPTIONS,
@@ -12,7 +12,6 @@ import {
   type BatchProcessingProgress,
 } from "shared";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Alert, AlertDescription } from "./ui/alert";
 
@@ -307,13 +306,12 @@ export function WatermarkTool({ className = "" }: WatermarkToolProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>Watermark Tool</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Image className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Watermark Tool</h1>
+      </div>
           <div className="space-y-6 flex-1 flex flex-col">
             <Tabs defaultValue="batch" className="w-full" value={mode} onValueChange={handleTabChange}>
               <TabsList className="grid w-full grid-cols-2 max-w-md">
@@ -536,8 +534,6 @@ export function WatermarkTool({ className = "" }: WatermarkToolProps) {
               </Alert>
             )}
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

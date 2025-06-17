@@ -8,7 +8,7 @@ import {
 } from "shared/speech-length-estimator";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 
 interface SpeechLengthEstimatorProps {
   className?: string;
@@ -66,16 +66,12 @@ export function SpeechLengthEstimator({ className = "" }: SpeechLengthEstimatorP
   const charCountWithoutSpaces = text ? text.replace(/\s/g, '').length : 0;
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center">
-            <Clock className="mr-2 h-5 w-5" />
-            Speech Length Estimator
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Clock className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Speech Length Estimator</h1>
+      </div>
           <div className="flex-1 flex flex-col md:flex-row gap-6 min-h-0">
             <div className="flex-1 flex flex-col min-h-0">
               <label htmlFor="input-text" className="mb-2 text-sm font-medium">
@@ -241,8 +237,6 @@ export function SpeechLengthEstimator({ className = "" }: SpeechLengthEstimatorP
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -10,7 +10,7 @@ import {
 } from "../../../shared";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Select, SelectOption } from "./ui/select";
 import { Alert, AlertDescription } from "./ui/alert";
@@ -99,13 +99,12 @@ export function TextUtility({ className }: TextUtilityProps) {
   };
 
   return (
-    <div className={cn("p-4 h-full flex flex-col", className)}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>Text Utility</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={cn("p-6 h-full flex flex-col space-y-6", className)}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Type className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Text Utility</h1>
+      </div>
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
@@ -243,8 +242,6 @@ export function TextUtility({ className }: TextUtilityProps) {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -7,7 +7,6 @@ import {
 } from "shared/binary-base64-codec";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
 
@@ -217,16 +216,12 @@ export function BinaryBase64Codec({ className = "" }: BinaryBase64CodecProps) {
   };
 
   return (
-    <div className={`flex flex-col h-full ${className}`}>
-      <Card className="flex-1 flex flex-col min-h-[600px]">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileUp className="h-5 w-5" />
-            Base64 Binary
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent className="flex-1 space-y-6 min-h-[500px] flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <FileUp className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Base64 Binary</h1>
+      </div>
           {/* Mode Tabs */}
           <Tabs value={mode} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-2 max-w-md">
@@ -389,8 +384,6 @@ export function BinaryBase64Codec({ className = "" }: BinaryBase64CodecProps) {
               <span className="text-red-700 dark:text-red-300 text-sm">{error}</span>
             </div>
           )}
-        </CardContent>
-      </Card>
     </div>
   );
 } 

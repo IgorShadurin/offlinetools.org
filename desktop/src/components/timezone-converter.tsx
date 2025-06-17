@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Plus } from 'lucide-react';
+import { Plus, Clock } from 'lucide-react';
 import { POPULAR_TIMEZONES, type TimezoneInfo, getCurrentTimezone } from 'shared/timezone-converter';
 import { TimezoneCard } from './timezone-card';
 
@@ -305,10 +305,11 @@ export function TimezoneConverter({ className }: TimezoneConverterProps) {
   });
 
   return (
-    <div className={`p-6 space-y-6 ${className}`}>
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">Timezone Converter</h1>
-        <p className="text-muted-foreground">Convert time between different timezones around the world</p>
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Clock className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Timezone Converter</h1>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

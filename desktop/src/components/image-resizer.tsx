@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
 import { resizeImage, ImageResizeOptions, DEFAULT_IMAGE_RESIZE_OPTIONS } from "shared";
-import { AlertCircle, Download, ImageIcon, Upload } from "lucide-react";
+import { AlertCircle, Download, ImageIcon, Upload, Image } from "lucide-react";
 
 interface ImageResizerProps {
   className?: string;
@@ -35,7 +35,7 @@ export function ImageResizer({ className }: ImageResizerProps) {
       setOutputUrl(null);
       setError(null);
       
-      const img = new Image();
+      const img = new window.Image();
       const objectUrl = URL.createObjectURL(selectedFile);
       img.onload = () => {
         setOriginalWidth(img.width);
@@ -114,13 +114,12 @@ export function ImageResizer({ className }: ImageResizerProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>Image Resizer</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Image className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Image Resizer</h1>
+      </div>
           <div className="space-y-6 flex-1 flex flex-col">
             <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center">
               <input
@@ -256,8 +255,6 @@ export function ImageResizer({ className }: ImageResizerProps) {
               </Alert>
             )}
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
