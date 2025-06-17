@@ -39,6 +39,7 @@ import { Steganography } from './components/steganography'
 import { DataEncryptor } from './components/data-encryptor'
 import { HtmlTextExtractor } from './components/html-text-extractor'
 import { BinaryBase64Codec } from './components/binary-base64-codec'
+import { TextToSlug } from './components/text-to-slug'
 
 // List of tools
 const tools: Tool[] = [
@@ -55,6 +56,7 @@ const tools: Tool[] = [
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
   { id: 'text-utility', name: 'Text Utility', icon: <Type size={16} /> },
+  { id: 'text-to-slug', name: 'Text to Slug', icon: <Hash size={16} /> },
   { id: 'qr-code', name: 'QR Code Tool', icon: <QrCode size={16} /> },
   { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
@@ -184,6 +186,8 @@ function App() {
           <DataEncryptor className="min-h-full" />
         ) : selectedTool === 'binary-base64-codec' ? (
           <BinaryBase64Codec className="min-h-full" />
+        ) : selectedTool === 'text-to-slug' ? (
+          <TextToSlug className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (
