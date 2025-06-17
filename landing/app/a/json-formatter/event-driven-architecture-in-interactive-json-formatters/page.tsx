@@ -9,23 +9,21 @@ export const metadata: Metadata = {
 export default function EventDrivenArchitectureArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Event-Driven Architecture in Interactive JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Event-Driven Architecture in Interactive JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
-          Interactive JSON formatters are essential tools for developers, allowing them to easily validate,
-          format, and manipulate JSON data in real-time. Behind the scenes, achieving this level of
-          responsiveness and dynamic behavior often relies on a powerful pattern: Event-Driven Architecture (EDA).
-          Let&apos;s delve into how EDA makes these tools so effective.
+          Interactive JSON formatters are essential tools for developers, allowing them to easily validate, format, and
+          manipulate JSON data in real-time. Behind the scenes, achieving this level of responsiveness and dynamic
+          behavior often relies on a powerful pattern: Event-Driven Architecture (EDA). Let&apos;s delve into how EDA
+          makes these tools so effective.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">What is Event-Driven Architecture?</h2>
         <p>
-          Event-Driven Architecture is a software design pattern that promotes the production, detection,
-          consumption of, and reaction to events. An "event" is a significant change in state. Instead of
-          components making direct calls to each other, they communicate indirectly through events.
+          Event-Driven Architecture is a software design pattern that promotes the production, detection, consumption
+          of, and reaction to events. An "event" is a significant change in state. Instead of components making direct
+          calls to each other, they communicate indirectly through events.
         </p>
         <p>
           In an interactive application like a JSON formatter, events are triggered by user actions (like typing,
@@ -38,12 +36,24 @@ export default function EventDrivenArchitectureArticle() {
           <p className="text-sm mt-1">
             These are the core triggers. Examples include:
             <ul className="list-disc pl-6 mt-1">
-              <li><code>userInputChanged</code>: Fired whenever the user types or pastes text.</li>
-              <li><code>formatRequested</code>: Fired when the user clicks a &quot;Format&quot; button.</li>
-              <li><code>validationNeeded</code>: Fired after input changes or formatting.</li>
-              <li><code>formattingComplete</code>: Fired when the formatting process finishes.</li>
-              <li><code>validationResult</code>: Fired when validation is done, carrying errors or success status.</li>
-              <li><code>themeChanged</code>: Fired when the user changes the formatter&apos;s theme.</li>
+              <li>
+                <code>userInputChanged</code>: Fired whenever the user types or pastes text.
+              </li>
+              <li>
+                <code>formatRequested</code>: Fired when the user clicks a &quot;Format&quot; button.
+              </li>
+              <li>
+                <code>validationNeeded</code>: Fired after input changes or formatting.
+              </li>
+              <li>
+                <code>formattingComplete</code>: Fired when the formatting process finishes.
+              </li>
+              <li>
+                <code>validationResult</code>: Fired when validation is done, carrying errors or success status.
+              </li>
+              <li>
+                <code>themeChanged</code>: Fired when the user changes the formatter&apos;s theme.
+              </li>
             </ul>
           </p>
 
@@ -51,9 +61,15 @@ export default function EventDrivenArchitectureArticle() {
           <p className="text-sm mt-1">
             These are components that detect a state change and emit an event.
             <ul className="list-disc pl-6 mt-1">
-              <li>The text editor component (emits <code>userInputChanged</code>).</li>
-              <li>A button component (emits <code>formatRequested</code>).</li>
-              <li>The formatter logic module (emits <code>formattingComplete</code>).</li>
+              <li>
+                The text editor component (emits <code>userInputChanged</code>).
+              </li>
+              <li>
+                A button component (emits <code>formatRequested</code>).
+              </li>
+              <li>
+                The formatter logic module (emits <code>formattingComplete</code>).
+              </li>
             </ul>
           </p>
 
@@ -61,42 +77,48 @@ export default function EventDrivenArchitectureArticle() {
           <p className="text-sm mt-1">
             These components listen for specific events and react to them.
             <ul className="list-disc pl-6 mt-1">
-              <li>The validation module (listens for <code>userInputChanged</code>, <code>formattingComplete</code>).</li>
-              <li>The output display component (listens for <code>formattingComplete</code>, <code>validationResult</code>).</li>
-              <li>A status bar component (listens for <code>validationResult</code>).</li>
-              <li>A syntax highlighter (listens for <code>userInputChanged</code>, <code>formattingComplete</code>).</li>
+              <li>
+                The validation module (listens for <code>userInputChanged</code>, <code>formattingComplete</code>).
+              </li>
+              <li>
+                The output display component (listens for <code>formattingComplete</code>, <code>validationResult</code>
+                ).
+              </li>
+              <li>
+                A status bar component (listens for <code>validationResult</code>).
+              </li>
+              <li>
+                A syntax highlighter (listens for <code>userInputChanged</code>, <code>formattingComplete</code>).
+              </li>
             </ul>
           </p>
 
           <h3 className="text-lg font-medium mt-4">4. Event Bus/Broker:</h3>
           <p className="text-sm mt-1">
-            An optional intermediary that receives events from producers and routes them to consumers.
-            This decouples producers and consumers. In a simple frontend app, this might be a global state manager
-            or a custom pub/sub implementation.
+            An optional intermediary that receives events from producers and routes them to consumers. This decouples
+            producers and consumers. In a simple frontend app, this might be a global state manager or a custom pub/sub
+            implementation.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">How it Works in Practice</h2>
-        <p>
-          Imagine a user typing JSON into the editor. Here&apos;s a simplified event flow:
-        </p>
+        <p>Imagine a user typing JSON into the editor. Here&apos;s a simplified event flow:</p>
 
         <ol className="list-decimal pl-6 space-y-3 my-4">
           <li>
-            <span className="font-medium">Typing occurs:</span> The editor component detects the change and
-            emits a <code>userInputChanged</code> event, carrying the new text.
+            <span className="font-medium">Typing occurs:</span> The editor component detects the change and emits a{" "}
+            <code>userInputChanged</code> event, carrying the new text.
           </li>
           <li>
-            <span className="font-medium">Listeners react:</span> The validation module and the syntax
-            highlighter are listening for <code>userInputChanged</code>.
+            <span className="font-medium">Listeners react:</span> The validation module and the syntax highlighter are
+            listening for <code>userInputChanged</code>.
           </li>
           <li>
-            <span className="font-medium">Validation starts:</span> The validation module processes the
-            new text.
+            <span className="font-medium">Validation starts:</span> The validation module processes the new text.
           </li>
           <li>
-            <span className="font-medium">Highlighting updates:</span> The syntax highlighter parses the
-            text and updates colors.
+            <span className="font-medium">Highlighting updates:</span> The syntax highlighter parses the text and
+            updates colors.
           </li>
           <li>
             <span className="font-medium">Validation finishes:</span> The validation module emits a
@@ -108,15 +130,15 @@ export default function EventDrivenArchitectureArticle() {
           </li>
         </ol>
         <p>
-          This decoupled approach means the editor doesn&apos;t need to know *who* cares about the text changing,
-          it just emits the event. Similarly, the validation module doesn&apos;t need to know *where* the text
-          came from, it just listens for the relevant event.
+          This decoupled approach means the editor doesn&apos;t need to know *who* cares about the text changing, it
+          just emits the event. Similarly, the validation module doesn&apos;t need to know *where* the text came from,
+          it just listens for the relevant event.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Simplified Code Concept (React/JSX)</h2>
         <p>
-          While a full EDA implementation can be complex, frameworks like React naturally encourage an
-          event-like flow using props, state, and effects. Here&apos;s a conceptual look:
+          While a full EDA implementation can be complex, frameworks like React naturally encourage an event-like flow
+          using props, state, and effects. Here&apos;s a conceptual look:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
@@ -206,61 +228,56 @@ export default JsonFormatter;`}
           <p className="mt-2 text-sm">
             This example uses React&apos;s state changes and <code>useEffect</code> hook to react to input.
             <code>useEffect</code> acts like an event listener, triggering validation/formatting logic whenever
-            <code>jsonInput</code> changes. Error states then trigger UI updates. This mirrors the reactive
-            nature of EDA.
+            <code>jsonInput</code> changes. Error states then trigger UI updates. This mirrors the reactive nature of
+            EDA.
           </p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8">Benefits of EDA for Formatters</h2>
         <ul className="list-disc pl-6 space-y-3 my-4">
           <li>
-            <span className="font-medium">Responsiveness:</span> Real-time feedback as the user types,
-            validation and formatting happen dynamically.
+            <span className="font-medium">Responsiveness:</span> Real-time feedback as the user types, validation and
+            formatting happen dynamically.
           </li>
           <li>
-            <span className="font-medium">Decoupling:</span> Components don&apos;t need direct knowledge
-            of each other. The editor doesn&apos;t care how many things listen to its input changes.
+            <span className="font-medium">Decoupling:</span> Components don&apos;t need direct knowledge of each other.
+            The editor doesn&apos;t care how many things listen to its input changes.
           </li>
           <li>
-            <span className="font-medium">Modularity:</span> Different concerns (editing, formatting,
-            validating, displaying errors, syntax highlighting) can be handled by separate modules
-            that only interact via events.
+            <span className="font-medium">Modularity:</span> Different concerns (editing, formatting, validating,
+            displaying errors, syntax highlighting) can be handled by separate modules that only interact via events.
           </li>
           <li>
-            <span className="font-medium">Extensibility:</span> Adding new features (e.g., schema validation,
-            difference view, dark mode toggle) is easier. You just add new listeners or event producers without
-            modifying existing core logic.
+            <span className="font-medium">Extensibility:</span> Adding new features (e.g., schema validation, difference
+            view, dark mode toggle) is easier. You just add new listeners or event producers without modifying existing
+            core logic.
           </li>
           <li>
-            <span className="font-medium">Testability:</span> Individual modules can often be tested
-            by triggering specific events or verifying the events they emit.
+            <span className="font-medium">Testability:</span> Individual modules can often be tested by triggering
+            specific events or verifying the events they emit.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Challenges</h2>
-        <p>
-          While beneficial, EDA is not without its challenges:
-        </p>
+        <p>While beneficial, EDA is not without its challenges:</p>
         <ul className="list-disc pl-6 space-y-3 my-4">
           <li>
-            <span className="font-medium">Complexity:</span> The flow can be harder to follow than linear
-            control flow. Debugging can be tricky ("Who triggered this event? Who is listening?").
+            <span className="font-medium">Complexity:</span> The flow can be harder to follow than linear control flow.
+            Debugging can be tricky ("Who triggered this event? Who is listening?").
           </li>
           <li>
-            <span className="font-medium">Event Storms:</span> Care must be taken to avoid a single event
-            triggering a cascade of many other events unnecessarily. Debouncing user input, as shown in the
-            example, is a common technique.
+            <span className="font-medium">Event Storms:</span> Care must be taken to avoid a single event triggering a
+            cascade of many other events unnecessarily. Debouncing user input, as shown in the example, is a common
+            technique.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Event-Driven Architecture provides a robust foundation for building interactive and responsive tools
-          like JSON formatters. By treating user actions and system changes as events, developers can create
-          decoupled, modular, and easily extensible applications that provide a smooth and dynamic user
-          experience. Understanding these underlying principles helps appreciate the architecture that powers
-          the tools we use daily.
+          Event-Driven Architecture provides a robust foundation for building interactive and responsive tools like JSON
+          formatters. By treating user actions and system changes as events, developers can create decoupled, modular,
+          and easily extensible applications that provide a smooth and dynamic user experience. Understanding these
+          underlying principles helps appreciate the architecture that powers the tools we use daily.
         </p>
       </div>
     </>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AlertTriangle, Code, Shield } from 'lucide-react';
+import { AlertTriangle, Code, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Cross-Site Scripting Vulnerabilities in JSON Web Applications | Security",
@@ -24,19 +24,17 @@ export default function XssJsonVulnerabilitiesArticle() {
 
       <div className="space-y-6">
         <p>
-          Modern web applications heavily rely on JSON (JavaScript Object Notation) for data exchange,
-          particularly via APIs. While JSON itself is a data format and doesn&apos;t inherently contain executable code
-          in the way HTML or JavaScript does, vulnerabilities can still arise when data retrieved from JSON
-          sources is improperly handled on the client side, leading to Cross-Site Scripting (XSS).
+          Modern web applications heavily rely on JSON (JavaScript Object Notation) for data exchange, particularly via
+          APIs. While JSON itself is a data format and doesn&apos;t inherently contain executable code in the way HTML
+          or JavaScript does, vulnerabilities can still arise when data retrieved from JSON sources is improperly
+          handled on the client side, leading to Cross-Site Scripting (XSS).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Code className="mr-2" size={24} />
           How JSON is Used (and Where XSS Comes In)
         </h2>
-        <p>
-          Typically, a web application architecture involves:
-        </p>
+        <p>Typically, a web application architecture involves:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>A backend server providing data via APIs, often in JSON format.</li>
           <li>A frontend client (browser) that fetches this JSON data.</li>
@@ -45,14 +43,12 @@ export default function XssJsonVulnerabilitiesArticle() {
         <p>
           The XSS vulnerability doesn&apos;t lie within the JSON structure itself, but in the third step:
           <strong>how the data *from* the JSON is inserted into the HTML Document Object Model (DOM)</strong>. If this
-          insertion is done without proper sanitization or encoding, malicious script tags or event handlers
-          present within the data values can be executed by the user&apos;s browser.
+          insertion is done without proper sanitization or encoding, malicious script tags or event handlers present
+          within the data values can be executed by the user&apos;s browser.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Illustrative Example: User Profile Data</h3>
-        <p>
-          Imagine a user profile page that fetches profile details (username, bio, etc.) from a JSON API:
-        </p>
+        <p>Imagine a user profile page that fetches profile details (username, bio, etc.) from a JSON API:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
             {`// Example JSON data from API
@@ -63,8 +59,8 @@ export default function XssJsonVulnerabilitiesArticle() {
           </pre>
         </div>
         <p>
-          If the frontend takes the <code>bio</code> value directly and inserts it into the HTML without
-          escaping it, the injected <code>&lt;script&gt;</code> tag will be executed when the page loads.
+          If the frontend takes the <code>bio</code> value directly and inserts it into the HTML without escaping it,
+          the injected <code>&lt;script&gt;</code> tag will be executed when the page loads.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -73,20 +69,20 @@ export default function XssJsonVulnerabilitiesArticle() {
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Stored XSS:</strong> This is the most common scenario involving JSON APIs. Malicious data
-            (like the bio example above) is submitted by an attacker, stored on the server (often in a database),
-            and later served via a JSON API to other users. When those users view the page that
-            renders this data without proper handling, the script executes.
+            <strong>Stored XSS:</strong> This is the most common scenario involving JSON APIs. Malicious data (like the
+            bio example above) is submitted by an attacker, stored on the server (often in a database), and later served
+            via a JSON API to other users. When those users view the page that renders this data without proper
+            handling, the script executes.
           </li>
           <li>
-            <strong>Reflected XSS:</strong> Less direct with a pure JSON API, but possible if data sent
-            to the server (e.g., in URL parameters or POST body) is echoed back in a JSON response, and the
-            client-side JavaScript then uses this echoed data insecurely in the page.
+            <strong>Reflected XSS:</strong> Less direct with a pure JSON API, but possible if data sent to the server
+            (e.g., in URL parameters or POST body) is echoed back in a JSON response, and the client-side JavaScript
+            then uses this echoed data insecurely in the page.
           </li>
           <li>
-            <strong>DOM-based XSS:</strong> The vulnerability exists purely in client-side JavaScript.
-            The script retrieves data (potentially from a JSON API, URL parameters, or local storage) and
-            writes it to a dangerous sink (like <code>innerHTML</code>) without sanitization.
+            <strong>DOM-based XSS:</strong> The vulnerability exists purely in client-side JavaScript. The script
+            retrieves data (potentially from a JSON API, URL parameters, or local storage) and writes it to a dangerous
+            sink (like <code>innerHTML</code>) without sanitization.
           </li>
         </ul>
 
@@ -95,10 +91,10 @@ export default function XssJsonVulnerabilitiesArticle() {
           Key Defense: Output Encoding / Escaping
         </h2>
         <p>
-          The primary defense against XSS when rendering data from JSON is **Output Encoding** or **Escaping**.
-          This involves converting characters that have special meaning in HTML (like <code>&lt;</code>,
-          <code>&gt;</code>, <code>&amp;</code>, <code>&quot;</code>, <code>&apos;</code>, <code>/</code>) into their
-          HTML entity equivalents (e.g., <code>&amp;lt;</code>, <code>&amp;gt;</code>).
+          The primary defense against XSS when rendering data from JSON is **Output Encoding** or **Escaping**. This
+          involves converting characters that have special meaning in HTML (like <code>&lt;</code>,<code>&gt;</code>,{" "}
+          <code>&amp;</code>, <code>&quot;</code>, <code>&apos;</code>, <code>/</code>) into their HTML entity
+          equivalents (e.g., <code>&amp;lt;</code>, <code>&amp;gt;</code>).
         </p>
         <p>
           When the browser encounters <code>&amp;lt;script&amp;gt;</code>, it renders it as the literal text
@@ -120,7 +116,7 @@ document.getElementById('bio-area').innerHTML = userData.bio;
 // Only use dangerouslySetInnerHTML when you trust the source *completely* or have applied robust server-side AND client-side sanitization.`}
           </pre>
           <p className="mt-2 flex items-center font-semibold">
-             <AlertTriangle className="mr-2" size={18} />
+            <AlertTriangle className="mr-2" size={18} />
             This allows any HTML or script tags in <code>userData.bio</code> to execute.
           </p>
         </div>
@@ -139,39 +135,38 @@ document.getElementById('bio-area').textContent = userData.bio;
 `}
           </pre>
           <p className="mt-2 flex items-center font-semibold">
-             <Shield className="mr-2" size={18} />
-             This automatically escapes special characters, rendering the malicious code harmlessly as text.
+            <Shield className="mr-2" size={18} />
+            This automatically escapes special characters, rendering the malicious code harmlessly as text.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">Modern Frameworks Help</h3>
         <p>
-          Frontend frameworks like React, Vue, and Angular provide significant protection out-of-the-box.
-          When you render data within their templating syntax (like using <code>{`{variable}`}</code> in JSX
-          or Vue templates, or <code>{`{{ variable }}`}</code> in Angular templates), they automatically
-          HTML-escape the content by default. This is a major reason why XSS is less common in applications built
-          with these frameworks compared to older techniques involving manual DOM manipulation with
+          Frontend frameworks like React, Vue, and Angular provide significant protection out-of-the-box. When you
+          render data within their templating syntax (like using <code>{`{variable}`}</code> in JSX or Vue templates, or{" "}
+          <code>{`{{ variable }}`}</code> in Angular templates), they automatically HTML-escape the content by default.
+          This is a major reason why XSS is less common in applications built with these frameworks compared to older
+          techniques involving manual DOM manipulation with
           <code>innerHTML</code>.
         </p>
         <p>
-           However, you can bypass this default safety (e.g., using <code>dangerouslySetInnerHTML</code> in React
-           or the equivalent in other frameworks), which should only be done when rendering trusted or
-           carefully sanitized HTML content (like rich text from a WYSIWYG editor).
+          However, you can bypass this default safety (e.g., using <code>dangerouslySetInnerHTML</code> in React or the
+          equivalent in other frameworks), which should only be done when rendering trusted or carefully sanitized HTML
+          content (like rich text from a WYSIWYG editor).
         </p>
-
 
         <h3 className="text-xl font-semibold mt-6">Other Layers of Defense</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <strong>Content Security Policy (CSP):</strong> A browser security feature that helps prevent XSS by
-            restricting which resources (scripts, styles, etc.) the browser is allowed to load and execute for a
-            given page. A strong CSP can block injected scripts even if they are successfully inserted into the DOM.
+            restricting which resources (scripts, styles, etc.) the browser is allowed to load and execute for a given
+            page. A strong CSP can block injected scripts even if they are successfully inserted into the DOM.
           </li>
           <li>
-            <strong>Input Validation &amp; Sanitization:</strong> While encoding is the primary defense at the *output* stage,
-            validating and sanitizing input on the server-side before storing it is also important. This can involve
-            removing potentially dangerous characters or structures. However, relying *only* on input sanitization is
-            risky, as filtering is hard to get perfectly right. Output encoding is the failsafe.
+            <strong>Input Validation &amp; Sanitization:</strong> While encoding is the primary defense at the *output*
+            stage, validating and sanitizing input on the server-side before storing it is also important. This can
+            involve removing potentially dangerous characters or structures. However, relying *only* on input
+            sanitization is risky, as filtering is hard to get perfectly right. Output encoding is the failsafe.
           </li>
           <li>
             <strong>Using Safe APIs:</strong> Prefer DOM manipulation methods like <code>textContent</code> over
@@ -181,11 +176,11 @@ document.getElementById('bio-area').textContent = userData.bio;
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON is a safe data format, but its consumption on the client-side is a common vector for XSS. The key takeaway
-          is that data from *any* untrusted source, including values fetched from a JSON API, must be properly
-          HTML-encoded or rendered using safe framework defaults before being inserted into the HTML DOM.
-          Combined with a strong Content Security Policy and careful use of APIs, developers can effectively
-          mitigate XSS risks in modern web applications relying on JSON data.
+          JSON is a safe data format, but its consumption on the client-side is a common vector for XSS. The key
+          takeaway is that data from *any* untrusted source, including values fetched from a JSON API, must be properly
+          HTML-encoded or rendered using safe framework defaults before being inserted into the HTML DOM. Combined with
+          a strong Content Security Policy and careful use of APIs, developers can effectively mitigate XSS risks in
+          modern web applications relying on JSON data.
         </p>
       </div>
     </>

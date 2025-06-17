@@ -9,14 +9,12 @@ export const metadata: Metadata = {
 export default function ThemeCustomizationArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Theme Customization Options in Modern JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Theme Customization Options in Modern JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
-          Modern JSON formatters are more than just tools for arranging data; they offer a range of features designed
-          to improve readability and user experience. One of the most valuable features is theme customization, allowing
+          Modern JSON formatters are more than just tools for arranging data; they offer a range of features designed to
+          improve readability and user experience. One of the most valuable features is theme customization, allowing
           users to tailor the visual appearance of the formatted JSON to their preferences and needs. This article
           explores the various ways you can customize themes in JSON formatters and why it matters.
         </p>
@@ -29,8 +27,8 @@ export default function ThemeCustomizationArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Readability:</span> Different color schemes can make it easier to distinguish
-              between different data types and elements in the JSON structure.
+              <span className="font-medium">Readability:</span> Different color schemes can make it easier to
+              distinguish between different data types and elements in the JSON structure.
             </li>
             <li>
               <span className="font-medium">Accessibility:</span> Users with visual impairments might require higher
@@ -41,12 +39,12 @@ export default function ThemeCustomizationArticle() {
               the eyes, especially during prolonged use.
             </li>
             <li>
-              <span className="font-medium">Personal Preference:</span> Simply put, users prefer tools that look and feel
-              right to them.
+              <span className="font-medium">Personal Preference:</span> Simply put, users prefer tools that look and
+              feel right to them.
             </li>
             <li>
-              <span className="font-medium">Consistency:</span> Matching the formatter's theme to your code editor or other
-              tools creates a more unified workspace.
+              <span className="font-medium">Consistency:</span> Matching the formatter's theme to your code editor or
+              other tools creates a more unified workspace.
             </li>
           </ul>
         </div>
@@ -78,7 +76,8 @@ export default function ThemeCustomizationArticle() {
               </ul>
             </li>
             <li>
-              <span className="font-medium">Font Family and Size:</span> Choosing a preferred font and adjusting its size.
+              <span className="font-medium">Font Family and Size:</span> Choosing a preferred font and adjusting its
+              size.
             </li>
             <li>
               <span className="font-medium">Line Numbers:</span> Color and visibility of line numbers.
@@ -90,9 +89,7 @@ export default function ThemeCustomizationArticle() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Methods of Customization</h2>
-        <p>
-          JSON formatters typically offer customization through several interfaces:
-        </p>
+        <p>JSON formatters typically offer customization through several interfaces:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
@@ -105,13 +102,12 @@ export default function ThemeCustomizationArticle() {
               colors using color pickers or select from dropdown menus for various syntax elements.
             </li>
             <li>
-                <span className="font-medium">Configuration Files:</span> More advanced formatters might allow theme
-                settings to be defined in a configuration file (often JSON or YAML itself), enabling fine-grained
-                control and easy sharing of themes.
+              <span className="font-medium">Configuration Files:</span> More advanced formatters might allow theme
+              settings to be defined in a configuration file (often JSON or YAML itself), enabling fine-grained control
+              and easy sharing of themes.
             </li>
           </ul>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8">Example: A Conceptual Theme Configuration</h2>
         <p>
@@ -146,8 +142,8 @@ export default function ThemeCustomizationArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This example demonstrates how specific color codes are assigned to different parts of the JSON
-            structure, allowing the user to define the visual appearance of the syntax highlighting.
+            This example demonstrates how specific color codes are assigned to different parts of the JSON structure,
+            allowing the user to define the visual appearance of the syntax highlighting.
           </p>
         </div>
 
@@ -161,19 +157,18 @@ export default function ThemeCustomizationArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
           <h3 className="text-lg font-medium">Pro Tip:</h3>
           <p className="mt-2">
-            If your formatter supports it, try customizing the error highlighting color. A distinct, easily
-            noticeable color can help you spot validation issues instantly.
+            If your formatter supports it, try customizing the error highlighting color. A distinct, easily noticeable
+            color can help you spot validation issues instantly.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Theme customization is a powerful feature in modern JSON formatters that significantly enhances usability.
-          By allowing users to control colors, fonts, and styles, these tools become more accessible, reduce eye
-          strain, and integrate better into individual workflows. Whether you prefer a bright light theme, a deep
-          dark theme, or a highly customized color palette for specific syntax elements, leveraging the theme
-          options available in your JSON formatter can make working with JSON data a much more comfortable and
-          efficient experience.
+          Theme customization is a powerful feature in modern JSON formatters that significantly enhances usability. By
+          allowing users to control colors, fonts, and styles, these tools become more accessible, reduce eye strain,
+          and integrate better into individual workflows. Whether you prefer a bright light theme, a deep dark theme, or
+          a highly customized color palette for specific syntax elements, leveraging the theme options available in your
+          JSON formatter can make working with JSON data a much more comfortable and efficient experience.
         </p>
       </div>
     </>

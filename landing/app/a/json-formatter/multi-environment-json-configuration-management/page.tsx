@@ -1,14 +1,5 @@
 import type { Metadata } from "next";
-import {
-  AlertTriangle,
-  CheckCircle,
-  FileJson,
-  Folder,
-  Lock,
-  Settings,
-  Server,
-  BookOpen,
-} from "lucide-react";
+import { AlertTriangle, CheckCircle, FileJson, Folder, Lock, Settings, Server, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Multi-Environment JSON Configuration Management",
@@ -19,25 +10,20 @@ export const metadata: Metadata = {
 export default function MultiEnvironmentJsonConfigArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Multi-Environment JSON Configuration Management
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Multi-Environment JSON Configuration Management</h1>
 
       <div className="space-y-6">
         <p>
-          Modern applications rarely run in just one setting. Developers work in a{" "}
-          <strong>development</strong> environment, test in{" "}
-          <strong>staging</strong> or <strong>QA</strong>, and deploy to{" "}
-          <strong>production</strong>. Each environment often requires slightly
-          (or significantly) different configuration settings &mdash; database
-          credentials, API endpoints, feature flags, logging levels, etc. Managing
-          these differences efficiently and safely is crucial. JSON files are a
-          popular choice for storing configuration due to their readability and
-          widespread support.
+          Modern applications rarely run in just one setting. Developers work in a <strong>development</strong>{" "}
+          environment, test in <strong>staging</strong> or <strong>QA</strong>, and deploy to{" "}
+          <strong>production</strong>. Each environment often requires slightly (or significantly) different
+          configuration settings &mdash; database credentials, API endpoints, feature flags, logging levels, etc.
+          Managing these differences efficiently and safely is crucial. JSON files are a popular choice for storing
+          configuration due to their readability and widespread support.
         </p>
         <p>
-          This article explores common patterns and best practices for managing
-          these environment-specific JSON configurations.
+          This article explores common patterns and best practices for managing these environment-specific JSON
+          configurations.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -46,20 +32,17 @@ export default function MultiEnvironmentJsonConfigArticle() {
         <p>JSON (JavaScript Object Notation) is an ideal format for configuration because:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Human-Readable:</strong> The key-value structure is easy for
-            developers to read and write.
+            <strong>Human-Readable:</strong> The key-value structure is easy for developers to read and write.
           </li>
           <li>
-            <strong>Machine-Readable:</strong> Easily parsed by virtually every
-            programming language.
+            <strong>Machine-Readable:</strong> Easily parsed by virtually every programming language.
           </li>
           <li>
-            <strong>Hierarchical Structure:</strong> Supports nested objects and
-            arrays, allowing for organized configurations.
+            <strong>Hierarchical Structure:</strong> Supports nested objects and arrays, allowing for organized
+            configurations.
           </li>
           <li>
-            <strong>Wide Tooling Support:</strong> Many editors provide JSON
-            syntax highlighting and validation.
+            <strong>Wide Tooling Support:</strong> Many editors provide JSON syntax highlighting and validation.
           </li>
         </ul>
 
@@ -71,10 +54,7 @@ export default function MultiEnvironmentJsonConfigArticle() {
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <FileJson className="inline-block" /> 1. Multiple Environment-Specific Files
         </h3>
-        <p>
-          This is perhaps the most straightforward approach. You create a separate
-          JSON file for each environment.
-        </p>
+        <p>This is perhaps the most straightforward approach. You create a separate JSON file for each environment.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
@@ -134,10 +114,8 @@ export default function MultiEnvironmentJsonConfigArticle() {
 
         <h4 className="text-lg font-medium mt-4">How to Load the Correct File:</h4>
         <p>
-          In your application code (typically server-side or during a build process),
-          you determine the current environment (usually via the{" "}
-          <code>NODE_ENV</code> environment variable) and load the corresponding
-          file.
+          In your application code (typically server-side or during a build process), you determine the current
+          environment (usually via the <code>NODE_ENV</code> environment variable) and load the corresponding file.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -188,17 +166,14 @@ try &lbrace;
         <p>
           <strong>Pros:</strong> Simple to understand, clear separation per environment.
           <br />
-          <strong>Cons:</strong> Duplication of common settings across files, easy
-          to forget updating all files when a new setting is added.
+          <strong>Cons:</strong> Duplication of common settings across files, easy to forget updating all files when a
+          new setting is added.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <FileJson className="inline-block" /> 2. Single JSON File with Environment Keys
         </h3>
-        <p>
-          Keep all configurations in one file, nested under keys representing each
-          environment.
-        </p>
+        <p>Keep all configurations in one file, nested under keys representing each environment.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
             <FileJson className="inline-block" /> <code>config.json</code>:
@@ -293,21 +268,18 @@ try &lbrace;
           </div>
         </div>
         <p>
-          <strong>Pros:</strong> All configurations in one place, easy to compare
-          settings across environments.
+          <strong>Pros:</strong> All configurations in one place, easy to compare settings across environments.
           <br />
-          <strong>Cons:</strong> File can become very large and difficult to
-          manage with many environments or settings, harder to use configuration
-          cascading (e.g., a base config plus environment overrides).
+          <strong>Cons:</strong> File can become very large and difficult to manage with many environments or settings,
+          harder to use configuration cascading (e.g., a base config plus environment overrides).
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <FileJson className="inline-block" /> 3. Base Config with Environment Overrides
         </h3>
         <p>
-          Combine the previous two approaches by having a base configuration file
-          with common settings, and environment-specific files that provide
-          overrides or add new settings.
+          Combine the previous two approaches by having a base configuration file with common settings, and
+          environment-specific files that provide overrides or add new settings.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
@@ -339,7 +311,9 @@ try &lbrace;
           <h4 className="text-lg font-medium mt-4 flex items-center gap-2">
             <FileJson className="inline-block" /> <code>config.development.json</code>:
           </h4>
-          <p className="text-sm italic">Overrides/adds settings from <code>config.base.json</code></p>
+          <p className="text-sm italic">
+            Overrides/adds settings from <code>config.base.json</code>
+          </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
               {`&lbrace;
@@ -358,8 +332,11 @@ try &lbrace;
           </div>
         </div>
         <h4 className="text-lg font-medium mt-4">How to Load and Merge:</h4>
-        <p>Load the base config first, then load the environment-specific config and merge it on top (environment settings override base settings).</p>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <p>
+          Load the base config first, then load the environment-specific config and merge it on top (environment
+          settings override base settings).
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Conceptual Loading & Merging Logic (TypeScript/Node.js):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
@@ -430,44 +407,43 @@ try &lbrace;
             </pre>
           </div>
         </div>
-         <p>
-          <strong>Pros:</strong> Reduces duplication, common settings are in one place,
-          clear separation of base and overrides.
+        <p>
+          <strong>Pros:</strong> Reduces duplication, common settings are in one place, clear separation of base and
+          overrides.
           <br />
-          <strong>Cons:</strong> Requires a merging mechanism (simple merge for top-level
-          keys, or a deep merge function/library for nested structures).
+          <strong>Cons:</strong> Requires a merging mechanism (simple merge for top-level keys, or a deep merge
+          function/library for nested structures).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Lock className="inline-block" /> Handling Sensitive Data: Configuration vs. Secrets
         </h2>
         <p>
-          A critical best practice is separating non-sensitive configuration
-          (like API endpoints, feature flags, log levels) from sensitive secrets
-          (like database passwords, API keys, encryption keys).
+          A critical best practice is separating non-sensitive configuration (like API endpoints, feature flags, log
+          levels) from sensitive secrets (like database passwords, API keys, encryption keys).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
-             <AlertTriangle className="inline-block text-yellow-500" /> Never commit secrets to Git!
+            <AlertTriangle className="inline-block text-yellow-500" /> Never commit secrets to Git!
           </h4>
           <p className="mt-2">
-            Configuration files checked into version control (like Git) should{" "}
-            <strong>never</strong> contain sensitive information. These files
-            are part of your codebase and could be accessed by anyone with access
-            to the repository.
+            Configuration files checked into version control (like Git) should <strong>never</strong> contain sensitive
+            information. These files are part of your codebase and could be accessed by anyone with access to the
+            repository.
           </p>
         </div>
         <p>
-          Sensitive data should be managed using <strong>environment variables</strong>.
-          These variables are set on the server or in the deployment environment itself,
-          outside of your application code and configuration files.
+          Sensitive data should be managed using <strong>environment variables</strong>. These variables are set on the
+          server or in the deployment environment itself, outside of your application code and configuration files.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-           <h4 className="text-lg font-medium flex items-center gap-2">
+          <h4 className="text-lg font-medium flex items-center gap-2">
             <Server className="inline-block" /> Using Environment Variables:
           </h4>
-           <p className="mt-2">Access environment variables via <code>process.env</code> in Node.js.</p>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
+          <p className="mt-2">
+            Access environment variables via <code>process.env</code> in Node.js.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
               {`// Inside your application code where you need database credentials
 const dbUser = process.env.DB_USER;
@@ -484,16 +460,14 @@ if (!dbUser || !dbPassword) &lbrace;
 `}
             </pre>
           </div>
-           <p className="mt-2">
-             You can combine environment variables with JSON configurations. For example,
-             your JSON might define the database schema or connection options, but the
-             user/password come from <code>process.env</code>.
-           </p>
+          <p className="mt-2">
+            You can combine environment variables with JSON configurations. For example, your JSON might define the
+            database schema or connection options, but the user/password come from <code>process.env</code>.
+          </p>
         </div>
         <p>
-          Tools like <code>dotenv</code> can help manage environment variables
-          in development by loading them from a <code>.env</code> file, but you
-          should rely on your hosting provider&apos;s mechanism for production
+          Tools like <code>dotenv</code> can help manage environment variables in development by loading them from a{" "}
+          <code>.env</code> file, but you should rely on your hosting provider&apos;s mechanism for production
           environment variables.
         </p>
 
@@ -501,33 +475,28 @@ if (!dbUser || !dbPassword) &lbrace;
           <CheckCircle className="inline-block" /> Configuration Validation
         </h2>
         <p>
-          As configurations grow, it&apos;s easy to make mistakes &mdash; typos in keys,
-          incorrect data types, missing required settings. Implementing validation
-          helps catch these errors early.
+          As configurations grow, it&apos;s easy to make mistakes &mdash; typos in keys, incorrect data types, missing
+          required settings. Implementing validation helps catch these errors early.
         </p>
         <p>
-          You can use JSON Schema or validation libraries (like Zod, Joi, or Yup)
-          to define the expected structure and types of your configuration.
-          Validate the loaded configuration object after parsing the JSON file(s).
+          You can use JSON Schema or validation libraries (like Zod, Joi, or Yup) to define the expected structure and
+          types of your configuration. Validate the loaded configuration object after parsing the JSON file(s).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Settings className="inline-block" /> Conclusion
         </h2>
         <p>
-          Managing configurations across multiple environments is a fundamental
-          aspect of building production-ready applications. Using JSON files
-          provides a structured and readable way to define settings. The best
-          approach (multiple files, single file with keys, or base with overrides)
-          often depends on the complexity and number of your environments and
-          settings.
+          Managing configurations across multiple environments is a fundamental aspect of building production-ready
+          applications. Using JSON files provides a structured and readable way to define settings. The best approach
+          (multiple files, single file with keys, or base with overrides) often depends on the complexity and number of
+          your environments and settings.
         </p>
         <p>
-          Regardless of the file structure you choose, remember the critical
-          rule: <strong>secrets belong in environment variables, not
-          committed configuration files</strong>. Implementing validation adds
-          an extra layer of robustness to ensure your application starts with
-          the correct settings in every environment.
+          Regardless of the file structure you choose, remember the critical rule:{" "}
+          <strong>secrets belong in environment variables, not committed configuration files</strong>. Implementing
+          validation adds an extra layer of robustness to ensure your application starts with the correct settings in
+          every environment.
         </p>
       </div>
     </>

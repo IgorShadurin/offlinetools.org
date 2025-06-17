@@ -20,26 +20,22 @@ export default function KotlinJsonLibrariesArticle() {
     <>
       {/* Article Title */}
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <FileJson size={32} /> Kotlin JSON Serialization and Formatting
-        Libraries
+        <FileJson size={32} /> Kotlin JSON Serialization and Formatting Libraries
       </h1>
 
       {/* Introduction */}
       <div className="space-y-6">
         <p>
-          In modern software development, JSON (JavaScript Object Notation) is
-          the de facto standard for data interchange, especially in web APIs and
-          data storage. Kotlin, with its focus on conciseness and safety, offers
-          excellent libraries to handle the process of converting Kotlin objects
-          into JSON strings (serialization) and JSON strings back into Kotlin
-          objects (deserialization). This process is often called marshalling or
+          In modern software development, JSON (JavaScript Object Notation) is the de facto standard for data
+          interchange, especially in web APIs and data storage. Kotlin, with its focus on conciseness and safety, offers
+          excellent libraries to handle the process of converting Kotlin objects into JSON strings (serialization) and
+          JSON strings back into Kotlin objects (deserialization). This process is often called marshalling or
           unmarshalling.
         </p>
         <p>
-          While you could manually parse JSON strings or build them piece by
-          piece, using a robust library provides numerous benefits, including
-          type safety, reduced boilerplate code, better performance, and
-          handling of complex data structures, formatting, and edge cases.
+          While you could manually parse JSON strings or build them piece by piece, using a robust library provides
+          numerous benefits, including type safety, reduced boilerplate code, better performance, and handling of
+          complex data structures, formatting, and edge cases.
         </p>
 
         {/* Why Use Libraries? */}
@@ -49,24 +45,22 @@ export default function KotlinJsonLibrariesArticle() {
         <p>Libraries automate the tedious and error-prone tasks:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Type Safety:</strong> Directly map JSON fields to Kotlin
-            data class properties, leveraging Kotlin's type system.
+            <strong>Type Safety:</strong> Directly map JSON fields to Kotlin data class properties, leveraging Kotlin's
+            type system.
           </li>
           <li>
-            <strong>Less Boilerplate:</strong> Automatically generate serialization
-            and deserialization logic, saving you from writing repetitive code.
+            <strong>Less Boilerplate:</strong> Automatically generate serialization and deserialization logic, saving
+            you from writing repetitive code.
           </li>
           <li>
-            <strong>Handling Complex Structures:</strong> Seamlessly manage
-            nested objects, arrays, collections, and polymorphic types.
+            <strong>Handling Complex Structures:</strong> Seamlessly manage nested objects, arrays, collections, and
+            polymorphic types.
           </li>
           <li>
-            <strong>Performance:</strong> Optimized parsing and generation for
-            efficiency.
+            <strong>Performance:</strong> Optimized parsing and generation for efficiency.
           </li>
           <li>
-            <strong>Formatting:</strong> Easily control output format, like
-            pretty-printing for readability.
+            <strong>Formatting:</strong> Easily control output format, like pretty-printing for readability.
           </li>
         </ul>
 
@@ -74,55 +68,45 @@ export default function KotlinJsonLibrariesArticle() {
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Code size={24} /> Key Libraries for Kotlin
         </h2>
-        <p>
-          Several libraries exist for handling JSON in Kotlin. The most popular
-          and recommended ones are:
-        </p>
+        <p>Several libraries exist for handling JSON in Kotlin. The most popular and recommended ones are:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <strong>
               <code>kotlinx.serialization</code>
             </strong>
-            : The official, multiplatform serialization library developed by
-            JetBrains. This is often the go-to choice for new Kotlin projects,
-            especially those targeting multiple platforms (JVM, JS, Native,
-            Android, iOS, etc.).
+            : The official, multiplatform serialization library developed by JetBrains. This is often the go-to choice
+            for new Kotlin projects, especially those targeting multiple platforms (JVM, JS, Native, Android, iOS,
+            etc.).
           </li>
           <li>
-            <strong>Moshi:</strong> Developed by Square, known for its
-            Kotlin-friendly API and use of Kotlin's reflection capabilities (or
-            code generation). A solid choice, particularly popular in the Android
-            community before <code>kotlinx.serialization</code> matured.
+            <strong>Moshi:</strong> Developed by Square, known for its Kotlin-friendly API and use of Kotlin's
+            reflection capabilities (or code generation). A solid choice, particularly popular in the Android community
+            before <code>kotlinx.serialization</code> matured.
           </li>
           <li>
-            <strong>GSON:</strong> Google's library. A very mature and widely
-            used Java library that works well with Kotlin, though it might require
-            more setup or boilerplate compared to Kotlin-native libraries.
+            <strong>GSON:</strong> Google's library. A very mature and widely used Java library that works well with
+            Kotlin, though it might require more setup or boilerplate compared to Kotlin-native libraries.
           </li>
         </ul>
         <p>
-          For most new Kotlin development, especially if multiplatform is a
-          consideration, <code>kotlinx.serialization</code> is the recommended
-          library due to its tight integration with the language and its
-          multiplatform nature. We will focus primarily on this library.
+          For most new Kotlin development, especially if multiplatform is a consideration,{" "}
+          <code>kotlinx.serialization</code> is the recommended library due to its tight integration with the language
+          and its multiplatform nature. We will focus primarily on this library.
         </p>
 
         {/* kotlinx.serialization Deep Dive */}
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Sparkles size={24} /> Deep Dive into{" "}
-          <code>kotlinx.serialization</code>
+          <Sparkles size={24} /> Deep Dive into <code>kotlinx.serialization</code>
         </h2>
         <p>
-          <code>kotlinx.serialization</code> is a plugin-based library. You apply a
-          compiler plugin to your project, and it automatically generates the
-          serialization code for classes you annotate.
+          <code>kotlinx.serialization</code> is a plugin-based library. You apply a compiler plugin to your project, and
+          it automatically generates the serialization code for classes you annotate.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Adding Dependency</h3>
         <p>
-          You need to add the serialization plugin and runtime library to your
-          project's build file (e.g., <code>build.gradle.kts</code> or{" "}
-          <code>build.gradle</code>).
+          You need to add the serialization plugin and runtime library to your project's build file (e.g.,{" "}
+          <code>build.gradle.kts</code> or <code>build.gradle</code>).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">
@@ -171,9 +155,8 @@ dependencies {
 
         <h3 className="text-xl font-semibold mt-6">Basic Serialization & Deserialization</h3>
         <p>
-          To make a class serializable, annotate it with{" "}
-          <code>@Serializable</code>. Then, use the <code>Json</code> object to
-          encode or decode instances.
+          To make a class serializable, annotate it with <code>@Serializable</code>. Then, use the <code>Json</code>{" "}
+          object to encode or decode instances.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -203,16 +186,15 @@ fun main() {
           <Settings size={20} /> Customizing Serialization
         </h3>
         <p>
-          <code>kotlinx.serialization</code> offers several annotations and configurations
-          to customize how your data is serialized.
+          <code>kotlinx.serialization</code> offers several annotations and configurations to customize how your data is
+          serialized.
         </p>
 
         <h4 className="text-lg font-medium mt-4 flex items-center gap-1">
           <List size={18} /> Changing Key Names (<code>@SerialName</code>)
         </h4>
         <p>
-          If your JSON keys don't match your Kotlin property names, use{" "}
-          <code>@SerialName</code>.
+          If your JSON keys don't match your Kotlin property names, use <code>@SerialName</code>.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -237,8 +219,8 @@ fun main() {
           <List size={18} /> Ignoring Properties (<code>@Transient</code>)
         </h4>
         <p>
-          Use <code>@Transient</code> to exclude properties from serialization.
-          Note that transient properties must have a default value.
+          Use <code>@Transient</code> to exclude properties from serialization. Note that transient properties must have
+          a default value.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -262,9 +244,8 @@ fun main() {
           <List size={18} /> Default Values & Missing Fields
         </h4>
         <p>
-          By default, missing fields in JSON will cause deserialization errors.
-          You can use default values in your data class properties to make them
-          optional.
+          By default, missing fields in JSON will cause deserialization errors. You can use default values in your data
+          class properties to make them optional.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -295,8 +276,8 @@ fun main() {
           <List size={18} /> Nullable Types
         </h4>
         <p>
-          Kotlin's nullable types (<code>?</code>) map directly to JSON null.
-          If a field is nullable, it can be missing or have a null value in the JSON.
+          Kotlin's nullable types (<code>?</code>) map directly to JSON null. If a field is nullable, it can be missing
+          or have a null value in the JSON.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -329,9 +310,8 @@ fun main() {
           <Settings size={20} /> JSON Formatting (Pretty Printing)
         </h3>
         <p>
-          By default, <code>Json.encodeToString</code> produces a compact JSON
-          string with no unnecessary whitespace. For human readability, you can
-          configure the <code>Json</code> instance to pretty print.
+          By default, <code>Json.encodeToString</code> produces a compact JSON string with no unnecessary whitespace.
+          For human readability, you can configure the <code>Json</code> instance to pretty print.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -392,9 +372,8 @@ Pretty JSON:
           </pre>
         </div>
         <p>
-          You can configure the <code>Json</code> object further using the
-          builder lambda, for example, to ignore unknown keys during
-          deserialization, use different naming strategies, etc.
+          You can configure the <code>Json</code> object further using the builder lambda, for example, to ignore
+          unknown keys during deserialization, use different naming strategies, etc.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -421,9 +400,8 @@ fun main() {
 
         <h3 className="text-xl font-semibold mt-6">Working with Lists and Maps</h3>
         <p>
-          Serialization works seamlessly with standard Kotlin collections like{" "}
-          <code>List</code>, <code>Set</code>, and <code>Map</code>, provided
-          their contents are also serializable.
+          Serialization works seamlessly with standard Kotlin collections like <code>List</code>, <code>Set</code>, and{" "}
+          <code>Map</code>, provided their contents are also serializable.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
@@ -458,10 +436,8 @@ fun main() {
           </pre>
         </div>
         <p>
-          Notice the use of explicit type parameters (
-          <code>&lt;List&lt;Item&gt;&gt;</code>,{" "}
-          <code>&lt;Map&lt;String, Item&gt;&gt;</code>) for deserializing
-          collections.
+          Notice the use of explicit type parameters (<code>&lt;List&lt;Item&gt;&gt;</code>,{" "}
+          <code>&lt;Map&lt;String, Item&gt;&gt;</code>) for deserializing collections.
         </p>
 
         {/* Mention other libraries briefly */}
@@ -470,29 +446,24 @@ fun main() {
         </h2>
         <h3 className="text-xl font-semibold mt-6">Moshi</h3>
         <p>
-          Moshi is a mature JSON library for Java and Kotlin. It has excellent
-          Kotlin support, including handling nullability and default values
-          without requiring reflection at runtime (using a codegen processor like
-          KSP or KAPT). It's known for its adapter system which makes custom
-          serialization logic relatively straightforward.
+          Moshi is a mature JSON library for Java and Kotlin. It has excellent Kotlin support, including handling
+          nullability and default values without requiring reflection at runtime (using a codegen processor like KSP or
+          KAPT). It's known for its adapter system which makes custom serialization logic relatively straightforward.
         </p>
         <p>
-          Choose Moshi if you prefer its API or adapter system, or if you're in an
-          Android environment where it has historically been very popular.
+          Choose Moshi if you prefer its API or adapter system, or if you're in an Android environment where it has
+          historically been very popular.
         </p>
         <h3 className="text-xl font-semibold mt-6">GSON</h3>
         <p>
-          GSON is a widely adopted library from Google, originally for Java. It
-          works with Kotlin, but often requires more manual configuration or
-          custom type adapters for optimal use with Kotlin's specific features
-          like null safety.
+          GSON is a widely adopted library from Google, originally for Java. It works with Kotlin, but often requires
+          more manual configuration or custom type adapters for optimal use with Kotlin's specific features like null
+          safety.
         </p>
         <p>
-          Use GSON if you are integrating with an existing Java project that
-          already uses it heavily, or if you require some of its specific
-          advanced features or extensive ecosystem of adapters. For new Kotlin
-          projects, <code>kotlinx.serialization</code> or Moshi are generally
-          more idiomatic choices.
+          Use GSON if you are integrating with an existing Java project that already uses it heavily, or if you require
+          some of its specific advanced features or extensive ecosystem of adapters. For new Kotlin projects,{" "}
+          <code>kotlinx.serialization</code> or Moshi are generally more idiomatic choices.
         </p>
 
         {/* Conclusion */}
@@ -500,16 +471,13 @@ fun main() {
           <Code size={24} /> Conclusion
         </h2>
         <p>
-          Handling JSON is a fundamental task in many Kotlin applications. While
-          multiple libraries exist, the official <code>kotlinx.serialization</code>{" "}
-          library is a powerful, modern, and multiplatform-ready solution that
-          leverages Kotlin's language features effectively. By annotating your data
-          classes and using the <code>Json</code> object, you can easily serialize
-          Kotlin objects to JSON and deserialize JSON back into objects, handling
-          complex structures and custom requirements with minimal boilerplate.
-          Understanding how to configure the <code>Json</code> instance,
-          especially for tasks like pretty-printing, is essential for debugging
-          and human-readable output.
+          Handling JSON is a fundamental task in many Kotlin applications. While multiple libraries exist, the official{" "}
+          <code>kotlinx.serialization</code> library is a powerful, modern, and multiplatform-ready solution that
+          leverages Kotlin's language features effectively. By annotating your data classes and using the{" "}
+          <code>Json</code> object, you can easily serialize Kotlin objects to JSON and deserialize JSON back into
+          objects, handling complex structures and custom requirements with minimal boilerplate. Understanding how to
+          configure the <code>Json</code> instance, especially for tasks like pretty-printing, is essential for
+          debugging and human-readable output.
         </p>
       </div>
     </>

@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 export default function ThemeImplementationStandardsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Theme Implementation Standards for JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Theme Implementation Standards for JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
@@ -63,8 +61,8 @@ export default function ThemeImplementationStandardsArticle() {
               <span className="font-medium">Background Color:</span> The base color of the formatter area.
             </li>
             <li>
-              <span className="font-medium">Default Text Color:</span> The color for general text, often curly braces
-              `{}` and square brackets `[]`.
+              <span className="font-medium">Default Text Color:</span> The color for general text, often curly braces `
+              {}` and square brackets `[]`.
             </li>
             <li>
               <span className="font-medium">Key/Property Name Color:</span> Color for the string keys in JSON objects.
@@ -203,9 +201,9 @@ export default function ThemeImplementationStandardsArticle() {
 
         <h2 className="2xl font-semibold mt-8">User Customization and Persistence</h2>
         <p>
-          Giving users the ability to select their preferred theme is a standard practice. This preference should ideally
-          be saved (e.g., in local storage) so that their choice persists across sessions. Some advanced formatters even
-          allow users to customize individual colors within a theme.
+          Giving users the ability to select their preferred theme is a standard practice. This preference should
+          ideally be saved (e.g., in local storage) so that their choice persists across sessions. Some advanced
+          formatters even allow users to customize individual colors within a theme.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -228,8 +226,8 @@ export default function ThemeImplementationStandardsArticle() {
         <p>
           Implementing effective themes in a JSON formatter is more than just aesthetics; it&apos;s about creating a
           highly usable and accessible tool. By standardizing the thematic elements, leveraging modern CSS techniques
-          like variables, prioritizing accessibility, and allowing user customization, you can build a formatter that
-          is both powerful and a pleasure to use. Investing time in a robust theming system pays dividends in user
+          like variables, prioritizing accessibility, and allowing user customization, you can build a formatter that is
+          both powerful and a pleasure to use. Investing time in a robust theming system pays dividends in user
           satisfaction and reduced cognitive load when working with JSON data.
         </p>
       </div>

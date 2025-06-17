@@ -11,13 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
-import { 
-  processText,
-  LineBreakType,
-  CaseType,
-  SortType,
-  TextUtilityOperation
-} from "shared";
+import { processText, LineBreakType, CaseType, SortType, TextUtilityOperation } from "shared";
 
 export default function TextUtility() {
   const [input, setInput] = useState("");
@@ -25,7 +19,7 @@ export default function TextUtility() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<TextUtilityOperation>(TextUtilityOperation.CASE_CONVERSION);
-  
+
   const [lineBreakType, setLineBreakType] = useState<LineBreakType>(LineBreakType.LF);
   const [caseType, setCaseType] = useState<CaseType>(CaseType.LOWER);
   const [sortType, setSortType] = useState<SortType>(SortType.ALPHABETIZE);
@@ -33,28 +27,28 @@ export default function TextUtility() {
   const handleProcess = () => {
     try {
       let result = "";
-      
+
       switch (activeTab) {
         case TextUtilityOperation.LINE_BREAK_CONVERSION:
           result = processText(input, {
             operation: TextUtilityOperation.LINE_BREAK_CONVERSION,
-            lineBreakType
+            lineBreakType,
           });
           break;
         case TextUtilityOperation.CASE_CONVERSION:
           result = processText(input, {
             operation: TextUtilityOperation.CASE_CONVERSION,
-            caseType
+            caseType,
           });
           break;
         case TextUtilityOperation.LINE_SORTING:
           result = processText(input, {
             operation: TextUtilityOperation.LINE_SORTING,
-            sortType
+            sortType,
           });
           break;
       }
-      
+
       setOutput(result);
       setError(null);
     } catch (error) {
@@ -202,12 +196,7 @@ export default function TextUtility() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Label htmlFor="input-text">Input Text</Label>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleClear}
-                  disabled={!input && !output}
-                >
+                <Button variant="outline" size="sm" onClick={handleClear} disabled={!input && !output}>
                   Clear
                 </Button>
               </div>
@@ -244,8 +233,6 @@ export default function TextUtility() {
               />
             </div>
           </div>
-
-
         </Tabs>
       </Container>
     </>

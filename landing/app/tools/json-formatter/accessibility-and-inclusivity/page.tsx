@@ -10,8 +10,7 @@ import { Accessibility, Eye, MousePointer, Globe, Languages } from "lucide-react
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Accessibility and Inclusivity | Offline Tools",
-  description:
-    "Making JSON tools accessible to users of all abilities through inclusive design practices"
+  description: "Making JSON tools accessible to users of all abilities through inclusive design practices",
 };
 
 /**
@@ -20,57 +19,68 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "Making JSON Formatters Accessible to Screen Reader Users",
-    description: "Learn how to design JSON formatters with proper ARIA roles and semantic markup for screen reader accessibility.",
+    description:
+      "Learn how to design JSON formatters with proper ARIA roles and semantic markup for screen reader accessibility.",
     slug: "making-json-formatters-accessible-to-screen-reader-users",
   },
   {
     title: "ARIA Attributes for Interactive JSON Tree Views",
-    description: "Discover essential ARIA attributes and techniques to make interactive JSON tree views accessible to users with disabilities.",
+    description:
+      "Discover essential ARIA attributes and techniques to make interactive JSON tree views accessible to users with disabilities.",
     slug: "aria-attributes-for-interactive-json-tree-views",
   },
   {
     title: "Keyboard Navigation Patterns for JSON Editors",
-    description: "Learn best practices for implementing keyboard navigation in JSON editors to support users who can't use a mouse.",
+    description:
+      "Learn best practices for implementing keyboard navigation in JSON editors to support users who can't use a mouse.",
     slug: "keyboard-navigation-patterns-for-json-editors",
   },
   {
     title: "Color Contrast Considerations in JSON Syntax Highlighting",
-    description: "Understand how to create JSON syntax highlighting color schemes that meet WCAG contrast requirements for all users.",
+    description:
+      "Understand how to create JSON syntax highlighting color schemes that meet WCAG contrast requirements for all users.",
     slug: "color-contrast-considerations-in-json-syntax-highlighting",
   },
   {
     title: "Screen Reader Announcements for JSON Validation Results",
-    description: "Learn techniques for making JSON validation results accessible to screen reader users with helpful announcements.",
+    description:
+      "Learn techniques for making JSON validation results accessible to screen reader users with helpful announcements.",
     slug: "screen-reader-announcements-for-json-validation-results",
   },
   {
     title: "Designing Accessible Error Messages for JSON Formatters",
-    description: "Create clear, accessible error messages that help all users identify and fix issues in their JSON data.",
+    description:
+      "Create clear, accessible error messages that help all users identify and fix issues in their JSON data.",
     slug: "designing-accessible-error-messages-for-json-formatters",
   },
   {
     title: "Focus Management in Complex JSON Editing Interfaces",
-    description: "Learn strategies for properly managing keyboard focus in complex JSON editing interfaces for better accessibility.",
+    description:
+      "Learn strategies for properly managing keyboard focus in complex JSON editing interfaces for better accessibility.",
     slug: "focus-management-in-complex-json-editing-interfaces",
   },
   {
     title: "Internationalization of JSON Formatters for Global Users",
-    description: "Implement internationalization features in JSON formatters to make them accessible to users worldwide.",
+    description:
+      "Implement internationalization features in JSON formatters to make them accessible to users worldwide.",
     slug: "internationalization-of-json-formatters-for-global-users",
   },
   {
     title: "Multi-Language Support in JSON Documentation",
-    description: "Best practices for creating multi-language documentation for JSON tools to support a global user base.",
+    description:
+      "Best practices for creating multi-language documentation for JSON tools to support a global user base.",
     slug: "multi-language-support-in-json-documentation",
   },
   {
     title: "Adaptive JSON Formatters for Different Vision Capabilities",
-    description: "Design techniques for making JSON formatters adaptable to users with various vision capabilities and preferences.",
+    description:
+      "Design techniques for making JSON formatters adaptable to users with various vision capabilities and preferences.",
     slug: "adaptive-json-formatters-for-different-vision-capabilities",
   },
   {
     title: "Font Considerations for JSON Readability",
-    description: "Learn how font selection impacts the readability of JSON data and which fonts work best for different users.",
+    description:
+      "Learn how font selection impacts the readability of JSON data and which fonts work best for different users.",
     slug: "font-considerations-for-json-readability",
   },
   {
@@ -90,22 +100,26 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Designing JSON Tools for Neurodivergent Developers",
-    description: "Learn how to create JSON tools that support the needs of neurodivergent developers with different cognitive styles.",
+    description:
+      "Learn how to create JSON tools that support the needs of neurodivergent developers with different cognitive styles.",
     slug: "designing-json-tools-for-neurodivergent-developers",
   },
   {
     title: "Accessible Themes for JSON Syntax Highlighting",
-    description: "Create accessible color themes for JSON syntax highlighting that work for users with color vision deficiencies.",
+    description:
+      "Create accessible color themes for JSON syntax highlighting that work for users with color vision deficiencies.",
     slug: "accessible-themes-for-json-syntax-highlighting",
   },
   {
     title: "User Testing JSON Formatters with Disabled Users",
-    description: "Best practices for including users with disabilities in your JSON tool testing process for better accessibility.",
+    description:
+      "Best practices for including users with disabilities in your JSON tool testing process for better accessibility.",
     slug: "user-testing-json-formatters-with-disabled-users",
   },
   {
     title: "Touch-Friendly JSON Formatters for Mobile Accessibility",
-    description: "Design techniques for creating touch-friendly JSON formatters that work well on mobile devices for all users.",
+    description:
+      "Design techniques for creating touch-friendly JSON formatters that work well on mobile devices for all users.",
     slug: "touch-friendly-json-formatters-for-mobile-accessibility",
   },
   {
@@ -115,12 +129,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Localization Best Practices for JSON Formatter Interfaces",
-    description: "Learn how to properly localize JSON formatter interfaces to support users from different language backgrounds.",
+    description:
+      "Learn how to properly localize JSON formatter interfaces to support users from different language backgrounds.",
     slug: "localization-best-practices-for-json-formatter-interfaces",
   },
   {
     title: "Text-to-Speech Considerations for JSON Structure",
-    description: "Understand how JSON structure is conveyed through text-to-speech and how to optimize for better auditory experience.",
+    description:
+      "Understand how JSON structure is conveyed through text-to-speech and how to optimize for better auditory experience.",
     slug: "text-to-speech-considerations-for-json-structure",
   },
   {
@@ -130,12 +146,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Cognitive Load Reduction in JSON Interfaces for Accessibility",
-    description: "Design strategies to reduce cognitive load in JSON interfaces, making them more accessible to all users.",
+    description:
+      "Design strategies to reduce cognitive load in JSON interfaces, making them more accessible to all users.",
     slug: "cognitive-load-reduction-in-json-interfaces-for-accessibility",
   },
   {
     title: "Designing for Motor Impairments in JSON Editing Workflows",
-    description: "Learn how to optimize JSON editing workflows for users with motor impairments who may use alternative input methods.",
+    description:
+      "Learn how to optimize JSON editing workflows for users with motor impairments who may use alternative input methods.",
     slug: "designing-for-motor-impairments-in-json-editing-workflows",
   },
   {
@@ -145,22 +163,26 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Alternative Input Methods for JSON Formatters",
-    description: "Support for alternative input methods in JSON formatters beyond keyboard and mouse for users with disabilities.",
+    description:
+      "Support for alternative input methods in JSON formatters beyond keyboard and mouse for users with disabilities.",
     slug: "alternative-input-methods-for-json-formatters",
   },
   {
     title: "Implementing Skip Navigation in Complex JSON Views",
-    description: "Learn how to implement skip navigation links in complex JSON views to improve keyboard accessibility.",
+    description:
+      "Learn how to implement skip navigation links in complex JSON views to improve keyboard accessibility.",
     slug: "implementing-skip-navigation-in-complex-json-views",
   },
   {
     title: "JSON Format Conversion for Accessibility (JSON to Tables)",
-    description: "Convert JSON to more accessible formats like tables to improve understanding for users with cognitive disabilities.",
+    description:
+      "Convert JSON to more accessible formats like tables to improve understanding for users with cognitive disabilities.",
     slug: "json-format-conversion-for-accessibility-json-to-tables",
   },
   {
     title: "Sensory-Friendly Design for JSON Validation Feedback",
-    description: "Create sensory-friendly validation feedback in JSON formatters that works for users with sensory sensitivities.",
+    description:
+      "Create sensory-friendly validation feedback in JSON formatters that works for users with sensory sensitivities.",
     slug: "sensory-friendly-design-for-json-validation-feedback",
   },
   {
@@ -190,17 +212,20 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Accessible JSON Diff Views for Vision-Impaired Users",
-    description: "Create accessible JSON diff views that effectively communicate changes to users with vision impairments.",
+    description:
+      "Create accessible JSON diff views that effectively communicate changes to users with vision impairments.",
     slug: "accessible-json-diff-views-for-vision-impaired-users",
   },
   {
     title: "Accommodating Age-Related Accessibility Needs in JSON Tools",
-    description: "Design JSON tools that accommodate the accessibility needs of older users with age-related impairments.",
+    description:
+      "Design JSON tools that accommodate the accessibility needs of older users with age-related impairments.",
     slug: "accommodating-age-related-accessibility-needs-in-json-tools",
   },
   {
     title: "Designing for Temporary Disabilities in JSON Interfaces",
-    description: "Consider temporary disabilities in JSON interface design to ensure accessibility for all users at all times.",
+    description:
+      "Consider temporary disabilities in JSON interface design to ensure accessibility for all users at all times.",
     slug: "designing-for-temporary-disabilities-in-json-interfaces",
   },
   {
@@ -210,7 +235,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Mobile Accessibility Guidelines for JSON Viewing Apps",
-    description: "Accessibility guidelines specifically for mobile JSON viewing applications to support all users on the go.",
+    description:
+      "Accessibility guidelines specifically for mobile JSON viewing applications to support all users on the go.",
     slug: "mobile-accessibility-guidelines-for-json-viewing-apps",
   },
   {
@@ -260,14 +286,15 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Accessible JSON Formatter Onboarding Experiences",
-    description: "Create accessible onboarding experiences for JSON formatters that work well for users of all abilities.",
+    description:
+      "Create accessible onboarding experiences for JSON formatters that work well for users of all abilities.",
     slug: "accessible-json-formatter-onboarding-experiences",
   },
   {
     title: "Building Inclusive JSON Tool Communities",
     description: "Strategies for building inclusive communities around JSON tools that welcome and support all users.",
     slug: "building-inclusive-json-tool-communities",
-  }
+  },
 ];
 
 /**
@@ -330,7 +357,8 @@ export default function JsonFormatterAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Visual Accessibility</h3>
                     <p className="text-sm text-muted-foreground">
-                      Designing JSON formatters with appropriate contrast, scalable text, and customizable color schemes to accommodate users with visual impairments.
+                      Designing JSON formatters with appropriate contrast, scalable text, and customizable color schemes
+                      to accommodate users with visual impairments.
                     </p>
                   </div>
                 </div>
@@ -342,7 +370,8 @@ export default function JsonFormatterAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Keyboard Navigation</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing comprehensive keyboard controls to allow users with motor disabilities to navigate, edit, and manipulate JSON data without relying on mouse input.
+                      Implementing comprehensive keyboard controls to allow users with motor disabilities to navigate,
+                      edit, and manipulate JSON data without relying on mouse input.
                     </p>
                   </div>
                 </div>
@@ -356,7 +385,8 @@ export default function JsonFormatterAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Screen Reader Support</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ensuring JSON formatters provide appropriate ARIA labels, semantic markup, and logical structure to enable effective use with screen readers and other assistive technologies.
+                      Ensuring JSON formatters provide appropriate ARIA labels, semantic markup, and logical structure
+                      to enable effective use with screen readers and other assistive technologies.
                     </p>
                   </div>
                 </div>
@@ -368,7 +398,8 @@ export default function JsonFormatterAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Internationalization</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating globally accessible tools through multilingual interfaces, culturally sensitive design, and support for various writing systems and reading directions.
+                      Creating globally accessible tools through multilingual interfaces, culturally sensitive design,
+                      and support for various writing systems and reading directions.
                     </p>
                   </div>
                 </div>
@@ -381,7 +412,9 @@ export default function JsonFormatterAccessibilityPage() {
                 <span>Accessibility Principle:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Accessible JSON tools benefit all users, not just those with disabilities—features like high contrast modes, keyboard shortcuts, and clear error messaging improve the experience for everyone, especially in challenging environments or when using different devices.
+                Accessible JSON tools benefit all users, not just those with disabilities—features like high contrast
+                modes, keyboard shortcuts, and clear error messaging improve the experience for everyone, especially in
+                challenging environments or when using different devices.
               </p>
             </div>
           </CardContent>
@@ -391,4 +424,4 @@ export default function JsonFormatterAccessibilityPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

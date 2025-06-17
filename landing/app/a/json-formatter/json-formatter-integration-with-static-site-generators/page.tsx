@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FileJson, Rocket, Settings, CodeXml, Check } from 'lucide-react';
+import { FileJson, Rocket, Settings, CodeXml, Check } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "JSON Formatter Integration with Static Site Generators",
@@ -16,58 +16,71 @@ export default function JsonFormatterSSGIntegrationArticle() {
 
       <div className="space-y-6 text-gray-700 dark:text-gray-300">
         <p>
-          Static Site Generators (SSGs) have become incredibly popular for building fast, secure, and scalable websites. They work by pre-rendering all pages at build time, often consuming various data sources like Markdown files, YAML, and critically for many applications, JSON. While SSGs excel at rendering data, the source data itself can sometimes be less than ideally formatted. This is where integrating a JSON formatter into your SSG workflow can significantly improve developer experience and maintainability.
+          Static Site Generators (SSGs) have become incredibly popular for building fast, secure, and scalable websites.
+          They work by pre-rendering all pages at build time, often consuming various data sources like Markdown files,
+          YAML, and critically for many applications, JSON. While SSGs excel at rendering data, the source data itself
+          can sometimes be less than ideally formatted. This is where integrating a JSON formatter into your SSG
+          workflow can significantly improve developer experience and maintainability.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Check className="w-6 h-6 mr-2 text-green-600" /> Why Format JSON?
         </h2>
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write and easy for machines to parse and generate. However, "easy for humans to read" often depends on how it's formatted.
+          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and
+          write and easy for machines to parse and generate. However, "easy for humans to read" often depends on how
+          it's formatted.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Readability:</strong> Unformatted or minified JSON, especially large files, is difficult to scan and understand. Proper indentation and spacing make nested structures clear.
+            <strong>Readability:</strong> Unformatted or minified JSON, especially large files, is difficult to scan and
+            understand. Proper indentation and spacing make nested structures clear.
           </li>
           <li>
-            <strong>Debugging:</strong> When working with JSON data files, inconsistent formatting can make it hard to spot errors like missing commas, mismatched brackets/braces, or incorrect nesting. A formatter provides a consistent, clean view.
+            <strong>Debugging:</strong> When working with JSON data files, inconsistent formatting can make it hard to
+            spot errors like missing commas, mismatched brackets/braces, or incorrect nesting. A formatter provides a
+            consistent, clean view.
           </li>
           <li>
-            <strong>Consistency:</strong> If multiple developers are working on JSON data files, an automated formatter ensures everyone adheres to the same style, reducing merge conflicts and stylistic debates.
+            <strong>Consistency:</strong> If multiple developers are working on JSON data files, an automated formatter
+            ensures everyone adheres to the same style, reducing merge conflicts and stylistic debates.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Rocket className="w-6 h-6 mr-2 text-purple-600" /> Why Integrate Formatting with SSGs?
         </h2>
-        <p>
-          Integrating JSON formatting directly into your SSG build process offers several advantages:
-        </p>
+        <p>Integrating JSON formatting directly into your SSG build process offers several advantages:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Automated Workflow:</strong> Formatting happens automatically as part of the build, ensuring data consumed by the SSG is always cleanly structured.
+            <strong>Automated Workflow:</strong> Formatting happens automatically as part of the build, ensuring data
+            consumed by the SSG is always cleanly structured.
           </li>
           <li>
-            <strong>Data Preparation:</strong> For SSGs that process raw data files (like Data directories in Hugo or Next.js), formatting ensures the input is consistent and easily parsed by the SSG's data loading mechanisms.
+            <strong>Data Preparation:</strong> For SSGs that process raw data files (like Data directories in Hugo or
+            Next.js), formatting ensures the input is consistent and easily parsed by the SSG's data loading mechanisms.
           </li>
           <li>
-            <strong>Developer Experience:</strong> Developers can focus on the data content, knowing that formatting will be handled automatically. This is especially useful when data is generated programmatically or pasted from external sources.
+            <strong>Developer Experience:</strong> Developers can focus on the data content, knowing that formatting
+            will be handled automatically. This is especially useful when data is generated programmatically or pasted
+            from external sources.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Settings className="w-6 h-6 mr-2 text-yellow-600" /> Approaches for Integration
         </h2>
-        <p>
-          There are primary ways to integrate JSON formatting into an SSG workflow:
-        </p>
+        <p>There are primary ways to integrate JSON formatting into an SSG workflow:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Build-time Scripting</h3>
         <p>
-          This is a flexible approach where you run a separate script before or during your SSG's build command. This script reads your raw JSON files, formats them, and overwrites the originals or saves the formatted versions to a designated location the SSG can then consume.
+          This is a flexible approach where you run a separate script before or during your SSG's build command. This
+          script reads your raw JSON files, formats them, and overwrites the originals or saves the formatted versions
+          to a designated location the SSG can then consume.
         </p>
         <p>
-          Most SSGs allow you to define custom build commands (e.g., `npm run build` or `yarn build`). You can prefix your build command with a script execution: `format-json && ssg-build-command`.
+          Most SSGs allow you to define custom build commands (e.g., `npm run build` or `yarn build`). You can prefix
+          your build command with a script execution: `format-json && ssg-build-command`.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -126,19 +139,25 @@ fs.readdir(dataDir, (err, files) => {
             </pre>
           </div>
           <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">
-            (This is a simplified example using Node.js file system operations. A real script might need more robust error handling, directory traversal, and potentially use a dedicated formatting library for complex cases or specific style guides.)
+            (This is a simplified example using Node.js file system operations. A real script might need more robust
+            error handling, directory traversal, and potentially use a dedicated formatting library for complex cases or
+            specific style guides.)
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">2. Within SSG Data Loading Mechanisms</h3>
         <p>
-          Some SSGs, especially those based on frameworks like React (e.g., Next.js with App Router or Pages Router), allow you to load data within specific functions (like `getStaticProps`, `getStaticPaths`, or data fetching in App Router). While the SSG might parse the JSON correctly regardless of formatting, you can ensure consistency *after* loading it or before saving derived data by formatting the resulting JavaScript object/array.
+          Some SSGs, especially those based on frameworks like React (e.g., Next.js with App Router or Pages Router),
+          allow you to load data within specific functions (like `getStaticProps`, `getStaticPaths`, or data fetching in
+          App Router). While the SSG might parse the JSON correctly regardless of formatting, you can ensure consistency
+          *after* loading it or before saving derived data by formatting the resulting JavaScript object/array.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Next.js `getStaticProps` Example:</h4>
           <p className="text-sm mb-2 text-gray-600 dark:text-gray-400">
-            (This doesn't format the source file, but formats the data *before* passing it to the page component or saving it elsewhere during the build).
+            (This doesn't format the source file, but formats the data *before* passing it to the page component or
+            saving it elsewhere during the build).
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
@@ -207,15 +226,20 @@ export async function getStaticProps() {
         </div>
 
         <p>
-          This method is less about cleaning up your source files and more about ensuring that any JSON you *generate* or *process* during the build is consistently formatted if you need to output it or display it.
+          This method is less about cleaning up your source files and more about ensuring that any JSON you *generate*
+          or *process* during the build is consistently formatted if you need to output it or display it.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">3. Using Pre-commit Hooks or Linters</h3>
         <p>
-          While not strictly part of the SSG build itself, integrating JSON formatting with tools like Prettier or linters (like ESLint with appropriate plugins) via pre-commit hooks ensures that JSON files are formatted *before* they are committed to version control. This guarantees that the files your SSG consumes are always clean.
+          While not strictly part of the SSG build itself, integrating JSON formatting with tools like Prettier or
+          linters (like ESLint with appropriate plugins) via pre-commit hooks ensures that JSON files are formatted
+          *before* they are committed to version control. This guarantees that the files your SSG consumes are always
+          clean.
         </p>
         <p>
-          This is often the most robust approach for maintaining clean source data files collaboratively. The build process then just consumes the already-formatted files.
+          This is often the most robust approach for maintaining clean source data files collaboratively. The build
+          process then just consumes the already-formatted files.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -223,36 +247,52 @@ export async function getStaticProps() {
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>API Documentation:</strong> Generating documentation that includes example request/response bodies often involves embedding JSON. Ensuring this JSON is formatted makes the documentation much clearer.
+            <strong>API Documentation:</strong> Generating documentation that includes example request/response bodies
+            often involves embedding JSON. Ensuring this JSON is formatted makes the documentation much clearer.
           </li>
           <li>
-            <strong>Content Management:</strong> If you store structured content or configuration in JSON files that your SSG reads, formatting keeps these data files manageable.
+            <strong>Content Management:</strong> If you store structured content or configuration in JSON files that
+            your SSG reads, formatting keeps these data files manageable.
           </li>
           <li>
-            <strong>Data Visualization:</strong> Preparing JSON data that will be used by client-side JavaScript libraries for charts or graphs. While minified is fine for production, having formatted versions during development is crucial.
+            <strong>Data Visualization:</strong> Preparing JSON data that will be used by client-side JavaScript
+            libraries for charts or graphs. While minified is fine for production, having formatted versions during
+            development is crucial.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Benefits Summarized</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>Cleaner and more readable source data files.</li>
-            <li>Reduced potential for parsing errors due to inconsistent formatting.</li>
-            <li>Improved collaboration among developers.</li>
-            <li>Easier debugging of data-related issues.</li>
-            <li>Automated process means less manual effort.</li>
+          <li>Cleaner and more readable source data files.</li>
+          <li>Reduced potential for parsing errors due to inconsistent formatting.</li>
+          <li>Improved collaboration among developers.</li>
+          <li>Easier debugging of data-related issues.</li>
+          <li>Automated process means less manual effort.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Considerations</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
-            <li><strong>Build Time Overhead:</strong> For very large JSON files, formatting can add a small amount of time to your build process. However, for typical use cases, this is negligible.</li>
-            <li><strong>Tooling:</strong> Decide whether to use a simple Node.js script, a dedicated CLI formatter (`jq`, `prettier`, etc.), or leverage SSG-specific features.</li>
-            <li><strong>Error Handling:</strong> Ensure your formatting script or process handles invalid JSON gracefully, reporting errors without necessarily crashing the entire build (depending on your requirements).</li>
+          <li>
+            <strong>Build Time Overhead:</strong> For very large JSON files, formatting can add a small amount of time
+            to your build process. However, for typical use cases, this is negligible.
+          </li>
+          <li>
+            <strong>Tooling:</strong> Decide whether to use a simple Node.js script, a dedicated CLI formatter (`jq`,
+            `prettier`, etc.), or leverage SSG-specific features.
+          </li>
+          <li>
+            <strong>Error Handling:</strong> Ensure your formatting script or process handles invalid JSON gracefully,
+            reporting errors without necessarily crashing the entire build (depending on your requirements).
+          </li>
         </ul>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Integrating JSON formatting into your SSG build pipeline, whether through pre-build scripts, SSG data loading hooks, or pre-commit hooks, is a simple yet effective way to enhance the developer experience and maintainability of your project. It ensures your structured data is always presented cleanly and consistently, making it easier to read, write, and debug. By automating this step, you streamline your workflow and reduce potential sources of error related to data file inconsistencies.
+          Integrating JSON formatting into your SSG build pipeline, whether through pre-build scripts, SSG data loading
+          hooks, or pre-commit hooks, is a simple yet effective way to enhance the developer experience and
+          maintainability of your project. It ensures your structured data is always presented cleanly and consistently,
+          making it easier to read, write, and debug. By automating this step, you streamline your workflow and reduce
+          potential sources of error related to data file inconsistencies.
         </p>
       </div>
     </>

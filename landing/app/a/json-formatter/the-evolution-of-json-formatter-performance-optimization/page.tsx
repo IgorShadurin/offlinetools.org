@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 export default function JsonFormatterPerformanceArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        The Evolution of JSON Formatter Performance Optimization
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">The Evolution of JSON Formatter Performance Optimization</h1>
 
       <div className="space-y-6">
         <p>
@@ -30,7 +28,10 @@ export default function JsonFormatterPerformanceArticle() {
 
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Iterate through the JSON string character by character.</li>
-          <li>Identify structural elements like <code>{`{`}</code>, <code>{`}`}</code>, <code>{`[`}</code>, <code>{`]`}</code>, and <code>{`,`}</code>.</li>
+          <li>
+            Identify structural elements like <code>{`{`}</code>, <code>{`}`}</code>, <code>{`[`}</code>,{" "}
+            <code>{`]`}</code>, and <code>{`,`}</code>.
+          </li>
           <li>Insert newlines and indentation based on the current nesting level.</li>
           <li>Concatenate these pieces to build the formatted string.</li>
         </ul>
@@ -78,8 +79,9 @@ export default function JsonFormatterPerformanceArticle() {
         </p>
 
         <p>
-          This approach leverages built-in, highly optimized parsing capabilities (e.g., <code>JSON.parse()</code> in JavaScript),
-          which are typically implemented in native code and are much faster than manual character iteration.
+          This approach leverages built-in, highly optimized parsing capabilities (e.g., <code>JSON.parse()</code> in
+          JavaScript), which are typically implemented in native code and are much faster than manual character
+          iteration.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -118,9 +120,9 @@ export default function JsonFormatterPerformanceArticle() {
 
         <p>
           Streaming parsers don&apos;t build a complete in-memory representation. Instead, they emit events (like
-          &quot;onObjectStart&quot;, &quot;onProperty&quot;, &quot;onValue&quot;, &quot;onObjectEnd&quot;) as they read the JSON input. A formatter
-          using a streaming parser can listen to these events and output the formatted JSON piece by piece,
-          without holding the entire data in RAM.
+          &quot;onObjectStart&quot;, &quot;onProperty&quot;, &quot;onValue&quot;, &quot;onObjectEnd&quot;) as they read
+          the JSON input. A formatter using a streaming parser can listen to these events and output the formatted JSON
+          piece by piece, without holding the entire data in RAM.
         </p>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -155,8 +157,8 @@ export default function JsonFormatterPerformanceArticle() {
           </p>
         </div>
         <p>
-          Implementing a streaming formatter is more complex than the simple parser-based approach but is essential
-          for robustly handling files of arbitrary size.
+          Implementing a streaming formatter is more complex than the simple parser-based approach but is essential for
+          robustly handling files of arbitrary size.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Asynchronous Processing and Web Workers</h2>
@@ -167,8 +169,8 @@ export default function JsonFormatterPerformanceArticle() {
         </p>
 
         <p>
-          The solution is to perform the formatting asynchronously. In web environments, this is commonly achieved
-          using <span className="font-medium">Web Workers</span>.
+          The solution is to perform the formatting asynchronously. In web environments, this is commonly achieved using{" "}
+          <span className="font-medium">Web Workers</span>.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -181,13 +183,13 @@ export default function JsonFormatterPerformanceArticle() {
           </ul>
         </div>
 
-        <p>
-          A typical implementation would involve:
-        </p>
+        <p>A typical implementation would involve:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>The main script sends the JSON string to a Web Worker.</li>
           <li>The Web Worker performs the parsing and formatting (potentially using streaming).</li>
-          <li>Once complete (or in chunks, for streaming), the Worker sends the formatted string back to the main script.</li>
+          <li>
+            Once complete (or in chunks, for streaming), the Worker sends the formatted string back to the main script.
+          </li>
           <li>The main script updates the UI with the result.</li>
         </ol>
 
@@ -216,14 +218,12 @@ export default function JsonFormatterPerformanceArticle() {
           </p>
         </div>
         <p>
-          This optimization is crucial for maintaining a smooth and responsive interface when displaying the output of
-          a formatter, especially for very large inputs.
+          This optimization is crucial for maintaining a smooth and responsive interface when displaying the output of a
+          formatter, especially for very large inputs.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Leveraging Native Code and Language Features</h2>
-        <p>
-          The evolution also involves leveraging the underlying platform&apos;s capabilities.
-        </p>
+        <p>The evolution also involves leveraging the underlying platform&apos;s capabilities.</p>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -232,13 +232,14 @@ export default function JsonFormatterPerformanceArticle() {
             Chrome and Node.js).
           </li>
           <li>
-            <span className="font-medium">Efficient Data Structures:</span> Using arrays and joining them (`array.join('')`)
-            is generally more performant for building strings iteratively than repeated concatenation (`str += ...`).
+            <span className="font-medium">Efficient Data Structures:</span> Using arrays and joining them
+            (`array.join('')`) is generally more performant for building strings iteratively than repeated concatenation
+            (`str += ...`).
           </li>
           <li>
             <span className="font-medium">Optimized Libraries:</span> Third-party libraries for JSON processing are
-            often meticulously optimized for performance, sometimes using WebAssembly (Wasm) to run near-native code
-            in the browser for critical parts like parsing.
+            often meticulously optimized for performance, sometimes using WebAssembly (Wasm) to run near-native code in
+            the browser for critical parts like parsing.
           </li>
         </ul>
 
@@ -248,22 +249,28 @@ export default function JsonFormatterPerformanceArticle() {
           <h3 className="text-lg font-medium">Key Optimizations in Modern JSON Formatters:</h3>
           <ul className="list-disc pl-6 space-y-3 mt-2">
             <li>
-              <span className="font-medium">Native Parsing/Stringifying:</span> Relying on highly optimized built-in functions (<code>JSON.parse</code>, <code>JSON.stringify</code>).
+              <span className="font-medium">Native Parsing/Stringifying:</span> Relying on highly optimized built-in
+              functions (<code>JSON.parse</code>, <code>JSON.stringify</code>).
             </li>
             <li>
-              <span className="font-medium">Streaming/Chunking:</span> Processing very large files incrementally to manage memory.
+              <span className="font-medium">Streaming/Chunking:</span> Processing very large files incrementally to
+              manage memory.
             </li>
             <li>
-              <span className="font-medium">Asynchronous Processing (Web Workers):</span> Offloading heavy work to avoid blocking the UI thread.
+              <span className="font-medium">Asynchronous Processing (Web Workers):</span> Offloading heavy work to avoid
+              blocking the UI thread.
             </li>
             <li>
-              <span className="font-medium">Efficient String Building:</span> Using techniques like array joining instead of repeated concatenation.
+              <span className="font-medium">Efficient String Building:</span> Using techniques like array joining
+              instead of repeated concatenation.
             </li>
             <li>
-              <span className="font-medium">UI Virtualization:</span> Optimizing the rendering of large formatted outputs.
+              <span className="font-medium">UI Virtualization:</span> Optimizing the rendering of large formatted
+              outputs.
             </li>
             <li>
-              <span className="font-medium">Leveraging Optimized Libraries:</span> Using battle-tested external parsers or formatters.
+              <span className="font-medium">Leveraging Optimized Libraries:</span> Using battle-tested external parsers
+              or formatters.
             </li>
           </ul>
         </div>

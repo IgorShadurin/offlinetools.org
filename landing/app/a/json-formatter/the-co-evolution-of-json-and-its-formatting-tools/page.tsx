@@ -9,17 +9,15 @@ export const metadata: Metadata = {
 export default function JsonToolsCoEvolutionArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        The Co-evolution of JSON and Its Formatting Tools
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">The Co-evolution of JSON and Its Formatting Tools</h1>
 
       <div className="space-y-6">
         <p>
           JSON (JavaScript Object Notation) emerged as a lightweight, human-readable data interchange format in the
           early 2000s. Its simplicity and native compatibility with JavaScript made it rapidly replace XML in many web
           applications. However, as JSON became more prevalent and datasets grew larger and more complex, the need for
-          tools to format, validate, and manipulate this data became paramount. This necessity drove a parallel evolution
-          of JSON itself and the tools developers use to handle it.
+          tools to format, validate, and manipulate this data became paramount. This necessity drove a parallel
+          evolution of JSON itself and the tools developers use to handle it.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Birth of JSON and Early Challenges</h2>
@@ -30,8 +28,8 @@ export default function JsonToolsCoEvolutionArticle() {
         </p>
         <p>
           In the early days, developers often worked with JSON data directly as plain text. Formatting was manual, and
-          syntax errors could be frustratingly difficult to spot in large, unformatted strings. Debugging involved careful
-          manual inspection, often line by line.
+          syntax errors could be frustratingly difficult to spot in large, unformatted strings. Debugging involved
+          careful manual inspection, often line by line.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -41,21 +39,19 @@ export default function JsonToolsCoEvolutionArticle() {
               {`{"user":{"id":101,"name":"Alice","roles":["admin","editor"]},"products":[{"id":501,"name":"Laptop","price":1200},{"id":502,"name":"Mouse","price":25}]}`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            Compact but hard to read and prone to errors when edited manually.
-          </p>
+          <p className="mt-2 text-sm">Compact but hard to read and prone to errors when edited manually.</p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">The Rise of Online Formatters and Validators</h2>
         <p>
           As JSON&apos;s adoption grew, simple online tools began to appear. These tools filled a critical gap: they
-          could take a raw JSON string and automatically indent and format it into a readable structure. More importantly,
-          they could validate the JSON syntax, pointing out errors like missing commas, misplaced brackets, or incorrect
-          quotes.
+          could take a raw JSON string and automatically indent and format it into a readable structure. More
+          importantly, they could validate the JSON syntax, pointing out errors like missing commas, misplaced brackets,
+          or incorrect quotes.
         </p>
         <p>
-          These first-generation tools significantly improved developer productivity by quickly identifying syntax issues
-          that were tedious to find manually. Features commonly found included:
+          These first-generation tools significantly improved developer productivity by quickly identifying syntax
+          issues that were tedious to find manually. Features commonly found included:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -70,14 +66,14 @@ export default function JsonToolsCoEvolutionArticle() {
         <h2 className="text-2xl font-semibold mt-8">Integration into Development Environments</h2>
         <p>
           The utility of JSON formatting and validation quickly led to these features being integrated directly into
-          Integrated Development Environments (IDEs) and text editors through plugins and built-in support. Working
-          with JSON files (`.json`) became seamless, offering real-time syntax checking, auto-completion based on context,
+          Integrated Development Environments (IDEs) and text editors through plugins and built-in support. Working with
+          JSON files (`.json`) became seamless, offering real-time syntax checking, auto-completion based on context,
           and instant formatting on save or command.
         </p>
         <p>
-          This integration was a major step, allowing developers to catch errors as they typed, rather than having to copy
-          and paste into an external tool. Advanced features like folding large objects or arrays and searching within the
-          formatted structure also became common.
+          This integration was a major step, allowing developers to catch errors as they typed, rather than having to
+          copy and paste into an external tool. Advanced features like folding large objects or arrays and searching
+          within the formatted structure also became common.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -116,14 +112,14 @@ export default function JsonToolsCoEvolutionArticle() {
         <h2 className="text-2xl font-semibold mt-8">Handling Complexity: Schemas and Large Datasets</h2>
         <p>
           As JSON became the standard for APIs and configuration files, datasets grew significantly, sometimes to many
-          megabytes or even gigabytes. Handling such large files efficiently required tools that could process data without
-          loading it entirely into memory. This led to the development of streaming parsers and formatters.
+          megabytes or even gigabytes. Handling such large files efficiently required tools that could process data
+          without loading it entirely into memory. This led to the development of streaming parsers and formatters.
         </p>
         <p>
           Furthermore, the need to ensure data conformed to a specific structure gave rise to JSON Schema. JSON Schema
-          provides a way to describe the format and structure of JSON data. Tools evolved to include JSON Schema validation,
-          allowing developers to check not just if the JSON was syntactically correct, but if it contained the expected
-          fields with the correct data types.
+          provides a way to describe the format and structure of JSON data. Tools evolved to include JSON Schema
+          validation, allowing developers to check not just if the JSON was syntactically correct, but if it contained
+          the expected fields with the correct data types.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -136,16 +132,18 @@ export default function JsonToolsCoEvolutionArticle() {
               <span className="font-medium">Streaming Parsers:</span> Processing large JSON without full memory load.
             </li>
             <li>
-              <span className="font-medium">Advanced Navigation:</span> Tools for exploring deeply nested or very large JSON objects (e.g., JSONPath queries).
+              <span className="font-medium">Advanced Navigation:</span> Tools for exploring deeply nested or very large
+              JSON objects (e.g., JSONPath queries).
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">The Modern JSON Tool Landscape</h2>
         <p>
-          Today, JSON formatting and validation tools are ubiquitous and highly sophisticated. They range from simple web-based
-          formatters and command-line utilities to powerful features embedded in major IDEs and code editors. Many tools
-          offer offline capabilities, allowing developers to work with sensitive data without transmitting it over the internet.
+          Today, JSON formatting and validation tools are ubiquitous and highly sophisticated. They range from simple
+          web-based formatters and command-line utilities to powerful features embedded in major IDEs and code editors.
+          Many tools offer offline capabilities, allowing developers to work with sensitive data without transmitting it
+          over the internet.
         </p>
         <p>Key features you can expect from modern tools include:</p>
 
@@ -162,7 +160,8 @@ export default function JsonToolsCoEvolutionArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Example: Using a Tool for Validation</h2>
         <p>
-          Consider a JSON object that should conform to a simple schema requiring a numeric <code>id</code> and a string <code>name</code>.
+          Consider a JSON object that should conform to a simple schema requiring a numeric <code>id</code> and a string{" "}
+          <code>name</code>.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -200,9 +199,7 @@ export default function JsonToolsCoEvolutionArticle() {
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm text-green-600 dark:text-green-400">
-            This JSON conforms to the schema.
-          </p>
+          <p className="mt-2 text-sm text-green-600 dark:text-green-400">This JSON conforms to the schema.</p>
         </div>
         <p>
           Modern tools integrate this level of checking, providing immediate feedback not just on syntax, but on the
@@ -210,9 +207,7 @@ export default function JsonToolsCoEvolutionArticle() {
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Future of JSON Tools</h2>
-        <p>
-          The evolution continues. Future tools may offer even more intelligent features, such as:
-        </p>
+        <p>The evolution continues. Future tools may offer even more intelligent features, such as:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
@@ -223,18 +218,18 @@ export default function JsonToolsCoEvolutionArticle() {
           </ul>
         </div>
         <p>
-          As JSON remains a dominant force in data exchange, the tools surrounding it will undoubtedly continue to adapt,
-          becoming more powerful, integrated, and user-friendly.
+          As JSON remains a dominant force in data exchange, the tools surrounding it will undoubtedly continue to
+          adapt, becoming more powerful, integrated, and user-friendly.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          The journey of JSON from a simple text format to the backbone of modern web communication is closely linked to the
-          evolution of its formatting and validation tools. These tools transformed working with JSON from a potentially
-          error-prone manual process into a streamlined and efficient part of the development workflow. From basic online
-          formatters to integrated IDE features and advanced schema validation, the tools have consistently risen to meet the
-          growing demands imposed by increasingly complex and large JSON datasets. They are now indispensable companions for
-          any developer working with this ubiquitous data format.
+          The journey of JSON from a simple text format to the backbone of modern web communication is closely linked to
+          the evolution of its formatting and validation tools. These tools transformed working with JSON from a
+          potentially error-prone manual process into a streamlined and efficient part of the development workflow. From
+          basic online formatters to integrated IDE features and advanced schema validation, the tools have consistently
+          risen to meet the growing demands imposed by increasingly complex and large JSON datasets. They are now
+          indispensable companions for any developer working with this ubiquitous data format.
         </p>
       </div>
     </>

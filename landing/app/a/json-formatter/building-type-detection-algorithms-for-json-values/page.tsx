@@ -9,54 +9,46 @@ export const metadata: Metadata = {
 export default function JsonTypeDetectionArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Building Type Detection Algorithms for JSON Values
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Building Type Detection Algorithms for JSON Values</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to
-          read and write and easy for machines to parse and generate. Understanding the data types of the values
-          within a JSON structure is crucial for processing, validating, and interacting with the data correctly.
-          While most programming languages parse JSON into native data structures (like objects, arrays, strings,
-          numbers), sometimes you need to explicitly detect the type of a value programmatically. This article
-          explores how to build algorithms for this purpose.
+          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and
+          write and easy for machines to parse and generate. Understanding the data types of the values within a JSON
+          structure is crucial for processing, validating, and interacting with the data correctly. While most
+          programming languages parse JSON into native data structures (like objects, arrays, strings, numbers),
+          sometimes you need to explicitly detect the type of a value programmatically. This article explores how to
+          build algorithms for this purpose.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Detect JSON Types?</h2>
-        <p>
-          Explicitly detecting types within a parsed JSON structure can be necessary for several reasons:
-        </p>
+        <p>Explicitly detecting types within a parsed JSON structure can be necessary for several reasons:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Validation:</span> Ensuring data conforms to an expected structure and
-            type definition (like a JSON Schema).
+            <span className="font-medium">Validation:</span> Ensuring data conforms to an expected structure and type
+            definition (like a JSON Schema).
           </li>
           <li>
-            <span className="font-medium">Dynamic Processing:</span> Writing logic that behaves differently
-            based on the type of data encountered (e.g., formatting a number, iterating over an array, accessing
-            object properties).
+            <span className="font-medium">Dynamic Processing:</span> Writing logic that behaves differently based on the
+            type of data encountered (e.g., formatting a number, iterating over an array, accessing object properties).
           </li>
           <li>
             <span className="font-medium">Conversion:</span> Handling conversions or transformations based on the
             original JSON type.
           </li>
           <li>
-            <span className="font-medium">Schema Inference:</span> Building tools that analyze JSON data to
-            suggest a schema based on detected types.
+            <span className="font-medium">Schema Inference:</span> Building tools that analyze JSON data to suggest a
+            schema based on detected types.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Understanding JSON Data Types</h2>
-        <p>
-          JSON defines a small set of primitive types and two structural types:
-        </p>
+        <p>JSON defines a small set of primitive types and two structural types:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">JSON Types:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">String:</span> Sequence of Unicode characters, enclosed in double
-              quotes.
+              <span className="font-medium">String:</span> Sequence of Unicode characters, enclosed in double quotes.
             </li>
             <li>
               <span className="font-medium">Number:</span> Integer or floating-point numbers (no octal, hex, or
@@ -69,30 +61,26 @@ export default function JsonTypeDetectionArticle() {
               <span className="font-medium">Null:</span> An empty value, represented by <code>null</code>.
             </li>
             <li>
-              <span className="font-medium">Object:</span> An unordered collection of key/value pairs, enclosed
-              in curly braces <code>{}</code>. Keys are strings.
+              <span className="font-medium">Object:</span> An unordered collection of key/value pairs, enclosed in curly
+              braces <code>{}</code>. Keys are strings.
             </li>
             <li>
-              <span className="font-medium">Array:</span> An ordered sequence of values, enclosed in square
-              brackets <code>[]</code>. Values can be of any JSON type.
+              <span className="font-medium">Array:</span> An ordered sequence of values, enclosed in square brackets{" "}
+              <code>[]</code>. Values can be of any JSON type.
             </li>
           </ul>
           <p className="mt-2 text-sm italic">
-            Note: JSON types map directly to JavaScript/TypeScript primitive types and objects/arrays after
-            parsing.
+            Note: JSON types map directly to JavaScript/TypeScript primitive types and objects/arrays after parsing.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Algorithm Approaches</h2>
-        <p>
-          You can detect the type of a parsed JSON value using a few different approaches:
-        </p>
+        <p>You can detect the type of a parsed JSON value using a few different approaches:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Manual Checks (Using `typeof` and `Array.isArray`)</h3>
         <p>
-          In JavaScript/TypeScript, after parsing a JSON string using <code>JSON.parse()</code>, the JSON values
-          are represented by native JS/TS types. You can use built-in operators and functions to determine the
-          type.
+          In JavaScript/TypeScript, after parsing a JSON string using <code>JSON.parse()</code>, the JSON values are
+          represented by native JS/TS types. You can use built-in operators and functions to determine the type.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">How `typeof` works:</h4>
@@ -125,15 +113,14 @@ typeof []           // returns "object" (needs special handling)`}
 
         <h3 className="text-xl font-semibold mt-6">2. Using Libraries</h3>
         <p>
-          Various libraries provide utility functions for type checking, often handling edge cases and providing
-          more semantic type names. Examples include Lodash (`_.isString`, `_.isNumber`, etc.) or validation
-          libraries.
+          Various libraries provide utility functions for type checking, often handling edge cases and providing more
+          semantic type names. Examples include Lodash (`_.isString`, `_.isNumber`, etc.) or validation libraries.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Building a Manual Type Detection Function</h2>
         <p>
-          Let&apos;s create a function in TypeScript that takes a parsed JSON value and returns a string
-          indicating its JSON type.
+          Let&apos;s create a function in TypeScript that takes a parsed JSON value and returns a string indicating its
+          JSON type.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mb-2">
@@ -231,22 +218,22 @@ console.log(getJsonType(true)); // Output: boolean
         </div>
         <p>
           This function covers the standard JSON types by leveraging JavaScript&apos;s built-in type checking
-          mechanisms, specifically handling the quirks of <code>typeof null</code> and distinguishing arrays from
-          other objects.
+          mechanisms, specifically handling the quirks of <code>typeof null</code> and distinguishing arrays from other
+          objects.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Handling Nested Structures</h2>
         <p>
-          The `getJsonType` function above only checks the type of a single value. If you need to traverse a
-          JSON structure and detect types at each level, you would typically use recursion or iteration.
+          The `getJsonType` function above only checks the type of a single value. If you need to traverse a JSON
+          structure and detect types at each level, you would typically use recursion or iteration.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mb-2">
             Recursive Type Detection Example:
           </h3>
           <p className="text-sm mb-2">
-            This example doesn&apos;t just return a single type, but could build a type structure or perform
-            actions based on the type at each node.
+            This example doesn&apos;t just return a single type, but could build a type structure or perform actions
+            based on the type at each node.
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
@@ -338,8 +325,8 @@ Output will be a complex object representing the structure:
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This recursive approach allows you to build a representation of the entire JSON structure, capturing
-            the type of every nested value.
+            This recursive approach allows you to build a representation of the entire JSON structure, capturing the
+            type of every nested value.
           </p>
         </div>
 
@@ -350,21 +337,21 @@ Output will be a complex object representing the structure:
             <code>undefined</code>. <code>JSON.parse</code> will never produce <code>undefined</code> values.
           </li>
           <li>
-            <span className="font-medium">NaN and Infinity:</span> Standard JSON numbers cannot be{" "}
-            <code>NaN</code> or <code>Infinity</code>. However, <code>JSON.parse</code> in JavaScript *will*
-            produce these if the input string literally contains "NaN", "Infinity", or "-Infinity" (though this is
-            non-standard and not universally supported). The `Number.isFinite()` check helps identify these.
+            <span className="font-medium">NaN and Infinity:</span> Standard JSON numbers cannot be <code>NaN</code> or{" "}
+            <code>Infinity</code>. However, <code>JSON.parse</code> in JavaScript *will* produce these if the input
+            string literally contains "NaN", "Infinity", or "-Infinity" (though this is non-standard and not universally
+            supported). The `Number.isFinite()` check helps identify these.
           </li>
           <li>
-            <span className="font-medium">Dates:</span> JSON does not have a specific "Date" type. Dates are
-            typically represented as strings (often in ISO 8601 format) or sometimes as numbers (timestamps). A
-            type detection algorithm will correctly identify these as "string" or "number". If you need to detect
-            if a string <em>represents</em> a date, that requires additional parsing and validation logic beyond
-            basic JSON type detection.
+            <span className="font-medium">Dates:</span> JSON does not have a specific "Date" type. Dates are typically
+            represented as strings (often in ISO 8601 format) or sometimes as numbers (timestamps). A type detection
+            algorithm will correctly identify these as "string" or "number". If you need to detect if a string{" "}
+            <em>represents</em> a date, that requires additional parsing and validation logic beyond basic JSON type
+            detection.
           </li>
           <li>
-            <span className="font-medium">Empty Objects/Arrays:</span> <code>{}</code> is an object,{" "}
-            <code>[]</code> is an array. Their emptiness doesn&apos;t change their fundamental type.
+            <span className="font-medium">Empty Objects/Arrays:</span> <code>{}</code> is an object, <code>[]</code> is
+            an array. Their emptiness doesn&apos;t change their fundamental type.
           </li>
           <li>
             <span className="font-medium">Order in Objects:</span> While JavaScript objects *do* maintain insertion
@@ -374,13 +361,13 @@ Output will be a complex object representing the structure:
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Using Libraries vs. Manual Implementation</h2>
-        <p>
-          Choosing between manual implementation and using a library depends on your needs:
-        </p>
+        <p>Choosing between manual implementation and using a library depends on your needs:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Manual Implementation:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><span className="font-medium">Pros:</span> Lightweight, no external dependencies, full control.</li>
+            <li>
+              <span className="font-medium">Pros:</span> Lightweight, no external dependencies, full control.
+            </li>
             <li>
               <span className="font-medium">Cons:</span> Need to handle edge cases (like <code>null</code>, arrays,
               potentially non-finite numbers) yourself, might be less readable for complex scenarios.
@@ -391,8 +378,8 @@ Output will be a complex object representing the structure:
           <h3 className="text-lg font-medium">Using Libraries (e.g., Lodash):</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Pros:</span> Concise syntax (`_.isString(value)`), handles many
-              common checks and edge cases consistently, well-tested.
+              <span className="font-medium">Pros:</span> Concise syntax (`_.isString(value)`), handles many common
+              checks and edge cases consistently, well-tested.
             </li>
             <li>
               <span className="font-medium">Cons:</span> Adds a dependency to your project, might include more
@@ -403,14 +390,13 @@ Output will be a complex object representing the structure:
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Building a type detection algorithm for JSON values in JavaScript/TypeScript involves leveraging the
-          results of <code>JSON.parse()</code> and using native language features like <code>typeof</code> and{" "}
-          <code>Array.isArray()</code>. By carefully handling the specific behaviors of <code>null</code> and
-          arrays, you can accurately determine the JSON type of any parsed value. For nested structures,
-          recursion is a natural fit for traversing objects and arrays. While libraries offer convenience, a
-          manual implementation provides control and avoids external dependencies for this relatively
-          straightforward task. Understanding these algorithms is a fundamental step in working effectively
-          with dynamic JSON data.
+          Building a type detection algorithm for JSON values in JavaScript/TypeScript involves leveraging the results
+          of <code>JSON.parse()</code> and using native language features like <code>typeof</code> and{" "}
+          <code>Array.isArray()</code>. By carefully handling the specific behaviors of <code>null</code> and arrays,
+          you can accurately determine the JSON type of any parsed value. For nested structures, recursion is a natural
+          fit for traversing objects and arrays. While libraries offer convenience, a manual implementation provides
+          control and avoids external dependencies for this relatively straightforward task. Understanding these
+          algorithms is a fundamental step in working effectively with dynamic JSON data.
         </p>
       </div>
     </>

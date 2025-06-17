@@ -18,8 +18,8 @@ export default function JsonFormattingIssuesArticle() {
         <p>
           JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web. Its
           lightweight, human-readable format makes it ideal for transmitting structured data between servers and
-          clients. However, like any standard, strict adherence to its rules is crucial for smooth communication.
-          Even small deviations in formatting can lead to parsing errors, unexpected behavior, and debugging headaches.
+          clients. However, like any standard, strict adherence to its rules is crucial for smooth communication. Even
+          small deviations in formatting can lead to parsing errors, unexpected behavior, and debugging headaches.
         </p>
         <p>
           This page explores common JSON formatting issues encountered in server-client communication and provides
@@ -32,9 +32,8 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. Trailing Commas</h3>
         <p>
-          JSON syntax does not allow trailing commas in object properties or array elements. This is a common
-          mistake, especially for developers familiar with JavaScript literal syntax where trailing commas are
-          often permitted.
+          JSON syntax does not allow trailing commas in object properties or array elements. This is a common mistake,
+          especially for developers familiar with JavaScript literal syntax where trailing commas are often permitted.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Incorrect JSON:</h4>
@@ -71,7 +70,11 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">2. Comments</h3>
         <p>
-          {"JSON is purely a data format and does not support comments (neither single-line "}<code>{" //"}</code>{" nor multi-line "}<code>{" /* ... */"}</code>{"). Including comments will result in a parsing error."}
+          {"JSON is purely a data format and does not support comments (neither single-line "}
+          <code>{" //"}</code>
+          {" nor multi-line "}
+          <code>{" /* ... */"}</code>
+          {"). Including comments will result in a parsing error."}
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Incorrect JSON:</h4>
@@ -82,9 +85,7 @@ export default function JsonFormattingIssuesArticle() {
 }`}
           </pre>
           <h4 className="text-lg font-medium mb-2 mt-4">Correct JSON:</h4>
-          <p>
-            Comments should be handled in the code that generates or consumes the JSON, not within the JSON itself.
-          </p>
+          <p>Comments should be handled in the code that generates or consumes the JSON, not within the JSON itself.</p>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             {`{
   "username": "coder123",
@@ -95,8 +96,8 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">3. Incorrect Quotes</h3>
         <p>
-          JSON requires all string values and object keys to be enclosed in double quotes (<code>&quot;</code>).
-          Single quotes (<code>&apos;</code>) are not allowed.
+          JSON requires all string values and object keys to be enclosed in double quotes (<code>&quot;</code>). Single
+          quotes (<code>&apos;</code>) are not allowed.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Incorrect JSON:</h4>
@@ -117,9 +118,9 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">4. Malformed Structure (Missing Braces/Brackets/Colons)</h3>
         <p>
-          JSON relies on strict pairing of braces &#x7b;&#x7d; for objects and brackets &#x5b;&#x5d;
-          for arrays, and colons <code>:</code> to separate keys from values in objects. Missing or misplaced structural
-          characters will break the format.
+          JSON relies on strict pairing of braces &#x7b;&#x7d; for objects and brackets &#x5b;&#x5d; for arrays, and
+          colons <code>:</code> to separate keys from values in objects. Missing or misplaced structural characters will
+          break the format.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Incorrect JSON:</h4>
@@ -160,9 +161,9 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">5. Unescaped Special Characters in Strings</h3>
         <p>
-          Certain characters within a string must be escaped with a backslash (<code>\</code>), such as double quotes
-          (<code>\"</code>), backslashes (<code>\\</code>), newlines (<code>\n</code>), carriage returns (<code>\r</code>),
-          tabs (<code>\t</code>), form feeds (<code>\f</code>), and backspaces (<code>\b</code>).
+          Certain characters within a string must be escaped with a backslash (<code>\</code>), such as double quotes (
+          <code>\"</code>), backslashes (<code>\\</code>), newlines (<code>\n</code>), carriage returns (<code>\r</code>
+          ), tabs (<code>\t</code>), form feeds (<code>\f</code>), and backspaces (<code>\b</code>).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Incorrect JSON:</h4>
@@ -181,9 +182,9 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">6. Invalid Data Types or Formats</h3>
         <p>
-          JSON has specific rules for numbers, booleans (<code>true</code>, <code>false</code>), and null (<code>null</code>).
-          These values must be lowercase and not quoted. Invalid number formats (like leading zeros on non-zero numbers)
-          or using JavaScript's <code>undefined</code> are also errors.
+          JSON has specific rules for numbers, booleans (<code>true</code>, <code>false</code>), and null (
+          <code>null</code>). These values must be lowercase and not quoted. Invalid number formats (like leading zeros
+          on non-zero numbers) or using JavaScript's <code>undefined</code> are also errors.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Incorrect JSON:</h4>
@@ -210,26 +211,40 @@ export default function JsonFormattingIssuesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">7. Encoding Issues</h3>
         <p>
-          JSON text MUST be encoded in UTF-8. Using other encodings without proper headers or conversion
-          can lead to parsing errors or corrupted data, especially with non-ASCII characters.
+          JSON text MUST be encoded in UTF-8. Using other encodings without proper headers or conversion can lead to
+          parsing errors or corrupted data, especially with non-ASCII characters.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">8. Large Payloads / Deeply Nested Structures</h3>
         <p>
-          While technically valid JSON, extremely large files or deeply nested structures can cause performance
-          issues or even stack overflows during parsing on either the server or the client side, depending on
-          the parser implementation and available memory/stack size.
+          While technically valid JSON, extremely large files or deeply nested structures can cause performance issues
+          or even stack overflows during parsing on either the server or the client side, depending on the parser
+          implementation and available memory/stack size.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Code size={24} /> Causes of JSON Formatting Issues
         </h2>
         <ul className="list-disc pl-6 space-y-2">
-          <li><strong>Manual JSON Construction:</strong> Typing JSON strings manually or concatenating strings instead of using built-in JSON serialization functions.</li>
-          <li><strong>Outdated or Non-Compliant Libraries:</strong> Using libraries that generate or parse JSON incorrectly according to the latest standard.</li>
-          <li><strong>Encoding Mismatches:</strong> Server and client expecting different character encodings.</li>
-          <li><strong>Handling User Input Directly:</strong> Allowing unvalidated user input to form part of a JSON structure without proper sanitization and escaping.</li>
-          <li><strong>Debugging Output:</strong> Copy-pasting debug output (which might include comments or trailing commas for readability) into production code or requests.</li>
+          <li>
+            <strong>Manual JSON Construction:</strong> Typing JSON strings manually or concatenating strings instead of
+            using built-in JSON serialization functions.
+          </li>
+          <li>
+            <strong>Outdated or Non-Compliant Libraries:</strong> Using libraries that generate or parse JSON
+            incorrectly according to the latest standard.
+          </li>
+          <li>
+            <strong>Encoding Mismatches:</strong> Server and client expecting different character encodings.
+          </li>
+          <li>
+            <strong>Handling User Input Directly:</strong> Allowing unvalidated user input to form part of a JSON
+            structure without proper sanitization and escaping.
+          </li>
+          <li>
+            <strong>Debugging Output:</strong> Copy-pasting debug output (which might include comments or trailing
+            commas for readability) into production code or requests.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -237,36 +252,45 @@ export default function JsonFormattingIssuesArticle() {
         </h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Use Standard Libraries:</strong> Always use the built-in <code>JSON.parse()</code> and <code>JSON.stringify()</code> in JavaScript/TypeScript, or their equivalents in other programming languages (e.g., <code>json_encode()</code>/<code>json_decode()</code> in PHP, <code>json.dumps()</code>/<code>json.loads()</code> in Python, <code>ObjectMapper</code> in Java). These functions handle escaping and formatting correctly.
+            <strong>Use Standard Libraries:</strong> Always use the built-in <code>JSON.parse()</code> and{" "}
+            <code>JSON.stringify()</code> in JavaScript/TypeScript, or their equivalents in other programming languages
+            (e.g., <code>json_encode()</code>/<code>json_decode()</code> in PHP, <code>json.dumps()</code>/
+            <code>json.loads()</code> in Python, <code>ObjectMapper</code> in Java). These functions handle escaping and
+            formatting correctly.
           </li>
           <li>
-            <strong>Validate JSON:</strong> Use online or offline JSON validators/linters during development. Many IDEs also have built-in JSON validation. This catches syntax errors before deployment.
+            <strong>Validate JSON:</strong> Use online or offline JSON validators/linters during development. Many IDEs
+            also have built-in JSON validation. This catches syntax errors before deployment.
           </li>
           <li>
-            <strong>Specify Content-Type:</strong> Ensure your server response includes the <code>Content-Type: application/json</code> header. This tells the client how to interpret the payload.
+            <strong>Specify Content-Type:</strong> Ensure your server response includes the{" "}
+            <code>Content-Type: application/json</code> header. This tells the client how to interpret the payload.
           </li>
           <li>
             <strong>Consistent Encoding:</strong> Configure both server and client to use UTF-8 consistently.
           </li>
           <li>
-            <strong>Error Handling:</strong> Implement proper error handling around <code>JSON.parse()</code> on the client and server sides. Catch parsing errors and return informative responses (e.g., HTTP 400 Bad Request with a message indicating a JSON parsing failure).
+            <strong>Error Handling:</strong> Implement proper error handling around <code>JSON.parse()</code> on the
+            client and server sides. Catch parsing errors and return informative responses (e.g., HTTP 400 Bad Request
+            with a message indicating a JSON parsing failure).
           </li>
           <li>
-            <strong>Logging:</strong> Log the raw request/response body when encountering parsing errors during debugging. This allows you to inspect the actual data being sent.
+            <strong>Logging:</strong> Log the raw request/response body when encountering parsing errors during
+            debugging. This allows you to inspect the actual data being sent.
           </li>
           <li>
-            <strong>Schema Validation:</strong> For complex data, consider using JSON Schema to define the expected structure and data types, and validate incoming/outgoing JSON against the schema.
+            <strong>Schema Validation:</strong> For complex data, consider using JSON Schema to define the expected
+            structure and data types, and validate incoming/outgoing JSON against the schema.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON's simplicity is its strength, but it relies on strict adherence to its specification.
-          Understanding common formatting pitfalls like trailing commas, comments, and incorrect quotes, and
-          consistently using standard serialization/parsing libraries are key to preventing frustrating
-          communication errors between your server and client applications. Validating your JSON during
-          development and implementing robust error handling at runtime will significantly improve the
-          reliability of your data exchange.
+          JSON's simplicity is its strength, but it relies on strict adherence to its specification. Understanding
+          common formatting pitfalls like trailing commas, comments, and incorrect quotes, and consistently using
+          standard serialization/parsing libraries are key to preventing frustrating communication errors between your
+          server and client applications. Validating your JSON during development and implementing robust error handling
+          at runtime will significantly improve the reliability of your data exchange.
         </p>
       </div>
     </>

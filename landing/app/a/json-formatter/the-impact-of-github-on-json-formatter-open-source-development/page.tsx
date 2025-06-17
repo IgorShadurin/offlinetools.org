@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 export default function GithubImpactJsonFormatterArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        The Impact of GitHub on JSON Formatter Open Source Development
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">The Impact of GitHub on JSON Formatter Open Source Development</h1>
 
       <div className="space-y-6">
         <p>
@@ -44,8 +42,9 @@ export default function GithubImpactJsonFormatterArticle() {
             </li>
             <li>
               <span className="font-medium">Branching and Merging:</span> Enables experimentation with new formatting
-              logic or parsing techniques in isolation before merging into the main codebase.
-             tropes with the maintainers, and integrate them seamlessly. This is crucial for adding new features or fixing bugs in formatters.
+              logic or parsing techniques in isolation before merging into the main codebase. tropes with the
+              maintainers, and integrate them seamlessly. This is crucial for adding new features or fixing bugs in
+              formatters.
             </li>
             <li>
               <span className="font-medium">Branching and Merging:</span> Enables experimentation with new formatting
@@ -154,8 +153,8 @@ jobs:
 
         <h2 className="text-2xl font-semibold mt-8">5. Diverse Implementations and Innovation</h2>
         <p>
-          The ease of sharing and collaborating on GitHub has led to a wide variety of open-source JSON formatters,
-          each with its own strengths and target audience.
+          The ease of sharing and collaborating on GitHub has led to a wide variety of open-source JSON formatters, each
+          with its own strengths and target audience.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -166,9 +165,7 @@ jobs:
             <li>Formatters with extra features like sorting keys, removing keys, or converting formats</li>
             <li>Implementations focusing on performance, strict validation, or user-friendliness</li>
           </ul>
-          <p className="mt-3 text-sm">
-            For instance, a simple Python script for basic formatting shared on GitHub:
-          </p>
+          <p className="mt-3 text-sm">For instance, a simple Python script for basic formatting shared on GitHub:</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-2">
             <pre>
               {`import json
@@ -194,9 +191,9 @@ def format_json_string(json_string):
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           GitHub has not merely hosted open-source JSON formatter projects; it has actively shaped their development
-          trajectory. By providing robust version control, streamlined collaboration tools, enhanced discoverability, and
-          essential infrastructure, GitHub has empowered developers worldwide to contribute to, improve, and create a
-          diverse ecosystem of high-quality JSON formatting tools.
+          trajectory. By providing robust version control, streamlined collaboration tools, enhanced discoverability,
+          and essential infrastructure, GitHub has empowered developers worldwide to contribute to, improve, and create
+          a diverse ecosystem of high-quality JSON formatting tools.
         </p>
 
         <p>

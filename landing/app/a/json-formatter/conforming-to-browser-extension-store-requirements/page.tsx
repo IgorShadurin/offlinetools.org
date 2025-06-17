@@ -9,16 +9,14 @@ export const metadata: Metadata = {
 export default function BrowserExtensionStoreRequirementsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Conforming to Browser Extension Store Requirements
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Conforming to Browser Extension Store Requirements</h1>
 
       <div className="space-y-6">
         <p>
           Publishing a browser extension involves more than just writing code; it requires adhering to the specific
-          policies and technical requirements set by each extension store (like the Chrome Web Store, Mozilla
-          Add-ons, Microsoft Edge Add-ons, etc.). Conforming to these requirements is crucial for your extension&apos;s
-          approval, maintenance, and overall success.
+          policies and technical requirements set by each extension store (like the Chrome Web Store, Mozilla Add-ons,
+          Microsoft Edge Add-ons, etc.). Conforming to these requirements is crucial for your extension&apos;s approval,
+          maintenance, and overall success.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Store Requirements Matter</h2>
@@ -43,21 +41,19 @@ export default function BrowserExtensionStoreRequirementsArticle() {
         <p>While specific rules vary slightly between stores, most requirements fall into these key categories:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Functionality and User Experience</h3>
-        <p>
-          Your extension must work as advertised and provide a clear benefit to the user.
-        </p>
+        <p>Your extension must work as advertised and provide a clear benefit to the user.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Clear Purpose:</span> The extension&apos;s functionality should be
-            obvious and align with its description.
+            <span className="font-medium">Clear Purpose:</span> The extension&apos;s functionality should be obvious and
+            align with its description.
           </li>
           <li>
-            <span className="font-medium">Non-Intrusive:</span> Avoid excessive pop-ups, notifications, or
-            disruptive behavior.
+            <span className="font-medium">Non-Intrusive:</span> Avoid excessive pop-ups, notifications, or disruptive
+            behavior.
           </li>
           <li>
-            <span className="font-medium">Reliability:</span> The extension should be stable and free from
-            crashes or major bugs.
+            <span className="font-medium">Reliability:</span> The extension should be stable and free from crashes or
+            major bugs.
           </li>
           <li>
             <span className="font-medium">Easy to Use:</span> The interface should be intuitive and user-friendly.
@@ -69,25 +65,23 @@ export default function BrowserExtensionStoreRequirementsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">2. Security and Privacy</h3>
-        <p>
-          Protecting user data and ensuring security are paramount.
-        </p>
+        <p>Protecting user data and ensuring security are paramount.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Request Minimal Permissions:</span> Only request the permissions absolutely
             necessary for your extension to function. Justify requested permissions if asked.
           </li>
           <li>
-            <span className="font-medium">Secure Data Handling:</span> Handle user data responsibly and securely.
-            Avoid collecting data you don&apos;t need.
+            <span className="font-medium">Secure Data Handling:</span> Handle user data responsibly and securely. Avoid
+            collecting data you don&apos;t need.
           </li>
           <li>
             <span className="font-medium">Transparency:</span> Clearly inform users about what data you collect and how
             it&apos;s used, typically through a privacy policy.
           </li>
           <li>
-            <span className="font-medium">No Malicious Code:</span> Your extension must not contain malware, spyware,
-            or any code designed to harm users or their data.
+            <span className="font-medium">No Malicious Code:</span> Your extension must not contain malware, spyware, or
+            any code designed to harm users or their data.
           </li>
           <li>
             <span className="font-medium">Safe Updates:</span> Updates should not introduce unexpected or malicious
@@ -114,8 +108,8 @@ export default function BrowserExtensionStoreRequirementsArticle() {
             `host_permissions` fields. These must align with your extension&apos;s code.
           </li>
           <li>
-            <span className="font-medium">Content Security Policy (CSP):</span> Define a strict CSP to mitigate
-            script injection attacks.
+            <span className="font-medium">Content Security Policy (CSP):</span> Define a strict CSP to mitigate script
+            injection attacks.
           </li>
           <li>
             <span className="font-medium">Icons:</span> Provide icons of specified sizes for the browser toolbar and
@@ -165,14 +159,13 @@ export default function BrowserExtensionStoreRequirementsArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This is a basic structure; actual fields depend on your extension&apos;s functionality and required permissions.
+            This is a basic structure; actual fields depend on your extension&apos;s functionality and required
+            permissions.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">4. Listing and Branding</h3>
-        <p>
-          How you present your extension in the store is part of the requirements.
-        </p>
+        <p>How you present your extension in the store is part of the requirements.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Clear and Accurate Description:</span> Explain what the extension does and its
@@ -192,9 +185,7 @@ export default function BrowserExtensionStoreRequirementsArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">5. Legal and Compliance</h3>
-        <p>
-          Ensure your extension complies with relevant laws and store policies.
-        </p>
+        <p>Ensure your extension complies with relevant laws and store policies.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Ownership/Rights:</span> You must have the necessary rights to use all code,
@@ -211,9 +202,7 @@ export default function BrowserExtensionStoreRequirementsArticle() {
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Preparing for Submission and Review</h2>
-        <p>
-          Before submitting your extension, take these steps to maximize your chances of approval:
-        </p>
+        <p>Before submitting your extension, take these steps to maximize your chances of approval:</p>
         <ol className="list-decimal pl-6 space-y-3 my-4">
           <li className="font-medium">
             <span className="font-medium">Read the Store Policies Carefully:</span> Each store has its own detailed
@@ -224,8 +213,8 @@ export default function BrowserExtensionStoreRequirementsArticle() {
             Pay close attention to sections on user data privacy, required permissions, and acceptable functionality.
           </p>
           <li className="font-medium">
-            <span className="font-medium">Test Thoroughly:</span> Test your extension across different operating systems,
-            browser versions, and scenarios.
+            <span className="font-medium">Test Thoroughly:</span> Test your extension across different operating
+            systems, browser versions, and scenarios.
           </li>
           <p className="text-sm -mt-2">
             Ensure it works correctly and doesn&apos;t cause performance issues or conflicts.
@@ -253,16 +242,16 @@ export default function BrowserExtensionStoreRequirementsArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
           <h3 className="text-lg font-medium">Tip for Faster Approval:</h3>
           <p className="mt-2">
-            If your extension requires permissions that could be considered sensitive (e.g., `&lt;all_urls&gt;`,
-            `tabs`, `history`), provide clear explanations during the submission process about why these permissions are
+            If your extension requires permissions that could be considered sensitive (e.g., `&lt;all_urls&gt;`, `tabs`,
+            `history`), provide clear explanations during the submission process about why these permissions are
             necessary and how you use the data securely. A short demo video can also be helpful.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Maintaining Compliance After Approval</h2>
         <p>
-          Compliance isn&apos;t a one-time effort. Store policies can change, and your extension might be reviewed again,
-          especially during updates.
+          Compliance isn&apos;t a one-time effort. Store policies can change, and your extension might be reviewed
+          again, especially during updates.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -285,8 +274,8 @@ export default function BrowserExtensionStoreRequirementsArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Conforming to browser extension store requirements is a fundamental part of the development lifecycle. It ensures
-          your extension is safe, functional, and reliable for users, and prevents issues with store listing and
+          Conforming to browser extension store requirements is a fundamental part of the development lifecycle. It
+          ensures your extension is safe, functional, and reliable for users, and prevents issues with store listing and
           maintenance. By understanding the core areas of requirements—functionality, security, manifest configuration,
           and listing details—and preparing thoroughly for the submission process, you can navigate the path to
           publication successfully.

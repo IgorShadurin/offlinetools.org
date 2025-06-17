@@ -1,14 +1,5 @@
 import type { Metadata } from "next";
-import {
-  FileJson,
-  Lightbulb,
-  Code,
-  CheckCheck,
-  Info,
-  Book,
-  Users,
-  Wrench,
-} from "lucide-react";
+import { FileJson, Lightbulb, Code, CheckCheck, Info, Book, Users, Wrench } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Self-Documenting JSON Configuration Best Practices | Your Site",
@@ -107,7 +98,6 @@ const jsonSchemaExample = `{
   }
 }`;
 
-
 export default function SelfDocumentingJsonArticlePage() {
   return (
     <>
@@ -118,10 +108,14 @@ export default function SelfDocumentingJsonArticlePage() {
 
       <div className="space-y-6 text-gray-700 dark:text-gray-300">
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write and easy for machines to parse and generate. It's ubiquitous in web development, APIs, and configuration files. While its structure is simple, poorly written JSON can be just as cryptic as poorly written code.
+          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and
+          write and easy for machines to parse and generate. It's ubiquitous in web development, APIs, and configuration
+          files. While its structure is simple, poorly written JSON can be just as cryptic as poorly written code.
         </p>
         <p>
-          <strong>Self-documenting JSON</strong> refers to JSON structures that are inherently clear and understandable without requiring extensive external documentation. This is particularly crucial for configuration files, where developers often need to understand settings quickly.
+          <strong>Self-documenting JSON</strong> refers to JSON structures that are inherently clear and understandable
+          without requiring extensive external documentation. This is particularly crucial for configuration files,
+          where developers often need to understand settings quickly.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -131,17 +125,20 @@ export default function SelfDocumentingJsonArticlePage() {
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <p>
-              <strong>Improved Readability:</strong> Developers (including your future self!) can quickly grasp the purpose of each configuration setting.
+              <strong>Improved Readability:</strong> Developers (including your future self!) can quickly grasp the
+              purpose of each configuration setting.
             </p>
           </li>
           <li>
             <p>
-              <strong>Easier Maintenance:</strong> Updating or debugging configurations becomes faster and less error-prone.
+              <strong>Easier Maintenance:</strong> Updating or debugging configurations becomes faster and less
+              error-prone.
             </p>
           </li>
           <li>
             <p>
-              <strong>Smoother Onboarding:</strong> New team members can understand the configuration landscape without constant questions.
+              <strong>Smoother Onboarding:</strong> New team members can understand the configuration landscape without
+              constant questions.
             </p>
           </li>
           <li>
@@ -161,18 +158,18 @@ export default function SelfDocumentingJsonArticlePage() {
           1. Descriptive Key Names
         </h3>
         <p>
-          Choose key names that clearly indicate the purpose of the value they hold. Avoid abbreviations or overly technical jargon unless it's standard in the domain and well-understood.
+          Choose key names that clearly indicate the purpose of the value they hold. Avoid abbreviations or overly
+          technical jargon unless it's standard in the domain and well-understood.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {descriptiveKeysExample}
-            </pre>
+            <pre>{descriptiveKeysExample}</pre>
           </div>
         </div>
         <p>
-          Using conventions like appending units (e.g., <code>_ms</code> for milliseconds) or indicating format can add clarity.
+          Using conventions like appending units (e.g., <code>_ms</code> for milliseconds) or indicating format can add
+          clarity.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
@@ -180,14 +177,13 @@ export default function SelfDocumentingJsonArticlePage() {
           2. Logical Structure and Nesting
         </h3>
         <p>
-          Group related settings together using nested objects. This creates a hierarchy that reflects the application's structure or the domain being configured.
+          Group related settings together using nested objects. This creates a hierarchy that reflects the application's
+          structure or the domain being configured.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {logicalStructureExample}
-            </pre>
+            <pre>{logicalStructureExample}</pre>
           </div>
         </div>
 
@@ -196,7 +192,9 @@ export default function SelfDocumentingJsonArticlePage() {
           3. Use Appropriate Data Types
         </h3>
         <p>
-          JSON supports strings, numbers, booleans, arrays, objects, and null. Use the most fitting type for the data. A boolean key like <code>"feature_enabled": true</code> is clearer than <code>"feature_enabled": "yes"</code>. Use arrays for lists of items.
+          JSON supports strings, numbers, booleans, arrays, objects, and null. Use the most fitting type for the data. A
+          boolean key like <code>"feature_enabled": true</code> is clearer than <code>"feature_enabled": "yes"</code>.
+          Use arrays for lists of items.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
@@ -204,28 +202,33 @@ export default function SelfDocumentingJsonArticlePage() {
           4. Handle Comments (with caveats)
         </h3>
         <p>
-          Standard JSON does <strong>not</strong> support comments. Adding <code>&#x2F;&#x2F;</code> or <code>&#x2F;&#x2A; ... &#x2A;&#x2F;</code> will make the JSON invalid. However, for configuration files, it is a common practice to use one of these methods:
+          Standard JSON does <strong>not</strong> support comments. Adding <code>&#x2F;&#x2F;</code> or{" "}
+          <code>&#x2F;&#x2A; ... &#x2A;&#x2F;</code> will make the JSON invalid. However, for configuration files, it is
+          a common practice to use one of these methods:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <p>
-              <strong>Strip Comments Before Parsing:</strong> Use a pre-processor or loader that removes comments before passing the string to a standard JSON parser. Many configuration loading libraries do this (e.g., JSONC - JSON with Comments).
+              <strong>Strip Comments Before Parsing:</strong> Use a pre-processor or loader that removes comments before
+              passing the string to a standard JSON parser. Many configuration loading libraries do this (e.g., JSONC -
+              JSON with Comments).
             </p>
           </li>
           <li>
             <p>
-              <strong>Reserved Keys for Documentation:</strong> Some conventions use special keys like <code>&#x7b;_comment&#x7d;</code>, <code>&#x7b;__description&#x7d;</code>, or $note within objects to hold descriptive text. Parsers are expected to ignore these keys or handle them specially.
+              <strong>Reserved Keys for Documentation:</strong> Some conventions use special keys like{" "}
+              <code>&#x7b;_comment&#x7d;</code>, <code>&#x7b;__description&#x7d;</code>, or $note within objects to hold
+              descriptive text. Parsers are expected to ignore these keys or handle them specially.
             </p>
             <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
               <h4 className="text-lg font-medium mb-2">Example using reserved keys:</h4>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-                <pre>
-                  {reservedKeysExample}
-                </pre>
+                <pre>{reservedKeysExample}</pre>
               </div>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <Info className="inline-block w-4 h-4 mr-1 pb-0.5" /> Note: This is not standard JSON and relies on the parser or consuming application to understand and ignore these keys.
+              <Info className="inline-block w-4 h-4 mr-1 pb-0.5" /> Note: This is not standard JSON and relies on the
+              parser or consuming application to understand and ignore these keys.
             </p>
           </li>
         </ul>
@@ -235,7 +238,9 @@ export default function SelfDocumentingJsonArticlePage() {
           5. Consistent Formatting
         </h3>
         <p>
-          Use consistent indentation (2 or 4 spaces), consistent key casing (camelCase, snake_case, or PascalCase), and maintain a predictable order of keys within objects if possible (though JSON objects are inherently unordered, tools often preserve insertion order). Using a linter or formatter (like Prettier) can automate this.
+          Use consistent indentation (2 or 4 spaces), consistent key casing (camelCase, snake_case, or PascalCase), and
+          maintain a predictable order of keys within objects if possible (though JSON objects are inherently unordered,
+          tools often preserve insertion order). Using a linter or formatter (like Prettier) can automate this.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
@@ -243,7 +248,8 @@ export default function SelfDocumentingJsonArticlePage() {
           6. Document Expected Value Formats/Constraints
         </h3>
         <p>
-          If a value has a specific format (e.g., a date string, a URL, a specific enum value), mention this in external documentation or use reserved keys for comments if that convention is adopted. Even better, use JSON Schema.
+          If a value has a specific format (e.g., a date string, a URL, a specific enum value), mention this in external
+          documentation or use reserved keys for comments if that convention is adopted. Even better, use JSON Schema.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
@@ -251,46 +257,50 @@ export default function SelfDocumentingJsonArticlePage() {
           7. Consider JSON Schema for Formal Documentation
         </h3>
         <p>
-          For complex or critical configurations, JSON Schema provides a powerful way to formally describe the structure and constraints of your JSON data. It serves as both documentation and a validation tool. While it's external to the JSON file itself, it's the most robust method for ensuring clarity and correctness.
+          For complex or critical configurations, JSON Schema provides a powerful way to formally describe the structure
+          and constraints of your JSON data. It serves as both documentation and a validation tool. While it's external
+          to the JSON file itself, it's the most robust method for ensuring clarity and correctness.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example snippet of a JSON Schema:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {jsonSchemaExample}
-            </pre>
+            <pre>{jsonSchemaExample}</pre>
           </div>
         </div>
         <p>
-          JSON Schema allows you to specify types, required fields, ranges, patterns, descriptions, and more, providing comprehensive documentation and validation capabilities. Many IDEs also offer autocompletion and validation based on JSON Schema.
+          JSON Schema allows you to specify types, required fields, ranges, patterns, descriptions, and more, providing
+          comprehensive documentation and validation capabilities. Many IDEs also offer autocompletion and validation
+          based on JSON Schema.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Users className="w-6 h-6 mr-3 text-purple-500" />
           Integrating with Your Workflow
         </h2>
-        <p>
-          Making self-documenting JSON a standard practice requires team adoption and tooling:
-        </p>
+        <p>Making self-documenting JSON a standard practice requires team adoption and tooling:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <p>
-              <strong>Code Reviews:</strong> Include clarity and adherence to naming/structuring conventions in your code review process.
+              <strong>Code Reviews:</strong> Include clarity and adherence to naming/structuring conventions in your
+              code review process.
             </p>
           </li>
           <li>
             <p>
-              <strong>Linters/Formatters:</strong> Use tools like ESLint (with plugins), Prettier, or specific JSON formatters to enforce consistent style.
+              <strong>Linters/Formatters:</strong> Use tools like ESLint (with plugins), Prettier, or specific JSON
+              formatters to enforce consistent style.
             </p>
           </li>
           <li>
             <p>
-              <strong>Configuration Loading Libraries:</strong> Choose libraries that support comments (if you adopt that convention) or provide good error reporting.
+              <strong>Configuration Loading Libraries:</strong> Choose libraries that support comments (if you adopt
+              that convention) or provide good error reporting.
             </p>
           </li>
           <li>
             <p>
-              <strong>JSON Schema Validation:</strong> Integrate JSON Schema validation into your application's startup or configuration loading process to catch errors early.
+              <strong>JSON Schema Validation:</strong> Integrate JSON Schema validation into your application's startup
+              or configuration loading process to catch errors early.
             </p>
           </li>
         </ul>
@@ -299,23 +309,26 @@ export default function SelfDocumentingJsonArticlePage() {
           <Wrench className="w-6 h-6 mr-3 text-red-500" />
           Tools and Conventions
         </h2>
-        <p>
-          Beyond JSON Schema, consider these related tools and conventions:
-        </p>
+        <p>Beyond JSON Schema, consider these related tools and conventions:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <p>
-              <strong>YAML:</strong> Often used for configuration, YAML is a superset of JSON and explicitly supports comments, anchors, and aliases, which can aid documentation and reduce repetition.
+              <strong>YAML:</strong> Often used for configuration, YAML is a superset of JSON and explicitly supports
+              comments, anchors, and aliases, which can aid documentation and reduce repetition.
             </p>
           </li>
           <li>
             <p>
-              <strong>dotenv:</strong> While not JSON, <code>.env</code> files are simple key=value pairs often used for environment-specific configuration (like secrets). They are inherently simple but lack the structure of JSON.
+              <strong>dotenv:</strong> While not JSON, <code>.env</code> files are simple key=value pairs often used for
+              environment-specific configuration (like secrets). They are inherently simple but lack the structure of
+              JSON.
             </p>
           </li>
           <li>
             <p>
-              <strong>Configuration-Specific Languages:</strong> Some projects use languages designed specifically for configuration (e.g., HCL by HashiCorp), which often include better support for comments, types, and structure than raw JSON.
+              <strong>Configuration-Specific Languages:</strong> Some projects use languages designed specifically for
+              configuration (e.g., HCL by HashiCorp), which often include better support for comments, types, and
+              structure than raw JSON.
             </p>
           </li>
         </ul>
@@ -325,7 +338,12 @@ export default function SelfDocumentingJsonArticlePage() {
           Conclusion
         </h2>
         <p>
-          While JSON's core specification is minimal, writing clear and maintainable configuration files involves adopting conventions and potentially using supplementary tools. Focusing on descriptive key names, logical structure, appropriate data types, and consistent formatting will significantly improve the "self-documenting" nature of your JSON. For more rigorous documentation and validation, integrating JSON Schema is highly recommended. By treating your configuration files with the same care as your codebase, you contribute to a more understandable and maintainable project.
+          While JSON's core specification is minimal, writing clear and maintainable configuration files involves
+          adopting conventions and potentially using supplementary tools. Focusing on descriptive key names, logical
+          structure, appropriate data types, and consistent formatting will significantly improve the "self-documenting"
+          nature of your JSON. For more rigorous documentation and validation, integrating JSON Schema is highly
+          recommended. By treating your configuration files with the same care as your codebase, you contribute to a
+          more understandable and maintainable project.
         </p>
       </div>
     </>

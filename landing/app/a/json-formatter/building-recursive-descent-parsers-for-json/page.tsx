@@ -2,37 +2,33 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Building Recursive Descent Parsers for JSON | Offline Tools",
-  description:
-    "Learn the principles of building a recursive descent parser specifically for the JSON data format.",
+  description: "Learn the principles of building a recursive descent parser specifically for the JSON data format.",
 };
 
 export default function RecursiveDescentJsonParserArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Building Recursive Descent Parsers for JSON
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Building Recursive Descent Parsers for JSON</h1>
 
       <div className="space-y-6">
         <p>
-          Parsing data is a fundamental task in many programming scenarios. When dealing with structured data
-          formats like JSON, a parser is needed to transform the raw text into a usable in-memory
-          representation (like objects, arrays, strings, numbers, booleans, or null). One intuitive and
-          straightforward method for building parsers, especially for context-free grammars like JSON, is
+          Parsing data is a fundamental task in many programming scenarios. When dealing with structured data formats
+          like JSON, a parser is needed to transform the raw text into a usable in-memory representation (like objects,
+          arrays, strings, numbers, booleans, or null). One intuitive and straightforward method for building parsers,
+          especially for context-free grammars like JSON, is
           <strong>Recursive Descent Parsing</strong>.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">What is Recursive Descent Parsing?</h2>
         <p>
-          Recursive descent is a top-down parsing technique. It constructs the parse tree from the top
-          (the root of the grammar) and works downwards. It&apos;s called &quot;recursive descent&quot; because
-          it often involves recursive function calls to process nested structures within the language or data
-          format being parsed.
+          Recursive descent is a top-down parsing technique. It constructs the parse tree from the top (the root of the
+          grammar) and works downwards. It&apos;s called &quot;recursive descent&quot; because it often involves
+          recursive function calls to process nested structures within the language or data format being parsed.
         </p>
         <p>
-          The core idea is to have a function for each &quot;production rule&quot; in the grammar. When a function
-          for a rule is called, it attempts to match the input sequence to that rule&apos;s definition, potentially
-          calling other functions (recursively) for sub-rules.
+          The core idea is to have a function for each &quot;production rule&quot; in the grammar. When a function for a
+          rule is called, it attempts to match the input sequence to that rule&apos;s definition, potentially calling
+          other functions (recursively) for sub-rules.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Recursive Descent for JSON?</h2>
@@ -60,42 +56,64 @@ Number ::= /* ...definition of a JSON number... */`}
         <h2 className="text-2xl font-semibold mt-8">Prerequisites: Tokenization</h2>
         <p>
           Before parsing, the raw JSON string is typically processed by a <strong>tokenizer</strong>
-          (or lexer). The tokenizer breaks the input string into a sequence of meaningful units called <strong>tokens</strong>.
-          For JSON, tokens include:
+          (or lexer). The tokenizer breaks the input string into a sequence of meaningful units called{" "}
+          <strong>tokens</strong>. For JSON, tokens include:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><code>&#123;</code>, <code>&#125;</code>, <code>[</code>, <code>]</code>, <code>,</code>, <code>:</code></li>
-          <li>String literals (e.g., <code>&quot;hello&quot;</code>)</li>
-          <li>Number literals (e.g., <code>123</code>, <code>-4.5e+2</code>)</li>
-          <li>Keywords (<code>true</code>, <code>false</code>, <code>null</code>)</li>
+          <li>
+            <code>&#123;</code>, <code>&#125;</code>, <code>[</code>, <code>]</code>, <code>,</code>, <code>:</code>
+          </li>
+          <li>
+            String literals (e.g., <code>&quot;hello&quot;</code>)
+          </li>
+          <li>
+            Number literals (e.g., <code>123</code>, <code>-4.5e+2</code>)
+          </li>
+          <li>
+            Keywords (<code>true</code>, <code>false</code>, <code>null</code>)
+          </li>
           <li>Whitespace (often ignored by the parser)</li>
         </ul>
-        <p>
-          The parser then works on this sequence of tokens, not the raw string.
-        </p>
+        <p>The parser then works on this sequence of tokens, not the raw string.</p>
 
         <h2 className="text-2xl font-semibold mt-8">Designing the Parser Functions</h2>
-        <p>
-          Based on the JSON grammar, we can design functions like:
-        </p>
+        <p>Based on the JSON grammar, we can design functions like:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><code>parseValue()</code>: Reads the next token and calls the appropriate specific parser function (<code>parseObject</code>, <code>parseArray</code>, etc.) based on the token type.</li>
-          <li><code>parseObject()</code>: Expects <code>&#123;</code>, then loops through key-value pairs until it finds <code>&#125;</code>. Inside the loop, it expects a string (key), <code>:</code>, and then calls <code>parseValue()</code> for the value.</li>
-          <li><code>parseArray()</code>: Expects <code>[</code>, then loops through values until it finds <code>]</code>. Inside the loop, it calls <code>parseValue()</code> for each element.</li>
-          <li><code>parseString()</code>: Expects a string token and consumes it.</li>
-          <li><code>parseNumber()</code>: Expects a number token and consumes it.</li>
-          <li><code>parseBoolean()</code>: Expects a <code>true</code> or <code>false</code> token and consumes it.</li>
-          <li><code>parseNull()</code>: Expects a <code>null</code> token and consumes it.</li>
+          <li>
+            <code>parseValue()</code>: Reads the next token and calls the appropriate specific parser function (
+            <code>parseObject</code>, <code>parseArray</code>, etc.) based on the token type.
+          </li>
+          <li>
+            <code>parseObject()</code>: Expects <code>&#123;</code>, then loops through key-value pairs until it finds{" "}
+            <code>&#125;</code>. Inside the loop, it expects a string (key), <code>:</code>, and then calls{" "}
+            <code>parseValue()</code> for the value.
+          </li>
+          <li>
+            <code>parseArray()</code>: Expects <code>[</code>, then loops through values until it finds <code>]</code>.
+            Inside the loop, it calls <code>parseValue()</code> for each element.
+          </li>
+          <li>
+            <code>parseString()</code>: Expects a string token and consumes it.
+          </li>
+          <li>
+            <code>parseNumber()</code>: Expects a number token and consumes it.
+          </li>
+          <li>
+            <code>parseBoolean()</code>: Expects a <code>true</code> or <code>false</code> token and consumes it.
+          </li>
+          <li>
+            <code>parseNull()</code>: Expects a <code>null</code> token and consumes it.
+          </li>
         </ul>
         <p>
-          Each parsing function reads tokens from the input stream, builds a part of the resulting data structure,
-          and potentially calls other parsing functions for nested elements.
+          Each parsing function reads tokens from the input stream, builds a part of the resulting data structure, and
+          potentially calls other parsing functions for nested elements.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Simplified Code Example</h2>
         <p>
-          This is a conceptual example focusing on the parser logic. A real implementation would need a robust
-          tokenizer and more detailed error handling.
+          This is a conceptual example focusing on the parser logic. A real implementation would need a robust tokenizer
+          and more detailed error handling.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -282,43 +300,62 @@ class Parser {
 
         <h2 className="text-2xl font-semibold mt-8">Error Handling</h2>
         <p>
-          In a recursive descent parser, error handling is typically done by checking the type of the current token
-          and throwing an error if it doesn&apos;t match what the parser expects based on the grammar rule being
-          processed.
+          In a recursive descent parser, error handling is typically done by checking the type of the current token and
+          throwing an error if it doesn&apos;t match what the parser expects based on the grammar rule being processed.
         </p>
         <p>
           For example, in <code>parseObject</code>, if we just consumed the opening <code>&#x7b;</code>
-          and the next token isn&apos;t a <code>&#x7d;</code> or a <code>String</code> (for a key), we
-          know there&apos;s a syntax error. The <code>eat()</code> helper function is a common place
-          to include basic error checks. More sophisticated error handling might involve reporting the line/column
-          number from the tokenizer.
+          and the next token isn&apos;t a <code>&#x7d;</code> or a <code>String</code> (for a key), we know there&apos;s
+          a syntax error. The <code>eat()</code> helper function is a common place to include basic error checks. More
+          sophisticated error handling might involve reporting the line/column number from the tokenizer.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Advantages and Disadvantages</h2>
 
         <h3 className="text-xl font-semibold mt-6">Advantages:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Simplicity and Readability:</strong> The parser structure often directly mirrors the grammar rules, making it easy to understand and implement.</li>
-          <li><strong>Ease of Implementation:</strong> For simple grammars like JSON, it can be hand-written relatively quickly.</li>
-          <li><strong>Good for LL(1) Grammars:</strong> JSON&apos;s grammar is suitable for this technique as it can be parsed by looking only one token ahead (LL(1)).</li>
-          <li><strong>Integration with Actions:</strong> It&apos;s straightforward to embed actions (like building the data structure) within the parsing functions.</li>
+          <li>
+            <strong>Simplicity and Readability:</strong> The parser structure often directly mirrors the grammar rules,
+            making it easy to understand and implement.
+          </li>
+          <li>
+            <strong>Ease of Implementation:</strong> For simple grammars like JSON, it can be hand-written relatively
+            quickly.
+          </li>
+          <li>
+            <strong>Good for LL(1) Grammars:</strong> JSON&apos;s grammar is suitable for this technique as it can be
+            parsed by looking only one token ahead (LL(1)).
+          </li>
+          <li>
+            <strong>Integration with Actions:</strong> It&apos;s straightforward to embed actions (like building the
+            data structure) within the parsing functions.
+          </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">Disadvantages:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Limited Applicability:</strong> Not suitable for grammars that are left-recursive or require more lookahead than one token.</li>
-          <li><strong>Error Recovery:</strong> Basic implementations might stop on the first error; robust error recovery can be complex.</li>
-          <li><strong>Maintenance for Complex Grammars:</strong> For very large or complex grammars, hand-writing can become cumbersome and prone to errors.</li>
+          <li>
+            <strong>Limited Applicability:</strong> Not suitable for grammars that are left-recursive or require more
+            lookahead than one token.
+          </li>
+          <li>
+            <strong>Error Recovery:</strong> Basic implementations might stop on the first error; robust error recovery
+            can be complex.
+          </li>
+          <li>
+            <strong>Maintenance for Complex Grammars:</strong> For very large or complex grammars, hand-writing can
+            become cumbersome and prone to errors.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Building a recursive descent parser for JSON is a practical exercise that clearly demonstrates
-          the relationship between a formal grammar and a parsing algorithm. While modern programming languages
-          and libraries typically provide built-in, highly optimized JSON parsers, understanding how one works
-          under the hood, particularly through a technique like recursive descent, provides valuable insight
-          into parsing theory and compiler design principles. For JSON&apos;s relatively simple and well-defined
-          structure, a hand-written recursive descent parser is quite feasible and educational.
+          Building a recursive descent parser for JSON is a practical exercise that clearly demonstrates the
+          relationship between a formal grammar and a parsing algorithm. While modern programming languages and
+          libraries typically provide built-in, highly optimized JSON parsers, understanding how one works under the
+          hood, particularly through a technique like recursive descent, provides valuable insight into parsing theory
+          and compiler design principles. For JSON&apos;s relatively simple and well-defined structure, a hand-written
+          recursive descent parser is quite feasible and educational.
         </p>
       </div>
     </>

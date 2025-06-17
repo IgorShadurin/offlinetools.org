@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
-import {
-  File,
-  Gauge,
-  Waves,
-  Cog,
-  AlertTriangle,
-  Check,
-  MemoryStick,
-} from "lucide-react";
+import { File, Gauge, Waves, Cog, AlertTriangle, Check, MemoryStick } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Stream Processing Large JSON Files for Memory Efficiency",
@@ -25,16 +17,16 @@ export default function StreamLargeJsonPage() {
 
       <div className="space-y-6 text-lg text-gray-700 dark:text-gray-300">
         <p>
-          Handling large files is a common challenge in software development. When dealing with JSON data, simply
-          using <code>JSON.parse()</code> is convenient but quickly becomes impractical for files exceeding
-          the available memory. Attempting to load a multi-gigabyte JSON file into the heap can lead to
-          &quot;out of memory&quot; errors, crashes, or severely degraded performance. This is where <strong>stream
-          processing</strong> becomes essential.
+          Handling large files is a common challenge in software development. When dealing with JSON data, simply using{" "}
+          <code>JSON.parse()</code> is convenient but quickly becomes impractical for files exceeding the available
+          memory. Attempting to load a multi-gigabyte JSON file into the heap can lead to &quot;out of memory&quot;
+          errors, crashes, or severely degraded performance. This is where <strong>stream processing</strong> becomes
+          essential.
         </p>
         <p>
           Instead of loading the entire file at once, streaming involves reading the file piece by piece, processing
-          each piece as it arrives, and discarding it once it's no longer needed. This keeps memory usage
-          constant and low, regardless of the file size.
+          each piece as it arrives, and discarding it once it's no longer needed. This keeps memory usage constant and
+          low, regardless of the file size.
           <Gauge className="inline-block w-5 h-5 ml-1 text-green-500" />
         </p>
 
@@ -43,29 +35,25 @@ export default function StreamLargeJsonPage() {
           Why Standard Parsing Fails with Large Files
         </h2>
         <p>
-          Standard JSON parsing methods like <code>JSON.parse()</code> are &quot;batch&quot; or &quot;tree&quot; parsers.
-          They read the entire input (string or buffer) and build a complete in-memory representation of the
+          Standard JSON parsing methods like <code>JSON.parse()</code> are &quot;batch&quot; or &quot;tree&quot;
+          parsers. They read the entire input (string or buffer) and build a complete in-memory representation of the
           JSON structure (an object or array hierarchy).
         </p>
-        <p>
-          For a JSON file like this:
-        </p>
+        <p>For a JSON file like this:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre className="whitespace-pre-wrap text-sm">
             <code className="language-json">
-              [
-                {/* This array could contain millions of objects */}
-                {/* &#x7b; "id": 1, "name": "Alice", "data": "..." &#x7d;, */}
-                {/* &#x7b; "id": 2, "name": "Bob", "data": "..." &#x7d;, */}
-                {/* ... */}
-                {/* &#x7b; "id": 1000000, "name": "Charlie", "data": "..." &#x7d; */}
-              ]
+              [{/* This array could contain millions of objects */}
+              {/* &#x7b; "id": 1, "name": "Alice", "data": "..." &#x7d;, */}
+              {/* &#x7b; "id": 2, "name": "Bob", "data": "..." &#x7d;, */}
+              {/* ... */}
+              {/* &#x7b; "id": 1000000, "name": "Charlie", "data": "..." &#x7d; */}]
             </code>
           </pre>
         </div>
         <p>
-          <code>JSON.parse()</code> would attempt to create a giant JavaScript array containing a million
-          objects in memory. If each object is even moderately sized, this quickly consumes gigabytes.
+          <code>JSON.parse()</code> would attempt to create a giant JavaScript array containing a million objects in
+          memory. If each object is even moderately sized, this quickly consumes gigabytes.
           <File className="inline-block w-5 h-5 ml-1 text-blue-500" />
         </p>
 
@@ -79,8 +67,12 @@ export default function StreamLargeJsonPage() {
           structure:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Start of object (`{`)</li>
-          <li>End of object (`}`)</li>
+          <li>
+            Start of object (`
+            {`)</li>
+          <li>End of object (`}
+            `)
+          </li>
           <li>Start of array (`[`)</li>
           <li>End of array (`]`)</li>
           <li>Object key (e.g., `"name"`)</li>
@@ -99,20 +91,21 @@ export default function StreamLargeJsonPage() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">1. Event-Based (SAX-like) Parsers</h3>
         <p>
-          Similar to SAX (Simple API for XML), these parsers work by notifying your code when specific syntax
-          elements are found. You register handlers for events like `onValue`, `onKey`, `onStartObject`,
-          `onEndArray`, etc.
+          Similar to SAX (Simple API for XML), these parsers work by notifying your code when specific syntax elements
+          are found. You register handlers for events like `onValue`, `onKey`, `onStartObject`, `onEndArray`, etc.
         </p>
         <p>
           <strong>How it works:</strong>
-          The parser reads the input stream byte by byte or chunk by chunk. It maintains minimal state to know
-          whether it&apos;s inside an object, an array, reading a key, or a value. When it completes parsing a
-          value (a primitive, a nested object, or a nested array), it triggers an event with that parsed value.
-          For large arrays of objects, you&apos;d typically listen for the event that signals the completion of an object
-          within the main array.
+          The parser reads the input stream byte by byte or chunk by chunk. It maintains minimal state to know whether
+          it&apos;s inside an object, an array, reading a key, or a value. When it completes parsing a value (a
+          primitive, a nested object, or a nested array), it triggers an event with that parsed value. For large arrays
+          of objects, you&apos;d typically listen for the event that signals the completion of an object within the main
+          array.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Conceptual Event-Based Stream Parsing (Node.js style stream, simplified):</h4>
+          <h4 className="text-lg font-medium mb-2">
+            Conceptual Event-Based Stream Parsing (Node.js style stream, simplified):
+          </h4>
           <pre className="whitespace-pre-wrap text-sm">
             <code className="language-typescript">
               {`
@@ -198,28 +191,31 @@ async function processLargeJsonArray(readableStream: ReadableStream): Promise&lt
             </code>
           </pre>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            <em>Note: This is a conceptual example showing the pattern. Actual implementation requires a streaming JSON parser library designed for Node.js streams or similar asynchronous I/O. Libraries like <code>jsonstream</code> or <code>clarinet</code> provide this functionality.</em>
+            <em>
+              Note: This is a conceptual example showing the pattern. Actual implementation requires a streaming JSON
+              parser library designed for Node.js streams or similar asynchronous I/O. Libraries like{" "}
+              <code>jsonstream</code> or <code>clarinet</code> provide this functionality.
+            </em>
           </p>
         </div>
         <p>
-          This method is generally the most memory-efficient because you only ever hold one complete
-          object/value in memory at a time (or parts of one value being built).
+          This method is generally the most memory-efficient because you only ever hold one complete object/value in
+          memory at a time (or parts of one value being built).
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Character-by-Character or Chunk-by-Chunk Parsing</h3>
         <p>
-          For ultimate control or when libraries aren't suitable, you can read the file in small chunks
-          and manually scan for JSON tokens (<code>&#x7b;</code>, <code>&#x7d;</code>, <code>[</code>,
-          <code>]</code>, <code>&quot;</code>, <code>,</code>, <code>:</code>, etc.). You&apos;d need to
-          write logic to track the nesting level of objects and arrays and extract complete values
-          (especially strings which can contain escaped characters) and then parse those smaller,
-          extracted values using <code>JSON.parse()</code>.
+          For ultimate control or when libraries aren't suitable, you can read the file in small chunks and manually
+          scan for JSON tokens (<code>&#x7b;</code>, <code>&#x7d;</code>, <code>[</code>,<code>]</code>,{" "}
+          <code>&quot;</code>, <code>,</code>, <code>:</code>, etc.). You&apos;d need to write logic to track the
+          nesting level of objects and arrays and extract complete values (especially strings which can contain escaped
+          characters) and then parse those smaller, extracted values using <code>JSON.parse()</code>.
         </p>
         <p>
           <strong>How it works:</strong>
-          You read data in small buffers. You scan the buffer, looking for JSON syntax characters. You need to
-          buffer data if a token spans across chunk boundaries. When you identify the start and end of a complete
-          JSON value (like a single object in a root array), you extract that substring and parse it.
+          You read data in small buffers. You scan the buffer, looking for JSON syntax characters. You need to buffer
+          data if a token spans across chunk boundaries. When you identify the start and end of a complete JSON value
+          (like a single object in a root array), you extract that substring and parse it.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Chunk-by-Chunk Processing (Manual Scan):</h4>
@@ -328,12 +324,16 @@ async function processLargeJsonManually(readableStream: ReadableStream): Promise
             </code>
           </pre>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            <em>Note: This manual approach is very complex and error-prone compared to using a battle-tested library. It requires careful handling of string escapes, nested structures, and chunk boundaries. It's shown conceptually to illustrate the underlying mechanism.</em>
+            <em>
+              Note: This manual approach is very complex and error-prone compared to using a battle-tested library. It
+              requires careful handling of string escapes, nested structures, and chunk boundaries. It's shown
+              conceptually to illustrate the underlying mechanism.
+            </em>
           </p>
         </div>
         <p>
-          While offering fine-grained control, this approach is significantly more difficult to implement
-          correctly compared to using an existing streaming parser library.
+          While offering fine-grained control, this approach is significantly more difficult to implement correctly
+          compared to using an existing streaming parser library.
           <AlertTriangle className="inline-block w-5 h-5 ml-1 text-yellow-500" />
         </p>
 
@@ -343,21 +343,21 @@ async function processLargeJsonManually(readableStream: ReadableStream): Promise
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Memory Efficiency:</strong> The primary benefit. Prevents out-of-memory errors and allows
-            processing files much larger than available RAM.
+            <strong>Memory Efficiency:</strong> The primary benefit. Prevents out-of-memory errors and allows processing
+            files much larger than available RAM.
             <Gauge className="inline-block w-5 h-5 ml-1 text-green-500" />
           </li>
           <li>
-            <strong>Faster Start Time:</strong> Processing can begin as soon as the first relevant data chunk
-            arrives, without waiting for the entire file to download or load.
+            <strong>Faster Start Time:</strong> Processing can begin as soon as the first relevant data chunk arrives,
+            without waiting for the entire file to download or load.
           </li>
           <li>
             <strong>Improved Responsiveness:</strong> For applications processing large data in the background,
             streaming prevents the process from freezing while waiting for full data load.
           </li>
           <li>
-            <strong>Handling Infinite Streams:</strong> Essential for processing data from continuous sources
-            (e.g., network sockets) that never "end".
+            <strong>Handling Infinite Streams:</strong> Essential for processing data from continuous sources (e.g.,
+            network sockets) that never "end".
             <Waves className="inline-block w-5 h-5 ml-1 text-blue-500" />
           </li>
         </ul>
@@ -368,57 +368,52 @@ async function processLargeJsonManually(readableStream: ReadableStream): Promise
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Complexity:</strong> Streaming code is generally more complex than simple `JSON.parse()`.
-            You need to manage state and handle events or buffer data correctly.
+            <strong>Complexity:</strong> Streaming code is generally more complex than simple `JSON.parse()`. You need
+            to manage state and handle events or buffer data correctly.
             <Cog className="inline-block w-5 h-5 ml-1 text-gray-600 dark:text-gray-400" />
           </li>
           <li>
-            <strong>Error Handling:</strong> Robust error handling for malformed JSON within a stream is harder
-            than catching a single error from `JSON.parse()`. You need to decide how to recover or fail.
+            <strong>Error Handling:</strong> Robust error handling for malformed JSON within a stream is harder than
+            catching a single error from `JSON.parse()`. You need to decide how to recover or fail.
           </li>
           <li>
-            <strong>Accessing Previous Data:</strong> If processing an item requires data from a previous item
-            in the stream, you might need to manually buffer that necessary previous data.
+            <strong>Accessing Previous Data:</strong> If processing an item requires data from a previous item in the
+            stream, you might need to manually buffer that necessary previous data.
           </li>
           <li>
-            <strong>Root Level Primitives:</strong> Streaming is most effective for root-level arrays or objects
-            where you can process child elements independently. A root-level primitive or a single giant object
-            still might require significant memory for that one item.
+            <strong>Root Level Primitives:</strong> Streaming is most effective for root-level arrays or objects where
+            you can process child elements independently. A root-level primitive or a single giant object still might
+            require significant memory for that one item.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
-          Choosing the Right Tool
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8 mb-4">Choosing the Right Tool</h2>
         <p>
-          For most large JSON streaming tasks in environments with streams (like Node.js backend or modern browser streams),
-          using a dedicated streaming JSON parser library is highly recommended. They handle the low-level complexity,
-          buffering, state management, and error handling for you, providing a clean event-driven or stream-piping interface.
+          For most large JSON streaming tasks in environments with streams (like Node.js backend or modern browser
+          streams), using a dedicated streaming JSON parser library is highly recommended. They handle the low-level
+          complexity, buffering, state management, and error handling for you, providing a clean event-driven or
+          stream-piping interface.
         </p>
-        <p>
-          Popular libraries in the Node.js ecosystem include:
-        </p>
+        <p>Popular libraries in the Node.js ecosystem include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><code>jsonstream</code>: A well-known library for piping streams.</li>
-          <li><code>clarinet</code>: Another robust streaming JSON parser.</li>
+          <li>
+            <code>jsonstream</code>: A well-known library for piping streams.
+          </li>
+          <li>
+            <code>clarinet</code>: Another robust streaming JSON parser.
+          </li>
         </ul>
-        <p>
-          Always check the documentation of your chosen library to understand its API and event model.
-        </p>
+        <p>Always check the documentation of your chosen library to understand its API and event model.</p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
           <File className="w-6 h-6 mr-2 text-blue-500" />
           Example Scenario: Processing User Data
         </h2>
-        <p>
-          Imagine a JSON file containing an array of a million user objects:
-        </p>
+        <p>Imagine a JSON file containing an array of a million user objects:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre className="whitespace-pre-wrap text-sm">
             <code className="language-json">
-              [
-                {/* &#x7b; "id": 1, "username": "user1", "email": "user1@example.com", "details": {...} &#x7d;,... */}
-              ]
+              [{/* &#x7b; "id": 1, "username": "user1", "email": "user1@example.com", "details": {...} &#x7d;,... */}]
             </code>
           </pre>
         </div>
@@ -428,15 +423,13 @@ async function processLargeJsonManually(readableStream: ReadableStream): Promise
           objects in memory simultaneously.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
-          Conclusion
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
         <p>
           When faced with large JSON files, recognizing the limitations of standard batch parsing is the first step.
-          Stream processing, whether through event-based libraries or careful manual implementation, provides
-          the necessary memory efficiency to handle datasets that would otherwise be impossible to process
-          within typical memory constraints. By processing data as a continuous flow rather than a single
-          static block, you unlock the ability to work with arbitrarily large files.
+          Stream processing, whether through event-based libraries or careful manual implementation, provides the
+          necessary memory efficiency to handle datasets that would otherwise be impossible to process within typical
+          memory constraints. By processing data as a continuous flow rather than a single static block, you unlock the
+          ability to work with arbitrarily large files.
         </p>
       </div>
     </>

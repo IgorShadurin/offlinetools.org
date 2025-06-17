@@ -17,10 +17,16 @@ export default function FSharpJsonFormattingArticle() {
 
       <div className="space-y-6">
         <p>
-          Handling JSON data is a ubiquitous task in modern software development, whether you're building web services, configuration systems, or data pipelines. While many languages offer built-in JSON support, the functional approach in F# brings unique benefits, emphasizing clarity, robustness, and type safety through immutability, pattern matching, and powerful composition techniques.
+          Handling JSON data is a ubiquitous task in modern software development, whether you're building web services,
+          configuration systems, or data pipelines. While many languages offer built-in JSON support, the functional
+          approach in F# brings unique benefits, emphasizing clarity, robustness, and type safety through immutability,
+          pattern matching, and powerful composition techniques.
         </p>
         <p>
-          This article explores how F# handles JSON formatting (serialization) and parsing (deserialization) from a functional perspective, highlighting the advantages and providing practical examples. We'll primarily look at using libraries that embrace functional principles, such as <code>Thoth.Json.Net</code>, which is popular in the F# ecosystem.
+          This article explores how F# handles JSON formatting (serialization) and parsing (deserialization) from a
+          functional perspective, highlighting the advantages and providing practical examples. We'll primarily look at
+          using libraries that embrace functional principles, such as <code>Thoth.Json.Net</code>, which is popular in
+          the F# ecosystem.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -28,23 +34,29 @@ export default function FSharpJsonFormattingArticle() {
           Why a Functional Approach?
         </h2>
         <p>
-          Traditional object-oriented or imperative approaches often rely on mutable state and side effects during serialization/deserialization. F#'s functional paradigm encourages:
+          Traditional object-oriented or imperative approaches often rely on mutable state and side effects during
+          serialization/deserialization. F#'s functional paradigm encourages:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Immutability:</strong> Data structures are typically immutable, leading to predictable behavior and easier reasoning about code.
+            <strong>Immutability:</strong> Data structures are typically immutable, leading to predictable behavior and
+            easier reasoning about code.
           </li>
           <li>
-            <strong>Pure Functions:</strong> Serialization and deserialization logic can be encapsulated in pure functions that map input data to output data without side effects.
+            <strong>Pure Functions:</strong> Serialization and deserialization logic can be encapsulated in pure
+            functions that map input data to output data without side effects.
           </li>
           <li>
-            <strong>Type Safety:</strong> F#'s strong type system helps catch potential errors at compile time, including mismatches between F# types and JSON structure.
+            <strong>Type Safety:</strong> F#'s strong type system helps catch potential errors at compile time,
+            including mismatches between F# types and JSON structure.
           </li>
           <li>
-            <strong>Composition:</strong> Complex encoders (for serialization) and decoders (for deserialization) can be built by composing simpler functions, making code modular and reusable.
+            <strong>Composition:</strong> Complex encoders (for serialization) and decoders (for deserialization) can be
+            built by composing simpler functions, making code modular and reusable.
           </li>
           <li>
-            <strong>Pattern Matching:</strong> Effectively handle different JSON structures or different cases within F# types (like discriminated unions).
+            <strong>Pattern Matching:</strong> Effectively handle different JSON structures or different cases within F#
+            types (like discriminated unions).
           </li>
         </ul>
 
@@ -52,9 +64,7 @@ export default function FSharpJsonFormattingArticle() {
           <Workflow className="w-6 h-6 text-purple-500" />
           Representing JSON Structure in F#
         </h2>
-        <p>
-          Conceptually, JSON can be represented in F# using a discriminated union:
-        </p>
+        <p>Conceptually, JSON can be represented in F# using a discriminated union:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre>
             {`type JsonValue =
@@ -67,7 +77,9 @@ export default function FSharpJsonFormattingArticle() {
           </pre>
         </div>
         <p>
-          Libraries like <code>Thoth.Json.Net</code> often use a similar internal representation or provide functions that operate on this conceptual model. When serializing, you map an F# value to this structure; when deserializing, you map from this structure (obtained from parsing the string) back to an F# value.
+          Libraries like <code>Thoth.Json.Net</code> often use a similar internal representation or provide functions
+          that operate on this conceptual model. When serializing, you map an F# value to this structure; when
+          deserializing, you map from this structure (obtained from parsing the string) back to an F# value.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -75,10 +87,14 @@ export default function FSharpJsonFormattingArticle() {
           Serialization (Encoding)
         </h2>
         <p>
-          Serialization is the process of converting an F# value into a JSON string. In a functional style, this is achieved by creating an "encoder" function for each specific F# type you want to serialize. Libraries provide basic encoders for primitive types, and you compose them to handle complex types like records, lists, and maps.
+          Serialization is the process of converting an F# value into a JSON string. In a functional style, this is
+          achieved by creating an "encoder" function for each specific F# type you want to serialize. Libraries provide
+          basic encoders for primitive types, and you compose them to handle complex types like records, lists, and
+          maps.
         </p>
         <p>
-          Let's use <code>Thoth.Json.Net.Encode</code> as an example. It provides functions like <code>string</code>, <code>int</code>, <code>bool</code>, <code>list</code>, <code>obj</code>, etc.
+          Let's use <code>Thoth.Json.Net.Encode</code> as an example. It provides functions like <code>string</code>,{" "}
+          <code>int</code>, <code>bool</code>, <code>list</code>, <code>obj</code>, etc.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -131,7 +147,11 @@ let bobJsonString = Encode.toFormattedJsonString 2 bobJsonValue
           </div>
         </div>
         <p>
-          Notice how <code>encodePerson</code> is a pure function. It takes a <code>Person</code> and returns a <code>JsonValue</code>. We use composition: <code>Encode.object</code> takes a list of key-value pairs, where values are produced by other encoder functions like <code>Encode.string</code>, <code>Encode.int</code>, etc. Finally, <code>Encode.toFormattedJsonString</code> is a separate function to convert the <code>JsonValue</code> tree into a string.
+          Notice how <code>encodePerson</code> is a pure function. It takes a <code>Person</code> and returns a{" "}
+          <code>JsonValue</code>. We use composition: <code>Encode.object</code> takes a list of key-value pairs, where
+          values are produced by other encoder functions like <code>Encode.string</code>, <code>Encode.int</code>, etc.
+          Finally, <code>Encode.toFormattedJsonString</code> is a separate function to convert the{" "}
+          <code>JsonValue</code> tree into a string.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -139,10 +159,24 @@ let bobJsonString = Encode.toFormattedJsonString 2 bobJsonValue
           Deserialization (Decoding)
         </h2>
         <p>
-          Deserialization is the reverse process: converting a JSON string into an F# value. This is typically handled by defining "decoder" functions. Functional JSON libraries often use a concept of a decoder that takes a <code>JsonValue</code> and attempts to produce a specific F# type, usually returning a <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/results" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline"><code>Result&lt;'a, string&gt;</code></a> type, where <code>Ok 'a</code> indicates success with the decoded value, and <code>Error string</code> indicates failure with an error message. This handles parsing errors gracefully.
+          Deserialization is the reverse process: converting a JSON string into an F# value. This is typically handled
+          by defining "decoder" functions. Functional JSON libraries often use a concept of a decoder that takes a{" "}
+          <code>JsonValue</code> and attempts to produce a specific F# type, usually returning a{" "}
+          <a
+            href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/results"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            <code>Result&lt;'a, string&gt;</code>
+          </a>{" "}
+          type, where <code>Ok 'a</code> indicates success with the decoded value, and <code>Error string</code>{" "}
+          indicates failure with an error message. This handles parsing errors gracefully.
         </p>
         <p>
-          <code>Thoth.Json.Net.Decode</code> provides functions like <code>string</code>, <code>int</code>, <code>bool</code>, <code>list</code>, <code>field</code>, and operators for composing them, like <code>&gt;&gt;.</code> (the bind operator for decoders).
+          <code>Thoth.Json.Net.Decode</code> provides functions like <code>string</code>, <code>int</code>,{" "}
+          <code>bool</code>, <code>list</code>, <code>field</code>, and operators for composing them, like{" "}
+          <code>&gt;&gt;.</code> (the bind operator for decoders).
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -196,7 +230,10 @@ match parseResult with
           </div>
         </div>
         <p>
-          The use of the <code>&gt;&gt;.</code> operator chains decoder steps together. Each step attempts to decode a specific field or structure. The final <code>Decode.map</code> function is applied to the successfully decoded values to construct the final F# value (the <code>Person</code> record). The entire decoding process is wrapped in a <code>Result</code> type, providing explicit error handling.
+          The use of the <code>&gt;&gt;.</code> operator chains decoder steps together. Each step attempts to decode a
+          specific field or structure. The final <code>Decode.map</code> function is applied to the successfully decoded
+          values to construct the final F# value (the <code>Person</code> record). The entire decoding process is
+          wrapped in a <code>Result</code> type, providing explicit error handling.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -262,7 +299,8 @@ match decodedHouseholdResult with
           </div>
         </div>
         <p>
-          This demonstrates the power of composition. We reused the <code>encodePerson</code> and <code>decodePerson</code> functions to handle lists of people within the <code>Household</code> type.
+          This demonstrates the power of composition. We reused the <code>encodePerson</code> and{" "}
+          <code>decodePerson</code> functions to handle lists of people within the <code>Household</code> type.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -270,21 +308,29 @@ match decodedHouseholdResult with
           Functional Error Handling
         </h2>
         <p>
-          As seen in the decoding examples, the use of the <code>Result&lt;'a, string&gt;</code> type is idiomatic F# for handling operations that might fail.
+          As seen in the decoding examples, the use of the <code>Result&lt;'a, string&gt;</code> type is idiomatic F#
+          for handling operations that might fail.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <code>Decode.fromString&lt;JsonValue&gt;</code> handles errors related to the JSON string format itself (e.g., malformed syntax).
+            <code>Decode.fromString&lt;JsonValue&gt;</code> handles errors related to the JSON string format itself
+            (e.g., malformed syntax).
           </li>
           <li>
-            The individual field and type decoders (like <code>Decode.field</code>, <code>Decode.string</code>, <code>Decode.list decodePerson</code>) handle errors related to the JSON structure or data types not matching the expected F# type.
+            The individual field and type decoders (like <code>Decode.field</code>, <code>Decode.string</code>,{" "}
+            <code>Decode.list decodePerson</code>) handle errors related to the JSON structure or data types not
+            matching the expected F# type.
           </li>
           <li>
-            The <code>Result.bind</code> (or <code>&gt;&gt;=</code>) and <code>Result.map</code> functions (or <code>|&gt; Result.map</code>) allow you to chain operations on the <code>Result</code>, propagating errors automatically. If any decoding step fails, the entire composition fails, returning an <code>Error</code> result with the first error encountered.
+            The <code>Result.bind</code> (or <code>&gt;&gt;=</code>) and <code>Result.map</code> functions (or{" "}
+            <code>|&gt; Result.map</code>) allow you to chain operations on the <code>Result</code>, propagating errors
+            automatically. If any decoding step fails, the entire composition fails, returning an <code>Error</code>{" "}
+            result with the first error encountered.
           </li>
         </ul>
         <p>
-          This contrasts with exceptions often used in imperative programming, making the success or failure outcome explicit in the function's type signature and encouraging handling errors where they occur.
+          This contrasts with exceptions often used in imperative programming, making the success or failure outcome
+          explicit in the function's type signature and encouraging handling errors where they occur.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -293,7 +339,8 @@ match decodedHouseholdResult with
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Predictability:</strong> Immutability and pure functions make serialization/deserialization logic easy to test and understand.
+            <strong>Predictability:</strong> Immutability and pure functions make serialization/deserialization logic
+            easy to test and understand.
           </li>
           <li>
             <strong>Type Safety:</strong> The compiler helps ensure your F# types match the JSON structure you expect.
@@ -302,16 +349,25 @@ match decodedHouseholdResult with
             <strong>Modularity:</strong> Encoders and decoders are simple, reusable functions that can be composed.
           </li>
           <li>
-            <strong>Explicit Error Handling:</strong> The <code>Result</code> type forces you to consider failure cases explicitly.
+            <strong>Explicit Error Handling:</strong> The <code>Result</code> type forces you to consider failure cases
+            explicitly.
           </li>
           <li>
-            <strong>Maintainability:</strong> Changes to your F# types or JSON structure often require only localized changes to the corresponding encoders/decoders.
+            <strong>Maintainability:</strong> Changes to your F# types or JSON structure often require only localized
+            changes to the corresponding encoders/decoders.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Adopting a functional approach to JSON formatting in F#, particularly with libraries designed for this style like <code>Thoth.Json.Net</code>, offers significant advantages in terms of code clarity, robustness, and maintainability. By treating serialization and deserialization as compositions of pure functions and using the type system and <code>Result</code> type for error handling, developers can build reliable JSON handling logic that is less prone to runtime surprises compared to approaches relying heavily on reflection, mutation, or exceptions. While other libraries exist (including wrappers around .NET's <code>System.Text.Json</code>), the composition-based functional decoders/encoders stand out as a powerful and idiomatic way to handle structured data in F#.
+          Adopting a functional approach to JSON formatting in F#, particularly with libraries designed for this style
+          like <code>Thoth.Json.Net</code>, offers significant advantages in terms of code clarity, robustness, and
+          maintainability. By treating serialization and deserialization as compositions of pure functions and using the
+          type system and <code>Result</code> type for error handling, developers can build reliable JSON handling logic
+          that is less prone to runtime surprises compared to approaches relying heavily on reflection, mutation, or
+          exceptions. While other libraries exist (including wrappers around .NET's <code>System.Text.Json</code>), the
+          composition-based functional decoders/encoders stand out as a powerful and idiomatic way to handle structured
+          data in F#.
         </p>
       </div>
     </>

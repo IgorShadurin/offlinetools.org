@@ -17,10 +17,10 @@ export default function PrototypePollutionJsonParsingArticle() {
 
       <div className="space-y-6">
         <p>
-          In JavaScript and TypeScript, understanding how data is structured and processed is crucial for security.
-          One significant vulnerability to be aware of, particularly when dealing with external data sources like JSON,
-          is <strong>Prototype Pollution</strong>. While often discussed in the context of object merging or cloning,
-          it can seem related to JSON parsing, and processing parsed JSON data is a common attack vector.
+          In JavaScript and TypeScript, understanding how data is structured and processed is crucial for security. One
+          significant vulnerability to be aware of, particularly when dealing with external data sources like JSON, is{" "}
+          <strong>Prototype Pollution</strong>. While often discussed in the context of object merging or cloning, it
+          can seem related to JSON parsing, and processing parsed JSON data is a common attack vector.
         </p>
         <p>
           This article explores what Prototype Pollution is, its connection (or lack thereof) to standard JSON parsing,
@@ -33,8 +33,8 @@ export default function PrototypePollutionJsonParsingArticle() {
         </h2>
         <p>
           In JavaScript, objects inherit properties and methods from their prototype. If an attacker can inject
-          properties into the prototype of a base object (like <code>Object.prototype</code>),
-          those injected properties will be accessible on *all* objects in the application, potentially leading to:
+          properties into the prototype of a base object (like <code>Object.prototype</code>), those injected properties
+          will be accessible on *all* objects in the application, potentially leading to:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Denial of Service (DoS) by crashing the application.</li>
@@ -51,15 +51,18 @@ export default function PrototypePollutionJsonParsingArticle() {
           <span>The Role of JSON.parse()</span>
         </h2>
         <p>
-          Let's clarify a common point of confusion: <strong>The standard <code>JSON.parse()</code> function
-          in modern JavaScript engines is NOT vulnerable to Prototype Pollution directly.</strong>
+          Let's clarify a common point of confusion:{" "}
+          <strong>
+            The standard <code>JSON.parse()</code> function in modern JavaScript engines is NOT vulnerable to Prototype
+            Pollution directly.
+          </strong>
         </p>
         <p>
-          <code>JSON.parse()</code> is designed to create plain objects (created with <code>&#x7b;&#x7d;</code>)
-          and arrays (created with <code>[]</code>) from a JSON string. When it encounters keys like
-          <code>"__proto__"</code>, <code>"constructor"</code>, or <code>"prototype"</code>, it treats them
-          simply as property names, just like any other string key. It does not traverse the prototype chain
-          or modify the prototype of the object it's creating.
+          <code>JSON.parse()</code> is designed to create plain objects (created with <code>&#x7b;&#x7d;</code>) and
+          arrays (created with <code>[]</code>) from a JSON string. When it encounters keys like
+          <code>"__proto__"</code>, <code>"constructor"</code>, or <code>"prototype"</code>, it treats them simply as
+          property names, just like any other string key. It does not traverse the prototype chain or modify the
+          prototype of the object it's creating.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -79,13 +82,13 @@ console.log(innocentObj.isAdmin); // Output: undefined
             </pre>
           </div>
           <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <code>JSON.parse()</code> correctly interprets <code>"__proto__"</code> as a literal key name, not
-            a special property accessor.
+            <code>JSON.parse()</code> correctly interprets <code>"__proto__"</code> as a literal key name, not a special
+            property accessor.
           </p>
         </div>
         <p>
-          So, parsing untrusted JSON data using just <code>JSON.parse()</code> does not inherently expose
-          you to Prototype Pollution.
+          So, parsing untrusted JSON data using just <code>JSON.parse()</code> does not inherently expose you to
+          Prototype Pollution.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -165,8 +168,8 @@ console.log("New object polluted?", (anotherObj as any).polluted); // If vulnera
             </pre>
           </div>
           <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            The vulnerability occurs because the merge function doesn't sanitize the keys from the parsed JSON
-            before assigning them, allowing <code>"__proto__"</code> to be treated as a key pointing to the prototype.
+            The vulnerability occurs because the merge function doesn't sanitize the keys from the parsed JSON before
+            assigning them, allowing <code>"__proto__"</code> to be treated as a key pointing to the prototype.
           </p>
         </div>
 
@@ -175,8 +178,8 @@ console.log("New object polluted?", (anotherObj as any).polluted); // If vulnera
           <span>How to Protect Against Prototype Pollution</span>
         </h2>
         <p>
-          Protection involves sanitizing or validating data *before* using it in potentially vulnerable operations
-          like deep merges or recursive assignments. Here are the key strategies:
+          Protection involves sanitizing or validating data *before* using it in potentially vulnerable operations like
+          deep merges or recursive assignments. Here are the key strategies:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Always Use `JSON.parse()`</h3>
@@ -194,11 +197,10 @@ const parsedUserData = JSON.parse(untrustedJsonString);`}
           </div>
         </div>
 
-
         <h3 className="text-xl font-semibold mt-6">2. Sanitize Input Before Processing</h3>
         <p>
-          If you need to use parsed JSON data in operations like merging or extending, validate the keys in the
-          parsed data. Reject or filter out keys that could target the prototype.
+          If you need to use parsed JSON data in operations like merging or extending, validate the keys in the parsed
+          data. Reject or filter out keys that could target the prototype.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium mb-2">Sanitization Example (Recursive Filter):</h3>
@@ -255,35 +257,34 @@ const sanitizedUserInput = sanitizeObject(parsedUserInput);
             </pre>
           </div>
           <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            This function recursively removes keys that target the prototype from the parsed JSON object before
-            it's used in operations like merging.
+            This function recursively removes keys that target the prototype from the parsed JSON object before it's
+            used in operations like merging.
           </p>
         </div>
 
-
         <h3 className="text-xl font-semibold mt-6">3. Use Safe Object Manipulation Libraries/Functions</h3>
         <p>
-          Reliable libraries often have built-in protections against Prototype Pollution in their merge, clone,
-          or set functions.
+          Reliable libraries often have built-in protections against Prototype Pollution in their merge, clone, or set
+          functions.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            Libraries like Lodash and jQuery had past vulnerabilities but have been updated to protect against
-            Prototype Pollution in functions like <code>_.merge()</code> or <code>_.extend()</code>. Always use
-            recent versions.
+            Libraries like Lodash and jQuery had past vulnerabilities but have been updated to protect against Prototype
+            Pollution in functions like <code>_.merge()</code> or <code>_.extend()</code>. Always use recent versions.
           </li>
           <li>
-            When implementing your own object manipulation logic, ensure it explicitly avoids or checks for keys
-            like <code>"__proto__"</code>, <code>"constructor"</code>, and <code>"prototype"</code>.
+            When implementing your own object manipulation logic, ensure it explicitly avoids or checks for keys like{" "}
+            <code>"__proto__"</code>, <code>"constructor"</code>, and <code>"prototype"</code>.
           </li>
           <li>
-            Use <code>Object.prototype.hasOwnProperty.call(obj, key)</code> instead of just <code>obj.hasOwnProperty(key)</code>
+            Use <code>Object.prototype.hasOwnProperty.call(obj, key)</code> instead of just{" "}
+            <code>obj.hasOwnProperty(key)</code>
             when iterating over object properties to avoid issues if <code>hasOwnProperty</code> itself is polluted.
           </li>
           <li>
-            Consider using <code>Object.keys()</code> or <code>Object.getOwnPropertyNames()</code> to iterate
-            only over own properties, although this alone might not protect against <code>__proto__</code> if assigned directly
-            as a regular property name. The explicit key check is the most robust defense.
+            Consider using <code>Object.keys()</code> or <code>Object.getOwnPropertyNames()</code> to iterate only over
+            own properties, although this alone might not protect against <code>__proto__</code> if assigned directly as
+            a regular property name. The explicit key check is the most robust defense.
           </li>
         </ul>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -357,11 +358,10 @@ console.log("New object polluted?", ({} as any).polluted); // Should still be un
             </pre>
           </div>
           <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            Freezing the prototype is a strong defense but can have compatibility issues. Use with caution and
-            thorough testing.
+            Freezing the prototype is a strong defense but can have compatibility issues. Use with caution and thorough
+            testing.
           </p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <AlertTriangle size={24} />
@@ -372,19 +372,25 @@ console.log("New object polluted?", ({} as any).polluted); // Should still be un
             Standard <code>JSON.parse()</code> is safe against Prototype Pollution.
           </li>
           <li>
-            Vulnerabilities arise when <em>processing</em> the parsed JSON using functions (like deep merge/clone)
-            that don't properly validate or sanitize property names.
+            Vulnerabilities arise when <em>processing</em> the parsed JSON using functions (like deep merge/clone) that
+            don't properly validate or sanitize property names.
           </li>
           <li>
-            Malicious payloads use keys like <code>"__proto__"</code>, <code>"constructor"</code>, or <code>"prototype"</code>
+            Malicious payloads use keys like <code>"__proto__"</code>, <code>"constructor"</code>, or{" "}
+            <code>"prototype"</code>
             to inject properties into base object prototypes.
           </li>
           <li>
             Protect yourself by:
             <ul className="list-circle pl-6 mt-2 space-y-1">
-              <li>Always using <code>JSON.parse()</code>.</li>
+              <li>
+                Always using <code>JSON.parse()</code>.
+              </li>
               <li>Sanitizing parsed data by filtering out malicious keys before using it in recursive operations.</li>
-              <li>Using modern, well-maintained libraries for object manipulation (like merging) that have built-in protections.</li>
+              <li>
+                Using modern, well-maintained libraries for object manipulation (like merging) that have built-in
+                protections.
+              </li>
               <li>Implementing your own object manipulation logic with explicit checks for malicious keys.</li>
             </ul>
           </li>
@@ -392,10 +398,9 @@ console.log("New object polluted?", ({} as any).polluted); // Should still be un
 
         <p>
           By understanding that the risk lies in the processing logic rather than the parsing itself, and by
-          implementing robust checks during object manipulation, you can effectively protect your application
-          against Prototype Pollution attacks originating from untrusted JSON inputs.
+          implementing robust checks during object manipulation, you can effectively protect your application against
+          Prototype Pollution attacks originating from untrusted JSON inputs.
         </p>
-
       </div>
     </>
   );

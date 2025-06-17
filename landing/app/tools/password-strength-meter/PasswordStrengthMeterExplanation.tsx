@@ -17,7 +17,8 @@ export default function PasswordStrengthMeterExplanation() {
             <Shield className="h-8 w-8 text-blue-600 mb-2" />
             <CardTitle>OWASP Guidelines</CardTitle>
             <CardDescription>
-              Our password strength meter follows industry-standard OWASP (Open Web Application Security Project) guidelines.
+              Our password strength meter follows industry-standard OWASP (Open Web Application Security Project)
+              guidelines.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -75,9 +76,7 @@ export default function PasswordStrengthMeterExplanation() {
           <CardHeader>
             <AlertTriangle className="h-8 w-8 text-red-600 mb-2" />
             <CardTitle>Common Vulnerabilities</CardTitle>
-            <CardDescription>
-              Understanding what makes passwords weak helps you avoid common pitfalls.
-            </CardDescription>
+            <CardDescription>Understanding what makes passwords weak helps you avoid common pitfalls.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -107,16 +106,15 @@ export default function PasswordStrengthMeterExplanation() {
           <CardHeader>
             <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
             <CardTitle>Best Practices</CardTitle>
-            <CardDescription>
-              Follow these recommendations to maintain strong password security.
-            </CardDescription>
+            <CardDescription>Follow these recommendations to maintain strong password security.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
                 <h4 className="font-medium text-sm mb-2">Use Passphrases</h4>
                 <p className="text-sm text-muted-foreground">
-                  Consider using memorable phrases with spaces and punctuation instead of complex character combinations.
+                  Consider using memorable phrases with spaces and punctuation instead of complex character
+                  combinations.
                 </p>
               </div>
               <div>
@@ -140,9 +138,7 @@ export default function PasswordStrengthMeterExplanation() {
         <CardHeader>
           <Info className="h-8 w-8 text-blue-600 mb-2" />
           <CardTitle>Strength Levels Explained</CardTitle>
-          <CardDescription>
-            Understanding what each strength level means for your password security.
-          </CardDescription>
+          <CardDescription>Understanding what each strength level means for your password security.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">

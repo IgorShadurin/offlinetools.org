@@ -17,32 +17,33 @@ export default function JsonFormatterExtensionArticle() {
       <div className="space-y-6">
         <p>
           Browsing APIs, debugging network requests, or simply viewing raw JSON data in the browser can often be
-          challenging due to its unformatted, plain-text nature. A JSON Formatter Chrome Extension
-          solves this by automatically detecting JSON content and presenting it in a structured,
-          readable, and highlighted format directly within the browser window.
+          challenging due to its unformatted, plain-text nature. A JSON Formatter Chrome Extension solves this by
+          automatically detecting JSON content and presenting it in a structured, readable, and highlighted format
+          directly within the browser window.
         </p>
         <p>
-          Building such an extension is a great way to learn about Chrome Extension development,
-          working with web content, and basic data formatting. This article will guide you through
-          the fundamental concepts and approaches.
+          Building such an extension is a great way to learn about Chrome Extension development, working with web
+          content, and basic data formatting. This article will guide you through the fundamental concepts and
+          approaches.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Build a JSON Formatter Extension?</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Improved Readability:</strong> Raw JSON is hard to scan. Formatting adds indentation,
-            line breaks, and color coding, making it much easier to understand the data structure.
+            <strong>Improved Readability:</strong> Raw JSON is hard to scan. Formatting adds indentation, line breaks,
+            and color coding, making it much easier to understand the data structure.
           </li>
           <li>
-            <strong>Error Detection:</strong> Syntax highlighting often breaks on invalid JSON, helping
-            spot errors quickly.
+            <strong>Error Detection:</strong> Syntax highlighting often breaks on invalid JSON, helping spot errors
+            quickly.
           </li>
           <li>
-            <strong>Navigation:</strong> Many formatters allow collapsing/expanding objects and arrays,
-            simplifying navigation through large datasets.
+            <strong>Navigation:</strong> Many formatters allow collapsing/expanding objects and arrays, simplifying
+            navigation through large datasets.
           </li>
           <li>
-            <strong>Learning Opportunity:</strong> It&apos;s a practical project to understand core Chrome Extension APIs.
+            <strong>Learning Opportunity:</strong> It&apos;s a practical project to understand core Chrome Extension
+            APIs.
           </li>
         </ul>
 
@@ -50,50 +51,51 @@ export default function JsonFormatterExtensionArticle() {
           Extension Fundamentals <Code className="w-6 h-6" />
         </h2>
         <p>
-          Chrome extensions are built using web technologies (HTML, CSS, JavaScript) and run in a
-          sandboxed environment within the browser. They interact with the browser and web pages
-          through specific APIs. Key components include:
+          Chrome extensions are built using web technologies (HTML, CSS, JavaScript) and run in a sandboxed environment
+          within the browser. They interact with the browser and web pages through specific APIs. Key components
+          include:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <code>manifest.json</code>: The configuration file for your extension. It defines permissions,
-            scripts, icons, and other metadata. This is the entry point for the browser to understand your extension.
+            <code>manifest.json</code>: The configuration file for your extension. It defines permissions, scripts,
+            icons, and other metadata. This is the entry point for the browser to understand your extension.
           </li>
           <li>
-            <strong>Background Script:</strong> A script that runs in the background. It handles events,
-            manages state, and coordinates communication between different parts of the extension. It doesn&apos;t
-            have direct access to web page content.
+            <strong>Background Script:</strong> A script that runs in the background. It handles events, manages state,
+            and coordinates communication between different parts of the extension. It doesn&apos;t have direct access
+            to web page content.
           </li>
           <li>
-            <strong>Content Script:</strong> A script injected into web pages. It can read and modify
-            the DOM of the page the user is visiting. It runs in an isolated world but can communicate
-            with the background script.
+            <strong>Content Script:</strong> A script injected into web pages. It can read and modify the DOM of the
+            page the user is visiting. It runs in an isolated world but can communicate with the background script.
           </li>
           <li>
-            <strong>Browser Action (Toolbar Icon):</strong> An icon in the browser toolbar. Can open a popup
-            or trigger an action via the background script.
+            <strong>Browser Action (Toolbar Icon):</strong> An icon in the browser toolbar. Can open a popup or trigger
+            an action via the background script.
           </li>
           <li>
-            <strong>Page Action (URL Bar Icon):</strong> An icon that appears only when the extension
-            is relevant to the current page. Less common in Manifest V3.
+            <strong>Page Action (URL Bar Icon):</strong> An icon that appears only when the extension is relevant to the
+            current page. Less common in Manifest V3.
           </li>
           <li>
-            <strong>DevTools Page:</strong> Creates panels in the browser&apos;s developer tools. Useful for
-            inspecting network requests or console output.
+            <strong>DevTools Page:</strong> Creates panels in the browser&apos;s developer tools. Useful for inspecting
+            network requests or console output.
           </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">Manifest V3</h3>
         <p>
-          As of 2023/2024, Chrome is transitioning from Manifest V2 to Manifest V3. V3 brings security
-          and performance enhancements, particularly changing how background processes work (Service Workers)
-          and networking request interception (Declarative Net Request API). For a JSON formatter, the V3
-          changes primarily affect background scripts and potentially how you detect/intercept JSON responses,
-          though Content Scripts remain a primary method for modifying page content.
+          As of 2023/2024, Chrome is transitioning from Manifest V2 to Manifest V3. V3 brings security and performance
+          enhancements, particularly changing how background processes work (Service Workers) and networking request
+          interception (Declarative Net Request API). For a JSON formatter, the V3 changes primarily affect background
+          scripts and potentially how you detect/intercept JSON responses, though Content Scripts remain a primary
+          method for modifying page content.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Basic Manifest V3 Structure (<code>manifest.json</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Basic Manifest V3 Structure (<code>manifest.json</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`&#x7b;
@@ -137,34 +139,32 @@ export default function JsonFormatterExtensionArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. Content Script Approach (Modifying Page Content)</h3>
         <p>
-          This is the most common approach for basic formatters. A content script is injected
-          into every page (or pages matching specific patterns) and checks if the page content
-          looks like raw JSON. If it does, the script replaces the page&apos;s body or specific
-          elements (like <code>&lt;pre&gt;</code> tags) with the formatted JSON.
+          This is the most common approach for basic formatters. A content script is injected into every page (or pages
+          matching specific patterns) and checks if the page content looks like raw JSON. If it does, the script
+          replaces the page&apos;s body or specific elements (like <code>&lt;pre&gt;</code> tags) with the formatted
+          JSON.
         </p>
         <h4 className="text-lg font-medium mt-4">How it works:</h4>
         <ul className="list-disc pl-6 space-y-2">
-          <li>
-            Content script runs when the page loads.
-          </li>
+          <li>Content script runs when the page loads.</li>
           <li>
             It reads the page&apos;s content (e.g., <code>document.body.innerText</code>).
           </li>
           <li>
-            It attempts to parse the content using <code>JSON.parse()</code>. If successful,
-            it&apos;s likely JSON. Add checks for content type headers if possible.
+            It attempts to parse the content using <code>JSON.parse()</code>. If successful, it&apos;s likely JSON. Add
+            checks for content type headers if possible.
           </li>
           <li>
             If parsing succeeds, apply formatting and highlighting logic. This could involve:
             <ul className="list-disc pl-6 mt-1">
               <li>Using a pre-built JavaScript formatting library.</li>
-              <li>Manually traversing the parsed JSON object/array and building HTML elements
-                with appropriate classes for CSS styling.</li>
+              <li>
+                Manually traversing the parsed JSON object/array and building HTML elements with appropriate classes for
+                CSS styling.
+              </li>
             </ul>
           </li>
-          <li>
-            Replace the original page content with the generated HTML.
-          </li>
+          <li>Replace the original page content with the generated HTML.</li>
         </ul>
         <h4 className="text-lg font-medium mt-4">Pros:</h4>
         <ul className="list-disc pl-6 space-y-2">
@@ -174,13 +174,17 @@ export default function JsonFormatterExtensionArticle() {
         <h4 className="text-lg font-medium mt-4">Cons:</h4>
         <ul className="list-disc pl-6 space-y-2">
           <li>Might interfere with pages that contain large amounts of text that is *almost* JSON.</li>
-          <li>Can be challenging to detect JSON returned via AJAX calls *after* the page loads, unless
-            you hook into network requests (which might require background scripts and different permissions).</li>
+          <li>
+            Can be challenging to detect JSON returned via AJAX calls *after* the page loads, unless you hook into
+            network requests (which might require background scripts and different permissions).
+          </li>
           <li>Replacing the entire page body might lose other elements or context. Need careful detection.</li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Conceptual Content Script (<code>content.js</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Conceptual Content Script (<code>content.js</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// content.js
@@ -285,9 +289,9 @@ document.querySelectorAll('pre').forEach(preElement => &#x7b;
 
         <h3 className="text-xl font-semibold mt-6">2. DevTools Panel Approach (Inspecting Network)</h3>
         <p>
-          This approach involves creating a custom panel within Chrome&apos;s Developer Tools.
-          The extension uses the <code>chrome.devtools.network</code> API to listen for network
-          requests and responses. When a response with a <code>Content-Type: application/json</code>
+          This approach involves creating a custom panel within Chrome&apos;s Developer Tools. The extension uses the{" "}
+          <code>chrome.devtools.network</code> API to listen for network requests and responses. When a response with a{" "}
+          <code>Content-Type: application/json</code>
           header is detected, its body is fetched and sent to the DevTools panel for display and formatting.
         </p>
         <h4 className="text-lg font-medium mt-4">How it works:</h4>
@@ -300,7 +304,8 @@ document.querySelectorAll('pre').forEach(preElement => &#x7b;
             to add a new panel.
           </li>
           <li>
-            This script (or a background script it communicates with) listens to <code>chrome.devtools.network.onRequestFinished</code>.
+            This script (or a background script it communicates with) listens to{" "}
+            <code>chrome.devtools.network.onRequestFinished</code>.
           </li>
           <li>
             When a request finishes, check its response headers for <code>Content-Type: application/json</code>.
@@ -309,11 +314,10 @@ document.querySelectorAll('pre').forEach(preElement => &#x7b;
             If it&apos;s JSON, use <code>request.getContent()</code> to get the response body.
           </li>
           <li>
-            Send this content to the DevTools panel (often involves messaging between the background/devtools script and the panel&apos;s HTML page script).
+            Send this content to the DevTools panel (often involves messaging between the background/devtools script and
+            the panel&apos;s HTML page script).
           </li>
-          <li>
-            The panel&apos;s script receives the JSON string, formats it, and displays it in the panel&apos;s UI.
-          </li>
+          <li>The panel&apos;s script receives the JSON string, formats it, and displays it in the panel&apos;s UI.</li>
         </ul>
         <h4 className="text-lg font-medium mt-4">Pros:</h4>
         <ul className="list-disc pl-6 space-y-2">
@@ -325,11 +329,15 @@ document.querySelectorAll('pre').forEach(preElement => &#x7b;
         <ul className="list-disc pl-6 space-y-2">
           <li>More complex to set up (involves multiple scripts and communication).</li>
           <li>Requires the user to open DevTools to see the formatted JSON.</li>
-          <li>Doesn&apos;t format JSON directly displayed in a browser tab (like visiting a <code>.json</code> file URL).</li>
+          <li>
+            Doesn&apos;t format JSON directly displayed in a browser tab (like visiting a <code>.json</code> file URL).
+          </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Manifest V3 for DevTools Approach (<code>manifest.json</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Manifest V3 for DevTools Approach (<code>manifest.json</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`&#x7b;
@@ -351,7 +359,9 @@ document.querySelectorAll('pre').forEach(preElement => &#x7b;
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Conceptual DevTools Page (<code>devtools.html</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Conceptual DevTools Page (<code>devtools.html</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`&lt;!DOCTYPE html&gt;
@@ -368,7 +378,9 @@ document.querySelectorAll('pre').forEach(preElement => &#x7b;
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Conceptual DevTools Script (<code>devtools.js</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Conceptual DevTools Script (<code>devtools.js</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// devtools.js
@@ -415,7 +427,9 @@ chrome.devtools.panels.create(
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Conceptual Panel HTML (<code>panel.html</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Conceptual Panel HTML (<code>panel.html</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`&lt;!DOCTYPE html&gt;
@@ -443,7 +457,9 @@ chrome.devtools.panels.create(
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Conceptual Panel Script (<code>panel.js</code>):</h4>
+          <h4 className="text-lg font-medium">
+            Conceptual Panel Script (<code>panel.js</code>):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// panel.js
@@ -490,30 +506,34 @@ function displayFormattedJson(jsonString) &#x7b;
 
         <h2 className="text-2xl font-semibold mt-8">Implementing the Formatting Logic</h2>
         <p>
-          Whether you use the Content Script or DevTools approach, the core task is taking a JSON string,
-          parsing it into a JavaScript object/array, and then generating HTML that represents this structure
-          with indentation and highlighting.
+          Whether you use the Content Script or DevTools approach, the core task is taking a JSON string, parsing it
+          into a JavaScript object/array, and then generating HTML that represents this structure with indentation and
+          highlighting.
         </p>
         <p>
           You can use <code>JSON.parse()</code> to parse the string safely. For formatting, you have options:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong><code>JSON.stringify(data, null, 2)</code>:</strong> This is the simplest way to get a
-            pretty-printed string with 2 spaces for indentation. You can then wrap this string in a <code>&lt;pre&gt;</code>
-            tag and potentially apply basic CSS for different data types by searching and replacing or using regular expressions
-            (though this can be complex and error-prone).
+            <strong>
+              <code>JSON.stringify(data, null, 2)</code>:
+            </strong>{" "}
+            This is the simplest way to get a pretty-printed string with 2 spaces for indentation. You can then wrap
+            this string in a <code>&lt;pre&gt;</code>
+            tag and potentially apply basic CSS for different data types by searching and replacing or using regular
+            expressions (though this can be complex and error-prone).
           </li>
           <li>
-            <strong>Manual DOM Generation:</strong> Iterate through the parsed JSON object/array. For each key-value pair
-            (in objects) or element (in arrays), create corresponding HTML elements (e.g., <code>&lt;span&gt;</code>, <code>&lt;div&gt;</code>).
-            Add CSS classes based on the data type (string, number, boolean, null, object, array, key). This gives you
-            fine-grained control for styling, collapse/expand features, etc.
+            <strong>Manual DOM Generation:</strong> Iterate through the parsed JSON object/array. For each key-value
+            pair (in objects) or element (in arrays), create corresponding HTML elements (e.g.,{" "}
+            <code>&lt;span&gt;</code>, <code>&lt;div&gt;</code>). Add CSS classes based on the data type (string,
+            number, boolean, null, object, array, key). This gives you fine-grained control for styling, collapse/expand
+            features, etc.
           </li>
           <li>
-            <strong>Third-party Libraries:</strong> Libraries exist specifically for formatting and highlighting JSON in HTML.
-            Integrating one might simplify the formatting part, but adds external dependencies to your extension. Choose carefully
-            and consider the library&apos;s size and compatibility.
+            <strong>Third-party Libraries:</strong> Libraries exist specifically for formatting and highlighting JSON in
+            HTML. Integrating one might simplify the formatting part, but adds external dependencies to your extension.
+            Choose carefully and consider the library&apos;s size and compatibility.
           </li>
         </ul>
 
@@ -584,54 +604,77 @@ function displayFormattedJson(jsonString) &#x7b;
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           Adding Options and Customization <Settings2 className="w-6 h-6" />
         </h2>
-        <p>
-          A useful extension often provides options. For a JSON formatter, this might include:
-        </p>
+        <p>A useful extension often provides options. For a JSON formatter, this might include:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Indentation size (2 spaces, 4 spaces, tabs).</li>
           <li>Color scheme for syntax highlighting.</li>
           <li>Whether to collapse certain nodes by default.</li>
           <li>Enabling/disabling the formatter on specific websites.</li>
         </ul>
-        <p>
-          You can implement this using:
-        </p>
+        <p>You can implement this using:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            An <a href="https://developer.chrome.com/docs/extensions/reference/optionsV2/" target="_blank" rel="noopener noreferrer" className="underline">Options page</a>: An HTML page defined in <code>manifest.json</code> where users can configure settings.
+            An{" "}
+            <a
+              href="https://developer.chrome.com/docs/extensions/reference/optionsV2/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Options page
+            </a>
+            : An HTML page defined in <code>manifest.json</code> where users can configure settings.
           </li>
           <li>
-            The <a href="https://developer.chrome.com/docs/extensions/reference/storage/" target="_blank" rel="noopener noreferrer" className="underline"><code>chrome.storage</code> API</a>: Used to save user settings persistently across browser sessions.
+            The{" "}
+            <a
+              href="https://developer.chrome.com/docs/extensions/reference/storage/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              <code>chrome.storage</code> API
+            </a>
+            : Used to save user settings persistently across browser sessions.
           </li>
         </ul>
         <p>
-          Your content or DevTools scripts can then read settings from <code>chrome.storage.sync</code> (synced across signed-in browsers) or <code>chrome.storage.local</code> (local only) and apply them to the formatting logic.
+          Your content or DevTools scripts can then read settings from <code>chrome.storage.sync</code> (synced across
+          signed-in browsers) or <code>chrome.storage.local</code> (local only) and apply them to the formatting logic.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Packaging and Publishing</h2>
-        <p>
-          Once your extension is ready:
-        </p>
+        <p>Once your extension is ready:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Packaging:</strong> Zip the extension&apos;s files (manifest.json, scripts, icons, HTML pages, CSS).
           </li>
           <li>
-            <strong>Testing:</strong> Load it in Chrome via <code>chrome://extensions</code> in developer mode. Test thoroughly on various JSON outputs and regular web pages.
+            <strong>Testing:</strong> Load it in Chrome via <code>chrome://extensions</code> in developer mode. Test
+            thoroughly on various JSON outputs and regular web pages.
           </li>
           <li>
-            <strong>Publishing:</strong> You can publish your extension to the Chrome Web Store through the <a href="https://chrome.google.com/webstore/developer/dashboard" target="_blank" rel="noopener noreferrer" className="underline">developer dashboard</a>. This requires a one-time fee.
+            <strong>Publishing:</strong> You can publish your extension to the Chrome Web Store through the{" "}
+            <a
+              href="https://chrome.google.com/webstore/developer/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              developer dashboard
+            </a>
+            . This requires a one-time fee.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Building a JSON Formatter Chrome Extension is a rewarding project that provides practical experience
-          with browser extension development, content manipulation (or DevTools API usage), and frontend
-          formatting techniques. Whether you choose the Content Script approach for direct page formatting
-          or the DevTools approach for network inspection, understanding the Chrome Extension lifecycle
-          and APIs is key. Start simple, perhaps using <code>JSON.stringify</code> initially, and gradually add
-          features like syntax highlighting, collapse/expand, and user options to build a robust tool.
+          Building a JSON Formatter Chrome Extension is a rewarding project that provides practical experience with
+          browser extension development, content manipulation (or DevTools API usage), and frontend formatting
+          techniques. Whether you choose the Content Script approach for direct page formatting or the DevTools approach
+          for network inspection, understanding the Chrome Extension lifecycle and APIs is key. Start simple, perhaps
+          using <code>JSON.stringify</code> initially, and gradually add features like syntax highlighting,
+          collapse/expand, and user options to build a robust tool.
         </p>
       </div>
     </>

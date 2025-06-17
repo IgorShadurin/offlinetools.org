@@ -2,7 +2,7 @@
 
 import { useRecentlyVisitedTools } from "@/lib/hooks/useRecentlyVisitedTools";
 import { useEffect } from "react";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
 export const ToolVisitTracker: React.FC = () => {
   const { addTool } = useRecentlyVisitedTools();
@@ -10,9 +10,10 @@ export const ToolVisitTracker: React.FC = () => {
 
   useEffect(() => {
     // Ensure this runs only on the client side and pathname is available
-    if (pathname) { // `typeof window !== 'undefined'` is implicit in client components
+    if (pathname) {
+      // `typeof window !== 'undefined'` is implicit in client components
       const title = document.title.replace(" | OfflineTools", ""); // Ensure this line is updated
-      
+
       // Only add if it's a tool page (e.g. /tools/json-formatter)
       // and not the main /tools or /tools/ layout itself.
       // Also ensure title and url are not empty.

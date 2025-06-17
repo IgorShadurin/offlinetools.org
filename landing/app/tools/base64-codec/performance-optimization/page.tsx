@@ -34,7 +34,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "SIMD Acceleration for Base64 Encoding",
-    description: "Leveraging Single Instruction Multiple Data instructions to parallelize and speed up Base64 operations.",
+    description:
+      "Leveraging Single Instruction Multiple Data instructions to parallelize and speed up Base64 operations.",
     slug: "simd-acceleration-for-base64-encoding",
   },
   {
@@ -116,7 +117,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Compiler Optimizations for Base64 Code",
     description: "Leveraging compiler features and flags to generate highly optimized Base64 encoding binaries.",
     slug: "compiler-optimizations-for-base64-code",
-  }
+  },
 ];
 
 /**
@@ -179,7 +180,8 @@ export default function Base64CodecPerformancePage() {
                   <div>
                     <h3 className="font-medium mb-1">Algorithmic Optimization</h3>
                     <p className="text-sm text-muted-foreground">
-                      Advanced techniques for improving Base64 processing speed through algorithm refinements and SIMD acceleration.
+                      Advanced techniques for improving Base64 processing speed through algorithm refinements and SIMD
+                      acceleration.
                     </p>
                   </div>
                 </div>
@@ -205,7 +207,8 @@ export default function Base64CodecPerformancePage() {
                   <div>
                     <h3 className="font-medium mb-1">Throughput Enhancement</h3>
                     <p className="text-sm text-muted-foreground">
-                      Parallel processing, multithreading, and hardware acceleration techniques for high-volume Base64 operations.
+                      Parallel processing, multithreading, and hardware acceleration techniques for high-volume Base64
+                      operations.
                     </p>
                   </div>
                 </div>
@@ -217,7 +220,8 @@ export default function Base64CodecPerformancePage() {
                   <div>
                     <h3 className="font-medium mb-1">Performance Measurement</h3>
                     <p className="text-sm text-muted-foreground">
-                      Benchmarking methodologies, profiling tools, and metrics for evaluating Base64 encoding efficiency.
+                      Benchmarking methodologies, profiling tools, and metrics for evaluating Base64 encoding
+                      efficiency.
                     </p>
                   </div>
                 </div>
@@ -230,7 +234,11 @@ export default function Base64CodecPerformancePage() {
                 <span>Performance Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Modern Base64 implementations can achieve massive performance gains through lookup tables and SIMD instructions. By processing multiple bytes in parallel with vector operations, SIMD-optimized encoders can achieve throughput of several gigabytes per second on standard hardware. For web applications, WebAssembly implementations can offer 10-20x performance improvements over JavaScript implementations while maintaining cross-browser compatibility.
+                Modern Base64 implementations can achieve massive performance gains through lookup tables and SIMD
+                instructions. By processing multiple bytes in parallel with vector operations, SIMD-optimized encoders
+                can achieve throughput of several gigabytes per second on standard hardware. For web applications,
+                WebAssembly implementations can offer 10-20x performance improvements over JavaScript implementations
+                while maintaining cross-browser compatibility.
               </p>
             </div>
           </CardContent>
@@ -240,4 +248,4 @@ export default function Base64CodecPerformancePage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

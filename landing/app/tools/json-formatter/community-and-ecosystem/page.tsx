@@ -10,8 +10,7 @@ import { Users, GitMerge, MessageSquare, GraduationCap, Heart } from "lucide-rea
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Community and Ecosystem | Offline Tools",
-  description:
-    "Building and nurturing open source communities around JSON formatter tools and standards"
+  description: "Building and nurturing open source communities around JSON formatter tools and standards",
 };
 
 /**
@@ -20,17 +19,20 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "Building a Community Around JSON Formatter Tools",
-    description: "Learn strategies for creating and growing a thriving community of users and contributors for JSON formatter projects.",
+    description:
+      "Learn strategies for creating and growing a thriving community of users and contributors for JSON formatter projects.",
     slug: "building-a-community-around-json-formatter-tools",
   },
   {
     title: "Open Source JSON Formatter Contribution Guidelines",
-    description: "How to establish clear contribution guidelines that encourage participation while maintaining code quality.",
+    description:
+      "How to establish clear contribution guidelines that encourage participation while maintaining code quality.",
     slug: "open-source-json-formatter-contribution-guidelines",
   },
   {
     title: "Running Successful JSON Formatter User Groups",
-    description: "Tips for organizing and maintaining active user groups that support JSON formatter tool adoption and improvement.",
+    description:
+      "Tips for organizing and maintaining active user groups that support JSON formatter tool adoption and improvement.",
     slug: "running-successful-json-formatter-user-groups",
   },
   {
@@ -40,7 +42,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "JSON Formatter Hackathons: Organization and Outcomes",
-    description: "How to organize productive hackathons that drive innovation and community engagement for JSON formatting tools.",
+    description:
+      "How to organize productive hackathons that drive innovation and community engagement for JSON formatting tools.",
     slug: "json-formatter-hackathons-organization-and-outcomes",
   },
   {
@@ -70,17 +73,20 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Organizing Virtual JSON Formatter Workshops",
-    description: "How to plan and execute engaging virtual workshops that teach JSON formatting concepts and tool usage.",
+    description:
+      "How to plan and execute engaging virtual workshops that teach JSON formatting concepts and tool usage.",
     slug: "organizing-virtual-json-formatter-workshops",
   },
   {
     title: "JSON Tool Maintainer Burnout: Prevention and Recovery",
-    description: "Recognizing the signs of maintainer burnout and strategies to prevent it in open source JSON projects.",
+    description:
+      "Recognizing the signs of maintainer burnout and strategies to prevent it in open source JSON projects.",
     slug: "json-tool-maintainer-burnout-prevention-and-recovery",
   },
   {
     title: "Building Inclusive Community Governance Models for JSON Tools",
-    description: "Creating fair and transparent governance structures that encourage diverse participation in JSON projects.",
+    description:
+      "Creating fair and transparent governance structures that encourage diverse participation in JSON projects.",
     slug: "building-inclusive-community-governance-models-for-json-tools",
   },
   {
@@ -100,7 +106,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Cross-Project Collaboration in JSON Tool Ecosystems",
-    description: "Facilitating cooperation between different JSON tool projects for mutual benefit and user convenience.",
+    description:
+      "Facilitating cooperation between different JSON tool projects for mutual benefit and user convenience.",
     slug: "cross-project-collaboration-in-json-tool-ecosystems",
   },
   {
@@ -185,7 +192,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Academic-Industry Partnerships in JSON Tool Development",
-    description: "Fostering collaboration between academic researchers and industry practitioners in JSON tool creation.",
+    description:
+      "Fostering collaboration between academic researchers and industry practitioners in JSON tool creation.",
     slug: "academic-industry-partnerships-in-json-tool-development",
   },
   {
@@ -200,7 +208,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Building Developer Advocacy Programs for JSON Formatters",
-    description: "Establishing effective developer relations initiatives that support JSON tool adoption and community growth.",
+    description:
+      "Establishing effective developer relations initiatives that support JSON tool adoption and community growth.",
     slug: "building-developer-advocacy-programs-for-json-formatters",
   },
   {
@@ -215,7 +224,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Managing Community Expectations in JSON Tool Roadmaps",
-    description: "How to communicate development plans effectively while balancing community requests with strategic goals.",
+    description:
+      "How to communicate development plans effectively while balancing community requests with strategic goals.",
     slug: "managing-community-expectations-in-json-tool-roadmaps",
   },
   {
@@ -240,7 +250,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Community-Driven Benchmarking of JSON Tools",
-    description: "Organizing collaborative efforts to evaluate and compare performance of different JSON formatting tools.",
+    description:
+      "Organizing collaborative efforts to evaluate and compare performance of different JSON formatting tools.",
     slug: "community-driven-benchmarking-of-json-tools",
   },
   {
@@ -260,14 +271,15 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "JSON Community Awards and Recognition Programs",
-    description: "Creating meaningful award programs that celebrate excellence in JSON tool development and community support.",
+    description:
+      "Creating meaningful award programs that celebrate excellence in JSON tool development and community support.",
     slug: "json-community-awards-and-recognition-programs",
   },
   {
     title: "The Future of the JSON Formatter Community Ecosystem",
     description: "Emerging trends and predictions for how JSON tool communities will evolve in coming years.",
     slug: "the-future-of-the-json-formatter-community-ecosystem",
-  }
+  },
 ];
 
 /**
@@ -330,7 +342,8 @@ export default function JsonFormatterCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Open Source Collaboration</h3>
                     <p className="text-sm text-muted-foreground">
-                      How community-driven development powers innovation in JSON formatting tools through shared code, transparent processes, and collaborative problem-solving.
+                      How community-driven development powers innovation in JSON formatting tools through shared code,
+                      transparent processes, and collaborative problem-solving.
                     </p>
                   </div>
                 </div>
@@ -342,7 +355,8 @@ export default function JsonFormatterCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Community Forums</h3>
                     <p className="text-sm text-muted-foreground">
-                      The role of discussion spaces, developer communities, and social platforms in shaping tool development and providing support for JSON formatter users.
+                      The role of discussion spaces, developer communities, and social platforms in shaping tool
+                      development and providing support for JSON formatter users.
                     </p>
                   </div>
                 </div>
@@ -356,7 +370,8 @@ export default function JsonFormatterCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Knowledge Sharing</h3>
                     <p className="text-sm text-muted-foreground">
-                      Community-created documentation, tutorials, and educational resources that help users master JSON formatting concepts and tool capabilities.
+                      Community-created documentation, tutorials, and educational resources that help users master JSON
+                      formatting concepts and tool capabilities.
                     </p>
                   </div>
                 </div>
@@ -368,7 +383,8 @@ export default function JsonFormatterCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Ecosystem Growth</h3>
                     <p className="text-sm text-muted-foreground">
-                      How JSON formatting tools fit into the broader data ecosystem, connecting with related technologies and communities to create comprehensive toolchains.
+                      How JSON formatting tools fit into the broader data ecosystem, connecting with related
+                      technologies and communities to create comprehensive toolchains.
                     </p>
                   </div>
                 </div>
@@ -381,7 +397,9 @@ export default function JsonFormatterCommunityPage() {
                 <span>Community Impact:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                The growth of open source JSON tools exemplifies how community collaboration can lead to robust, feature-rich applications that evolve rapidly through contributions from users with diverse needs and backgrounds.
+                The growth of open source JSON tools exemplifies how community collaboration can lead to robust,
+                feature-rich applications that evolve rapidly through contributions from users with diverse needs and
+                backgrounds.
               </p>
             </div>
           </CardContent>
@@ -391,4 +409,4 @@ export default function JsonFormatterCommunityPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

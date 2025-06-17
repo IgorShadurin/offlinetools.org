@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "The Base64 Algorithm: Step-by-Step Implementation Guide",
-    description: "A comprehensive walkthrough of the Base64 encoding and decoding algorithm with implementation examples.",
+    description:
+      "A comprehensive walkthrough of the Base64 encoding and decoding algorithm with implementation examples.",
     slug: "the-base64-algorithm-step-by-step-implementation-guide",
   },
   {
@@ -29,7 +30,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Lookup Tables vs. Computation in Base64 Implementation",
-    description: "Comparing performance trade-offs between lookup table approaches and computational methods for Base64 encoding.",
+    description:
+      "Comparing performance trade-offs between lookup table approaches and computational methods for Base64 encoding.",
     slug: "lookup-tables-vs-computation-in-base64-implementation",
   },
   {
@@ -44,17 +46,20 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Implementing URL-Safe Base64 Variants",
-    description: "Technical details for implementing URL-safe Base64 encoding with appropriate character substitutions.",
+    description:
+      "Technical details for implementing URL-safe Base64 encoding with appropriate character substitutions.",
     slug: "implementing-url-safe-base64-variants",
   },
   {
     title: "Handling Padding in Base64 Implementations",
-    description: "Techniques for properly implementing and configuring padding behavior in Base64 encoders and decoders.",
+    description:
+      "Techniques for properly implementing and configuring padding behavior in Base64 encoders and decoders.",
     slug: "handling-padding-in-base64-implementations",
   },
   {
     title: "Stream-Based Base64 Processing Implementation",
-    description: "Architectures for implementing Base64 encoding that processes data incrementally rather than all at once.",
+    description:
+      "Architectures for implementing Base64 encoding that processes data incrementally rather than all at once.",
     slug: "stream-based-base64-processing-implementation",
   },
   {
@@ -69,7 +74,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Unit Testing Strategies for Base64 Implementations",
-    description: "Comprehensive testing methodologies to ensure correctness and compatibility of Base64 encoding implementations.",
+    description:
+      "Comprehensive testing methodologies to ensure correctness and compatibility of Base64 encoding implementations.",
     slug: "unit-testing-strategies-for-base64-implementations",
   },
   {
@@ -79,12 +85,14 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "SIMD Acceleration for Base64 Encoding",
-    description: "Leveraging Single Instruction Multiple Data (SIMD) capabilities to significantly speed up Base64 operations.",
+    description:
+      "Leveraging Single Instruction Multiple Data (SIMD) capabilities to significantly speed up Base64 operations.",
     slug: "simd-acceleration-for-base64-encoding",
   },
   {
     title: "Thread-Safe Base64 Implementation Approaches",
-    description: "Design patterns for creating Base64 encoding libraries that perform correctly in multi-threaded environments.",
+    description:
+      "Design patterns for creating Base64 encoding libraries that perform correctly in multi-threaded environments.",
     slug: "thread-safe-base64-implementation-approaches",
   },
   {
@@ -104,19 +112,21 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Vectorized Base64 Encoding: Performance Techniques",
-    description: "Advanced implementation strategies using vectorization to achieve maximum Base64 encoding throughput.",
+    description:
+      "Advanced implementation strategies using vectorization to achieve maximum Base64 encoding throughput.",
     slug: "vectorized-base64-encoding-performance-techniques",
   },
   {
     title: "Implementing Line Breaking in Base64 Encoders",
-    description: "Techniques for correctly handling line length limitations and line breaking in Base64 encoded output.",
+    description:
+      "Techniques for correctly handling line length limitations and line breaking in Base64 encoded output.",
     slug: "implementing-line-breaking-in-base64-encoders",
   },
   {
     title: "Zero-Copy Base64 Implementation Approaches",
     description: "Designing Base64 encoders and decoders that minimize data copying for maximum performance.",
     slug: "zero-copy-base64-implementation-approaches",
-  }
+  },
 ];
 
 /**
@@ -167,7 +177,9 @@ export default function Base64CodecImplementationPage() {
               <Code2 className="text-slate-600" size={24} />
               Under the Hood: Base64 Implementation
             </CardTitle>
-            <CardDescription>Technical aspects of building efficient Base64 encoding and decoding algorithms</CardDescription>
+            <CardDescription>
+              Technical aspects of building efficient Base64 encoding and decoding algorithms
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +191,8 @@ export default function Base64CodecImplementationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Algorithm Fundamentals</h3>
                     <p className="text-sm text-muted-foreground">
-                      Core bit manipulation techniques, lookup table designs, and the mathematical foundations of Base64 encoding.
+                      Core bit manipulation techniques, lookup table designs, and the mathematical foundations of Base64
+                      encoding.
                     </p>
                   </div>
                 </div>
@@ -205,7 +218,8 @@ export default function Base64CodecImplementationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Advanced Implementations</h3>
                     <p className="text-sm text-muted-foreground">
-                      Stream processing, thread-safety, constant-time decoding, and WebAssembly implementations for browsers.
+                      Stream processing, thread-safety, constant-time decoding, and WebAssembly implementations for
+                      browsers.
                     </p>
                   </div>
                 </div>
@@ -230,7 +244,9 @@ export default function Base64CodecImplementationPage() {
                 <span>Implementation Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                The heart of Base64 encoding involves converting 3 bytes (24 bits) of input data into 4 Base64 digits (6 bits each). This 3-to-4 byte expansion is why Base64 encoded data is approximately 33% larger than the original binary data.
+                The heart of Base64 encoding involves converting 3 bytes (24 bits) of input data into 4 Base64 digits (6
+                bits each). This 3-to-4 byte expansion is why Base64 encoded data is approximately 33% larger than the
+                original binary data.
               </p>
             </div>
           </CardContent>
@@ -240,4 +256,4 @@ export default function Base64CodecImplementationPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

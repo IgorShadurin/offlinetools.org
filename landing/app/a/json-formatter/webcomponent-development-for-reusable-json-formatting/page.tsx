@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Palette, Component, Code, Share2 } from 'lucide-react'; // Import needed icons from the approved list
+import { Palette, Component, Code, Share2 } from "lucide-react"; // Import needed icons from the approved list
 
 export const metadata: Metadata = {
   title: "WebComponent Development for Reusable JSON Formatting",
@@ -10,112 +10,118 @@ export const metadata: Metadata = {
 export default function WebComponentJsonFormatterArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        WebComponent Development for Reusable JSON Formatting
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">WebComponent Development for Reusable JSON Formatting</h1>
 
       <div className="space-y-6">
         <p>
-          In modern web development, dealing with JSON data is ubiquitous. Whether fetching configurations,
-          displaying API responses, or working with data stores, presenting raw JSON directly to developers
-          (e.g., in a debugging panel) or even advanced users can be challenging due to its lack of formatting
-          and syntax highlighting. Creating a consistent, reusable way to render formatted, readable JSON across different
-          projects or frameworks is a common need.
+          In modern web development, dealing with JSON data is ubiquitous. Whether fetching configurations, displaying
+          API responses, or working with data stores, presenting raw JSON directly to developers (e.g., in a debugging
+          panel) or even advanced users can be challenging due to its lack of formatting and syntax highlighting.
+          Creating a consistent, reusable way to render formatted, readable JSON across different projects or frameworks
+          is a common need.
         </p>
         <p>
-          This is where <strong>Web Components</strong> offer a powerful solution. By encapsulating the JSON
-          formatting logic within a custom element, you can create a portable, reusable component that works
-          anywhere HTML can be used, independent of the JavaScript framework or library in use.
+          This is where <strong>Web Components</strong> offer a powerful solution. By encapsulating the JSON formatting
+          logic within a custom element, you can create a portable, reusable component that works anywhere HTML can be
+          used, independent of the JavaScript framework or library in use.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Palette className="inline-block" /> Why Format JSON for Display?
         </h2>
         <p>
-          Raw JSON, especially when large or deeply nested, is hard to read. It lacks indentation,
-          syntax highlighting, and often appears as a single long line of text. This makes debugging,
-          understanding data structures, or presenting data in a human-readable format difficult.
-          A well-formatted JSON display typically includes visual cues like:
+          Raw JSON, especially when large or deeply nested, is hard to read. It lacks indentation, syntax highlighting,
+          and often appears as a single long line of text. This makes debugging, understanding data structures, or
+          presenting data in a human-readable format difficult. A well-formatted JSON display typically includes visual
+          cues like:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Proper indentation to clearly show the nesting level of objects and arrays.</li>
-          <li>Syntax highlighting (coloring) for different data types (strings, numbers, booleans, null) and property keys.</li>
-          <li>Collapsible sections (for objects and arrays) to allow users to hide complex sub-structures and focus on relevant parts.</li>
+          <li>
+            Syntax highlighting (coloring) for different data types (strings, numbers, booleans, null) and property
+            keys.
+          </li>
+          <li>
+            Collapsible sections (for objects and arrays) to allow users to hide complex sub-structures and focus on
+            relevant parts.
+          </li>
           <li>Clear visual distinction between different data types.</li>
         </ul>
         <p>
-          Building this logic, including parsing, traversing, styling, and managing interactive states (like collapse/expand)
-          every time you need a JSON viewer is inefficient. A reusable component solves this.
+          Building this logic, including parsing, traversing, styling, and managing interactive states (like
+          collapse/expand) every time you need a JSON viewer is inefficient. A reusable component solves this.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Component className="inline-block" /> What are Web Components?
         </h2>
         <p>
-          Web Components are a set of web platform APIs that allow you to create new custom, reusable, encapsulated
-          HTML tags with their own functionality and styling. They are designed to be interoperable and work
-          seamlessly with any JavaScript library or framework, or even without one. They consist of three main technologies:
+          Web Components are a set of web platform APIs that allow you to create new custom, reusable, encapsulated HTML
+          tags with their own functionality and styling. They are designed to be interoperable and work seamlessly with
+          any JavaScript library or framework, or even without one. They consist of three main technologies:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Custom Elements:</strong> This API allows you to define new HTML tags (like our proposed <code>&lt;json-formatter&gt;</code>)
-            and associate a JavaScript class with them to define their behavior, lifecycle callbacks (when they are attached to the DOM,
-            attributes change, etc.), and custom methods or properties.
+            <strong>Custom Elements:</strong> This API allows you to define new HTML tags (like our proposed{" "}
+            <code>&lt;json-formatter&gt;</code>) and associate a JavaScript class with them to define their behavior,
+            lifecycle callbacks (when they are attached to the DOM, attributes change, etc.), and custom methods or
+            properties.
           </li>
           <li>
-            <strong>Shadow DOM:</strong> This provides encapsulation. It attaches a separate, isolated DOM tree to an element,
-            rendering its contents separately from the main document's DOM. Styles defined within the Shadow DOM are scoped to it,
-            preventing them from affecting the main document, and vice-versa. This is crucial for building truly self-contained components.
+            <strong>Shadow DOM:</strong> This provides encapsulation. It attaches a separate, isolated DOM tree to an
+            element, rendering its contents separately from the main document's DOM. Styles defined within the Shadow
+            DOM are scoped to it, preventing them from affecting the main document, and vice-versa. This is crucial for
+            building truly self-contained components.
           </li>
           <li>
             <strong>HTML Templates:</strong> The <code>&lt;template&gt;</code> and <code>&lt;slot&gt;</code>
-            elements allow you to write chunks of reusable HTML markup that aren't immediately rendered. They are useful for
-            structuring the internal DOM of your Web Component or enabling content distribution ("slotting").
+            elements allow you to write chunks of reusable HTML markup that aren't immediately rendered. They are useful
+            for structuring the internal DOM of your Web Component or enabling content distribution ("slotting").
           </li>
         </ul>
-        <p>
-          By combining these technologies, we can build a robust and isolated JSON formatting component.
-        </p>
+        <p>By combining these technologies, we can build a robust and isolated JSON formatting component.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Code className="inline-block" /> Designing the `&lt;json-formatter&gt;` Component
         </h2>
         <p>
-          The goal is to create a custom element, let's call it <code>&lt;json-formatter&gt;</code>, that accepts JSON data
-          and renders it in a formatted, readable way within its own encapsulated Shadow DOM.
+          The goal is to create a custom element, let's call it <code>&lt;json-formatter&gt;</code>, that accepts JSON
+          data and renders it in a formatted, readable way within its own encapsulated Shadow DOM.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Getting JSON Data into the Component</h3>
-        <p>
-          A custom element needs a way to receive the JSON data it should format. Common approaches include:
-        </p>
+        <p>A custom element needs a way to receive the JSON data it should format. Common approaches include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Via an Attribute:</strong> The JSON data (as a string) can be passed directly using an attribute, e.g.,
-            <code>&lt;json-formatter json-data='{`{ "key": "value" }`}'&gt;&lt;/json-formatter&gt;</code>. The custom element
-            can use the <code>observedAttributes</code> static property and the <code>attributeChangedCallback</code> lifecycle
-            method to react to changes in this attribute and re-render. This method is simple but less suitable for large or complex JSON due to attribute size limits and quoting complexities.
+            <strong>Via an Attribute:</strong> The JSON data (as a string) can be passed directly using an attribute,
+            e.g.,
+            <code>&lt;json-formatter json-data='{`{ "key": "value" }`}'&gt;&lt;/json-formatter&gt;</code>. The custom
+            element can use the <code>observedAttributes</code> static property and the{" "}
+            <code>attributeChangedCallback</code> lifecycle method to react to changes in this attribute and re-render.
+            This method is simple but less suitable for large or complex JSON due to attribute size limits and quoting
+            complexities.
           </li>
           <li>
-            <strong>Via a JavaScript Property:</strong> Web Components are DOM nodes, and you can set properties directly on them using JavaScript, e.g.,
-            <code>document.querySelector('json-formatter').jsonData = yourActualJsonObject;</code>. This is often the most flexible approach,
-            especially when dealing with non-string data or data that changes dynamically. The component class can define standard JavaScript
-            getter/setter properties. The setter would typically trigger the rendering logic.
+            <strong>Via a JavaScript Property:</strong> Web Components are DOM nodes, and you can set properties
+            directly on them using JavaScript, e.g.,
+            <code>document.querySelector('json-formatter').jsonData = yourActualJsonObject;</code>. This is often the
+            most flexible approach, especially when dealing with non-string data or data that changes dynamically. The
+            component class can define standard JavaScript getter/setter properties. The setter would typically trigger
+            the rendering logic.
           </li>
-           <li>
-            <strong>Via Inner HTML (Less Common for Data):</strong> While custom elements can process their <code>textContent</code> or inner HTML,
-            embedding raw JSON string inside the tag (<code>&lt;json-formatter&gt;{`{ "key": "value" }`}&lt;/json-formatter&gt;</code>)
-            is less conventional for passing data compared to attributes or properties. It might be used for initial content or simple cases.
+          <li>
+            <strong>Via Inner HTML (Less Common for Data):</strong> While custom elements can process their{" "}
+            <code>textContent</code> or inner HTML, embedding raw JSON string inside the tag (
+            <code>&lt;json-formatter&gt;{`{ "key": "value" }`}&lt;/json-formatter&gt;</code>) is less conventional for
+            passing data compared to attributes or properties. It might be used for initial content or simple cases.
           </li>
         </ul>
-        <p>
-          Implementing support for setting data via a property is generally recommended for robustness.
-        </p>
+        <p>Implementing support for setting data via a property is generally recommended for robustness.</p>
 
         <h3 className="text-xl font-semibold mt-6">Core Logic within the Custom Element Class</h3>
         <p>
-          The JavaScript class associated with the <code>&lt;json-formatter&gt;</code> tag will contain the logic.
-          This class extends <code>HTMLElement</code> and utilizes the Web Component APIs.
+          The JavaScript class associated with the <code>&lt;json-formatter&gt;</code> tag will contain the logic. This
+          class extends <code>HTMLElement</code> and utilizes the Web Component APIs.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -295,18 +301,18 @@ class JsonFormatter extends HTMLElement {
         <p>
           The <code>constructor</code> sets up the Shadow DOM and the basic internal structure.
           <code>observedAttributes</code> and <code>attributeChangedCallback</code> handle changes when the
-          <code>json-data</code> attribute is modified. <code>connectedCallback</code> ensures initial rendering
-          when the element appears on the page. The core work happens in <code>renderJson</code> and the
-          recursive <code>generateFormattedHtml</code> function, which parses the JSON and builds the
-          HTML structure with appropriate classes for styling and potentially elements for interactivity.
-          The optional property setter <code>jsonData</code> provides a more convenient JavaScript API.
+          <code>json-data</code> attribute is modified. <code>connectedCallback</code> ensures initial rendering when
+          the element appears on the page. The core work happens in <code>renderJson</code> and the recursive{" "}
+          <code>generateFormattedHtml</code> function, which parses the JSON and builds the HTML structure with
+          appropriate classes for styling and potentially elements for interactivity. The optional property setter{" "}
+          <code>jsonData</code> provides a more convenient JavaScript API.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Usage Examples</h2>
         <p>
           Once the Web Component's JavaScript file is loaded and the custom element is defined using
-          <code>customElements.define()</code>, you can use your new <code>&lt;json-formatter&gt;</code> tag
-          just like any built-in HTML element.
+          <code>customElements.define()</code>, you can use your new <code>&lt;json-formatter&gt;</code> tag just like
+          any built-in HTML element.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">In Static HTML:</h3>
@@ -366,18 +372,18 @@ class JsonFormatter extends HTMLElement {
 
         <h3 className="text-xl font-semibold mt-6">In React/Next.js (TSX):</h3>
         <p>
-          Integrating Web Components into React or Next.js requires understanding how these frameworks handle
-          custom elements and data flow. By default, React passes props as HTML attributes. While you can pass
-          a stringified JSON this way (matching our attribute example), for passing complex objects, the standard
-          approach involves getting a direct reference to the DOM node and setting a property on it.
+          Integrating Web Components into React or Next.js requires understanding how these frameworks handle custom
+          elements and data flow. By default, React passes props as HTML attributes. While you can pass a stringified
+          JSON this way (matching our attribute example), for passing complex objects, the standard approach involves
+          getting a direct reference to the DOM node and setting a property on it.
         </p>
-         <p>
+        <p>
           <strong>Note:</strong> This page component is a static server component. It doesn't run client-side JavaScript
-          after the initial render. Therefore, we cannot demonstrate dynamic data updates or property setting
-          using client-side hooks like <code>useEffect</code> here. The example below shows how you would
-          statically render the component using the attribute approach, which works on both server and client.
-          For dynamic data or property setting, you would need a Client Component (`use client`).
-         </p>
+          after the initial render. Therefore, we cannot demonstrate dynamic data updates or property setting using
+          client-side hooks like <code>useEffect</code> here. The example below shows how you would statically render
+          the component using the attribute approach, which works on both server and client. For dynamic data or
+          property setting, you would need a Client Component (`use client`).
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">SomeReactComponent.tsx:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -456,52 +462,73 @@ export default function StaticJsonDisplay() {
           </div>
         </div>
         <p>
-           When working with frameworks like React or Next.js, it's important to remember that they manage the DOM differently than plain JavaScript. While passing data via attributes works for strings, using properties is more idiomatic for complex data structures and requires accessing the DOM node instance, typically done in client-side effects or lifecycle methods. Proper build configuration might also be needed to prevent warnings about custom elements.
+          When working with frameworks like React or Next.js, it's important to remember that they manage the DOM
+          differently than plain JavaScript. While passing data via attributes works for strings, using properties is
+          more idiomatic for complex data structures and requires accessing the DOM node instance, typically done in
+          client-side effects or lifecycle methods. Proper build configuration might also be needed to prevent warnings
+          about custom elements.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Share2 className="inline-block" /> Advantages and Disadvantages
         </h2>
-        <p>
-          Using Web Components for a reusable JSON formatter comes with its own set of trade-offs.
-        </p>
+        <p>Using Web Components for a reusable JSON formatter comes with its own set of trade-offs.</p>
 
         <h3 className="text-xl font-semibold mt-6">Advantages:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Framework Agnostic:</strong> The biggest advantage is portability. The component works natively across all major browsers and can be dropped into projects using React, Vue, Angular, Svelte, jQuery, or no framework at all.
+            <strong>Framework Agnostic:</strong> The biggest advantage is portability. The component works natively
+            across all major browsers and can be dropped into projects using React, Vue, Angular, Svelte, jQuery, or no
+            framework at all.
           </li>
           <li>
-            <strong>Encapsulation:</strong> Shadow DOM provides strong style and DOM isolation, reducing the risk of conflicts with the parent page's styles or scripts. This ensures the component looks and behaves consistently.
+            <strong>Encapsulation:</strong> Shadow DOM provides strong style and DOM isolation, reducing the risk of
+            conflicts with the parent page's styles or scripts. This ensures the component looks and behaves
+            consistently.
           </li>
           <li>
-            <strong>Reusability & Maintainability:</strong> The formatting logic is contained within a single, self-registering unit. This centralizes updates and reduces code duplication across projects.
+            <strong>Reusability & Maintainability:</strong> The formatting logic is contained within a single,
+            self-registering unit. This centralizes updates and reduces code duplication across projects.
           </li>
-           <li>
-            <strong>Leverages Web Standards:</strong> Built directly on browser APIs, Web Components are generally performant and benefit from ongoing browser improvements.
+          <li>
+            <strong>Leverages Web Standards:</strong> Built directly on browser APIs, Web Components are generally
+            performant and benefit from ongoing browser improvements.
           </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">Disadvantages:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Styling Challenges:</strong> Styling the *internal* parts of a Shadow DOM component from the outside requires using CSS custom properties (`--my-var: value;`) or exposing "parts" via the `::part()` pseudo-element, which can be less straightforward than traditional CSS selectors.
+            <strong>Styling Challenges:</strong> Styling the *internal* parts of a Shadow DOM component from the outside
+            requires using CSS custom properties (`--my-var: value;`) or exposing "parts" via the `::part()`
+            pseudo-element, which can be less straightforward than traditional CSS selectors.
           </li>
           <li>
-            <strong>Browser Support & Polyfills:</strong> While modern browser support is excellent, compatibility with older browsers might require polyfills for Custom Elements or Shadow DOM. Declarative Shadow DOM, useful for server-side rendering, is relatively newer.
+            <strong>Browser Support & Polyfills:</strong> While modern browser support is excellent, compatibility with
+            older browsers might require polyfills for Custom Elements or Shadow DOM. Declarative Shadow DOM, useful for
+            server-side rendering, is relatively newer.
           </li>
           <li>
-            <strong>Developer Ergonomics (Frameworks):</strong> Integrating with some frameworks can sometimes feel less "smooth" than using native framework components, especially when passing complex data via properties or handling events. Tools and libraries exist to improve this experience (e.g., Lit, Stencil, libraries specific to framework integration).
+            <strong>Developer Ergonomics (Frameworks):</strong> Integrating with some frameworks can sometimes feel less
+            "smooth" than using native framework components, especially when passing complex data via properties or
+            handling events. Tools and libraries exist to improve this experience (e.g., Lit, Stencil, libraries
+            specific to framework integration).
           </li>
-           <li>
-            <strong>Implementation Complexity:</strong> Building non-trivial features like robust collapsing, large data handling, virtualization, or sophisticated search purely with native Web Component APIs and vanilla JavaScript can be more complex than using helper libraries or framework-specific tools.
+          <li>
+            <strong>Implementation Complexity:</strong> Building non-trivial features like robust collapsing, large data
+            handling, virtualization, or sophisticated search purely with native Web Component APIs and vanilla
+            JavaScript can be more complex than using helper libraries or framework-specific tools.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Developing a JSON formatting tool as a Web Component is an excellent use case for showcasing the power of encapsulation and reusability provided by web standards. By creating a <code>&lt;json-formatter&gt;</code> custom element, you can provide a consistent, portable, and framework-agnostic solution for displaying structured JSON data beautifully anywhere on the web. While there are implementation details to manage, particularly around data passing and styling the Shadow DOM, the benefits of a truly reusable component make this a worthwhile endeavor for developers seeking to build shareable UI widgets.
+          Developing a JSON formatting tool as a Web Component is an excellent use case for showcasing the power of
+          encapsulation and reusability provided by web standards. By creating a <code>&lt;json-formatter&gt;</code>{" "}
+          custom element, you can provide a consistent, portable, and framework-agnostic solution for displaying
+          structured JSON data beautifully anywhere on the web. While there are implementation details to manage,
+          particularly around data passing and styling the Shadow DOM, the benefits of a truly reusable component make
+          this a worthwhile endeavor for developers seeking to build shareable UI widgets.
         </p>
       </div>
     </>

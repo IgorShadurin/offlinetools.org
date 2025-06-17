@@ -10,8 +10,7 @@ import { GitBranch, Workflow, Server, Cog, GitPullRequest } from "lucide-react";
  */
 export const metadata: Metadata = {
   title: "JSON for DevOps and CI/CD | Offline Tools",
-  description:
-    "Implementing JSON in deployment pipelines, infrastructure as code, and continuous integration"
+  description: "Implementing JSON in deployment pipelines, infrastructure as code, and continuous integration",
 };
 
 /**
@@ -35,7 +34,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Automated JSON Formatting in Git Hooks",
-    description: "Setting up pre-commit hooks to automatically format JSON files before they're committed to your repository.",
+    description:
+      "Setting up pre-commit hooks to automatically format JSON files before they're committed to your repository.",
     slug: "automated-json-formatting-in-git-hooks",
   },
   {
@@ -45,7 +45,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Managing Environment Variables as JSON in CI/CD",
-    description: "Techniques for organizing and using environment variables in JSON format across different deployment environments.",
+    description:
+      "Techniques for organizing and using environment variables in JSON format across different deployment environments.",
     slug: "managing-environment-variables-as-json-in-ci-cd",
   },
   {
@@ -80,7 +81,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Multi-Environment JSON Configuration Management",
-    description: "Strategies for managing JSON configurations across development, staging, and production environments.",
+    description:
+      "Strategies for managing JSON configurations across development, staging, and production environments.",
     slug: "multi-environment-json-configuration-management",
   },
   {
@@ -105,12 +107,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Merging JSON Configurations Across Environments",
-    description: "Techniques for effectively merging JSON configurations when promoting from one environment to another.",
+    description:
+      "Techniques for effectively merging JSON configurations when promoting from one environment to another.",
     slug: "merging-json-configurations-across-environments",
   },
   {
     title: "JSON-based Monitoring and Alerting Configurations",
-    description: "Setting up monitoring systems using JSON to define alert thresholds, notification channels, and escalation paths.",
+    description:
+      "Setting up monitoring systems using JSON to define alert thresholds, notification channels, and escalation paths.",
     slug: "json-based-monitoring-and-alerting-configurations",
   },
   {
@@ -130,7 +134,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "JSON Configuration Drift Detection in Infrastructure",
-    description: "Implementing systems to detect and alert on unexpected changes to JSON configuration files in production.",
+    description:
+      "Implementing systems to detect and alert on unexpected changes to JSON configuration files in production.",
     slug: "json-configuration-drift-detection-in-infrastructure",
   },
   {
@@ -235,7 +240,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Monitoring JSON Configuration Changes in Production",
-    description: "Setting up monitoring systems to track changes to JSON configuration files in production environments.",
+    description:
+      "Setting up monitoring systems to track changes to JSON configuration files in production environments.",
     slug: "monitoring-json-configuration-changes-in-production",
   },
   {
@@ -267,7 +273,7 @@ const jsonFormatterArticles: ToolArticle[] = [
     title: "Security Scanning of JSON Configuration in CI/CD Pipelines",
     description: "Implementing security scans for JSON configuration files to detect vulnerabilities early.",
     slug: "security-scanning-of-json-configuration-in-ci-cd-pipelines",
-  }
+  },
 ];
 
 /**
@@ -330,7 +336,8 @@ export default function JsonFormatterDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Pipeline Configuration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Using JSON to define and configure CI/CD pipelines in systems like GitHub Actions, GitLab CI, Jenkins, and other automation platforms.
+                      Using JSON to define and configure CI/CD pipelines in systems like GitHub Actions, GitLab CI,
+                      Jenkins, and other automation platforms.
                     </p>
                   </div>
                 </div>
@@ -342,7 +349,8 @@ export default function JsonFormatterDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Infrastructure as Code</h3>
                     <p className="text-sm text-muted-foreground">
-                      JSON's role in infrastructure definition with tools like Terraform, CloudFormation, and Kubernetes, including validation and formatting challenges.
+                      JSON's role in infrastructure definition with tools like Terraform, CloudFormation, and
+                      Kubernetes, including validation and formatting challenges.
                     </p>
                   </div>
                 </div>
@@ -356,7 +364,8 @@ export default function JsonFormatterDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Automation Scripts</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating and maintaining JSON-processing scripts for build, test, and deployment automation pipelines with appropriate error handling.
+                      Creating and maintaining JSON-processing scripts for build, test, and deployment automation
+                      pipelines with appropriate error handling.
                     </p>
                   </div>
                 </div>
@@ -368,7 +377,8 @@ export default function JsonFormatterDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Pull Request Validation</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing JSON linting and validation as part of CI/CD checks to ensure configuration files and data assets maintain proper format and structure.
+                      Implementing JSON linting and validation as part of CI/CD checks to ensure configuration files and
+                      data assets maintain proper format and structure.
                     </p>
                   </div>
                 </div>
@@ -381,7 +391,8 @@ export default function JsonFormatterDevOpsPage() {
                 <span>DevOps Best Practice:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                In CI/CD environments, use JSON Schema validation as a pre-commit or pre-build step to catch configuration errors early, preventing failed deployments and reducing troubleshooting time.
+                In CI/CD environments, use JSON Schema validation as a pre-commit or pre-build step to catch
+                configuration errors early, preventing failed deployments and reducing troubleshooting time.
               </p>
             </div>
           </CardContent>
@@ -391,4 +402,4 @@ export default function JsonFormatterDevOpsPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

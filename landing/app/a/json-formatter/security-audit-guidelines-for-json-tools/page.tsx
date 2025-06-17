@@ -9,14 +9,12 @@ export const metadata: Metadata = {
 export default function SecurityAuditGuidelinesForJsonToolsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Security Audit Guidelines for JSON Tools
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Security Audit Guidelines for JSON Tools</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is a ubiquitous data interchange format, used in everything from web APIs
-          to configuration files. While seemingly simple, JSON processing tools can introduce significant security
+          JSON (JavaScript Object Notation) is a ubiquitous data interchange format, used in everything from web APIs to
+          configuration files. While seemingly simple, JSON processing tools can introduce significant security
           vulnerabilities if not implemented and audited carefully. This guide outlines key areas to focus on when
           conducting a security audit of any software or service that parses, generates, or transforms JSON data.
         </p>
@@ -103,8 +101,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">2. Output Encoding</h3>
         <p>
-          If the tool&apos;s output (or data derived from JSON processing) is embedded into other formats like HTML,
-          SQL queries, or shell commands, improper encoding can lead to injection vulnerabilities.
+          If the tool&apos;s output (or data derived from JSON processing) is embedded into other formats like HTML, SQL
+          queries, or shell commands, improper encoding can lead to injection vulnerabilities.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-3">
@@ -167,8 +165,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
             </li>
             <li>
               <span className="font-medium">Proof of Work/Throttling:</span> For public-facing APIs, consider
-              implementing rate limiting or simple proof-of-work mechanisms for large/complex requests if DoS is a
-              major concern.
+              implementing rate limiting or simple proof-of-work mechanisms for large/complex requests if DoS is a major
+              concern.
             </li>
           </ul>
         </div>
@@ -184,7 +182,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
           <ul className="list-disc pl-6 space-y-2">
             <li>
               <span className="font-medium">Logging:</span> Ensure sensitive data (passwords, PII, payment info) is not
-              inadvertently logged during JSON parsing or processing errors. Mask or remove sensitive fields before logging.
+              inadvertently logged during JSON parsing or processing errors. Mask or remove sensitive fields before
+              logging.
             </li>
             <li>
               <span className="font-medium">Storage:</span> If JSON data containing sensitive information is stored,
@@ -211,8 +210,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
           <h4 className="text-lg font-medium">Guidelines:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Keep Libraries Updated:</span> Regularly update JSON parsing libraries to the
-              latest versions to incorporate security patches.
+              <span className="font-medium">Keep Libraries Updated:</span> Regularly update JSON parsing libraries to
+              the latest versions to incorporate security patches.
             </li>
             <li>
               <span className="font-medium">Use Reputable Libraries:</span> Prefer well-known, actively maintained JSON
@@ -240,8 +239,9 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
           <h4 className="text-lg font-medium">Guidelines:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Generic Error Messages:</span> Return generic error messages to clients/users
-              for parsing failures. Log detailed errors internally for debugging, but do not expose them externally.
+              <span className="font-medium">Generic Error Messages:</span> Return generic error messages to
+              clients/users for parsing failures. Log detailed errors internally for debugging, but do not expose them
+              externally.
             </li>
             <li>
               <span className="font-medium">Consistent Error Responses:</span> Provide consistent error response formats
@@ -249,8 +249,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
               could reveal information.
             </li>
             <li>
-              <span className="font-medium">Fail Securely:</span> Ensure that parsing errors lead to graceful failures or
-              rejections, not unexpected behavior or uncaught exceptions that could be exploited.
+              <span className="font-medium">Fail Securely:</span> Ensure that parsing errors lead to graceful failures
+              or rejections, not unexpected behavior or uncaught exceptions that could be exploited.
             </li>
           </ul>
         </div>
@@ -260,8 +260,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
-              <span className="font-medium">Review Source Code:</span> Manually review the code sections responsible
-              for parsing, processing, and serializing JSON. Look for how data is handled after parsing.
+              <span className="font-medium">Review Source Code:</span> Manually review the code sections responsible for
+              parsing, processing, and serializing JSON. Look for how data is handled after parsing.
             </li>
             <li>
               <span className="font-medium">Fuzz Testing:</span> Use fuzzing tools to send large volumes of malformed
@@ -269,8 +269,8 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
               output).
             </li>
             <li>
-              <span className="font-medium">Penetration Testing:</span> Include testing JSON input endpoints as part
-              of a broader penetration test.
+              <span className="font-medium">Penetration Testing:</span> Include testing JSON input endpoints as part of
+              a broader penetration test.
             </li>
             <li>
               <span className="font-medium">Configuration Review:</span> Review the configuration of the JSON parser
@@ -284,19 +284,22 @@ export default function SecurityAuditGuidelinesForJsonToolsArticle() {
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-           <h3 className="text-lg font-medium">Tool Example (Conceptual):</h3>
-           <p className="mt-2 text-sm">
-             Consider a simple internal service that takes JSON configuration via an API. An audit would involve:
-             <ul className="list-disc pl-6 mt-1">
-               <li>Verifying the API requires authentication/authorization.</li>
-               <li>Checking if the parsing library is up-to-date.</li>
-               <li>Examining the parsing code for strictness and error handling.</li>
-               <li>Ensuring configuration values extracted from JSON are validated before being used (e.g., file paths, port numbers).</li>
-               <li>Testing with oversized JSON and deeply nested JSON to check for DoS vulnerabilities.</li>
-               <li>Checking if the response to invalid JSON leaks internal details.</li>
-             </ul>
-           </p>
-         </div>
+          <h3 className="text-lg font-medium">Tool Example (Conceptual):</h3>
+          <p className="mt-2 text-sm">
+            Consider a simple internal service that takes JSON configuration via an API. An audit would involve:
+            <ul className="list-disc pl-6 mt-1">
+              <li>Verifying the API requires authentication/authorization.</li>
+              <li>Checking if the parsing library is up-to-date.</li>
+              <li>Examining the parsing code for strictness and error handling.</li>
+              <li>
+                Ensuring configuration values extracted from JSON are validated before being used (e.g., file paths,
+                port numbers).
+              </li>
+              <li>Testing with oversized JSON and deeply nested JSON to check for DoS vulnerabilities.</li>
+              <li>Checking if the response to invalid JSON leaks internal details.</li>
+            </ul>
+          </p>
+        </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>

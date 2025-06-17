@@ -27,7 +27,8 @@ export default function JsonFormatterTddArticle() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6">
-        Learning JSON Formatter Integration with <span className="text-blue-600 dark:text-blue-400">Test-Driven Development</span>
+        Learning JSON Formatter Integration with{" "}
+        <span className="text-blue-600 dark:text-blue-400">Test-Driven Development</span>
       </h1>
 
       <div className="space-y-6">
@@ -36,17 +37,16 @@ export default function JsonFormatterTddArticle() {
           configuring applications, or storing user preferences, JSON is the de facto standard. Ensuring this JSON is
           well-formatted, readable, and valid is crucial for debugging and maintainability. Integrating a robust JSON
           formatter into an application can significantly improve developer experience. This article explores how to
-          achieve this integration effectively, leveraging the power of{" "}
-          <strong>Test-Driven Development (TDD)</strong>.
+          achieve this integration effectively, leveraging the power of <strong>Test-Driven Development (TDD)</strong>.
         </p>
 
         <div className="flex items-start space-x-3 p-4 bg-gray-100 rounded-lg dark:bg-gray-800">
           <Lightbulb className="flex-shrink-0 text-yellow-500 mt-1" size={20} />
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            <strong>What is JSON Formatting?</strong> At its core, JSON formatting involves taking a JSON string
-            and restructuring it for improved readability. This often means adding whitespace (indentation,
-            newlines) to represent the hierarchical structure clearly. It can also involve validating the JSON
-            syntax or providing error feedback.
+            <strong>What is JSON Formatting?</strong> At its core, JSON formatting involves taking a JSON string and
+            restructuring it for improved readability. This often means adding whitespace (indentation, newlines) to
+            represent the hierarchical structure clearly. It can also involve validating the JSON syntax or providing
+            error feedback.
           </p>
         </div>
 
@@ -54,8 +54,8 @@ export default function JsonFormatterTddArticle() {
           <TestTube size={24} className="text-green-600 dark:text-green-400" /> Why TDD for Formatter Integration?
         </h2>
         <p>
-          TDD is a software development process where you write tests for new functionality before you write the
-          code itself. It follows a "Red-Green-Refactor" cycle:
+          TDD is a software development process where you write tests for new functionality before you write the code
+          itself. It follows a "Red-Green-Refactor" cycle:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -71,20 +71,19 @@ export default function JsonFormatterTddArticle() {
         <p>Applying TDD to JSON formatter integration offers several benefits:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Clear Requirements:</strong> Writing tests first forces you to define exactly what the
-            formatter should do for various inputs (valid, invalid, edge cases).
+            <strong>Clear Requirements:</strong> Writing tests first forces you to define exactly what the formatter
+            should do for various inputs (valid, invalid, edge cases).
           </li>
           <li>
-            <strong>Robustness:</strong> Ensures the formatter handles a wide range of JSON structures and
-            potential syntax errors gracefully.
+            <strong>Robustness:</strong> Ensures the formatter handles a wide range of JSON structures and potential
+            syntax errors gracefully.
           </li>
           <li>
-            <strong>Maintainability:</strong> A comprehensive test suite makes it safer to refactor or update
-            the formatter logic later.
+            <strong>Maintainability:</strong> A comprehensive test suite makes it safer to refactor or update the
+            formatter logic later.
           </li>
           <li>
-            <strong>Confidence:</strong> Passing tests provide high confidence that the integration works as
-            expected.
+            <strong>Confidence:</strong> Passing tests provide high confidence that the integration works as expected.
           </li>
         </ul>
 
@@ -97,8 +96,8 @@ export default function JsonFormatterTddArticle() {
             <strong>Parsing:</strong> Converts a JSON string into a native JavaScript object/array structure.
           </li>
           <li>
-            <strong>Stringifying (Beautification):</strong> Converts a JavaScript object/array back into a
-            JSON string, adding indentation and newlines for readability.
+            <strong>Stringifying (Beautification):</strong> Converts a JavaScript object/array back into a JSON string,
+            adding indentation and newlines for readability.
           </li>
           <li>
             <strong>Minification:</strong> Removes unnecessary whitespace to create a compact JSON string.
@@ -108,18 +107,18 @@ export default function JsonFormatterTddArticle() {
           </li>
         </ul>
         <p>
-          While JavaScript's built-in <code>JSON.parse()</code> and <code>JSON.stringify()</code> handle
-          the core parsing and stringifying, a formatter often adds a user interface layer, error handling,
-          and specific formatting options (like indentation size). TDD will help us build the integration
-          layer around these core functions, ensuring our application correctly uses and presents the results.
+          While JavaScript's built-in <code>JSON.parse()</code> and <code>JSON.stringify()</code> handle the core
+          parsing and stringifying, a formatter often adds a user interface layer, error handling, and specific
+          formatting options (like indentation size). TDD will help us build the integration layer around these core
+          functions, ensuring our application correctly uses and presents the results.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <TestTube size={24} className="text-blue-600 dark:text-blue-400" /> Setting Up the TDD Workflow
         </h2>
         <p>
-          Let's assume you have a component or function responsible for taking a raw JSON string input
-          and producing a formatted output or an error message. Using TDD, you'd start by creating a test file.
+          Let's assume you have a component or function responsible for taking a raw JSON string input and producing a
+          formatted output or an error message. Using TDD, you'd start by creating a test file.
         </p>
         <p>
           You'll need a testing framework (like Jest, Vitest, Mocha) and possibly a testing utility for React components
@@ -129,11 +128,11 @@ export default function JsonFormatterTddArticle() {
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <FileCheck size={22} className="text-green-600 dark:text-green-400" /> Step 1: Write a Failing Test (Red)
         </h3>
-        <p>
-          Start with the simplest valid case: formatting a basic object.
-        </p>
+        <p>Start with the simplest valid case: formatting a basic object.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium"><code>formatter.test.ts</code> (Initial - Red)</h4>
+          <h4 className="text-lg font-medium">
+            <code>formatter.test.ts</code> (Initial - Red)
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`import { formatJson } from './formatter'; // This function doesn't exist yet!
@@ -156,7 +155,8 @@ describe('JSON Formatter', () => {
           </div>
         </div>
         <p>
-          Running this test will fail because the <code>formatJson</code> function doesn't exist, or if it exists, it won't return the expected structure or formatted string. This is the "Red" phase.
+          Running this test will fail because the <code>formatJson</code> function doesn't exist, or if it exists, it
+          won't return the expected structure or formatted string. This is the "Red" phase.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -166,7 +166,9 @@ describe('JSON Formatter', () => {
           Now, write just enough code in <code>formatter.ts</code> to make that first test pass.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium"><code>formatter.ts</code> (Minimum Code - Green)</h4>
+          <h4 className="text-lg font-medium">
+            <code>formatter.ts</code> (Minimum Code - Green)
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// Basic implementation
@@ -184,12 +186,11 @@ export function formatJson(jsonString: string): &#x7b; formattedString: string |
             </pre>
           </div>
         </div>
-        <p>
-          Run the test again. It should now pass. You've reached the "Green" phase.
-        </p>
+        <p>Run the test again. It should now pass. You've reached the "Green" phase.</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Settings2 size={22} className="text-blue-600 dark:text-blue-400" /> Step 3: Refactor (Optional but Recommended)
+          <Settings2 size={22} className="text-blue-600 dark:text-blue-400" /> Step 3: Refactor (Optional but
+          Recommended)
         </h3>
         <p>
           For this simple case, not much refactoring is needed immediately. However, as you add more tests and the
@@ -206,11 +207,11 @@ export function formatJson(jsonString: string): &#x7b; formattedString: string |
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <XCircle size={22} className="text-red-600 dark:text-red-400" /> Testing Invalid JSON
         </h3>
-        <p>
-          The formatter should detect and report invalid JSON.
-        </p>
+        <p>The formatter should detect and report invalid JSON.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium"><code>formatter.test.ts</code> (Adding Invalid JSON Test - Red)</h4>
+          <h4 className="text-lg font-medium">
+            <code>formatter.test.ts</code> (Adding Invalid JSON Test - Red)
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// ... previous tests ...
@@ -229,18 +230,18 @@ export function formatJson(jsonString: string): &#x7b; formattedString: string |
           </div>
         </div>
         <p>
-          Our current <code>formatJson</code> already includes a basic try-catch, so this test might
-          immediately pass (Green). If it didn't, we'd add the necessary error handling.
+          Our current <code>formatJson</code> already includes a basic try-catch, so this test might immediately pass
+          (Green). If it didn't, we'd add the necessary error handling.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <CheckCircle2 size={22} className="text-green-600 dark:text-green-400" /> Testing Different JSON Types
         </h3>
-        <p>
-          Test arrays, nested objects, values like null, boolean, numbers, strings with special characters, etc.
-        </p>
+        <p>Test arrays, nested objects, values like null, boolean, numbers, strings with special characters, etc.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium"><code>formatter.test.ts</code> (Adding More Valid Cases - Red)</h4>
+          <h4 className="text-lg font-medium">
+            <code>formatter.test.ts</code> (Adding More Valid Cases - Red)
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// ... previous tests ...
@@ -286,10 +287,11 @@ export function formatJson(jsonString: string): &#x7b; formattedString: string |
           </div>
         </div>
         <p>
-          For each new test that fails (Red), add just enough code to make it pass (Green), and then Refactor.
-          Using <code>JSON.stringify(parsed, null, 2)</code> correctly handles most standard formatting,
-          so many of these tests might pass directly. The value of TDD here is ensuring your <em>wrapper function</em>
-          correctly uses <code>JSON.parse</code> and <code>JSON.stringify</code> and handles their outputs/errors as expected by your application's requirements.
+          For each new test that fails (Red), add just enough code to make it pass (Green), and then Refactor. Using{" "}
+          <code>JSON.stringify(parsed, null, 2)</code> correctly handles most standard formatting, so many of these
+          tests might pass directly. The value of TDD here is ensuring your <em>wrapper function</em>
+          correctly uses <code>JSON.parse</code> and <code>JSON.stringify</code> and handles their outputs/errors as
+          expected by your application's requirements.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -302,9 +304,7 @@ export function formatJson(jsonString: string): &#x7b; formattedString: string |
           <li>JSON with very deep nesting (potential stack overflow, though less likely with built-in JSON)?</li>
           <li>JSON with unusually large numbers or long strings?</li>
         </ul>
-        <p>
-          Add tests for these to see how your formatter behaves and adjust if necessary.
-        </p>
+        <p>Add tests for these to see how your formatter behaves and adjust if necessary.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Briefcase size={24} className="text-teal-600 dark:text-teal-400" /> Integrating into the Application
@@ -318,10 +318,13 @@ export function formatJson(jsonString: string): &#x7b; formattedString: string |
           <TestTube size={22} className="text-green-600 dark:text-green-400" /> Testing the Integration Logic (Red)
         </h3>
         <p>
-          Let's imagine a simple function that takes a raw string, formats it, and returns an object with either the formatted string or an error message for display.
+          Let's imagine a simple function that takes a raw string, formats it, and returns an object with either the
+          formatted string or an error message for display.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium"><code>jsonDisplayHelper.test.ts</code> (Integration Test - Red)</h4>
+          <h4 className="text-lg font-medium">
+            <code>jsonDisplayHelper.test.ts</code> (Integration Test - Red)
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`import { processAndFormatJson } from './jsonDisplayHelper'; // New helper function
@@ -359,17 +362,21 @@ describe('JSON Display Helper', () => {
           </div>
         </div>
         <p>
-          These tests define the expected output structure for your application's display layer. They will fail because <code>processAndFormatJson</code> doesn't exist or work correctly yet.
+          These tests define the expected output structure for your application's display layer. They will fail because{" "}
+          <code>processAndFormatJson</code> doesn't exist or work correctly yet.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <Code size={22} className="text-purple-600 dark:text-purple-400" /> Writing Integration Code (Green)
         </h3>
         <p>
-          Now, write the <code>processAndFormatJson</code> function using your previously tested <code>formatJson</code>.
+          Now, write the <code>processAndFormatJson</code> function using your previously tested <code>formatJson</code>
+          .
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium"><code>jsonDisplayHelper.ts</code> (Integration Code - Green)</h4>
+          <h4 className="text-lg font-medium">
+            <code>jsonDisplayHelper.ts</code> (Integration Code - Green)
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`import { formatJson } from './formatter';
@@ -393,8 +400,8 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
           </div>
         </div>
         <p>
-          Run the integration tests. They should now pass. You've successfully integrated your tested formatter
-          function into a higher-level helper function, driven by tests.
+          Run the integration tests. They should now pass. You've successfully integrated your tested formatter function
+          into a higher-level helper function, driven by tests.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -402,16 +409,15 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
         </h3>
         <p>
           Finally, in your TSX page component (like this one, conceptually), you would call{" "}
-          <code>processAndFormatJson</code>. Since this example page must be static and cannot use{" "}
-          <code>useState</code> or dynamic data, a real interactive application would typically manage the
-          input string and the result object (<code>displayString</code>, <code>isError</code>,{" "}
-          <code>errorMessage</code>) in component state or a data management solution.
+          <code>processAndFormatJson</code>. Since this example page must be static and cannot use <code>useState</code>{" "}
+          or dynamic data, a real interactive application would typically manage the input string and the result object
+          (<code>displayString</code>, <code>isError</code>, <code>errorMessage</code>) in component state or a data
+          management solution.
         </p>
         <p>
-          For a static page like this article, we can only demonstrate the concept using static code blocks
-          and descriptions. In a dynamic Next.js application with client-side features enabled, you'd have
-          an input area and display area, using state to update the output based on user input and the formatter's
-          result.
+          For a static page like this article, we can only demonstrate the concept using static code blocks and
+          descriptions. In a dynamic Next.js application with client-side features enabled, you'd have an input area and
+          display area, using state to update the output based on user input and the formatter's result.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -420,8 +426,8 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <CheckCircle2 size={18} className="inline mr-2 text-green-500" />
-            Each part of the logic (core formatting, input handling, error presentation) is tested in isolation
-            and in combination.
+            Each part of the logic (core formatting, input handling, error presentation) is tested in isolation and in
+            combination.
           </li>
           <li>
             <CheckCircle2 size={18} className="inline mr-2 text-green-500" />
@@ -429,8 +435,8 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
           </li>
           <li>
             <CheckCircle2 size={18} className="inline mr-2 text-green-500" />
-            Refactoring the formatting logic or changing libraries becomes less risky because the test suite
-            will immediately highlight any breaking changes.
+            Refactoring the formatting logic or changing libraries becomes less risky because the test suite will
+            immediately highlight any breaking changes.
           </li>
           <li>
             <CheckCircle2 size={18} className="inline mr-2 text-green-500" />
@@ -441,18 +447,21 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <FileText size={24} className="text-gray-600 dark:text-gray-400" /> Beyond Basic Formatting
         </h2>
-        <p>
-          As your requirements grow, TDD helps you add complexity predictably:
-        </p>
+        <p>As your requirements grow, TDD helps you add complexity predictably:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Options:</strong> Add tests for formatting with different indentation sizes (2 spaces, 4 spaces, tabs), sorting keys, etc. Modify <code>formatJson</code> to accept an options object, driven by tests for each option.
+            <strong>Options:</strong> Add tests for formatting with different indentation sizes (2 spaces, 4 spaces,
+            tabs), sorting keys, etc. Modify <code>formatJson</code> to accept an options object, driven by tests for
+            each option.
           </li>
           <li>
-            <strong>Error Highlighting:</strong> If you need to show *where* in the string the JSON is invalid, you might use a more advanced parser or library. Tests would define the expected structure of the error output (e.g., line number, column number).
+            <strong>Error Highlighting:</strong> If you need to show *where* in the string the JSON is invalid, you
+            might use a more advanced parser or library. Tests would define the expected structure of the error output
+            (e.g., line number, column number).
           </li>
           <li>
-            <strong>Minification:</strong> Add a separate test suite and function for minification using <code>JSON.stringify(parsed)</code>.
+            <strong>Minification:</strong> Add a separate test suite and function for minification using{" "}
+            <code>JSON.stringify(parsed)</code>.
           </li>
         </ul>
 
@@ -461,10 +470,15 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Library Choice:</strong> For production applications, you'll likely use battle-tested libraries (like the native <code>JSON</code> object or potentially more feature-rich ones if needed). TDD helps ensure you use the library correctly and integrate it into your application's flow, rather than reinventing the core parsing/stringifying.
+            <strong>Library Choice:</strong> For production applications, you'll likely use battle-tested libraries
+            (like the native <code>JSON</code> object or potentially more feature-rich ones if needed). TDD helps ensure
+            you use the library correctly and integrate it into your application's flow, rather than reinventing the
+            core parsing/stringifying.
           </li>
           <li>
-            <strong>Performance:</strong> For extremely large JSON inputs, formatting can be computationally expensive. While TDD helps with correctness, you might need separate performance testing or profiling if this becomes an issue.
+            <strong>Performance:</strong> For extremely large JSON inputs, formatting can be computationally expensive.
+            While TDD helps with correctness, you might need separate performance testing or profiling if this becomes
+            an issue.
           </li>
         </ul>
 
@@ -472,11 +486,11 @@ export function processAndFormatJson(rawInput: string): &#x7b; displayString: st
           <Component size={24} className="text-teal-600 dark:text-teal-400" /> Conclusion
         </h2>
         <p>
-          Integrating a JSON formatter is a common development task. By adopting Test-Driven Development, you
-          approach this task systematically, building a robust, well-tested, and maintainable part of your application.
-          Starting with failing tests for core functionality, then edge cases, and finally the integration points,
-          ensures high quality and confidence in your JSON handling code. The resulting test suite serves as a living
-          document of your formatter's capabilities and limitations.
+          Integrating a JSON formatter is a common development task. By adopting Test-Driven Development, you approach
+          this task systematically, building a robust, well-tested, and maintainable part of your application. Starting
+          with failing tests for core functionality, then edge cases, and finally the integration points, ensures high
+          quality and confidence in your JSON handling code. The resulting test suite serves as a living document of
+          your formatter's capabilities and limitations.
         </p>
       </div>
     </>

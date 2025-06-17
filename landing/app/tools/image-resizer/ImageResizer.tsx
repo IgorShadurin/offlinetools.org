@@ -8,17 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
-import { 
-  Check, 
-  Copy, 
-  Download, 
-  Link as LinkIcon, 
-  AlertCircle, 
-  Upload, 
-  ImageIcon,
-  Settings,
-  Lock
-} from "lucide-react";
+import { Check, Copy, Download, Link as LinkIcon, AlertCircle, Upload, ImageIcon, Settings, Lock } from "lucide-react";
 import Link from "next/link";
 import { resizeImage, ImageResizeOptions, DEFAULT_IMAGE_RESIZE_OPTIONS } from "shared";
 
@@ -46,10 +36,10 @@ export default function ImageResizer() {
    */
   const handleResize = async () => {
     if (!file) return;
-    
+
     setIsProcessing(true);
     setError(null);
-    
+
     try {
       const parsedWidth = Number(width);
       const parsedHeight = Number(height);
@@ -89,7 +79,7 @@ export default function ImageResizer() {
     if (!outputUrl) return;
     const a = document.createElement("a");
     a.href = outputUrl;
-    a.download = `resized-${file?.name || 'image'}`;
+    a.download = `resized-${file?.name || "image"}`;
     a.click();
   };
 
@@ -102,7 +92,7 @@ export default function ImageResizer() {
       setFile(selectedFile);
       setOutputUrl(null);
       setError(null);
-      
+
       // Get image dimensions
       const img = new Image();
       const objectUrl = URL.createObjectURL(selectedFile);
@@ -128,7 +118,7 @@ export default function ImageResizer() {
         title="Image Resizer"
         description="Resize images to custom dimensions directly in your browser with optional aspect ratio preservation."
       />
-      
+
       <div className="mb-6 flex items-center text-sm text-muted-foreground gap-2">
         <LinkIcon className="h-4 w-4" />
         <span>Related tool: </span>
@@ -147,9 +137,7 @@ export default function ImageResizer() {
                   <Upload className="h-5 w-5" />
                   Upload & Configure
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  Select an image and set your desired dimensions
-                </p>
+                <p className="text-sm text-muted-foreground">Select an image and set your desired dimensions</p>
               </div>
 
               <Separator />
@@ -160,10 +148,10 @@ export default function ImageResizer() {
                   Select Image
                 </Label>
                 <div className="relative">
-                  <Input 
-                    id="image-file" 
-                    type="file" 
-                    accept="image/*" 
+                  <Input
+                    id="image-file"
+                    type="file"
+                    accept="image/*"
                     onChange={handleFileChange}
                     className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 border-0 bg-transparent p-0 h-auto"
                   />
@@ -187,25 +175,29 @@ export default function ImageResizer() {
                   <Settings className="h-4 w-4" />
                   <Label className="text-sm font-medium">Dimensions</Label>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="width" className="text-sm">Width (px)</Label>
-                    <Input 
-                      id="width" 
-                      type="number" 
-                      value={width} 
+                    <Label htmlFor="width" className="text-sm">
+                      Width (px)
+                    </Label>
+                    <Input
+                      id="width"
+                      type="number"
+                      value={width}
                       onChange={(e) => setWidth(e.target.value)}
                       placeholder="Width"
                       min="1"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="height" className="text-sm">Height (px)</Label>
-                    <Input 
-                      id="height" 
-                      type="number" 
-                      value={height} 
+                    <Label htmlFor="height" className="text-sm">
+                      Height (px)
+                    </Label>
+                    <Input
+                      id="height"
+                      type="number"
+                      value={height}
                       onChange={(e) => setHeight(e.target.value)}
                       placeholder="Height"
                       min="1"
@@ -217,9 +209,9 @@ export default function ImageResizer() {
                 <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
                   <Lock className="h-4 w-4 text-muted-foreground" />
                   <label className="flex items-center gap-2 text-sm cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={keepAspect} 
+                    <input
+                      type="checkbox"
+                      checked={keepAspect}
                       onChange={(e) => setKeepAspect(e.target.checked)}
                       className="rounded border-gray-300 text-primary focus:ring-primary"
                     />
@@ -229,12 +221,7 @@ export default function ImageResizer() {
               </div>
 
               {/* Action Button */}
-              <Button 
-                onClick={handleResize} 
-                className="w-full" 
-                size="lg"
-                disabled={!file || isProcessing}
-              >
+              <Button onClick={handleResize} className="w-full" size="lg" disabled={!file || isProcessing}>
                 {isProcessing ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -260,9 +247,7 @@ export default function ImageResizer() {
                   <ImageIcon className="h-5 w-5" />
                   Result
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  Your resized image will appear here
-                </p>
+                <p className="text-sm text-muted-foreground">Your resized image will appear here</p>
               </div>
 
               <Separator />
@@ -279,28 +264,19 @@ export default function ImageResizer() {
                   <div className="w-full space-y-4">
                     <div className="flex justify-center">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img 
-                        src={outputUrl} 
-                        alt="Resized" 
-                        className="max-w-full max-h-80 object-contain rounded-lg border shadow-sm" 
+                      <img
+                        src={outputUrl}
+                        alt="Resized"
+                        className="max-w-full max-h-80 object-contain rounded-lg border shadow-sm"
                       />
                     </div>
                     <div className="flex gap-2 justify-center">
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        onClick={handleCopy} 
-                        className="flex items-center gap-2"
-                      >
+                      <Button size="sm" variant="outline" onClick={handleCopy} className="flex items-center gap-2">
                         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                         {copied ? "Copied!" : "Copy URL"}
                       </Button>
-                      <Button 
-                        size="sm" 
-                        onClick={handleDownload} 
-                        className="flex items-center gap-2"
-                      >
-                        <Download className="h-4 w-4" /> 
+                      <Button size="sm" onClick={handleDownload} className="flex items-center gap-2">
+                        <Download className="h-4 w-4" />
                         Download
                       </Button>
                     </div>
@@ -309,9 +285,7 @@ export default function ImageResizer() {
                   <div className="text-center text-muted-foreground space-y-3">
                     <ImageIcon className="h-12 w-12 mx-auto opacity-50" />
                     <p>No image resized yet.</p>
-                    <p className="text-xs">
-                      Upload an image and click "Resize Image" to get started
-                    </p>
+                    <p className="text-xs">Upload an image and click "Resize Image" to get started</p>
                   </div>
                 )}
               </div>

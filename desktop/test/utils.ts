@@ -206,8 +206,8 @@ export async function waitForComponentTitle(page: Page, title: string, timeout?:
   }
   
   try {
-    // Wait for h3 with exact text content
-    await page.waitForSelector(`h3:has-text("${title}")`, {
+    // Wait for h1, h2, or h3 with exact text content (flexible title selector)
+    await page.waitForSelector(`h1:has-text("${title}"), h2:has-text("${title}"), h3:has-text("${title}")`, {
       state: 'visible',
       timeout
     });

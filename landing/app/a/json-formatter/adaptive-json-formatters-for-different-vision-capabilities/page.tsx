@@ -1,14 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Eye,
-  Cog,
-  LayoutList,
-  Filter,
-  CodeXml,
-  Users,
-  Palette,
-  Settings,
-} from "lucide-react"; // Only import allowed icons
+import { Eye, Cog, LayoutList, Filter, CodeXml, Users, Palette, Settings } from "lucide-react"; // Only import allowed icons
 
 export const metadata: Metadata = {
   title: "Adaptive JSON Formatters for Different Vision Capabilities | Article",
@@ -20,115 +11,89 @@ export default function AdaptiveJsonFormattersArticle() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <Eye className="w-8 h-8" /> Adaptive JSON Formatters for Different
-        Vision Capabilities
+        <Eye className="w-8 h-8" /> Adaptive JSON Formatters for Different Vision Capabilities
       </h1>
 
       <div className="space-y-6 text-lg">
         <p>
-          In modern web development and data exchange, JSON (JavaScript Object
-          Notation) is the de facto standard. Its simplicity and widespread
-          support make it ideal for APIs, configuration files, and data
-          storage. However, not all consumers of JSON data are created equal.
-          What works well for a human developer inspecting a response might be
-          inefficient for an automated system or inaccessible for a user
-          relying on assistive technologies.
+          In modern web development and data exchange, JSON (JavaScript Object Notation) is the de facto standard. Its
+          simplicity and widespread support make it ideal for APIs, configuration files, and data storage. However, not
+          all consumers of JSON data are created equal. What works well for a human developer inspecting a response
+          might be inefficient for an automated system or inaccessible for a user relying on assistive technologies.
         </p>
         <p>
-          This is where the concept of "Adaptive JSON Formatting for Different
-          Vision Capabilities" comes into play. It's about intelligently
-          structuring and presenting JSON data based on the specific needs and
-          capabilities of the entity consuming it – whether that entity is a
-          human user with specific accessibility requirements, a backend microservice,
-          a mobile application, or a frontend visualization tool.
+          This is where the concept of "Adaptive JSON Formatting for Different Vision Capabilities" comes into play.
+          It's about intelligently structuring and presenting JSON data based on the specific needs and capabilities of
+          the entity consuming it – whether that entity is a human user with specific accessibility requirements, a
+          backend microservice, a mobile application, or a frontend visualization tool.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Cog className="w-6 h-6" /> Understanding "Vision Capabilities"
         </h2>
         <p>
-          The term "Vision Capabilities" in this context refers to the diverse ways
-          different systems or users interact with and process JSON data. These
-          capabilities dictate the optimal format. Consider these angles:
+          The term "Vision Capabilities" in this context refers to the diverse ways different systems or users interact
+          with and process JSON data. These capabilities dictate the optimal format. Consider these angles:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Human Vision / Debugging:</strong> Developers or technical users
-            inspecting data for development or troubleshooting. They need
-            readability, clarity, potentially pretty-printed JSON with
-            indentation, sorted keys, and perhaps inclusion of all fields for
-            completeness.
+            <strong>Human Vision / Debugging:</strong> Developers or technical users inspecting data for development or
+            troubleshooting. They need readability, clarity, potentially pretty-printed JSON with indentation, sorted
+            keys, and perhaps inclusion of all fields for completeness.
           </li>
           <li>
-            <strong>Automated System Vision / Processing:</strong> Backend services,
-            scripts, or APIs consuming data programmatically. They prioritize
-            efficiency, predictable structure, minimal data (only necessary
-            fields), compact formatting (no unnecessary whitespace), and potentially
-            specific data types or field names required by their parsers.
+            <strong>Automated System Vision / Processing:</strong> Backend services, scripts, or APIs consuming data
+            programmatically. They prioritize efficiency, predictable structure, minimal data (only necessary fields),
+            compact formatting (no unnecessary whitespace), and potentially specific data types or field names required
+            by their parsers.
           </li>
           <li>
-            <strong>UI Vision / Presentation:</strong> Frontend applications
-            (web, mobile) displaying data to end-users. The JSON might need to
-            be structured to match UI components, include metadata for
-            rendering (like data types, display labels), or even be simplified
-            / pre-processed to reduce client-side logic.
+            <strong>UI Vision / Presentation:</strong> Frontend applications (web, mobile) displaying data to end-users.
+            The JSON might need to be structured to match UI components, include metadata for rendering (like data
+            types, display labels), or even be simplified / pre-processed to reduce client-side logic.
           </li>
           <li>
-            <strong>Accessibility Vision:</strong> Users interacting with UIs via
-            assistive technologies (screen readers, magnifiers). While accessibility
-            primarily concerns the UI layer, providing JSON with clearer data types,
-            consistent structures, or even including simplified summaries could
-            potentially aid the accessibility implementation.
+            <strong>Accessibility Vision:</strong> Users interacting with UIs via assistive technologies (screen
+            readers, magnifiers). While accessibility primarily concerns the UI layer, providing JSON with clearer data
+            types, consistent structures, or even including simplified summaries could potentially aid the accessibility
+            implementation.
           </li>
           <li>
-            <strong>Performance/Bandwidth Vision:</strong> Consumers on limited
-            bandwidth or devices with low processing power. They require the
-            most compact format possible, potentially omitting nulls, empty
-            arrays/objects, or default values.
+            <strong>Performance/Bandwidth Vision:</strong> Consumers on limited bandwidth or devices with low processing
+            power. They require the most compact format possible, potentially omitting nulls, empty arrays/objects, or
+            default values.
           </li>
         </ul>
-        <p>
-          Each "vision" implies different requirements for the JSON structure,
-          verbosity, and formatting.
-        </p>
+        <p>Each "vision" implies different requirements for the JSON structure, verbosity, and formatting.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <LayoutList className="w-6 h-6" /> Common Adaptation Strategies
         </h2>
-        <p>
-          To cater to these different capabilities, we can employ several
-          strategies when generating JSON output:
-        </p>
+        <p>To cater to these different capabilities, we can employ several strategies when generating JSON output:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Field Filtering/Selection:</strong> Include only the fields
-            relevant to the specific consumer. This reduces payload size and
-            avoids exposing unnecessary or sensitive data.
+            <strong>Field Filtering/Selection:</strong> Include only the fields relevant to the specific consumer. This
+            reduces payload size and avoids exposing unnecessary or sensitive data.
           </li>
           <li>
-            <strong>Structure Transformation (Flattening/Nesting):</strong> Adjust
-            the depth and relationships of objects and arrays. Some consumers
-            might prefer a flat structure, while others need deeply nested data.
+            <strong>Structure Transformation (Flattening/Nesting):</strong> Adjust the depth and relationships of
+            objects and arrays. Some consumers might prefer a flat structure, while others need deeply nested data.
           </li>
           <li>
-            <strong>Conditional Formatting:</strong> Provide pretty-printed
-            (indented) JSON for human consumption and compact JSON for machine
-            processing.
+            <strong>Conditional Formatting:</strong> Provide pretty-printed (indented) JSON for human consumption and
+            compact JSON for machine processing.
           </li>
           <li>
-            <strong>Data Simplification/Aggregation:</strong> For certain visions
-            (e.g., UI summary views, accessibility), the JSON might contain
-            pre-calculated summaries or simplified representations derived from
+            <strong>Data Simplification/Aggregation:</strong> For certain visions (e.g., UI summary views,
+            accessibility), the JSON might contain pre-calculated summaries or simplified representations derived from
             the raw data.
           </li>
           <li>
-            <strong>Adding Metadata/Hints:</strong> Include additional fields
-            or a separate metadata object within the JSON to provide context,
-            data type hints, or display instructions for UI consumers.
+            <strong>Adding Metadata/Hints:</strong> Include additional fields or a separate metadata object within the
+            JSON to provide context, data type hints, or display instructions for UI consumers.
           </li>
           <li>
-            <strong>Renaming Fields:</strong> Map internal field names to names
-            preferred by specific consumers.
+            <strong>Renaming Fields:</strong> Map internal field names to names preferred by specific consumers.
           </li>
         </ul>
 
@@ -136,33 +101,27 @@ export default function AdaptiveJsonFormattersArticle() {
           <Filter className="w-6 h-6" /> Implementing Adaptivity
         </h2>
         <p>
-          Adaptive JSON formatting is typically implemented server-side or within
-          an API gateway, where the system generating the JSON can determine
-          the consumer's capabilities or requirements. Common approaches include:
+          Adaptive JSON formatting is typically implemented server-side or within an API gateway, where the system
+          generating the JSON can determine the consumer's capabilities or requirements. Common approaches include:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Request Parameters:</strong> Allowing the client to specify
-            the desired format, fields, or level of detail via query parameters
-            (e.g., <code>/api/data?view=summary</code>,{" "}
-            <code>/api/data?fields=id,name,price</code>,{" "}
-            <code>/api/data?format=pretty</code>).
+            <strong>Request Parameters:</strong> Allowing the client to specify the desired format, fields, or level of
+            detail via query parameters (e.g., <code>/api/data?view=summary</code>,{" "}
+            <code>/api/data?fields=id,name,price</code>, <code>/api/data?format=pretty</code>).
           </li>
           <li>
-            <strong>Request Headers:</strong> Using standard or custom HTTP
-            headers to indicate preferences (e.g., <code>Accept</code> header
-            for media type variations, or a custom header like{" "}
+            <strong>Request Headers:</strong> Using standard or custom HTTP headers to indicate preferences (e.g.,{" "}
+            <code>Accept</code> header for media type variations, or a custom header like{" "}
             <code>X-Data-View: verbose</code>).
           </li>
           <li>
-            <strong>Authentication/Authorization Context:</strong> Adapting the
-            format based on the authenticated user's role or the authorized
-            application's profile.
+            <strong>Authentication/Authorization Context:</strong> Adapting the format based on the authenticated user's
+            role or the authorized application's profile.
           </li>
           <li>
-            <strong>Content Negotiation:</strong> Using the <code>Accept</code>{" "}
-            header to serve different representations, although this is more
-            common for different data formats (JSON, XML) rather than JSON
+            <strong>Content Negotiation:</strong> Using the <code>Accept</code> header to serve different
+            representations, although this is more common for different data formats (JSON, XML) rather than JSON
             structure variations.
           </li>
         </ul>
@@ -171,8 +130,8 @@ export default function AdaptiveJsonFormattersArticle() {
           <CodeXml className="w-6 h-6" /> Code Examples (Conceptual)
         </h2>
         <p>
-          Below are conceptual examples illustrating some adaptation strategies
-          in a hypothetical backend TypeScript environment.
+          Below are conceptual examples illustrating some adaptation strategies in a hypothetical backend TypeScript
+          environment.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -238,9 +197,7 @@ function formatProductJson(data: any, view: ProductView): any {
           <h3 className="text-lg font-medium flex items-center gap-2">
             <LayoutList className="w-5 h-5" /> Example 2: Structure Transformation (Flattening)
           </h3>
-          <p>
-            Converting a nested structure into a flatter one for easier table display or specific parsers.
-          </p>
+          <p>Converting a nested structure into a flatter one for easier table display or specific parsers.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`const userDataNested = {
@@ -299,9 +256,7 @@ function flattenUserData(data: any): any {
           <h3 className="text-lg font-medium flex items-center gap-2">
             <Palette className="w-5 h-5" /> Example 3: Adding Metadata for UI Hints
           </h3>
-          <p>
-            Embedding information about how data fields should be presented in a user interface.
-          </p>
+          <p>Embedding information about how data fields should be presented in a user interface.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`const reportData = {
@@ -370,9 +325,7 @@ function addReportMetadata(data: any): any {
           <h3 className="text-lg font-medium flex items-center gap-2">
             <CodeXml className="w-5 h-5" /> Example 4: Conditional Pretty-Printing
           </h3>
-          <p>
-            Serving compact JSON by default, but pretty-printing if a specific parameter is present.
-          </p>
+          <p>Serving compact JSON by default, but pretty-printing if a specific parameter is present.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`const sampleData = { name: "Test Item", values: [1, 2, 3], nested: { a: 1, b: 2 } };
@@ -403,34 +356,25 @@ function serializeJson(data: any, isPretty: boolean): string {
           <Settings className="w-6 h-6" /> Challenges and Considerations
         </h2>
         <p>
-          While adaptive formatting offers significant benefits, it's important
-          to be mindful of potential challenges:
-        - <strong>Complexity:</strong> Managing multiple formatting logic paths
-          can increase backend complexity.
-        - <strong>Consistency:</strong> Ensuring different views of the same
-          data remain consistent where necessary (e.g., unique identifiers
-          should be present in all relevant views).
-        - <strong>Versioning:</strong> As requirements or data structures
-          change, maintaining compatibility across different formatting
-          views for potentially older clients is crucial.
-        - <strong>Performance:</strong> Complex transformations can add
-          processing overhead server-side.
-        - <strong>Documentation:</strong> Clearly documenting the available
-          views, parameters, and the structure of each is vital for consumers.
+          While adaptive formatting offers significant benefits, it's important to be mindful of potential challenges: -{" "}
+          <strong>Complexity:</strong> Managing multiple formatting logic paths can increase backend complexity. -{" "}
+          <strong>Consistency:</strong> Ensuring different views of the same data remain consistent where necessary
+          (e.g., unique identifiers should be present in all relevant views). - <strong>Versioning:</strong> As
+          requirements or data structures change, maintaining compatibility across different formatting views for
+          potentially older clients is crucial. - <strong>Performance:</strong> Complex transformations can add
+          processing overhead server-side. - <strong>Documentation:</strong> Clearly documenting the available views,
+          parameters, and the structure of each is vital for consumers.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Users className="w-6 h-6" /> Conclusion
         </h2>
         <p>
-          Designing APIs and data services with different "vision capabilities"
-          in mind allows for more flexible, efficient, and user-friendly
-          systems. By implementing adaptive JSON formatting strategies –
-          whether it's filtering fields, transforming structures, or adding
-          metadata – developers can tailor data delivery to meet the specific
-          needs of diverse consumers, improving performance for machines and
-          readability/accessibility for humans. This requires careful design
-          and clear communication of the available data representations.
+          Designing APIs and data services with different "vision capabilities" in mind allows for more flexible,
+          efficient, and user-friendly systems. By implementing adaptive JSON formatting strategies – whether it's
+          filtering fields, transforming structures, or adding metadata – developers can tailor data delivery to meet
+          the specific needs of diverse consumers, improving performance for machines and readability/accessibility for
+          humans. This requires careful design and clear communication of the available data representations.
         </p>
       </div>
     </>

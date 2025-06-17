@@ -20,32 +20,28 @@ export default function BddJsonFormatterTestingArticle() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <Sparkles className="w-8 h-8 text-blue-500" /> Behavior-Driven Development in JSON
-        Formatter Testing
+        <Sparkles className="w-8 h-8 text-blue-500" /> Behavior-Driven Development in JSON Formatter Testing
       </h1>
 
       <div className="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed">
         <p>
-          Testing tools, especially those that process data like JSON formatters, requires precision.
-          Ensuring that valid JSON is formatted correctly and invalid input is handled gracefully
-          is crucial. While traditional unit and integration tests are essential, adopting a
-          Behavior-Driven Development (BDD) approach can bring significant benefits, focusing on
-          how the *user* expects the formatter to behave.
+          Testing tools, especially those that process data like JSON formatters, requires precision. Ensuring that
+          valid JSON is formatted correctly and invalid input is handled gracefully is crucial. While traditional unit
+          and integration tests are essential, adopting a Behavior-Driven Development (BDD) approach can bring
+          significant benefits, focusing on how the *user* expects the formatter to behave.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Users className="w-6 h-6 text-green-500" /> What is Behavior-Driven Development (BDD)?
         </h2>
         <p>
-          BDD is an agile software development process that encourages collaboration among
-          developers, QA analysts, and non-technical or business participants. It bridges the gap
-          between technical specifications and business requirements by defining application
-          behavior in clear, human-readable text.
+          BDD is an agile software development process that encourages collaboration among developers, QA analysts, and
+          non-technical or business participants. It bridges the gap between technical specifications and business
+          requirements by defining application behavior in clear, human-readable text.
         </p>
         <p>
-          At its core, BDD uses a Ubiquitous Language shared across the team. This language is often
-          structured using the Gherkin syntax, which follows a simple Given/When/Then structure to
-          describe scenarios:
+          At its core, BDD uses a Ubiquitous Language shared across the team. This language is often structured using
+          the Gherkin syntax, which follows a simple Given/When/Then structure to describe scenarios:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -62,19 +58,27 @@ export default function BddJsonFormatterTestingArticle() {
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <FileJson className="w-6 h-6 text-purple-500" /> Why BDD for JSON Formatter Testing?
         </h2>
-        <p>Applying BDD to a JSON formatter might seem overly complex for a seemingly simple tool, but it offers several advantages:</p>
+        <p>
+          Applying BDD to a JSON formatter might seem overly complex for a seemingly simple tool, but it offers several
+          advantages:
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Clear Specification:</strong> Gherkin scenarios provide unambiguous specifications of how the formatter should behave under various conditions (validity, different data types, formatting options).
-          </li> {/* Added missing closing tag */}
+            <strong>Clear Specification:</strong> Gherkin scenarios provide unambiguous specifications of how the
+            formatter should behave under various conditions (validity, different data types, formatting options).
+          </li>{" "}
+          {/* Added missing closing tag */}
           <li>
-            <strong>Collaboration:</strong> Non-technical stakeholders (like content creators or analysts who might use the tool) can understand and even contribute to the test cases, ensuring the tool meets real-world needs.
+            <strong>Collaboration:</strong> Non-technical stakeholders (like content creators or analysts who might use
+            the tool) can understand and even contribute to the test cases, ensuring the tool meets real-world needs.
           </li>
           <li>
-            <strong>Focus on User Value:</strong> Tests are written from the perspective of someone using the formatter, ensuring that key user interactions and expected results are covered.
+            <strong>Focus on User Value:</strong> Tests are written from the perspective of someone using the formatter,
+            ensuring that key user interactions and expected results are covered.
           </li>
           <li>
-            <strong>Executable Documentation:</strong> The scenarios serve as living documentation that is always up-to-date because they are the tests themselves.
+            <strong>Executable Documentation:</strong> The scenarios serve as living documentation that is always
+            up-to-date because they are the tests themselves.
           </li>
         </ul>
 
@@ -82,9 +86,9 @@ export default function BddJsonFormatterTestingArticle() {
           <ClipboardCheck className="w-6 h-6 text-teal-500" /> Applying BDD: Writing Scenarios
         </h2>
         <p>
-          Let's look at how we can write Gherkin scenarios for common JSON formatter behaviors.
-          These scenarios can be written in plain text files (e.g., `.feature` files) and then
-          automated using BDD frameworks like Cucumber, Jest-Cucumber, or similar tools.
+          Let's look at how we can write Gherkin scenarios for common JSON formatter behaviors. These scenarios can be
+          written in plain text files (e.g., `.feature` files) and then automated using BDD frameworks like Cucumber,
+          Jest-Cucumber, or similar tools.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Scenario 1: Formatting Valid JSON</h3>
@@ -113,8 +117,8 @@ export default function BddJsonFormatterTestingArticle() {
           </pre>
         </div>
         <p>
-          This scenario clearly defines the input (Given), the action (When), and the expected output (Then).
-          The triple quotes (`"""`) are used for multi-line string arguments in Gherkin.
+          This scenario clearly defines the input (Given), the action (When), and the expected output (Then). The triple
+          quotes (`"""`) are used for multi-line string arguments in Gherkin.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Scenario 2: Handling Invalid JSON</h3>
@@ -132,8 +136,8 @@ export default function BddJsonFormatterTestingArticle() {
           </pre>
         </div>
         <p>
-          Here, the expected outcome is not a formatted string but a specific error condition.
-          The "Then" step could be refined to check for a specific error message or type.
+          Here, the expected outcome is not a formatted string but a specific error condition. The "Then" step could be
+          refined to check for a specific error message or type.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Scenario 3: Using Formatting Options (e.g., indentation)</h3>
@@ -158,21 +162,20 @@ export default function BddJsonFormatterTestingArticle() {
           </pre>
         </div>
         <p>
-          This shows how additional context (And steps) can be added to the Given section to specify
-          configuration or options before the action is performed.
+          This shows how additional context (And steps) can be added to the Given section to specify configuration or
+          options before the action is performed.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Code className="w-6 h-6 text-orange-500" /> Implementing Step Definitions
         </h2>
         <p>
-          Once the scenarios are written, the next step is to automate them. This involves writing
-          "step definitions" – small pieces of code that link the Gherkin steps to the actual
-          application code or testing library.
+          Once the scenarios are written, the next step is to automate them. This involves writing "step definitions" –
+          small pieces of code that link the Gherkin steps to the actual application code or testing library.
         </p>
         <p>
-          Using a library like `jest-cucumber` with Jest in TypeScript, you would write functions
-          that match the Gherkin step text.
+          Using a library like `jest-cucumber` with Jest in TypeScript, you would write functions that match the Gherkin
+          step text.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Step Definition Example (TypeScript):</h4>
@@ -239,26 +242,24 @@ defineFeature('./json-formatter.feature', feature => {
           </div>
         </div>
         <p>
-          Each step definition is a function that executes the necessary code to fulfill the step's
-          description. The parameters from the Gherkin step (like the multi-line string inputs or
-          the number of spaces) are passed as arguments to these functions.
+          Each step definition is a function that executes the necessary code to fulfill the step's description. The
+          parameters from the Gherkin step (like the multi-line string inputs or the number of spaces) are passed as
+          arguments to these functions.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <FlaskConical className="w-6 h-6 text-red-500" /> Testing More Complex Scenarios
         </h2>
-        <p>
-          BDD becomes increasingly valuable when dealing with more complex formatter requirements,
-          such as:
-        </p>
+        <p>BDD becomes increasingly valuable when dealing with more complex formatter requirements, such as:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Handling different JSON data types (arrays, nested objects, numbers, booleans, null).</li>
           <li>Specific formatting options (e.g., sorting keys, compact output).</li>
           <li>Edge cases (empty objects/arrays, JSON with comments, invalid Unicode characters).</li>
           <li>Handling large JSON inputs (performance considerations).</li>
         </ul>
-        <p>Each of these can be captured as distinct scenarios in your `.feature` files, providing
-          a comprehensive suite of tests and documentation.
+        <p>
+          Each of these can be captured as distinct scenarios in your `.feature` files, providing a comprehensive suite
+          of tests and documentation.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Scenario: Format JSON with nested arrays and objects</h4>
@@ -295,52 +296,54 @@ defineFeature('./json-formatter.feature', feature => {
           <BadgeCheck className="w-6 h-6 text-yellow-500" /> Benefits Beyond Testing
         </h2>
         <p>
-          Implementing BDD for your JSON formatter testing offers benefits that extend beyond just
-          having automated tests:
+          Implementing BDD for your JSON formatter testing offers benefits that extend beyond just having automated
+          tests:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Improved Communication:</strong> The shared language and scenarios facilitate better understanding between team members.
+            <strong>Improved Communication:</strong> The shared language and scenarios facilitate better understanding
+            between team members.
           </li>
           <li>
-            <strong>Clear Requirements:</strong> Writing scenarios forces clarity on expected behavior before coding begins.
+            <strong>Clear Requirements:</strong> Writing scenarios forces clarity on expected behavior before coding
+            begins.
           </li>
           <li>
-            <strong>Reduced Rework:</strong> Misunderstandings are caught early in the process, reducing costly rework later.
+            <strong>Reduced Rework:</strong> Misunderstandings are caught early in the process, reducing costly rework
+            later.
           </li>
           <li>
-            <strong>Executable Specifications:</strong> The feature files act as up-to-date documentation of what the formatter *does*, not just what it *should* do.
+            <strong>Executable Specifications:</strong> The feature files act as up-to-date documentation of what the
+            formatter *does*, not just what it *should* do.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Info className="w-6 h-6 text-blue-500" /> Considerations
         </h2>
-        <p>
-          While beneficial, adopting BDD requires commitment:
-        </p>
+        <p>While beneficial, adopting BDD requires commitment:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>
-                <strong>Initial Learning Curve:</strong> Team members need to learn Gherkin and the chosen BDD framework.
-            </li>
-            <li>
-                <strong>Maintenance Overhead:</strong> Scenarios and step definitions must be maintained as the formatter evolves. Well-structured step definitions can mitigate this.
-            </li>
-            <li>
-                <strong>Scope:</strong> Not every single test case needs to be a BDD scenario. Focus on key behaviors and user-facing functionality; unit tests are still valuable for internal logic.
-            </li>
+          <li>
+            <strong>Initial Learning Curve:</strong> Team members need to learn Gherkin and the chosen BDD framework.
+          </li>
+          <li>
+            <strong>Maintenance Overhead:</strong> Scenarios and step definitions must be maintained as the formatter
+            evolves. Well-structured step definitions can mitigate this.
+          </li>
+          <li>
+            <strong>Scope:</strong> Not every single test case needs to be a BDD scenario. Focus on key behaviors and
+            user-facing functionality; unit tests are still valuable for internal logic.
+          </li>
         </ul>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Behavior-Driven Development, while often associated with complex business applications,
-          can be a powerful methodology even for tools like JSON formatters. By focusing on the
-          expected behavior from a user's perspective and using clear, collaborative language like
-          Gherkin, teams can build more robust, well-specified, and user-friendly formatters. It
-          shifts the focus from testing implementation details to testing observable outcomes,
-          leading to higher confidence in the tool's functionality and better alignment across the
-          development team.
+          Behavior-Driven Development, while often associated with complex business applications, can be a powerful
+          methodology even for tools like JSON formatters. By focusing on the expected behavior from a user's
+          perspective and using clear, collaborative language like Gherkin, teams can build more robust, well-specified,
+          and user-friendly formatters. It shifts the focus from testing implementation details to testing observable
+          outcomes, leading to higher confidence in the tool's functionality and better alignment across the development
+          team.
         </p>
       </div>
     </>

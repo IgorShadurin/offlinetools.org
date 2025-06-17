@@ -29,7 +29,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 with Custom Alphabets: Beyond Standard Encoding",
-    description: "Exploring customized Base64 encoding schemes that use alternative character sets for specialized applications.",
+    description:
+      "Exploring customized Base64 encoding schemes that use alternative character sets for specialized applications.",
     slug: "base64-with-custom-alphabets-beyond-standard-encoding",
   },
   {
@@ -44,7 +45,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Padding Options and Their Impact",
-    description: "Understanding how padding affects Base64 encoded data and options for controlling it in various implementations.",
+    description:
+      "Understanding how padding affects Base64 encoded data and options for controlling it in various implementations.",
     slug: "base64-padding-options-and-their-impact",
   },
   {
@@ -59,7 +61,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Encoding with Stream Processing",
-    description: "Implementing Base64 encoding and decoding for continuous data streams rather than fixed-length content.",
+    description:
+      "Implementing Base64 encoding and decoding for continuous data streams rather than fixed-length content.",
     slug: "base64-encoding-with-stream-processing",
   },
   {
@@ -74,7 +77,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Variants Beyond Standard: Base64url, Base64xml, and More",
-    description: "Exploring different variants of Base64 encoding optimized for specific applications and environments.",
+    description:
+      "Exploring different variants of Base64 encoding optimized for specific applications and environments.",
     slug: "base64-variants-beyond-standard-base64url-base64xml-and-more",
   },
   {
@@ -104,7 +108,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Command-Line Options for Base64 Tools",
-    description: "Essential command-line parameters and features for effective Base64 processing in terminal environments.",
+    description:
+      "Essential command-line parameters and features for effective Base64 processing in terminal environments.",
     slug: "command-line-options-for-base64-tools",
   },
   {
@@ -116,7 +121,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Base64 Tools with Internationalization Support",
     description: "Designing Base64 encoders and decoders with multi-language and locale-aware capabilities.",
     slug: "base64-tools-with-internationalization-support",
-  }
+  },
 ];
 
 /**
@@ -167,7 +172,9 @@ export default function Base64CodecFeaturesPage() {
               <Puzzle className="text-violet-500" size={24} />
               Exploring Base64 Capabilities
             </CardTitle>
-            <CardDescription>Discover the rich feature set of modern Base64 encoding and decoding tools</CardDescription>
+            <CardDescription>
+              Discover the rich feature set of modern Base64 encoding and decoding tools
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +186,8 @@ export default function Base64CodecFeaturesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Core Functionality</h3>
                     <p className="text-sm text-muted-foreground">
-                      Standard and specialized encoding options, including URL-safe encoding, custom alphabets, and padding controls.
+                      Standard and specialized encoding options, including URL-safe encoding, custom alphabets, and
+                      padding controls.
                     </p>
                   </div>
                 </div>
@@ -191,7 +199,8 @@ export default function Base64CodecFeaturesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Advanced Options</h3>
                     <p className="text-sm text-muted-foreground">
-                      Batch processing, streaming capabilities, and character set handling for diverse encoding scenarios.
+                      Batch processing, streaming capabilities, and character set handling for diverse encoding
+                      scenarios.
                     </p>
                   </div>
                 </div>
@@ -205,7 +214,8 @@ export default function Base64CodecFeaturesPage() {
                   <div>
                     <h3 className="font-medium mb-1">User Interface Features</h3>
                     <p className="text-sm text-muted-foreground">
-                      Drag-and-drop support, clipboard integration, syntax highlighting, and preview capabilities for enhanced usability.
+                      Drag-and-drop support, clipboard integration, syntax highlighting, and preview capabilities for
+                      enhanced usability.
                     </p>
                   </div>
                 </div>
@@ -217,7 +227,8 @@ export default function Base64CodecFeaturesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Specialized Capabilities</h3>
                     <p className="text-sm text-muted-foreground">
-                      Format detection, integrity verification, internationalization support, and command-line interfaces.
+                      Format detection, integrity verification, internationalization support, and command-line
+                      interfaces.
                     </p>
                   </div>
                 </div>
@@ -230,7 +241,9 @@ export default function Base64CodecFeaturesPage() {
                 <span>Feature Highlight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Modern Base64 tools offer URL-safe encoding variants that replace problematic characters (+ and /) with web-friendly alternatives (- and _) to ensure Base64 data can be safely used in URLs, filenames, and other contexts where certain characters have special meaning.
+                Modern Base64 tools offer URL-safe encoding variants that replace problematic characters (+ and /) with
+                web-friendly alternatives (- and _) to ensure Base64 data can be safely used in URLs, filenames, and
+                other contexts where certain characters have special meaning.
               </p>
             </div>
           </CardContent>
@@ -240,4 +253,4 @@ export default function Base64CodecFeaturesPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

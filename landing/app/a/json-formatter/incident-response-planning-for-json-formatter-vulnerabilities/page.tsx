@@ -31,7 +31,8 @@ export default function JsonFormatterIncidentResponse() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center">
-        <ShieldAlert className="mr-3 text-red-600" size={32} /> Incident Response Planning for JSON Formatter Vulnerabilities
+        <ShieldAlert className="mr-3 text-red-600" size={32} /> Incident Response Planning for JSON Formatter
+        Vulnerabilities
       </h1>
 
       <div className="space-y-8">
@@ -40,10 +41,17 @@ export default function JsonFormatterIncidentResponse() {
             <AlertCircle className="mr-2 text-yellow-600" /> Introduction: Why Plan for JSON Formatter Incidents?
           </h2>
           <p>
-            JSON formatters, parsers, and validators are fundamental tools in modern web development, widely used for data exchange and configuration. While seemingly innocuous, vulnerabilities in these components or the surrounding logic that processes user-supplied JSON can lead to serious security incidents, including Cross-Site Scripting (XSS), Denial of Service (DoS), Server-Side Request Forgery (SSRF), or information disclosure.
+            JSON formatters, parsers, and validators are fundamental tools in modern web development, widely used for
+            data exchange and configuration. While seemingly innocuous, vulnerabilities in these components or the
+            surrounding logic that processes user-supplied JSON can lead to serious security incidents, including
+            Cross-Site Scripting (XSS), Denial of Service (DoS), Server-Side Request Forgery (SSRF), or information
+            disclosure.
           </p>
           <p>
-            A robust incident response plan is crucial for minimizing damage, reducing recovery time, and maintaining user trust when such vulnerabilities are exploited. This page outlines the key considerations for preparing for, detecting, and responding to security incidents specifically related to JSON processing within your applications.
+            A robust incident response plan is crucial for minimizing damage, reducing recovery time, and maintaining
+            user trust when such vulnerabilities are exploited. This page outlines the key considerations for preparing
+            for, detecting, and responding to security incidents specifically related to JSON processing within your
+            applications.
           </p>
         </section>
 
@@ -52,23 +60,49 @@ export default function JsonFormatterIncidentResponse() {
             <Bug className="mr-2 text-orange-600" /> Common Vulnerability Types
           </h2>
           <p>
-            Understanding the potential attack vectors helps in anticipating incidents. For JSON formatters and processors, key vulnerability types include:
+            Understanding the potential attack vectors helps in anticipating incidents. For JSON formatters and
+            processors, key vulnerability types include:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong><Lock className="inline mr-1" size={18} /> Cross-Site Scripting (XSS):</strong> If the formatter directly outputs user-supplied JSON content into an HTML context without proper sanitization, malicious JavaScript within string values could execute in other users&apos; browsers. This is common when formatting JSON for display in a web UI. Example: JSON containing a key like <code>&quot;&lt;script&gt;alert(&apos;XSS&apos;)&lt;/script&gt;&quot;</code>.
+              <strong>
+                <Lock className="inline mr-1" size={18} /> Cross-Site Scripting (XSS):
+              </strong>{" "}
+              If the formatter directly outputs user-supplied JSON content into an HTML context without proper
+              sanitization, malicious JavaScript within string values could execute in other users&apos; browsers. This
+              is common when formatting JSON for display in a web UI. Example: JSON containing a key like{" "}
+              <code>&quot;&lt;script&gt;alert(&apos;XSS&apos;)&lt;/script&gt;&quot;</code>.
             </li>
             <li>
-              <strong><Cpu className="inline mr-1" size={18} /> Resource Exhaustion / ReDoS:</strong> Exploiting inefficient regex used in parsing/validation, or deeply nested structures that cause stack overflows or excessive memory allocation. Large or specially crafted JSON can consume significant resources, leading to Denial of Service. Example: Extremely long strings with specific repeating patterns for regex attacks, or JSON like <code>&#x7b;&quot;a&quot;:&#x7b;&quot;a&quot;:&#x7b;&quot;a&quot;:...&#x7d;&#x7d;&#x7d;</code>.
+              <strong>
+                <Cpu className="inline mr-1" size={18} /> Resource Exhaustion / ReDoS:
+              </strong>{" "}
+              Exploiting inefficient regex used in parsing/validation, or deeply nested structures that cause stack
+              overflows or excessive memory allocation. Large or specially crafted JSON can consume significant
+              resources, leading to Denial of Service. Example: Extremely long strings with specific repeating patterns
+              for regex attacks, or JSON like{" "}
+              <code>&#x7b;&quot;a&quot;:&#x7b;&quot;a&quot;:&#x7b;&quot;a&quot;:...&#x7d;&#x7d;&#x7d;</code>.
             </li>
             <li>
-              <strong><HardDrive className="inline mr-1" size={18} /> Server-Side Request Forgery (SSRF):</strong> Less direct, but possible if the application uses JSON content (e.g., a URL embedded in a JSON field) to trigger server-side actions without validating the target, potentially forcing the server to interact with internal services or external malicious sites.
+              <strong>
+                <HardDrive className="inline mr-1" size={18} /> Server-Side Request Forgery (SSRF):
+              </strong>{" "}
+              Less direct, but possible if the application uses JSON content (e.g., a URL embedded in a JSON field) to
+              trigger server-side actions without validating the target, potentially forcing the server to interact with
+              internal services or external malicious sites.
             </li>
             <li>
-              <strong><FileWarning className="inline mr-1" size={18} /> Information Disclosure:</strong> Error messages generated by parsers or formatters might reveal internal details (like file paths, library versions) if not handled securely.
+              <strong>
+                <FileWarning className="inline mr-1" size={18} /> Information Disclosure:
+              </strong>{" "}
+              Error messages generated by parsers or formatters might reveal internal details (like file paths, library
+              versions) if not handled securely.
             </li>
             <li>
-              <strong><Settings className="inline mr-1" size={18} /> Library Vulnerabilities:</strong> Using an outdated or known-vulnerable JSON parsing library itself can introduce flaws.
+              <strong>
+                <Settings className="inline mr-1" size={18} /> Library Vulnerabilities:
+              </strong>{" "}
+              Using an outdated or known-vulnerable JSON parsing library itself can introduce flaws.
             </li>
           </ul>
         </section>
@@ -78,33 +112,73 @@ export default function JsonFormatterIncidentResponse() {
             <BookOpen className="mr-2 text-blue-600" /> Incident Response Lifecycle Phases
           </h2>
           <p>
-            A standard incident response framework provides a structured approach. Adapting it for JSON formatter vulnerabilities involves focusing on the specific attack vectors and affected components.
+            A standard incident response framework provides a structured approach. Adapting it for JSON formatter
+            vulnerabilities involves focusing on the specific attack vectors and affected components.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="border rounded-lg p-6 shadow-sm bg-white dark:bg-gray-800">
-              <h3 className="text-xl font-semibold mb-3 flex items-center"><FileText className="mr-2" size={20} /> 1. Preparation</h3>
-              <p>Build your team, define roles, establish communication channels. Crucially, identify where and how JSON is processed in your application, which libraries are used, and what data flows through them. Set up monitoring and logging tailored to detect formatter-related issues (e.g., high CPU load, unusual output). Have code repositories and deployment pipelines ready for rapid patching.</p>
+              <h3 className="text-xl font-semibold mb-3 flex items-center">
+                <FileText className="mr-2" size={20} /> 1. Preparation
+              </h3>
+              <p>
+                Build your team, define roles, establish communication channels. Crucially, identify where and how JSON
+                is processed in your application, which libraries are used, and what data flows through them. Set up
+                monitoring and logging tailored to detect formatter-related issues (e.g., high CPU load, unusual
+                output). Have code repositories and deployment pipelines ready for rapid patching.
+              </p>
             </div>
             <div className="border rounded-lg p-6 shadow-sm bg-white dark:bg-gray-800">
-              <h3 className="text-xl font-semibold mb-3 flex items-center"><Search className="mr-2" size={20} /> 2. Identification</h3>
-              <p>Detect the incident. This could be triggered by automated alerts (e.g., XSS payload detected in logs, high server load), user reports, or internal security scans. Confirm the incident, determine its scope (which users/systems are affected), and identify the specific vulnerability being exploited (e.g., XSS in display, ReDoS in parsing).</p>
+              <h3 className="text-xl font-semibold mb-3 flex items-center">
+                <Search className="mr-2" size={20} /> 2. Identification
+              </h3>
+              <p>
+                Detect the incident. This could be triggered by automated alerts (e.g., XSS payload detected in logs,
+                high server load), user reports, or internal security scans. Confirm the incident, determine its scope
+                (which users/systems are affected), and identify the specific vulnerability being exploited (e.g., XSS
+                in display, ReDoS in parsing).
+              </p>
             </div>
             <div className="border rounded-lg p-6 shadow-sm bg-white dark:bg-gray-800">
-              <h3 className="text-xl font-semibold mb-3 flex items-center"><CloudOff className="mr-2" size={20} /> 3. Containment</h3>
-              <p>Limit the damage. For formatter vulnerabilities, this might involve disabling the specific feature that processes user-supplied JSON, blocking malicious IPs or user accounts, or isolating affected servers. The goal is to stop the attack from spreading or continuing.</p>
+              <h3 className="text-xl font-semibold mb-3 flex items-center">
+                <CloudOff className="mr-2" size={20} /> 3. Containment
+              </h3>
+              <p>
+                Limit the damage. For formatter vulnerabilities, this might involve disabling the specific feature that
+                processes user-supplied JSON, blocking malicious IPs or user accounts, or isolating affected servers.
+                The goal is to stop the attack from spreading or continuing.
+              </p>
             </div>
             <div className="border rounded-lg p-6 shadow-sm bg-white dark:bg-gray-800">
-              <h3 className="text-xl font-semibold mb-3 flex items-center"><Code className="mr-2" size={20} /> 4. Eradication</h3>
-              <p>Remove the cause. This involves fixing the vulnerable code. For XSS, implement proper output encoding (e.g., using a library like <code>dompurify</code> if rendering HTML). For ReDoS, optimize regex, implement resource limits, or use safer parsing methods. Update vulnerable libraries. Ensure the fix is tested thoroughly.</p>
+              <h3 className="text-xl font-semibold mb-3 flex items-center">
+                <Code className="mr-2" size={20} /> 4. Eradication
+              </h3>
+              <p>
+                Remove the cause. This involves fixing the vulnerable code. For XSS, implement proper output encoding
+                (e.g., using a library like <code>dompurify</code> if rendering HTML). For ReDoS, optimize regex,
+                implement resource limits, or use safer parsing methods. Update vulnerable libraries. Ensure the fix is
+                tested thoroughly.
+              </p>
             </div>
             <div className="border rounded-lg p-6 shadow-sm bg-white dark:bg-gray-800">
-              <h3 className="text-xl font-semibold mb-3 flex items-center"><RefreshCw className="mr-2" size={20} /> 5. Recovery</h3>
-              <p>Restore affected systems and services to full operation. This might involve deploying the patched code, restoring data (if compromised), and verifying that the vulnerability is closed and systems are functioning normally. Monitor closely after recovery.</p>
+              <h3 className="text-xl font-semibold mb-3 flex items-center">
+                <RefreshCw className="mr-2" size={20} /> 5. Recovery
+              </h3>
+              <p>
+                Restore affected systems and services to full operation. This might involve deploying the patched code,
+                restoring data (if compromised), and verifying that the vulnerability is closed and systems are
+                functioning normally. Monitor closely after recovery.
+              </p>
             </div>
             <div className="border rounded-lg p-6 shadow-sm bg-white dark:bg-gray-800">
-              <h3 className="text-xl font-semibold mb-3 flex items-center"><BookOpen className="mr-2" size={20} /> 6. Lessons Learned</h3>
-              <p>Analyze what happened. Review the incident response process itself – what worked, what didn&apos;t? Update your incident response plan, security policies, and development practices based on the findings. Share knowledge within the team to prevent similar incidents.</p>
-          </div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center">
+                <BookOpen className="mr-2" size={20} /> 6. Lessons Learned
+              </h3>
+              <p>
+                Analyze what happened. Review the incident response process itself – what worked, what didn&apos;t?
+                Update your incident response plan, security policies, and development practices based on the findings.
+                Share knowledge within the team to prevent similar incidents.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -113,27 +187,55 @@ export default function JsonFormatterIncidentResponse() {
             <Activity className="mr-2 text-teal-600" /> Specific Steps for JSON Processing Incidents
           </h2>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center"><Search className="mr-2" size={20} /> Detection & Analysis Focus</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center">
+            <Search className="mr-2" size={20} /> Detection & Analysis Focus
+          </h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Input Validation:</strong> Look for failed validation attempts or malformed JSON that bypasses checks.</li>
-            <li><strong>Resource Monitoring:</strong> Spikes in CPU, memory, or network traffic originating from processes handling JSON input.</li>
-            <li><strong>Log Analysis:</strong> Search for known exploit patterns, unusual JSON structures, or error messages related to parsing/formatting.</li>
-            <li><strong>User Reports:</strong> Pay attention to reports of strange behavior, formatting issues, or unexpected pop-ups.</li>
-            <li><strong>Code Review:</strong> Quickly identify the code path handling the specific JSON input and output. Check for usage of potentially unsafe functions (e.g., direct `dangerouslySetInnerHTML` with unescaped JSON values, or unconstrained regex).</li>
+            <li>
+              <strong>Input Validation:</strong> Look for failed validation attempts or malformed JSON that bypasses
+              checks.
+            </li>
+            <li>
+              <strong>Resource Monitoring:</strong> Spikes in CPU, memory, or network traffic originating from processes
+              handling JSON input.
+            </li>
+            <li>
+              <strong>Log Analysis:</strong> Search for known exploit patterns, unusual JSON structures, or error
+              messages related to parsing/formatting.
+            </li>
+            <li>
+              <strong>User Reports:</strong> Pay attention to reports of strange behavior, formatting issues, or
+              unexpected pop-ups.
+            </li>
+            <li>
+              <strong>Code Review:</strong> Quickly identify the code path handling the specific JSON input and output.
+              Check for usage of potentially unsafe functions (e.g., direct `dangerouslySetInnerHTML` with unescaped
+              JSON values, or unconstrained regex).
+            </li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center"><CloudOff className="mr-2" size={20} /> Containment Actions</h3>
-           <ul className="list-disc pl-6 space-y-2">
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center">
+            <CloudOff className="mr-2" size={20} /> Containment Actions
+          </h3>
+          <ul className="list-disc pl-6 space-y-2">
             <li>Disable the vulnerable feature or endpoint entirely.</li>
             <li>If the vulnerability is in a client-side formatter, remove the affected script or deploy a hotfix.</li>
-            <li>Implement temporary firewall rules to block traffic with suspect patterns or from known malicious IPs.</li>
+            <li>
+              Implement temporary firewall rules to block traffic with suspect patterns or from known malicious IPs.
+            </li>
             <li>If severe, take the affected service offline temporarily.</li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center"><Code className="mr-2" size={20} /> Eradication & Recovery Focus</h3>
-           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Fix the Code:</strong> Apply proper escaping for HTML output, implement strict input validation against a schema, add resource limits to parsing functions, update vulnerable libraries.</li>
-            <li><strong>Example (XSS Fix in React/JSX):</strong>
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center">
+            <Code className="mr-2" size={20} /> Eradication & Recovery Focus
+          </h3>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Fix the Code:</strong> Apply proper escaping for HTML output, implement strict input validation
+              against a schema, add resource limits to parsing functions, update vulnerable libraries.
+            </li>
+            <li>
+              <strong>Example (XSS Fix in React/JSX):</strong>
               <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-3 overflow-x-auto">
                 <h4 className="text-lg font-medium mb-2">Before (Vulnerable):</h4>
                 <pre>
@@ -145,7 +247,9 @@ export default function JsonFormatterIncidentResponse() {
                   {`// Render JSON string as text content
 <div>{JSON.stringify(jsonData, null, 2)}</div>`}
                 </pre>
-                 <h4 className="text-lg font-medium mb-2 mt-4">After (Secure - Escaping HTML if needed for rendering):</h4>
+                <h4 className="text-lg font-medium mb-2 mt-4">
+                  After (Secure - Escaping HTML if needed for rendering):
+                </h4>
                 <pre>
                   {`// Use a sanitization library if you must render potential HTML from JSON strings
 // Example with hypothetical sanitize function:
@@ -155,17 +259,24 @@ export default function JsonFormatterIncidentResponse() {
                 </pre>
               </div>
             </li>
-             <li><strong>Example (Preventing ReDoS):</strong>
-               <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-3 overflow-x-auto">
+            <li>
+              <strong>Example (Preventing ReDoS):</strong>
+              <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-3 overflow-x-auto">
                 <h4 className="text-lg font-medium mb-2">Mitigation Strategies:</h4>
                 <ul className="list-disc pl-6">
                   <li>Avoid inefficient regex with backtracking on user input.</li>
                   <li>Set limits on string length or nesting depth before parsing.</li>
-                  <li>Use parsers that are resistant to ReDoS attacks (e.g., Go&apos;s standard library is often cited).</li>
+                  <li>
+                    Use parsers that are resistant to ReDoS attacks (e.g., Go&apos;s standard library is often cited).
+                  </li>
                   <li>Wrap parsing logic in a sandbox with resource limits (memory, CPU time).</li>
                 </ul>
                 <p className="mt-3">
-                  Consider input like <code>&#x7b;&quot;long_key&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!&quot;&#x7d;</code> and regex like <code>^(a+)+$</code> applied to the value.
+                  Consider input like{" "}
+                  <code>
+                    &#x7b;&quot;long_key&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!&quot;&#x7d;
+                  </code>{" "}
+                  and regex like <code>^(a+)+$</code> applied to the value.
                 </p>
               </div>
             </li>
@@ -174,10 +285,15 @@ export default function JsonFormatterIncidentResponse() {
             <li>Scan logs for any lingering effects of the exploit.</li>
           </ul>
 
-           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center"><MessageSquare className="mr-2" size={20} /> Communication</h3>
-           <ul className="list-disc pl-6 space-y-2">
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center">
+            <MessageSquare className="mr-2" size={20} /> Communication
+          </h3>
+          <ul className="list-disc pl-6 space-y-2">
             <li>Inform relevant internal teams (security, development, operations, legal, PR).</li>
-            <li>If user data was potentially exposed or functionality impacted, plan and execute communication with affected users according to your privacy policy and regulations.</li>
+            <li>
+              If user data was potentially exposed or functionality impacted, plan and execute communication with
+              affected users according to your privacy policy and regulations.
+            </li>
             <li>If the vulnerability was in an open-source library, consider reporting it responsibly.</li>
           </ul>
         </section>
@@ -186,37 +302,63 @@ export default function JsonFormatterIncidentResponse() {
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <CheckCircle className="mr-2 text-green-600" /> Prevention is Key
           </h2>
-          <p>
-            The best incident response is preventing the incident in the first place.
-          </p>
+          <p>The best incident response is preventing the incident in the first place.</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong><Check className="inline mr-1" size={18} /> Validate and Sanitize All Input:</strong> Treat all user-supplied JSON as untrusted. Validate against a schema. Escape or sanitize any part of the JSON that will be rendered in HTML or executed in any dynamic context.
+              <strong>
+                <Check className="inline mr-1" size={18} /> Validate and Sanitize All Input:
+              </strong>{" "}
+              Treat all user-supplied JSON as untrusted. Validate against a schema. Escape or sanitize any part of the
+              JSON that will be rendered in HTML or executed in any dynamic context.
             </li>
-             <li>
-              <strong><Check className="inline mr-1" size={18} /> Use Secure Libraries:</strong> Keep JSON parsing and formatting libraries updated. Be aware of known vulnerabilities in the libraries you use. Choose libraries known for robustness against ReDoS and other parsing attacks.
+            <li>
+              <strong>
+                <Check className="inline mr-1" size={18} /> Use Secure Libraries:
+              </strong>{" "}
+              Keep JSON parsing and formatting libraries updated. Be aware of known vulnerabilities in the libraries you
+              use. Choose libraries known for robustness against ReDoS and other parsing attacks.
             </li>
-             <li>
-              <strong><Check className="inline mr-1" size={18} /> Implement Resource Limits:</strong> When parsing or formatting large JSON inputs, enforce limits on processing time, memory allocation, string length, and nesting depth to prevent ReDoS attacks.
+            <li>
+              <strong>
+                <Check className="inline mr-1" size={18} /> Implement Resource Limits:
+              </strong>{" "}
+              When parsing or formatting large JSON inputs, enforce limits on processing time, memory allocation, string
+              length, and nesting depth to prevent ReDoS attacks.
             </li>
-             <li>
-              <strong><Check className="inline mr-1" size={18} /> Sandbox Untrusted Processing:</strong> If processing untrusted JSON is critical, consider doing so in an isolated environment (e.g., a separate microservice, a container with strict resource limits, a WebAssembly sandbox) so a compromise doesn&apos;t affect your main application.
+            <li>
+              <strong>
+                <Check className="inline mr-1" size={18} /> Sandbox Untrusted Processing:
+              </strong>{" "}
+              If processing untrusted JSON is critical, consider doing so in an isolated environment (e.g., a separate
+              microservice, a container with strict resource limits, a WebAssembly sandbox) so a compromise doesn&apos;t
+              affect your main application.
             </li>
-             <li>
-              <strong><Check className="inline mr-1" size={18} /> Secure Output:</strong> Ensure that formatted JSON displayed to users is properly escaped, especially if embedding it within script tags, HTML attributes, or dynamic JavaScript code.
+            <li>
+              <strong>
+                <Check className="inline mr-1" size={18} /> Secure Output:
+              </strong>{" "}
+              Ensure that formatted JSON displayed to users is properly escaped, especially if embedding it within
+              script tags, HTML attributes, or dynamic JavaScript code.
             </li>
-             <li>
-              <strong><Check className="inline mr-1" size={18} /> Principle of Least Privilege:</strong> Ensure the process handling untrusted JSON has minimal necessary permissions.
+            <li>
+              <strong>
+                <Check className="inline mr-1" size={18} /> Principle of Least Privilege:
+              </strong>{" "}
+              Ensure the process handling untrusted JSON has minimal necessary permissions.
             </li>
           </ul>
         </section>
 
         <section>
-           <h2 className="text-2xl font-semibold mb-4 flex items-center">
+          <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Clock className="mr-2 text-purple-600" /> Conclusion
           </h2>
           <p>
-            Vulnerabilities in JSON processing components are a real and persistent threat. By understanding the common attack vectors, establishing a clear incident response plan with phases tailored to these specific risks, and focusing heavily on preventative measures, developers and organizations can significantly improve their security posture and readiness. Regular review and testing of both the application&apos;s security and the incident response plan itself are essential for maintaining resilience against evolving threats.
+            Vulnerabilities in JSON processing components are a real and persistent threat. By understanding the common
+            attack vectors, establishing a clear incident response plan with phases tailored to these specific risks,
+            and focusing heavily on preventative measures, developers and organizations can significantly improve their
+            security posture and readiness. Regular review and testing of both the application&apos;s security and the
+            incident response plan itself are essential for maintaining resilience against evolving threats.
           </p>
         </section>
       </div>

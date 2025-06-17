@@ -167,7 +167,9 @@ export default function Base64CodecMiscellaneousPage() {
               <FileText className="text-slate-600" size={24} />
               Diverse Base64 Applications
             </CardTitle>
-            <CardDescription>Exploring unique and specialized uses of Base64 encoding across different domains</CardDescription>
+            <CardDescription>
+              Exploring unique and specialized uses of Base64 encoding across different domains
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -191,7 +193,8 @@ export default function Base64CodecMiscellaneousPage() {
                   <div>
                     <h3 className="font-medium mb-1">Industry-Specific Uses</h3>
                     <p className="text-sm text-muted-foreground">
-                      How different sectors like healthcare, gaming, advertising, and publishing utilize Base64 encoding.
+                      How different sectors like healthcare, gaming, advertising, and publishing utilize Base64
+                      encoding.
                     </p>
                   </div>
                 </div>
@@ -217,7 +220,8 @@ export default function Base64CodecMiscellaneousPage() {
                   <div>
                     <h3 className="font-medium mb-1">Domain Crossovers</h3>
                     <p className="text-sm text-muted-foreground">
-                      Interdisciplinary applications where Base64 encoding bridges different technical or creative fields.
+                      Interdisciplinary applications where Base64 encoding bridges different technical or creative
+                      fields.
                     </p>
                   </div>
                 </div>
@@ -230,7 +234,11 @@ export default function Base64CodecMiscellaneousPage() {
                 <span>Miscellaneous Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Base64 encoding has transcended its original purpose and found applications in unexpected domains. Beyond standard web uses, it's employed in digital art installations, used to encode DNA sequences in bioinformatics, embedded in physical objects through QR codes, used in puzzle games, and even appears as cryptic tattoos. This versatility demonstrates how technical standards can evolve beyond their intended purposes when adopted by creative communities and specialized industries.
+                Base64 encoding has transcended its original purpose and found applications in unexpected domains.
+                Beyond standard web uses, it's employed in digital art installations, used to encode DNA sequences in
+                bioinformatics, embedded in physical objects through QR codes, used in puzzle games, and even appears as
+                cryptic tattoos. This versatility demonstrates how technical standards can evolve beyond their intended
+                purposes when adopted by creative communities and specialized industries.
               </p>
             </div>
           </CardContent>
@@ -240,4 +248,4 @@ export default function Base64CodecMiscellaneousPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

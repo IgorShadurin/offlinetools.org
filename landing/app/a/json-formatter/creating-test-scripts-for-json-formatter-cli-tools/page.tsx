@@ -246,43 +246,41 @@ async function fileExists(filePath) {
       <div className="space-y-6">
         <p>
           Command Line Interface (CLI) tools are powerful utilities for developers, enabling automation and integration
-          into workflows. A common task is formatting data, and JSON formatters are particularly useful for pretty-printing,
-          minimizing, or standardizing JSON output. Ensuring these tools work correctly and consistently across various inputs
-          is crucial. This article explores how to create effective test scripts for your JSON formatter CLI tool.
+          into workflows. A common task is formatting data, and JSON formatters are particularly useful for
+          pretty-printing, minimizing, or standardizing JSON output. Ensuring these tools work correctly and
+          consistently across various inputs is crucial. This article explores how to create effective test scripts for
+          your JSON formatter CLI tool.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <ListChecks className="mr-2 h-6 w-6" /> Why Test Your CLI Formatter?
         </h2>
-        <p>
-          Testing CLI tools, especially formatters, is essential for several reasons:
-        </p>
+        <p>Testing CLI tools, especially formatters, is essential for several reasons:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Correctness:</strong> Verify that the tool produces valid JSON output according to the specification,
-            and that formatting rules (indentation, spacing, key order, etc.) are applied as expected.
+            <strong>Correctness:</strong> Verify that the tool produces valid JSON output according to the
+            specification, and that formatting rules (indentation, spacing, key order, etc.) are applied as expected.
           </li>
           <li>
             <strong>Consistency:</strong> Ensure the same input consistently produces the same output.
           </li>
           <li>
-            <strong>Robustness:</strong> Check how the tool handles edge cases and invalid inputs without crashing
-            or producing incorrect results.
+            <strong>Robustness:</strong> Check how the tool handles edge cases and invalid inputs without crashing or
+            producing incorrect results.
           </li>
           <li>
             <strong>Regression Prevention:</strong> Catch bugs introduced when adding new features or refactoring code.
           </li>
           <li>
-            <strong>Documentation:</strong> Test cases can serve as executable examples of how the tool is supposed to behave.
+            <strong>Documentation:</strong> Test cases can serve as executable examples of how the tool is supposed to
+            behave.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <ListChecks className="mr-2 h-6 w-6" /> Types of Test Cases
         </h2>
-        <p>
-          A comprehensive test suite should cover various scenarios. Here are some categories of test cases:
-        </p>
+        <p>A comprehensive test suite should cover various scenarios. Here are some categories of test cases:</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <Check className="mr-2 h-5 w-5 text-green-600" /> Happy Path / Basic Functionality
@@ -300,9 +298,7 @@ async function fileExists(filePath) {
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <Code className="mr-2 h-5 w-5" /> Edge Cases
         </h3>
-        <p>
-          Test inputs that might reveal subtle bugs or unexpected behavior.
-        </p>
+        <p>Test inputs that might reveal subtle bugs or unexpected behavior.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Empty objects &#x7b;&#x7d; and arrays &#x5b;&#x5d;.</li>
           <li>JSON with large numbers or very long strings.</li>
@@ -315,7 +311,8 @@ async function fileExists(filePath) {
           <X className="mr-2 h-5 w-5 text-red-600" /> Invalid Input / Error Handling
         </h3>
         <p>
-          Ensure the formatter correctly identifies invalid JSON and exits with a non-zero status code, ideally providing a helpful error message.
+          Ensure the formatter correctly identifies invalid JSON and exits with a non-zero status code, ideally
+          providing a helpful error message.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Missing commas, colons, brackets, braces, or quotes.</li>
@@ -329,36 +326,52 @@ async function fileExists(filePath) {
           <Code className="mr-2 h-5 w-5" /> Options Testing
         </h3>
         <p>
-          If your formatter supports command-line options (e.g., indentation level, sorting keys, compact output), test each option and combinations.
+          If your formatter supports command-line options (e.g., indentation level, sorting keys, compact output), test
+          each option and combinations.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><code>--indent 2</code>, <code>--indent 4</code>, <code>--indent &apos;\t&apos;</code></li>
-          <li><code>--compact</code> / <code>--minify</code></li>
-          <li><code>--sort-keys</code></li>
-          <li>Combinations like <code>--sort-keys --indent 2</code></li>
+          <li>
+            <code>--indent 2</code>, <code>--indent 4</code>, <code>--indent &apos;\t&apos;</code>
+          </li>
+          <li>
+            <code>--compact</code> / <code>--minify</code>
+          </li>
+          <li>
+            <code>--sort-keys</code>
+          </li>
+          <li>
+            Combinations like <code>--sort-keys --indent 2</code>
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <FolderCode className="mr-2 h-6 w-6" /> Setting up the Test Environment
         </h2>
         <p>
-          A common and effective approach for testing CLI tools is using &quot;snapshot&quot; or &quot;golden file&quot; testing.
-          You create pairs of input and expected output files.
+          A common and effective approach for testing CLI tools is using &quot;snapshot&quot; or &quot;golden file&quot;
+          testing. You create pairs of input and expected output files.
         </p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>
-            <strong>Input Files:</strong> Create files containing various JSON inputs (valid, invalid, edge cases, etc.).
+            <strong>Input Files:</strong> Create files containing various JSON inputs (valid, invalid, edge cases,
+            etc.).
           </li>
           <li>
-            <strong>Expected Output Files:</strong> For each valid input file and set of options, create a corresponding file containing the *exact* output you expect the CLI tool to produce. For invalid inputs, document the expected error message or exit code.
+            <strong>Expected Output Files:</strong> For each valid input file and set of options, create a corresponding
+            file containing the *exact* output you expect the CLI tool to produce. For invalid inputs, document the
+            expected error message or exit code.
           </li>
           <li>
-            <strong>Test Script:</strong> Write a script (e.g., in Bash, Python, Node.js) that automates running your CLI tool with different inputs and options, captures its output (stdout and stderr), and compares it against the expected output files.
+            <strong>Test Script:</strong> Write a script (e.g., in Bash, Python, Node.js) that automates running your
+            CLI tool with different inputs and options, captures its output (stdout and stderr), and compares it against
+            the expected output files.
           </li>
         </ol>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center"><FolderCode className="mr-2 h-5 w-5"/> Example Test Directory Structure:</h3>
+          <h3 className="text-lg font-medium flex items-center">
+            <FolderCode className="mr-2 h-5 w-5" /> Example Test Directory Structure:
+          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
               {`tests/
@@ -385,18 +398,22 @@ async function fileExists(filePath) {
           <Terminal className="mr-2 h-6 w-6" /> Writing Test Scripts (Shell Example)
         </h2>
         <p>
-          Shell scripts (like Bash) are straightforward for running CLI commands and comparing file outputs using standard utilities like <code>diff</code>.
+          Shell scripts (like Bash) are straightforward for running CLI commands and comparing file outputs using
+          standard utilities like <code>diff</code>.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center"><Code className="mr-2 h-5 w-5"/> Simple Bash Test Script (<code>test_formatter.sh</code>):</h3>
+          <h3 className="text-lg font-medium flex items-center">
+            <Code className="mr-2 h-5 w-5" /> Simple Bash Test Script (<code>test_formatter.sh</code>):
+          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {bashScript}
-            </pre>
+            <pre>{bashScript}</pre>
           </div>
           <p className="mt-4">
-            This script defines a helper function <code>run_test</code> to encapsulate the logic for running the formatter, capturing output, and comparing. It handles both successful runs (checking stdout) and expected failures (checking exit code and optionally stderr). The <code>diff</code> command is a standard Unix utility that shows line-by-line differences between files.
+            This script defines a helper function <code>run_test</code> to encapsulate the logic for running the
+            formatter, capturing output, and comparing. It handles both successful runs (checking stdout) and expected
+            failures (checking exit code and optionally stderr). The <code>diff</code> command is a standard Unix
+            utility that shows line-by-line differences between files.
           </p>
         </div>
 
@@ -404,21 +421,23 @@ async function fileExists(filePath) {
           <Code className="mr-2 h-6 w-6" /> Writing Test Scripts (Node.js Example)
         </h2>
         <p>
-          If your CLI tool is built with Node.js, you might prefer writing tests in Node.js itself. This allows for more programmatic control and potentially more detailed comparisons.
+          If your CLI tool is built with Node.js, you might prefer writing tests in Node.js itself. This allows for more
+          programmatic control and potentially more detailed comparisons.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center"><Code className="mr-2 h-5 w-5"/> Simple Node.js Test Script (<code>test_formatter.js</code>):</h3>
+          <h3 className="text-lg font-medium flex items-center">
+            <Code className="mr-2 h-5 w-5" /> Simple Node.js Test Script (<code>test_formatter.js</code>):
+          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {nodeScript}
-            </pre>
+            <pre>{nodeScript}</pre>
           </div>
           <p className="mt-4">
-            This Node.js script uses <code>child_process.spawn</code> to run the CLI tool and pipes input/output. It reads expected results from files and performs string comparisons. For more complex diffing, you might use a dedicated library. Added error handling for <code>readFile</code> in <code>fileExists</code>.
+            This Node.js script uses <code>child_process.spawn</code> to run the CLI tool and pipes input/output. It
+            reads expected results from files and performs string comparisons. For more complex diffing, you might use a
+            dedicated library. Added error handling for <code>readFile</code> in <code>fileExists</code>.
           </p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Diff className="mr-2 h-6 w-6" /> Comparing Output
@@ -428,39 +447,52 @@ async function fileExists(filePath) {
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Exact String Match:</strong> For simple cases or compact output, a direct string comparison might suffice. However, be mindful of trailing newlines or whitespace differences.
+            <strong>Exact String Match:</strong> For simple cases or compact output, a direct string comparison might
+            suffice. However, be mindful of trailing newlines or whitespace differences.
           </li>
           <li>
-            <strong>Line-by-Line Diff:</strong> Tools like <code>diff</code> are excellent for pretty-printed JSON, highlighting exactly where the actual output deviates from the expected.
+            <strong>Line-by-Line Diff:</strong> Tools like <code>diff</code> are excellent for pretty-printed JSON,
+            highlighting exactly where the actual output deviates from the expected.
           </li>
           <li>
-            <strong>JSON Comparison Libraries:</strong> For more flexible comparisons (e.g., ignoring key order in pretty-printed output unless <code>--sort-keys</code> is used), you could parse both the actual and expected output JSON strings into data structures and compare the structures programmatically. Libraries exist for this purpose. However, for testing a *formatter* specifically, comparing the *formatted string* output is often the most direct way to verify the formatting rules themselves are applied correctly.
+            <strong>JSON Comparison Libraries:</strong> For more flexible comparisons (e.g., ignoring key order in
+            pretty-printed output unless <code>--sort-keys</code> is used), you could parse both the actual and expected
+            output JSON strings into data structures and compare the structures programmatically. Libraries exist for
+            this purpose. However, for testing a *formatter* specifically, comparing the *formatted string* output is
+            often the most direct way to verify the formatting rules themselves are applied correctly.
           </li>
         </ul>
         <p>
-          For the golden file approach, storing the expected output files in version control (like Git) is crucial. When the formatter&apos;s output changes (intentionally due to updates or bug fixes), you&apos;ll need to review the differences and update the expected files.
+          For the golden file approach, storing the expected output files in version control (like Git) is crucial. When
+          the formatter&apos;s output changes (intentionally due to updates or bug fixes), you&apos;ll need to review
+          the differences and update the expected files.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Terminal className="mr-2 h-6 w-6" /> Running Tests
         </h2>
-        <p>
-          Integrate your test script into your project&apos;s development workflow:
-        </p>
+        <p>Integrate your test script into your project&apos;s development workflow:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Run tests before committing changes.</li>
-          <li>Include tests in your Continuous Integration (CI) pipeline to automatically check every push or pull request.</li>
-          <li>Add a script command to your <code>package.json</code> (if using Node.js) for easy execution, e.g., <code>&quot;test&quot;: &quot;./tests/test_formatter.sh&quot;</code> or <code>&quot;test&quot;: &quot;node ./tests/test_formatter.js&quot;</code>.</li>
+          <li>
+            Include tests in your Continuous Integration (CI) pipeline to automatically check every push or pull
+            request.
+          </li>
+          <li>
+            Add a script command to your <code>package.json</code> (if using Node.js) for easy execution, e.g.,{" "}
+            <code>&quot;test&quot;: &quot;./tests/test_formatter.sh&quot;</code> or{" "}
+            <code>&quot;test&quot;: &quot;node ./tests/test_formatter.js&quot;</code>.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <ArrowRight className="mr-2 h-6 w-6" /> Next Steps
         </h2>
         <p>
-          Start by creating tests for the basic functionality, then gradually add edge cases, error tests, and option tests.
-          Maintaining the expected output files requires discipline, but it provides a robust safety net for your CLI tool&apos;s correctness.
-          Consider using a testing framework if your test suite grows very large or complex, but for many CLI tools, a simple script with golden files is sufficient and easy to understand.
+          Start by creating tests for the basic functionality, then gradually add edge cases, error tests, and option
+          tests. Maintaining the expected output files requires discipline, but it provides a robust safety net for your
+          CLI tool&apos;s correctness. Consider using a testing framework if your test suite grows very large or
+          complex, but for many CLI tools, a simple script with golden files is sufficient and easy to understand.
         </p>
       </div>
     </>

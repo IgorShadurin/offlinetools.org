@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Check, X, AlertTriangle, Code, FileJson, TestTube, FlaskConical } from 'lucide-react'; // Using available icons
+import { Check, X, AlertTriangle, Code, FileJson, TestTube, FlaskConical } from "lucide-react"; // Using available icons
 
 export const metadata: Metadata = {
   title: "Testing Schema Validation in JSON Formatters | Offline Tools",
@@ -21,8 +21,8 @@ export default function TestingSchemaValidationArticle() {
 
       <section className="space-y-6">
         <p>
-          In the world of data exchange, JSON is ubiquitous. Whether you're building APIs, configuring applications,
-          or storing data, chances are you're interacting with JSON. Often, applications need to take raw data and
+          In the world of data exchange, JSON is ubiquitous. Whether you're building APIs, configuring applications, or
+          storing data, chances are you're interacting with JSON. Often, applications need to take raw data and
           <strong>format</strong> it into a specific JSON structure before sending it out or saving it.
         </p>
         <p>
@@ -40,8 +40,8 @@ export default function TestingSchemaValidationArticle() {
           allowed values, and relationships within a JSON document.
         </p>
         <p>
-          <strong>JSON Schema</strong> is a popular standard for describing the structure of JSON data. It allows you
-          to specify constraints like:
+          <strong>JSON Schema</strong> is a popular standard for describing the structure of JSON data. It allows you to
+          specify constraints like:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>What properties an object should have.</li>
@@ -53,7 +53,9 @@ export default function TestingSchemaValidationArticle() {
           <li>Relationships between properties.</li>
         </ul>
         <p>
-          <strong>Schema validation</strong> is the process of checking whether a given JSON document conforms to its defined schema. If it doesn&apos;t, the validation process should report specific errors indicating what went wrong.
+          <strong>Schema validation</strong> is the process of checking whether a given JSON document conforms to its
+          defined schema. If it doesn&apos;t, the validation process should report specific errors indicating what went
+          wrong.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
@@ -61,39 +63,45 @@ export default function TestingSchemaValidationArticle() {
           Why Test Schema Validation?
         </h2>
         <p>
-          You might wonder, &quot;If my formatter builds the JSON according to the rules, why do I need to validate it?&quot;
-          Here&apos;s why it&apos;s critical:
+          You might wonder, &quot;If my formatter builds the JSON according to the rules, why do I need to validate
+          it?&quot; Here&apos;s why it&apos;s critical:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Preventing Bugs:</strong> Formatters can have bugs. A simple logic error might output a number instead of a string, miss a required field, or use the wrong key name.
+            <strong>Preventing Bugs:</strong> Formatters can have bugs. A simple logic error might output a number
+            instead of a string, miss a required field, or use the wrong key name.
           </li>
           <li>
-            <strong>Ensuring API Contracts:</strong> If your JSON is an API response, the schema is your contract with consumers. Broken contracts lead to broken integrations for others.
+            <strong>Ensuring API Contracts:</strong> If your JSON is an API response, the schema is your contract with
+            consumers. Broken contracts lead to broken integrations for others.
           </li>
           <li>
-            <strong>Maintaining Data Integrity:</strong> When storing or processing JSON internally, validating against a schema ensures consistency and prevents invalid data from corrupting downstream processes.
+            <strong>Maintaining Data Integrity:</strong> When storing or processing JSON internally, validating against
+            a schema ensures consistency and prevents invalid data from corrupting downstream processes.
           </li>
           <li>
-            <strong>Refactoring Confidence:</strong> When you refactor your formatter code, tests that validate the output schema give you confidence that you haven&apos;t inadvertently changed the output structure.
+            <strong>Refactoring Confidence:</strong> When you refactor your formatter code, tests that validate the
+            output schema give you confidence that you haven&apos;t inadvertently changed the output structure.
           </li>
           <li>
-            <strong>Clear Error Reporting:</strong> Validation libraries provide specific error messages, making debugging failed formatting attempts much easier.
+            <strong>Clear Error Reporting:</strong> Validation libraries provide specific error messages, making
+            debugging failed formatting attempts much easier.
           </li>
         </ul>
-        <p>
-          Testing this validation step acts as a safety net, catching issues early in the development cycle.
-        </p>
+        <p>Testing this validation step acts as a safety net, catching issues early in the development cycle.</p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
           <FileJson className="w-6 h-6 text-purple-500" />
           How to Validate and Test Validation
         </h2>
         <p>
-          Validation is typically done using a dedicated JSON Schema validation library. These libraries take a JSON Schema definition and a JSON data object and return a boolean indicating validity, plus a list of validation errors if it&apos;s invalid.
+          Validation is typically done using a dedicated JSON Schema validation library. These libraries take a JSON
+          Schema definition and a JSON data object and return a boolean indicating validity, plus a list of validation
+          errors if it&apos;s invalid.
         </p>
         <p>
-          Popular libraries exist for most programming languages (e.g., AJV for JavaScript/TypeScript, jsonschema for Python, etc.). The core idea is the same:
+          Popular libraries exist for most programming languages (e.g., AJV for JavaScript/TypeScript, jsonschema for
+          Python, etc.). The core idea is the same:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium mb-2">Conceptual Validation Process:</h3>
@@ -147,7 +155,7 @@ export default function TestingSchemaValidationArticle() {
 
         <h3 className="text-xl font-semibold mt-6 mb-2">Conceptual Validation Code (using &apos;ajv&apos;):</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             {`// Assuming 'ajv' is installed and imported
 // import Ajv from 'ajv';
 
@@ -213,15 +221,16 @@ const formattedData = formatUserData(inputData);
           <TestTube className="w-6 h-6 text-cyan-500" />
           Testing the Validation Process Itself
         </h2>
-        <p>
-          Your tests should cover two main areas:
-        </p>
+        <p>Your tests should cover two main areas:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>
-            <strong>Testing the Validator Setup:</strong> Ensure your schema is correctly defined and the validation library is configured to validate against it. This is often implicitly tested when you test your formatter, but dedicated tests for complex schemas can be useful.
+            <strong>Testing the Validator Setup:</strong> Ensure your schema is correctly defined and the validation
+            library is configured to validate against it. This is often implicitly tested when you test your formatter,
+            but dedicated tests for complex schemas can be useful.
           </li>
           <li>
-            <strong>Testing the Formatter&apos;s Output:</strong> This is the primary goal. You pass various inputs to your formatter and then validate its output against the schema.
+            <strong>Testing the Formatter&apos;s Output:</strong> This is the primary goal. You pass various inputs to
+            your formatter and then validate its output against the schema.
           </li>
         </ol>
 
@@ -231,11 +240,9 @@ const formattedData = formatUserData(inputData);
           <Check className="w-5 h-5 text-green-500" />
           1. Valid Data Tests
         </h4>
-        <p>
-          Test cases where the input data should result in a perfectly valid JSON output according to the schema.
-        </p>
+        <p>Test cases where the input data should result in a perfectly valid JSON output according to the schema.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             {`// Test case: Standard valid input
 test('formatter outputs valid JSON for standard data', () => {
   const input = { userId: "user-123", userName: "Alice", userAge: 30, userStatus: 'active', userTags: 'dev' };
@@ -259,18 +266,19 @@ test('formatter outputs valid JSON when optional fields are missing', () => {
         </div>
 
         <h4 className="text-lg font-semibold mt-4 mb-2 flex items-center gap-2">
-           <X className="w-5 h-5 text-red-500" />
+          <X className="w-5 h-5 text-red-500" />
           2. Invalid Data Tests
         </h4>
         <p>
-          These are crucial. Test cases where the input data should cause the formatter to produce output that
-          violates the schema. The test should assert that validation fails and, ideally, check for specific error details.
+          These are crucial. Test cases where the input data should cause the formatter to produce output that violates
+          the schema. The test should assert that validation fails and, ideally, check for specific error details.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Missing Required Fields:</strong> What happens if the input data lacks information needed for a required field in the output?
+            <strong>Missing Required Fields:</strong> What happens if the input data lacks information needed for a
+            required field in the output?
             <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-               <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+              <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
                 {`// Test case: Missing required field 'name' in output
 test('formatter outputs invalid JSON when input is missing user name', () => {
   const input = { userId: "user-789", userAge: 40, userStatus: 'active' }; // Missing userName
@@ -294,9 +302,10 @@ test('formatter outputs invalid JSON when input is missing user name', () => {
             </div>
           </li>
           <li>
-            <strong>Wrong Data Types:</strong> Test inputs that should cause the formatter to output a field with the wrong type.
+            <strong>Wrong Data Types:</strong> Test inputs that should cause the formatter to output a field with the
+            wrong type.
             <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-               <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+              <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
                 {`// Test case: Outputting wrong type for 'age'
 test('formatter outputs invalid JSON with wrong type for age', () => {
   const input = { userId: "user-101", userName: "Charlie", userAge: "thirty", userStatus: 'active' }; // Age is a string
@@ -321,7 +330,7 @@ test('formatter outputs invalid JSON with wrong type for age', () => {
           <li>
             <strong>Incorrect Format/Constraints:</strong> Test number ranges, string patterns, array item types, etc.
             <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-               <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+              <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
                 {`// Test case: Outputting age less than minimum (0)
 test('formatter outputs invalid JSON with age less than minimum', () => {
   const input = { userId: "user-112", userName: "Diana", userAge: -5, userStatus: 'active' }; // Age is negative
@@ -344,9 +353,11 @@ test('formatter outputs invalid JSON with age less than minimum', () => {
             </div>
           </li>
           <li>
-            <strong>Extra/Unexpected Properties:</strong> If your schema uses <code>&quot;additionalProperties&quot;: false</code>, test that extra fields in the output cause validation failure.
-             <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-               <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <strong>Extra/Unexpected Properties:</strong> If your schema uses{" "}
+            <code>&quot;additionalProperties&quot;: false</code>, test that extra fields in the output cause validation
+            failure.
+            <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+              <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
                 {`// Assume schema had "additionalProperties": false
 // Test case: Formatter adds an unexpected property
 test('formatter outputs invalid JSON with unexpected property', () => {
@@ -374,16 +385,16 @@ test('formatter outputs invalid JSON with unexpected property', () => {
         </ul>
 
         <h4 className="text-lg font-semibold mt-4 mb-2 flex items-center gap-2">
-           <AlertTriangle className="w-5 h-5 text-orange-500" />
+          <AlertTriangle className="w-5 h-5 text-orange-500" />
           3. Edge Cases
         </h4>
-        <p>
-          Consider inputs that might lead to edge cases in your formatter&apos;s output:
-        </p>
+        <p>Consider inputs that might lead to edge cases in your formatter&apos;s output:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Empty input data for the formatter.</li>
           <li>Inputs that should result in empty objects or arrays in the output.</li>
-          <li>Inputs that should result in <code>null</code> values (if allowed by schema).</li>
+          <li>
+            Inputs that should result in <code>null</code> values (if allowed by schema).
+          </li>
           <li>Arrays with empty items or wrong item types (if schema specifies item type).</li>
         </ul>
 
@@ -392,11 +403,11 @@ test('formatter outputs invalid JSON with unexpected property', () => {
           Structuring Your Tests
         </h2>
         <p>
-          Organize your tests logically. A common pattern is to group tests by the formatter function
-          or the schema they validate against.
+          Organize your tests logically. A common pattern is to group tests by the formatter function or the schema they
+          validate against.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             {`// Example test file structure (using Jest or similar)
 // import { formatUserData } from './userFormatter'; // Your formatter
 // import { userSchema } from './userSchema';         // Your schema
@@ -465,19 +476,22 @@ describe('User Data Formatter Output Validation', () => {
           </pre>
         </div>
         <p>
-          Within the invalid output tests, specifically checking the structure of the validation errors
-          (e.g., using <code>expect.arrayContaining</code> and <code>expect.objectContaining</code>
-          with properties like <code>dataPath</code>, <code>keyword</code>, <code>message</code>)
-          is a robust way to ensure the validation is failing for the &lt;em&gt;correct&lt;/em&gt; reason.
+          Within the invalid output tests, specifically checking the structure of the validation errors (e.g., using{" "}
+          <code>expect.arrayContaining</code> and <code>expect.objectContaining</code>
+          with properties like <code>dataPath</code>, <code>keyword</code>, <code>message</code>) is a robust way to
+          ensure the validation is failing for the &lt;em&gt;correct&lt;/em&gt; reason.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
           <Check className="w-6 h-6 text-green-500" />
           Conclusion
         </h2>
         <p>
-          Testing schema validation for your JSON formatter&apos;s output is a fundamental practice for building robust and reliable systems that handle structured data. By using a schema definition (like JSON Schema) and a validation library, and by writing comprehensive tests covering valid, invalid, and edge cases, you create a strong safety net. This practice minimizes bugs, ensures data integrity, upholds API contracts, and provides confidence during refactoring, ultimately leading to more stable and maintainable code.
+          Testing schema validation for your JSON formatter&apos;s output is a fundamental practice for building robust
+          and reliable systems that handle structured data. By using a schema definition (like JSON Schema) and a
+          validation library, and by writing comprehensive tests covering valid, invalid, and edge cases, you create a
+          strong safety net. This practice minimizes bugs, ensures data integrity, upholds API contracts, and provides
+          confidence during refactoring, ultimately leading to more stable and maintainable code.
         </p>
       </section>
     </div>

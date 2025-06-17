@@ -9,24 +9,18 @@ export const metadata: Metadata = {
 export default function KeyboardShortcutConventionsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Keyboard Shortcut Conventions in JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Keyboard Shortcut Conventions in JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
-          Efficiently navigating and manipulating JSON data is crucial for developers, data analysts, and anyone
-          working with APIs or configuration files. While mouse interactions are intuitive, mastering keyboard
-          shortcuts in your favorite JSON formatter can significantly speed up your workflow. This article explores
-          common keyboard shortcut conventions you&apos;ll likely find across various JSON tools.
+          Efficiently navigating and manipulating JSON data is crucial for developers, data analysts, and anyone working
+          with APIs or configuration files. While mouse interactions are intuitive, mastering keyboard shortcuts in your
+          favorite JSON formatter can significantly speed up your workflow. This article explores common keyboard
+          shortcut conventions you&apos;ll likely find across various JSON tools.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Why Learn JSON Formatter Shortcuts?
-        </h2>
-        <p>
-          Keyboard shortcuts offer several benefits when working with JSON:
-        </p>
+        <h2 className="text-2xl font-semibold mt-8">Why Learn JSON Formatter Shortcuts?</h2>
+        <p>Keyboard shortcuts offer several benefits when working with JSON:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Speed:</span> Perform actions much faster than reaching for the mouse.
@@ -44,12 +38,10 @@ export default function KeyboardShortcutConventionsArticle() {
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Common Shortcut Categories and Examples
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Common Shortcut Categories and Examples</h2>
         <p>
-          JSON formatters often adopt standard text editor shortcut conventions, while also including some specific
-          to data manipulation. Here are common categories:
+          JSON formatters often adopt standard text editor shortcut conventions, while also including some specific to
+          data manipulation. Here are common categories:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Basic Editing & File Operations</h3>
@@ -70,9 +62,7 @@ export default function KeyboardShortcutConventionsArticle() {
             </thead>
             <tbody>
               <tr className="bg-white dark:bg-gray-900">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Save
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Save</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + S</code>
                 </td>
@@ -81,9 +71,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-gray-50 dark:bg-gray-850">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Copy
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Copy</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + C</code>
                 </td>
@@ -92,9 +80,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-white dark:bg-gray-900">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Paste
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Paste</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + V</code>
                 </td>
@@ -103,9 +89,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-gray-50 dark:bg-gray-850">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Cut
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Cut</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + X</code>
                 </td>
@@ -114,9 +98,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-white dark:bg-gray-900">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Undo
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Undo</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + Z</code>
                 </td>
@@ -125,9 +107,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-gray-50 dark:bg-gray-850">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Redo
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Redo</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + Y</code> or <code>Ctrl + Shift + Z</code>
                 </td>
@@ -142,8 +122,8 @@ export default function KeyboardShortcutConventionsArticle() {
         <h3 className="text-xl font-semibold mt-6">2. Formatting & Validation</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <p className="mb-3">
-            This is where JSON formatters shine. A common shortcut is for auto-formatting or &quot;beautifying&quot;
-            the JSON.
+            This is where JSON formatters shine. A common shortcut is for auto-formatting or &quot;beautifying&quot; the
+            JSON.
           </p>
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead>
@@ -165,18 +145,16 @@ export default function KeyboardShortcutConventionsArticle() {
                   Format/Beautify JSON
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Often <code>Ctrl + Alt + L</code>, <code>Shift + Alt + F</code>, or
-                  specific to the tool (e.g., <code>Ctrl + B</code>)
+                  Often <code>Ctrl + Alt + L</code>, <code>Shift + Alt + F</code>, or specific to the tool (e.g.,{" "}
+                  <code>Ctrl + B</code>)
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Often <code>Cmd + Alt + L</code>, <code>Shift + Option + F</code>, or
-                  specific to the tool (e.g., <code>Cmd + B</code>)
+                  Often <code>Cmd + Alt + L</code>, <code>Shift + Option + F</code>, or specific to the tool (e.g.,{" "}
+                  <code>Cmd + B</code>)
                 </td>
               </tr>
               <tr className="bg-gray-50 dark:bg-gray-850">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Validate JSON
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Validate JSON</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   Less common as a single shortcut, often part of format or triggered on save/input.
                 </td>
@@ -193,9 +171,7 @@ export default function KeyboardShortcutConventionsArticle() {
 
         <h3 className="text-xl font-semibold mt-6">3. Navigation & Selection</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <p className="mb-3">
-            Moving around large JSON documents efficiently.
-          </p>
+          <p className="mb-3">Moving around large JSON documents efficiently.</p>
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead>
               <tr>
@@ -212,9 +188,7 @@ export default function KeyboardShortcutConventionsArticle() {
             </thead>
             <tbody>
               <tr className="bg-white dark:bg-gray-900">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Find
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Find</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + F</code>
                 </td>
@@ -223,9 +197,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-gray-50 dark:bg-gray-850">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Find Next
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Find Next</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Enter</code> (after Ctrl+F), <code>F3</code>
                 </td>
@@ -234,9 +206,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-white dark:bg-gray-900">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Find Previous
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Find Previous</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Shift + Enter</code> (after Ctrl+F), <code>Shift + F3</code>
                 </td>
@@ -245,9 +215,7 @@ export default function KeyboardShortcutConventionsArticle() {
                 </td>
               </tr>
               <tr className="bg-gray-50 dark:bg-gray-850">
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                  Replace
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">Replace</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <code>Ctrl + H</code>
                 </td>
@@ -261,9 +229,7 @@ export default function KeyboardShortcutConventionsArticle() {
 
         <h3 className="text-xl font-semibold mt-6">4. Structuring & Folding</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <p className="mb-3">
-            Collapsing/expanding JSON nodes to manage complexity.
-          </p>
+          <p className="mb-3">Collapsing/expanding JSON nodes to manage complexity.</p>
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead>
               <tr>
@@ -318,9 +284,7 @@ export default function KeyboardShortcutConventionsArticle() {
 
         <h3 className="text-xl font-semibold mt-6">5. View & Display Options</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <p className="mb-3">
-            Adjusting how the JSON is displayed.
-          </p>
+          <p className="mb-3">Adjusting how the JSON is displayed.</p>
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead>
               <tr>
@@ -353,39 +317,34 @@ export default function KeyboardShortcutConventionsArticle() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Learning and Customizing Shortcuts</h2>
-        <p>
-          While many shortcuts are standard, some are tool-specific. Here&apos;s how to make the most of them:
-        </p>
+        <p>While many shortcuts are standard, some are tool-specific. Here&apos;s how to make the most of them:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Check Documentation:</span> The best source for accurate shortcuts is
-            the documentation of your specific JSON formatter.
+            <span className="font-medium">Check Documentation:</span> The best source for accurate shortcuts is the
+            documentation of your specific JSON formatter.
           </li>
           <li>
-            <span className="font-medium">Explore Menus:</span> Many applications list shortcuts next to the
-            menu items.
+            <span className="font-medium">Explore Menus:</span> Many applications list shortcuts next to the menu items.
           </li>
           <li>
-            <span className="font-medium">Practice:</span> Start by integrating one or two new shortcuts into your
-            daily routine and gradually add more.
+            <span className="font-medium">Practice:</span> Start by integrating one or two new shortcuts into your daily
+            routine and gradually add more.
           </li>
           <li>
-            <span className="font-medium">Customization:</span> Some advanced formatters or editors with JSON
-            plugins allow you to customize keybindings to match your preferences.
+            <span className="font-medium">Customization:</span> Some advanced formatters or editors with JSON plugins
+            allow you to customize keybindings to match your preferences.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Example Workflow Using Shortcuts</h2>
-        <p>
-          Imagine you receive a large, unformatted JSON string. Here&apos;s how you might use shortcuts:
-        </p>
+        <p>Imagine you receive a large, unformatted JSON string. Here&apos;s how you might use shortcuts:</p>
         <ol className="list-decimal pl-6 space-y-3 my-4">
           <li className="font-medium">
             Paste the JSON: Use <code>Ctrl + V</code> (Win/Linux) or <code>Cmd + V</code> (macOS).
           </li>
           <li className="font-medium">
-            Format the JSON: Use the formatter&apos;s specific shortcut (e.g., <code>Shift + Alt + F</code>). The
-            JSON is now readable.
+            Format the JSON: Use the formatter&apos;s specific shortcut (e.g., <code>Shift + Alt + F</code>). The JSON
+            is now readable.
           </li>
           <li className="font-medium">
             Find a specific key: Use <code>Ctrl + F</code> (Win/Linux) or <code>Cmd + F</code> (macOS), type the key
@@ -403,15 +362,16 @@ export default function KeyboardShortcutConventionsArticle() {
             need to see currently.
           </li>
           <li className="font-medium">
-            Copy a section: Select the text using arrow keys and Shift, then use <code>Ctrl + C</code> / <code>Cmd + C</code>.
+            Copy a section: Select the text using arrow keys and Shift, then use <code>Ctrl + C</code> /{" "}
+            <code>Cmd + C</code>.
           </li>
         </ol>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Keyboard shortcut conventions in JSON formatters are designed to make your data manipulation tasks faster
-          and more fluid. While basic editing shortcuts are nearly universal, formatting and structure-specific ones
-          can vary. Investing a little time to learn the shortcuts in your preferred tool will pay dividends in
+          Keyboard shortcut conventions in JSON formatters are designed to make your data manipulation tasks faster and
+          more fluid. While basic editing shortcuts are nearly universal, formatting and structure-specific ones can
+          vary. Investing a little time to learn the shortcuts in your preferred tool will pay dividends in
           productivity, especially when dealing with complex or large JSON documents. Start with the most common ones
           like formatting and find/replace, and gradually build your muscle memory.
         </p>

@@ -9,22 +9,18 @@ export const metadata: Metadata = {
 export default function LineNumbersGutterArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Line Numbers and Gutter Displays in JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Line Numbers and Gutter Displays in JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
           When working with JSON data, especially complex or large structures, readability and navigability are crucial.
-          Most modern JSON formatters and editors include features like line numbers and a "gutter" area. While seemingly
-          minor, these elements play a significant role in debugging, understanding, and efficiently managing your JSON.
-          Let&apos;s dive into why they are essential tools in any JSON workflow.
+          Most modern JSON formatters and editors include features like line numbers and a "gutter" area. While
+          seemingly minor, these elements play a significant role in debugging, understanding, and efficiently managing
+          your JSON. Let&apos;s dive into why they are essential tools in any JSON workflow.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">What are Line Numbers and the Gutter?</h2>
-        <p>
-          In the context of a text editor or formatter, these features provide structural and navigational context:
-        </p>
+        <p>In the context of a text editor or formatter, these features provide structural and navigational context:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Line Numbers:</h3>
@@ -143,22 +139,27 @@ Expected comma or closing bracket`}
               !
             </div>
           </div>
-          <p className="mt-2 text-sm">
-            In a JSON formatter with line numbers and a gutter, you would see:
-          </p>
+          <p className="mt-2 text-sm">In a JSON formatter with line numbers and a gutter, you would see:</p>
           <ul className="list-disc pl-6 space-y-1 mt-2 text-sm">
             <li>Line numbers 1 through 8 displayed on the left.</li>
             <li>A red error indicator in the gutter next to line 6, where the missing comma is located or detected.</li>
-            <li>An error message mentioning a syntax error, often pointing to line 6 or the line after it (line 7) depending on the parser&apos;s specific behavior.</li>
+            <li>
+              An error message mentioning a syntax error, often pointing to line 6 or the line after it (line 7)
+              depending on the parser&apos;s specific behavior.
+            </li>
           </ul>
           <p className="mt-2">
-            The visual cue in the gutter and the referenced line number allow you to instantly identify the problem line, making debugging far more efficient than just reading a general error message.
+            The visual cue in the gutter and the referenced line number allow you to instantly identify the problem
+            line, making debugging far more efficient than just reading a general error message.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Utilizing Gutter for Folding</h2>
         <p>
-          One of the most useful features in the gutter for large JSON files is code folding. Folding allows you to collapse complex objects or arrays into a single line, showing only the first few characters (like <code>{`{...}`}</code> or <code>{`[...]`}</code>). This dramatically reduces the vertical space occupied by data, allowing you to focus on the overall structure and navigate between top-level elements easily.
+          One of the most useful features in the gutter for large JSON files is code folding. Folding allows you to
+          collapse complex objects or arrays into a single line, showing only the first few characters (like{" "}
+          <code>{`{...}`}</code> or <code>{`[...]`}</code>). This dramatically reduces the vertical space occupied by
+          data, allowing you to focus on the overall structure and navigate between top-level elements easily.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -177,18 +178,18 @@ Expected comma or closing bracket`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            Folding icons (often -/+ signs or arrows) appear in the gutter next to the lines containing the opening bracket/brace of a foldable block. Clicking them collapses or expands the content.
+            Folding icons (often -/+ signs or arrows) appear in the gutter next to the lines containing the opening
+            bracket/brace of a foldable block. Clicking them collapses or expands the content.
           </p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           Line numbers and gutter displays are fundamental features in quality JSON formatters and editors. They provide
           essential context, improve readability, facilitate navigation, and are indispensable for quickly locating and
-          fixing syntax errors. Don&apos;t underestimate their value; they transform the process of working with JSON from
-          a potentially frustrating search for errors into a streamlined and efficient workflow. Always prefer using
-          tools that offer these basic but powerful features.
+          fixing syntax errors. Don&apos;t underestimate their value; they transform the process of working with JSON
+          from a potentially frustrating search for errors into a streamlined and efficient workflow. Always prefer
+          using tools that offer these basic but powerful features.
         </p>
       </div>
     </>

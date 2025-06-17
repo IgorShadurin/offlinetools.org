@@ -8,14 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { 
-  encryptText, 
-  decryptText, 
-  encryptFile, 
-  decryptFile,
-  formatEncryptedOutput,
-  parseEncryptedInput 
-} from "shared";
+import { encryptText, decryptText, encryptFile, decryptFile, formatEncryptedOutput, parseEncryptedInput } from "shared";
 import { useState, useRef } from "react";
 import { AlertCircle, Check, Copy, Eye, EyeOff, Upload, Download, Lock } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -82,7 +75,7 @@ export default function DataEncryptor() {
           const decrypted = await decryptText(parsed.encryptedData, {
             password,
             salt: parsed.salt,
-            iv: parsed.iv
+            iv: parsed.iv,
           });
           setOutput(decrypted);
         } else {
@@ -90,7 +83,7 @@ export default function DataEncryptor() {
           const decryptedBlob = await decryptFile(parsed.encryptedData, {
             password,
             salt: parsed.salt,
-            iv: parsed.iv
+            iv: parsed.iv,
           });
           setDecryptedFile(decryptedBlob);
           setDecryptedFileName(selectedFile?.name || "decrypted-file");
@@ -112,10 +105,10 @@ export default function DataEncryptor() {
 
   const handleSaveOutput = () => {
     if (!output) return;
-    
-    const blob = new Blob([output], { type: 'text/plain' });
+
+    const blob = new Blob([output], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = mode === "encrypt" ? "encrypted-data.txt" : "decrypted-data.txt";
     document.body.appendChild(a);
@@ -141,7 +134,7 @@ export default function DataEncryptor() {
     if (file) {
       setSelectedFile(file);
       setError(null);
-      
+
       // If in decrypt mode, read the file content
       if (mode === "decrypt") {
         const reader = new FileReader();
@@ -158,7 +151,7 @@ export default function DataEncryptor() {
     if (!decryptedFile) return;
 
     const url = URL.createObjectURL(decryptedFile);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = decryptedFileName;
     document.body.appendChild(a);
@@ -188,9 +181,9 @@ export default function DataEncryptor() {
           </Tabs>
 
           <div className="flex items-center space-x-2">
-            <Switch 
-              id="input-type" 
-              checked={inputType === "file"} 
+            <Switch
+              id="input-type"
+              checked={inputType === "file"}
               onCheckedChange={(checked) => {
                 setInputType(checked ? "file" : "text");
                 setTextInput("");
@@ -199,16 +192,16 @@ export default function DataEncryptor() {
                 if (fileInputRef.current) {
                   fileInputRef.current.value = "";
                 }
-              }} 
+              }}
             />
-            <Label htmlFor="input-type">
-              {inputType === "text" ? "Switch to file mode" : "Switch to text mode"}
-            </Label>
+            <Label htmlFor="input-type">{inputType === "text" ? "Switch to file mode" : "Switch to text mode"}</Label>
           </div>
 
           <div className="space-y-4">
             <div>
-              <Label htmlFor="password" className="mb-2 block">Password</Label>
+              <Label htmlFor="password" className="mb-2 block">
+                Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -225,11 +218,7 @@ export default function DataEncryptor() {
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={togglePasswordVisibility}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
@@ -238,17 +227,18 @@ export default function DataEncryptor() {
           <div className="flex flex-wrap md:flex-nowrap gap-8">
             <div className="w-full md:w-1/2 flex items-center justify-between">
               <Label htmlFor="input-area">
-                {mode === "encrypt" 
-                  ? (inputType === "text" ? "Text to encrypt" : "File to encrypt")
-                  : (inputType === "text" ? "Encrypted data to decrypt" : "Encrypted file to decrypt")
-                }
+                {mode === "encrypt"
+                  ? inputType === "text"
+                    ? "Text to encrypt"
+                    : "File to encrypt"
+                  : inputType === "text"
+                    ? "Encrypted data to decrypt"
+                    : "Encrypted file to decrypt"}
               </Label>
             </div>
 
             <div className="w-full md:w-1/2 flex items-center justify-between h-9">
-              <Label htmlFor="output-area">
-                {mode === "encrypt" ? "Encrypted output" : "Decrypted output"}
-              </Label>
+              <Label htmlFor="output-area">{mode === "encrypt" ? "Encrypted output" : "Decrypted output"}</Label>
               <div className="min-w-[85px] h-8 flex justify-end gap-2">
                 {output && (
                   <>
@@ -279,8 +269,8 @@ export default function DataEncryptor() {
                   id="input-area"
                   className="min-h-[300px] font-mono w-full"
                   placeholder={
-                    mode === "encrypt" 
-                      ? "Enter text to encrypt..." 
+                    mode === "encrypt"
+                      ? "Enter text to encrypt..."
                       : "Enter encrypted data (format: salt:iv:encryptedData)..."
                   }
                   value={textInput}
@@ -302,35 +292,29 @@ export default function DataEncryptor() {
                         <p className="text-sm text-gray-600">
                           {selectedFile ? selectedFile.name : "Click to select a file to encrypt"}
                         </p>
-                        <p className="text-xs text-gray-400 mt-2">
-                          Any file type supported
-                        </p>
+                        <p className="text-xs text-gray-400 mt-2">Any file type supported</p>
                       </label>
                     </div>
                   ) : (
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center min-h-[300px] flex flex-col justify-center">
-                                             <input
-                         ref={fileInputRef}
-                         type="file"
-                         onChange={handleFileSelect}
-                         className="hidden"
-                         id="file-input-decrypt"
-                       />
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        id="file-input-decrypt"
+                      />
                       <label htmlFor="file-input-decrypt" className="cursor-pointer">
                         <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                         <p className="text-sm text-gray-600">
                           {selectedFile ? selectedFile.name : "Click to select an encrypted file"}
                         </p>
-                                                 <p className="text-xs text-gray-400 mt-2">
-                           Any file type containing encrypted data
-                         </p>
+                        <p className="text-xs text-gray-400 mt-2">Any file type containing encrypted data</p>
                       </label>
                       {selectedFile && textInput && (
                         <div className="mt-4 p-3 bg-gray-50 rounded border max-h-32 overflow-auto">
                           <p className="text-xs text-gray-500 mb-1">File content preview:</p>
-                          <p className="text-xs font-mono text-gray-700 break-all">
-                            {textInput.substring(0, 100)}...
-                          </p>
+                          <p className="text-xs font-mono text-gray-700 break-all">{textInput.substring(0, 100)}...</p>
                         </div>
                       )}
                     </div>
@@ -351,9 +335,7 @@ export default function DataEncryptor() {
                   id="output-area"
                   className="min-h-[300px] font-mono w-full"
                   placeholder={
-                    mode === "encrypt" 
-                      ? "Encrypted data will appear here..." 
-                      : "Decrypted content will appear here..."
+                    mode === "encrypt" ? "Encrypted data will appear here..." : "Decrypted content will appear here..."
                   }
                   value={output}
                   readOnly
@@ -364,20 +346,14 @@ export default function DataEncryptor() {
 
           <div className="flex flex-wrap md:flex-nowrap gap-8">
             <div className="w-full md:w-1/2">
-              <Button 
-                onClick={handleProcess} 
-                className="w-full" 
-                disabled={isProcessing}
-              >
+              <Button onClick={handleProcess} className="w-full" disabled={isProcessing}>
                 {isProcessing ? (
                   <>
                     <Lock className="mr-2 h-4 w-4 animate-spin" />
                     {mode === "encrypt" ? "Encrypting..." : "Decrypting..."}
                   </>
                 ) : (
-                  <>
-                    {mode === "encrypt" ? "Encrypt Data" : "Decrypt Data"}
-                  </>
+                  <>{mode === "encrypt" ? "Encrypt Data" : "Decrypt Data"}</>
                 )}
               </Button>
             </div>
@@ -389,8 +365,8 @@ export default function DataEncryptor() {
               <Lock className="h-4 w-4" />
               <AlertTitle>Security Notice</AlertTitle>
               <AlertDescription>
-                Your data is encrypted using AES-256-CBC with PBKDF2 key derivation (100,000 iterations). 
-                Keep your password safe - it cannot be recovered if lost. All encryption happens locally in your browser.
+                Your data is encrypted using AES-256-CBC with PBKDF2 key derivation (100,000 iterations). Keep your
+                password safe - it cannot be recovered if lost. All encryption happens locally in your browser.
               </AlertDescription>
             </Alert>
           )}

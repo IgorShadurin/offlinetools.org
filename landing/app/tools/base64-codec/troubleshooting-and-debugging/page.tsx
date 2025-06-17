@@ -49,7 +49,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Debugging Large File Base64 Encoding: Memory and Performance Issues",
-    description: "Techniques for identifying and resolving performance bottlenecks when encoding large files to Base64.",
+    description:
+      "Techniques for identifying and resolving performance bottlenecks when encoding large files to Base64.",
     slug: "debugging-large-file-base64-encoding-memory-and-performance-issues",
   },
   {
@@ -116,7 +117,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Developing a Base64 Debug Checklist",
     description: "Creating a systematic approach for diagnosing and resolving Base64 encoding problems efficiently.",
     slug: "developing-a-base64-debug-checklist",
-  }
+  },
 ];
 
 /**
@@ -167,7 +168,9 @@ export default function Base64CodecTroubleshootingPage() {
               <Bug className="text-rose-600" size={24} />
               Resolving Base64 Encoding Issues
             </CardTitle>
-            <CardDescription>Advanced techniques for diagnosing and fixing Base64 encoding and decoding problems</CardDescription>
+            <CardDescription>
+              Advanced techniques for diagnosing and fixing Base64 encoding and decoding problems
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +182,8 @@ export default function Base64CodecTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Common Error Patterns</h3>
                     <p className="text-sm text-muted-foreground">
-                      Identifying and fixing frequent issues like padding problems, invalid characters, and encoding corruption.
+                      Identifying and fixing frequent issues like padding problems, invalid characters, and encoding
+                      corruption.
                     </p>
                   </div>
                 </div>
@@ -191,7 +195,8 @@ export default function Base64CodecTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Diagnostic Techniques</h3>
                     <p className="text-sm text-muted-foreground">
-                      Systematic approaches and debugging tools for tracking down the root causes of Base64 processing failures.
+                      Systematic approaches and debugging tools for tracking down the root causes of Base64 processing
+                      failures.
                     </p>
                   </div>
                 </div>
@@ -205,7 +210,8 @@ export default function Base64CodecTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Problem Resolution</h3>
                     <p className="text-sm text-muted-foreground">
-                      Practical solutions for Base64 issues across platforms, from browsers and mobile apps to server environments.
+                      Practical solutions for Base64 issues across platforms, from browsers and mobile apps to server
+                      environments.
                     </p>
                   </div>
                 </div>
@@ -217,7 +223,8 @@ export default function Base64CodecTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Prevention Strategies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Input validation, automated testing, and error logging techniques to prevent Base64 encoding problems.
+                      Input validation, automated testing, and error logging techniques to prevent Base64 encoding
+                      problems.
                     </p>
                   </div>
                 </div>
@@ -230,7 +237,10 @@ export default function Base64CodecTroubleshootingPage() {
                 <span>Debugging Tip:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                When troubleshooting Base64 decoding failures, first check that the input is correctly padded with '=' characters to make the length a multiple of 4, then verify that the string only contains valid Base64 characters (A-Z, a-z, 0-9, +, /, and =). If using URL-safe Base64, ensure that - and _ are properly handled as replacements for + and /.
+                When troubleshooting Base64 decoding failures, first check that the input is correctly padded with '='
+                characters to make the length a multiple of 4, then verify that the string only contains valid Base64
+                characters (A-Z, a-z, 0-9, +, /, and =). If using URL-safe Base64, ensure that - and _ are properly
+                handled as replacements for + and /.
               </p>
             </div>
           </CardContent>
@@ -240,4 +250,4 @@ export default function Base64CodecTroubleshootingPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

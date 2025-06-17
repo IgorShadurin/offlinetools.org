@@ -1,15 +1,5 @@
 import type { Metadata } from "next";
-import {
-  CreditCard,
-  CheckCircle,
-  XCircle,
-  Lock,
-  Code,
-  Info,
-  ArrowRight,
-  Layers,
-  FileJson,
-} from "lucide-react";
+import { CreditCard, CheckCircle, XCircle, Lock, Code, Info, ArrowRight, Layers, FileJson } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Payment Gateway Integration Using JSON Formatters | Developer Guide",
@@ -21,8 +11,7 @@ export default function PaymentGatewayJsonPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6 flex items-center">
-        <CreditCard className="mr-3 h-8 w-8 text-blue-600" /> Payment Gateway
-        Integration with JSON Formatters
+        <CreditCard className="mr-3 h-8 w-8 text-blue-600" /> Payment Gateway Integration with JSON Formatters
       </h1>
 
       <div className="space-y-8">
@@ -31,12 +20,12 @@ export default function PaymentGatewayJsonPage() {
             <Info className="mr-2 h-6 w-6 text-blue-500" /> Introduction
           </h2>
           <p className="text-lg leading-relaxed">
-            Integrating a payment gateway is a crucial step for any e-commerce or online service platform. It
-            enables businesses to securely accept payments from customers. While various communication
-            protocols and data formats exist, JSON (JavaScript Object Notation) has become the de facto
-            standard for modern web APIs, including those offered by payment gateways. Its lightweight
-            nature, human-readability, and ease of parsing across different programming languages make it
-            an ideal choice for structuring the data exchanged between your application and the gateway.
+            Integrating a payment gateway is a crucial step for any e-commerce or online service platform. It enables
+            businesses to securely accept payments from customers. While various communication protocols and data
+            formats exist, JSON (JavaScript Object Notation) has become the de facto standard for modern web APIs,
+            including those offered by payment gateways. Its lightweight nature, human-readability, and ease of parsing
+            across different programming languages make it an ideal choice for structuring the data exchanged between
+            your application and the gateway.
           </p>
         </section>
 
@@ -49,19 +38,24 @@ export default function PaymentGatewayJsonPage() {
           </p>
           <ul className="list-disc pl-6 space-y-3 mt-4 text-lg leading-relaxed">
             <li>
-              <strong>Simplicity and Readability:</strong> JSON&apos;s key-value pair structure is intuitive and easy for developers to understand and debug.
+              <strong>Simplicity and Readability:</strong> JSON&apos;s key-value pair structure is intuitive and easy
+              for developers to understand and debug.
             </li>
             <li>
-              <strong>Language Agnostic:</strong> Most programming languages have built-in support or readily available libraries for parsing and generating JSON.
+              <strong>Language Agnostic:</strong> Most programming languages have built-in support or readily available
+              libraries for parsing and generating JSON.
             </li>
             <li>
-              <strong>Lightweight:</strong> Compared to XML, JSON has less overhead, resulting in smaller data payloads and faster communication.
+              <strong>Lightweight:</strong> Compared to XML, JSON has less overhead, resulting in smaller data payloads
+              and faster communication.
             </li>
             <li>
-              <strong>Flexibility:</strong> It easily represents complex data structures, including nested objects and arrays, necessary for various payment details and responses.
+              <strong>Flexibility:</strong> It easily represents complex data structures, including nested objects and
+              arrays, necessary for various payment details and responses.
             </li>
             <li>
-              <strong>Widespread Adoption:</strong> It&apos;s the standard for RESTful APIs, which most modern payment gateways provide.
+              <strong>Widespread Adoption:</strong> It&apos;s the standard for RESTful APIs, which most modern payment
+              gateways provide.
             </li>
           </ul>
         </section>
@@ -71,18 +65,30 @@ export default function PaymentGatewayJsonPage() {
             <Code className="mr-2 h-6 w-6 text-blue-500" /> JSON Formatters in Action
           </h2>
           <p className="text-lg leading-relaxed">
-            In JavaScript/TypeScript environments like Next.js, the primary tools for working with JSON are the built-in `JSON` object&apos;s methods:
+            In JavaScript/TypeScript environments like Next.js, the primary tools for working with JSON are the built-in
+            `JSON` object&apos;s methods:
           </p>
           <ul className="list-disc pl-6 space-y-3 mt-4 text-lg leading-relaxed">
             <li>
-              <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.stringify()</code>: Converts a JavaScript object or value into a JSON string. This is essential when preparing data to send to the payment gateway API.
+              <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">
+                JSON.stringify()
+              </code>
+              : Converts a JavaScript object or value into a JSON string. This is essential when preparing data to send
+              to the payment gateway API.
             </li>
             <li>
-              <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>: Parses a JSON string, converting it back into a JavaScript object or value. This is used when processing the response received from the payment gateway.
+              <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>:
+              Parses a JSON string, converting it back into a JavaScript object or value. This is used when processing
+              the response received from the payment gateway.
             </li>
           </ul>
           <p className="text-lg leading-relaxed mt-4">
-            As this page is focused on the Next.js backend (no <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">&quot;use client&quot;</code>), these operations will typically occur within API routes or server-side functions where you handle the communication with the external gateway API.
+            As this page is focused on the Next.js backend (no{" "}
+            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">
+              &quot;use client&quot;
+            </code>
+            ), these operations will typically occur within API routes or server-side functions where you handle the
+            communication with the external gateway API.
           </p>
         </section>
 
@@ -91,7 +97,8 @@ export default function PaymentGatewayJsonPage() {
             <FileJson className="mr-2 h-6 w-6 text-blue-500" /> Common JSON Structures (Examples)
           </h2>
           <p className="text-lg leading-relaxed">
-            While specific fields vary between gateways, the overall structure for requests and responses is often similar.
+            While specific fields vary between gateways, the overall structure for requests and responses is often
+            similar.
           </p>
 
           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center">
@@ -101,7 +108,9 @@ export default function PaymentGatewayJsonPage() {
             You assemble a JavaScript object with the required payment details and use{" "}
             <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.stringify()</code>{" "}
             to send it in the request body (usually with the{" "}
-            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">Content-Type: application/json</code>{" "}
+            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">
+              Content-Type: application/json
+            </code>{" "}
             header).
           </p>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm mt-4 overflow-x-auto">
@@ -151,8 +160,8 @@ const jsonPayload = JSON.stringify(paymentRequestData);
           </h3>
           <p className="text-lg leading-relaxed">
             Upon receiving the JSON response from the gateway, you use{" "}
-            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>{" "}
-            to convert the string back into a usable JavaScript object.
+            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code> to
+            convert the string back into a usable JavaScript object.
           </p>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm mt-4 overflow-x-auto">
             <pre>
@@ -200,7 +209,9 @@ try {
             <XCircle className="mr-2 h-6 w-6 text-red-500" /> Handling Errors with JSON
           </h2>
           <p className="text-lg leading-relaxed">
-            Payment gateways typically communicate errors using specific HTTP status codes (e.g., 400 Bad Request, 401 Unauthorized, 402 Payment Required, 404 Not Found, 500 Internal Server Error) and provide detailed error information in the JSON response body.
+            Payment gateways typically communicate errors using specific HTTP status codes (e.g., 400 Bad Request, 401
+            Unauthorized, 402 Payment Required, 404 Not Found, 500 Internal Server Error) and provide detailed error
+            information in the JSON response body.
           </p>
           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center">
             <ArrowRight className="mr-2 h-5 w-5 text-blue-400" /> Error Response Example
@@ -236,7 +247,8 @@ try {
             </pre>
           </div>
           <p className="text-lg leading-relaxed mt-4">
-            Always check the HTTP status code first. If it&apos;s not a 2xx success code, parse the body (which is often still JSON) to get specific error details using{" "}
+            Always check the HTTP status code first. If it&apos;s not a 2xx success code, parse the body (which is often
+            still JSON) to get specific error details using{" "}
             <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>.
           </p>
         </section>
@@ -246,26 +258,36 @@ try {
             <Lock className="mr-2 h-6 w-6 text-blue-500" /> Security Considerations
           </h2>
           <p className="text-lg leading-relaxed">
-            While JSON is excellent for data structure, it doesn&apos;t inherently provide security. Security in payment gateway integration relies on several layers:
+            While JSON is excellent for data structure, it doesn&apos;t inherently provide security. Security in payment
+            gateway integration relies on several layers:
           </p>
           <ul className="list-disc pl-6 space-y-3 mt-4 text-lg leading-relaxed">
             <li>
-              <strong>HTTPS:</strong> Always communicate with the payment gateway API over HTTPS to ensure the data (including your JSON payload) is encrypted in transit.
+              <strong>HTTPS:</strong> Always communicate with the payment gateway API over HTTPS to ensure the data
+              (including your JSON payload) is encrypted in transit.
             </li>
             <li>
-              <strong>Tokenization:</strong> Never handle raw sensitive payment details (like full credit card numbers) on your server if possible. Use client-side libraries provided by the gateway to tokenize the card details, receiving a token that you then send in your JSON request instead of the raw data.
+              <strong>Tokenization:</strong> Never handle raw sensitive payment details (like full credit card numbers)
+              on your server if possible. Use client-side libraries provided by the gateway to tokenize the card
+              details, receiving a token that you then send in your JSON request instead of the raw data.
             </li>
             <li>
-              <strong>API Keys/Authentication:</strong> Authenticate your requests using secret keys or tokens provided by the gateway, sent securely (e.g., in the{" "}
+              <strong>API Keys/Authentication:</strong> Authenticate your requests using secret keys or tokens provided
+              by the gateway, sent securely (e.g., in the{" "}
               <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">Authorization</code>{" "}
               header).
             </li>
             <li>
-              <strong>Input Validation:</strong> Before formatting your data into JSON, validate all input received from the client-side on your server.
+              <strong>Input Validation:</strong> Before formatting your data into JSON, validate all input received from
+              the client-side on your server.
             </li>
           </ul>
           <p className="text-lg leading-relaxed mt-4">
-            Using <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.stringify()</code> and <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code> are standard practices, but they operate on data *after* it has been prepared for transmission (e.g., tokenized) and *before* it is used within your application logic.
+            Using{" "}
+            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.stringify()</code>{" "}
+            and <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>{" "}
+            are standard practices, but they operate on data *after* it has been prepared for transmission (e.g.,
+            tokenized) and *before* it is used within your application logic.
           </p>
         </section>
 
@@ -274,10 +296,14 @@ try {
             <CheckCircle className="mr-2 h-6 w-6 text-green-500" /> Conclusion
           </h2>
           <p className="text-lg leading-relaxed">
-            Integrating payment gateways using JSON formatters is a standard and efficient approach in modern web development, particularly in backend environments like Next.js API routes. By understanding the common JSON structures for requests and responses, leveraging built-in functions like{" "}
+            Integrating payment gateways using JSON formatters is a standard and efficient approach in modern web
+            development, particularly in backend environments like Next.js API routes. By understanding the common JSON
+            structures for requests and responses, leveraging built-in functions like{" "}
             <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.stringify()</code>{" "}
-            and{" "}
-            <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>, and always prioritizing security best practices, developers can build robust and reliable payment processing flows. The flexibility and widespread support of JSON make it an excellent choice for handling the diverse data requirements of various payment methods and gateway APIs.
+            and <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono">JSON.parse()</code>
+            , and always prioritizing security best practices, developers can build robust and reliable payment
+            processing flows. The flexibility and widespread support of JSON make it an excellent choice for handling
+            the diverse data requirements of various payment methods and gateway APIs.
           </p>
         </section>
       </div>

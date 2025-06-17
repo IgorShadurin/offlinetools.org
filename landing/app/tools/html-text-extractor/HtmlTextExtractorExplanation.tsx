@@ -2,12 +2,13 @@ export default function HtmlTextExtractorExplanation() {
   return (
     <div className="p-6 border rounded-lg bg-card text-card-foreground shadow-sm space-y-6">
       <h2 className="text-2xl font-bold">About HTML Text Extractor</h2>
-      
+
       <div className="space-y-2">
         <h3 className="text-xl font-semibold">Tool Capabilities</h3>
         <p>
-          The HTML Text Extractor tool converts HTML content into plain text while preserving the important information and structure. 
-          It strips away HTML tags and formatting while giving you control over how specific elements like links and images are handled.
+          The HTML Text Extractor tool converts HTML content into plain text while preserving the important information
+          and structure. It strips away HTML tags and formatting while giving you control over how specific elements
+          like links and images are handled.
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>Extract clean, readable text from any HTML content</li>
@@ -17,7 +18,7 @@ export default function HtmlTextExtractorExplanation() {
           <li>Set maximum line length with automatic wordwrap</li>
         </ul>
       </div>
-      
+
       <div className="space-y-2">
         <h3 className="text-xl font-semibold">Common Use Cases</h3>
         <ol className="list-decimal pl-6 space-y-3">
@@ -39,7 +40,9 @@ export default function HtmlTextExtractorExplanation() {
           </li>
           <li>
             <strong>Content Analysis</strong>
-            <p>Remove HTML markup to perform text analysis, keyword extraction, or sentiment analysis on the content.</p>
+            <p>
+              Remove HTML markup to perform text analysis, keyword extraction, or sentiment analysis on the content.
+            </p>
           </li>
           <li>
             <strong>Data Cleaning</strong>
@@ -51,12 +54,12 @@ export default function HtmlTextExtractorExplanation() {
           </li>
         </ol>
       </div>
-      
+
       <div className="space-y-2">
         <h3 className="text-xl font-semibold">Technical Details</h3>
         <p>
-          The HTML Text Extractor uses a specialized HTML parsing algorithm that maintains the semantic structure of the content while removing markup.
-          It handles various HTML elements differently to preserve their meaning:
+          The HTML Text Extractor uses a specialized HTML parsing algorithm that maintains the semantic structure of the
+          content while removing markup. It handles various HTML elements differently to preserve their meaning:
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>Headings are preserved with appropriate spacing</li>
@@ -66,8 +69,8 @@ export default function HtmlTextExtractorExplanation() {
           <li>HTML entities are properly decoded to their corresponding characters</li>
         </ul>
         <p className="mt-2">
-          The tool processes HTML content entirely in your browser, ensuring your data never leaves your device.
-          This makes it suitable for working with sensitive or confidential information.
+          The tool processes HTML content entirely in your browser, ensuring your data never leaves your device. This
+          makes it suitable for working with sensitive or confidential information.
         </p>
       </div>
     </div>

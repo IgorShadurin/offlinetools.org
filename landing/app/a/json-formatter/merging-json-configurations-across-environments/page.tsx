@@ -1,14 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Settings,
-  Merge,
-  Code,
-  CheckCheck,
-  Folder,
-  Database,
-  FlaskConical,
-  Lock,
-} from "lucide-react"; // Using only allowed icons
+import { Settings, Merge, Code, CheckCheck, Folder, Database, FlaskConical, Lock } from "lucide-react"; // Using only allowed icons
 
 export const metadata: Metadata = {
   title: "Merging JSON Configurations Across Environments",
@@ -25,7 +16,12 @@ export default function MergingJsonConfigsArticle() {
 
       <div className="space-y-6 text-lg leading-relaxed">
         <p>
-          Managing application configuration for different environments (like development, staging, and production) is a common task for developers. You often have settings that are shared across all environments (e.g., API endpoints, feature flags) and settings that are specific to each environment (e.g., database credentials, logging levels). Storing these settings in JSON files is a popular approach. However, simply replacing the entire configuration file based on the environment can lead to duplication and make updates tedious. This is where <strong>merging JSON configurations</strong> becomes incredibly useful.
+          Managing application configuration for different environments (like development, staging, and production) is a
+          common task for developers. You often have settings that are shared across all environments (e.g., API
+          endpoints, feature flags) and settings that are specific to each environment (e.g., database credentials,
+          logging levels). Storing these settings in JSON files is a popular approach. However, simply replacing the
+          entire configuration file based on the environment can lead to duplication and make updates tedious. This is
+          where <strong>merging JSON configurations</strong> becomes incredibly useful.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -71,14 +67,19 @@ export default function MergingJsonConfigsArticle() {
 &rbrace;`}
             </code>
           </pre>
-          Notice the overlap and the differences. If you just load &#x60;config.development.json&#x60; in development and &#x60;config.production.json&#x60; in production, you have to maintain potentially large parts of the configuration in multiple places. Adding a new common setting means editing every environment file. This is inefficient and error-prone.
+          Notice the overlap and the differences. If you just load &#x60;config.development.json&#x60; in development
+          and &#x60;config.production.json&#x60; in production, you have to maintain potentially large parts of the
+          configuration in multiple places. Adding a new common setting means editing every environment file. This is
+          inefficient and error-prone.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Merge size={24} /> Introducing Configuration Merging
         </h2>
         <p>
-          A better approach is to define a <strong>base configuration</strong> that contains all shared settings and then have environment-specific files that only contain the overrides and additions for that particular environment.
+          A better approach is to define a <strong>base configuration</strong> that contains all shared settings and
+          then have environment-specific files that only contain the overrides and additions for that particular
+          environment.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-json">
@@ -99,7 +100,7 @@ export default function MergingJsonConfigsArticle() {
     "adminPanel": true
   &rbrace;
 &rbrace;`}
-            </code>
+          </code>
         </pre>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-json">
@@ -116,7 +117,7 @@ export default function MergingJsonConfigsArticle() {
     "newDashboard": true // Override base
   &rbrace;
 &rbrace;`}
-            </code>
+          </code>
         </pre>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-json">
@@ -137,22 +138,25 @@ export default function MergingJsonConfigsArticle() {
   &rbrace;
   // featureFlags are inherited from base
 &rbrace;`}
-            </code>
+          </code>
         </pre>
         <p>
-          With this structure, you load the base configuration first, and then <strong>merge</strong> the environment-specific configuration on top of it. The values from the environment file override the values in the base file where they exist, and new sections/keys in the environment file are added to the final configuration.
+          With this structure, you load the base configuration first, and then <strong>merge</strong> the
+          environment-specific configuration on top of it. The values from the environment file override the values in
+          the base file where they exist, and new sections/keys in the environment file are added to the final
+          configuration.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Code size={24} /> How Merging Works: Shallow vs. Deep
         </h2>
-        <p>
-          There are two main strategies for merging JSON objects:
-        </p>
+        <p>There are two main strategies for merging JSON objects:</p>
 
         <h3 className="text-xl font-semibold mt-6">Shallow Merge</h3>
         <p>
-          A shallow merge only copies top-level properties from the source object to the target object. If a property's value is an object, the object itself is copied by reference or replaced entirely; its nested properties are not merged recursively.
+          A shallow merge only copies top-level properties from the source object to the target object. If a property's
+          value is an object, the object itself is copied by reference or replaced entirely; its nested properties are
+          not merged recursively.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-javascript">
@@ -184,12 +188,16 @@ console.log(mergedConfigShallow);
           </code>
         </pre>
         <p>
-          As you can see, the nested &#x60;database&#x60; or &#x60;logging&#x60; objects from the base config would be entirely replaced by the objects in the environment config, losing any properties not explicitly listed in the environment config. This is often not the desired behavior for configurations.
+          As you can see, the nested &#x60;database&#x60; or &#x60;logging&#x60; objects from the base config would be
+          entirely replaced by the objects in the environment config, losing any properties not explicitly listed in the
+          environment config. This is often not the desired behavior for configurations.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Deep Merge</h3>
         <p>
-          A deep merge recursively merges nested objects. If both the source and target have a property that is an object, the merge function calls itself on those nested objects. If a property's value is primitive (string, number, boolean, null) or an array, it's typically overwritten by the source value.
+          A deep merge recursively merges nested objects. If both the source and target have a property that is an
+          object, the merge function calls itself on those nested objects. If a property's value is primitive (string,
+          number, boolean, null) or an array, it's typically overwritten by the source value.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-javascript">
@@ -222,14 +230,16 @@ console.log(mergedConfigDeep);
           </code>
         </pre>
         <p>
-          Deep merging is usually what you want for JSON configurations, as it allows you to override specific nested settings without having to repeat the entire nested structure in your environment files.
+          Deep merging is usually what you want for JSON configurations, as it allows you to override specific nested
+          settings without having to repeat the entire nested structure in your environment files.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <FlaskConical size={24} /> Implementing a Deep Merge Function
         </h2>
         <p>
-          Here's a basic TypeScript implementation of a deep merge function that handles objects and overwrites primitives and arrays.
+          Here's a basic TypeScript implementation of a deep merge function that handles objects and overwrites
+          primitives and arrays.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-typescript">
@@ -310,10 +320,14 @@ console.log(finalConfig);
           </code>
         </pre>
         <p>
-          This function takes two objects (target and source) and recursively merges them. Keys present in the &#x60;source&#x60; object will override keys in the &#x60;target&#x60; object. If both keys contain objects, those objects are merged recursively. Primitive values and arrays from the &#x60;source&#x60; simply replace those in the &#x60;target&#x60;.
+          This function takes two objects (target and source) and recursively merges them. Keys present in the
+          &#x60;source&#x60; object will override keys in the &#x60;target&#x60; object. If both keys contain objects,
+          those objects are merged recursively. Primitive values and arrays from the &#x60;source&#x60; simply replace
+          those in the &#x60;target&#x60;.
         </p>
         <p>
-          In a real application, you would typically load &#x60;config.base.json&#x60; and then load &#x60;config.$&#x7b;NODE_ENV&#x7d;.json&#x60; and apply the deep merge.
+          In a real application, you would typically load &#x60;config.base.json&#x60; and then load
+          &#x60;config.$&#x7b;NODE_ENV&#x7d;.json&#x60; and apply the deep merge.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <code className="language-typescript">
@@ -358,31 +372,46 @@ try &lbrace;
 
         <h3 className="text-xl font-semibold mt-6">Array Merging</h3>
         <p>
-          The provided &#x60;deepMerge&#x60; function overwrites arrays. For configurations, this is often acceptable (e.g., a list of allowed origins might be completely different per environment). However, sometimes you might want different array merging strategies:
+          The provided &#x60;deepMerge&#x60; function overwrites arrays. For configurations, this is often acceptable
+          (e.g., a list of allowed origins might be completely different per environment). However, sometimes you might
+          want different array merging strategies:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <strong>Concatenation:</strong> Combine elements from both arrays.
           </li>
           <li>
-            <strong>Merging Objects in Arrays:</strong> If an array contains objects with a unique identifier (&#x60;id&#x60;, &#x60;name&#x60;), you might want to merge objects based on this ID (e.g., list of users where you only update properties for a specific user by ID).
+            <strong>Merging Objects in Arrays:</strong> If an array contains objects with a unique identifier
+            (&#x60;id&#x60;, &#x60;name&#x60;), you might want to merge objects based on this ID (e.g., list of users
+            where you only update properties for a specific user by ID).
           </li>
           <li>
-            <strong>Custom Logic:</strong> More complex scenarios might require custom merge rules for specific array properties.
+            <strong>Custom Logic:</strong> More complex scenarios might require custom merge rules for specific array
+            properties.
           </li>
         </ul>
-        <p>Implementing these requires a more sophisticated merge function, potentially with options passed to control array behavior or even a convention like &#x60;_mergeStrategy: "concat"&#x60;. Many libraries exist that offer configurable deep merging.</p>
+        <p>
+          Implementing these requires a more sophisticated merge function, potentially with options passed to control
+          array behavior or even a convention like &#x60;_mergeStrategy: "concat"&#x60;. Many libraries exist that offer
+          configurable deep merging.
+        </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-           Handling Sensitive Data <Lock size={20} />
+          Handling Sensitive Data <Lock size={20} />
         </h3>
         <p>
-          <strong>Never store sensitive credentials (passwords, API keys) directly in JSON configuration files, especially not in files that might be checked into source control.</strong> Use environment variables or a dedicated secrets management system instead. Your application code should read secrets from these secure sources and merge them with the non-sensitive configuration loaded from files.
+          <strong>
+            Never store sensitive credentials (passwords, API keys) directly in JSON configuration files, especially not
+            in files that might be checked into source control.
+          </strong>{" "}
+          Use environment variables or a dedicated secrets management system instead. Your application code should read
+          secrets from these secure sources and merge them with the non-sensitive configuration loaded from files.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Configuration Validation</h3>
         <p>
-          After merging, it's crucial to validate the final configuration structure and types to ensure your application receives the expected data. Libraries like Zod, Joi, or custom validation logic can be used here.
+          After merging, it's crucial to validate the final configuration structure and types to ensure your application
+          receives the expected data. Libraries like Zod, Joi, or custom validation logic can be used here.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -393,19 +422,25 @@ try &lbrace;
             <strong>Reduced Duplication:</strong> Common settings live only in the base config.
           </li>
           <li>
-            <strong>Improved Maintainability:</strong> Changes to common settings are made in one place. Environment-specific changes are isolated.
+            <strong>Improved Maintainability:</strong> Changes to common settings are made in one place.
+            Environment-specific changes are isolated.
           </li>
           <li>
             <strong>Clear Overrides:</strong> It's explicit what settings are being overridden for each environment.
           </li>
           <li>
-            <strong>Flexibility:</strong> Easily add new environments or feature flags by creating minimal override files.
+            <strong>Flexibility:</strong> Easily add new environments or feature flags by creating minimal override
+            files.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Merging JSON configurations across environments is a powerful pattern that significantly simplifies application setup and maintenance. By defining a base configuration and using environment-specific overrides combined with a deep merge strategy, you can create a flexible, readable, and less error-prone configuration system. Remember to use secure practices for sensitive data and validate your final configuration to ensure reliability.
+          Merging JSON configurations across environments is a powerful pattern that significantly simplifies
+          application setup and maintenance. By defining a base configuration and using environment-specific overrides
+          combined with a deep merge strategy, you can create a flexible, readable, and less error-prone configuration
+          system. Remember to use secure practices for sensitive data and validate your final configuration to ensure
+          reliability.
         </p>
       </div>
     </>

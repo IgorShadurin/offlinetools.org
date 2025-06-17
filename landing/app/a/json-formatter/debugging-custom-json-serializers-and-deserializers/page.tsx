@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
-import { Bug, Code, FileText, CheckCheck, Search, Binary, Boxes, CircleAlert, Wrench, ClipboardCheck } from "lucide-react";
+import {
+  Bug,
+  Code,
+  FileText,
+  CheckCheck,
+  Search,
+  Binary,
+  Boxes,
+  CircleAlert,
+  Wrench,
+  ClipboardCheck,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Debugging Custom JSON Serializers and Deserializers | Your Site Name",
@@ -16,21 +27,28 @@ export default function DebuggingJsonArticle() {
 
       <section className="space-y-6">
         <p>
-          Working with JSON is fundamental in modern web development, especially when building APIs or storing structured data. While the built-in <code>JSON.stringify</code> and <code>JSON.parse</code> methods handle most basic cases, you often encounter scenarios requiring custom logic. This might involve serializing complex objects with methods, handling specific data types like <code>Date</code> or <code>BigInt</code>, dealing with circular references, or implementing specific data formats.
+          Working with JSON is fundamental in modern web development, especially when building APIs or storing
+          structured data. While the built-in <code>JSON.stringify</code> and <code>JSON.parse</code> methods handle
+          most basic cases, you often encounter scenarios requiring custom logic. This might involve serializing complex
+          objects with methods, handling specific data types like <code>Date</code> or <code>BigInt</code>, dealing with
+          circular references, or implementing specific data formats.
         </p>
         <p>
-          Implementing custom serialization (converting an object to a JSON string) and deserialization (converting a JSON string back to an object) can introduce subtle bugs. This article explores common issues and effective strategies for debugging them.
+          Implementing custom serialization (converting an object to a JSON string) and deserialization (converting a
+          JSON string back to an object) can introduce subtle bugs. This article explores common issues and effective
+          strategies for debugging them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Binary className="mr-2" size={24} /> Why Custom Logic?
         </h2>
-        <p>
-          You might need custom JSON handling for reasons like:
-        </p>
+        <p>You might need custom JSON handling for reasons like:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Serializing instances of custom classes (methods are lost by default).</li>
-          <li>Handling data types not natively supported by JSON (e.g., <code>Date</code>, <code>Set</code>, <code>Map</code>, <code>BigInt</code>).</li>
+          <li>
+            Handling data types not natively supported by JSON (e.g., <code>Date</code>, <code>Set</code>,{" "}
+            <code>Map</code>, <code>BigInt</code>).
+          </li>
           <li>Controlling which properties are included or excluded.</li>
           <li>Formatting output (indentation, sorting keys).</li>
           <li>Implementing specific data format versions or transformations.</li>
@@ -48,14 +66,25 @@ export default function DebuggingJsonArticle() {
           By default, <code>JSON.stringify</code> transforms certain types:
         </p>
         <ul className="list-disc pl-6 space-y-2">
-          <li><code>Date</code> objects become ISO 8601 strings.</li>
-          <li><code>Set</code> and <code>Map</code> become empty objects &#x7b;&#x7d;.</li>
-          <li><code>BigInt</code> throws a <code>TypeError</code>.</li>
-          <li><code>undefined</code>, functions, and Symbols in objects are omitted.</li>
-          <li><code>undefined</code>, functions, and Symbols in arrays become <code>null</code>.</li>
+          <li>
+            <code>Date</code> objects become ISO 8601 strings.
+          </li>
+          <li>
+            <code>Set</code> and <code>Map</code> become empty objects &#x7b;&#x7d;.
+          </li>
+          <li>
+            <code>BigInt</code> throws a <code>TypeError</code>.
+          </li>
+          <li>
+            <code>undefined</code>, functions, and Symbols in objects are omitted.
+          </li>
+          <li>
+            <code>undefined</code>, functions, and Symbols in arrays become <code>null</code>.
+          </li>
         </ul>
         <p>
-          If your custom logic doesn't handle these transformations explicitly, you might lose data or encounter unexpected formats.
+          If your custom logic doesn't handle these transformations explicitly, you might lose data or encounter
+          unexpected formats.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: BigInt Error</h4>
@@ -96,14 +125,16 @@ console.log(customJsonString);
           </pre>
         </div>
         <p>
-          <strong>Debugging Tip:</strong> Use <code>console.log</code> on the object *before* serialization and inspect the resulting JSON string. Pay close attention to the types and presence of properties.
+          <strong>Debugging Tip:</strong> Use <code>console.log</code> on the object *before* serialization and inspect
+          the resulting JSON string. Pay close attention to the types and presence of properties.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <Boxes className="mr-2 inline-block" size={20} /> 2. Circular References
         </h3>
         <p>
-          If an object contains a reference back to itself, directly or indirectly, <code>JSON.stringify</code> will throw a <code>TypeError</code>.
+          If an object contains a reference back to itself, directly or indirectly, <code>JSON.stringify</code> will
+          throw a <code>TypeError</code>.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Circular Reference Error</h4>
@@ -145,14 +176,16 @@ console.log(safeJsonString);
           </pre>
         </div>
         <p>
-          <strong>Debugging Tip:</strong> The error message "Converting circular structure to JSON" is a dead giveaway. Analyze your object graph to find the loop. Logging object structures can help visualize relationships.
+          <strong>Debugging Tip:</strong> The error message "Converting circular structure to JSON" is a dead giveaway.
+          Analyze your object graph to find the loop. Logging object structures can help visualize relationships.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <Code className="mr-2 inline-block" size={20} /> 3. Handling <code>undefined</code> vs <code>null</code>
         </h3>
         <p>
-          <code>JSON.stringify</code> treats <code>undefined</code> and <code>null</code> differently depending on whether they are object properties or array elements.
+          <code>JSON.stringify</code> treats <code>undefined</code> and <code>null</code> differently depending on
+          whether they are object properties or array elements.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Undefined/Null Differences</h4>
@@ -177,7 +210,9 @@ console.log("Array:", JSON.stringify(arrayData));
           </pre>
         </div>
         <p>
-          If your deserialization logic expects a specific structure (e.g., a field to be present even if its value is "empty"), the omission of <code>undefined</code> properties can cause issues. Custom logic using a replacer function might be needed to explicitly include or transform <code>undefined</code> values if required.
+          If your deserialization logic expects a specific structure (e.g., a field to be present even if its value is
+          "empty"), the omission of <code>undefined</code> properties can cause issues. Custom logic using a replacer
+          function might be needed to explicitly include or transform <code>undefined</code> values if required.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -188,7 +223,8 @@ console.log("Array:", JSON.stringify(arrayData));
           <FileText className="mr-2 inline-block" size={20} /> 1. Missing or Unexpected Fields/Types
         </h3>
         <p>
-          When deserializing JSON, the input might not match the expected structure or data types. This is especially common when dealing with external APIs or evolving data schemas.
+          When deserializing JSON, the input might not match the expected structure or data types. This is especially
+          common when dealing with external APIs or evolving data schemas.
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>A required field might be missing.</li>
@@ -253,14 +289,20 @@ console.log("Parsed with Reviver Type of createdAt:", typeof parsedWithReviver.c
           </pre>
         </div>
         <p>
-          <strong>Debugging Tip:</strong> Check the structure and types of the incoming JSON string carefully. Use logging after <code>JSON.parse</code> to see the resulting object's structure and values. Schema validation libraries are highly recommended for robust deserialization.
+          <strong>Debugging Tip:</strong> Check the structure and types of the incoming JSON string carefully. Use
+          logging after <code>JSON.parse</code> to see the resulting object's structure and values. Schema validation
+          libraries are highly recommended for robust deserialization.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <Wrench className="mr-2 inline-block" size={20} /> 2. Security (Prototype Pollution)
         </h3>
         <p>
-          Directly deserializing untrusted user input into object structures without validation can be a security risk, particularly related to prototype pollution attacks. If your custom deserialization logic (or a library you use) isn't careful, an attacker could inject properties like <code>__proto__</code> or <code>constructor.prototype</code> to modify the prototype of core JavaScript objects, potentially leading to arbitrary code execution or denial-of-service.
+          Directly deserializing untrusted user input into object structures without validation can be a security risk,
+          particularly related to prototype pollution attacks. If your custom deserialization logic (or a library you
+          use) isn't careful, an attacker could inject properties like <code>__proto__</code> or{" "}
+          <code>constructor.prototype</code> to modify the prototype of core JavaScript objects, potentially leading to
+          arbitrary code execution or denial-of-service.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Conceptual Example: Prototype Pollution Risk</h4>
@@ -314,17 +356,23 @@ const parsed = JSON.parse(maliciousJson);
           </pre>
         </div>
         <p>
-          <strong>Debugging Tip:</strong> Always treat external JSON as untrusted. If you are implementing custom deserialization logic (beyond a simple <code>JSON.parse</code> with a reviver), be extremely cautious about how keys and values are assigned, especially in nested structures. Rely on established, security-audited libraries for complex transformations from untrusted sources.
+          <strong>Debugging Tip:</strong> Always treat external JSON as untrusted. If you are implementing custom
+          deserialization logic (beyond a simple <code>JSON.parse</code> with a reviver), be extremely cautious about
+          how keys and values are assigned, especially in nested structures. Rely on established, security-audited
+          libraries for complex transformations from untrusted sources.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <Wrench className="mr-2 inline-block" size={20} /> 3. Versioning and Backward Compatibility
         </h3>
         <p>
-          Over time, your data structure might change. Older JSON strings might not conform to the latest object structure expected by your code. Deserialization logic needs to handle these variations gracefully.
+          Over time, your data structure might change. Older JSON strings might not conform to the latest object
+          structure expected by your code. Deserialization logic needs to handle these variations gracefully.
         </p>
         <p>
-          <strong>Debugging Tip:</strong> Test your deserialization logic with various versions of your JSON schema. Implement conditional logic in your reviver or post-processing steps to handle older formats (e.g., providing default values for missing fields, converting deprecated field names).
+          <strong>Debugging Tip:</strong> Test your deserialization logic with various versions of your JSON schema.
+          Implement conditional logic in your reviver or post-processing steps to handle older formats (e.g., providing
+          default values for missing fields, converting deprecated field names).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -335,7 +383,9 @@ const parsed = JSON.parse(maliciousJson);
           <Code className="mr-2 inline-block" size={20} /> 1. Liberal Logging
         </h3>
         <p>
-          Log the input object before serialization and the resulting string. Log the input string before deserialization and the resulting object. This helps pinpoint where the data transformation goes wrong. Inside custom replacer or reviver functions, log the <code>key</code> and <code>value</code> being processed.
+          Log the input object before serialization and the resulting string. Log the input string before
+          deserialization and the resulting object. This helps pinpoint where the data transformation goes wrong. Inside
+          custom replacer or reviver functions, log the <code>key</code> and <code>value</code> being processed.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Logging in Reviver</h4>
@@ -371,7 +421,9 @@ Processing key: "value", value: 456
           <Wrench className="mr-2 inline-block" size={20} /> 2. Leverage <code>JSON.stringify</code> Options
         </h3>
         <p>
-          The <code>replacer</code> argument (a function or array of strings/numbers) allows you to control which properties are included and how their values are transformed during serialization. The <code>space</code> argument (a string or number) helps format the output for readability, making it easier to inspect.
+          The <code>replacer</code> argument (a function or array of strings/numbers) allows you to control which
+          properties are included and how their values are transformed during serialization. The <code>space</code>{" "}
+          argument (a string or number) helps format the output for readability, making it easier to inspect.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Replacer and Space</h4>
@@ -448,7 +500,10 @@ Expected output:
           <Wrench className="mr-2 inline-block" size={20} /> 3. Leverage <code>JSON.parse</code> Reviver
         </h3>
         <p>
-          The <code>reviver</code> function passed to <code>JSON.parse</code> is called for every key-value pair in the parsed object (starting from the innermost nested levels and working outwards), including the root object itself. This is the primary mechanism for performing custom transformations during deserialization, such as converting date strings back to <code>Date</code> objects.
+          The <code>reviver</code> function passed to <code>JSON.parse</code> is called for every key-value pair in the
+          parsed object (starting from the innermost nested levels and working outwards), including the root object
+          itself. This is the primary mechanism for performing custom transformations during deserialization, such as
+          converting date strings back to <code>Date</code> objects.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Reviver for Date Conversion</h4>
@@ -480,14 +535,18 @@ console.log("Type of details.reportedAt:", typeof parsedObject.details.reportedA
           </pre>
         </div>
         <p>
-          <strong>Debugging Tip:</strong> Use the reviver to intercept values. Log the <code>key</code> and <code>value</code> to understand the parsing flow. If a value isn't converting as expected, check its type and format within the reviver function.
+          <strong>Debugging Tip:</strong> Use the reviver to intercept values. Log the <code>key</code> and{" "}
+          <code>value</code> to understand the parsing flow. If a value isn't converting as expected, check its type and
+          format within the reviver function.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <CheckCheck className="mr-2 inline-block" size={20} /> 4. Schema Validation
         </h3>
         <p>
-          For robust applications, especially when dealing with external data, validate the structure and types of the parsed JSON against a predefined schema. Libraries like Zod, Yup, or Joi provide powerful and expressive ways to define schemas and validate data. They offer clear error reporting when validation fails.
+          For robust applications, especially when dealing with external data, validate the structure and types of the
+          parsed JSON against a predefined schema. Libraries like Zod, Yup, or Joi provide powerful and expressive ways
+          to define schemas and validate data. They offer clear error reporting when validation fails.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Conceptual Example: Zod Validation</h4>
@@ -540,23 +599,28 @@ try {
           </pre>
         </div>
         <p>
-          <strong>Debugging Tip:</strong> Implement schema validation early in your deserialization pipeline. The detailed error messages from validation libraries are invaluable for identifying exactly what part of the input JSON doesn't match the expected structure or type.
+          <strong>Debugging Tip:</strong> Implement schema validation early in your deserialization pipeline. The
+          detailed error messages from validation libraries are invaluable for identifying exactly what part of the
+          input JSON doesn't match the expected structure or type.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <ClipboardCheck className="mr-2 inline-block" size={20} /> 5. Write Unit Tests
         </h3>
         <p>
-          Write tests for your serialization and deserialization functions with various inputs: typical data, edge cases (empty arrays/objects, null values), incorrect data types, missing fields, circular references (if you handle them), and old versions of your data structure. Automated tests catch regressions as your code evolves.
+          Write tests for your serialization and deserialization functions with various inputs: typical data, edge cases
+          (empty arrays/objects, null values), incorrect data types, missing fields, circular references (if you handle
+          them), and old versions of your data structure. Automated tests catch regressions as your code evolves.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <Bug className="mr-2 inline-block" size={20} /> 6. Step-Through Debugging
         </h3>
         <p>
-          Use your IDE's debugger to step through your custom serialization or deserialization logic (especially within replacer or reviver functions). This allows you to inspect the state of variables, the value of <code>key</code> and <code>value</code> at each step, and the execution flow.
+          Use your IDE's debugger to step through your custom serialization or deserialization logic (especially within
+          replacer or reviver functions). This allows you to inspect the state of variables, the value of{" "}
+          <code>key</code> and <code>value</code> at each step, and the execution flow.
         </p>
-
       </section>
 
       <section className="space-y-6 mt-8">
@@ -564,7 +628,12 @@ try {
           <FileText className="mr-2" size={24} /> Conclusion
         </h2>
         <p>
-          Debugging custom JSON serializers and deserializers often boils down to carefully inspecting the data at different stages of the conversion process. Understanding how <code>JSON.stringify</code> and <code>JSON.parse</code> handle different data types by default is crucial. Leveraging the <code>replacer</code> and <code>reviver</code> functions, coupled with liberal logging, step-through debugging, and robust schema validation, provides a powerful toolkit for identifying and resolving issues, ensuring your data is correctly transformed and your application remains secure and reliable.
+          Debugging custom JSON serializers and deserializers often boils down to carefully inspecting the data at
+          different stages of the conversion process. Understanding how <code>JSON.stringify</code> and{" "}
+          <code>JSON.parse</code> handle different data types by default is crucial. Leveraging the{" "}
+          <code>replacer</code> and <code>reviver</code> functions, coupled with liberal logging, step-through
+          debugging, and robust schema validation, provides a powerful toolkit for identifying and resolving issues,
+          ensuring your data is correctly transformed and your application remains secure and reliable.
         </p>
       </section>
     </article>

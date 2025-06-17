@@ -18,14 +18,14 @@ export default function JsonFormattersInCmsArticle() {
       <div className="space-y-6">
         <p>
           In modern Content Management Systems (CMS), data often goes beyond simple text fields and image uploads.
-          Structured, hierarchical data is increasingly common, and JSON (JavaScript Object Notation) has become
-          a de facto standard for representing such data. This is where <strong>JSON formatters</strong> come into play.
+          Structured, hierarchical data is increasingly common, and JSON (JavaScript Object Notation) has become a de
+          facto standard for representing such data. This is where <strong>JSON formatters</strong> come into play.
         </p>
         <p>
-          A "JSON formatter" in the context of a CMS isn't just a tool to make JSON look pretty with indentation.
-          It refers to the various mechanisms and interfaces within the CMS that allow users (often developers,
-          but sometimes advanced content editors) to interact with JSON data effectively. This includes input,
-          editing, validation, storage, and display.
+          A "JSON formatter" in the context of a CMS isn't just a tool to make JSON look pretty with indentation. It
+          refers to the various mechanisms and interfaces within the CMS that allow users (often developers, but
+          sometimes advanced content editors) to interact with JSON data effectively. This includes input, editing,
+          validation, storage, and display.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">
@@ -34,16 +34,15 @@ export default function JsonFormattersInCmsArticle() {
         </h2>
         <p>
           CMS platforms need to handle diverse content structures. While relational databases power many traditional
-          CMSs, the rise of APIs, microservices, and flexible frontend frameworks has pushed CMSs towards
-          more schema-flexible data models, often leveraging NoSQL databases or extending relational models
-          with JSON column types.
+          CMSs, the rise of APIs, microservices, and flexible frontend frameworks has pushed CMSs towards more
+          schema-flexible data models, often leveraging NoSQL databases or extending relational models with JSON column
+          types.
         </p>
-        <p>
-          Storing data as JSON allows for:
-        </p>
+        <p>Storing data as JSON allows for:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Flexibility:</strong> Adapting to evolving data structures without strict database schema migrations.
+            <strong>Flexibility:</strong> Adapting to evolving data structures without strict database schema
+            migrations.
           </li>
           <li>
             <strong>Structured Data:</strong> Representing complex relationships, nested objects, and arrays directly.
@@ -70,9 +69,7 @@ export default function JsonFormattersInCmsArticle() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Raw Text Area Editor</h3>
-        <p>
-          The simplest approach is a standard multi-line text area. The user types or pastes JSON directly.
-        </p>
+        <p>The simplest approach is a standard multi-line text area. The user types or pastes JSON directly.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Raw Editor Input (HTML):</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -97,14 +94,16 @@ export default function JsonFormattersInCmsArticle() {
             <strong>Pros:</strong> Simple to implement, works for any JSON structure.
           </p>
           <p>
-            <strong>Cons:</strong> Error-prone (syntax errors), difficult to navigate large data, poor user experience for complex structures.
+            <strong>Cons:</strong> Error-prone (syntax errors), difficult to navigate large data, poor user experience
+            for complex structures.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">Enhanced Code Editor (Syntax Highlighting, Linting, Formatting)</h3>
         <p>
-          A significant improvement is integrating a code editor component (like CodeMirror, Monaco Editor, etc. - though we avoid external libs here, the concept is key)
-          specifically configured for JSON. This provides features that aid developers:
+          A significant improvement is integrating a code editor component (like CodeMirror, Monaco Editor, etc. -
+          though we avoid external libs here, the concept is key) specifically configured for JSON. This provides
+          features that aid developers:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -130,7 +129,9 @@ export default function JsonFormattersInCmsArticle() {
             {`&#x7d;`}
           </pre>
           <p>And a button to format the JSON neatly:</p>
-          <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Format JSON</button>
+          <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+            Format JSON
+          </button>
           <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
             (This button would trigger a parsing and stringifying process with indentation)
           </p>
@@ -166,7 +167,8 @@ export default function JsonFormattersInCmsArticle() {
           <strong>Pros:</strong> Less error-prone for syntax, easier navigation, more intuitive for non-technical users.
         </p>
         <p>
-          <strong>Cons:</strong> Can be complex to implement, might abstract away the raw JSON structure too much for developers, less efficient for large text values.
+          <strong>Cons:</strong> Can be complex to implement, might abstract away the raw JSON structure too much for
+          developers, less efficient for large text values.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">
@@ -174,13 +176,13 @@ export default function JsonFormattersInCmsArticle() {
           JSON Validation
         </h2>
         <p>
-          Beyond just being syntactically correct JSON, the data often needs to adhere to a specific structure or schema.
-          Validation is a critical function of a JSON formatter in a CMS to ensure data consistency and prevent errors
-          in downstream applications consuming the data.
+          Beyond just being syntactically correct JSON, the data often needs to adhere to a specific structure or
+          schema. Validation is a critical function of a JSON formatter in a CMS to ensure data consistency and prevent
+          errors in downstream applications consuming the data.
         </p>
         <p>
-          <strong>JSON Schema</strong> is a powerful vocabulary for annotating and validating JSON documents. A CMS
-          can integrate a JSON Schema validator to check the entered JSON against a predefined schema.
+          <strong>JSON Schema</strong> is a powerful vocabulary for annotating and validating JSON documents. A CMS can
+          integrate a JSON Schema validator to check the entered JSON against a predefined schema.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example JSON Schema for Article Sections:</h4>
@@ -210,14 +212,14 @@ export default function JsonFormattersInCmsArticle() {
             {`&#x7d;`}
           </pre>
           <p className="mt-2">
-            This schema defines an object with a required string `title` and a required array `sections`.
-            Each item in `sections` must be an object with a required `type` (enum: heading, paragraph, image)
-            and either a `text` or a `url` property.
+            This schema defines an object with a required string `title` and a required array `sections`. Each item in
+            `sections` must be an object with a required `type` (enum: heading, paragraph, image) and either a `text` or
+            a `url` property.
           </p>
         </div>
         <p>
-          The CMS can use this schema to provide real-time validation feedback in the editor and prevent saving
-          invalid data to the backend.
+          The CMS can use this schema to provide real-time validation feedback in the editor and prevent saving invalid
+          data to the backend.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">
@@ -225,13 +227,14 @@ export default function JsonFormattersInCmsArticle() {
           Storage and Internal Handling
         </h2>
         <p>
-          When saving, the CMS takes the validated JSON data and stores it. This might be in a dedicated JSON/JSONB column
-          in a relational database (like PostgreSQL or MySQL 5.7+), as a document in a NoSQL database (like MongoDB),
-          or serialized and stored in a text field depending on the CMS architecture.
+          When saving, the CMS takes the validated JSON data and stores it. This might be in a dedicated JSON/JSONB
+          column in a relational database (like PostgreSQL or MySQL 5.7+), as a document in a NoSQL database (like
+          MongoDB), or serialized and stored in a text field depending on the CMS architecture.
         </p>
         <p>
-          On the backend (which, for this page, implies a Next.js API route or server component context without `useState` or client-side hooks),
-          the JSON data is typically parsed into native JavaScript objects or TypeScript interfaces for processing.
+          On the backend (which, for this page, implies a Next.js API route or server component context without
+          `useState` or client-side hooks), the JSON data is typically parsed into native JavaScript objects or
+          TypeScript interfaces for processing.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual TypeScript Interface for the JSON Data:</h4>
@@ -298,11 +301,11 @@ export async function GET(request: Request, &#x7b; params &#x7d;: &#x7b; params:
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON formatters are indispensable components of modern CMS platforms that handle structured data. They
-          bridge the gap between raw, error-prone text and usable, validated, and consistently structured data.
-          By providing enhanced editing interfaces, robust validation mechanisms (like JSON Schema), and seamless
-          backend handling and output, CMSs empower developers and content creators to manage complex JSON data
-          effectively, fueling flexible content models and modern API-driven architectures.
+          JSON formatters are indispensable components of modern CMS platforms that handle structured data. They bridge
+          the gap between raw, error-prone text and usable, validated, and consistently structured data. By providing
+          enhanced editing interfaces, robust validation mechanisms (like JSON Schema), and seamless backend handling
+          and output, CMSs empower developers and content creators to manage complex JSON data effectively, fueling
+          flexible content models and modern API-driven architectures.
         </p>
       </div>
     </>

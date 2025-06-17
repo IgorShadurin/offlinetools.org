@@ -18,14 +18,12 @@ export default function DataEncryptorExplanation() {
               <Shield className="h-5 w-5 text-blue-600" />
               AES-256-CBC Encryption
             </CardTitle>
-            <CardDescription>
-              Military-grade encryption standard
-            </CardDescription>
+            <CardDescription>Military-grade encryption standard</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Advanced Encryption Standard (AES) with 256-bit keys in Cipher Block Chaining (CBC) mode. 
-              This is the same encryption standard used by governments and financial institutions worldwide.
+              Advanced Encryption Standard (AES) with 256-bit keys in Cipher Block Chaining (CBC) mode. This is the same
+              encryption standard used by governments and financial institutions worldwide.
             </p>
           </CardContent>
         </Card>
@@ -36,14 +34,12 @@ export default function DataEncryptorExplanation() {
               <Key className="h-5 w-5 text-green-600" />
               PBKDF2 Key Derivation
             </CardTitle>
-            <CardDescription>
-              Secure password-based encryption
-            </CardDescription>
+            <CardDescription>Secure password-based encryption</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Password-Based Key Derivation Function 2 (PBKDF2) with 100,000 iterations and random salt. 
-              This makes brute-force attacks computationally expensive and protects against rainbow table attacks.
+              Password-Based Key Derivation Function 2 (PBKDF2) with 100,000 iterations and random salt. This makes
+              brute-force attacks computationally expensive and protects against rainbow table attacks.
             </p>
           </CardContent>
         </Card>
@@ -54,14 +50,12 @@ export default function DataEncryptorExplanation() {
               <Lock className="h-5 w-5 text-purple-600" />
               Client-Side Processing
             </CardTitle>
-            <CardDescription>
-              Your data never leaves your browser
-            </CardDescription>
+            <CardDescription>Your data never leaves your browser</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              All encryption and decryption happens locally in your browser using the Web Crypto API. 
-              Your sensitive data and passwords are never transmitted to our servers.
+              All encryption and decryption happens locally in your browser using the Web Crypto API. Your sensitive
+              data and passwords are never transmitted to our servers.
             </p>
           </CardContent>
         </Card>
@@ -72,14 +66,12 @@ export default function DataEncryptorExplanation() {
               <FileText className="h-5 w-5 text-orange-600" />
               Text &amp; File Support
             </CardTitle>
-            <CardDescription>
-              Encrypt any type of content
-            </CardDescription>
+            <CardDescription>Encrypt any type of content</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Encrypt plain text messages, documents, images, or any other file type. 
-              The encrypted output is Base64 encoded for easy sharing and storage.
+              Encrypt plain text messages, documents, images, or any other file type. The encrypted output is Base64
+              encoded for easy sharing and storage.
             </p>
           </CardContent>
         </Card>
@@ -90,14 +82,12 @@ export default function DataEncryptorExplanation() {
               <CheckCircle className="h-5 w-5 text-teal-600" />
               Format Compatibility
             </CardTitle>
-            <CardDescription>
-              Standard encryption format
-            </CardDescription>
+            <CardDescription>Standard encryption format</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Output format: salt:iv:encryptedData (all Base64 encoded). 
-              This standard format ensures compatibility and includes all necessary components for decryption.
+              Output format: salt:iv:encryptedData (all Base64 encoded). This standard format ensures compatibility and
+              includes all necessary components for decryption.
             </p>
           </CardContent>
         </Card>
@@ -108,14 +98,12 @@ export default function DataEncryptorExplanation() {
               <AlertTriangle className="h-5 w-5 text-red-600" />
               Security Best Practices
             </CardTitle>
-            <CardDescription>
-              Important security considerations
-            </CardDescription>
+            <CardDescription>Important security considerations</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Use strong, unique passwords. Store encrypted data and passwords separately. 
-              Remember that if you lose your password, your data cannot be recovered.
+              Use strong, unique passwords. Store encrypted data and passwords separately. Remember that if you lose
+              your password, your data cannot be recovered.
             </p>
           </CardContent>
         </Card>
@@ -149,9 +137,7 @@ export default function DataEncryptorExplanation() {
         <div className="flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
           <div>
-            <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-              Important Security Reminders
-            </h4>
+            <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Important Security Reminders</h4>
             <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
               <li>• Choose strong passwords with a mix of letters, numbers, and symbols</li>
               <li>• Never share your encryption passwords through insecure channels</li>

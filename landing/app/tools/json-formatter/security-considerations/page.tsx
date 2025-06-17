@@ -10,8 +10,7 @@ import { Shield, Lock, Eye, FileWarning, KeyRound } from "lucide-react";
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Security Considerations | Offline Tools",
-  description:
-    "Understand security risks and best practices when working with JSON data and formatters"
+  description: "Understand security risks and best practices when working with JSON data and formatters",
 };
 
 /**
@@ -20,32 +19,38 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "JSON Injection Attacks: How Formatters Can Help Prevent Them",
-    description: "Understanding how well-designed JSON formatters can identify and mitigate potential injection vulnerabilities in JSON data.",
+    description:
+      "Understanding how well-designed JSON formatters can identify and mitigate potential injection vulnerabilities in JSON data.",
     slug: "json-injection-attacks-how-formatters-can-help-prevent-them",
   },
   {
     title: "Secure Handling of Sensitive Data in JSON Formatters",
-    description: "Best practices for ensuring that sensitive information in JSON data remains protected during formatting operations.",
+    description:
+      "Best practices for ensuring that sensitive information in JSON data remains protected during formatting operations.",
     slug: "secure-handling-of-sensitive-data-in-json-formatters",
   },
   {
     title: "Cross-Site Scripting Vulnerabilities in JSON Web Applications",
-    description: "How XSS attacks can target JSON-handling applications and methods to protect against these security threats.",
+    description:
+      "How XSS attacks can target JSON-handling applications and methods to protect against these security threats.",
     slug: "cross-site-scripting-vulnerabilities-in-json-web-applications",
   },
   {
     title: "Code Execution Risks in Online JSON Formatters",
-    description: "Examining the potential dangers of malicious code execution when using web-based JSON formatting services.",
+    description:
+      "Examining the potential dangers of malicious code execution when using web-based JSON formatting services.",
     slug: "code-execution-risks-in-online-json-formatters",
   },
   {
     title: "Privacy Implications of Cloud-Based JSON Formatting Services",
-    description: "Understanding the privacy concerns when submitting potentially sensitive JSON data to third-party online formatting tools.",
+    description:
+      "Understanding the privacy concerns when submitting potentially sensitive JSON data to third-party online formatting tools.",
     slug: "privacy-implications-of-cloud-based-json-formatting-services",
   },
   {
     title: "JSON Formatter Data Retention Policies: Security Analysis",
-    description: "Evaluating how different JSON formatting services handle data retention and the security implications for users.",
+    description:
+      "Evaluating how different JSON formatting services handle data retention and the security implications for users.",
     slug: "json-formatter-data-retention-policies-security-analysis",
   },
   {
@@ -65,7 +70,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Certificate Validation in JSON Formatter API Communications",
-    description: "Ensuring proper certificate validation when JSON formatters communicate with external APIs to prevent MITM attacks.",
+    description:
+      "Ensuring proper certificate validation when JSON formatters communicate with external APIs to prevent MITM attacks.",
     slug: "certificate-validation-in-json-formatter-api-communications",
   },
   {
@@ -75,22 +81,26 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Protecting Against Prototype Pollution in JSON Parsing",
-    description: "Understanding and mitigating prototype pollution vulnerabilities that can occur during JSON parsing operations.",
+    description:
+      "Understanding and mitigating prototype pollution vulnerabilities that can occur during JSON parsing operations.",
     slug: "protecting-against-prototype-pollution-in-json-parsing",
   },
   {
     title: "Security Risks of Eval-Based JSON Parsing",
-    description: "Why using eval() for JSON parsing creates serious security vulnerabilities and safer alternatives to consider.",
+    description:
+      "Why using eval() for JSON parsing creates serious security vulnerabilities and safer alternatives to consider.",
     slug: "security-risks-of-eval-based-json-parsing",
   },
   {
     title: "Authentication Mechanisms in Enterprise JSON Formatters",
-    description: "Secure authentication approaches for JSON formatting tools used in corporate and enterprise environments.",
+    description:
+      "Secure authentication approaches for JSON formatting tools used in corporate and enterprise environments.",
     slug: "authentication-mechanisms-in-enterprise-json-formatters",
   },
   {
     title: "Role-Based Access Control in Collaborative JSON Editors",
-    description: "Implementing RBAC systems to secure multi-user JSON editing environments with appropriate permissions.",
+    description:
+      "Implementing RBAC systems to secure multi-user JSON editing environments with appropriate permissions.",
     slug: "role-based-access-control-in-collaborative-json-editors",
   },
   {
@@ -105,7 +115,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Secure Temporary File Handling in JSON Processing",
-    description: "Ensuring that temporary files created during JSON processing operations don't introduce security vulnerabilities.",
+    description:
+      "Ensuring that temporary files created during JSON processing operations don't introduce security vulnerabilities.",
     slug: "secure-temporary-file-handling-in-json-processing",
   },
   {
@@ -115,7 +126,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Browser Extension Permissions: Security Implications for JSON Formatters",
-    description: "Understanding the security implications of different permission levels for browser-based JSON formatter extensions.",
+    description:
+      "Understanding the security implications of different permission levels for browser-based JSON formatter extensions.",
     slug: "browser-extension-permissions-security-implications-for-json-formatters",
   },
   {
@@ -125,7 +137,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Security Auditing of JSON Formatter Implementations",
-    description: "Methodologies for conducting comprehensive security audits of JSON formatter codebases and applications.",
+    description:
+      "Methodologies for conducting comprehensive security audits of JSON formatter codebases and applications.",
     slug: "security-auditing-of-json-formatter-implementations",
   },
   {
@@ -155,12 +168,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Secure Code Review Processes for JSON Parsing Libraries",
-    description: "Establishing effective code review procedures specifically focused on security aspects of JSON parsing code.",
+    description:
+      "Establishing effective code review procedures specifically focused on security aspects of JSON parsing code.",
     slug: "secure-code-review-processes-for-json-parsing-libraries",
   },
   {
     title: "Memory Safety in JSON Formatter Implementations",
-    description: "Addressing memory safety concerns in JSON formatters to prevent buffer overflows and related vulnerabilities.",
+    description:
+      "Addressing memory safety concerns in JSON formatters to prevent buffer overflows and related vulnerabilities.",
     slug: "memory-safety-in-json-formatter-implementations",
   },
   {
@@ -180,7 +195,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Preventing Information Disclosure in JSON Error Messages",
-    description: "Designing error handling that doesn't inadvertently reveal sensitive information in JSON processing tools.",
+    description:
+      "Designing error handling that doesn't inadvertently reveal sensitive information in JSON processing tools.",
     slug: "preventing-information-disclosure-in-json-error-messages",
   },
   {
@@ -205,7 +221,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Protecting Against Regular Expression DoS in JSON Validation",
-    description: "Preventing denial of service attacks that exploit inefficient regular expressions in JSON validators.",
+    description:
+      "Preventing denial of service attacks that exploit inefficient regular expressions in JSON validators.",
     slug: "protecting-against-regular-expression-dos-in-json-validation",
   },
   {
@@ -235,7 +252,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Third-Party Library Security in JSON Formatter Implementations",
-    description: "Evaluating and ensuring the security of third-party dependencies used in JSON formatting applications.",
+    description:
+      "Evaluating and ensuring the security of third-party dependencies used in JSON formatting applications.",
     slug: "third-party-library-security-in-json-formatter-implementations",
   },
   {
@@ -265,9 +283,10 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Incident Response Planning for JSON Formatter Vulnerabilities",
-    description: "Creating effective incident response plans to address security vulnerabilities in JSON formatter applications.",
+    description:
+      "Creating effective incident response plans to address security vulnerabilities in JSON formatter applications.",
     slug: "incident-response-planning-for-json-formatter-vulnerabilities",
-  }
+  },
 ];
 
 /**
@@ -330,7 +349,8 @@ export default function JsonFormatterSecurityPage() {
                   <div>
                     <h3 className="font-medium mb-1">JSON Injection</h3>
                     <p className="text-sm text-muted-foreground">
-                      Understanding how improperly handled JSON can lead to injection attacks, particularly when dynamically evaluating JSON as code or using it in database operations.
+                      Understanding how improperly handled JSON can lead to injection attacks, particularly when
+                      dynamically evaluating JSON as code or using it in database operations.
                     </p>
                   </div>
                 </div>
@@ -342,7 +362,8 @@ export default function JsonFormatterSecurityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Data Privacy</h3>
                     <p className="text-sm text-muted-foreground">
-                      Best practices for handling sensitive data in JSON, including PII redaction, secure storage, and considerations for online vs. offline formatting tools.
+                      Best practices for handling sensitive data in JSON, including PII redaction, secure storage, and
+                      considerations for online vs. offline formatting tools.
                     </p>
                   </div>
                 </div>
@@ -356,7 +377,8 @@ export default function JsonFormatterSecurityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Secure Transmission</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ensuring JSON data is securely transmitted using proper encryption, HTTPS protocols, and understanding the risks of sharing formatted JSON through insecure channels.
+                      Ensuring JSON data is securely transmitted using proper encryption, HTTPS protocols, and
+                      understanding the risks of sharing formatted JSON through insecure channels.
                     </p>
                   </div>
                 </div>
@@ -368,7 +390,8 @@ export default function JsonFormatterSecurityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Access Control</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing proper access controls for JSON data processing tools, especially in enterprise environments where confidential data may be formatted or validated.
+                      Implementing proper access controls for JSON data processing tools, especially in enterprise
+                      environments where confidential data may be formatted or validated.
                     </p>
                   </div>
                 </div>
@@ -381,7 +404,8 @@ export default function JsonFormatterSecurityPage() {
                 <span>Security Advisory:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                When using online JSON formatters, be aware that sensitive data may be transmitted to third-party servers. For confidential information, prefer offline tools that process data locally on your device.
+                When using online JSON formatters, be aware that sensitive data may be transmitted to third-party
+                servers. For confidential information, prefer offline tools that process data locally on your device.
               </p>
             </div>
           </CardContent>
@@ -391,4 +415,4 @@ export default function JsonFormatterSecurityPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

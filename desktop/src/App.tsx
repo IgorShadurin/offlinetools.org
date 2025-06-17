@@ -33,6 +33,7 @@ import { TextUtility } from './components/text-utility'
 import { WatermarkTool } from './components/watermark-tool'
 import { QrCodeTool } from './components/qr-code'
 import { ImageResizer } from './components/image-resizer'
+import { TimezoneConverter } from './components/timezone-converter'
 import { Steganography } from './components/steganography'
 import { DataEncryptor } from './components/data-encryptor'
 
@@ -45,6 +46,7 @@ const tools: Tool[] = [
   { id: 'uuid-generator', name: 'UUID Generator', icon: <Fingerprint size={16} /> },
   { id: 'person-generator', name: 'Person Generator', icon: <Users size={16} /> },
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
+  { id: 'timezone-converter', name: 'Timezone Converter', icon: <Clock size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
   { id: 'text-utility', name: 'Text Utility', icon: <Type size={16} /> },
@@ -167,6 +169,8 @@ function App() {
           <WatermarkTool className="min-h-full" />
         ) : selectedTool === 'image-resizer' ? (
           <ImageResizer className="min-h-full" />
+        ) : selectedTool === 'timezone-converter' ? (
+          <TimezoneConverter className="min-h-full" />
         ) : selectedTool === 'steganography' ? (
           <Steganography className="min-h-full" />
         ) : selectedTool === 'data-encryptor' ? (

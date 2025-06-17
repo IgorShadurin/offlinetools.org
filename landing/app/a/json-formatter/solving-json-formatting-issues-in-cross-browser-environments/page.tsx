@@ -27,22 +27,23 @@ export default function CrossBrowserJsonArticle() {
       <div className="space-y-6 text-base">
         <p>
           JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web. Its
-          simplicity and direct mapping to JavaScript data structures make it ideal for APIs and client-side
-          data handling. However, like many web technologies, slight differences or historical quirks across
-          browser JavaScript engines can occasionally lead to unexpected JSON formatting issues. While modern browsers
-          are largely compliant with the ECMAScript standard that defines the <Code className="inline size-4" />
+          simplicity and direct mapping to JavaScript data structures make it ideal for APIs and client-side data
+          handling. However, like many web technologies, slight differences or historical quirks across browser
+          JavaScript engines can occasionally lead to unexpected JSON formatting issues. While modern browsers are
+          largely compliant with the ECMAScript standard that defines the <Code className="inline size-4" />
           <span className="font-mono">JSON</span>
-          <Code className="inline size-4" /> global object, understanding the potential pitfalls and best practices
-          is crucial for robust cross-browser applications.
+          <Code className="inline size-4" /> global object, understanding the potential pitfalls and best practices is
+          crucial for robust cross-browser applications.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Globe className="size-6" />
-          <span>The Core Tools: <Code className="inline size-4" />
-          <span className="font-mono">JSON.parse</span>
-          <Code className="inline size-4" /> and <Code className="inline size-4" />
-          <span className="font-mono">JSON.stringify</span>
-          <Code className="inline size-4" />
+          <span>
+            The Core Tools: <Code className="inline size-4" />
+            <span className="font-mono">JSON.parse</span>
+            <Code className="inline size-4" /> and <Code className="inline size-4" />
+            <span className="font-mono">JSON.stringify</span>
+            <Code className="inline size-4" />
           </span>
         </h2>
         <p>
@@ -61,14 +62,14 @@ export default function CrossBrowserJsonArticle() {
           <li>
             <Code className="inline size-4" />
             <span className="font-mono">JSON.stringify(value[, replacer[, space]])</span>
-            <Code className="inline size-4" />: Converts a JavaScript value to a JSON string, optionally including
-            only certain properties or using a custom transformation function.
+            <Code className="inline size-4" />: Converts a JavaScript value to a JSON string, optionally including only
+            certain properties or using a custom transformation function.
           </li>
         </ul>
         <p>
           These methods are standardized and provide consistent behavior across compliant environments. Problems
-          primarily arise when dealing with non-standard inputs or relying on specific output formatting details
-          that were handled inconsistently in older engines or non-standard implementations.
+          primarily arise when dealing with non-standard inputs or relying on specific output formatting details that
+          were handled inconsistently in older engines or non-standard implementations.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -91,11 +92,19 @@ export default function CrossBrowserJsonArticle() {
         <p>
           Before the <Code className="inline size-4" />
           <span className="font-mono">JSON</span>
-          <Code className="inline size-4" /> object was standardized, developers often relied on third-party
-          libraries or manual parsing/stringifying methods. These could have varying levels of compliance
-          with the JSON specification. If supporting very old browsers is a requirement, polyfills like the one
-          from <a href="https://github.com/douglascrockford/JSON-js" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline dark:text-blue-400">Douglas Crockford&apos;s JSON-js library</a>
-          were necessary. However, for most modern web development targeting IE9+, this is no longer a significant concern.
+          <Code className="inline size-4" /> object was standardized, developers often relied on third-party libraries
+          or manual parsing/stringifying methods. These could have varying levels of compliance with the JSON
+          specification. If supporting very old browsers is a requirement, polyfills like the one from{" "}
+          <a
+            href="https://github.com/douglascrockford/JSON-js"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline dark:text-blue-400"
+          >
+            Douglas Crockford&apos;s JSON-js library
+          </a>
+          were necessary. However, for most modern web development targeting IE9+, this is no longer a significant
+          concern.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -107,7 +116,10 @@ export default function CrossBrowserJsonArticle() {
           trailing commas in arrays or objects, and forbids comments.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center space-x-2"><AlertTriangle className="size-5 text-yellow-500" /><span>Invalid JSON (Common Mistakes):</span></h4>
+          <h4 className="text-lg font-medium flex items-center space-x-2">
+            <AlertTriangle className="size-5 text-yellow-500" />
+            <span>Invalid JSON (Common Mistakes):</span>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
               {`{
@@ -120,13 +132,16 @@ export default function CrossBrowserJsonArticle() {
           </div>
         </div>
         <p>
-          While some JavaScript parsers might be lenient (e.g., <Code className="inline size-4" /><span className="font-mono">eval()</span><Code className="inline size-4" />
+          While some JavaScript parsers might be lenient (e.g., <Code className="inline size-4" />
+          <span className="font-mono">eval()</span>
+          <Code className="inline size-4" />
           or older custom parsers), standard <Code className="inline size-4" />
           <span className="font-mono">JSON.parse</span>
           <Code className="inline size-4" /> will throw a
           <Code className="inline size-4" />
           <span className="font-mono">SyntaxError</span>
-          <Code className="inline size-4" /> for invalid JSON. Consistency comes from adhering strictly to the JSON standard on both the producing (server) and consuming (client) ends.
+          <Code className="inline size-4" /> for invalid JSON. Consistency comes from adhering strictly to the JSON
+          standard on both the producing (server) and consuming (client) ends.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -142,7 +157,11 @@ export default function CrossBrowserJsonArticle() {
           argument that controls indentation.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example <Code className="inline size-4" /><span className="font-mono">space</span><Code className="inline size-4" /> argument:</h4>
+          <h4 className="text-lg font-medium">
+            Example <Code className="inline size-4" />
+            <span className="font-mono">space</span>
+            <Code className="inline size-4" /> argument:
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
               {`const obj = { name: "Bob", age: 42 };
@@ -171,12 +190,16 @@ console.log(JSON.stringify(obj, null, '\\t'));
           </div>
         </div>
         <p>
-          The specific whitespace (spaces or tabs) and newlines generated when using the <Code className="inline size-4" />
+          The specific whitespace (spaces or tabs) and newlines generated when using the{" "}
+          <Code className="inline size-4" />
           <span className="font-mono">space</span>
-          <Code className="inline size-4" /> argument are consistent across modern browsers according to the spec. Issues here are more likely related to developers *expecting* a specific format (e.g., for pretty-printing) and not using the <Code className="inline size-4" />
+          <Code className="inline size-4" /> argument are consistent across modern browsers according to the spec.
+          Issues here are more likely related to developers *expecting* a specific format (e.g., for pretty-printing)
+          and not using the <Code className="inline size-4" />
           <span className="font-mono">space</span>
           <Code className="inline size-4" />
-          argument correctly, rather than true cross-browser inconsistencies in parsing valid JSON with various whitespace.
+          argument correctly, rather than true cross-browser inconsistencies in parsing valid JSON with various
+          whitespace.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -184,7 +207,12 @@ console.log(JSON.stringify(obj, null, '\\t'));
           <span>4. Number Precision Issues</span>
         </h3>
         <p>
-          JSON numbers are typically represented as IEEE 754 double-precision floating-point numbers in JavaScript. Very large integers or numbers with high decimal precision might suffer from precision loss. This is not a JSON *formatting* issue itself, but a limitation of JavaScript&apos;s number type that becomes apparent when parsing numbers from JSON. This behavior is consistent across standard JavaScript environments, but it&apos;s something to be aware of if your application deals with financial data or scientific calculations requiring exact precision beyond what doubles can provide.
+          JSON numbers are typically represented as IEEE 754 double-precision floating-point numbers in JavaScript. Very
+          large integers or numbers with high decimal precision might suffer from precision loss. This is not a JSON
+          *formatting* issue itself, but a limitation of JavaScript&apos;s number type that becomes apparent when
+          parsing numbers from JSON. This behavior is consistent across standard JavaScript environments, but it&apos;s
+          something to be aware of if your application deals with financial data or scientific calculations requiring
+          exact precision beyond what doubles can provide.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -192,34 +220,44 @@ console.log(JSON.stringify(obj, null, '\\t'));
           <span>5. Character Encoding</span>
         </h3>
         <p>
-          JSON text MUST be encoded in UTF-8. While browsers generally handle UTF-8 correctly, serving JSON with a different encoding (like Latin-1) without specifying the correct <Code className="inline size-4" />
+          JSON text MUST be encoded in UTF-8. While browsers generally handle UTF-8 correctly, serving JSON with a
+          different encoding (like Latin-1) without specifying the correct <Code className="inline size-4" />
           <span className="font-mono">Content-Type: application/json; charset=utf-8</span>
           <Code className="inline size-4" />
-          header can lead to incorrect parsing of non-ASCII characters in some browser/server configurations. Always ensure consistent UTF-8 encoding.
+          header can lead to incorrect parsing of non-ASCII characters in some browser/server configurations. Always
+          ensure consistent UTF-8 encoding.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <Bug className="size-5" />
-          <span>6. Security Concerns (<Code className="inline size-4" />
-          <span className="font-mono">eval()</span>
-          <Code className="inline size-4" /> is Bad)</span>
+          <span>
+            6. Security Concerns (<Code className="inline size-4" />
+            <span className="font-mono">eval()</span>
+            <Code className="inline size-4" /> is Bad)
+          </span>
         </h3>
         <p>
           Historically, some developers used <Code className="inline size-4" />
           <span className="font-mono">eval()</span>
           <Code className="inline size-4" /> to parse JSON strings, especially before <Code className="inline size-4" />
           <span className="font-mono">JSON.parse</span>
-          <Code className="inline size-4" /> was widely available. This is a major security vulnerability because <Code className="inline size-4" />
+          <Code className="inline size-4" /> was widely available. This is a major security vulnerability because{" "}
+          <Code className="inline size-4" />
           <span className="font-mono">eval()</span>
           <Code className="inline size-4" />
-          executes *any* JavaScript code within the string. If the JSON data comes from an untrusted source, it could contain malicious code. <Code className="inline size-4" />
+          executes *any* JavaScript code within the string. If the JSON data comes from an untrusted source, it could
+          contain malicious code. <Code className="inline size-4" />
           <span className="font-mono">JSON.parse</span>
-          <Code className="inline size-4" /> is designed to be safe as it only parses the JSON syntax and does not execute code. Using <Code className="inline size-4" />
+          <Code className="inline size-4" /> is designed to be safe as it only parses the JSON syntax and does not
+          execute code. Using <Code className="inline size-4" />
           <span className="font-mono">eval()</span>
           <Code className="inline size-4" /> for JSON parsing should be strictly avoided in all browsers.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center space-x-2"><AlertTriangle className="size-5 text-red-500" /><span>NEVER do this:</span></h4>
+          <h4 className="text-lg font-medium flex items-center space-x-2">
+            <AlertTriangle className="size-5 text-red-500" />
+            <span>NEVER do this:</span>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
               {`// BAD, insecure, can execute arbitrary code!
@@ -234,7 +272,10 @@ try {
           </div>
         </div>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center space-x-2"><Check className="size-5 text-green-500" /><span>ALWAYS do this:</span></h4>
+          <h4 className="text-lg font-medium flex items-center space-x-2">
+            <Check className="size-5 text-green-500" />
+            <span>ALWAYS do this:</span>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
             <pre>
               {`// GOOD, safe
@@ -256,13 +297,16 @@ try {
 
         <ul className="list-disc pl-6 space-y-3 my-4">
           <li>
-            <p className="font-semibold">Use <Code className="inline size-4" />
-            <span className="font-mono">JSON.parse</span>
-            <Code className="inline size-4" /> and <Code className="inline size-4" />
-            <span className="font-mono">JSON.stringify</span>
-            <Code className="inline size-4" /> Exclusively:</p>
+            <p className="font-semibold">
+              Use <Code className="inline size-4" />
+              <span className="font-mono">JSON.parse</span>
+              <Code className="inline size-4" /> and <Code className="inline size-4" />
+              <span className="font-mono">JSON.stringify</span>
+              <Code className="inline size-4" /> Exclusively:
+            </p>
             <p>
-              These are the standard, safest, and most performant methods available in modern browsers. Avoid manual parsing or <Code className="inline size-4" />
+              These are the standard, safest, and most performant methods available in modern browsers. Avoid manual
+              parsing or <Code className="inline size-4" />
               <span className="font-mono">eval()</span>
               <Code className="inline size-4" />.
             </p>
@@ -297,7 +341,9 @@ try {
           <li>
             <p className="font-semibold">Ensure Server-Side Output is Valid JSON:</p>
             <p>
-              The most common source of "JSON formatting issues" on the client-side is actually invalid JSON produced by the server. Use robust JSON serialization libraries on the backend and validate the output if possible. Set the correct <Code className="inline size-4" />
+              The most common source of "JSON formatting issues" on the client-side is actually invalid JSON produced by
+              the server. Use robust JSON serialization libraries on the backend and validate the output if possible.
+              Set the correct <Code className="inline size-4" />
               <span className="font-mono">Content-Type: application/json; charset=utf-8</span>
               <Code className="inline size-4" /> header.
             </p>
@@ -305,15 +351,34 @@ try {
           <li>
             <p className="font-semibold">Be Mindful of Number Precision:</p>
             <p>
-              If your application requires exact handling of large numbers, consider passing them as strings in the JSON and using a library like <a href="https://github.com/MikeMcl/decimal.js/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline dark:text-blue-400">Decimal.js</a>
-              or <a href="https://github.com/gwilie/BigInt.js" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline dark:text-blue-400">BigInt</a>
+              If your application requires exact handling of large numbers, consider passing them as strings in the JSON
+              and using a library like{" "}
+              <a
+                href="https://github.com/MikeMcl/decimal.js/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline dark:text-blue-400"
+              >
+                Decimal.js
+              </a>
+              or{" "}
+              <a
+                href="https://github.com/gwilie/BigInt.js"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline dark:text-blue-400"
+              >
+                BigInt
+              </a>
               (for integers, supported natively in newer JS) to handle them after parsing.
             </p>
           </li>
           <li>
             <p className="font-semibold">Handle Dates Appropriately:</p>
             <p>
-              JSON does not have a built-in Date type. Dates are typically represented as strings (e.g., ISO 8601 format). You will need to manually convert these strings into JavaScript <Code className="inline size-4" />
+              JSON does not have a built-in Date type. Dates are typically represented as strings (e.g., ISO 8601
+              format). You will need to manually convert these strings into JavaScript{" "}
+              <Code className="inline size-4" />
               <span className="font-mono">Date</span>
               <Code className="inline size-4" /> objects after parsing. The <Code className="inline size-4" />
               <span className="font-mono">reviver</span>
@@ -323,7 +388,14 @@ try {
               is useful for this.
             </p>
             <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-              <h4 className="text-lg font-medium flex items-center space-x-2"><RefreshCcw className="size-5" /><span>Example using a <Code className="inline size-4" /><span className="font-mono">reviver</span><Code className="inline size-4" /> for Dates:</span></h4>
+              <h4 className="text-lg font-medium flex items-center space-x-2">
+                <RefreshCcw className="size-5" />
+                <span>
+                  Example using a <Code className="inline size-4" />
+                  <span className="font-mono">reviver</span>
+                  <Code className="inline size-4" /> for Dates:
+                </span>
+              </h4>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto font-mono text-sm">
                 <pre>
                   {`const jsonWithDate = '{"name": "Event", "date": "2023-10-27T10:00:00.000Z"}';
@@ -350,7 +422,9 @@ console.log(parsedDataWithDate.date instanceof Date); // Output: true`}
           <li>
             <p className="font-semibold">Use Linters and Formatters:</p>
             <p>
-              Tools like ESLint and Prettier can help catch potential syntax errors in JSON literals within your codebase and enforce consistent formatting, although they primarily address static code files, not dynamic data received from servers.
+              Tools like ESLint and Prettier can help catch potential syntax errors in JSON literals within your
+              codebase and enforce consistent formatting, although they primarily address static code files, not dynamic
+              data received from servers.
             </p>
           </li>
         </ul>
@@ -360,8 +434,8 @@ console.log(parsedDataWithDate.date instanceof Date); // Output: true`}
           <span>Conclusion</span>
         </h2>
         <p>
-          In contemporary web development, cross-browser JSON formatting issues are far less prevalent than they were
-          in the past, thanks to the widespread adoption and standardization of the <Code className="inline size-4" />
+          In contemporary web development, cross-browser JSON formatting issues are far less prevalent than they were in
+          the past, thanks to the widespread adoption and standardization of the <Code className="inline size-4" />
           <span className="font-mono">JSON</span>
           <Code className="inline size-4" />
           object in JavaScript engines. The vast majority of &quot;formatting&quot; problems stem from invalid JSON
@@ -376,9 +450,9 @@ console.log(parsedDataWithDate.date instanceof Date); // Output: true`}
           <span className="font-mono">JSON.stringify</span>
           <Code className="inline size-4" />, validating input with <Code className="inline size-4" />
           <span className="font-mono">try...catch</span>
-          <Code className="inline size-4" />, ensuring server-side JSON compliance (UTF-8 encoding, correct syntax),
-          and handling data types like Dates and large numbers explicitly, you can ensure reliable and consistent
-          JSON processing across all modern web browsers.
+          <Code className="inline size-4" />, ensuring server-side JSON compliance (UTF-8 encoding, correct syntax), and
+          handling data types like Dates and large numbers explicitly, you can ensure reliable and consistent JSON
+          processing across all modern web browsers.
         </p>
       </div>
     </>

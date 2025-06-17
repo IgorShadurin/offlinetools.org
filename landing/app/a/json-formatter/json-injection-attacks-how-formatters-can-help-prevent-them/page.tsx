@@ -17,10 +17,10 @@ export default function JsonInjectionPrevention() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is the de facto standard for data interchange on the web. Its
-          simplicity and readability make it incredibly popular. However, just like SQL, XML, or any other
-          structured data format, processing untrusted JSON input without proper care can expose your application
-          to security vulnerabilities, particularly <strong>JSON Injection Attacks</strong>.
+          JSON (JavaScript Object Notation) is the de facto standard for data interchange on the web. Its simplicity and
+          readability make it incredibly popular. However, just like SQL, XML, or any other structured data format,
+          processing untrusted JSON input without proper care can expose your application to security vulnerabilities,
+          particularly <strong>JSON Injection Attacks</strong>.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -29,13 +29,13 @@ export default function JsonInjectionPrevention() {
         </h2>
         <p>
           A JSON Injection attack occurs when an attacker provides malicious data that, when processed by the
-          application as JSON, alters the intended structure or content of the data in a harmful way, or worse,
-          causes unintended code execution.
+          application as JSON, alters the intended structure or content of the data in a harmful way, or worse, causes
+          unintended code execution.
         </p>
         <p>
-          The core of this vulnerability lies in how the application parses or interprets the input string. If
-          the application uses an unsafe method that evaluates the input string as code, an attacker can inject
-          JavaScript code disguised as JSON data.
+          The core of this vulnerability lies in how the application parses or interprets the input string. If the
+          application uses an unsafe method that evaluates the input string as code, an attacker can inject JavaScript
+          code disguised as JSON data.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -44,16 +44,18 @@ export default function JsonInjectionPrevention() {
         </h2>
         <p>
           Historically, before native JSON parsers were widespread, developers sometimes used JavaScript's
-          <code>eval()</code> function to parse JSON strings. The idea was that a valid JSON string is also a
-          valid JavaScript expression that evaluates to an object or array.
+          <code>eval()</code> function to parse JSON strings. The idea was that a valid JSON string is also a valid
+          JavaScript expression that evaluates to an object or array.
         </p>
         <p>
-          However, <code>eval()</code> is incredibly dangerous when used with untrusted input because it executes
-          *any* valid JavaScript code within the string, not just code that forms a JSON structure.
+          However, <code>eval()</code> is incredibly dangerous when used with untrusted input because it executes *any*
+          valid JavaScript code within the string, not just code that forms a JSON structure.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: Unsafe Parsing with <code>eval()</code></h3>
+          <h3 className="text-lg font-medium">
+            Example: Unsafe Parsing with <code>eval()</code>
+          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// Assume this comes from user input
@@ -76,7 +78,11 @@ const maliciousInput = '{"name": "Attacker", "exec": alert("You have been pwned!
           </div>
           <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center space-x-1">
             <AlertTriangle className="w-4 h-4" />
-            <span>Using <code>eval()</code> with untrusted JSON input is a critical security vulnerability. It can lead to Cross-Site Scripting (XSS), data breaches, or even Remote Code Execution (RCE) depending on the environment and the code executed.</span>
+            <span>
+              Using <code>eval()</code> with untrusted JSON input is a critical security vulnerability. It can lead to
+              Cross-Site Scripting (XSS), data breaches, or even Remote Code Execution (RCE) depending on the
+              environment and the code executed.
+            </span>
           </p>
         </div>
 
@@ -85,20 +91,27 @@ const maliciousInput = '{"name": "Attacker", "exec": alert("You have been pwned!
           <span>How Proper JSON Formatters (Parsers) Help</span>
         </h2>
         <p>
-          This is where dedicated JSON parsers, often built into modern programming languages and frameworks,
-          come to the rescue. The most common and recommended way to parse JSON in JavaScript environments
-          (including Node.js backend applications like a Next.js API route) is using the built-in
+          This is where dedicated JSON parsers, often built into modern programming languages and frameworks, come to
+          the rescue. The most common and recommended way to parse JSON in JavaScript environments (including Node.js
+          backend applications like a Next.js API route) is using the built-in
           <code>JSON.parse()</code> method.
         </p>
         <p>
-          <code>JSON.parse()</code> is a <strong>strict JSON formatter and validator</strong>. It does not
-          evaluate the input string as general JavaScript code. Instead, it:
+          <code>JSON.parse()</code> is a <strong>strict JSON formatter and validator</strong>. It does not evaluate the
+          input string as general JavaScript code. Instead, it:
         </p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>
-            <strong>Strictly Validates JSON Syntax:</strong> It checks if the input string strictly adheres
-            to the <a href="https://www.json.org/json-en.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline">official JSON specification</a>.
-            This includes rules like:
+            <strong>Strictly Validates JSON Syntax:</strong> It checks if the input string strictly adheres to the{" "}
+            <a
+              href="https://www.json.org/json-en.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 underline"
+            >
+              official JSON specification
+            </a>
+            . This includes rules like:
             <ul className="list-disc pl-6 mt-1">
               <li>Object keys must be double-quoted strings.</li>
               <li>Strings must use double quotes.</li>
@@ -110,15 +123,17 @@ const maliciousInput = '{"name": "Attacker", "exec": alert("You have been pwned!
             <code>SyntaxError</code>.
           </li>
           <li>
-            <strong>Parses, Does Not Evaluate:</strong> Crucially, <code>JSON.parse()</code> is a parser,
-            not an interpreter. It reads the string character by character, builds an internal representation
-            of the data structure based on the strict JSON rules, and then constructs a native JavaScript
-            object or array from that representation. It does not execute any code found within the string.
+            <strong>Parses, Does Not Evaluate:</strong> Crucially, <code>JSON.parse()</code> is a parser, not an
+            interpreter. It reads the string character by character, builds an internal representation of the data
+            structure based on the strict JSON rules, and then constructs a native JavaScript object or array from that
+            representation. It does not execute any code found within the string.
           </li>
         </ol>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: Safe Parsing with <code>JSON.parse()</code></h3>
+          <h3 className="text-lg font-medium">
+            Example: Safe Parsing with <code>JSON.parse()</code>
+          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// Assume this comes from user input
@@ -149,7 +164,10 @@ try {
           </div>
           <p className="mt-2 text-sm text-green-600 dark:text-green-400 flex items-center space-x-1">
             <CheckCircle className="w-4 h-4" />
-            <span>Using <code>JSON.parse()</code> prevents code execution because it only accepts strictly valid JSON values and structures. Malicious code disguised as data will cause a parsing error instead of executing.</span>
+            <span>
+              Using <code>JSON.parse()</code> prevents code execution because it only accepts strictly valid JSON values
+              and structures. Malicious code disguised as data will cause a parsing error instead of executing.
+            </span>
           </p>
         </div>
 
@@ -158,19 +176,23 @@ try {
           <span>Beyond Parsing: Input Validation</span>
         </h2>
         <p>
-          While using a proper JSON parser like <code>JSON.parse()</code> is the fundamental defense against
-          JSON injection via unsafe evaluation, it&apos;s not the complete security story. Parsers only ensure the
-          input is *syntactically* correct JSON and produce a standard JavaScript object/array.
+          While using a proper JSON parser like <code>JSON.parse()</code> is the fundamental defense against JSON
+          injection via unsafe evaluation, it&apos;s not the complete security story. Parsers only ensure the input is
+          *syntactically* correct JSON and produce a standard JavaScript object/array.
         </p>
         <p>
-          After parsing, you must still validate the *content* and *structure* of the resulting data against
-          your application&apos;s expectations. This means checking:
+          After parsing, you must still validate the *content* and *structure* of the resulting data against your
+          application&apos;s expectations. This means checking:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Do the expected keys exist?</li>
-          <li>Are the values of the correct data types (e.g., is <code>age</code> a number, not a string)?</li>
+          <li>
+            Are the values of the correct data types (e.g., is <code>age</code> a number, not a string)?
+          </li>
           <li>Are the values within acceptable ranges or formats (e.g., is the age a positive number)?</li>
-          <li>Does the structure match what you expect (e.g., is <code>courses</code> an array of strings)?</li>
+          <li>
+            Does the structure match what you expect (e.g., is <code>courses</code> an array of strings)?
+          </li>
         </ul>
         <p>
           Failing to validate the parsed data can lead to other issues, such as application logic errors,
@@ -181,16 +203,15 @@ try {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON Injection attacks exploiting unsafe evaluation methods like <code>eval()</code> are a serious
-          threat. Fortunately, preventing this specific type of injection is straightforward and built into
-          the platform: always use the standard, secure <code>JSON.parse()</code> function to parse JSON
-          strings from untrusted sources.
+          JSON Injection attacks exploiting unsafe evaluation methods like <code>eval()</code> are a serious threat.
+          Fortunately, preventing this specific type of injection is straightforward and built into the platform: always
+          use the standard, secure <code>JSON.parse()</code> function to parse JSON strings from untrusted sources.
         </p>
         <p>
-          <code>JSON.parse()</code> acts as a strict formatter and validator, ensuring the input conforms
-          to the JSON specification and, crucially, does not execute arbitrary code. Pair this with robust
-          post-parsing validation of the data's structure and content, and you will significantly harden
-          your application against vulnerabilities stemming from untrusted JSON input.
+          <code>JSON.parse()</code> acts as a strict formatter and validator, ensuring the input conforms to the JSON
+          specification and, crucially, does not execute arbitrary code. Pair this with robust post-parsing validation
+          of the data's structure and content, and you will significantly harden your application against
+          vulnerabilities stemming from untrusted JSON input.
         </p>
       </div>
     </>

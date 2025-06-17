@@ -28,8 +28,8 @@ export default function JsonFormatterArticle() {
         <h2 className="text-2xl font-semibold mt-8">What Are Feature Flags?</h2>
         <p>
           Feature flags are boolean values or parameters that determine whether a particular feature is enabled or
-          disabled for specific users or environments. They act as conditional switches that control program flow without
-          requiring code changes or redeployments.
+          disabled for specific users or environments. They act as conditional switches that control program flow
+          without requiring code changes or redeployments.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -155,9 +155,7 @@ if (envFlags.newHomepage) {
         </div>
 
         <h3 className="text-xl font-medium mt-6">3. User-Targeted Flags</h3>
-        <p>
-          For more sophisticated feature targeting, you can define rules for specific user segments or IDs.
-        </p>
+        <p>For more sophisticated feature targeting, you can define rules for specific user segments or IDs.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Example JSON:</h4>
@@ -227,15 +225,14 @@ function isFeatureEnabledForUser(featureName, user) {
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
           <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Pro Tip:</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            For percentage-based rollouts, ensure you use a consistent hashing mechanism based on a user identifier. This
-            guarantees the same users always get the same experience, rather than randomly changing on each page load.
+            For percentage-based rollouts, ensure you use a consistent hashing mechanism based on a user identifier.
+            This guarantees the same users always get the same experience, rather than randomly changing on each page
+            load.
           </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">4. Feature Flags with Configuration Values</h3>
-        <p>
-          Sometimes you need more than just an on/off switch - you might need configurable values for features.
-        </p>
+        <p>Sometimes you need more than just an on/off switch - you might need configurable values for features.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Example JSON:</h4>
@@ -284,7 +281,8 @@ function getSearchResults(query) {
 
         <h3 className="text-xl font-medium mt-6">1. Server-Side Loading</h3>
         <p>
-          Loading feature flags on the server is typically more secure and prevents exposing sensitive flag configurations to clients.
+          Loading feature flags on the server is typically more secure and prevents exposing sensitive flag
+          configurations to clients.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -319,9 +317,7 @@ app.get('/api/feature-flags', (req, res) => {
         </div>
 
         <h3 className="text-xl font-medium mt-6">2. Client-Side Loading</h3>
-        <p>
-          For client-side applications, you can fetch flags via an API or bundle them with your application.
-        </p>
+        <p>For client-side applications, you can fetch flags via an API or bundle them with your application.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Example with React:</h4>
@@ -383,9 +379,7 @@ function NewFeature() {
         <h2 className="text-2xl font-semibold mt-8">Managing JSON Flag Updates</h2>
 
         <h3 className="text-xl font-medium mt-6">1. Static File Approach</h3>
-        <p>
-          The simplest approach is to store flags in a static JSON file that gets updated with deployments.
-        </p>
+        <p>The simplest approach is to store flags in a static JSON file that gets updated with deployments.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Pros and Cons:</h4>
@@ -414,9 +408,7 @@ function NewFeature() {
         </div>
 
         <h3 className="text-xl font-medium mt-6">2. Database-Driven Approach</h3>
-        <p>
-          For more dynamic control, store flags in a database and provide an admin interface to update them.
-        </p>
+        <p>For more dynamic control, store flags in a database and provide an admin interface to update them.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Implementation Approach:</h4>
@@ -430,9 +422,7 @@ function NewFeature() {
         </div>
 
         <h3 className="text-xl font-medium mt-6">3. External Configuration Service</h3>
-        <p>
-          Dedicated configuration services offer more sophisticated flag management capabilities.
-        </p>
+        <p>Dedicated configuration services offer more sophisticated flag management capabilities.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Implementation Options:</h4>
@@ -448,7 +438,8 @@ function NewFeature() {
 
         <ol className="list-decimal pl-6 space-y-3 mt-4">
           <li>
-            <strong>Include default values and fallbacks</strong> to ensure your application works even if flag loading fails
+            <strong>Include default values and fallbacks</strong> to ensure your application works even if flag loading
+            fails
           </li>
           <li>
             <strong>Keep feature flag logic separate</strong> from your business logic to maintain clean code
@@ -532,7 +523,9 @@ function NewFeature() {
               </tr>
               <tr className="border-t">
                 <td className="px-4 py-2">Testing with different flag combinations</td>
-                <td className="px-4 py-2">Create testing flag presets and add flag override capabilities in test environments</td>
+                <td className="px-4 py-2">
+                  Create testing flag presets and add flag override capabilities in test environments
+                </td>
               </tr>
             </tbody>
           </table>
@@ -540,17 +533,17 @@ function NewFeature() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Using JSON for feature flags provides a flexible, readable way to implement runtime configuration in your applications. 
-          Whether you choose a simple file-based approach or integrate with sophisticated configuration management systems, 
-          feature flags enable controlled rollouts, experimentation, and risk reduction.
+          Using JSON for feature flags provides a flexible, readable way to implement runtime configuration in your
+          applications. Whether you choose a simple file-based approach or integrate with sophisticated configuration
+          management systems, feature flags enable controlled rollouts, experimentation, and risk reduction.
         </p>
         <p className="mt-4">
-          As your application grows, consider evolving your feature flag implementation to match your team's needs. 
-          Start simple with basic boolean flags and add complexity only when necessary. Remember that the ultimate goal 
+          As your application grows, consider evolving your feature flag implementation to match your team's needs.
+          Start simple with basic boolean flags and add complexity only when necessary. Remember that the ultimate goal
           is to increase deployment confidence and flexibility while maintaining a great user experience.
         </p>
         <p className="mt-4">
-          With proper design and management, JSON feature flags can become a powerful tool in your development workflow, 
+          With proper design and management, JSON feature flags can become a powerful tool in your development workflow,
           enabling you to ship faster while maintaining control over how and when your features are released to users.
         </p>
       </div>

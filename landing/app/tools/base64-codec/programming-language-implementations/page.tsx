@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "JavaScript Base64 Implementation: btoa and atob Functions",
-    description: "Understanding the built-in Base64 encoding and decoding functions in JavaScript and their limitations.",
+    description:
+      "Understanding the built-in Base64 encoding and decoding functions in JavaScript and their limitations.",
     slug: "javascript-base64-implementation-btoa-and-atob-functions",
   },
   {
@@ -64,7 +65,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Rust Base64 Encoding Crates: Performance and Features",
-    description: "A comparison of Base64 libraries available in the Rust ecosystem with focus on safety and performance.",
+    description:
+      "A comparison of Base64 libraries available in the Rust ecosystem with focus on safety and performance.",
     slug: "rust-base64-encoding-crates-performance-and-features",
   },
   {
@@ -116,7 +118,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Embedded Systems Base64 Implementations for Resource-Constrained Environments",
     description: "Optimized Base64 coding techniques for microcontrollers and embedded systems with limited resources.",
     slug: "embedded-systems-base64-implementations-for-resource-constrained-environments",
-  }
+  },
 ];
 
 /**
@@ -157,7 +159,9 @@ export default function Base64CodecProgrammingLanguagesPage() {
                 <li aria-current="page">Programming Language Implementations</li>
               </ol>
             </nav>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight">Base64 Codec Programming Language Implementations</h1>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight">
+              Base64 Codec Programming Language Implementations
+            </h1>
           </div>
         </div>
 
@@ -167,7 +171,9 @@ export default function Base64CodecProgrammingLanguagesPage() {
               <Code className="text-gray-700" size={24} />
               Base64 Across Programming Languages
             </CardTitle>
-            <CardDescription>Implementations and libraries for Base64 encoding in different programming ecosystems</CardDescription>
+            <CardDescription>
+              Implementations and libraries for Base64 encoding in different programming ecosystems
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +185,8 @@ export default function Base64CodecProgrammingLanguagesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Web and Scripting Languages</h3>
                     <p className="text-sm text-muted-foreground">
-                      Base64 implementations in JavaScript, TypeScript, Python, Ruby, PHP, and Node.js for web and scripting applications.
+                      Base64 implementations in JavaScript, TypeScript, Python, Ruby, PHP, and Node.js for web and
+                      scripting applications.
                     </p>
                   </div>
                 </div>
@@ -191,7 +198,8 @@ export default function Base64CodecProgrammingLanguagesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Systems Programming</h3>
                     <p className="text-sm text-muted-foreground">
-                      Low-level Base64 implementations in C, C++, Rust, Go, and Assembly for performance-critical applications.
+                      Low-level Base64 implementations in C, C++, Rust, Go, and Assembly for performance-critical
+                      applications.
                     </p>
                   </div>
                 </div>
@@ -205,7 +213,8 @@ export default function Base64CodecProgrammingLanguagesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Object-Oriented Languages</h3>
                     <p className="text-sm text-muted-foreground">
-                      Base64 libraries and patterns in Java, C#, Swift, Kotlin, and Objective-C for enterprise and mobile development.
+                      Base64 libraries and patterns in Java, C#, Swift, Kotlin, and Objective-C for enterprise and
+                      mobile development.
                     </p>
                   </div>
                 </div>
@@ -217,7 +226,8 @@ export default function Base64CodecProgrammingLanguagesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Cross-Platform Considerations</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ensuring Base64 compatibility across languages, platforms, and environments including embedded systems.
+                      Ensuring Base64 compatibility across languages, platforms, and environments including embedded
+                      systems.
                     </p>
                   </div>
                 </div>
@@ -230,7 +240,9 @@ export default function Base64CodecProgrammingLanguagesPage() {
                 <span>Implementation Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                While most programming languages follow RFC 4648 for Base64 implementation, subtle differences can exist in handling padding characters, line breaks, and URL-safe variants. When working across multiple languages, be aware of these nuances to ensure compatibility in your Base64 encoded data.
+                While most programming languages follow RFC 4648 for Base64 implementation, subtle differences can exist
+                in handling padding characters, line breaks, and URL-safe variants. When working across multiple
+                languages, be aware of these nuances to ensure compatibility in your Base64 encoded data.
               </p>
             </div>
           </CardContent>
@@ -240,4 +252,4 @@ export default function Base64CodecProgrammingLanguagesPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

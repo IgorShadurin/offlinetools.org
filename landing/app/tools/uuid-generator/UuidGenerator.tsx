@@ -9,13 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { 
-  generateUUID, 
-  generateMultipleUUIDs, 
-  validateUUID,
-  UUIDVersion, 
-  UUIDNamespace 
-} from "shared";
+import { generateUUID, generateMultipleUUIDs, validateUUID, UUIDVersion, UUIDNamespace } from "shared";
 import { useState } from "react";
 import { AlertCircle, Check, Copy, RefreshCw, Link as LinkIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -40,7 +34,7 @@ export default function UuidGenerator() {
   const handleGenerate = () => {
     try {
       let result = "";
-      
+
       if (count === 1) {
         const options = {
           version: uuidVersion,
@@ -50,7 +44,7 @@ export default function UuidGenerator() {
           namespace,
           customNamespace,
         };
-        
+
         result = generateUUID(options);
       } else {
         const options = {
@@ -61,10 +55,10 @@ export default function UuidGenerator() {
           namespace,
           customNamespace,
         };
-        
-        result = generateMultipleUUIDs(count, options).join('\n');
+
+        result = generateMultipleUUIDs(count, options).join("\n");
       }
-      
+
       setOutput(result);
       setError(null);
     } catch (error) {
@@ -79,7 +73,7 @@ export default function UuidGenerator() {
         setValidationResult(null);
         return;
       }
-      
+
       const isValid = validateUUID(validateInput);
       setValidationResult(isValid);
       setError(null);
@@ -255,13 +249,13 @@ export default function UuidGenerator() {
 
                   <Button onClick={handleGenerate} className="w-full flex items-center gap-2">
                     <RefreshCw className="h-4 w-4" />
-                    Generate UUID{count > 1 ? 's' : ''}
+                    Generate UUID{count > 1 ? "s" : ""}
                   </Button>
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor="output">Generated UUID{count > 1 ? 's' : ''}</Label>
+                    <Label htmlFor="output">Generated UUID{count > 1 ? "s" : ""}</Label>
                     {output && (
                       <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleCopy}>
                         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -315,22 +309,11 @@ export default function UuidGenerator() {
                       <AlertDescription>{error}</AlertDescription>
                     </Alert>
                   ) : validationResult !== null ? (
-                    <Alert
-                      variant={validationResult ? "default" : "destructive"}
-                      className="mt-2"
-                    >
-                      {validationResult ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4" />
-                      )}
-                      <AlertTitle>
-                        {validationResult ? "Valid UUID" : "Invalid UUID"}
-                      </AlertTitle>
+                    <Alert variant={validationResult ? "default" : "destructive"} className="mt-2">
+                      {validationResult ? <Check className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+                      <AlertTitle>{validationResult ? "Valid UUID" : "Invalid UUID"}</AlertTitle>
                       <AlertDescription>
-                        {validationResult
-                          ? "The string is a valid UUID."
-                          : "The string is not a valid UUID."}
+                        {validationResult ? "The string is a valid UUID." : "The string is not a valid UUID."}
                       </AlertDescription>
                     </Alert>
                   ) : (

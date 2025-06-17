@@ -23,8 +23,8 @@ export default function PrologJsonHandlingArticle() {
           Prolog terms and formatting Prolog terms into JSON strings.
         </p>
         <p>
-          This page explores the common approaches and provides examples using the widely supported syntax found
-          in systems like SWI-Prolog, which offers a comprehensive JSON library.
+          This page explores the common approaches and provides examples using the widely supported syntax found in
+          systems like SWI-Prolog, which offers a comprehensive JSON library.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -32,8 +32,8 @@ export default function PrologJsonHandlingArticle() {
           The Basics: Representing JSON in Prolog
         </h2>
         <p>
-          Before diving into parsing and formatting, it's essential to understand how JSON data structures are
-          typically represented within Prolog's term structure:
+          Before diving into parsing and formatting, it's essential to understand how JSON data structures are typically
+          represented within Prolog's term structure:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -46,20 +46,21 @@ export default function PrologJsonHandlingArticle() {
             >
               Prolog Dict
             </a>{" "}
-            (or "dictionary"). Keys are typically atoms or strings, and values can be any Prolog term representing
-            a JSON value. Example:{" "}
-            <code>_&#123;id:123, name:"Alice", active:true&#125;</code>
+            (or "dictionary"). Keys are typically atoms or strings, and values can be any Prolog term representing a
+            JSON value. Example: <code>_&#123;id:123, name:"Alice", active:true&#125;</code>
           </li>
           <li>
-            <strong>JSON Array:</strong> Represented as a standard Prolog List. Example: <code>[1, "apple", false]</code>
+            <strong>JSON Array:</strong> Represented as a standard Prolog List. Example:{" "}
+            <code>[1, "apple", false]</code>
           </li>
           <li>
-            <strong>JSON String:</strong> Represented as a Prolog String (double quotes) or sometimes an Atom (single quotes),
-            depending on the specific predicate and options used. Strings are generally preferred for direct JSON mapping.
-            Example: <code>"Hello, World!"</code>
+            <strong>JSON String:</strong> Represented as a Prolog String (double quotes) or sometimes an Atom (single
+            quotes), depending on the specific predicate and options used. Strings are generally preferred for direct
+            JSON mapping. Example: <code>"Hello, World!"</code>
           </li>
           <li>
-            <strong>JSON Number:</strong> Represented as a Prolog Integer or Float. Example: <code>42</code>, <code>3.14</code>
+            <strong>JSON Number:</strong> Represented as a Prolog Integer or Float. Example: <code>42</code>,{" "}
+            <code>3.14</code>
           </li>
           <li>
             <strong>JSON Boolean:</strong> Represented by the Prolog atoms <code>true</code> and <code>false</code>.
@@ -69,8 +70,8 @@ export default function PrologJsonHandlingArticle() {
           </li>
         </ul>
         <p>
-          This mapping allows Prolog's powerful unification and pattern matching capabilities to be applied directly
-          to parsed JSON data.
+          This mapping allows Prolog's powerful unification and pattern matching capabilities to be applied directly to
+          parsed JSON data.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -78,12 +79,14 @@ export default function PrologJsonHandlingArticle() {
           JSON Parsing: From String to Prolog Term
         </h2>
         <p>
-          The primary goal of JSON parsing in Prolog is to take a JSON formatted string (or stream) and convert it
-          into a corresponding Prolog term (usually a dict or a list). The most common predicate for this in SWI-Prolog
-          is <code>json_read/2</code> or <code>json_read_dict/2</code>.
+          The primary goal of JSON parsing in Prolog is to take a JSON formatted string (or stream) and convert it into
+          a corresponding Prolog term (usually a dict or a list). The most common predicate for this in SWI-Prolog is{" "}
+          <code>json_read/2</code> or <code>json_read_dict/2</code>.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Using <code>json_read/2</code></h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Using <code>json_read/2</code>
+        </h3>
         <p>
           <code>json_read(Stream, Term)</code> reads a JSON term from <code>Stream</code> and unifies it with{" "}
           <code>Term</code>. You typically wrap the string in a "string stream" for this.
@@ -117,14 +120,18 @@ Data = _{active:false, person:_{cities:["London", "Paris"], name:"Charlie"}}.
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Using <code>json_read_dict/2</code></h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Using <code>json_read_dict/2</code>
+        </h3>
         <p>
           This predicate is similar but specifically designed for parsing the top-level JSON object or array directly
-          into a dict or list term. It's often more convenient for parsing JSON API responses which are typically
-          either an object or an array at the root.
+          into a dict or list term. It's often more convenient for parsing JSON API responses which are typically either
+          an object or an array at the root.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Using <code>json_read_dict/2</code></h4>
+          <h4 className="text-lg font-medium mb-2">
+            Example: Using <code>json_read_dict/2</code>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre className="text-sm">
               {`?- json_read_dict(string('{"status": "ok", "data": [1, 2, 3]}'), Dict).
@@ -161,8 +168,8 @@ Address = _{city:"Rome", zip:"00100"}.`}
 
         <h3 className="text-xl font-semibold mt-6">Error Handling</h3>
         <p>
-          If the input string is not valid JSON, the parsing predicates will typically throw an exception. You can
-          use <code>catch/3</code> to handle these errors gracefully.
+          If the input string is not valid JSON, the parsing predicates will typically throw an exception. You can use{" "}
+          <code>catch/3</code> to handle these errors gracefully.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -171,15 +178,17 @@ Address = _{city:"Rome", zip:"00100"}.`}
         </h2>
         <p>
           Formatting (or serializing) JSON involves converting a Prolog term (that represents a JSON structure) back
-          into a JSON formatted string. Predicates like <code>json_write/2</code> and <code>json_write_dict/2</code>{" "}
-          are used for this purpose. They typically write to a stream, which can be an output stream like <code>current_output</code>{" "}
-          or a "string stream" to capture the output into a Prolog string.
+          into a JSON formatted string. Predicates like <code>json_write/2</code> and <code>json_write_dict/2</code> are
+          used for this purpose. They typically write to a stream, which can be an output stream like{" "}
+          <code>current_output</code> or a "string stream" to capture the output into a Prolog string.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Using <code>json_write/2</code> or <code>json_write_dict/2</code></h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Using <code>json_write/2</code> or <code>json_write_dict/2</code>
+        </h3>
         <p>
-          These predicates take a Prolog term and a stream and write the JSON representation to the stream. To get
-          the JSON into a string variable, you use a "string stream" in write mode.
+          These predicates take a Prolog term and a stream and write the JSON representation to the stream. To get the
+          JSON into a string variable, you use a "string stream" in write mode.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example 1: Formatting a Prolog Dict</h4>
@@ -232,11 +241,13 @@ JsonString = "{"config":{"timeout":5000,"retries":3},"endpoints":["/users","/pro
 
         <h3 className="text-xl font-semibold mt-6">Formatting Options (Pretty Printing, etc.)</h3>
         <p>
-          Predicates like <code>json_write/3</code> or <code>json_write_dict/3</code> allow specifying options,
-          such as indentation for "pretty printing" the output JSON string, making it more human-readable.
+          Predicates like <code>json_write/3</code> or <code>json_write_dict/3</code> allow specifying options, such as
+          indentation for "pretty printing" the output JSON string, making it more human-readable.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Pretty Printing with <code>json_write/3</code></h4>
+          <h4 className="text-lg font-medium mb-2">
+            Example: Pretty Printing with <code>json_write/3</code>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre className="text-sm">
               {`?- Data = _{config:_{timeout:5000, retries:3}, endpoints:["/users", "/products"]},
@@ -252,17 +263,15 @@ JsonString = "{\\n    \"config\": {\\n        \"timeout\": 5000,\\n        \"ret
             </pre>
           </div>
         </div>
-        <p>
-          When outputting to a console or file, the newlines and spaces would render the structured format.
-        </p>
+        <p>When outputting to a console or file, the newlines and spaces would render the structured format.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Code className="w-6 h-6" />
           Working with JSON Files
         </h2>
         <p>
-          Reading from or writing to JSON files is straightforward using standard Prolog file handling predicates
-          (<code>open/3</code>, <code>close/1</code>) in conjunction with the JSON library predicates.
+          Reading from or writing to JSON files is straightforward using standard Prolog file handling predicates (
+          <code>open/3</code>, <code>close/1</code>) in conjunction with the JSON library predicates.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example: Reading from a File</h4>
@@ -304,10 +313,10 @@ write_json_file(FilePath, Term) :-
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           Prolog's built-in capabilities, especially the JSON libraries available in implementations like SWI-Prolog,
-          make handling JSON data straightforward and efficient. By mapping JSON objects to Prolog dicts and JSON
-          arrays to Prolog lists, developers can leverage Prolog's strengths in data representation, manipulation,
-          and pattern matching directly on external data sources. Whether you need to parse data from a web API
-          or format Prolog results for a web application, the predicates covered provide the necessary tools.
+          make handling JSON data straightforward and efficient. By mapping JSON objects to Prolog dicts and JSON arrays
+          to Prolog lists, developers can leverage Prolog's strengths in data representation, manipulation, and pattern
+          matching directly on external data sources. Whether you need to parse data from a web API or format Prolog
+          results for a web application, the predicates covered provide the necessary tools.
         </p>
       </div>
     </>

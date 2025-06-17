@@ -22,22 +22,19 @@ export const metadata: Metadata = {
 export default function JsonFormatterFeaturesArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Microlearning Modules: Unpacking JSON Formatter Features
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Microlearning Modules: Unpacking JSON Formatter Features</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is the ubiquitous data interchange format in web development
-          and beyond. While simple in structure, reading and writing large or complex JSON can be challenging.
-          This is where <strong className="font-semibold">JSON Formatters</strong> come in.
-          They are essential tools for developers, providing features that make working with JSON easier,
-          more efficient, and less error-prone.
+          JSON (JavaScript Object Notation) is the ubiquitous data interchange format in web development and beyond.
+          While simple in structure, reading and writing large or complex JSON can be challenging. This is where{" "}
+          <strong className="font-semibold">JSON Formatters</strong> come in. They are essential tools for developers,
+          providing features that make working with JSON easier, more efficient, and less error-prone.
         </p>
         <p>
-          This article breaks down the key features of a typical JSON formatter into small, digestible
-          "microlearning modules." Whether you&apos;re a beginner or an experienced developer, understanding
-          these features will significantly enhance your productivity when handling JSON data.
+          This article breaks down the key features of a typical JSON formatter into small, digestible "microlearning
+          modules." Whether you&apos;re a beginner or an experienced developer, understanding these features will
+          significantly enhance your productivity when handling JSON data.
         </p>
 
         {/* Module 1: Core Formatting */}
@@ -46,9 +43,8 @@ export default function JsonFormatterFeaturesArticle() {
             <Code className="text-blue-500" /> Module 1: Core Formatting &amp; Indentation
           </h2>
           <p>
-            The most fundamental task of a JSON formatter is taking raw, often
-            unreadable JSON strings and presenting them in a structured, indented format.
-            This makes the hierarchical nature of JSON immediately visible.
+            The most fundamental task of a JSON formatter is taking raw, often unreadable JSON strings and presenting
+            them in a structured, indented format. This makes the hierarchical nature of JSON immediately visible.
           </p>
           <h3 className="text-xl font-medium">What it does:</h3>
           <ul className="list-disc pl-6 space-y-1">
@@ -58,21 +54,15 @@ export default function JsonFormatterFeaturesArticle() {
           </ul>
           <h3 className="text-xl font-medium mt-4">Why it&apos;s useful:</h3>
           <p>
-            Human readability is drastically improved, making it easy to trace nested objects and arrays,
-            identify data structures, and spot missing commas or brackets.
+            Human readability is drastically improved, making it easy to trace nested objects and arrays, identify data
+            structures, and spot missing commas or brackets.
           </p>
           <h3 className="text-xl font-medium mt-4">Example:</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Consider this unformatted JSON:
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Consider this unformatted JSON:</p>
           <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
-            <pre className="text-sm">
-              {`{"name":"Alice","age":30,"isStudent":false,"courses":["Math","Science"]}`}
-            </pre>
+            <pre className="text-sm">{`{"name":"Alice","age":30,"isStudent":false,"courses":["Math","Science"]}`}</pre>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Formatted (e.g., 2-space indentation):
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Formatted (e.g., 2-space indentation):</p>
           <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
             <pre className="text-sm">
               {`{
@@ -87,8 +77,8 @@ export default function JsonFormatterFeaturesArticle() {
             </pre>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <IndentIncrease size={18} /> Key takeaway: Good formatting reveals structure.
-            </div>
+            <IndentIncrease size={18} /> Key takeaway: Good formatting reveals structure.
+          </div>
         </div>
 
         {/* Module 2: Syntax Validation */}
@@ -97,26 +87,30 @@ export default function JsonFormatterFeaturesArticle() {
             <AlertCircle className="text-yellow-500" /> Module 2: Syntax Validation
           </h2>
           <p>
-            Beyond just formatting, a good tool validates if the JSON is actually syntactically correct
-            according to the JSON specification.
+            Beyond just formatting, a good tool validates if the JSON is actually syntactically correct according to the
+            JSON specification.
           </p>
           <h3 className="text-xl font-medium">What it does:</h3>
           <ul className="list-disc pl-6 space-y-1">
             <li>Checks for missing commas between key-value pairs or array elements.</li>
             <li>Ensures keys are double-quoted strings.</li>
-            <li>Verifies correct usage of brackets <code>[</code>, <code>]</code>, braces <code>&#x7b;</code>, <code>&#x7d;</code>, and colons <code>:</code>.</li>
-            <li>Identifies incorrect value types (e.g., unquoted strings, trailing commas - though some parsers are lenient, formatters often flag these).</li>
+            <li>
+              Verifies correct usage of brackets <code>[</code>, <code>]</code>, braces <code>&#x7b;</code>,{" "}
+              <code>&#x7d;</code>, and colons <code>:</code>.
+            </li>
+            <li>
+              Identifies incorrect value types (e.g., unquoted strings, trailing commas - though some parsers are
+              lenient, formatters often flag these).
+            </li>
             <li>Points out where the syntax error occurred (line number, position).</li>
           </ul>
           <h3 className="text-xl font-medium mt-4">Why it&apos;s useful:</h3>
           <p>
-            Catching syntax errors early is crucial for debugging APIs, configuration files,
-            or data exchange issues. It prevents runtime errors in applications that consume the JSON.
+            Catching syntax errors early is crucial for debugging APIs, configuration files, or data exchange issues. It
+            prevents runtime errors in applications that consume the JSON.
           </p>
           <h3 className="text-xl font-medium mt-4">Example:</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Consider this JSON with errors:
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Consider this JSON with errors:</p>
           <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
             <pre className="text-sm">
               {`{
@@ -126,18 +120,16 @@ export default function JsonFormatterFeaturesArticle() {
 }`}
             </pre>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            A validator would typically report errors like:
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">A validator would typically report errors like:</p>
           <div className="bg-red-100 text-red-800 p-3 rounded dark:bg-red-900 dark:text-red-200 overflow-x-auto">
             <pre className="text-sm">
               {`Error: Expected string literal or '}' at line 2, column 3 (character 4)
 Error: Expected comma or '}' at line 4, column 1 (character 31)`}
             </pre>
           </div>
-           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <Check size={18} className="text-green-500"/> Key takeaway: Validation ensures your JSON is parseable.
-            </div>
+          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <Check size={18} className="text-green-500" /> Key takeaway: Validation ensures your JSON is parseable.
+          </div>
         </div>
 
         {/* Module 3: Tree/Hierarchical View */}
@@ -146,8 +138,8 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
             <FolderTree className="text-green-500" /> Module 3: Tree View &amp; Visualization
           </h2>
           <p>
-            Formatted text is great, but for deeply nested or complex JSON, a visual tree representation
-            can be even more intuitive.
+            Formatted text is great, but for deeply nested or complex JSON, a visual tree representation can be even
+            more intuitive.
           </p>
           <h3 className="text-xl font-medium">What it does:</h3>
           <ul className="list-disc pl-6 space-y-1">
@@ -158,13 +150,11 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
           </ul>
           <h3 className="text-xl font-medium mt-4">Why it&apos;s useful:</h3>
           <p>
-            Quickly grasp the overall structure, navigate deep into the data, find specific nested values,
-            and understand the relationship between different parts of the JSON.
+            Quickly grasp the overall structure, navigate deep into the data, find specific nested values, and
+            understand the relationship between different parts of the JSON.
           </p>
           <h3 className="text-xl font-medium mt-4">Example (Conceptual):</h3>
-           <p className="text-sm text-gray-600 dark:text-gray-400">
-            JSON:
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">JSON:</p>
           <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
             <pre className="text-sm">
               {`{
@@ -183,10 +173,8 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
 }`}
             </pre>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Tree View representation:
-          </p>
-           <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
+          <p className="text-sm text-gray-600 dark:text-gray-400">Tree View representation:</p>
+          <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
             <pre className="text-sm">
               {`▼ user (Object)
   ├─ id (Number): 123
@@ -203,19 +191,18 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
         └─ amount (Number): 120`}
             </pre>
           </div>
-           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <Maximize size={18} /><Minimize size={18} /> Key takeaway: Tree view simplifies navigation and understanding complex structures.
-            </div>
+          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <Maximize size={18} />
+            <Minimize size={18} /> Key takeaway: Tree view simplifies navigation and understanding complex structures.
+          </div>
         </div>
 
-         {/* Module 4: Search & Filter */}
+        {/* Module 4: Search & Filter */}
         <div className="border p-4 rounded-lg dark:border-gray-700 space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2">
             <Search className="text-purple-500" /> Module 4: Search &amp; Filter
           </h2>
-          <p>
-            Finding specific data points within a large JSON payload can be tedious without search capabilities.
-          </p>
+          <p>Finding specific data points within a large JSON payload can be tedious without search capabilities.</p>
           <h3 className="text-xl font-medium">What it does:</h3>
           <ul className="list-disc pl-6 space-y-1">
             <li>Allows searching for keys or values.</li>
@@ -228,22 +215,23 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
             especially useful for debugging or data exploration.
           </p>
           <h3 className="text-xl font-medium mt-4">Example:</h3>
-           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Searching for "Anytown" in the previous JSON example would highlight that specific value within the <code>address</code> object.
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Searching for "Anytown" in the previous JSON example would highlight that specific value within the{" "}
+            <code>address</code> object.
           </p>
-           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <ListTodo size={18} /> Key takeaway: Search saves time when dealing with large datasets.
-            </div>
+          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <ListTodo size={18} /> Key takeaway: Search saves time when dealing with large datasets.
+          </div>
         </div>
 
-         {/* Module 5: Diffing */}
+        {/* Module 5: Diffing */}
         <div className="border p-4 rounded-lg dark:border-gray-700 space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2">
             <Diff className="text-orange-500" /> Module 5: Diffing JSON
           </h2>
           <p>
-            Comparing two versions of a JSON document can be challenging line by line.
-            JSON diffing tools analyze the structural and value differences.
+            Comparing two versions of a JSON document can be challenging line by line. JSON diffing tools analyze the
+            structural and value differences.
           </p>
           <h3 className="text-xl font-medium">What it does:</h3>
           <ul className="list-disc pl-6 space-y-1">
@@ -253,14 +241,14 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
           </ul>
           <h3 className="text-xl font-medium mt-4">Why it&apos;s useful:</h3>
           <p>
-            Crucial for debugging API changes, tracking configuration file modifications,
-            or understanding how data structures evolve.
+            Crucial for debugging API changes, tracking configuration file modifications, or understanding how data
+            structures evolve.
           </p>
           <h3 className="text-xl font-medium mt-4">Example (Conceptual):</h3>
-           <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Comparing <code>{`{"a": 1, "b": 2, "c": 3}`}</code> and <code>{`{"a": 1, "b": 5, "d": 4}`}</code>:
           </p>
-           <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
+          <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto">
             <pre className="text-sm">
               {`// Input 1:
 {
@@ -278,30 +266,28 @@ Error: Expected comma or '}' at line 4, column 1 (character 31)`}
             </pre>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            A diff tool would show that <code>"c"</code> was deleted, <code>"b"</code> changed from 2 to 5, and <code>"d"</code> was added.
+            A diff tool would show that <code>"c"</code> was deleted, <code>"b"</code> changed from 2 to 5, and{" "}
+            <code>"d"</code> was added.
           </p>
-           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <FileJson size={18} /> Key takeaway: Diffing helps pinpoint changes in JSON data.
-            </div>
+          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <FileJson size={18} /> Key takeaway: Diffing helps pinpoint changes in JSON data.
+          </div>
         </div>
 
         {/* Conclusion */}
         <div className="border p-4 rounded-lg dark:border-gray-700 space-y-4">
-           <h2 className="text-2xl font-semibold">Conclusion</h2>
-           <p>
-            JSON formatters are more than just pretty printers. They offer a suite of features
-            that significantly improve the developer experience when working with JSON data.
-            Mastering core formatting, validation, tree views, searching, and diffing will
-            make you much more efficient in tasks involving APIs, configuration management,
-            and data inspection.
-           </p>
-            <p>
-            Think of these features as essential tools in your development toolkit,
-            much like an IDE helps you write code. They empower you to quickly understand,
-            validate, and manipulate JSON, saving valuable debugging time.
-           </p>
+          <h2 className="text-2xl font-semibold">Conclusion</h2>
+          <p>
+            JSON formatters are more than just pretty printers. They offer a suite of features that significantly
+            improve the developer experience when working with JSON data. Mastering core formatting, validation, tree
+            views, searching, and diffing will make you much more efficient in tasks involving APIs, configuration
+            management, and data inspection.
+          </p>
+          <p>
+            Think of these features as essential tools in your development toolkit, much like an IDE helps you write
+            code. They empower you to quickly understand, validate, and manipulate JSON, saving valuable debugging time.
+          </p>
         </div>
-
       </div>
     </>
   );

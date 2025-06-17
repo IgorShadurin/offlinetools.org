@@ -31,18 +31,14 @@ export default function JsonFormattersCompliancePage() {
       {/* Introduction */}
       <div className="space-y-6">
         <p>
-          In today&apos;s data-driven world, managing information accurately,
-          consistently, and transparently is paramount, especially under the
-          scrutiny of regulatory bodies. While often seen as just a way to make
-          JSON human-readable,{" "}
-          <strong>JSON formatters</strong> and the principles behind structured
-          JSON output play a crucial role in meeting various regulatory
-          compliance requirements.
+          In today&apos;s data-driven world, managing information accurately, consistently, and transparently is
+          paramount, especially under the scrutiny of regulatory bodies. While often seen as just a way to make JSON
+          human-readable, <strong>JSON formatters</strong> and the principles behind structured JSON output play a
+          crucial role in meeting various regulatory compliance requirements.
         </p>
         <p>
-          This page explores how standardized and formatted JSON outputs contribute
-          to auditability, data privacy, and interoperability, offering insights
-          and practical examples for developers working in regulated industries.
+          This page explores how standardized and formatted JSON outputs contribute to auditability, data privacy, and
+          interoperability, offering insights and practical examples for developers working in regulated industries.
         </p>
 
         {/* Why Compliance Cares Section */}
@@ -51,43 +47,36 @@ export default function JsonFormattersCompliancePage() {
           Why Regulatory Compliance Demands Structured Data
         </h2>
         <p>
-          Regulatory frameworks like GDPR (General Data Protection Regulation),
-          HIPAA (Health Insurance Portability and Accountability Act), CCPA
-          (California Consumer Privacy Act), SOX (Sarbanes-Oxley Act), and
-          industry-specific standards (like financial or pharmaceutical
-          regulations) impose strict requirements on how data is collected,
+          Regulatory frameworks like GDPR (General Data Protection Regulation), HIPAA (Health Insurance Portability and
+          Accountability Act), CCPA (California Consumer Privacy Act), SOX (Sarbanes-Oxley Act), and industry-specific
+          standards (like financial or pharmaceutical regulations) impose strict requirements on how data is collected,
           stored, processed, exchanged, and audited.
         </p>
         <p>Key requirements often include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Auditability:</strong> The ability to track data origins,
-            modifications, and access over time. Logs and audit trails must be
-            clear and immutable.
+            <strong>Auditability:</strong> The ability to track data origins, modifications, and access over time. Logs
+            and audit trails must be clear and immutable.
           </li>
           <li>
-            <strong>Data Accuracy & Consistency:</strong> Data must be reliable
-            and uniformly structured across systems.
+            <strong>Data Accuracy & Consistency:</strong> Data must be reliable and uniformly structured across systems.
           </li>
           <li>
-            <strong>Data Privacy & Security:</strong> Sensitive information must
-            be protected, potentially requiring masking, redaction, or
-            anonymization for certain use cases.
+            <strong>Data Privacy & Security:</strong> Sensitive information must be protected, potentially requiring
+            masking, redaction, or anonymization for certain use cases.
           </li>
           <li>
-            <strong>Interoperability:</strong> Systems often need to exchange
-            data reliably with partners, regulators, or other internal systems.
+            <strong>Interoperability:</strong> Systems often need to exchange data reliably with partners, regulators,
+            or other internal systems.
           </li>
           <li>
-            <strong>Transparency:</strong> Understanding what data is held and
-            how it&apos;s structured is essential for reporting and subject
-            access requests.
+            <strong>Transparency:</strong> Understanding what data is held and how it&apos;s structured is essential for
+            reporting and subject access requests.
           </li>
         </ul>
         <p>
-          Well-formatted and consistently structured JSON directly supports
-          these requirements by making data easier to parse, validate, audit,
-          and process automatically or manually.
+          Well-formatted and consistently structured JSON directly supports these requirements by making data easier to
+          parse, validate, audit, and process automatically or manually.
         </p>
 
         {/* How JSON Formatters Help Section */}
@@ -96,10 +85,9 @@ export default function JsonFormattersCompliancePage() {
           How JSON Formatters Contribute to Compliance
         </h2>
         <p>
-          While JSON itself provides a standard structure, its raw string
-          representation can vary in whitespace, key order, and indentation.
-          JSON formatters (or pretty-printers) and structured output techniques
-          address these variations.
+          While JSON itself provides a standard structure, its raw string representation can vary in whitespace, key
+          order, and indentation. JSON formatters (or pretty-printers) and structured output techniques address these
+          variations.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
@@ -107,14 +95,12 @@ export default function JsonFormattersCompliancePage() {
           1. Enhanced Readability and Auditability
         </h3>
         <p>
-          Raw JSON strings, especially for complex or deeply nested data, can be
-          almost impossible for humans to read and verify. Formatting adds
-          indentation and line breaks, making the structure clear.
+          Raw JSON strings, especially for complex or deeply nested data, can be almost impossible for humans to read
+          and verify. Formatting adds indentation and line breaks, making the structure clear.
         </p>
         <p>
-          This is crucial for manual audits, debugging logs, and reviewing
-          configurations where engineers or compliance officers need to quickly
-          understand the data payload.
+          This is crucial for manual audits, debugging logs, and reviewing configurations where engineers or compliance
+          officers need to quickly understand the data payload.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example: Raw vs. Formatted JSON</h4>
@@ -152,8 +138,7 @@ export default function JsonFormattersCompliancePage() {
             </div>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            The formatted version is significantly easier to read and verify
-            against expected structures.
+            The formatted version is significantly easier to read and verify against expected structures.
           </p>
         </div>
 
@@ -162,16 +147,13 @@ export default function JsonFormattersCompliancePage() {
           2. Standardization and Interoperability
         </h3>
         <p>
-          Consistent formatting, including predictable key ordering (though not
-          guaranteed by standard JSON unless specific tools are used) and
-          indentation, ensures that JSON outputs from different systems or
-          different runs of the same system are comparable and parsable without
-          ambiguity.
+          Consistent formatting, including predictable key ordering (though not guaranteed by standard JSON unless
+          specific tools are used) and indentation, ensures that JSON outputs from different systems or different runs
+          of the same system are comparable and parsable without ambiguity.
         </p>
         <p>
-          For data exchange with regulators or external partners, providing JSON
-          in a clearly defined and consistently formatted structure minimizes
-          errors and facilitates automated processing on the receiving end.
+          For data exchange with regulators or external partners, providing JSON in a clearly defined and consistently
+          formatted structure minimizes errors and facilitates automated processing on the receiving end.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
@@ -179,17 +161,14 @@ export default function JsonFormattersCompliancePage() {
           3. Data Privacy and Redaction
         </h3>
         <p>
-          Regulations often require masking or redacting sensitive information
-          before it is logged, shared, or displayed in certain contexts (e.g.,
-          removing customer emails from public logs). JSON formatting tools,
-          especially programmatically via a &quot;replacer&quot; function, can
-          selectively modify or omit data fields.
+          Regulations often require masking or redacting sensitive information before it is logged, shared, or displayed
+          in certain contexts (e.g., removing customer emails from public logs). JSON formatting tools, especially
+          programmatically via a &quot;replacer&quot; function, can selectively modify or omit data fields.
         </p>
         <p>
-          Using a custom replacer function allows dynamic inspection of keys
-          and values during the stringification process, enabling conditional
-          redaction based on the field name, data type, or even the context of
-          the operation.
+          Using a custom replacer function allows dynamic inspection of keys and values during the stringification
+          process, enabling conditional redaction based on the field name, data type, or even the context of the
+          operation.
         </p>
 
         {/* Practical Techniques Section */}
@@ -198,9 +177,8 @@ export default function JsonFormattersCompliancePage() {
           Practical Techniques Using JavaScript/TypeScript
         </h2>
         <p>
-          The built-in <code>JSON.stringify()</code> method in JavaScript is a
-          powerful tool for controlling JSON output format for compliance
-          purposes. It accepts two optional arguments: <code>replacer</code>
+          The built-in <code>JSON.stringify()</code> method in JavaScript is a powerful tool for controlling JSON output
+          format for compliance purposes. It accepts two optional arguments: <code>replacer</code>
           and <code>space</code>.
         </p>
 
@@ -209,9 +187,8 @@ export default function JsonFormattersCompliancePage() {
           Basic Formatting (Pretty-Printing)
         </h3>
         <p>
-          The <code>space</code> argument controls indentation and whitespace.
-          Using <code>null</code> for the replacer and a number (like 2 or 4)
-          or a string (like &quot; &nbsp;&nbsp;&quot;) for <code>space</code>
+          The <code>space</code> argument controls indentation and whitespace. Using <code>null</code> for the replacer
+          and a number (like 2 or 4) or a string (like &quot; &nbsp;&nbsp;&quot;) for <code>space</code>
           produces human-readable output.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -250,8 +227,7 @@ console.log(formattedLog);
           </div>
         </div>
         <p>
-          This is the most common use case for improving the readability of
-          logs, configuration files, or audit trails.
+          This is the most common use case for improving the readability of logs, configuration files, or audit trails.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
@@ -259,11 +235,9 @@ console.log(formattedLog);
           Controlling Output with a Replacer Array
         </h3>
         <p>
-          The <code>replacer</code> argument can be an array of strings or numbers.
-          When it&apos;s an array of strings, only the properties with names
-          matching one of the strings in the array will be included in the
-          output. This is useful for omitting specific fields for privacy or
-          relevance.
+          The <code>replacer</code> argument can be an array of strings or numbers. When it&apos;s an array of strings,
+          only the properties with names matching one of the strings in the array will be included in the output. This
+          is useful for omitting specific fields for privacy or relevance.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
@@ -308,11 +282,9 @@ console.log(redactedRecord);
           </div>
         </div>
         <p>
-          Using an array replacer is straightforward but provides limited
-          control; it can only include/exclude top-level properties or properties
-          within nested objects if their names are explicitly listed (which isn&apos;t
-          always practical for deep structures). It doesn&apos;t allow for
-          conditional logic based on value or deeper paths.
+          Using an array replacer is straightforward but provides limited control; it can only include/exclude top-level
+          properties or properties within nested objects if their names are explicitly listed (which isn&apos;t always
+          practical for deep structures). It doesn&apos;t allow for conditional logic based on value or deeper paths.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
@@ -320,30 +292,25 @@ console.log(redactedRecord);
           Dynamic Redaction with a Replacer Function
         </h3>
         <p>
-          The <code>replacer</code> can also be a function. This function is
-          called for each key-value pair in the object/array being stringified,
-          including the root object itself. It receives the key and the value as
+          The <code>replacer</code> can also be a function. This function is called for each key-value pair in the
+          object/array being stringified, including the root object itself. It receives the key and the value as
           arguments.
         </p>
-        <p>
-          The function&apos;s return value determines what is included in the output:
-        </p>
+        <p>The function&apos;s return value determines what is included in the output:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             Return the <code>value</code>: The property is included as is.
           </li>
           <li>
-            Return a modified <code>value</code>: The property is included with
-            the new value.
+            Return a modified <code>value</code>: The property is included with the new value.
           </li>
           <li>
             Return <code>undefined</code>: The property is omitted from the output.
           </li>
         </ul>
         <p>
-          This provides the most flexibility for conditional redaction, data
-          masking (e.g., replacing part of a credit card number), or even
-          transforming data types before stringification.
+          This provides the most flexibility for conditional redaction, data masking (e.g., replacing part of a credit
+          card number), or even transforming data types before stringification.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
@@ -416,8 +383,8 @@ console.log(redactedUserData);
           </div>
         </div>
         <p>
-          This function-based approach is highly flexible and can implement
-          complex redaction logic required by data privacy regulations.
+          This function-based approach is highly flexible and can implement complex redaction logic required by data
+          privacy regulations.
         </p>
 
         {/* Tools and Approaches Section */}
@@ -426,36 +393,30 @@ console.log(redactedUserData);
           Tools and Approaches Beyond `JSON.stringify`
         </h2>
         <p>
-          While <code>JSON.stringify</code> is fundamental, more sophisticated
-          needs might involve other tools or libraries:
+          While <code>JSON.stringify</code> is fundamental, more sophisticated needs might involve other tools or
+          libraries:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Schema Validation:</strong> While not strictly formatters,
-            tools like Zod, Joi, or libraries implementing JSON Schema validation
-            ensure that JSON data conforms to a predefined structure and data
-            types. This is a critical compliance step to ensure data consistency
-            and prevent errors. Formatters help present data for easier validation
-            debugging.
+            <strong>Schema Validation:</strong> While not strictly formatters, tools like Zod, Joi, or libraries
+            implementing JSON Schema validation ensure that JSON data conforms to a predefined structure and data types.
+            This is a critical compliance step to ensure data consistency and prevent errors. Formatters help present
+            data for easier validation debugging.
           </li>
           <li>
-            <strong>Canonical JSON Libraries:</strong> For scenarios where byte-for-byte
-            comparability is required (e.g., digital signatures, deterministic
-            hashing for audit trails), libraries that produce Canonical JSON
-            (RFC 8785) ensure consistent key ordering and formatting regardless
-            of input order.
+            <strong>Canonical JSON Libraries:</strong> For scenarios where byte-for-byte comparability is required
+            (e.g., digital signatures, deterministic hashing for audit trails), libraries that produce Canonical JSON
+            (RFC 8785) ensure consistent key ordering and formatting regardless of input order.
           </li>
           <li>
-            <strong>Specialized Redaction Libraries:</strong> For complex
-            redaction rules (e.g., partial masking of numbers, redaction based
-            on data classification tags), dedicated libraries might offer more
-            features than a simple replacer function.
+            <strong>Specialized Redaction Libraries:</strong> For complex redaction rules (e.g., partial masking of
+            numbers, redaction based on data classification tags), dedicated libraries might offer more features than a
+            simple replacer function.
           </li>
         </ul>
         <p>
-          Choosing the right tool depends on the specific compliance requirement,
-          the complexity of the data, and the required level of formatting
-          and control.
+          Choosing the right tool depends on the specific compliance requirement, the complexity of the data, and the
+          required level of formatting and control.
         </p>
 
         {/* Best Practices Section */}
@@ -465,39 +426,32 @@ console.log(redactedUserData);
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Define Standards:</strong> Establish clear guidelines for
-            JSON structure and formatting within your organization. Document
-            expected keys, data types, and formatting rules (indentation, etc.).
+            <strong>Define Standards:</strong> Establish clear guidelines for JSON structure and formatting within your
+            organization. Document expected keys, data types, and formatting rules (indentation, etc.).
           </li>
           <li>
-            <strong>Use Schemas:</strong> Implement JSON schema validation for
-            critical data flows (APIs, database storage) to ensure data
-            consistency at the structural level.
+            <strong>Use Schemas:</strong> Implement JSON schema validation for critical data flows (APIs, database
+            storage) to ensure data consistency at the structural level.
           </li>
           <li>
-            <strong>Consistent Formatting for Logging/Auditing:</strong> Use a
-            standard indentation (e.g., 2 spaces) for all logs and audit trails
-            to make them uniformly readable.
+            <strong>Consistent Formatting for Logging/Auditing:</strong> Use a standard indentation (e.g., 2 spaces) for
+            all logs and audit trails to make them uniformly readable.
           </li>
           <li>
-            <strong>Centralize Redaction Logic:</strong> Implement data redaction
-            logic in reusable functions or modules. Avoid ad-hoc redaction scattered
-            throughout the codebase to ensure consistency and maintainability.
+            <strong>Centralize Redaction Logic:</strong> Implement data redaction logic in reusable functions or
+            modules. Avoid ad-hoc redaction scattered throughout the codebase to ensure consistency and maintainability.
           </li>
           <li>
-            <strong>Test Redaction Thoroughly:</strong> Verify that sensitive data
-            is correctly masked or omitted in all required output contexts (logs,
-            APIs, reports).
+            <strong>Test Redaction Thoroughly:</strong> Verify that sensitive data is correctly masked or omitted in all
+            required output contexts (logs, APIs, reports).
           </li>
           <li>
-            <strong>Document Redaction Rules:</strong> Keep clear documentation of
-            what data is considered sensitive and how it is handled (redacted,
-            masked) in different scenarios.
+            <strong>Document Redaction Rules:</strong> Keep clear documentation of what data is considered sensitive and
+            how it is handled (redacted, masked) in different scenarios.
           </li>
           <li>
-            <strong>Consider Performance:</strong> For very large JSON objects,
-            extensive formatting or complex replacer functions can impact performance.
-            Optimize or consider streaming approaches if needed.
+            <strong>Consider Performance:</strong> For very large JSON objects, extensive formatting or complex replacer
+            functions can impact performance. Optimize or consider streaming approaches if needed.
           </li>
         </ul>
 
@@ -507,19 +461,15 @@ console.log(redactedUserData);
           Conclusion
         </h2>
         <p>
-          JSON formatters are more than just developer conveniences; they are
-          essential tools in the compliance toolkit. By ensuring data is
-          readable, consistently structured, and capable of incorporating
-          privacy-preserving transformations, they directly support the
-          requirements of modern regulatory frameworks.
+          JSON formatters are more than just developer conveniences; they are essential tools in the compliance toolkit.
+          By ensuring data is readable, consistently structured, and capable of incorporating privacy-preserving
+          transformations, they directly support the requirements of modern regulatory frameworks.
         </p>
         <p>
           Implementing standard formatting and utilizing features like the
-          <code>replacer</code> function are practical steps developers can take
-          to improve the auditability, privacy, and interoperability of the
-          data they handle, contributing significantly to meeting regulatory
-          obligations. Understanding and applying these techniques is vital
-          for building robust and compliant systems.
+          <code>replacer</code> function are practical steps developers can take to improve the auditability, privacy,
+          and interoperability of the data they handle, contributing significantly to meeting regulatory obligations.
+          Understanding and applying these techniques is vital for building robust and compliant systems.
         </p>
       </div>
     </>

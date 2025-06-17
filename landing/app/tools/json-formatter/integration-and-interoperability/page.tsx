@@ -10,8 +10,7 @@ import { Link as LinkIcon, GitBranch, RefreshCw, Layers, Plug } from "lucide-rea
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Integration and Interoperability | Offline Tools",
-  description:
-    "Strategies for integrating JSON formatters with other tools and systems"
+  description: "Strategies for integrating JSON formatters with other tools and systems",
 };
 
 /**
@@ -20,32 +19,38 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "JSON Formatter Integration with IDEs: Best Practices",
-    description: "Guidelines for effectively integrating JSON formatting tools into popular integrated development environments.",
+    description:
+      "Guidelines for effectively integrating JSON formatting tools into popular integrated development environments.",
     slug: "json-formatter-integration-with-ides-best-practices",
   },
   {
     title: "Embedding JSON Formatters in Custom Applications",
-    description: "Techniques for incorporating JSON formatting capabilities directly into your own software applications.",
+    description:
+      "Techniques for incorporating JSON formatting capabilities directly into your own software applications.",
     slug: "embedding-json-formatters-in-custom-applications",
   },
   {
     title: "JSON Formatter API Design for Third-Party Integration",
-    description: "Principles for designing effective APIs that allow other tools to utilize your JSON formatting services.",
+    description:
+      "Principles for designing effective APIs that allow other tools to utilize your JSON formatting services.",
     slug: "json-formatter-api-design-for-third-party-integration",
   },
   {
     title: "Creating VS Code Extensions for JSON Formatting",
-    description: "Step-by-step guide to building Visual Studio Code extensions that enhance JSON formatting capabilities.",
+    description:
+      "Step-by-step guide to building Visual Studio Code extensions that enhance JSON formatting capabilities.",
     slug: "creating-vs-code-extensions-for-json-formatting",
   },
   {
     title: "Integrating JSON Formatters with CI/CD Pipelines",
-    description: "Methods for incorporating JSON formatting and validation into continuous integration and deployment workflows.",
+    description:
+      "Methods for incorporating JSON formatting and validation into continuous integration and deployment workflows.",
     slug: "integrating-json-formatters-with-ci-cd-pipelines",
   },
   {
     title: "JSON Formatter Plugins for Popular Web Frameworks",
-    description: "Developing plugins that bring JSON formatting capabilities to frameworks like React, Angular, and Vue.",
+    description:
+      "Developing plugins that bring JSON formatting capabilities to frameworks like React, Angular, and Vue.",
     slug: "json-formatter-plugins-for-popular-web-frameworks",
   },
   {
@@ -70,7 +75,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Content Management System Plugins for JSON Formatting",
-    description: "Building plugins that bring JSON formatting capabilities to popular CMS platforms like WordPress and Drupal.",
+    description:
+      "Building plugins that bring JSON formatting capabilities to popular CMS platforms like WordPress and Drupal.",
     slug: "content-management-system-plugins-for-json-formatting",
   },
   {
@@ -85,12 +91,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Slack Bot Integration for JSON Formatting Services",
-    description: "Building Slack bots that provide JSON formatting functionality directly within team communication channels.",
+    description:
+      "Building Slack bots that provide JSON formatting functionality directly within team communication channels.",
     slug: "slack-bot-integration-for-json-formatting-services",
   },
   {
     title: "Building Browser Bookmarklets for JSON Formatting",
-    description: "Creating simple browser bookmarklets that provide instant JSON formatting capabilities on any webpage.",
+    description:
+      "Creating simple browser bookmarklets that provide instant JSON formatting capabilities on any webpage.",
     slug: "building-browser-bookmarklets-for-json-formatting",
   },
   {
@@ -115,7 +123,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Browser DevTools Extension for Advanced JSON Formatting",
-    description: "Building extensions that enhance browser developer tools with sophisticated JSON formatting features.",
+    description:
+      "Building extensions that enhance browser developer tools with sophisticated JSON formatting features.",
     slug: "browser-devtools-extension-for-advanced-json-formatting",
   },
   {
@@ -160,7 +169,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "WebComponent Development for Reusable JSON Formatting",
-    description: "Creating standardized web components that provide JSON formatting functionality across different platforms.",
+    description:
+      "Creating standardized web components that provide JSON formatting functionality across different platforms.",
     slug: "webcomponent-development-for-reusable-json-formatting",
   },
   {
@@ -175,12 +185,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Integrating JSON Formatters with Monitoring Tools",
-    description: "Connecting JSON formatting capabilities with systems that monitor application health and performance.",
+    description:
+      "Connecting JSON formatting capabilities with systems that monitor application health and performance.",
     slug: "integrating-json-formatters-with-monitoring-tools",
   },
   {
     title: "Electron App Development for Cross-Platform JSON Formatting",
-    description: "Creating desktop applications with Electron that provide consistent JSON formatting across operating systems.",
+    description:
+      "Creating desktop applications with Electron that provide consistent JSON formatting across operating systems.",
     slug: "electron-app-development-for-cross-platform-json-formatting",
   },
   {
@@ -210,7 +222,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "GitHub Actions for Automated JSON Formatting and Validation",
-    description: "Setting up GitHub Actions workflows that automatically format and validate JSON files in repositories.",
+    description:
+      "Setting up GitHub Actions workflows that automatically format and validate JSON files in repositories.",
     slug: "github-actions-for-automated-json-formatting-and-validation",
   },
   {
@@ -240,7 +253,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Implementing JSON Formatter Plugins for JetBrains IDEs",
-    description: "Developing plugins that add JSON formatting features to IntelliJ IDEA, WebStorm, and other JetBrains products.",
+    description:
+      "Developing plugins that add JSON formatting features to IntelliJ IDEA, WebStorm, and other JetBrains products.",
     slug: "implementing-json-formatter-plugins-for-jetbrains-ides",
   },
   {
@@ -265,9 +279,10 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "OAuth Integration for Enterprise JSON Formatting Services",
-    description: "Implementing secure authentication systems for JSON formatting tools used in enterprise environments.",
+    description:
+      "Implementing secure authentication systems for JSON formatting tools used in enterprise environments.",
     slug: "oauth-integration-for-enterprise-json-formatting-services",
-  }
+  },
 ];
 
 /**
@@ -318,7 +333,9 @@ export default function JsonFormatterIntegrationPage() {
               <LinkIcon className="text-sky-500" size={24} />
               Connecting JSON Tools to Your Workflow
             </CardTitle>
-            <CardDescription>Approaches for seamless integration with development environments and systems</CardDescription>
+            <CardDescription>
+              Approaches for seamless integration with development environments and systems
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -330,7 +347,8 @@ export default function JsonFormatterIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">API Integration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Leveraging REST APIs and SDKs to integrate JSON formatting capabilities into other applications, from custom development tools to enterprise systems.
+                      Leveraging REST APIs and SDKs to integrate JSON formatting capabilities into other applications,
+                      from custom development tools to enterprise systems.
                     </p>
                   </div>
                 </div>
@@ -342,7 +360,8 @@ export default function JsonFormatterIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Developer Tools Integration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Integrating JSON formatters with IDEs, code editors, and other development environment tools through plugins, extensions, and add-ons.
+                      Integrating JSON formatters with IDEs, code editors, and other development environment tools
+                      through plugins, extensions, and add-ons.
                     </p>
                   </div>
                 </div>
@@ -356,7 +375,8 @@ export default function JsonFormatterIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Format Conversion</h3>
                     <p className="text-sm text-muted-foreground">
-                      Capabilities for converting between JSON and other data formats such as XML, YAML, CSV, and custom formats to enhance interoperability.
+                      Capabilities for converting between JSON and other data formats such as XML, YAML, CSV, and custom
+                      formats to enhance interoperability.
                     </p>
                   </div>
                 </div>
@@ -368,7 +388,8 @@ export default function JsonFormatterIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Automation Workflows</h3>
                     <p className="text-sm text-muted-foreground">
-                      Incorporating JSON formatting into automated processes through command-line interfaces, build pipelines, and scripting for consistent data processing.
+                      Incorporating JSON formatting into automated processes through command-line interfaces, build
+                      pipelines, and scripting for consistent data processing.
                     </p>
                   </div>
                 </div>
@@ -381,7 +402,8 @@ export default function JsonFormatterIntegrationPage() {
                 <span>Integration Note:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Modern JSON formatters increasingly offer extensibility through plugins and hooks, allowing developers to create custom behaviors and extend core functionality to meet specialized requirements.
+                Modern JSON formatters increasingly offer extensibility through plugins and hooks, allowing developers
+                to create custom behaviors and extend core functionality to meet specialized requirements.
               </p>
             </div>
           </CardContent>
@@ -391,4 +413,4 @@ export default function JsonFormatterIntegrationPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

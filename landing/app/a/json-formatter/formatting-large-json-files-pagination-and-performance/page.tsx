@@ -9,23 +9,21 @@ export const metadata: Metadata = {
 export default function LargeJsonFormattingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Formatting Large JSON Files: Pagination and Performance
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Formatting Large JSON Files: Pagination and Performance</h1>
 
       <div className="space-y-6">
         <p>
-          Working with large JSON files can be a challenge, especially when you need to format, validate, or
-          simply view their structure. Standard JSON formatters can become slow, unresponsive, or even crash
-          when faced with multi-megabyte or gigabyte files. This is where techniques like pagination and
-          performance optimization become crucial.
+          Working with large JSON files can be a challenge, especially when you need to format, validate, or simply view
+          their structure. Standard JSON formatters can become slow, unresponsive, or even crash when faced with
+          multi-megabyte or gigabyte files. This is where techniques like pagination and performance optimization become
+          crucial.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Large JSON Files Cause Performance Problems</h2>
         <p>
-          Traditional JSON formatters and parsers often load the entire file into memory at once to build a
-          complete representation of the data structure (like a tree). While this is efficient for small files,
-          it quickly consumes excessive memory and processing power for large ones.
+          Traditional JSON formatters and parsers often load the entire file into memory at once to build a complete
+          representation of the data structure (like a tree). While this is efficient for small files, it quickly
+          consumes excessive memory and processing power for large ones.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -41,24 +39,21 @@ export default function LargeJsonFormattingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Introducing Pagination for Large Data</h2>
         <p>
-          Pagination, commonly used in databases and APIs, is a powerful concept that can be applied to handling
-          large local files. Instead of processing the entire file at once, you process and display it in
-          smaller, manageable chunks.
+          Pagination, commonly used in databases and APIs, is a powerful concept that can be applied to handling large
+          local files. Instead of processing the entire file at once, you process and display it in smaller, manageable
+          chunks.
         </p>
-        <p>
-          For a JSON formatter, this might mean:
-        </p>
+        <p>For a JSON formatter, this might mean:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Loading only the first N elements of a top-level array.</li>
-          <li>Providing controls (like &quot;Next&quot;, &quot;Previous&quot;, or page numbers) to view other
-            chunks.</li>
+          <li>
+            Providing controls (like &quot;Next&quot;, &quot;Previous&quot;, or page numbers) to view other chunks.
+          </li>
           <li>Lazy loading nested objects/arrays only when they are expanded by the user.</li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-8">Conceptual Example: Paginated Array Formatting</h3>
-        <p>
-          Imagine a JSON file containing a massive array of user objects:
-        </p>
+        <p>Imagine a JSON file containing a massive array of user objects:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
             {`[
@@ -70,8 +65,8 @@ export default function LargeJsonFormattingArticle() {
           </pre>
         </div>
         <p>
-          A paginating formatter wouldn&apos;t load all 1,000,000 entries. It might initially load and display
-          only the first 100, showing a structure like this:
+          A paginating formatter wouldn&apos;t load all 1,000,000 entries. It might initially load and display only the
+          first 100, showing a structure like this:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
@@ -91,35 +86,34 @@ Showing items 1-100. [ Next Page ] [ Go to Page ... ]`}
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Other Performance Optimization Techniques</h2>
-        <p>
-          Beyond pagination, several other strategies can improve the performance of handling large JSON:
-        </p>
+        <p>Beyond pagination, several other strategies can improve the performance of handling large JSON:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6 space-y-4">
           <div>
             <h3 className="text-lg font-medium">Streaming Parsers:</h3>
             <p className="text-sm">
-              Instead of building a complete in-memory tree, streaming parsers process the JSON document
-              sequentially, emitting events (like &quot;start object&quot;, &quot;key&quot;, &quot;value&quot;, &quot;end object&quot;) as they encounter tokens.
-              This is much more memory-efficient for very large files. The formatter can then build the
-              UI representation based on these events without holding the entire file in memory.
+              Instead of building a complete in-memory tree, streaming parsers process the JSON document sequentially,
+              emitting events (like &quot;start object&quot;, &quot;key&quot;, &quot;value&quot;, &quot;end
+              object&quot;) as they encounter tokens. This is much more memory-efficient for very large files. The
+              formatter can then build the UI representation based on these events without holding the entire file in
+              memory.
             </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">Virtual Rendering (Windowing):</h3>
             <p className="text-sm">
               When displaying large lists or trees, only render the elements that are currently visible in the
-              user&apos;s viewport. As the user scrolls, dynamically render the new visible elements and remove
-              those that have scrolled out of view. This significantly reduces the number of DOM elements the
-              browser has to manage.
+              user&apos;s viewport. As the user scrolls, dynamically render the new visible elements and remove those
+              that have scrolled out of view. This significantly reduces the number of DOM elements the browser has to
+              manage.
             </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">Indexed Data Structures:</h3>
             <p className="text-sm">
-              For files with top-level arrays, an optimized formatter might build a lightweight index mapping
-              array indices to their byte positions in the file. This allows quick seeking and loading of
-              specific items or chunks without parsing the entire file up to that point.
+              For files with top-level arrays, an optimized formatter might build a lightweight index mapping array
+              indices to their byte positions in the file. This allows quick seeking and loading of specific items or
+              chunks without parsing the entire file up to that point.
             </p>
           </div>
           <div>
@@ -135,19 +129,18 @@ Showing items 1-100. [ Next Page ] [ Go to Page ... ]`}
         <h2 className="text-2xl font-semibold mt-8">Choosing the Right Tool or Approach</h2>
         <p>
           If you frequently deal with large JSON files, look for tools (online or offline) that explicitly mention
-          support for large files, streaming, or lazy loading. For developers, using streaming JSON libraries
-          in your code is essential when building applications that handle potentially large JSON inputs or
-          outputs.
+          support for large files, streaming, or lazy loading. For developers, using streaming JSON libraries in your
+          code is essential when building applications that handle potentially large JSON inputs or outputs.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-           <h3 className="text-lg font-medium">Example: Basic Node.js Streaming with JSONStream</h3>
-           <p className="text-sm">
-             This pseudo-code shows how a server might process a large JSON array file without loading the whole thing:
-           </p>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-2">
-             <pre>
-               {`// Requires the 'jsonstream' library
+          <h3 className="text-lg font-medium">Example: Basic Node.js Streaming with JSONStream</h3>
+          <p className="text-sm">
+            This pseudo-code shows how a server might process a large JSON array file without loading the whole thing:
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-2">
+            <pre>
+              {`// Requires the 'jsonstream' library
 // const JSONStream = require('jsonstream');
 // const fs = require('fs');
 
@@ -166,19 +159,19 @@ Showing items 1-100. [ Next Page ] [ Go to Page ... ]`}
 //   .on('error', function (err) {
 //     console.error('Error reading stream:', err);
 //   });`}
-             </pre>
-           </div>
-           <p className="text-sm mt-2">
-             This pattern is also applied internally by sophisticated online/offline JSON tools to handle large files.
-           </p>
+            </pre>
+          </div>
+          <p className="text-sm mt-2">
+            This pattern is also applied internally by sophisticated online/offline JSON tools to handle large files.
+          </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Handling large JSON files requires moving beyond simple &quot;load and format&quot; approaches. Techniques like
-          pagination, streaming parsing, virtual rendering, and background processing are vital for maintaining
-          performance and responsiveness. By understanding these concepts and utilizing tools that implement
-          them, you can effectively work with even the largest JSON datasets.
+          Handling large JSON files requires moving beyond simple &quot;load and format&quot; approaches. Techniques
+          like pagination, streaming parsing, virtual rendering, and background processing are vital for maintaining
+          performance and responsiveness. By understanding these concepts and utilizing tools that implement them, you
+          can effectively work with even the largest JSON datasets.
         </p>
       </div>
     </>

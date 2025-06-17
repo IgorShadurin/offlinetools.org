@@ -16,23 +16,23 @@ export default function DartFlutterJsonPage() {
 
       <div className="space-y-6">
         <p>
-          Handling JSON (JavaScript Object Notation) data is a fundamental task in modern application
-          development, especially when working with APIs, configuration files, or local storage. In Dart
-          and Flutter, you'll frequently encounter JSON. Efficiently and correctly converting JSON strings
-          into Dart objects (deserialization) and Dart objects back into JSON strings (serialization) is crucial
-          for performance, maintainability, and type safety.
+          Handling JSON (JavaScript Object Notation) data is a fundamental task in modern application development,
+          especially when working with APIs, configuration files, or local storage. In Dart and Flutter, you'll
+          frequently encounter JSON. Efficiently and correctly converting JSON strings into Dart objects
+          (deserialization) and Dart objects back into JSON strings (serialization) is crucial for performance,
+          maintainability, and type safety.
         </p>
         <p>
-          This page explores the common strategies available in the Dart ecosystem for tackling JSON, suitable
-          for developers of varying experience levels.
+          This page explores the common strategies available in the Dart ecosystem for tackling JSON, suitable for
+          developers of varying experience levels.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Zap className="w-6 h-6" /> Why Handle JSON in Flutter?
         </h2>
         <p>
-          Flutter apps often need to interact with external data sources or persist data locally. JSON's
-          lightweight format and widespread adoption make it the standard choice for:
+          Flutter apps often need to interact with external data sources or persist data locally. JSON's lightweight
+          format and widespread adoption make it the standard choice for:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Consuming REST APIs.</li>
@@ -42,20 +42,21 @@ export default function DartFlutterJsonPage() {
           <li>Interacting with platform-specific code via platform channels.</li>
         </ul>
         <p>
-          While Dart provides built-in tools for basic JSON handling, managing complex or deeply nested
-          JSON structures requires more robust solutions.
+          While Dart provides built-in tools for basic JSON handling, managing complex or deeply nested JSON structures
+          requires more robust solutions.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <BookOpen className="w-6 h-6" /> Approach 1: Manual Parsing with <code>dart:convert</code>
         </h2>
         <p>
-          Dart's core library <code>dart:convert</code> provides basic functions for encoding and decoding JSON.
-          The primary functions are <code>jsonDecode</code> (for parsing JSON strings) and <code>jsonEncode</code>
+          Dart's core library <code>dart:convert</code> provides basic functions for encoding and decoding JSON. The
+          primary functions are <code>jsonDecode</code> (for parsing JSON strings) and <code>jsonEncode</code>
           (for converting Dart objects to JSON strings).
         </p>
         <p>
-          When you use <code>jsonDecode</code>, it returns a standard Dart type: a <code>Map&lt;String, dynamic&gt;</code>
+          When you use <code>jsonDecode</code>, it returns a standard Dart type: a{" "}
+          <code>Map&lt;String, dynamic&gt;</code>
           for JSON objects, a <code>List&lt;dynamic&gt;</code> for JSON arrays, or primitive types (<code>String</code>,
           <code>int</code>, <code>double</code>, <code>bool</code>, <code>null</code>).
         </p>
@@ -80,8 +81,8 @@ export default function DartFlutterJsonPage() {
 
         <h3 className="text-xl font-semibold mt-6">Example Manual Parsing and Serialization:</h3>
         <p>
-          To handle JSON manually, you add factory constructors for deserialization and methods for serialization
-          to your model classes.
+          To handle JSON manually, you add factory constructors for deserialization and methods for serialization to
+          your model classes.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -164,7 +165,9 @@ void main() &#x7b;
             <div>
               <span className="font-semibold">Pros:</span>
               <ul className="list-disc pl-6 mt-1">
-                <li>No external dependencies needed beyond <code>dart:convert</code>.</li>
+                <li>
+                  No external dependencies needed beyond <code>dart:convert</code>.
+                </li>
                 <li>Full control over the mapping process.</li>
                 <li>Suitable for simple JSON structures or when you only need to access a few fields.</li>
                 <li>Easy to implement for small projects or quick tasks.</li>
@@ -176,10 +179,22 @@ void main() &#x7b;
             <div>
               <span className="font-semibold">Cons:</span>
               <ul className="list-disc pl-6 mt-1">
-                <li><span className="font-medium">Verbose and repetitive:</span> Writing boilerplate code for each model class.</li>
-                <li><span className="font-medium">Error-prone:</span> Easy to make typos with string keys (<code>json['name']</code>), leading to runtime errors.</li>
-                <li><span className="font-medium">Hard to maintain:</span> Changes in the JSON structure require manual updates across all related models.</li>
-                <li>Requires careful type casting (e.g., <code>json['age'] as int</code>, <code>List&lt;String&gt;.from(...)</code>).</li>
+                <li>
+                  <span className="font-medium">Verbose and repetitive:</span> Writing boilerplate code for each model
+                  class.
+                </li>
+                <li>
+                  <span className="font-medium">Error-prone:</span> Easy to make typos with string keys (
+                  <code>json['name']</code>), leading to runtime errors.
+                </li>
+                <li>
+                  <span className="font-medium">Hard to maintain:</span> Changes in the JSON structure require manual
+                  updates across all related models.
+                </li>
+                <li>
+                  Requires careful type casting (e.g., <code>json['age'] as int</code>,{" "}
+                  <code>List&lt;String&gt;.from(...)</code>).
+                </li>
               </ul>
             </div>
           </div>
@@ -189,13 +204,13 @@ void main() &#x7b;
           <Settings className="w-6 h-6" /> Approach 2: Automated Code Generation with <code>json_serializable</code>
         </h2>
         <p>
-          For applications dealing with many JSON models or complex structures, writing manual parsing code
-          becomes impractical. The <code>json_serializable</code> package, combined with <code>build_runner</code>,
-          provides a powerful code generation solution.
+          For applications dealing with many JSON models or complex structures, writing manual parsing code becomes
+          impractical. The <code>json_serializable</code> package, combined with <code>build_runner</code>, provides a
+          powerful code generation solution.
         </p>
         <p>
-          You define your Dart model classes using standard syntax and add annotations from <code>json_annotation</code>.
-          Then, you run a build command, and <code>build_runner</code> executes <code>json_serializable</code> to
+          You define your Dart model classes using standard syntax and add annotations from <code>json_annotation</code>
+          . Then, you run a build command, and <code>build_runner</code> executes <code>json_serializable</code> to
           generate the necessary <code>fromJson</code> factory and <code>toJson</code> method automatically in a
           separate <code>.g.dart</code> file.
         </p>
@@ -256,16 +271,14 @@ class User &#x7b;
         </div>
         <p>
           <Info className="inline w-5 h-5 mr-1 text-blue-500" />
-          Notice the <code>part 'user.g.dart';</code> directive and the <code>@JsonSerializable()</code> annotation.
-          The factory constructor <code>User.fromJson</code> and method <code>toJson</code> are now
-          delegating to functions (<code>_$UserFromJson</code>, <code>_$UserToJson</code>) that will be
-          generated in the <code>user.g.dart</code> file.
+          Notice the <code>part 'user.g.dart';</code> directive and the <code>@JsonSerializable()</code> annotation. The
+          factory constructor <code>User.fromJson</code> and method <code>toJson</code> are now delegating to functions
+          (<code>_$UserFromJson</code>, <code>_$UserToJson</code>) that will be generated in the{" "}
+          <code>user.g.dart</code> file.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Running the Code Generator:</h3>
-        <p>
-          In your project's root directory, run the build command:
-        </p>
+        <p>In your project's root directory, run the build command:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
@@ -278,16 +291,15 @@ flutter pub run build_runner watch`}
           </div>
         </div>
         <p>
-          This command will analyze your project, find the <code>@JsonSerializable()</code> annotations,
-          and generate the <code>.g.dart</code> files (e.g., <code>lib/user.g.dart</code>). You should
-          never manually edit these generated files.
+          This command will analyze your project, find the <code>@JsonSerializable()</code> annotations, and generate
+          the <code>.g.dart</code> files (e.g., <code>lib/user.g.dart</code>). You should never manually edit these
+          generated files.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Example Usage with Generated Code:</h3>
         <p>
-          Once the <code>.g.dart</code> file is generated and you've imported your model, the usage is
-          similar to the manual approach, but you call the generated functions via your model's
-          factory constructor and method.
+          Once the <code>.g.dart</code> file is generated and you've imported your model, the usage is similar to the
+          manual approach, but you call the generated functions via your model's factory constructor and method.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -337,16 +349,29 @@ void main() &#x7b;
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Customizations with <code>json_serializable</code>:</h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Customizations with <code>json_serializable</code>:
+        </h3>
         <p>
           <code>json_serializable</code> offers various annotations to handle complex cases, such as:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><code>@JsonKey(name: 'api_key')</code>: Map a JSON key with a different name to a Dart field.</li>
-          <li><code>@JsonKey(defaultValue: 'N/A')</code>: Provide a default value if a JSON key is missing.</li>
-          <li><code>@JsonKey(required: true)</code>: Mark a field as required during deserialization.</li>
-          <li><code>@JsonKey(ignore: true)</code>: Ignore a field during serialization/deserialization.</li>
-          <li><code>@JsonSerializable(explicitToJson: true)</code>: Ensure nested objects also call their <code>toJson()</code> methods (useful for complex nested structures).</li>
+          <li>
+            <code>@JsonKey(name: 'api_key')</code>: Map a JSON key with a different name to a Dart field.
+          </li>
+          <li>
+            <code>@JsonKey(defaultValue: 'N/A')</code>: Provide a default value if a JSON key is missing.
+          </li>
+          <li>
+            <code>@JsonKey(required: true)</code>: Mark a field as required during deserialization.
+          </li>
+          <li>
+            <code>@JsonKey(ignore: true)</code>: Ignore a field during serialization/deserialization.
+          </li>
+          <li>
+            <code>@JsonSerializable(explicitToJson: true)</code>: Ensure nested objects also call their{" "}
+            <code>toJson()</code> methods (useful for complex nested structures).
+          </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">Pros and Cons of Code Generation:</h3>
@@ -356,10 +381,21 @@ void main() &#x7b;
             <div>
               <span className="font-semibold">Pros:</span>
               <ul className="list-disc pl-6 mt-1">
-                <li><span className="font-medium">Reduces Boilerplate:</span> Significantly less manual code for serialization/deserialization.</li>
-                <li><span className="font-medium">Less Error-Prone:</span> Eliminates typos in JSON keys, as the mapping is generated based on your Dart field names (or explicit <code>@JsonKey</code> names).</li>
-                <li><span className="font-medium">Maintainability:</span> Easier to update when JSON structures change; often just requires running the build command again after updating the model.</li>
-                <li><span className="font-medium">Type Safety:</span> Generates code that handles type conversions safely.</li>
+                <li>
+                  <span className="font-medium">Reduces Boilerplate:</span> Significantly less manual code for
+                  serialization/deserialization.
+                </li>
+                <li>
+                  <span className="font-medium">Less Error-Prone:</span> Eliminates typos in JSON keys, as the mapping
+                  is generated based on your Dart field names (or explicit <code>@JsonKey</code> names).
+                </li>
+                <li>
+                  <span className="font-medium">Maintainability:</span> Easier to update when JSON structures change;
+                  often just requires running the build command again after updating the model.
+                </li>
+                <li>
+                  <span className="font-medium">Type Safety:</span> Generates code that handles type conversions safely.
+                </li>
                 <li>Handles nested objects and lists automatically.</li>
                 <li>Good performance as the code is generated once.</li>
               </ul>
@@ -370,8 +406,14 @@ void main() &#x7b;
             <div>
               <span className="font-semibold">Cons:</span>
               <ul className="list-disc pl-6 mt-1">
-                <li><span className="font-medium">Setup Overhead:</span> Requires adding dependencies and understanding the build runner concept.</li>
-                <li><span className="font-medium">Build Time:</span> Running the build command adds a step to your workflow, although <code>watch</code> mode mitigates this during development.</li>
+                <li>
+                  <span className="font-medium">Setup Overhead:</span> Requires adding dependencies and understanding
+                  the build runner concept.
+                </li>
+                <li>
+                  <span className="font-medium">Build Time:</span> Running the build command adds a step to your
+                  workflow, although <code>watch</code> mode mitigates this during development.
+                </li>
                 <li>Can feel like "magic" to beginners until they understand the code generation process.</li>
                 <li>May not be necessary for extremely simple, few-field JSON objects used infrequently.</li>
               </ul>
@@ -382,26 +424,25 @@ void main() &#x7b;
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Info className="w-6 h-6" /> Choosing the Right Approach
         </h2>
-        <p>
-          The best approach depends on the scale and complexity of your project:
-        </p>
+        <p>The best approach depends on the scale and complexity of your project:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Manual Parsing:</strong> Use for very small projects, simple single-use scripts, or when
-            dealing with extremely simple JSON structures where creating a full model class feels
-            like overkill. It's also useful for understanding the underlying mechanics.
+            <strong>Manual Parsing:</strong> Use for very small projects, simple single-use scripts, or when dealing
+            with extremely simple JSON structures where creating a full model class feels like overkill. It's also
+            useful for understanding the underlying mechanics.
           </li>
           <li>
-            <strong>Code Generation (<code>json_serializable</code>):</strong> This is the recommended approach
-            for most Flutter applications, especially those interacting with APIs or handling
-            multiple data models. It significantly reduces boilerplate, improves maintainability,
-            and is less prone to runtime errors from mistyped keys. The initial setup pays off
-            quickly in larger projects.
+            <strong>
+              Code Generation (<code>json_serializable</code>):
+            </strong>{" "}
+            This is the recommended approach for most Flutter applications, especially those interacting with APIs or
+            handling multiple data models. It significantly reduces boilerplate, improves maintainability, and is less
+            prone to runtime errors from mistyped keys. The initial setup pays off quickly in larger projects.
           </li>
         </ul>
         <p>
-          For team environments or projects expected to grow, adopting code generation early is generally
-          a wise decision.
+          For team environments or projects expected to grow, adopting code generation early is generally a wise
+          decision.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -410,9 +451,9 @@ void main() &#x7b;
 
         <h3 className="text-xl font-semibold mt-6">Error Handling:</h3>
         <p>
-          JSON parsing can fail if the input string is malformed or if expected keys are missing.
-          Always wrap your <code>jsonDecode</code> calls and model deserialization (<code>.fromJson</code>)
-          in <code>try-catch</code> blocks to gracefully handle potential parsing errors.
+          JSON parsing can fail if the input string is malformed or if expected keys are missing. Always wrap your{" "}
+          <code>jsonDecode</code> calls and model deserialization (<code>.fromJson</code>) in <code>try-catch</code>{" "}
+          blocks to gracefully handle potential parsing errors.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -431,17 +472,17 @@ void main() &#x7b;
 
         <h3 className="text-xl font-semibold mt-6">Immutability:</h3>
         <p>
-          Using <code>final</code> fields for your model properties (as shown in the examples) is
-          a common practice in Dart. This promotes immutability, making your objects easier to reason about
-          and preventing unintended side effects.
+          Using <code>final</code> fields for your model properties (as shown in the examples) is a common practice in
+          Dart. This promotes immutability, making your objects easier to reason about and preventing unintended side
+          effects.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Testing:</h3>
         <p>
-          Write unit tests for your JSON serialization and deserialization logic. This is especially important
-          for manual parsing but also valuable for verifying that your <code>@JsonKey</code> customizations
-          in code generation are working correctly. Test both successful cases and edge cases (missing fields,
-          null values, incorrect types).
+          Write unit tests for your JSON serialization and deserialization logic. This is especially important for
+          manual parsing but also valuable for verifying that your <code>@JsonKey</code> customizations in code
+          generation are working correctly. Test both successful cases and edge cases (missing fields, null values,
+          incorrect types).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -449,27 +490,36 @@ void main() &#x7b;
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>JSON naming conventions:</strong> JSON keys often use <code>snake_case</code> (e.g., <code>user_name</code>), while Dart properties use <code>camelCase</code> (e.g., <code>userName</code>). <code>json_serializable</code> handles this automatically by default or can be customized with <code>@JsonKey(name: '...')</code>.
+            <strong>JSON naming conventions:</strong> JSON keys often use <code>snake_case</code> (e.g.,{" "}
+            <code>user_name</code>), while Dart properties use <code>camelCase</code> (e.g., <code>userName</code>).{" "}
+            <code>json_serializable</code> handles this automatically by default or can be customized with{" "}
+            <code>@JsonKey(name: '...')</code>.
           </li>
           <li>
-            <strong>Nested Structures:</strong> Both manual parsing and code generation can handle nested objects and arrays. With manual parsing, you recursively call the <code>.fromJson</code> factory for nested types. With <code>json_serializable</code>, you simply annotate the nested class with <code>@JsonSerializable()</code> as well, and the generator handles the rest (ensure <code>explicitToJson: true</code> if you need to serialize nested objects).
+            <strong>Nested Structures:</strong> Both manual parsing and code generation can handle nested objects and
+            arrays. With manual parsing, you recursively call the <code>.fromJson</code> factory for nested types. With{" "}
+            <code>json_serializable</code>, you simply annotate the nested class with <code>@JsonSerializable()</code>{" "}
+            as well, and the generator handles the rest (ensure <code>explicitToJson: true</code> if you need to
+            serialize nested objects).
           </li>
           <li>
-            <strong>JSON-like data:</strong> Sometimes you receive data that isn't strictly JSON but is Map/List based. <code>dart:convert</code> works directly with these Map/List structures too, allowing you to bypass <code>jsonDecode</code> if the data is already in that format.
+            <strong>JSON-like data:</strong> Sometimes you receive data that isn't strictly JSON but is Map/List based.{" "}
+            <code>dart:convert</code> works directly with these Map/List structures too, allowing you to bypass{" "}
+            <code>jsonDecode</code> if the data is already in that format.
           </li>
         </ul>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <BookOpen className="w-6 h-6" /> Conclusion
         </h2>
         <p>
-          Dart and Flutter provide flexible options for handling JSON. While manual parsing with <code>dart:convert</code>
-          is suitable for simple cases and educational purposes, the automated code generation approach
-          using <code>json_serializable</code> and <code>build_runner</code> is the industry standard for
-          most real-world Flutter applications. It dramatically improves developer productivity, reduces
-          errors, and enhances maintainability when dealing with numerous or complex data models.
-          Understanding both methods equips you to choose the most appropriate solution for your specific needs.
+          Dart and Flutter provide flexible options for handling JSON. While manual parsing with{" "}
+          <code>dart:convert</code>
+          is suitable for simple cases and educational purposes, the automated code generation approach using{" "}
+          <code>json_serializable</code> and <code>build_runner</code> is the industry standard for most real-world
+          Flutter applications. It dramatically improves developer productivity, reduces errors, and enhances
+          maintainability when dealing with numerous or complex data models. Understanding both methods equips you to
+          choose the most appropriate solution for your specific needs.
         </p>
       </div>
     </>

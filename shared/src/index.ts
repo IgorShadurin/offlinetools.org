@@ -92,6 +92,7 @@ export * from './text-to-slug/clipboard-registration';
 export * from './ethereum-converter/clipboard-registration';
 export * from './text-utility/clipboard-registration';
 export * from './watermark-tool/clipboard-registration';
+export * from './timezone-converter/clipboard-registration';
 export * from './data-encryptor/clipboard-registration';
 export * from './steganography/clipboard-registration';
 
@@ -124,3 +125,6 @@ export * from './data-encryptor';
 
 // Export Steganography
 export * from './steganography';
+
+// Export Timezone Converter
+export * from './timezone-converter';

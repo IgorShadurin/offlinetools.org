@@ -167,7 +167,9 @@ export default function Base64CodecAccessibilityPage() {
               <Accessibility className="text-teal-600" size={24} />
               Inclusive Base64 Tools
             </CardTitle>
-            <CardDescription>Designing Base64 encoding tools that are accessible to all users regardless of ability</CardDescription>
+            <CardDescription>
+              Designing Base64 encoding tools that are accessible to all users regardless of ability
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +181,8 @@ export default function Base64CodecAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Universal Design</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating Base64 tools with inclusive interfaces that accommodate users with varying abilities and preferences.
+                      Creating Base64 tools with inclusive interfaces that accommodate users with varying abilities and
+                      preferences.
                     </p>
                   </div>
                 </div>
@@ -191,7 +194,8 @@ export default function Base64CodecAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Visual Accessibility</h3>
                     <p className="text-sm text-muted-foreground">
-                      Optimizing color contrast, typography, and layout to ensure Base64 tools are usable by people with vision impairments.
+                      Optimizing color contrast, typography, and layout to ensure Base64 tools are usable by people with
+                      vision impairments.
                     </p>
                   </div>
                 </div>
@@ -205,7 +209,8 @@ export default function Base64CodecAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Input Accessibility</h3>
                     <p className="text-sm text-muted-foreground">
-                      Supporting alternative input methods and accommodating users with motor limitations when using Base64 tools.
+                      Supporting alternative input methods and accommodating users with motor limitations when using
+                      Base64 tools.
                     </p>
                   </div>
                 </div>
@@ -217,7 +222,8 @@ export default function Base64CodecAccessibilityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Assistive Technology Support</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ensuring Base64 encoding interfaces work seamlessly with screen readers, keyboard navigation, and other assistive tools.
+                      Ensuring Base64 encoding interfaces work seamlessly with screen readers, keyboard navigation, and
+                      other assistive tools.
                     </p>
                   </div>
                 </div>
@@ -230,7 +236,11 @@ export default function Base64CodecAccessibilityPage() {
                 <span>Accessibility Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                One of the most significant accessibility challenges in Base64 tools involves displaying encoded output, which appears as seemingly random strings. For screen reader users, this content can be confusing without proper labels and context. Effective Base64 tools include descriptive ARIA labels, announce the encoding status, and provide clear feedback when operations complete. Additionally, they offer multiple copy methods (button, keyboard shortcut) to accommodate diverse interaction preferences.
+                One of the most significant accessibility challenges in Base64 tools involves displaying encoded output,
+                which appears as seemingly random strings. For screen reader users, this content can be confusing
+                without proper labels and context. Effective Base64 tools include descriptive ARIA labels, announce the
+                encoding status, and provide clear feedback when operations complete. Additionally, they offer multiple
+                copy methods (button, keyboard shortcut) to accommodate diverse interaction preferences.
               </p>
             </div>
           </CardContent>
@@ -240,4 +250,4 @@ export default function Base64CodecAccessibilityPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

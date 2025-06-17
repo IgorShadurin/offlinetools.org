@@ -10,12 +10,14 @@ export const metadata: Metadata = {
 export default function JsonFormattersInBiPage() {
   return (
     <div className="container mx-auto px-4 py-8 prose dark:prose-invert max-w-screen-lg">
-      <h1 className="text-3xl font-bold mb-6">
-        Using JSON Formatters in Business Intelligence Applications
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Using JSON Formatters in Business Intelligence Applications</h1>
 
       <p className="text-lg mb-8">
-        In the world of Business Intelligence (BI), data is king. Often, this data flows through APIs, databases, logs, or other sources in structured formats. JSON (JavaScript Object Notation) is one of the most prevalent formats due to its human-readability and flexibility. However, dealing with large, complex, or unformatted JSON can quickly become a significant hurdle. This is where JSON formatters come into play, transforming raw JSON strings into neatly organized, readable structures that significantly aid BI professionals and developers.
+        In the world of Business Intelligence (BI), data is king. Often, this data flows through APIs, databases, logs,
+        or other sources in structured formats. JSON (JavaScript Object Notation) is one of the most prevalent formats
+        due to its human-readability and flexibility. However, dealing with large, complex, or unformatted JSON can
+        quickly become a significant hurdle. This is where JSON formatters come into play, transforming raw JSON strings
+        into neatly organized, readable structures that significantly aid BI professionals and developers.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
@@ -24,24 +26,32 @@ export default function JsonFormattersInBiPage() {
       </h2>
 
       <p>
-        BI applications frequently involve consuming, processing, and visualizing data. Raw JSON, especially from API responses or database dumps, is often minified or poorly indented, making it incredibly difficult to read and understand manually. A JSON formatter parses the string and outputs a "pretty-printed" version with proper indentation, line breaks, and syntax highlighting. This transformation is crucial for several BI tasks:
+        BI applications frequently involve consuming, processing, and visualizing data. Raw JSON, especially from API
+        responses or database dumps, is often minified or poorly indented, making it incredibly difficult to read and
+        understand manually. A JSON formatter parses the string and outputs a "pretty-printed" version with proper
+        indentation, line breaks, and syntax highlighting. This transformation is crucial for several BI tasks:
       </p>
 
       <ul className="list-disc pl-6 space-y-2 my-4">
         <li>
-          <strong>Data Inspection and Debugging:</strong> Quickly understanding the structure and content of data received from an API or a data source during development or troubleshooting.
+          <strong>Data Inspection and Debugging:</strong> Quickly understanding the structure and content of data
+          received from an API or a data source during development or troubleshooting.
         </li>
         <li>
-          <strong>Schema Understanding:</strong> Inferring the data schema by easily visualizing nested objects and arrays.
+          <strong>Schema Understanding:</strong> Inferring the data schema by easily visualizing nested objects and
+          arrays.
         </li>
         <li>
-          <strong>Error Detection:</strong> Identifying malformed JSON structures that can cause data parsing errors in BI pipelines.
+          <strong>Error Detection:</strong> Identifying malformed JSON structures that can cause data parsing errors in
+          BI pipelines.
         </li>
         <li>
-          <strong>Collaboration:</strong> Sharing formatted JSON snippets with colleagues for easier discussion and analysis.
+          <strong>Collaboration:</strong> Sharing formatted JSON snippets with colleagues for easier discussion and
+          analysis.
         </li>
         <li>
-          <strong>UI Presentation:</strong> Displaying complex data structures in a user-friendly way within a BI dashboard or application interface (though often a simplified view is preferred for end-users).
+          <strong>UI Presentation:</strong> Displaying complex data structures in a user-friendly way within a BI
+          dashboard or application interface (though often a simplified view is preferred for end-users).
         </li>
       </ul>
 
@@ -50,11 +60,11 @@ export default function JsonFormattersInBiPage() {
         Applications and Use Cases in BI
       </h2>
 
-      <h3 className="text-xl font-semibold mt-6 mb-3">
-        1. API Response Debugging
-      </h3>
+      <h3 className="text-xl font-semibold mt-6 mb-3">1. API Response Debugging</h3>
       <p>
-        BI often relies on fetching data from various APIs. When testing an API endpoint or debugging an integration, the raw response can be a single, long string. Using a formatter helps in instantly seeing the data structure, locating specific fields, and verifying data types and values.
+        BI often relies on fetching data from various APIs. When testing an API endpoint or debugging an integration,
+        the raw response can be a single, long string. Using a formatter helps in instantly seeing the data structure,
+        locating specific fields, and verifying data types and values.
       </p>
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
         <h4 className="text-lg font-medium mb-2">Example: Raw vs. Formatted API Response Snippet</h4>
@@ -88,18 +98,18 @@ export default function JsonFormattersInBiPage() {
         </div>
       </div>
 
-      <h3 className="text-xl font-semibold mt-6 mb-3">
-        2. Data Pipeline Development and Testing
-      </h3>
+      <h3 className="text-xl font-semibold mt-6 mb-3">2. Data Pipeline Development and Testing</h3>
       <p>
-        ETL (Extract, Transform, Load) processes frequently handle JSON data. When developing a data transformation script or testing an ingestion process, being able to quickly format and inspect intermediate data outputs or source samples is invaluable for verifying that data is being processed correctly.
+        ETL (Extract, Transform, Load) processes frequently handle JSON data. When developing a data transformation
+        script or testing an ingestion process, being able to quickly format and inspect intermediate data outputs or
+        source samples is invaluable for verifying that data is being processed correctly.
       </p>
 
-      <h3 className="text-xl font-semibold mt-6 mb-3">
-        3. Presenting Data in BI Dashboards (Developer View)
-      </h3>
+      <h3 className="text-xl font-semibold mt-6 mb-3">3. Presenting Data in BI Dashboards (Developer View)</h3>
       <p>
-        While end-users typically see charts and tables, developers or power users might need to inspect the raw data behind a visualization. Embedding a simple JSON viewer with formatting capabilities can be a powerful debugging tool within the BI application itself.
+        While end-users typically see charts and tables, developers or power users might need to inspect the raw data
+        behind a visualization. Embedding a simple JSON viewer with formatting capabilities can be a powerful debugging
+        tool within the BI application itself.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
@@ -108,13 +118,16 @@ export default function JsonFormattersInBiPage() {
       </h2>
 
       <p>
-        Implementing a full-featured JSON formatter from scratch involves parsing the JSON string into an in-memory data structure (like a JavaScript object or array) and then recursively traversing this structure to generate a pretty-printed string. Most developers will leverage existing libraries or built-in functions.
+        Implementing a full-featured JSON formatter from scratch involves parsing the JSON string into an in-memory data
+        structure (like a JavaScript object or array) and then recursively traversing this structure to generate a
+        pretty-printed string. Most developers will leverage existing libraries or built-in functions.
       </p>
 
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
         <h4 className="text-lg font-medium mb-2">Conceptual Code Snippet (Server-Side Processing)</h4>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-          This is how you might format JSON data retrieved on the server before potentially sending it to a client or saving it.
+          This is how you might format JSON data retrieved on the server before potentially sending it to a client or
+          saving it.
         </p>
         <div className="bg-white p-3 rounded text-sm overflow-x-auto dark:bg-gray-900">
           <pre>
@@ -153,17 +166,20 @@ try {
       </div>
 
       <p className="mt-4">
-        The standard JavaScript <code>JSON.stringify()</code> method with the <code>space</code> parameter is the most common built-in way to "pretty-print" JSON. Setting <code>space</code> to a number (like 2 or 4) uses that many spaces for indentation. Setting it to a string (like <code>"\t"</code>) uses that string for indentation.
+        The standard JavaScript <code>JSON.stringify()</code> method with the <code>space</code> parameter is the most
+        common built-in way to "pretty-print" JSON. Setting <code>space</code> to a number (like 2 or 4) uses that many
+        spaces for indentation. Setting it to a string (like <code>"\t"</code>) uses that string for indentation.
       </p>
 
-      <h3 className="text-xl font-semibold mt-6 mb-3">
-        Leveraging Libraries and Tools
-      </h3>
+      <h3 className="text-xl font-semibold mt-6 mb-3">Leveraging Libraries and Tools</h3>
       <p>
-        For more advanced features like syntax highlighting, collapsible sections, or built-in validation UI, frontend components or dedicated libraries are often used. However, the core formatting logic typically still relies on parsing and re-serializing with indentation.
+        For more advanced features like syntax highlighting, collapsible sections, or built-in validation UI, frontend
+        components or dedicated libraries are often used. However, the core formatting logic typically still relies on
+        parsing and re-serializing with indentation.
       </p>
       <p>
-        Many online JSON formatter tools also exist and are frequently used by BI analysts and developers for quick ad-hoc formatting and validation.
+        Many online JSON formatter tools also exist and are frequently used by BI analysts and developers for quick
+        ad-hoc formatting and validation.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
@@ -193,20 +209,24 @@ try {
         <Braces className="mr-3 text-orange-500" size={28} />
         Considerations
       </h2>
-      <p>
-        While formatting is highly beneficial for human consumption, remember that:
-      </p>
+      <p>While formatting is highly beneficial for human consumption, remember that:</p>
       <ul className="list-disc pl-6 space-y-2 my-4">
         <li>
-          Formatted JSON is larger in size than minified JSON due to whitespace. This is generally not an issue for debugging or display purposes but is important if storing large volumes or transmitting over low-bandwidth networks.
+          Formatted JSON is larger in size than minified JSON due to whitespace. This is generally not an issue for
+          debugging or display purposes but is important if storing large volumes or transmitting over low-bandwidth
+          networks.
         </li>
         <li>
-          Formatting only changes the presentation, not the data content or validity. Validating the JSON structure against a schema (like JSON Schema) is a separate, important step in BI workflows.
+          Formatting only changes the presentation, not the data content or validity. Validating the JSON structure
+          against a schema (like JSON Schema) is a separate, important step in BI workflows.
         </li>
       </ul>
 
       <p className="mt-8 text-lg">
-        In conclusion, JSON formatters are indispensable tools in the Business Intelligence toolkit. They transform unruly data strings into clear, navigable structures, significantly boosting productivity and understanding for anyone working with JSON data in BI applications, from data engineers building pipelines to analysts inspecting API outputs or developers creating data visualization components.
+        In conclusion, JSON formatters are indispensable tools in the Business Intelligence toolkit. They transform
+        unruly data strings into clear, navigable structures, significantly boosting productivity and understanding for
+        anyone working with JSON data in BI applications, from data engineers building pipelines to analysts inspecting
+        API outputs or developers creating data visualization components.
       </p>
     </div>
   );

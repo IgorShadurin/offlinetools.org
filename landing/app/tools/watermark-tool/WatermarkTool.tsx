@@ -52,8 +52,8 @@ export default function WatermarkTool() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file for the watermark');
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file for the watermark");
       return;
     }
 
@@ -63,7 +63,7 @@ export default function WatermarkTool() {
       setWatermarkImage(img);
       setError(null);
     } catch {
-      setError('Failed to load watermark image');
+      setError("Failed to load watermark image");
       setWatermarkFile(null);
       setWatermarkImage(null);
     }
@@ -72,13 +72,13 @@ export default function WatermarkTool() {
   const handleTargetFilesChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const { valid, invalid } = validateImageFiles(files);
-    
+
     if (invalid.length > 0) {
       setError(`${invalid.length} file(s) are not valid images and will be skipped`);
     } else {
       setError(null);
     }
-    
+
     setTargetFiles(valid);
     setResults([]);
   };
@@ -87,8 +87,8 @@ export default function WatermarkTool() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file");
       return;
     }
 
@@ -99,66 +99,72 @@ export default function WatermarkTool() {
       setError(null);
       updatePreview(img);
     } catch {
-      setError('Failed to load target image');
+      setError("Failed to load target image");
       setSingleTargetFile(null);
       setSingleTargetImage(null);
     }
   };
 
-  const calculatePosition = useCallback((canvasWidth: number, canvasHeight: number, watermarkWidth: number, watermarkHeight: number) => {
-    const margin = options.margin;
-    switch (options.position) {
-      case WatermarkPosition.TOP_LEFT:
-        return { x: margin, y: margin };
-      case WatermarkPosition.TOP_RIGHT:
-        return { x: canvasWidth - watermarkWidth - margin, y: margin };
-      case WatermarkPosition.BOTTOM_LEFT:
-        return { x: margin, y: canvasHeight - watermarkHeight - margin };
-      case WatermarkPosition.BOTTOM_RIGHT:
-        return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
-      default:
-        return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
-    }
-  }, [options.margin, options.position]);
+  const calculatePosition = useCallback(
+    (canvasWidth: number, canvasHeight: number, watermarkWidth: number, watermarkHeight: number) => {
+      const margin = options.margin;
+      switch (options.position) {
+        case WatermarkPosition.TOP_LEFT:
+          return { x: margin, y: margin };
+        case WatermarkPosition.TOP_RIGHT:
+          return { x: canvasWidth - watermarkWidth - margin, y: margin };
+        case WatermarkPosition.BOTTOM_LEFT:
+          return { x: margin, y: canvasHeight - watermarkHeight - margin };
+        case WatermarkPosition.BOTTOM_RIGHT:
+          return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
+        default:
+          return { x: canvasWidth - watermarkWidth - margin, y: canvasHeight - watermarkHeight - margin };
+      }
+    },
+    [options.margin, options.position]
+  );
 
-  const updatePreview = useCallback((targetImg?: HTMLImageElement) => {
-    if (!canvasRef.current || !watermarkImage) return;
-    
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  const updatePreview = useCallback(
+    (targetImg?: HTMLImageElement) => {
+      if (!canvasRef.current || !watermarkImage) return;
 
-    const img = targetImg || singleTargetImage;
-    if (!img) return;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
-    const maxWidth = 600;
-    const maxHeight = 400;
-    const scale = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
-    
-    canvas.width = img.width * scale;
-    canvas.height = img.height * scale;
+      const img = targetImg || singleTargetImage;
+      if (!img) return;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const maxWidth = 600;
+      const maxHeight = 400;
+      const scale = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
 
-    const watermarkScale = options.scale * scale;
-    const watermarkWidth = watermarkImage.width * watermarkScale;
-    const watermarkHeight = watermarkImage.height * watermarkScale;
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
 
-    let x, y;
-    if (dragPosition) {
-      x = Math.max(0, Math.min(canvas.width - watermarkWidth, dragPosition.x - watermarkWidth / 2));
-      y = Math.max(0, Math.min(canvas.height - watermarkHeight, dragPosition.y - watermarkHeight / 2));
-    } else {
-      const pos = calculatePosition(canvas.width, canvas.height, watermarkWidth, watermarkHeight);
-      x = pos.x;
-      y = pos.y;
-    }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    ctx.globalAlpha = options.opacity;
-    ctx.drawImage(watermarkImage, x, y, watermarkWidth, watermarkHeight);
-    ctx.globalAlpha = 1;
-  }, [watermarkImage, singleTargetImage, options, dragPosition, calculatePosition]);
+      const watermarkScale = options.scale * scale;
+      const watermarkWidth = watermarkImage.width * watermarkScale;
+      const watermarkHeight = watermarkImage.height * watermarkScale;
+
+      let x, y;
+      if (dragPosition) {
+        x = Math.max(0, Math.min(canvas.width - watermarkWidth, dragPosition.x - watermarkWidth / 2));
+        y = Math.max(0, Math.min(canvas.height - watermarkHeight, dragPosition.y - watermarkHeight / 2));
+      } else {
+        const pos = calculatePosition(canvas.width, canvas.height, watermarkWidth, watermarkHeight);
+        x = pos.x;
+        y = pos.y;
+      }
+
+      ctx.globalAlpha = options.opacity;
+      ctx.drawImage(watermarkImage, x, y, watermarkWidth, watermarkHeight);
+      ctx.globalAlpha = 1;
+    },
+    [watermarkImage, singleTargetImage, options, dragPosition, calculatePosition]
+  );
 
   useEffect(() => {
     if (mode === "single") {
@@ -168,22 +174,22 @@ export default function WatermarkTool() {
 
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
-    
+
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     setDragPosition({ x, y });
     setIsDragging(true);
   };
 
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging || !canvasRef.current) return;
-    
+
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     setDragPosition({ x, y });
   };
 
@@ -193,7 +199,7 @@ export default function WatermarkTool() {
 
   const handleBatchProcess = async () => {
     if (!watermarkImage || targetFiles.length === 0) {
-      setError('Please select a watermark and at least one target image');
+      setError("Please select a watermark and at least one target image");
       return;
     }
 
@@ -202,15 +208,10 @@ export default function WatermarkTool() {
     setResults([]);
 
     try {
-      const processedResults = await processMultipleImages(
-        targetFiles,
-        watermarkImage,
-        options,
-        setProgress
-      );
+      const processedResults = await processMultipleImages(targetFiles, watermarkImage, options, setProgress);
       setResults(processedResults);
     } catch {
-      setError('Failed to process images');
+      setError("Failed to process images");
     } finally {
       setIsProcessing(false);
     }
@@ -218,7 +219,7 @@ export default function WatermarkTool() {
 
   const handleSingleProcess = async () => {
     if (!watermarkImage || !singleTargetFile) {
-      setError('Please select a watermark and target image');
+      setError("Please select a watermark and target image");
       return;
     }
 
@@ -227,9 +228,8 @@ export default function WatermarkTool() {
 
     try {
       let finalOptions = { ...options };
-      
-      if (dragPosition && canvasRef.current && singleTargetImage && watermarkImage) {
 
+      if (dragPosition && canvasRef.current && singleTargetImage && watermarkImage) {
         finalOptions = {
           ...options,
           position: WatermarkPosition.TOP_LEFT,
@@ -243,17 +243,23 @@ export default function WatermarkTool() {
         const watermarkScale = options.scale * scale;
         const watermarkWidth = watermarkImage.width * watermarkScale;
         const watermarkHeight = watermarkImage.height * watermarkScale;
-        
-        const actualX = Math.max(0, Math.min(singleTargetImage.width - watermarkWidth / scale, (dragPosition.x - watermarkWidth / 2) / scale));
-        const actualY = Math.max(0, Math.min(singleTargetImage.height - watermarkHeight / scale, (dragPosition.y - watermarkHeight / 2) / scale));
-        
+
+        const actualX = Math.max(
+          0,
+          Math.min(singleTargetImage.width - watermarkWidth / scale, (dragPosition.x - watermarkWidth / 2) / scale)
+        );
+        const actualY = Math.max(
+          0,
+          Math.min(singleTargetImage.height - watermarkHeight / scale, (dragPosition.y - watermarkHeight / 2) / scale)
+        );
+
         customPos = { x: actualX, y: actualY };
       }
 
       const result = await applyWatermark(singleTargetFile, watermarkImage, finalOptions, customPos);
       setResults([result]);
     } catch {
-      setError('Failed to process image');
+      setError("Failed to process image");
     } finally {
       setIsProcessing(false);
     }
@@ -263,7 +269,7 @@ export default function WatermarkTool() {
     if (!result.blob) return;
 
     const url = URL.createObjectURL(result.blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = result.watermarkedFileName;
     document.body.appendChild(a);
@@ -273,7 +279,7 @@ export default function WatermarkTool() {
   };
 
   const handleDownloadAll = () => {
-    results.forEach(result => {
+    results.forEach((result) => {
       if (result.success && result.blob) {
         handleDownload(result);
       }
@@ -286,10 +292,10 @@ export default function WatermarkTool() {
     setResults([]);
     setProgress(null);
     setDragPosition(null);
-    
+
     if (targetInputRef.current) targetInputRef.current.value = "";
     if (singleTargetInputRef.current) singleTargetInputRef.current.value = "";
-    
+
     setTargetFiles([]);
     setSingleTargetFile(null);
     setSingleTargetImage(null);
@@ -356,7 +362,10 @@ export default function WatermarkTool() {
               <div className="space-y-4">
                 <Label>Position</Label>
                 <div className="block md:hidden">
-                  <Select value={options.position} onValueChange={(value) => setOptions(prev => ({ ...prev, position: value as WatermarkPosition }))}>
+                  <Select
+                    value={options.position}
+                    onValueChange={(value) => setOptions((prev) => ({ ...prev, position: value as WatermarkPosition }))}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -370,7 +379,7 @@ export default function WatermarkTool() {
                 </div>
                 <RadioGroup
                   value={options.position}
-                  onValueChange={(value) => setOptions(prev => ({ ...prev, position: value as WatermarkPosition }))}
+                  onValueChange={(value) => setOptions((prev) => ({ ...prev, position: value as WatermarkPosition }))}
                   className="hidden md:flex md:flex-col"
                 >
                   <div className="flex items-center space-x-2">
@@ -397,7 +406,7 @@ export default function WatermarkTool() {
                   <Label>Opacity: {Math.round(options.opacity * 100)}%</Label>
                   <Slider
                     value={[options.opacity * 100]}
-                    onValueChange={([value]) => setOptions(prev => ({ ...prev, opacity: value / 100 }))}
+                    onValueChange={([value]) => setOptions((prev) => ({ ...prev, opacity: value / 100 }))}
                     max={100}
                     min={10}
                     step={5}
@@ -408,7 +417,7 @@ export default function WatermarkTool() {
                   <Label>Scale: {Math.round(options.scale * 100)}%</Label>
                   <Slider
                     value={[options.scale * 100]}
-                    onValueChange={([value]) => setOptions(prev => ({ ...prev, scale: value / 100 }))}
+                    onValueChange={([value]) => setOptions((prev) => ({ ...prev, scale: value / 100 }))}
                     max={50}
                     min={5}
                     step={1}
@@ -419,7 +428,7 @@ export default function WatermarkTool() {
                   <Label>Margin: {options.margin}px</Label>
                   <Slider
                     value={[options.margin]}
-                    onValueChange={([value]) => setOptions(prev => ({ ...prev, margin: value }))}
+                    onValueChange={([value]) => setOptions((prev) => ({ ...prev, margin: value }))}
                     max={100}
                     min={0}
                     step={5}
@@ -446,9 +455,7 @@ export default function WatermarkTool() {
                     <span className="text-lg font-medium mb-1">
                       {targetFiles.length > 0 ? `${targetFiles.length} image(s) selected` : "Choose target images"}
                     </span>
-                    <span className="text-sm text-muted-foreground">
-                      Select multiple images to watermark
-                    </span>
+                    <span className="text-sm text-muted-foreground">Select multiple images to watermark</span>
                   </Label>
                 </div>
 
@@ -471,7 +478,10 @@ export default function WatermarkTool() {
                     className="hidden"
                     id="single-target-upload"
                   />
-                  <Label htmlFor="single-target-upload" className="flex flex-col items-center justify-center cursor-pointer">
+                  <Label
+                    htmlFor="single-target-upload"
+                    className="flex flex-col items-center justify-center cursor-pointer"
+                  >
                     <FileUp className="h-10 w-10 text-gray-400 mb-2" />
                     <span className="text-lg font-medium mb-1">
                       {singleTargetFile ? singleTargetFile.name : "Choose target image"}
@@ -512,7 +522,9 @@ export default function WatermarkTool() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Processing: {progress.fileName}</span>
-                  <span>{progress.current} / {progress.total}</span>
+                  <span>
+                    {progress.current} / {progress.total}
+                  </span>
                 </div>
                 <Progress value={(progress.current / progress.total) * 100} />
               </div>
@@ -522,7 +534,7 @@ export default function WatermarkTool() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label>Results</Label>
-                  {results.filter(r => r.success).length > 1 && (
+                  {results.filter((r) => r.success).length > 1 && (
                     <Button variant="outline" onClick={handleDownloadAll}>
                       Download All
                     </Button>

@@ -10,8 +10,7 @@ import { Code2, Database, Server, Cpu, Braces } from "lucide-react";
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Implementation Details | Offline Tools",
-  description:
-    "Dive into the technical aspects of building JSON formatters, from parsing to optimization techniques",
+  description: "Dive into the technical aspects of building JSON formatters, from parsing to optimization techniques",
 };
 
 /**
@@ -20,32 +19,38 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "Building a JSON Formatter: Architecture Overview",
-    description: "Explore the architectural design principles behind effective JSON formatter tools and understand key components.",
+    description:
+      "Explore the architectural design principles behind effective JSON formatter tools and understand key components.",
     slug: "building-a-json-formatter-architecture-overview",
   },
   {
     title: "Tokenization Techniques in JSON Parser Implementations",
-    description: "Learn about different tokenization approaches used in JSON parsers and how they impact formatter performance.",
+    description:
+      "Learn about different tokenization approaches used in JSON parsers and how they impact formatter performance.",
     slug: "tokenization-techniques-in-json-parser-implementations",
   },
   {
     title: "Abstract Syntax Trees in JSON Formatter Construction",
-    description: "Understand how Abstract Syntax Trees (ASTs) are used to represent and manipulate JSON data in formatters.",
+    description:
+      "Understand how Abstract Syntax Trees (ASTs) are used to represent and manipulate JSON data in formatters.",
     slug: "abstract-syntax-trees-in-json-formatter-construction",
   },
   {
     title: "Memory Optimization Techniques for Large JSON Documents",
-    description: "Explore effective strategies and techniques to optimize memory usage when processing and handling large JSON documents.",
+    description:
+      "Explore effective strategies and techniques to optimize memory usage when processing and handling large JSON documents.",
     slug: "memory-optimization-techniques-for-large-json-documents",
   },
   {
     title: "Implementing JSON Path Query Engines",
-    description: "Learn how to design and implement JSON Path query engines for efficient data extraction and manipulation.",
+    description:
+      "Learn how to design and implement JSON Path query engines for efficient data extraction and manipulation.",
     slug: "implementing-json-path-query-engines",
   },
   {
     title: "The Role of Regular Expressions in JSON Parsing",
-    description: "Discover how regular expressions are utilized in JSON parsing and their impact on formatter functionality.",
+    description:
+      "Discover how regular expressions are utilized in JSON parsing and their impact on formatter functionality.",
     slug: "the-role-of-regular-expressions-in-json-parsing",
   },
   {
@@ -55,12 +60,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Stream Processing Approaches to JSON Formatting",
-    description: "Explore stream-based techniques for processing JSON data efficiently, especially for large documents.",
+    description:
+      "Explore stream-based techniques for processing JSON data efficiently, especially for large documents.",
     slug: "stream-processing-approaches-to-json-formatting",
   },
   {
     title: "Implementing Syntax Highlighting for JSON",
-    description: "Discover techniques for adding syntax highlighting to JSON formatters to improve readability and user experience.",
+    description:
+      "Discover techniques for adding syntax highlighting to JSON formatters to improve readability and user experience.",
     slug: "implementing-syntax-highlighting-for-json",
   },
   {
@@ -70,12 +77,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Implementing Collapsible Tree Views for JSON Documents",
-    description: "Understand the implementation details of creating interactive, collapsible tree views for JSON data visualization.",
+    description:
+      "Understand the implementation details of creating interactive, collapsible tree views for JSON data visualization.",
     slug: "implementing-collapsible-tree-views-for-json-documents",
   },
   {
     title: "Browser Storage APIs for JSON Formatter Settings",
-    description: "Learn how to leverage browser storage APIs to save and restore user preferences in JSON formatter tools.",
+    description:
+      "Learn how to leverage browser storage APIs to save and restore user preferences in JSON formatter tools.",
     slug: "browser-storage-apis-for-json-formatter-settings",
   },
   {
@@ -85,17 +94,20 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Implementing Search Functionality in Large JSON Documents",
-    description: "Learn techniques for adding efficient search capabilities to navigate and find data in large JSON structures.",
+    description:
+      "Learn techniques for adding efficient search capabilities to navigate and find data in large JSON structures.",
     slug: "implementing-search-functionality-in-large-json-documents",
   },
   {
     title: "Algorithm Complexity in JSON Formatter Operations",
-    description: "Understand the computational complexity of various operations in JSON formatters and how to optimize them.",
+    description:
+      "Understand the computational complexity of various operations in JSON formatters and how to optimize them.",
     slug: "algorithm-complexity-in-json-formatter-operations",
   },
   {
     title: "CSS Techniques for JSON Syntax Highlighting",
-    description: "Explore CSS approaches for implementing effective and customizable syntax highlighting in JSON formatters.",
+    description:
+      "Explore CSS approaches for implementing effective and customizable syntax highlighting in JSON formatters.",
     slug: "css-techniques-for-json-syntax-highlighting",
   },
   {
@@ -105,7 +117,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Building JSON Schema Validators into Formatters",
-    description: "Discover how to integrate JSON Schema validation capabilities into formatter tools for data verification.",
+    description:
+      "Discover how to integrate JSON Schema validation capabilities into formatter tools for data verification.",
     slug: "building-json-schema-validators-into-formatters",
   },
   {
@@ -115,7 +128,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Implementing Keyboard Navigation in JSON Tree Views",
-    description: "Learn how to add keyboard navigation support to JSON tree views for improved accessibility and usability.",
+    description:
+      "Learn how to add keyboard navigation support to JSON tree views for improved accessibility and usability.",
     slug: "implementing-keyboard-navigation-in-json-tree-views",
   },
   {
@@ -130,7 +144,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Text Editor Component Selection for JSON Formatters",
-    description: "Explore considerations for choosing the right text editor components when building JSON formatter tools.",
+    description:
+      "Explore considerations for choosing the right text editor components when building JSON formatter tools.",
     slug: "text-editor-component-selection-for-json-formatters",
   },
   {
@@ -170,12 +185,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Optimizing DOM Rendering for Large JSON Structures",
-    description: "Explore techniques to optimize DOM rendering when displaying large JSON data structures in the browser.",
+    description:
+      "Explore techniques to optimize DOM rendering when displaying large JSON data structures in the browser.",
     slug: "optimizing-dom-rendering-for-large-json-structures",
   },
   {
     title: "Modular Architecture Patterns for JSON Formatting Tools",
-    description: "Learn about modular design patterns for building maintainable and extensible JSON formatter applications.",
+    description:
+      "Learn about modular design patterns for building maintainable and extensible JSON formatter applications.",
     slug: "modular-architecture-patterns-for-json-formatting-tools",
   },
   {
@@ -190,7 +207,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Building Type Detection Algorithms for JSON Values",
-    description: "Learn how to implement algorithms that accurately detect and validate different value types in JSON data.",
+    description:
+      "Learn how to implement algorithms that accurately detect and validate different value types in JSON data.",
     slug: "building-type-detection-algorithms-for-json-values",
   },
   {
@@ -260,9 +278,10 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Code Splitting Strategies for JSON Formatter Bundles",
-    description: "Explore code splitting approaches to optimize the loading performance of JSON formatter applications.",
+    description:
+      "Explore code splitting approaches to optimize the loading performance of JSON formatter applications.",
     slug: "code-splitting-strategies-for-json-formatter-bundles",
-  }
+  },
 ];
 
 /**
@@ -325,7 +344,8 @@ export default function JsonFormatterImplementationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Parser Architecture</h3>
                     <p className="text-sm text-muted-foreground">
-                      The foundation of any JSON formatter is its parser, which must accurately tokenize input strings according to the JSON specification while handling edge cases and errors gracefully.
+                      The foundation of any JSON formatter is its parser, which must accurately tokenize input strings
+                      according to the JSON specification while handling edge cases and errors gracefully.
                     </p>
                   </div>
                 </div>
@@ -337,7 +357,8 @@ export default function JsonFormatterImplementationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Data Structures</h3>
                     <p className="text-sm text-muted-foreground">
-                      Efficient representation of JSON data in memory using appropriate data structures enables fast traversal, manipulation, and formatting operations.
+                      Efficient representation of JSON data in memory using appropriate data structures enables fast
+                      traversal, manipulation, and formatting operations.
                     </p>
                   </div>
                 </div>
@@ -351,7 +372,8 @@ export default function JsonFormatterImplementationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Rendering Engines</h3>
                     <p className="text-sm text-muted-foreground">
-                      Formatter rendering engines transform in-memory JSON data structures into visually formatted output with proper indentation, coloring, and interactive elements.
+                      Formatter rendering engines transform in-memory JSON data structures into visually formatted
+                      output with proper indentation, coloring, and interactive elements.
                     </p>
                   </div>
                 </div>
@@ -363,7 +385,8 @@ export default function JsonFormatterImplementationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Performance Considerations</h3>
                     <p className="text-sm text-muted-foreground">
-                      Processing large JSON documents requires careful memory management, streaming techniques, and optimization strategies to maintain responsiveness.
+                      Processing large JSON documents requires careful memory management, streaming techniques, and
+                      optimization strategies to maintain responsiveness.
                     </p>
                   </div>
                 </div>
@@ -376,7 +399,8 @@ export default function JsonFormatterImplementationPage() {
                 <span>Implementation Focus:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Modern JSON formatters typically use recursive descent parsers or state machines to handle the JSON grammar, combined with efficient rendering algorithms that balance memory usage with performance.
+                Modern JSON formatters typically use recursive descent parsers or state machines to handle the JSON
+                grammar, combined with efficient rendering algorithms that balance memory usage with performance.
               </p>
             </div>
           </CardContent>
@@ -386,4 +410,4 @@ export default function JsonFormatterImplementationPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

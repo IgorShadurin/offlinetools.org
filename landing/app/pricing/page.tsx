@@ -122,7 +122,7 @@ export default function PricingPage() {
         isOpen={isFeedbackOpen}
         onOpenChange={setIsFeedbackOpen}
         defaultValues={{
-          message: "I want to buy your product, please contact me by email above."
+          message: "I want to buy your product, please contact me by email above.",
         }}
       />
     </PageLayout>

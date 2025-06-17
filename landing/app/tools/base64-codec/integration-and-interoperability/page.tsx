@@ -29,7 +29,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Interoperability Between Programming Languages: Base64 Standards",
-    description: "Ensuring Base64 encoded data can be reliably exchanged between different programming language ecosystems.",
+    description:
+      "Ensuring Base64 encoded data can be reliably exchanged between different programming language ecosystems.",
     slug: "interoperability-between-programming-languages-base64-standards",
   },
   {
@@ -99,7 +100,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Integration with Frontend Frameworks",
-    description: "Techniques for incorporating Base64 processing in React, Angular, Vue, and other frontend frameworks.",
+    description:
+      "Techniques for incorporating Base64 processing in React, Angular, Vue, and other frontend frameworks.",
     slug: "base64-integration-with-frontend-frameworks",
   },
   {
@@ -116,7 +118,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Base64 in IoT Device Communication Protocols",
     description: "Implementing Base64 encoding for efficient data exchange in resource-constrained IoT environments.",
     slug: "base64-in-iot-device-communication-protocols",
-  }
+  },
 ];
 
 /**
@@ -179,7 +181,8 @@ export default function Base64CodecIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">API and Service Integration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementation patterns for Base64 in RESTful APIs, microservices, GraphQL, and third-party service integrations.
+                      Implementation patterns for Base64 in RESTful APIs, microservices, GraphQL, and third-party
+                      service integrations.
                     </p>
                   </div>
                 </div>
@@ -191,7 +194,8 @@ export default function Base64CodecIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Cross-Platform Compatibility</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ensuring consistent Base64 processing across different programming languages, platforms, and environments.
+                      Ensuring consistent Base64 processing across different programming languages, platforms, and
+                      environments.
                     </p>
                   </div>
                 </div>
@@ -205,7 +209,8 @@ export default function Base64CodecIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">System Architecture</h3>
                     <p className="text-sm text-muted-foreground">
-                      Base64 integration in diverse architectures including event-driven systems, serverless functions, and IoT networks.
+                      Base64 integration in diverse architectures including event-driven systems, serverless functions,
+                      and IoT networks.
                     </p>
                   </div>
                 </div>
@@ -217,7 +222,8 @@ export default function Base64CodecIntegrationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Data Exchange Patterns</h3>
                     <p className="text-sm text-muted-foreground">
-                      Using Base64 for efficient binary data transfer in file systems, databases, and communication protocols.
+                      Using Base64 for efficient binary data transfer in file systems, databases, and communication
+                      protocols.
                     </p>
                   </div>
                 </div>
@@ -230,7 +236,10 @@ export default function Base64CodecIntegrationPage() {
                 <span>Integration Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                When integrating Base64 encoding across different systems, always ensure consistent handling of URL-safe variants and padding. Some systems and libraries automatically handle these differences, while others require explicit configuration. Document your Base64 implementation details clearly to avoid interoperability issues during system integration.
+                When integrating Base64 encoding across different systems, always ensure consistent handling of URL-safe
+                variants and padding. Some systems and libraries automatically handle these differences, while others
+                require explicit configuration. Document your Base64 implementation details clearly to avoid
+                interoperability issues during system integration.
               </p>
             </div>
           </CardContent>
@@ -240,4 +249,4 @@ export default function Base64CodecIntegrationPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

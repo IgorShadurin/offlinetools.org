@@ -10,8 +10,7 @@ import { Bug, Search, AlertTriangle, FileSearch, Wrench } from "lucide-react";
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Troubleshooting and Debugging | Offline Tools",
-  description:
-    "Advanced techniques for identifying and resolving JSON parsing and formatting issues"
+  description: "Advanced techniques for identifying and resolving JSON parsing and formatting issues",
 };
 
 /**
@@ -20,12 +19,14 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "Advanced JSON Debugging Techniques for Complex Structures",
-    description: "Learn sophisticated debugging approaches for handling deeply nested and complex JSON data structures.",
+    description:
+      "Learn sophisticated debugging approaches for handling deeply nested and complex JSON data structures.",
     slug: "advanced-json-debugging-techniques-for-complex-structures",
   },
   {
     title: "Root Cause Analysis of Common JSON Processing Errors",
-    description: "Methodical approaches to identify and resolve the underlying causes of frequent JSON processing issues.",
+    description:
+      "Methodical approaches to identify and resolve the underlying causes of frequent JSON processing issues.",
     slug: "root-cause-analysis-of-common-json-processing-errors",
   },
   {
@@ -45,7 +46,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Inspecting Network JSON Payloads with Browser DevTools",
-    description: "Using browser developer tools to analyze and troubleshoot JSON data in network requests and responses.",
+    description:
+      "Using browser developer tools to analyze and troubleshoot JSON data in network requests and responses.",
     slug: "inspecting-network-json-payloads-with-browser-devtools",
   },
   {
@@ -55,7 +57,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "JSON Formatting Issues During Server-Client Communication",
-    description: "Identifying and resolving JSON problems that occur when transferring data between servers and clients.",
+    description:
+      "Identifying and resolving JSON problems that occur when transferring data between servers and clients.",
     slug: "json-formatting-issues-during-server-client-communication",
   },
   {
@@ -95,7 +98,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Visual Studio JSON Debugger Extensions and Tools",
-    description: "Enhancing Visual Studio's capabilities for debugging JSON with powerful extensions and built-in features.",
+    description:
+      "Enhancing Visual Studio's capabilities for debugging JSON with powerful extensions and built-in features.",
     slug: "visual-studio-json-debugger-extensions-and-tools",
   },
   {
@@ -165,7 +169,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Non-Invasive JSON Debugging in Production",
-    description: "Safe debugging approaches that allow investigation of JSON issues without disrupting production systems.",
+    description:
+      "Safe debugging approaches that allow investigation of JSON issues without disrupting production systems.",
     slug: "non-invasive-json-debugging-in-production",
   },
   {
@@ -175,7 +180,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "JSON Injection Points and How to Debug Them",
-    description: "Identifying and addressing security vulnerabilities where malicious JSON can be injected into applications.",
+    description:
+      "Identifying and addressing security vulnerabilities where malicious JSON can be injected into applications.",
     slug: "json-injection-points-and-how-to-debug-them",
   },
   {
@@ -220,7 +226,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Diagnosing Performance Bottlenecks in JSON Processing",
-    description: "Identifying and resolving performance issues in JSON parsing, transformation, and validation operations.",
+    description:
+      "Identifying and resolving performance issues in JSON parsing, transformation, and validation operations.",
     slug: "diagnosing-performance-bottlenecks-in-json-processing",
   },
   {
@@ -230,12 +237,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Debugging Tips for JSON Configuration Files",
-    description: "Practical advice for troubleshooting problems in JSON configuration files across different environments.",
+    description:
+      "Practical advice for troubleshooting problems in JSON configuration files across different environments.",
     slug: "debugging-tips-for-json-configuration-files",
   },
   {
     title: "Creating JSON Debugging Proxies for API Testing",
-    description: "Building debugging proxies that intercept, analyze, and modify JSON API traffic for testing purposes.",
+    description:
+      "Building debugging proxies that intercept, analyze, and modify JSON API traffic for testing purposes.",
     slug: "creating-json-debugging-proxies-for-api-testing",
   },
   {
@@ -255,7 +264,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Debugging Edge Cases in JSON Internationalization",
-    description: "Addressing tricky internationalization issues when working with JSON data across languages and locales.",
+    description:
+      "Addressing tricky internationalization issues when working with JSON data across languages and locales.",
     slug: "debugging-edge-cases-in-json-internationalization",
   },
   {
@@ -265,9 +275,10 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Post-Mortem Debugging of JSON-related Production Incidents",
-    description: "Techniques for analyzing JSON-related production failures after they've occurred to prevent recurrence.",
+    description:
+      "Techniques for analyzing JSON-related production failures after they've occurred to prevent recurrence.",
     slug: "post-mortem-debugging-of-json-related-production-incidents",
-  }
+  },
 ];
 
 /**
@@ -330,7 +341,8 @@ export default function JsonFormatterTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Common Error Patterns</h3>
                     <p className="text-sm text-muted-foreground">
-                      Identifying and resolving frequent JSON syntax issues including unclosed brackets, missing commas, incorrect escaping, and encoding problems.
+                      Identifying and resolving frequent JSON syntax issues including unclosed brackets, missing commas,
+                      incorrect escaping, and encoding problems.
                     </p>
                   </div>
                 </div>
@@ -342,7 +354,8 @@ export default function JsonFormatterTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Diagnostic Techniques</h3>
                     <p className="text-sm text-muted-foreground">
-                      Methodical approaches to isolate JSON errors through incremental validation, syntax highlighting, and specialized linting tools.
+                      Methodical approaches to isolate JSON errors through incremental validation, syntax highlighting,
+                      and specialized linting tools.
                     </p>
                   </div>
                 </div>
@@ -356,7 +369,8 @@ export default function JsonFormatterTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Large File Troubleshooting</h3>
                     <p className="text-sm text-muted-foreground">
-                      Specialized techniques for finding and fixing errors in large JSON documents, including streaming parsers and divide-and-conquer approaches.
+                      Specialized techniques for finding and fixing errors in large JSON documents, including streaming
+                      parsers and divide-and-conquer approaches.
                     </p>
                   </div>
                 </div>
@@ -368,7 +382,8 @@ export default function JsonFormatterTroubleshootingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Recovery Strategies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Methods for salvaging and repairing damaged or malformed JSON data, from automated fixers to manual reconstruction techniques.
+                      Methods for salvaging and repairing damaged or malformed JSON data, from automated fixers to
+                      manual reconstruction techniques.
                     </p>
                   </div>
                 </div>
@@ -381,7 +396,9 @@ export default function JsonFormatterTroubleshootingPage() {
                 <span>Troubleshooting Tip:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                When debugging complex JSON errors, try breaking down large documents into smaller chunks and validating them individually—this divide-and-conquer approach often pinpoints issues more effectively than examining the entire file at once.
+                When debugging complex JSON errors, try breaking down large documents into smaller chunks and validating
+                them individually—this divide-and-conquer approach often pinpoints issues more effectively than
+                examining the entire file at once.
               </p>
             </div>
           </CardContent>
@@ -391,4 +408,4 @@ export default function JsonFormatterTroubleshootingPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

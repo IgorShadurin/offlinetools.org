@@ -9,31 +9,27 @@ export const metadata: Metadata = {
 export default function VersionControlJsonFormatterArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Version Control Best Practices for JSON Formatter Development
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Version Control Best Practices for JSON Formatter Development</h1>
 
       <div className="space-y-6">
         <p>
-          Developing a JSON formatter, whether it&apos;s a simple script or a complex web application, involves
-          writing code, managing configurations, handling dependencies, and potentially collaborating with others.
-          Version control is not just helpful in this process—it&apos;s essential. It allows you to track changes,
-          revert to previous states, manage different versions, and collaborate effectively. Let&apos;s explore the
-          best practices tailored for building such a tool.
+          Developing a JSON formatter, whether it&apos;s a simple script or a complex web application, involves writing
+          code, managing configurations, handling dependencies, and potentially collaborating with others. Version
+          control is not just helpful in this process—it&apos;s essential. It allows you to track changes, revert to
+          previous states, manage different versions, and collaborate effectively. Let&apos;s explore the best practices
+          tailored for building such a tool.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Version Control Matters for a JSON Formatter</h2>
-        <p>
-          Even for a relatively small project like a formatter, version control provides significant benefits:
-        </p>
+        <p>Even for a relatively small project like a formatter, version control provides significant benefits:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Change Tracking:</span> See exactly who changed what and when. Essential
-            for debugging or understanding the history of your codebase.
+            <span className="font-medium">Change Tracking:</span> See exactly who changed what and when. Essential for
+            debugging or understanding the history of your codebase.
           </li>
           <li>
-            <span className="font-medium">Experimentation:</span> Create separate branches for trying new features
-            (like different formatting styles or validation options) without affecting the stable version.
+            <span className="font-medium">Experimentation:</span> Create separate branches for trying new features (like
+            different formatting styles or validation options) without affecting the stable version.
           </li>
           <li>
             <span className="font-medium">Collaboration:</span> If working in a team, version control (especially
@@ -84,22 +80,22 @@ export default function VersionControlJsonFormatterArticle() {
           </pre>
         </div>
         <p>
-          Keep your source code organized into logical directories (e.g., `src`, `lib`), separate tests,
-          documentation, and any public assets.
+          Keep your source code organized into logical directories (e.g., `src`, `lib`), separate tests, documentation,
+          and any public assets.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Branching Strategy</h2>
         <p>
-          A branching strategy defines how you use branches to manage development. A simple yet effective strategy
-          for many projects is Gitflow, or a simpler variation based on feature branches.
+          A branching strategy defines how you use branches to manage development. A simple yet effective strategy for
+          many projects is Gitflow, or a simpler variation based on feature branches.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Recommended Simple Branching:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">`main` (or `master`):</span> Represents the stable, production-ready
-              version of your formatter. Only merge tested code into this branch.
+              <span className="font-medium">`main` (or `master`):</span> Represents the stable, production-ready version
+              of your formatter. Only merge tested code into this branch.
             </li>
             <li>
               <span className="font-medium">`develop`:</span> An integration branch where features are merged before
@@ -115,8 +111,8 @@ export default function VersionControlJsonFormatterArticle() {
             </li>
           </ul>
           <p className="mt-2 text-sm">
-            Work happens on feature branches, which are then merged into `develop` (via pull requests), and
-            periodically `develop` is merged into `main` for releases.
+            Work happens on feature branches, which are then merged into `develop` (via pull requests), and periodically
+            `develop` is merged into `main` for releases.
           </p>
         </div>
 
@@ -124,8 +120,8 @@ export default function VersionControlJsonFormatterArticle() {
         <p>Commits are snapshots of your project at specific points in time. Follow these practices:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Commit Often:</span> Make small, frequent commits. Each commit should represent a
-            single logical change (e.g., adding one feature, fixing one bug). This makes history cleaner and
+            <span className="font-medium">Commit Often:</span> Make small, frequent commits. Each commit should
+            represent a single logical change (e.g., adding one feature, fixing one bug). This makes history cleaner and
             debugging easier.
           </li>
           <li>
@@ -133,9 +129,8 @@ export default function VersionControlJsonFormatterArticle() {
             mix unrelated changes.
           </li>
           <li>
-            <span className="font-medium">Write Clear Commit Messages:</span> A good commit message explains *why*
-            the change was made, not just *what* changed. Use a concise subject line (50 chars) and an optional
-            body.
+            <span className="font-medium">Write Clear Commit Messages:</span> A good commit message explains *why* the
+            change was made, not just *what* changed. Use a concise subject line (50 chars) and an optional body.
           </li>
         </ul>
 
@@ -192,33 +187,31 @@ test/data/large_sample.json # Only if it's too big or proprietary
           </div>
         </div>
         <p>
-          Never commit files containing API keys, passwords, or other sensitive data. Use environment variables
-          instead, and list the file holding them (like `.env`) in `.gitignore`.
+          Never commit files containing API keys, passwords, or other sensitive data. Use environment variables instead,
+          and list the file holding them (like `.env`) in `.gitignore`.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Handling Dependencies</h2>
         <p>
-          If your formatter relies on external libraries (e.g., a specific JSON parsing library), manage them using
-          a package manager (like npm/yarn for JavaScript, pip for Python, Maven/Gradle for Java). Commit the
-          package manager&apos;s lock file (`package-lock.json`, `yarn.lock`, `Pipfile.lock`, etc.) to your
-          repository. This ensures everyone working on the project uses the exact same dependency versions,
-          preventing "works on my machine" issues.
+          If your formatter relies on external libraries (e.g., a specific JSON parsing library), manage them using a
+          package manager (like npm/yarn for JavaScript, pip for Python, Maven/Gradle for Java). Commit the package
+          manager&apos;s lock file (`package-lock.json`, `yarn.lock`, `Pipfile.lock`, etc.) to your repository. This
+          ensures everyone working on the project uses the exact same dependency versions, preventing "works on my
+          machine" issues.
         </p>
         <p>
-          List the dependency directory itself (like `node_modules/`) in `.gitignore` as these files can be
-          downloaded via the lock file.
+          List the dependency directory itself (like `node_modules/`) in `.gitignore` as these files can be downloaded
+          via the lock file.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Code Formatting and Linting</h2>
         <p>
-          Consistency in code style is crucial for collaborative projects using version control. Inconsistent
-          formatting creates unnecessary &quot;noise&quot; in diffs (the changes shown by the VCS), making it
-          harder to review actual code changes.
+          Consistency in code style is crucial for collaborative projects using version control. Inconsistent formatting
+          creates unnecessary &quot;noise&quot; in diffs (the changes shown by the VCS), making it harder to review
+          actual code changes.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Use a linter (like ESLint for JS, Pylint for Python) to enforce code quality and style rules.
-          </li>
+          <li>Use a linter (like ESLint for JS, Pylint for Python) to enforce code quality and style rules.</li>
           <li>
             Use a code formatter (like Prettier for many languages) to automatically format code on save or commit.
           </li>
@@ -227,59 +220,48 @@ test/data/large_sample.json # Only if it's too big or proprietary
             repository.
           </li>
           <li>
-            Consider using Git hooks (like `pre-commit`) to automatically run linters and formatters before allowing
-            a commit.
+            Consider using Git hooks (like `pre-commit`) to automatically run linters and formatters before allowing a
+            commit.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Testing Integration</h2>
-        <p>
-          Integrate your test suite with your version control workflow. Run tests:
-        </p>
+        <p>Integrate your test suite with your version control workflow. Run tests:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Locally before committing.</li>
           <li>Via a pre-commit hook.</li>
           <li>On your CI/CD server (if you have one) after every push or pull request.</li>
         </ul>
         <p>
-          Committing and merging code that breaks tests is a common source of bugs and technical debt. Version
-          control coupled with automated testing ensures that the `main` and `develop` branches remain stable. Store
-          your test files and any necessary test data (within reason) in the repository.
+          Committing and merging code that breaks tests is a common source of bugs and technical debt. Version control
+          coupled with automated testing ensures that the `main` and `develop` branches remain stable. Store your test
+          files and any necessary test data (within reason) in the repository.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Collaboration via Pull Requests (Merge Requests)</h2>
-        <p>
-          If working with a team, use pull requests (or merge requests on GitLab).
-        </p>
+        <p>If working with a team, use pull requests (or merge requests on GitLab).</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Work on a feature branch.
-          </li>
-          <li>
-            Push your branch to the remote repository.
-          </li>
-          <li>
-            Open a pull request requesting to merge your feature branch into `develop` (or `main`).
-          </li>
-          <li>
-            This triggers code review and automated checks (tests, linting).
-          </li>
+          <li>Work on a feature branch.</li>
+          <li>Push your branch to the remote repository.</li>
+          <li>Open a pull request requesting to merge your feature branch into `develop` (or `main`).</li>
+          <li>This triggers code review and automated checks (tests, linting).</li>
           <li>
             Reviewers provide feedback, you make changes (and commit them to the same feature branch), and once approved
             and checks pass, the branch is merged.
           </li>
         </ul>
         <p>
-          This process provides a crucial layer of quality control before changes are integrated into the main development lines.
+          This process provides a crucial layer of quality control before changes are integrated into the main
+          development lines.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing solid version control practices from the start will save you significant time and headaches
-          when developing a JSON formatter, or any software project. Choose a suitable VCS (Git is highly
-          recommended), maintain a clean repository structure, adopt a consistent branching strategy, commit
-          frequently with clear messages, effectively use `.gitignore`, manage dependencies properly, integrate
-          code formatting and linting, and bake in testing throughout your workflow.
+          Implementing solid version control practices from the start will save you significant time and headaches when
+          developing a JSON formatter, or any software project. Choose a suitable VCS (Git is highly recommended),
+          maintain a clean repository structure, adopt a consistent branching strategy, commit frequently with clear
+          messages, effectively use `.gitignore`, manage dependencies properly, integrate code formatting and linting,
+          and bake in testing throughout your workflow.
         </p>
         <p>
           These practices not only protect your codebase but also create a smoother, more collaborative development

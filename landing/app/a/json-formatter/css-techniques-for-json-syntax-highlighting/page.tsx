@@ -9,16 +9,14 @@ export const metadata: Metadata = {
 export default function CssJsonHighlightingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        CSS Techniques for JSON Syntax Highlighting
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">CSS Techniques for JSON Syntax Highlighting</h1>
 
       <div className="space-y-6">
         <p>
           Syntax highlighting is crucial for improving the readability of code and data formats like JSON. It helps
           developers quickly parse complex structures by assigning different colors and styles to various elements.
-          While dedicated libraries exist, understanding the underlying CSS techniques provides valuable insight
-          and control. This article explores how CSS is used to achieve effective JSON syntax highlighting.
+          While dedicated libraries exist, understanding the underlying CSS techniques provides valuable insight and
+          control. This article explores how CSS is used to achieve effective JSON syntax highlighting.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Syntax Highlighting for JSON?</h2>
@@ -36,20 +34,18 @@ export default function CssJsonHighlightingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">The Core CSS Technique: Class-Based Styling</h2>
         <p>
-          The fundamental approach to syntax highlighting with CSS involves wrapping different syntactic elements
-          of the JSON data within HTML elements (usually <code>&lt;code&gt;</code> or <code>&lt;span&gt;</code>) and assigning specific CSS classes
-          to these elements based on their type (e.g., key, string, number, boolean, punctuation).
+          The fundamental approach to syntax highlighting with CSS involves wrapping different syntactic elements of the
+          JSON data within HTML elements (usually <code>&lt;code&gt;</code> or <code>&lt;span&gt;</code>) and assigning
+          specific CSS classes to these elements based on their type (e.g., key, string, number, boolean, punctuation).
         </p>
         <p>
-          This requires processing the raw JSON string first (often using JavaScript or a server-side language)
-          to identify the different tokens (keys, values, etc.) and then generating HTML output with the
-          appropriate structure and classes.
+          This requires processing the raw JSON string first (often using JavaScript or a server-side language) to
+          identify the different tokens (keys, values, etc.) and then generating HTML output with the appropriate
+          structure and classes.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. HTML Structure with Classes</h3>
-        <p>
-          Consider a simple JSON object:
-        </p>
+        <p>Consider a simple JSON object:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
             {`{
@@ -61,9 +57,7 @@ export default function CssJsonHighlightingArticle() {
 }`}
           </pre>
         </div>
-        <p>
-          To highlight this using CSS classes, you would transform it into something like this HTML structure:
-        </p>
+        <p>To highlight this using CSS classes, you would transform it into something like this HTML structure:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
             {`<code class="json">
@@ -84,11 +78,13 @@ export default function CssJsonHighlightingArticle() {
         <h3 className="text-xl font-semibold mt-6">2. Defining CSS Rules</h3>
         <p>
           Once the HTML is structured with appropriate classes, you can define CSS rules to style each element type.
-          Here&apos;s a basic example of CSS that would apply colors (using Tailwind CSS utility classes for demonstration
-          within this environment):
+          Here&apos;s a basic example of CSS that would apply colors (using Tailwind CSS utility classes for
+          demonstration within this environment):
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Conceptual CSS Styles (using common syntax highlighting colors):</h4>
+          <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Conceptual CSS Styles (using common syntax highlighting colors):
+          </h4>
           <pre className="whitespace-pre-wrap text-sm">
             {`.json-key    { <span className="text-blue-600 dark:text-blue-400">color: #9cdcfe; /* A common color for keys */</span> }
 .json-string { <span className="text-red-600 dark:text-red-400">color: #ce9178; /* A common color for strings */</span> }
@@ -106,13 +102,15 @@ export default function CssJsonHighlightingArticle() {
 `}
           </pre>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Note: The colors used here are illustrative and common in syntax highlighting themes. You would define these classes in your global CSS file or a CSS module.
+            Note: The colors used here are illustrative and common in syntax highlighting themes. You would define these
+            classes in your global CSS file or a CSS module.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">3. Container Styling (`pre` and `code`)</h3>
         <p>
-          JSON data is often displayed within <code>&lt;code&gt;</code> and <code>&lt;pre&gt;</code> tags to preserve whitespace and formatting. You should style these containers as well:
+          JSON data is often displayed within <code>&lt;code&gt;</code> and <code>&lt;pre&gt;</code> tags to preserve
+          whitespace and formatting. You should style these containers as well:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="whitespace-pre-wrap text-sm">
@@ -133,21 +131,20 @@ code.json {
           </pre>
         </div>
         <p>
-          Applying these styles to the `pre` and `code` elements containing the highlighted JSON will give it the familiar code block appearance.
+          Applying these styles to the `pre` and `code` elements containing the highlighted JSON will give it the
+          familiar code block appearance.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Handling Different JSON Structures</h2>
         <p>
-          The challenge in implementing this purely with CSS is the need to dynamically add the HTML <code>&lt;span&gt;</code> tags
-          with correct classes. This parsing and wrapping logic is typically done using JavaScript. A simple parser
-          would iterate through the JSON structure, identify the type of each token (key, value, array bracket, object
-          brace, comma, colon), and build the HTML string accordingly.
+          The challenge in implementing this purely with CSS is the need to dynamically add the HTML{" "}
+          <code>&lt;span&gt;</code> tags with correct classes. This parsing and wrapping logic is typically done using
+          JavaScript. A simple parser would iterate through the JSON structure, identify the type of each token (key,
+          value, array bracket, object brace, comma, colon), and build the HTML string accordingly.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Example Parsing Logic (Conceptual JavaScript)</h3>
-        <p>
-          While not a full implementation, this snippet illustrates the idea:
-        </p>
+        <p>While not a full implementation, this snippet illustrates the idea:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
             {`function highlightJson(jsonString) {
@@ -173,13 +170,15 @@ code.json {
 `}
           </pre>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Note: This JavaScript example is highly simplified and would fail on complex or malformed JSON. Production-ready highlighting libraries use robust parsers.
+            Note: This JavaScript example is highly simplified and would fail on complex or malformed JSON.
+            Production-ready highlighting libraries use robust parsers.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Theming with CSS Variables</h2>
         <p>
-          For easy theme switching (e.g., light mode vs. dark mode), CSS variables (custom properties) are invaluable. Instead of hardcoding colors in your class rules, define them as variables:
+          For easy theme switching (e.g., light mode vs. dark mode), CSS variables (custom properties) are invaluable.
+          Instead of hardcoding colors in your class rules, define them as variables:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre className="whitespace-pre-wrap text-sm">
@@ -217,20 +216,22 @@ pre.json-container {
           </pre>
         </div>
         <p>
-          By defining color palettes in <code>:root</code> and potentially theme-specific classes like <code>.dark-theme</code>, you can easily switch themes by adding/removing a single class from a parent element or the <code>body</code>.
+          By defining color palettes in <code>:root</code> and potentially theme-specific classes like{" "}
+          <code>.dark-theme</code>, you can easily switch themes by adding/removing a single class from a parent element
+          or the <code>body</code>.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          CSS is the backbone of visual syntax highlighting for JSON on the web. The core technique involves
-          preparing the JSON data by wrapping different syntactic elements in HTML tags with specific classes and
-          then using CSS rules to style these classes with appropriate colors and font weights.
+          CSS is the backbone of visual syntax highlighting for JSON on the web. The core technique involves preparing
+          the JSON data by wrapping different syntactic elements in HTML tags with specific classes and then using CSS
+          rules to style these classes with appropriate colors and font weights.
         </p>
         <p>
-          While the parsing and HTML generation require JavaScript, the flexibility and power of CSS allow for
-          creating diverse and customizable highlighting themes. Understanding these techniques is beneficial,
-          whether you&apos;re building a simple JSON viewer or integrating a powerful syntax highlighting library, as
-          it demystifies how those libraries work under the hood and allows for advanced customization.
+          While the parsing and HTML generation require JavaScript, the flexibility and power of CSS allow for creating
+          diverse and customizable highlighting themes. Understanding these techniques is beneficial, whether
+          you&apos;re building a simple JSON viewer or integrating a powerful syntax highlighting library, as it
+          demystifies how those libraries work under the hood and allows for advanced customization.
         </p>
       </div>
     </>

@@ -4,14 +4,17 @@ import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata({
   title: "HTML Text Extractor",
-  description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+  description:
+    "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
   openGraph: {
     title: "HTML Text Extractor",
-    description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+    description:
+      "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
   },
   twitter: {
     title: "HTML Text Extractor",
-    description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+    description:
+      "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
   },
 });
 

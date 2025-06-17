@@ -9,22 +9,19 @@ export const metadata: Metadata = {
 export default function AccessibilityFeaturesJsonFormattersArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Accessibility Features in JSON Formatting Tools
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Accessibility Features in JSON Formatting Tools</h1>
 
       <div className="space-y-6">
         <p>
-          As developers, we often spend hours working with text-based tools, including JSON formatters. Ensuring
-          these tools are accessible is crucial for providing an inclusive environment for all users, regardless
-          of their abilities. Accessible JSON formatters not only comply with standards but also improve usability
-          for everyone.
+          As developers, we often spend hours working with text-based tools, including JSON formatters. Ensuring these
+          tools are accessible is crucial for providing an inclusive environment for all users, regardless of their
+          abilities. Accessible JSON formatters not only comply with standards but also improve usability for everyone.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Accessibility Matters</h2>
         <p>
-          Accessibility in software development tools ensures that individuals with disabilities can effectively
-          use them. For JSON formatters, this means addressing needs related to vision, motor skills, and cognitive
+          Accessibility in software development tools ensures that individuals with disabilities can effectively use
+          them. For JSON formatters, this means addressing needs related to vision, motor skills, and cognitive
           abilities. Features like keyboard navigation, screen reader compatibility, and adjustable visuals are
           paramount.
         </p>
@@ -35,7 +32,10 @@ export default function AccessibilityFeaturesJsonFormattersArticle() {
             <li>Perceivable: Information and UI components must be presentable to users in ways they can perceive.</li>
             <li>Operable: UI components and navigation must be operable.</li>
             <li>Understandable: Information and the operation of UI must be understandable.</li>
-            <li>Robust: Content must be robust enough that it can be interpreted reliably by a wide variety of user agents, including assistive technologies.</li>
+            <li>
+              Robust: Content must be robust enough that it can be interpreted reliably by a wide variety of user
+              agents, including assistive technologies.
+            </li>
           </ul>
         </div>
 
@@ -44,9 +44,17 @@ export default function AccessibilityFeaturesJsonFormattersArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">1. Color Contrast and Themes</h3>
           <p className="text-sm mt-2">
-            Sufficient color contrast between text and background is vital for users with visual impairments or
-            color blindness. Accessible formatters offer themes (like high-contrast or dark mode) that meet
-            <a href="https://www.w3.org/TR/WCAG21/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400"> WCAG (Web Content Accessibility Guidelines)</a>
+            Sufficient color contrast between text and background is vital for users with visual impairments or color
+            blindness. Accessible formatters offer themes (like high-contrast or dark mode) that meet
+            <a
+              href="https://www.w3.org/TR/WCAG21/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400"
+            >
+              {" "}
+              WCAG (Web Content Accessibility Guidelines)
+            </a>
             contrast requirements. Syntax highlighting colors should also be distinguishable.
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3 text-xs">
@@ -73,7 +81,10 @@ export default function AccessibilityFeaturesJsonFormattersArticle() {
             <li>Activating buttons and links with the Enter/Space key.</li>
             <li>Accessing context menus or additional options via keyboard shortcuts.</li>
           </ul>
-          <p className="text-sm mt-2">Test a tool's keyboard navigation by trying to perform all actions (pasting, formatting, copying, validating) without touching your mouse.</p>
+          <p className="text-sm mt-2">
+            Test a tool's keyboard navigation by trying to perform all actions (pasting, formatting, copying,
+            validating) without touching your mouse.
+          </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -87,7 +98,9 @@ export default function AccessibilityFeaturesJsonFormattersArticle() {
             <li>Announce significant updates, like validation errors or formatting success.</li>
             <li>Allow screen readers to navigate and read the content of the JSON text area effectively.</li>
           </ul>
-          <p className="text-sm mt-2">Ensure the input/output areas and action buttons are clearly identified by screen reader software.</p>
+          <p className="text-sm mt-2">
+            Ensure the input/output areas and action buttons are clearly identified by screen reader software.
+          </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -106,7 +119,9 @@ export default function AccessibilityFeaturesJsonFormattersArticle() {
 }`}
             </pre>
           </div>
-          <p className="text-sm mt-2">Look for zoom functionality and settings to control text size and line wrapping.</p>
+          <p className="text-sm mt-2">
+            Look for zoom functionality and settings to control text size and line wrapping.
+          </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -120,13 +135,13 @@ export default function AccessibilityFeaturesJsonFormattersArticle() {
             <li>Indicate the error location clearly (line number, visual marker).</li>
             <li>Offer accessible notifications for success messages (e.g., "JSON formatted successfully").</li>
           </ul>
-          <p className="text-sm mt-2">Ensure error messages are not solely reliant on color and are announced by screen readers if needed.</p>
+          <p className="text-sm mt-2">
+            Ensure error messages are not solely reliant on color and are announced by screen readers if needed.
+          </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Choosing an Accessible Tool</h2>
-        <p>
-          When selecting or developing a JSON formatting tool, consider the following:
-        </p>
+        <p>When selecting or developing a JSON formatting tool, consider the following:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Check for compliance statements (e.g., WCAG 2.1 AA).</li>
           <li>Test with assistive technologies (screen readers, keyboard-only navigation).</li>

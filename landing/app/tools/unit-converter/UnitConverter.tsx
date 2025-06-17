@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  UnitCategory, 
-  convertUnit, 
-  getUnitsForCategory, 
+import {
+  UnitCategory,
+  convertUnit,
+  getUnitsForCategory,
   getUnitEnumForCategory,
   LengthUnit,
   WeightUnit,
@@ -17,7 +17,7 @@ import {
   VolumeUnit,
   AreaUnit,
   EnergyUnit,
-  PowerUnit
+  PowerUnit,
 } from "shared";
 import { useState } from "react";
 import { AlertCircle, Check, Copy, Link as LinkIcon } from "lucide-react";
@@ -30,7 +30,7 @@ type UnitType = LengthUnit | WeightUnit | TemperatureUnit | VolumeUnit | AreaUni
 export default function UnitConverter() {
   const [selectedCategory, setSelectedCategory] = useState<UnitCategory>(UnitCategory.Length);
   const [values, setValues] = useState<Record<string, string>>({});
-  const [activeUnit, setActiveUnit] = useState<string>('');
+  const [activeUnit, setActiveUnit] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -40,7 +40,7 @@ export default function UnitConverter() {
   const handleCategoryChange = (category: UnitCategory) => {
     setSelectedCategory(category);
     setValues({});
-    setActiveUnit('');
+    setActiveUnit("");
     setError(null);
   };
 
@@ -48,26 +48,21 @@ export default function UnitConverter() {
     try {
       setActiveUnit(unit);
       setError(null);
-      
+
       if (!value.trim()) {
         setValues({});
         return;
       }
-      
+
       const newValues: Record<string, string> = {};
       newValues[unit] = value;
-      
+
       currentUnits.forEach((toUnit) => {
         if (toUnit !== unit) {
-          newValues[toUnit] = convertUnit(
-            value, 
-            unit as UnitType, 
-            toUnit as UnitType, 
-            selectedCategory
-          );
+          newValues[toUnit] = convertUnit(value, unit as UnitType, toUnit as UnitType, selectedCategory);
         }
       });
-      
+
       setValues(newValues);
     } catch (error) {
       setError((error as Error).message);
@@ -81,7 +76,9 @@ export default function UnitConverter() {
   };
 
   const getUnitDisplayName = (unit: string): string => {
-    const unitKey = Object.keys(currentUnitEnum).find(key => currentUnitEnum[key as keyof typeof currentUnitEnum] === unit);
+    const unitKey = Object.keys(currentUnitEnum).find(
+      (key) => currentUnitEnum[key as keyof typeof currentUnitEnum] === unit
+    );
     return unitKey || unit;
   };
 
@@ -143,9 +140,9 @@ export default function UnitConverter() {
               <div className="w-full md:w-4/6">
                 <Input
                   id={`${unit}-input`}
-                  className={`font-mono w-full ${activeUnit === unit ? 'border-primary' : ''}`}
+                  className={`font-mono w-full ${activeUnit === unit ? "border-primary" : ""}`}
                   placeholder={`Enter ${unit} value...`}
-                  value={values[unit] || ''}
+                  value={values[unit] || ""}
                   onChange={(e) => handleValueChange(e.target.value, unit)}
                 />
               </div>

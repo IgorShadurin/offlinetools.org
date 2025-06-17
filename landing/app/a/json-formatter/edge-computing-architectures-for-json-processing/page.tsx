@@ -32,12 +32,11 @@ export default function EdgeJsonProcessingArticle() {
 
       <div className="space-y-6">
         <p>
-          In today&apos;s data-intensive world, JSON (JavaScript Object Notation) has become the de facto standard
-          for exchanging structured data between systems. From web APIs to IoT devices, JSON is ubiquitous.
-          Traditionally, processing this data often happens in centralized cloud data centers. However, with the
-          rise of{" "}
-          <strong>Edge Computing</strong>, there&apos;s a growing need to process JSON data closer to its
-          source or destination, right at the &quot;edge&quot; of the network.
+          In today&apos;s data-intensive world, JSON (JavaScript Object Notation) has become the de facto standard for
+          exchanging structured data between systems. From web APIs to IoT devices, JSON is ubiquitous. Traditionally,
+          processing this data often happens in centralized cloud data centers. However, with the rise of{" "}
+          <strong>Edge Computing</strong>, there&apos;s a growing need to process JSON data closer to its source or
+          destination, right at the &quot;edge&quot; of the network.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -45,41 +44,37 @@ export default function EdgeJsonProcessingArticle() {
           <span>What is Edge Computing?</span>
         </h2>
         <p>
-          Edge computing is a distributed computing paradigm that brings computation and data storage closer to
-          the location where it is needed. This is in contrast to traditional cloud computing, which relies
-          on a centralized server farm to do all the work. By processing data at the edge, you can reduce
-          latency, conserve bandwidth, and enhance privacy and security.
+          Edge computing is a distributed computing paradigm that brings computation and data storage closer to the
+          location where it is needed. This is in contrast to traditional cloud computing, which relies on a centralized
+          server farm to do all the work. By processing data at the edge, you can reduce latency, conserve bandwidth,
+          and enhance privacy and security.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Zap className="w-6 h-6 text-yellow-500" />
           <span>Why Process JSON at the Edge?</span>
         </h2>
-        <p>
-          Processing JSON data at the edge offers several compelling advantages:
-        </p>
+        <p>Processing JSON data at the edge offers several compelling advantages:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Reduced Latency:</strong> Processing data closer to the user or device means faster
-            response times, critical for real-time applications like gaming, autonomous vehicles, or live
-            data dashboards.
+            <strong>Reduced Latency:</strong> Processing data closer to the user or device means faster response times,
+            critical for real-time applications like gaming, autonomous vehicles, or live data dashboards.
           </li>
           <li>
-            <strong>Bandwidth Savings:</strong> You can process, filter, or aggregate large JSON payloads at the
-            edge, sending only the relevant or reduced data to the cloud, saving significant bandwidth costs.
+            <strong>Bandwidth Savings:</strong> You can process, filter, or aggregate large JSON payloads at the edge,
+            sending only the relevant or reduced data to the cloud, saving significant bandwidth costs.
           </li>
           <li>
-            <strong>Improved Reliability:</strong> Edge devices or functions can operate even with intermittent
-            or poor connectivity to the central cloud.
+            <strong>Improved Reliability:</strong> Edge devices or functions can operate even with intermittent or poor
+            connectivity to the central cloud.
           </li>
           <li>
-            <strong>Enhanced Security & Privacy:</strong> Sensitive data within JSON can be processed and
-            anonymized or aggregated locally before being sent further, reducing the risk of exposing raw
-            sensitive information.
+            <strong>Enhanced Security & Privacy:</strong> Sensitive data within JSON can be processed and anonymized or
+            aggregated locally before being sent further, reducing the risk of exposing raw sensitive information.
           </li>
           <li>
-            <strong>Lower Costs:</strong> Reduced bandwidth and less data flowing to expensive cloud processing
-            services can lead to cost savings.
+            <strong>Lower Costs:</strong> Reduced bandwidth and less data flowing to expensive cloud processing services
+            can lead to cost savings.
           </li>
         </ul>
 
@@ -88,8 +83,8 @@ export default function EdgeJsonProcessingArticle() {
           <span>Architectural Patterns for Edge JSON Processing</span>
         </h2>
         <p>
-          Various architectural patterns emerge depending on where the &quot;edge&quot; is defined and the
-          capabilities of the edge device.
+          Various architectural patterns emerge depending on where the &quot;edge&quot; is defined and the capabilities
+          of the edge device.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -97,15 +92,14 @@ export default function EdgeJsonProcessingArticle() {
           <span>1. Client-Side Processing (Browser/Mobile App)</span>
         </h3>
         <p>
-          This is the simplest form of edge processing, where the JSON data is downloaded to the user&apos;s
-          browser or mobile device, and all processing (parsing, manipulation, display) happens locally.
+          This is the simplest form of edge processing, where the JSON data is downloaded to the user&apos;s browser or
+          mobile device, and all processing (parsing, manipulation, display) happens locally.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example Scenario:</h4>
           <p className="mb-2">
-            A web application fetching a large JSON list of products. Instead of asking the server to
-            filter or sort the list, the browser downloads the full list and performs these operations
-            using JavaScript.
+            A web application fetching a large JSON list of products. Instead of asking the server to filter or sort the
+            list, the browser downloads the full list and performs these operations using JavaScript.
           </p>
           <h4 className="text-lg font-medium mb-2">JSON Processing Tasks:</h4>
           <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -145,16 +139,16 @@ try {
           <span>2. Edge Function Processing (Serverless Edge)</span>
         </h3>
         <p>
-          Serverless functions deployed on edge networks (like Cloudflare Workers, Vercel Edge Functions,
-          AWS Lambda@Edge, Akamai EdgeWorkers) can intercept requests or process data streams very close to the user.
-          This is a powerful pattern for dynamic edge logic.
+          Serverless functions deployed on edge networks (like Cloudflare Workers, Vercel Edge Functions, AWS
+          Lambda@Edge, Akamai EdgeWorkers) can intercept requests or process data streams very close to the user. This
+          is a powerful pattern for dynamic edge logic.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example Scenario:</h4>
           <p className="mb-2">
-            An API gateway receives large JSON payloads. An edge function intercepts the request,
-            validates the JSON structure, removes unnecessary fields to reduce payload size, and
-            then forwards the reduced JSON to the origin server.
+            An API gateway receives large JSON payloads. An edge function intercepts the request, validates the JSON
+            structure, removes unnecessary fields to reduce payload size, and then forwards the reduced JSON to the
+            origin server.
           </p>
           <h4 className="text-lg font-medium mb-2">JSON Processing Tasks:</h4>
           <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -214,15 +208,14 @@ async function handleRequest(request) {
           <span>3. IoT/Device-Level Processing</span>
         </h3>
         <p>
-          Processing JSON directly on the device generating or consuming the data, such as sensors,
-          appliances, or industrial equipment. These devices often have limited compute resources.
+          Processing JSON directly on the device generating or consuming the data, such as sensors, appliances, or
+          industrial equipment. These devices often have limited compute resources.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example Scenario:</h4>
           <p className="mb-2">
-            A smart sensor collects temperature and humidity data. It aggregates readings over a
-            period, formats them into a JSON object, and sends a single JSON message instead of
-            many small ones.
+            A smart sensor collects temperature and humidity data. It aggregates readings over a period, formats them
+            into a JSON object, and sends a single JSON message instead of many small ones.
           </p>
           <h4 className="text-lg font-medium mb-2">JSON Processing Tasks:</h4>
           <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -261,8 +254,8 @@ async function handleRequest(request) {
         </div>
         <p>
           <strong>Pros:</strong> Real-time processing on the source, works offline, saves significant bandwidth.
-          <strong>Cons:</strong> Severely limited resources (CPU, memory), complex deployment and updates,
-          requires efficient and often specialized JSON parsers/generators.
+          <strong>Cons:</strong> Severely limited resources (CPU, memory), complex deployment and updates, requires
+          efficient and often specialized JSON parsers/generators.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -270,16 +263,15 @@ async function handleRequest(request) {
           <span>4. Gateway Processing (Local Network/On-Premise Edge)</span>
         </h3>
         <p>
-          Processing JSON on a local gateway device that serves multiple other devices within a limited area
-          (e.g., a smart home hub, a factory gateway, a retail store server).
+          Processing JSON on a local gateway device that serves multiple other devices within a limited area (e.g., a
+          smart home hub, a factory gateway, a retail store server).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example Scenario:</h4>
           <p className="mb-2">
-            A factory gateway receives JSON data from various machines. It aggregates, filters, and
-            performs initial analytics on this data locally before sending summarized JSON to the
-            cloud for long-term storage and deeper analysis. It might also translate JSON from one
-            machine format to another.
+            A factory gateway receives JSON data from various machines. It aggregates, filters, and performs initial
+            analytics on this data locally before sending summarized JSON to the cloud for long-term storage and deeper
+            analysis. It might also translate JSON from one machine format to another.
           </p>
           <h4 className="text-lg font-medium mb-2">JSON Processing Tasks:</h4>
           <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -299,10 +291,10 @@ Device C (JSON) --/`}
           </div>
         </div>
         <p>
-          <strong>Pros:</strong> More compute power than individual devices, can manage multiple devices, works
-          with local network infrastructure, provides a buffer between devices and the cloud.
-          <strong>Cons:</strong> Requires dedicated hardware/software management on-premise, potential single
-          point of failure locally.
+          <strong>Pros:</strong> More compute power than individual devices, can manage multiple devices, works with
+          local network infrastructure, provides a buffer between devices and the cloud.
+          <strong>Cons:</strong> Requires dedicated hardware/software management on-premise, potential single point of
+          failure locally.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -312,38 +304,48 @@ Device C (JSON) --/`}
         <p>Regardless of the specific edge architecture, common JSON processing tasks include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li className="flex items-start space-x-2">
-            <span className="mt-1"><CheckCheck className="w-4 h-4 text-green-600" /></span>
+            <span className="mt-1">
+              <CheckCheck className="w-4 h-4 text-green-600" />
+            </span>
             <span>
-              <strong>Validation:</strong> Checking if a JSON payload conforms to an expected schema (e.g.,
-              JSON Schema). This can reject malformed data early.
+              <strong>Validation:</strong> Checking if a JSON payload conforms to an expected schema (e.g., JSON
+              Schema). This can reject malformed data early.
             </span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="mt-1"><Filter className="w-4 h-4 text-indigo-600" /></span>
+            <span className="mt-1">
+              <Filter className="w-4 h-4 text-indigo-600" />
+            </span>
             <span>
-              <strong>Filtering and Transformation:</strong> Removing unnecessary fields, renaming keys,
-              restructuring nested objects/arrays to optimize payload size or format for the next hop.
+              <strong>Filtering and Transformation:</strong> Removing unnecessary fields, renaming keys, restructuring
+              nested objects/arrays to optimize payload size or format for the next hop.
             </span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="mt-1"><Layers className="w-4 h-4 text-purple-600" /></span>
+            <span className="mt-1">
+              <Layers className="w-4 h-4 text-purple-600" />
+            </span>
             <span>
-              <strong>Aggregation and Summarization:</strong> Combining data from multiple JSON messages
-              into a single summary JSON object (e.g., calculating averages, counts).
+              <strong>Aggregation and Summarization:</strong> Combining data from multiple JSON messages into a single
+              summary JSON object (e.g., calculating averages, counts).
             </span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="mt-1"><Split className="w-4 h-4 text-orange-600" /></span>
+            <span className="mt-1">
+              <Split className="w-4 h-4 text-orange-600" />
+            </span>
             <span>
-              <strong>Routing/Splitting:</strong> Inspecting JSON content to decide where the message
-              should be routed next, or splitting a large JSON array into smaller messages.
+              <strong>Routing/Splitting:</strong> Inspecting JSON content to decide where the message should be routed
+              next, or splitting a large JSON array into smaller messages.
             </span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="mt-1"><Database className="w-4 h-4 text-gray-600" /></span>
+            <span className="mt-1">
+              <Database className="w-4 h-4 text-gray-600" />
+            </span>
             <span>
-              <strong>Local Storage Interaction:</strong> Reading or writing JSON data to/from local storage
-              on the edge device/gateway.
+              <strong>Local Storage Interaction:</strong> Reading or writing JSON data to/from local storage on the edge
+              device/gateway.
             </span>
           </li>
         </ul>
@@ -352,29 +354,26 @@ Device C (JSON) --/`}
           <Cpu className="w-6 h-6 text-red-500" />
           <span>Challenges</span>
         </h2>
-        <p>
-          Processing JSON at the edge is not without its difficulties:
-        </p>
+        <p>Processing JSON at the edge is not without its difficulties:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Resource Constraints:</strong> Especially on IoT devices, CPU, memory, and storage are
-            limited. Efficient JSON parsers and generators are crucial.
+            <strong>Resource Constraints:</strong> Especially on IoT devices, CPU, memory, and storage are limited.
+            Efficient JSON parsers and generators are crucial.
           </li>
           <li>
-            <strong>Development Complexity:</strong> Writing code that runs reliably on diverse edge
-            environments can be challenging.
+            <strong>Development Complexity:</strong> Writing code that runs reliably on diverse edge environments can be
+            challenging.
           </li>
           <li>
-            <strong>Deployment and Management:</strong> Deploying updates, monitoring, and managing a large
-            fleet of edge devices or functions processing JSON can be complex.
+            <strong>Deployment and Management:</strong> Deploying updates, monitoring, and managing a large fleet of
+            edge devices or functions processing JSON can be complex.
           </li>
           <li>
-            <strong>Security:</strong> Ensuring the integrity and confidentiality of JSON data processed
-            at potentially less secure edge locations.
+            <strong>Security:</strong> Ensuring the integrity and confidentiality of JSON data processed at potentially
+            less secure edge locations.
           </li>
           <li>
-            <strong>Tooling:</strong> Debugging and monitoring edge processing logic might require
-            specialized tools.
+            <strong>Tooling:</strong> Debugging and monitoring edge processing logic might require specialized tools.
           </li>
         </ul>
 
@@ -383,13 +382,13 @@ Device C (JSON) --/`}
           <span>Conclusion</span>
         </h2>
         <p>
-          Edge computing provides significant benefits for processing JSON data by moving the work closer
-          to the source or consumer. Whether it&apos;s reducing latency with edge functions, saving bandwidth
-          on IoT devices, or enabling local intelligence on gateways, various architectural patterns exist
-          to meet specific needs. Developers working on edge applications must consider the constraints
-          of the edge environment and choose appropriate tools and techniques for efficient and reliable
-          JSON processing. As edge infrastructure matures, processing structured data like JSON at the edge
-          will become an increasingly vital part of modern distributed systems.
+          Edge computing provides significant benefits for processing JSON data by moving the work closer to the source
+          or consumer. Whether it&apos;s reducing latency with edge functions, saving bandwidth on IoT devices, or
+          enabling local intelligence on gateways, various architectural patterns exist to meet specific needs.
+          Developers working on edge applications must consider the constraints of the edge environment and choose
+          appropriate tools and techniques for efficient and reliable JSON processing. As edge infrastructure matures,
+          processing structured data like JSON at the edge will become an increasingly vital part of modern distributed
+          systems.
         </p>
       </div>
     </>

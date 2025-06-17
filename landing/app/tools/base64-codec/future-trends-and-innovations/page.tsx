@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "AI-Assisted Base64 Error Detection and Correction",
-    description: "How machine learning is being applied to automatically identify and fix issues in Base64 encoded data.",
+    description:
+      "How machine learning is being applied to automatically identify and fix issues in Base64 encoded data.",
     slug: "ai-assisted-base64-error-detection-and-correction",
   },
   {
@@ -49,7 +50,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "5G Impact on Real-Time Base64 Processing",
-    description: "How 5G networks are enabling new approaches to high-volume Base64 encoding in real-time applications.",
+    description:
+      "How 5G networks are enabling new approaches to high-volume Base64 encoding in real-time applications.",
     slug: "5g-impact-on-real-time-base64-processing",
   },
   {
@@ -167,7 +169,9 @@ export default function Base64CodecFutureTrendsPage() {
               <Lightbulb className="text-pink-600" size={24} />
               The Future of Base64 Encoding
             </CardTitle>
-            <CardDescription>Emerging technologies and innovative approaches shaping the evolution of Base64 tools</CardDescription>
+            <CardDescription>
+              Emerging technologies and innovative approaches shaping the evolution of Base64 tools
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +183,8 @@ export default function Base64CodecFutureTrendsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Advanced Technologies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Quantum computing, WebAssembly, and edge processing architectures for next-generation Base64 operations.
+                      Quantum computing, WebAssembly, and edge processing architectures for next-generation Base64
+                      operations.
                     </p>
                   </div>
                 </div>
@@ -217,7 +222,8 @@ export default function Base64CodecFutureTrendsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Innovative Applications</h3>
                     <p className="text-sm text-muted-foreground">
-                      Novel uses of Base64 in blockchain, DNA storage, federated learning, and other cutting-edge domains.
+                      Novel uses of Base64 in blockchain, DNA storage, federated learning, and other cutting-edge
+                      domains.
                     </p>
                   </div>
                 </div>
@@ -230,7 +236,12 @@ export default function Base64CodecFutureTrendsPage() {
                 <span>Innovation Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                While Base64 encoding itself is a mature technology, significant innovation is happening at the implementation level. WebAssembly-powered encoders already deliver near-native performance in browsers, while specialized hardware accelerators are emerging for high-throughput scenarios. The most transformative developments may come from AI-assisted tools that automatically correct malformed Base64 data and optimize encoding parameters based on the specific characteristics of input data, dramatically reducing the expertise needed for effective Base64 implementation.
+                While Base64 encoding itself is a mature technology, significant innovation is happening at the
+                implementation level. WebAssembly-powered encoders already deliver near-native performance in browsers,
+                while specialized hardware accelerators are emerging for high-throughput scenarios. The most
+                transformative developments may come from AI-assisted tools that automatically correct malformed Base64
+                data and optimize encoding parameters based on the specific characteristics of input data, dramatically
+                reducing the expertise needed for effective Base64 implementation.
               </p>
             </div>
           </CardContent>
@@ -240,4 +251,4 @@ export default function Base64CodecFutureTrendsPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

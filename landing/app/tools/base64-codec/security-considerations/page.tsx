@@ -116,7 +116,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Compliance Requirements for Base64 Encoded Sensitive Data",
     description: "Regulatory and standard compliance considerations when using Base64 for protected information.",
     slug: "compliance-requirements-for-base64-encoded-sensitive-data",
-  }
+  },
 ];
 
 /**
@@ -167,7 +167,9 @@ export default function Base64CodecSecurityPage() {
               <ShieldAlert className="text-green-600" size={24} />
               Secure Base64 Implementation
             </CardTitle>
-            <CardDescription>Understanding security implications and best practices for Base64 encoding</CardDescription>
+            <CardDescription>
+              Understanding security implications and best practices for Base64 encoding
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +181,8 @@ export default function Base64CodecSecurityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Common Vulnerabilities</h3>
                     <p className="text-sm text-muted-foreground">
-                      Identifying and preventing buffer overflows, injection attacks, and other security weaknesses in Base64 code.
+                      Identifying and preventing buffer overflows, injection attacks, and other security weaknesses in
+                      Base64 code.
                     </p>
                   </div>
                 </div>
@@ -217,7 +220,8 @@ export default function Base64CodecSecurityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Input Validation</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing robust validation and sanitization of Base64 encoded input to prevent security issues.
+                      Implementing robust validation and sanitization of Base64 encoded input to prevent security
+                      issues.
                     </p>
                   </div>
                 </div>
@@ -230,7 +234,11 @@ export default function Base64CodecSecurityPage() {
                 <span>Security Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Base64 is not encryption and provides no security benefit beyond basic obfuscation. A common security mistake is treating Base64 encoded data as "secure" when it can be trivially decoded. For sensitive data, always use proper encryption (like AES) before Base64 encoding for transport or storage. Additionally, all Base64 decoder implementations should rigorously validate input to prevent injection attacks that exploit the decoding process.
+                Base64 is not encryption and provides no security benefit beyond basic obfuscation. A common security
+                mistake is treating Base64 encoded data as "secure" when it can be trivially decoded. For sensitive
+                data, always use proper encryption (like AES) before Base64 encoding for transport or storage.
+                Additionally, all Base64 decoder implementations should rigorously validate input to prevent injection
+                attacks that exploit the decoding process.
               </p>
             </div>
           </CardContent>
@@ -240,4 +248,4 @@ export default function Base64CodecSecurityPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

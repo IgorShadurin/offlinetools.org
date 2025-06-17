@@ -28,15 +28,21 @@ export default function JsonFormattersInStreamingArticle() {
 
       <div className="space-y-8">
         <p>
-          In the world of media streaming, where vast amounts of data (metadata,
-          manifests, user interactions, analytics) flow constantly between servers and clients,
-          efficient and standardized data exchange is paramount. <a href="https://www.json.org/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">JSON (JavaScript Object Notation)</a>
-          has become the de facto standard for this data interchange due to its human-readability and
-          relative simplicity. However, simply using JSON isn&apos;t enough; how that JSON is
-          structured, delivered, and processed &mdash; essentially, how it&apos;s "formatted" and
-          handled throughout the application &mdash; significantly impacts performance, developer experience, and
-          maintainability. This article explores the various facets of using JSON formatters in
-          media streaming.
+          In the world of media streaming, where vast amounts of data (metadata, manifests, user interactions,
+          analytics) flow constantly between servers and clients, efficient and standardized data exchange is paramount.{" "}
+          <a
+            href="https://www.json.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            JSON (JavaScript Object Notation)
+          </a>
+          has become the de facto standard for this data interchange due to its human-readability and relative
+          simplicity. However, simply using JSON isn&apos;t enough; how that JSON is structured, delivered, and
+          processed &mdash; essentially, how it&apos;s "formatted" and handled throughout the application &mdash;
+          significantly impacts performance, developer experience, and maintainability. This article explores the
+          various facets of using JSON formatters in media streaming.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -44,10 +50,9 @@ export default function JsonFormattersInStreamingArticle() {
           Server-Side: Structuring Media APIs with JSON
         </h2>
         <p>
-          The journey of JSON in streaming often begins on the server side, where APIs provide
-          information about available media, user profiles, playback progress, and more.
-          A well-formatted JSON API response is crucial for performance and ease of consumption
-          by various clients (web browsers, mobile apps, smart TVs).
+          The journey of JSON in streaming often begins on the server side, where APIs provide information about
+          available media, user profiles, playback progress, and more. A well-formatted JSON API response is crucial for
+          performance and ease of consumption by various clients (web browsers, mobile apps, smart TVs).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium mb-2">Example: Media Item JSON Structure</h3>
@@ -88,10 +93,27 @@ export default function JsonFormattersInStreamingArticle() {
           <strong>Key Considerations for Server-Side JSON Formatting:</strong>
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li className="flex items-start"><CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Consistency:</strong> Use consistent casing (e.g., snake_case or camelCase), date formats (ISO 8601 is standard), and naming conventions across all API endpoints.</li>
-          <li className="flex items-start"><CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Efficiency:</strong> Avoid sending unnecessary data. Only include fields the client needs. For large lists (like search results or playlists), consider pagination.</li>
-          <li className="flex items-start"><CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Predictability:</strong> Use standard data types. Ensure fields that can be null or absent are clearly documented or consistently represented (e.g., always include the key with a `null` value if it might be absent).</li>
-          <li className="flex items-start"><CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Clear Nesting:</strong> Group related data logically (e.g., `playback_info`). Avoid overly deep nesting which can make client-side processing complex.</li>
+          <li className="flex items-start">
+            <CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Consistency:</strong>{" "}
+            Use consistent casing (e.g., snake_case or camelCase), date formats (ISO 8601 is standard), and naming
+            conventions across all API endpoints.
+          </li>
+          <li className="flex items-start">
+            <CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Efficiency:</strong>{" "}
+            Avoid sending unnecessary data. Only include fields the client needs. For large lists (like search results
+            or playlists), consider pagination.
+          </li>
+          <li className="flex items-start">
+            <CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} />{" "}
+            <strong>Predictability:</strong> Use standard data types. Ensure fields that can be null or absent are
+            clearly documented or consistently represented (e.g., always include the key with a `null` value if it might
+            be absent).
+          </li>
+          <li className="flex items-start">
+            <CheckCircle2 className="mr-2 mt-1 text-blue-500 flex-shrink-0" size={18} /> <strong>Clear Nesting:</strong>{" "}
+            Group related data logically (e.g., `playback_info`). Avoid overly deep nesting which can make client-side
+            processing complex.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -99,10 +121,10 @@ export default function JsonFormattersInStreamingArticle() {
           Client-Side: Parsing, Transformation, and Display
         </h2>
         <p>
-          Once the JSON data arrives on the client, it needs to be parsed from a string into
-          native JavaScript objects using `JSON.parse()`. However, the raw API response might not
-          be in the ideal format for the client&apos;s UI components or internal state management.
-          Client-side "formatting" often involves transforming this parsed data.
+          Once the JSON data arrives on the client, it needs to be parsed from a string into native JavaScript objects
+          using `JSON.parse()`. However, the raw API response might not be in the ideal format for the client&apos;s UI
+          components or internal state management. Client-side "formatting" often involves transforming this parsed
+          data.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium mb-2">Example: Client-Side Data Mapping (Conceptual TypeScript)</h3>
@@ -181,9 +203,9 @@ function mapApiToClientMediaItem(apiItem: ApiMediaItem): ClientMediaItem {
           </div>
         </div>
         <p>
-          This mapping process is a form of client-side JSON "formatting" or transformation,
-          making the data easier to work with within the client&apos;s architecture, reducing
-          boilerplate code in UI components, and ensuring data consistency.
+          This mapping process is a form of client-side JSON "formatting" or transformation, making the data easier to
+          work with within the client&apos;s architecture, reducing boilerplate code in UI components, and ensuring data
+          consistency.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -191,16 +213,13 @@ function mapApiToClientMediaItem(apiItem: ApiMediaItem): ClientMediaItem {
           Data Validation with JSON Schemas
         </h2>
         <p>
-          Ensuring the JSON received by the client (or sent to the server) conforms to the
-          expected structure and types is critical for preventing runtime errors and security
-          vulnerabilities. While not strictly a "formatter," JSON Schema is a powerful tool
-          for defining the expected format of your JSON data.
+          Ensuring the JSON received by the client (or sent to the server) conforms to the expected structure and types
+          is critical for preventing runtime errors and security vulnerabilities. While not strictly a "formatter," JSON
+          Schema is a powerful tool for defining the expected format of your JSON data.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium mb-2">Example: Partial JSON Schema for Media Item</h3>
-          <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
-            Defining the expected structure and types.
-          </p>
+          <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">Defining the expected structure and types.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
@@ -272,10 +291,9 @@ function mapApiToClientMediaItem(apiItem: ApiMediaItem): ClientMediaItem {
           </div>
         </div>
         <p>
-          Using tools that validate JSON against a schema helps ensure data integrity,
-          especially when dealing with multiple teams or external APIs. While the validation
-          itself isn&apos;t "formatting" in the visual sense, it ensures the data conforms to
-          a defined format.
+          Using tools that validate JSON against a schema helps ensure data integrity, especially when dealing with
+          multiple teams or external APIs. While the validation itself isn&apos;t "formatting" in the visual sense, it
+          ensures the data conforms to a defined format.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -283,22 +301,37 @@ function mapApiToClientMediaItem(apiItem: ApiMediaItem): ClientMediaItem {
           Debugging and Visualization Tools
         </h2>
         <p>
-          Beyond the structured API responses and client-side transformations, the term
-          "JSON formatter" is often used by developers to refer to tools that make raw JSON
-          strings readable during debugging. Media streaming platforms involve complex data flows;
-          being able to quickly inspect and understand the content of a JSON payload is invaluable.
+          Beyond the structured API responses and client-side transformations, the term "JSON formatter" is often used
+          by developers to refer to tools that make raw JSON strings readable during debugging. Media streaming
+          platforms involve complex data flows; being able to quickly inspect and understand the content of a JSON
+          payload is invaluable.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li className="flex items-start"><Inspect className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} /> <strong>Browser Developer Tools:</strong> Most modern browsers (Chrome, Firefox, Edge, Safari) automatically detect and format JSON responses in the Network tab, providing collapsible trees and syntax highlighting.</li>
-          <li className="flex items-start"><Code className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} /> <strong>IDE/Editor Extensions:</strong> Extensions for VS Code, Sublime Text, etc., offer built-in or plugin-based JSON formatting, validation, and even schema integration.</li>
-          <li className="flex items-start"><Table className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} /> <strong>Online Formatters:</strong> Numerous websites allow pasting raw JSON to pretty-print it, validate syntax, and sometimes even visualize its structure.</li>
-          <li className="flex items-start"><Users className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} /> <strong>Custom Client-Side Pretty-Printers:</strong> For developer tools or internal dashboards within the streaming platform, you might implement a simple client-side JSON pretty-printer using `JSON.stringify(data, null, 2)` to display formatted JSON to users or developers.</li>
+          <li className="flex items-start">
+            <Inspect className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} />{" "}
+            <strong>Browser Developer Tools:</strong> Most modern browsers (Chrome, Firefox, Edge, Safari) automatically
+            detect and format JSON responses in the Network tab, providing collapsible trees and syntax highlighting.
+          </li>
+          <li className="flex items-start">
+            <Code className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} />{" "}
+            <strong>IDE/Editor Extensions:</strong> Extensions for VS Code, Sublime Text, etc., offer built-in or
+            plugin-based JSON formatting, validation, and even schema integration.
+          </li>
+          <li className="flex items-start">
+            <Table className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} /> <strong>Online Formatters:</strong>{" "}
+            Numerous websites allow pasting raw JSON to pretty-print it, validate syntax, and sometimes even visualize
+            its structure.
+          </li>
+          <li className="flex items-start">
+            <Users className="mr-2 mt-1 text-purple-500 flex-shrink-0" size={18} />{" "}
+            <strong>Custom Client-Side Pretty-Printers:</strong> For developer tools or internal dashboards within the
+            streaming platform, you might implement a simple client-side JSON pretty-printer using `JSON.stringify(data,
+            null, 2)` to display formatted JSON to users or developers.
+          </li>
         </ul>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium mb-2">Example: Basic Client-Side Pretty Printing</h3>
-          <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
-            Using standard browser/Node.js functionality.
-          </p>
+          <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">Using standard browser/Node.js functionality.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// Assume 'rawData' is a string received from an API
@@ -329,23 +362,21 @@ try {
           </div>
         </div>
         <p>
-          These tools don&apos;t change the data itself, but they are indispensable "formatters"
-          in the context of developer productivity and debugging complex streaming data.
+          These tools don&apos;t change the data itself, but they are indispensable "formatters" in the context of
+          developer productivity and debugging complex streaming data.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <List className="mr-2 text-blue-500" />
           Conclusion: The Importance of JSON Formatting
         </h2>
         <p>
-          JSON formatters, in their various forms, are fundamental to building robust media
-          streaming platforms. From the server&apos;s careful crafting of API responses to the
-          client&apos;s transformation of data for presentation, and the essential tools
-          that aid developers in understanding complex payloads, efficient and consistent JSON
-          handling is key. By paying attention to JSON structure, utilizing schema validation,
-          and leveraging debugging formatters, developers can build streaming applications
-          that are performant, scalable, and easier to maintain.
+          JSON formatters, in their various forms, are fundamental to building robust media streaming platforms. From
+          the server&apos;s careful crafting of API responses to the client&apos;s transformation of data for
+          presentation, and the essential tools that aid developers in understanding complex payloads, efficient and
+          consistent JSON handling is key. By paying attention to JSON structure, utilizing schema validation, and
+          leveraging debugging formatters, developers can build streaming applications that are performant, scalable,
+          and easier to maintain.
         </p>
       </div>
     </>
