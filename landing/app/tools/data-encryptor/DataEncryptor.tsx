@@ -52,7 +52,12 @@ export default function DataEncryptor() {
       return;
     }
 
-    if (inputType === "file" && !textInput && mode === "decrypt") {
+    if (inputType === "file" && !selectedFile && !textInput && mode === "decrypt") {
+      setError("Please select an encrypted file or enter encrypted data to decrypt");
+      return;
+    }
+
+    if (inputType === "text" && !textInput && mode === "decrypt") {
       setError("Please enter encrypted data to decrypt");
       return;
     }
@@ -136,6 +141,16 @@ export default function DataEncryptor() {
     if (file) {
       setSelectedFile(file);
       setError(null);
+      
+      // If in decrypt mode, read the file content
+      if (mode === "decrypt") {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result as string;
+          setTextInput(content);
+        };
+        reader.readAsText(file);
+      }
     }
   };
 
@@ -193,7 +208,7 @@ export default function DataEncryptor() {
 
           <div className="space-y-4">
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="mb-2 block">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -225,7 +240,7 @@ export default function DataEncryptor() {
               <Label htmlFor="input-area">
                 {mode === "encrypt" 
                   ? (inputType === "text" ? "Text to encrypt" : "File to encrypt")
-                  : (inputType === "text" ? "Encrypted data to decrypt" : "Encrypted data to decrypt")
+                  : (inputType === "text" ? "Encrypted data to decrypt" : "Encrypted file to decrypt")
                 }
               </Label>
             </div>
@@ -274,7 +289,7 @@ export default function DataEncryptor() {
               ) : (
                 <div className="space-y-4">
                   {mode === "encrypt" ? (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center min-h-[300px] flex flex-col justify-center">
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -293,13 +308,32 @@ export default function DataEncryptor() {
                       </label>
                     </div>
                   ) : (
-                    <Textarea
-                      id="input-area"
-                      className="min-h-[300px] font-mono w-full"
-                      placeholder="Enter encrypted data (format: salt:iv:encryptedData)..."
-                      value={textInput}
-                      onChange={(e) => setTextInput(e.target.value)}
-                    />
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center min-h-[300px] flex flex-col justify-center">
+                                             <input
+                         ref={fileInputRef}
+                         type="file"
+                         onChange={handleFileSelect}
+                         className="hidden"
+                         id="file-input-decrypt"
+                       />
+                      <label htmlFor="file-input-decrypt" className="cursor-pointer">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                        <p className="text-sm text-gray-600">
+                          {selectedFile ? selectedFile.name : "Click to select an encrypted file"}
+                        </p>
+                                                 <p className="text-xs text-gray-400 mt-2">
+                           Any file type containing encrypted data
+                         </p>
+                      </label>
+                      {selectedFile && textInput && (
+                        <div className="mt-4 p-3 bg-gray-50 rounded border max-h-32 overflow-auto">
+                          <p className="text-xs text-gray-500 mb-1">File content preview:</p>
+                          <p className="text-xs font-mono text-gray-700 break-all">
+                            {textInput.substring(0, 100)}...
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
