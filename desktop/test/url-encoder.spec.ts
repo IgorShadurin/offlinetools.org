@@ -78,7 +78,7 @@ describe('URL Encoder/Decoder tests', async () => {
     await takeScreenshot(page, 'url-encoder', 'url-encoder-page');
     
     // Verify component title
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test data with spaces and special characters
     const testData = 'https://example.com/path with spaces?query=special chars!@#$%^&*()';

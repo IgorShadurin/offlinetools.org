@@ -86,7 +86,7 @@ describe('[electron-vite-react] e2e tests', async () => {
     const jsonFormatButton = await findButtonByText(page, 'JSON Format/Validate');
     expect(jsonFormatButton).not.toBeNull();
     
-    const base64Button = await findButtonByText(page, 'Base64 String Encode/Decode');
+    const base64Button = await findButtonByText(page, 'Base64 String');
     expect(base64Button).not.toBeNull();
     
     const urlEncoderButton = await findButtonByText(page, 'URL Encoder/Decoder');

@@ -79,7 +79,7 @@ describe('JSON Format/Validate tests', async () => {
     await waitForComponentTitle(page, COMPONENT_TITLE);
     
     // Verify component title
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Take screenshot of loaded component
     await takeScreenshot(page, 'json-formatter', 'component-loaded');

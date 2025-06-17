@@ -29,8 +29,6 @@ const COMPONENT_TITLE = 'Base64 Binary';
 // Configure timeout based on CI environment
 const isCI = process.env.CI === 'true';
 
-
-
 /**
  * Helper function to switch between encode/decode modes
  * @param page - Playwright page object
@@ -87,7 +85,7 @@ describe('Base64 Binary tests', async () => {
     await takeScreenshot(page, 'binary-base64-codec', 'navigation-success');
     
     // Verify correct component loaded
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
   });
 
   test('should display basic UI elements', async () => {

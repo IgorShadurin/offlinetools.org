@@ -59,7 +59,7 @@ const tools: Tool[] = [
   { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
   { id: 'image-resizer', name: 'Image Resizer', icon: <Image size={16} /> },
-  { id: 'steganography', name: 'Steganography Tool', icon: <Lock size={16} /> },
+  { id: 'steganography', name: 'Steganography', icon: <Lock size={16} /> },
   { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
