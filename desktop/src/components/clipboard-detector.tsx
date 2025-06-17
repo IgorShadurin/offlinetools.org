@@ -30,6 +30,7 @@ const TOOL_ID_MAPPING: Record<string, string> = {
   [Tool.JSON_FORMATTER]: "json-formatter",
   [Tool.BASE64_CODEC]: "base64-string",
   [Tool.URL_ENCODER]: "url-encoder",
+  [Tool.HTML_TEXT_EXTRACTOR]: "html-text-extractor",
 };
 
 /**
@@ -39,6 +40,7 @@ const IMPLEMENTED_TOOLS = [
   Tool.JSON_FORMATTER,
   Tool.BASE64_CODEC,
   Tool.URL_ENCODER,
+  Tool.HTML_TEXT_EXTRACTOR,
 ];
 
 /**
@@ -83,6 +85,7 @@ export function ClipboardDetector({ className, onSelectTool }: ClipboardDetector
       [Tool.BASE64_CODEC]: "Base64 Encoder/Decoder",
       [Tool.BINARY_BASE64_CODEC]: "Binary Base64 Encoder/Decoder",
       [Tool.FILE_HASH_COMPARE]: "File Hash Compare",
+      [Tool.HTML_TEXT_EXTRACTOR]: "HTML Text Extractor",
       [Tool.TEXT_HASH_GENERATOR]: "Text Hash Generator",
       [Tool.URL_ENCODER]: "URL Encoder/Decoder",
     };
