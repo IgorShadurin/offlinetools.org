@@ -46,22 +46,62 @@ alwaysApply: false
      )}
      ```
 
-5. **Testing Requirements**
-   - Create tests in `/desktop/test/{feature-name}.spec.ts`
+5. **Testing Strategy & Requirements**
+   
+   ### **CRITICAL: Feature-First Testing Approach**
+   **AI agents MUST follow this testing workflow to optimize development speed and resource usage:**
+
+   #### **Phase 1: Feature-Specific Testing (REQUIRED FIRST)**
+   1. **Create tests first** in `/desktop/test/{feature-name}.spec.ts`
+   2. **Run ONLY the feature tests** during development:
+      ```bash
+      # Run specific feature tests only
+      pnpm run test test/{feature-name}.spec.ts
+      
+      # Examples:
+      pnpm run test test/data-encryptor.spec.ts
+      pnpm run test test/json-formatter.spec.ts
+      pnpm run test test/base64.spec.ts
+      ```
+   3. **Fix issues rapidly** by focusing only on the feature being developed
+   4. **Iterate quickly** with faster feedback (1-2s vs 30s+ for all tests)
+
+   #### **Phase 2: Full Test Suite (ONLY AFTER FEATURE TESTS PASS)**
+   ```bash
+   # Run all tests only when feature is complete
+   pnpm run test
+   # Or for headless environments
+   pnpm run test:no-screen
+   ```
+
+   ### **Testing Patterns & Structure**
    - Follow style patterns from existing tests:
      - `/desktop/test/base64.spec.ts` - Base64 encoder/decoder tests
      - `/desktop/test/json-formatter.spec.ts` - JSON formatter tests
      - `/desktop/test/url-encoder.spec.ts` - URL encoder tests
-   - Important testing principles:
-     - **Never use arbitrary timeouts** (e.g., `page.waitForTimeout()`)
-     - Always wait for specific elements or conditions instead
-     - Use `waitForVisibleElement()`, `waitForComponentTitle()`, etc.
-   - Recommended test structure:
-     1. Setup: Initialize Electron app
-     2. Navigation: Wait for sidebar to load, then click tool
-     3. Input: Test with valid and invalid inputs
-     4. Verification: Wait for and verify correct output
-     5. Error handling: Verify appropriate error messages
-  - Use utilities from `/desktop/test/utils.ts` to handle waiting
-  - Run tests locally with `pnpm run test`
-  - Use `pnpm run test:no-screen` to run tests on devices without a screen (wraps Vitest with `xvfb-run`)
+   
+   ### **Important Testing Principles**
+   - **Never use arbitrary timeouts** (e.g., `page.waitForTimeout()`)
+   - Always wait for specific elements or conditions instead
+   - Use `waitForVisibleElement()`, `waitForComponentTitle()`, etc.
+   - Start with basic UI tests, then add functionality tests
+   
+   ### **Recommended Test Structure**
+   - Follow the pattern in `/desktop/test/data-encryptor.spec.ts` for clean, focused testing
+   - Start with basic navigation and UI element verification tests
+   - Add functionality tests after basic tests pass
+   - Use proper test isolation and error handling
+
+   ### **Performance Benefits of Feature-First Testing**
+   - **Speed**: 1-2s vs 30s+ (15-30x faster)
+   - **Resource Usage**: Lower CPU/memory consumption
+   - **Focus**: Immediate feedback on specific feature issues
+   - **Debugging**: Easier to isolate and fix problems
+   - **Development Flow**: Faster iteration cycles
+
+   ### **Test Utilities**
+   - Use utilities from `/desktop/test/utils.ts` to handle waiting
+   - Available commands:
+     - `pnpm run test` - Run all tests
+     - `pnpm run test test/specific-file.spec.ts` - Run specific test file
+     - `pnpm run test:no-screen` - Run tests on devices without a screen (wraps Vitest with `xvfb-run`)

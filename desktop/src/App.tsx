@@ -34,6 +34,7 @@ import { WatermarkTool } from './components/watermark-tool'
 import { QrCodeTool } from './components/qr-code'
 import { ImageResizer } from './components/image-resizer'
 import { Steganography } from './components/steganography'
+import { DataEncryptor } from './components/data-encryptor'
 
 // List of tools
 const tools: Tool[] = [
@@ -52,6 +53,7 @@ const tools: Tool[] = [
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
   { id: 'image-resizer', name: 'Image Resizer', icon: <Image size={16} /> },
   { id: 'steganography', name: 'Steganography Tool', icon: <Lock size={16} /> },
+  { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
 
@@ -167,6 +169,8 @@ function App() {
           <ImageResizer className="min-h-full" />
         ) : selectedTool === 'steganography' ? (
           <Steganography className="min-h-full" />
+        ) : selectedTool === 'data-encryptor' ? (
+          <DataEncryptor className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (
