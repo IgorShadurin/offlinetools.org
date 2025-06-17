@@ -20,93 +20,76 @@ export default function SkipNavigationJsonViewArticle() {
   return (
     <article className="container mx-auto px-4 py-8 max-w-3xl">
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <Navigation className="w-8 h-8 text-blue-600" /> Implementing Skip
-        Navigation in Complex JSON Views
+        <Navigation className="w-8 h-8 text-blue-600" /> Implementing Skip Navigation in Complex JSON Views
       </h1>
 
       <section className="space-y-6">
         <p>
-          In modern web development, displaying complex data, often fetched and
-          structured as JSON, is commonplace. While powerful, deeply nested or
-          large JSON structures rendered into interactive views can sometimes
-          create significant accessibility challenges, particularly for keyboard
-          users and screen reader users. One fundamental accessibility feature
-          is <strong>Skip Navigation</strong> (or Skip Link). This article
-          explores how to effectively implement skip navigation within the
-          context of views primarily presenting complex JSON data.
+          In modern web development, displaying complex data, often fetched and structured as JSON, is commonplace.
+          While powerful, deeply nested or large JSON structures rendered into interactive views can sometimes create
+          significant accessibility challenges, particularly for keyboard users and screen reader users. One fundamental
+          accessibility feature is <strong>Skip Navigation</strong> (or Skip Link). This article explores how to
+          effectively implement skip navigation within the context of views primarily presenting complex JSON data.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Accessibility className="w-6 h-6 text-green-600" /> What is Skip
-          Navigation?
+          <Accessibility className="w-6 h-6 text-green-600" /> What is Skip Navigation?
         </h2>
         <p>
-          A skip navigation link is typically the first focusable element on a
-          web page. It provides a mechanism for users of assistive technologies,
-          especially screen readers and keyboard-only users, to quickly bypass
-          blocks of repetitive content, such as a main navigation menu, and jump
-          directly to the main content of the page.
+          A skip navigation link is typically the first focusable element on a web page. It provides a mechanism for
+          users of assistive technologies, especially screen readers and keyboard-only users, to quickly bypass blocks
+          of repetitive content, such as a main navigation menu, and jump directly to the main content of the page.
         </p>
         <p>
-          This simple link is a crucial component for meeting accessibility
-          standards, specifically WCAG 2.1 Success Criterion 2.4.1 Bypass
-          Blocks, which requires a mechanism to bypass blocks of content that
-          are repeated on multiple Web pages.
+          This simple link is a crucial component for meeting accessibility standards, specifically WCAG 2.1 Success
+          Criterion 2.4.1 Bypass Blocks, which requires a mechanism to bypass blocks of content that are repeated on
+          multiple Web pages.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <AlertTriangle className="w-6 h-6 text-yellow-600" /> Challenges in Complex
-          JSON Views
+          <AlertTriangle className="w-6 h-6 text-yellow-600" /> Challenges in Complex JSON Views
         </h2>
         <p>
-          When rendering complex JSON, the structure of the visible page content
-          is often dynamically generated based on the data. This can lead to
-          challenges for skip navigation:
+          When rendering complex JSON, the structure of the visible page content is often dynamically generated based on
+          the data. This can lead to challenges for skip navigation:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Dynamic Structure:</strong> The presence and hierarchy of
-            elements might change depending on the specific JSON data received.
+            <strong>Dynamic Structure:</strong> The presence and hierarchy of elements might change depending on the
+            specific JSON data received.
           </li>
           <li>
-            <strong>Deep Nesting:</strong> Complex JSON often translates to deeply
-            nested HTML, potentially creating many elements to tab through.
+            <strong>Deep Nesting:</strong> Complex JSON often translates to deeply nested HTML, potentially creating
+            many elements to tab through.
           </li>
           <li>
-            <strong>Lack of Standard Landmarks:</strong> Without careful
-            structuring, dynamically generated content might lack standard ARIA
-            landmarks (`&lt;main&gt;`, `&lt;nav&gt;`, `&lt;aside&gt;`, etc.) that screen readers
-            can use for navigation.
+            <strong>Lack of Standard Landmarks:</strong> Without careful structuring, dynamically generated content
+            might lack standard ARIA landmarks (`&lt;main&gt;`, `&lt;nav&gt;`, `&lt;aside&gt;`, etc.) that screen
+            readers can use for navigation.
           </li>
           <li>
-            <strong>Identifying &quot;Main Content&quot;:</strong> What constitutes the
-            &quot;main content&quot; might be less clear in a view dominated by structured
-            data. Is it the data table? A specific visualization? A detail
-            panel?
+            <strong>Identifying &quot;Main Content&quot;:</strong> What constitutes the &quot;main content&quot; might
+            be less clear in a view dominated by structured data. Is it the data table? A specific visualization? A
+            detail panel?
           </li>
         </ul>
         <p>
-          The key is to ensure that even though the *content* is dynamic, the
-          *structure* includes stable, identifiable target elements that the
-          skip link can point to.
+          The key is to ensure that even though the *content* is dynamic, the *structure* includes stable, identifiable
+          target elements that the skip link can point to.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Code className="w-6 h-6 text-blue-600" /> Implementing the Standard
-          Skip Link
+          <Code className="w-6 h-6 text-blue-600" /> Implementing the Standard Skip Link
         </h2>
-        <p>
-          The basic implementation involves two parts:
-        </p>
+        <p>The basic implementation involves two parts:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>
-            An `&lt;a&gt;` tag placed early in the HTML `&lt;body&gt;`, with an
-            `href` attribute pointing to the ID of the main content area.
+            An `&lt;a&gt;` tag placed early in the HTML `&lt;body&gt;`, with an `href` attribute pointing to the ID of
+            the main content area.
           </li>
           <li>
-            The main content area element (usually a `&lt;main&gt;`, `&lt;div&gt;`,
-            or `&lt;article&gt;`) must have an `id` attribute matching the `href`
-            of the skip link.
+            The main content area element (usually a `&lt;main&gt;`, `&lt;div&gt;`, or `&lt;article&gt;`) must have an
+            `id` attribute matching the `href` of the skip link.
           </li>
         </ol>
 
@@ -133,8 +116,7 @@ export default function SkipNavigationJsonViewArticle() {
 
         <h3 className="text-xl font-semibold mt-6">CSS for Hiding/Showing:</h3>
         <p>
-          The link is usually hidden visually but becomes visible when it
-           receives keyboard focus (via the `Tab` key).
+          The link is usually hidden visually but becomes visible when it receives keyboard focus (via the `Tab` key).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
@@ -165,32 +147,27 @@ export default function SkipNavigationJsonViewArticle() {
           </pre>
         </div>
         <p>
-          Using `position: absolute` and `left: -999px` is a common technique
-          to hide elements visually while keeping them available to screen readers
-          and keyboard navigation. The `:focus` state makes it visible.
+          Using `position: absolute` and `left: -999px` is a common technique to hide elements visually while keeping
+          them available to screen readers and keyboard navigation. The `:focus` state makes it visible.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CheckCheck className="w-6 h-6 text-green-600" /> Applying to JSON
-          Views in TSX (Next.js Static Pages)
+          <CheckCheck className="w-6 h-6 text-green-600" /> Applying to JSON Views in TSX (Next.js Static Pages)
         </h2>
         <p>
-          Since this component is for a Next.js backend context without `useState`
-          or &quot;use client&quot;, we are dealing with server-rendered or statically
-          generated HTML. This simplifies the skip link implementation because
-          the target IDs must be part of the predictable, generated HTML
-          structure.
+          Since this component is for a Next.js backend context without `useState` or &quot;use client&quot;, we are
+          dealing with server-rendered or statically generated HTML. This simplifies the skip link implementation
+          because the target IDs must be part of the predictable, generated HTML structure.
         </p>
         <p>
-          The key is to wrap the main output of your JSON rendering logic within
-          a container element that has a consistent `id`.
+          The key is to wrap the main output of your JSON rendering logic within a container element that has a
+          consistent `id`.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Identifying Skip Targets:</h3>
         <p>
-          Think about the main sections a user might want to jump to after
-          skipping repetitive header/navigation. In a complex JSON view, these
-          might be:
+          Think about the main sections a user might want to jump to after skipping repetitive header/navigation. In a
+          complex JSON view, these might be:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>The primary display of the data (e.g., a large table, list, or tree view).</li>
@@ -199,14 +176,12 @@ export default function SkipNavigationJsonViewArticle() {
           <li>The main content area encompassing the primary data display.</li>
         </ul>
         <p>
-          Choose one or two main targets. The most common is the primary data
-          display or the main content area itself.
+          Choose one or two main targets. The most common is the primary data display or the main content area itself.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Example: Structuring for Skip Navigation</h3>
         <p>
-          Imagine your page receives JSON data and renders it into a structure
-          that includes filters and a data grid.
+          Imagine your page receives JSON data and renders it into a structure that includes filters and a data grid.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
@@ -266,87 +241,70 @@ export default function SkipNavigationJsonViewArticle() {
         </div>
 
         <p>
-          In this structure, we've added two potential skip targets:
-          `#data-filters` and `#json-data-area`. The skip link at the top points
-          to `#json-data-area`, assuming the user most likely wants to jump
-          directly to the data results. The `main` element also provides a
-          standard landmark, often sufficient for screen reader users who navigate
-          by landmarks.
+          In this structure, we've added two potential skip targets: `#data-filters` and `#json-data-area`. The skip
+          link at the top points to `#json-data-area`, assuming the user most likely wants to jump directly to the data
+          results. The `main` element also provides a standard landmark, often sufficient for screen reader users who
+          navigate by landmarks.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Lightbulb className="w-6 h-6 text-yellow-600" /> Best Practices and
-          Considerations
+          <Lightbulb className="w-6 h-6 text-yellow-600" /> Best Practices and Considerations
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Consistent IDs:</strong> Ensure the target element ID (e.g.,
-            `json-data-area`) is static and does not change based on the specific
-            JSON data or user interaction. It should be part of the page's layout
+            <strong>Consistent IDs:</strong> Ensure the target element ID (e.g., `json-data-area`) is static and does
+            not change based on the specific JSON data or user interaction. It should be part of the page's layout
             structure.
           </li>
           <li>
-            <strong>Semantic HTML:</strong> While rendering JSON, use
-            appropriate semantic HTML tags (`&lt;table&gt;`, `&lt;ul&gt;`, `&lt;ol&gt;`,
-            `&lt;dl&gt;`, `&lt;section&gt;`, `&lt;article&gt;`) within your target
-            section (`#json-data-area`). This provides inherent structure for
-            assistive technologies.
+            <strong>Semantic HTML:</strong> While rendering JSON, use appropriate semantic HTML tags (`&lt;table&gt;`,
+            `&lt;ul&gt;`, `&lt;ol&gt;`, `&lt;dl&gt;`, `&lt;section&gt;`, `&lt;article&gt;`) within your target section
+            (`#json-data-area`). This provides inherent structure for assistive technologies.
           </li>
           <li>
-            <strong>ARIA Landmarks:</strong> Supplement semantic HTML with ARIA
-            landmarks (`role="main"`, `role="region"`, `aria-label`) on your
-            target sections (like the filter area and the data area) if the
-            semantic HTML alone isn't sufficient to convey their purpose or
-            distinguish them. The `main` tag automatically has `role="main"`.
+            <strong>ARIA Landmarks:</strong> Supplement semantic HTML with ARIA landmarks (`role="main"`,
+            `role="region"`, `aria-label`) on your target sections (like the filter area and the data area) if the
+            semantic HTML alone isn't sufficient to convey their purpose or distinguish them. The `main` tag
+            automatically has `role="main"`.
           </li>
           <li>
-            <strong>Placement:</strong> The skip link should be one of the
-            *very first* elements inside the `&lt;body&gt;` tag in the rendered
-            HTML output.
+            <strong>Placement:</strong> The skip link should be one of the *very first* elements inside the
+            `&lt;body&gt;` tag in the rendered HTML output.
           </li>
           <li>
-            <strong>Visibility on Focus:</strong> The CSS must correctly make the
-            link visible and usable when it receives keyboard focus. Test this
-            thoroughly.
+            <strong>Visibility on Focus:</strong> The CSS must correctly make the link visible and usable when it
+            receives keyboard focus. Test this thoroughly.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <TextSelect className="w-6 h-6 text-gray-600" /> Testing Skip Navigation
         </h2>
-        <p>
-          To test your skip navigation implementation:
-        </p>
+        <p>To test your skip navigation implementation:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>Load the page in a browser.</li>
           <li>Immediately press the `Tab` key.</li>
-          <li>
-            The skip link should become visible (if you used the common CSS
-            technique) and receive focus.
-          </li>
+          <li>The skip link should become visible (if you used the common CSS technique) and receive focus.</li>
           <li>Press `Enter` or `Spacebar`.</li>
-          <li>
-            Keyboard focus should jump to the element with the target ID (`#json-data-area` in our example).
-          </li>
+          <li>Keyboard focus should jump to the element with the target ID (`#json-data-area` in our example).</li>
           <li>Subsequent `Tab` presses should navigate *within* the content of that target element.</li>
-          <li>Test with a screen reader (e.g., NVDA, JAWS, VoiceOver, Narrator) to ensure the link is announced correctly as the first interactive element.</li>
+          <li>
+            Test with a screen reader (e.g., NVDA, JAWS, VoiceOver, Narrator) to ensure the link is announced correctly
+            as the first interactive element.
+          </li>
         </ol>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ArrowRight className="w-6 h-6 text-blue-600" /> Conclusion
         </h2>
         <p>
-          Implementing skip navigation in views displaying complex JSON data is
-          primarily about ensuring that your static HTML structure, generated from
-          that data, includes a stable, identifiable target element. By placing a
-          standard skip link early in the DOM and assigning a consistent ID to
-          the main data display area (or the containing main element), you provide
-          a vital accessibility feature for keyboard and screen reader users,
-          allowing them to efficiently access the core content of the page,
-          regardless of the complexity or dynamic nature of the underlying JSON.
-          Focusing on semantic HTML and ARIA landmarks within the data rendering
-          further enhances the navigability and understanding of the complex data
-          structure.
+          Implementing skip navigation in views displaying complex JSON data is primarily about ensuring that your
+          static HTML structure, generated from that data, includes a stable, identifiable target element. By placing a
+          standard skip link early in the DOM and assigning a consistent ID to the main data display area (or the
+          containing main element), you provide a vital accessibility feature for keyboard and screen reader users,
+          allowing them to efficiently access the core content of the page, regardless of the complexity or dynamic
+          nature of the underlying JSON. Focusing on semantic HTML and ARIA landmarks within the data rendering further
+          enhances the navigability and understanding of the complex data structure.
         </p>
       </section>
     </article>

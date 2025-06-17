@@ -23,47 +23,44 @@ export default function OfflineJsonFormattersArticle() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center">
-        <CloudOff className="mr-3 text-blue-600" size={32} /> Making the Switch: Transitioning from
-        Online to Offline JSON Formatters
+        <CloudOff className="mr-3 text-blue-600" size={32} /> Making the Switch: Transitioning from Online to Offline
+        JSON Formatters
       </h1>
 
       <div className="space-y-6 text-gray-700 dark:text-gray-300">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data
-          interchange on the web. As developers, we frequently encounter JSON data
-          that needs to be formatted, validated, or cleaned up for readability. Online
-          JSON formatters are a convenient solution that many developers rely on. You
-          paste your JSON, click a button, and get a nicely indented or minified output.
-          However, while convenient, relying solely on online tools presents significant
-          drawbacks, especially concerning data privacy and security.
+          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web. As
+          developers, we frequently encounter JSON data that needs to be formatted, validated, or cleaned up for
+          readability. Online JSON formatters are a convenient solution that many developers rely on. You paste your
+          JSON, click a button, and get a nicely indented or minified output. However, while convenient, relying solely
+          on online tools presents significant drawbacks, especially concerning data privacy and security.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <FileLock className="mr-3 text-red-600" /> Why Make the Switch? The Case for Offline Tools
         </h2>
         <p>
-          The primary reason to move away from online formatters, particularly for
-          sensitive or proprietary data, is **security and privacy**. When you paste
-          JSON into a web page, that data is transmitted over the internet to a
-          third-party server. While reputable online tools might claim not to store or
-          log your data, you are relying on their trustworthiness and the security of
-          their infrastructure.
+          The primary reason to move away from online formatters, particularly for sensitive or proprietary data, is
+          **security and privacy**. When you paste JSON into a web page, that data is transmitted over the internet to a
+          third-party server. While reputable online tools might claim not to store or log your data, you are relying on
+          their trustworthiness and the security of their infrastructure.
         </p>
         <p>
-          For development teams handling customer data, internal configuration, API keys,
-          or any other confidential information, sending that data to an external online
-          service is a significant security risk. Offline formatters process your data
-          locally on your machine, ensuring it never leaves your environment.
+          For development teams handling customer data, internal configuration, API keys, or any other confidential
+          information, sending that data to an external online service is a significant security risk. Offline
+          formatters process your data locally on your machine, ensuring it never leaves your environment.
         </p>
         <p>Beyond security, offline tools offer other advantages:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <Bolt className="inline mr-2 text-yellow-600" size={16} />
-            <strong>Speed:</strong> Processing large JSON files can be slow when relying on network latency and server processing. Offline tools are typically much faster.
+            <strong>Speed:</strong> Processing large JSON files can be slow when relying on network latency and server
+            processing. Offline tools are typically much faster.
           </li>
           <li>
             <Scale className="inline mr-2 text-green-600" size={16} />
-            <strong>Handling Large Files:</strong> Online tools often have limits on the size of the JSON you can paste. Offline tools can handle much larger files, limited only by your system's resources.
+            <strong>Handling Large Files:</strong> Online tools often have limits on the size of the JSON you can paste.
+            Offline tools can handle much larger files, limited only by your system's resources.
           </li>
           <li>
             <CloudOff className="inline mr-2 text-blue-600" size={16} />
@@ -71,7 +68,8 @@ export default function OfflineJsonFormattersArticle() {
           </li>
           <li>
             <Workflow className="inline mr-2 text-purple-600" size={16} />
-            <strong>Integration:</strong> Offline tools can often be integrated directly into your development workflow, IDE, or scripts for automation.
+            <strong>Integration:</strong> Offline tools can often be integrated directly into your development workflow,
+            IDE, or scripts for automation.
           </li>
         </ul>
 
@@ -79,16 +77,16 @@ export default function OfflineJsonFormattersArticle() {
           <Code className="mr-3 text-gray-600" /> Offline JSON Formatting Options
         </h2>
         <p>
-          Transitioning to offline tools doesn't mean sacrificing convenience. There are
-          several robust alternatives to web-based formatters, catering to different
-          preferences and use cases.
+          Transitioning to offline tools doesn't mean sacrificing convenience. There are several robust alternatives to
+          web-based formatters, catering to different preferences and use cases.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <Laptop className="mr-2 text-cyan-600" /> 1. Desktop Applications
         </h3>
         <p>
-          These are standalone software programs installed on your operating system (Windows, macOS, Linux). They provide a dedicated user interface for working with JSON.
+          These are standalone software programs installed on your operating system (Windows, macOS, Linux). They
+          provide a dedicated user interface for working with JSON.
         </p>
         <p>
           <strong>Pros:</strong>
@@ -105,17 +103,13 @@ export default function OfflineJsonFormattersArticle() {
           <li>May not be cross-platform compatible without specific versions.</li>
           <li>Can be overkill for simple formatting tasks.</li>
         </ul>
-        <p>
-          Examples include JSON-specific editors or general-purpose data editors that
-          support JSON formatting.
-        </p>
+        <p>Examples include JSON-specific editors or general-purpose data editors that support JSON formatting.</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <Terminal className="mr-2 text-green-600" /> 2. Command-Line Interface (CLI) Tools
         </h3>
         <p>
-          CLI tools are powerful utilities that you run from your terminal. They are
-          ideal for automation and scripting.
+          CLI tools are powerful utilities that you run from your terminal. They are ideal for automation and scripting.
         </p>
         <p>
           <strong>Pros:</strong>
@@ -152,8 +146,8 @@ cat data_formatted.json | jq -c '.' > data_minified.json`}
             </code>
           </pre>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-            The <code>.</code> filter in <code>jq</code> effectively pretty-prints the JSON input.
-            The <code>-c</code> flag minifies it.
+            The <code>.</code> filter in <code>jq</code> effectively pretty-prints the JSON input. The <code>-c</code>{" "}
+            flag minifies it.
           </p>
         </div>
 
@@ -161,8 +155,8 @@ cat data_formatted.json | jq -c '.' > data_minified.json`}
           <Code className="mr-2 text-orange-600" /> 3. IDE Extensions & Built-in Features
         </h3>
         <p>
-          Many Integrated Development Environments (IDEs) and code editors have built-in
-          JSON formatting capabilities or offer extensions that provide rich JSON support.
+          Many Integrated Development Environments (IDEs) and code editors have built-in JSON formatting capabilities or
+          offer extensions that provide rich JSON support.
         </p>
         <p>
           <strong>Pros:</strong>
@@ -180,18 +174,17 @@ cat data_formatted.json | jq -c '.' > data_minified.json`}
           <li>Functionality depends on the specific extension or editor feature.</li>
         </ul>
         <p>
-          Examples include extensions for VS Code, Sublime Text, Atom, and built-in
-          features in IDEs like WebStorm or Eclipse.
+          Examples include extensions for VS Code, Sublime Text, Atom, and built-in features in IDEs like WebStorm or
+          Eclipse.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <FileJson className="mr-2 text-red-500" /> 4. Using Programming Language Features
         </h3>
         <p>
-          Most programming languages have built-in libraries for parsing and
-          serializing JSON. You can write a simple script to read a JSON file,
-          parse it into a native data structure, and then serialize it back to a
-          formatted string.
+          Most programming languages have built-in libraries for parsing and serializing JSON. You can write a simple
+          script to read a JSON file, parse it into a native data structure, and then serialize it back to a formatted
+          string.
         </p>
         <p>
           <strong>Pros:</strong>
@@ -241,60 +234,50 @@ try {
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <CheckCheck className="mr-3 text-blue-500" /> Choosing the Right Offline Tool
         </h2>
-        <p>
-          The best offline tool depends on your specific needs and workflow:
-        </p>
+        <p>The best offline tool depends on your specific needs and workflow:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            If you primarily need a quick way to format JSON directly within the files
-            you are working on, an <strong>IDE extension</strong> is often the most convenient.
+            If you primarily need a quick way to format JSON directly within the files you are working on, an{" "}
+            <strong>IDE extension</strong> is often the most convenient.
           </li>
           <li>
-            If you need to process large files, incorporate formatting into build
-            scripts, or work with JSON data manipulation in pipelines, a
-            <strong>CLI tool</strong> is the way to go.
+            If you need to process large files, incorporate formatting into build scripts, or work with JSON data
+            manipulation in pipelines, a<strong>CLI tool</strong> is the way to go.
           </li>
           <li>
-            If you need a dedicated, feature-rich environment for exploring, editing,
-            validating, and formatting complex JSON structures, a
-            <strong>desktop application</strong> might be most suitable.
+            If you need a dedicated, feature-rich environment for exploring, editing, validating, and formatting complex
+            JSON structures, a<strong>desktop application</strong> might be most suitable.
           </li>
           <li>
-            For occasional formatting or integration into existing codebases without
-            adding new dependencies, using <strong>built-in language features</strong> is a
-            pragmatic choice.
+            For occasional formatting or integration into existing codebases without adding new dependencies, using{" "}
+            <strong>built-in language features</strong> is a pragmatic choice.
           </li>
         </ul>
         <p>
-          Many developers use a combination of these tools. An IDE extension for
-          daily coding, a CLI tool for scripting, and perhaps a desktop app for
-          debugging particularly gnarly JSON structures.
+          Many developers use a combination of these tools. An IDE extension for daily coding, a CLI tool for scripting,
+          and perhaps a desktop app for debugging particularly gnarly JSON structures.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <ShieldCheck className="mr-3 text-green-700" /> Emphasizing Security and Privacy
         </h2>
         <p>
-          Let&apos;s reiterate the critical aspect: security. By processing your JSON
-          offline, you completely eliminate the risk of your sensitive data being
-          intercepted, logged, or misused by a third-party service. This is
-          non-negotiable for applications dealing with personal user data, financial
-          information, internal system details, or anything that falls under compliance
-          regulations (like GDPR, HIPAA, etc.). Making the switch is not just about
-          convenience or speed; it&apos;s a fundamental security best practice.
+          Let&apos;s reiterate the critical aspect: security. By processing your JSON offline, you completely eliminate
+          the risk of your sensitive data being intercepted, logged, or misused by a third-party service. This is
+          non-negotiable for applications dealing with personal user data, financial information, internal system
+          details, or anything that falls under compliance regulations (like GDPR, HIPAA, etc.). Making the switch is
+          not just about convenience or speed; it&apos;s a fundamental security best practice.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Online JSON formatters are easy to access, but their utility is limited
-          by security concerns, performance on large data, and reliance on internet
-          connectivity. Transitioning to offline alternatives like desktop applications,
-          CLI tools, IDE extensions, or leveraging built-in language features offers
-          enhanced security, greater speed, better handling of large files, and seamless
-          integration into your development workflow. Evaluate your needs and workflow to
-          choose the best offline tool or combination of tools that empower you to handle
-          JSON data efficiently and, most importantly, securely. Making this simple switch
-          is a small but significant step towards a more secure development environment.
+          Online JSON formatters are easy to access, but their utility is limited by security concerns, performance on
+          large data, and reliance on internet connectivity. Transitioning to offline alternatives like desktop
+          applications, CLI tools, IDE extensions, or leveraging built-in language features offers enhanced security,
+          greater speed, better handling of large files, and seamless integration into your development workflow.
+          Evaluate your needs and workflow to choose the best offline tool or combination of tools that empower you to
+          handle JSON data efficiently and, most importantly, securely. Making this simple switch is a small but
+          significant step towards a more secure development environment.
         </p>
       </div>
     </>

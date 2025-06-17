@@ -1,15 +1,5 @@
 import type { Metadata } from "next";
-import {
-  CircuitBoard,
-  Database,
-  Code,
-  Link,
-  Shield,
-  Lightbulb,
-  Hash,
-  Binary,
-  MessageSquare,
-} from "lucide-react";
+import { CircuitBoard, Database, Code, Link, Shield, Lightbulb, Hash, Binary, MessageSquare } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Smart Contract Integration with JSON Data Structures | Web3 Development",
@@ -27,7 +17,11 @@ export default function SmartContractJsonIntegrationArticle() {
 
       <div className="space-y-6">
         <p>
-          In the world of decentralized applications (dApps), smart contracts are the backbone, executing logic on the blockchain. However, smart contracts operate in an isolated environment, limited to the data stored directly on the chain. Real-world applications often rely on data stored off-chain, frequently in structured formats like JSON. Integrating this off-chain JSON data securely and efficiently with on-chain smart contracts presents unique challenges.
+          In the world of decentralized applications (dApps), smart contracts are the backbone, executing logic on the
+          blockchain. However, smart contracts operate in an isolated environment, limited to the data stored directly
+          on the chain. Real-world applications often rely on data stored off-chain, frequently in structured formats
+          like JSON. Integrating this off-chain JSON data securely and efficiently with on-chain smart contracts
+          presents unique challenges.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -35,15 +29,21 @@ export default function SmartContractJsonIntegrationArticle() {
           <span>The Challenge: Bridging On-Chain and Off-Chain</span>
         </h2>
         <p>
-          Smart contracts are deterministic and live in a sandboxed environment. They cannot directly make HTTP requests to fetch data from a web server hosting a JSON file or database. This is by design, ensuring that contract execution is predictable and repeatable across all validating nodes.
+          Smart contracts are deterministic and live in a sandboxed environment. They cannot directly make HTTP requests
+          to fetch data from a web server hosting a JSON file or database. This is by design, ensuring that contract
+          execution is predictable and repeatable across all validating nodes.
         </p>
         <p>
-          Furthermore, storing complex JSON structures directly on the blockchain is often prohibitively expensive due to gas costs and limitations on data types and storage layout in languages like Solidity.
+          Furthermore, storing complex JSON structures directly on the blockchain is often prohibitively expensive due
+          to gas costs and limitations on data types and storage layout in languages like Solidity.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Why JSON?</h3>
         <p>
-          JSON (JavaScript Object Notation) is a lightweight, human-readable format widely used for data interchange on the internet. It represents data as key-value pairs and ordered lists (arrays), making it flexible and common for APIs and databases. The challenge is how to bring this flexible, nested structure into the rigid, cost-sensitive environment of a smart contract.
+          JSON (JavaScript Object Notation) is a lightweight, human-readable format widely used for data interchange on
+          the internet. It represents data as key-value pairs and ordered lists (arrays), making it flexible and common
+          for APIs and databases. The challenge is how to bring this flexible, nested structure into the rigid,
+          cost-sensitive environment of a smart contract.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -51,7 +51,8 @@ export default function SmartContractJsonIntegrationArticle() {
           <span>Common Patterns and Approaches</span>
         </h2>
         <p>
-          Several strategies exist to enable smart contracts to interact with or leverage off-chain JSON data. The choice depends on the specific use case, security requirements, data sensitivity, and frequency of updates.
+          Several strategies exist to enable smart contracts to interact with or leverage off-chain JSON data. The
+          choice depends on the specific use case, security requirements, data sensitivity, and frequency of updates.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -59,10 +60,14 @@ export default function SmartContractJsonIntegrationArticle() {
           <span>1. Storing Data Hashes On-Chain</span>
         </h3>
         <p>
-          One of the simplest and most gas-efficient methods is to store a hash of the JSON data on the blockchain. The actual JSON data remains off-chain (e.g., on a web server, IPFS, or a database).
+          One of the simplest and most gas-efficient methods is to store a hash of the JSON data on the blockchain. The
+          actual JSON data remains off-chain (e.g., on a web server, IPFS, or a database).
         </p>
         <p>
-          The smart contract stores a cryptographic hash (like Keccak-256, commonly used in Ethereum). When a user or dApp needs to verify the integrity of the off-chain JSON data, they retrieve the JSON, compute its hash off-chain, and compare it to the hash stored in the smart contract. If the hashes match, it proves the off-chain data has not been tampered with since the hash was recorded on-chain.
+          The smart contract stores a cryptographic hash (like Keccak-256, commonly used in Ethereum). When a user or
+          dApp needs to verify the integrity of the off-chain JSON data, they retrieve the JSON, compute its hash
+          off-chain, and compare it to the hash stored in the smart contract. If the hashes match, it proves the
+          off-chain data has not been tampered with since the hash was recorded on-chain.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Solidity (Storing Hash):</h4>
@@ -107,7 +112,9 @@ contract DataVerifier {
           </div>
         </div>
         <p>
-          This method doesn&apos;t allow the smart contract to *read* the data within the JSON, only to verify its integrity. It&apos;s suitable for scenarios where the data is publicly available but needs trustless verification of its state at a certain point in time.
+          This method doesn&apos;t allow the smart contract to *read* the data within the JSON, only to verify its
+          integrity. It&apos;s suitable for scenarios where the data is publicly available but needs trustless
+          verification of its state at a certain point in time.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -115,10 +122,14 @@ contract DataVerifier {
           <span>2. Storing Relevant Fields On-Chain</span>
         </h3>
         <p>
-          If only a few specific pieces of data from a JSON structure are needed by the smart contract logic, those fields can be extracted off-chain and stored directly in the smart contract using Solidity&apos;s native data types (<code>uint</code>, <code>string</code>, <code>bool</code>, <code>address</code>, structs, arrays of primitive types).
+          If only a few specific pieces of data from a JSON structure are needed by the smart contract logic, those
+          fields can be extracted off-chain and stored directly in the smart contract using Solidity&apos;s native data
+          types (<code>uint</code>, <code>string</code>, <code>bool</code>, <code>address</code>, structs, arrays of
+          primitive types).
         </p>
         <p>
-          This requires an off-chain process (a trusted server, a script, or a decentralized oracle network) to parse the JSON, extract the necessary values, and then send a transaction to the smart contract to update its state.
+          This requires an off-chain process (a trusted server, a script, or a decentralized oracle network) to parse
+          the JSON, extract the necessary values, and then send a transaction to the smart contract to update its state.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Solidity (Storing Fields):</h4>
@@ -172,7 +183,9 @@ contract ProductInfo {
           </div>
         </div>
         <p>
-          This approach is more expensive than storing just a hash, as you pay gas for storing each piece of data. It also requires trust in the entity that extracts and provides the data to the smart contract (`dataUpdater` in the example).
+          This approach is more expensive than storing just a hash, as you pay gas for storing each piece of data. It
+          also requires trust in the entity that extracts and provides the data to the smart contract (`dataUpdater` in
+          the example).
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -180,10 +193,15 @@ contract ProductInfo {
           <span>3. Encoding and Serialization</span>
         </h3>
         <p>
-          For more complex JSON structures that need to be passed to the smart contract, the JSON data can be serialized (converted into a byte string) off-chain. This byte string can then be passed to a smart contract function.
+          For more complex JSON structures that need to be passed to the smart contract, the JSON data can be serialized
+          (converted into a byte string) off-chain. This byte string can then be passed to a smart contract function.
         </p>
         <p>
-          Within the smart contract, you could potentially use libraries or custom logic to *decode* this byte string back into a structured format that Solidity can work with, like a struct or mapping. This is complex and highly gas-intensive. Alternatively, the contract might just store the raw bytes for later retrieval and interpretation off-chain, similar to the hash approach but storing the data itself (less efficient than just the hash).
+          Within the smart contract, you could potentially use libraries or custom logic to *decode* this byte string
+          back into a structured format that Solidity can work with, like a struct or mapping. This is complex and
+          highly gas-intensive. Alternatively, the contract might just store the raw bytes for later retrieval and
+          interpretation off-chain, similar to the hash approach but storing the data itself (less efficient than just
+          the hash).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual TypeScript (Encoding JSON to Bytes):</h4>
@@ -226,7 +244,10 @@ console.log("JSON Bytes:", jsonBytes); // Example: Uint8Array [ 123, 34, 117, ..
           </div>
         </div>
         <p>
-          Directly parsing JSON bytes within Solidity is extremely difficult and costly due to Solidity&apos;s limited string manipulation and byte processing capabilities designed for deterministic execution. This method is usually more practical for storing the raw data bytes on-chain for later off-chain retrieval and interpretation.
+          Directly parsing JSON bytes within Solidity is extremely difficult and costly due to Solidity&apos;s limited
+          string manipulation and byte processing capabilities designed for deterministic execution. This method is
+          usually more practical for storing the raw data bytes on-chain for later off-chain retrieval and
+          interpretation.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -234,10 +255,15 @@ console.log("JSON Bytes:", jsonBytes); // Example: Uint8Array [ 123, 34, 117, ..
           <span>4. Oracles (Decentralized Data Feeds)</span>
         </h3>
         <p>
-          Oracles are third-party services that provide smart contracts with external data. A decentralized oracle network (like Chainlink) can fetch data from APIs, parse JSON responses, and then send the required data fields to a smart contract in a format the contract understands (e.g., <code>uint256</code>, <code>string</code>).
+          Oracles are third-party services that provide smart contracts with external data. A decentralized oracle
+          network (like Chainlink) can fetch data from APIs, parse JSON responses, and then send the required data
+          fields to a smart contract in a format the contract understands (e.g., <code>uint256</code>,{" "}
+          <code>string</code>).
         </p>
         <p>
-          This is arguably the most common and robust method for getting dynamic off-chain data onto the chain in a decentralized manner. The oracle network handles the complexity and cost of fetching, parsing, and delivering the data securely.
+          This is arguably the most common and robust method for getting dynamic off-chain data onto the chain in a
+          decentralized manner. The oracle network handles the complexity and cost of fetching, parsing, and delivering
+          the data securely.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Solidity (Using an Oracle):</h4>
@@ -285,7 +311,8 @@ contract PriceConsumer {
           </div>
         </div>
         <p>
-          Using oracles shifts the trust assumption from a single data updater to the oracle network itself. It&apos;s a powerful pattern for incorporating real-world data, including data from JSON APIs, into smart contract logic.
+          Using oracles shifts the trust assumption from a single data updater to the oracle network itself. It&apos;s a
+          powerful pattern for incorporating real-world data, including data from JSON APIs, into smart contract logic.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -293,10 +320,15 @@ contract PriceConsumer {
           <span>5. Decentralized Storage & Protocols (e.g., IPFS + Proofs)</span>
         </h3>
         <p>
-          For larger datasets, the JSON can be stored on decentralized storage like IPFS. The IPFS content identifier (CID), which is a hash of the content, can then be stored on-chain (similar to the hash approach).
+          For larger datasets, the JSON can be stored on decentralized storage like IPFS. The IPFS content identifier
+          (CID), which is a hash of the content, can then be stored on-chain (similar to the hash approach).
         </p>
         <p>
-          To use specific data points from the JSON within a smart contract, more advanced protocols might be used. For instance, protocols like Merkle proofs can allow a smart contract to verify that a specific piece of data exists within a larger dataset (represented by a Merkle root stored on-chain) stored off-chain, without needing the entire dataset on-chain. The JSON data structure lends itself well to being represented as a Merkle tree (e.g., using keys or array indices).
+          To use specific data points from the JSON within a smart contract, more advanced protocols might be used. For
+          instance, protocols like Merkle proofs can allow a smart contract to verify that a specific piece of data
+          exists within a larger dataset (represented by a Merkle root stored on-chain) stored off-chain, without
+          needing the entire dataset on-chain. The JSON data structure lends itself well to being represented as a
+          Merkle tree (e.g., using keys or array indices).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Conceptual Flow (IPFS + Merkle Proof):</h4>
@@ -344,7 +376,10 @@ const largeJsonData = { ... }; // Your large JSON object/array
           </div>
         </div>
         <p>
-          This method offers good integrity verification for large datasets but requires significant off-chain computation to prepare the proofs and potentially complex on-chain logic for verification. It doesn&apos;t easily allow the smart contract to consume arbitrary data from the JSON on demand, only to verify the existence/inclusion of specific, pre-defined data points.
+          This method offers good integrity verification for large datasets but requires significant off-chain
+          computation to prepare the proofs and potentially complex on-chain logic for verification. It doesn&apos;t
+          easily allow the smart contract to consume arbitrary data from the JSON on demand, only to verify the
+          existence/inclusion of specific, pre-defined data points.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -352,15 +387,36 @@ const largeJsonData = { ... }; // Your large JSON object/array
           <span>Data Type Mapping</span>
         </h2>
         <p>
-          When bringing structured data onto the chain (even just specific fields), you must consider the mapping between JSON data types and Solidity types:
+          When bringing structured data onto the chain (even just specific fields), you must consider the mapping
+          between JSON data types and Solidity types:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>JSON String:</strong> Maps to Solidity <code>string</code> or <code>bytes</code>. Be mindful of gas costs for storing long strings.</li>
-          <li><strong>JSON Number:</strong> Maps to Solidity integer types (<code>uint</code>/<code>int</code> of various sizes) or fixed-point numbers (less common). Floating-point numbers (like 95.5 in the example) are NOT natively supported in Solidity; they must be scaled and stored as integers (e.g., 955 as `uint` with an implicit decimal point, or store 95 and 5 separately, or use a fixed-point library).</li>
-          <li><strong>JSON Boolean:</strong> Maps directly to Solidity <code>bool</code>.</li>
-          <li><strong>JSON Array:</strong> Maps to Solidity arrays (<code>type[]</code>). Arrays of complex types or dynamic sizes can be gas-intensive. Arrays of strings are particularly expensive.</li>
-          <li><strong>JSON Object:</strong> Can be mapped to Solidity <code>structs</code> or <code>mappings</code>. Nested objects require nested structs or multiple mappings.</li>
-          <li><strong>JSON Null:</strong> Solidity doesn&apos;t have a direct &quot;null&quot; type for state variables. You might use a default/zero value (e.g., 0 for uint, empty string for string) or a separate boolean flag to indicate if a field is &quot;set&quot;.</li>
+          <li>
+            <strong>JSON String:</strong> Maps to Solidity <code>string</code> or <code>bytes</code>. Be mindful of gas
+            costs for storing long strings.
+          </li>
+          <li>
+            <strong>JSON Number:</strong> Maps to Solidity integer types (<code>uint</code>/<code>int</code> of various
+            sizes) or fixed-point numbers (less common). Floating-point numbers (like 95.5 in the example) are NOT
+            natively supported in Solidity; they must be scaled and stored as integers (e.g., 955 as `uint` with an
+            implicit decimal point, or store 95 and 5 separately, or use a fixed-point library).
+          </li>
+          <li>
+            <strong>JSON Boolean:</strong> Maps directly to Solidity <code>bool</code>.
+          </li>
+          <li>
+            <strong>JSON Array:</strong> Maps to Solidity arrays (<code>type[]</code>). Arrays of complex types or
+            dynamic sizes can be gas-intensive. Arrays of strings are particularly expensive.
+          </li>
+          <li>
+            <strong>JSON Object:</strong> Can be mapped to Solidity <code>structs</code> or <code>mappings</code>.
+            Nested objects require nested structs or multiple mappings.
+          </li>
+          <li>
+            <strong>JSON Null:</strong> Solidity doesn&apos;t have a direct &quot;null&quot; type for state variables.
+            You might use a default/zero value (e.g., 0 for uint, empty string for string) or a separate boolean flag to
+            indicate if a field is &quot;set&quot;.
+          </li>
         </ul>
         <p>
           This mapping must be handled carefully by the off-chain process that prepares data for the smart contract.
@@ -370,14 +426,26 @@ const largeJsonData = { ... }; // Your large JSON object/array
           <Shield className="w-6 h-6 text-red-500" />
           <span>Security and Trust Considerations</span>
         </h2>
-        <p>
-          Integrating off-chain data introduces points of failure and trust assumptions:
-        </p>
+        <p>Integrating off-chain data introduces points of failure and trust assumptions:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Data Integrity:</strong> How can you ensure the off-chain data hasn&apos;t been tampered with before being used or hashed? Storing hashes or using Merkle proofs helps verify integrity against the on-chain record, but getting the *initial* correct hash or data onto the chain is critical.</li>
-          <li><strong>Data Availability:</strong> If you only store a hash or CID on-chain, the off-chain data source must remain available for verification or retrieval.</li>
-          <li><strong>Oracle Reliance:</strong> Using oracles introduces reliance on the oracle network. Ensure the oracle is decentralized and reputable for your use case. A malicious or faulty oracle can feed incorrect data to your contract.</li>
-          <li><strong>Centralization Risk:</strong> If a single entity is responsible for fetching, parsing, and updating data on-chain (as in pattern 2), your dApp has a point of centralization.</li>
+          <li>
+            <strong>Data Integrity:</strong> How can you ensure the off-chain data hasn&apos;t been tampered with before
+            being used or hashed? Storing hashes or using Merkle proofs helps verify integrity against the on-chain
+            record, but getting the *initial* correct hash or data onto the chain is critical.
+          </li>
+          <li>
+            <strong>Data Availability:</strong> If you only store a hash or CID on-chain, the off-chain data source must
+            remain available for verification or retrieval.
+          </li>
+          <li>
+            <strong>Oracle Reliance:</strong> Using oracles introduces reliance on the oracle network. Ensure the oracle
+            is decentralized and reputable for your use case. A malicious or faulty oracle can feed incorrect data to
+            your contract.
+          </li>
+          <li>
+            <strong>Centralization Risk:</strong> If a single entity is responsible for fetching, parsing, and updating
+            data on-chain (as in pattern 2), your dApp has a point of centralization.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -389,18 +457,28 @@ const largeJsonData = { ... }; // Your large JSON object/array
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Store only the absolute minimum necessary data on-chain.</li>
-          <li>Prefer fixed-size types over dynamic types (like <code>string</code> or dynamic arrays) if possible.</li>
+          <li>
+            Prefer fixed-size types over dynamic types (like <code>string</code> or dynamic arrays) if possible.
+          </li>
           <li>Use the most gas-efficient pattern for your needs (hashing is cheapest if only integrity is needed).</li>
           <li>Offload heavy computation (like JSON parsing or Merkle proof generation) off-chain.</li>
-          <li>Be mindful of storage update costs (<code>SLOAD</code> and <code>SSTORE</code> are expensive operations).</li>
+          <li>
+            Be mindful of storage update costs (<code>SLOAD</code> and <code>SSTORE</code> are expensive operations).
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Integrating smart contracts with off-chain JSON data is a common requirement for building feature-rich dApps. While smart contracts cannot directly consume JSON, developers have established patterns involving storing hashes, selectively storing fields, employing oracles, or leveraging decentralized storage with proofs.
+          Integrating smart contracts with off-chain JSON data is a common requirement for building feature-rich dApps.
+          While smart contracts cannot directly consume JSON, developers have established patterns involving storing
+          hashes, selectively storing fields, employing oracles, or leveraging decentralized storage with proofs.
         </p>
         <p>
-          Each method involves trade-offs between cost, complexity, security, and the type of interaction the smart contract needs with the data. Understanding the limitations of the on-chain environment and carefully designing the off-chain components responsible for data handling and transmission are key to successful and secure integration. The choice of pattern should be driven by the specific use case and the level of decentralization and trust required.
+          Each method involves trade-offs between cost, complexity, security, and the type of interaction the smart
+          contract needs with the data. Understanding the limitations of the on-chain environment and carefully
+          designing the off-chain components responsible for data handling and transmission are key to successful and
+          secure integration. The choice of pattern should be driven by the specific use case and the level of
+          decentralization and trust required.
         </p>
       </div>
     </>

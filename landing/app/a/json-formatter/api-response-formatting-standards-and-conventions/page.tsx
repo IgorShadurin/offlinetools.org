@@ -9,21 +9,17 @@ export const metadata: Metadata = {
 export default function ApiResponseFormattingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        API Response Formatting Standards and Conventions
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">API Response Formatting Standards and Conventions</h1>
 
       <div className="space-y-6">
         <p>
-          Designing effective APIs involves more than just defining endpoints and logic; the format of the response
-          data is equally crucial. Consistent and well-structured API responses make your API easier to understand,
-          integrate with, and maintain. This article explores common standards, conventions, and best practices for
-          formatting API responses.
+          Designing effective APIs involves more than just defining endpoints and logic; the format of the response data
+          is equally crucial. Consistent and well-structured API responses make your API easier to understand, integrate
+          with, and maintain. This article explores common standards, conventions, and best practices for formatting API
+          responses.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Why Response Formatting Matters
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Why Response Formatting Matters</h2>
         <p>
           The way your API returns data directly impacts the developer experience for those consuming your API. Good
           formatting provides several benefits:
@@ -32,8 +28,8 @@ export default function ApiResponseFormattingArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Predictability:</span> Consumers can anticipate the structure of the
-              data they will receive.
+              <span className="font-medium">Predictability:</span> Consumers can anticipate the structure of the data
+              they will receive.
             </li>
             <li>
               <span className="font-medium">Usability:</span> Data is easy to parse and extract programmatically.
@@ -43,22 +39,20 @@ export default function ApiResponseFormattingArticle() {
               integrations if the structure is consistent.
             </li>
             <li>
-              <span className="font-medium">Readability:</span> Helps developers quickly understand the data by
-              looking at examples.
+              <span className="font-medium">Readability:</span> Helps developers quickly understand the data by looking
+              at examples.
             </li>
             <li>
-              <span className="font-medium">Discoverability:</span> Standards like HATEOAS (explained below) can
-              help consumers discover related resources.
+              <span className="font-medium">Discoverability:</span> Standards like HATEOAS (explained below) can help
+              consumers discover related resources.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Common Response Formats
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Common Response Formats</h2>
         <p>
-          JSON is the de facto standard for web API responses due to its lightweight nature and ease of parsing.
-          While XML is still used, especially in enterprise or legacy systems, JSON is preferred for most new APIs.
+          JSON is the de facto standard for web API responses due to its lightweight nature and ease of parsing. While
+          XML is still used, especially in enterprise or legacy systems, JSON is preferred for most new APIs.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -75,12 +69,10 @@ export default function ApiResponseFormattingArticle() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Standardized Structures & Protocols
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Standardized Structures & Protocols</h2>
         <p>
-          Beyond basic JSON, several specifications and patterns provide more rigid guidelines for response
-          structures, especially for complex scenarios like collections, relationships, and errors.
+          Beyond basic JSON, several specifications and patterns provide more rigid guidelines for response structures,
+          especially for complex scenarios like collections, relationships, and errors.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6 space-y-4">
@@ -173,8 +165,8 @@ export default function ApiResponseFormattingArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">General Conventions and Best Practices</h2>
         <p>
-          Regardless of whether you adopt a full standard, following these general conventions will improve your
-          API's design:
+          Regardless of whether you adopt a full standard, following these general conventions will improve your API's
+          design:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6 space-y-4">
@@ -192,13 +184,9 @@ export default function ApiResponseFormattingArticle() {
             </p>
             <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-2">
               <p className="font-medium">camelCase:</p>
-              <pre>
-                {`{ "userName": "johnDoe", "totalItems": 5 }`}
-              </pre>
+              <pre>{`{ "userName": "johnDoe", "totalItems": 5 }`}</pre>
               <p className="font-medium mt-2">snake_case:</p>
-              <pre>
-                {`{ "user_name": "john_doe", "total_items": 5 }`}
-              </pre>
+              <pre>{`{ "user_name": "john_doe", "total_items": 5 }`}</pre>
             </div>
           </div>
 
@@ -237,7 +225,8 @@ export default function ApiResponseFormattingArticle() {
           <div>
             <h3 className="text-lg font-medium">Handling Null Values</h3>
             <p className="text-sm mt-1">
-              Be consistent about whether you include properties with null values or omit them entirely. Document your approach. Including them often provides a clearer contract.
+              Be consistent about whether you include properties with null values or omit them entirely. Document your
+              approach. Including them often provides a clearer contract.
             </p>
           </div>
 
@@ -261,7 +250,8 @@ export default function ApiResponseFormattingArticle() {
           <div>
             <h3 className="text-lg font-medium">Error Responses</h3>
             <p className="text-sm mt-1">
-              Error responses should be as consistent as successful responses. Use standard HTTP status codes and provide a structured JSON body with details about the error.
+              Error responses should be as consistent as successful responses. Use standard HTTP status codes and
+              provide a structured JSON body with details about the error.
             </p>
             <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-2">
               <pre>
@@ -288,45 +278,55 @@ export default function ApiResponseFormattingArticle() {
           <div>
             <h3 className="text-lg font-medium">Pagination and Filtering</h3>
             <p className="text-sm mt-1">
-              For collection endpoints, provide mechanisms for pagination, filtering, sorting, and selecting fields. Include relevant links or metadata in the response envelope.
+              For collection endpoints, provide mechanisms for pagination, filtering, sorting, and selecting fields.
+              Include relevant links or metadata in the response envelope.
             </p>
           </div>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Choosing the Right Approach</h2>
-        <p>
-          The best approach depends on your API's complexity and audience.
-        </p>
+        <p>The best approach depends on your API's complexity and audience.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Considerations:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Simplicity:</span> For simple APIs, basic JSON with consistent naming and wrapping may be sufficient.
+              <span className="font-medium">Simplicity:</span> For simple APIs, basic JSON with consistent naming and
+              wrapping may be sufficient.
             </li>
             <li>
-              <span className="font-medium">Relationships & Structure:</span> If your data has complex relationships (like social graphs or hierarchical data), JSON API or a similar structured format might be beneficial.
+              <span className="font-medium">Relationships & Structure:</span> If your data has complex relationships
+              (like social graphs or hierarchical data), JSON API or a similar structured format might be beneficial.
             </li>
             <li>
-              <span className="font-medium">Hypermedia/HATEOAS:</span> If you want clients to discover actions and related resources dynamically, HAL or JSON API (which supports HATEOAS) are good choices.
+              <span className="font-medium">Hypermedia/HATEOAS:</span> If you want clients to discover actions and
+              related resources dynamically, HAL or JSON API (which supports HATEOAS) are good choices.
             </li>
             <li>
-              <span className="font-medium">Tooling and Ecosystem:</span> Some standards (like OData) have strong tooling support in specific development ecosystems.
+              <span className="font-medium">Tooling and Ecosystem:</span> Some standards (like OData) have strong
+              tooling support in specific development ecosystems.
             </li>
             <li>
-              <span className="font-medium">Audience:</span> Consider the familiarity of your target developers with different standards.
+              <span className="font-medium">Audience:</span> Consider the familiarity of your target developers with
+              different standards.
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Documentation</h2>
         <p>
-          Even the most perfectly formatted response is less useful if it's not documented. Clearly document the structure, data types, and conventions used for each endpoint's response. Tools like OpenAPI (Swagger) are invaluable for this.
+          Even the most perfectly formatted response is less useful if it's not documented. Clearly document the
+          structure, data types, and conventions used for each endpoint's response. Tools like OpenAPI (Swagger) are
+          invaluable for this.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing clear and consistent API response formatting standards and conventions is vital for building robust, maintainable, and developer-friendly APIs. Whether you choose to adopt a formal standard like JSON API or HAL, or define your own internal conventions, prioritize consistency, provide helpful error messages, and document everything thoroughly. This effort pays off significantly in the long run by reducing integration friction and support costs.
+          Implementing clear and consistent API response formatting standards and conventions is vital for building
+          robust, maintainable, and developer-friendly APIs. Whether you choose to adopt a formal standard like JSON API
+          or HAL, or define your own internal conventions, prioritize consistency, provide helpful error messages, and
+          document everything thoroughly. This effort pays off significantly in the long run by reducing integration
+          friction and support costs.
         </p>
       </div>
     </>

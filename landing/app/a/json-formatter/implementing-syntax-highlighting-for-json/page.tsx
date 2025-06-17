@@ -9,36 +9,33 @@ export const metadata: Metadata = {
 export default function ImplementingJsonSyntaxHighlightingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Implementing Syntax Highlighting for JSON
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Implementing Syntax Highlighting for JSON</h1>
 
       <div className="space-y-6">
         <p>
-          Syntax highlighting is a feature commonly found in text editors, IDEs, and code viewers that displays
-          source code, markup languages, and data formats like JSON in different colors and fonts according to the
-          category of terms. For JSON, this means coloring keys, values (strings, numbers, booleans, null), and
-          structural elements (braces, brackets, commas, colons) differently. Implementing this feature significantly
-          enhances readability and helps in quickly identifying syntax errors.
+          Syntax highlighting is a feature commonly found in text editors, IDEs, and code viewers that displays source
+          code, markup languages, and data formats like JSON in different colors and fonts according to the category of
+          terms. For JSON, this means coloring keys, values (strings, numbers, booleans, null), and structural elements
+          (braces, brackets, commas, colons) differently. Implementing this feature significantly enhances readability
+          and helps in quickly identifying syntax errors.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Syntax Highlighting is Crucial for JSON</h2>
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read
-          and write, and easy for machines to parse and generate. However, complex or large JSON structures can
-          quickly become difficult to navigate and understand without visual cues. Syntax highlighting addresses
-          this by:
+          JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read and
+          write, and easy for machines to parse and generate. However, complex or large JSON structures can quickly
+          become difficult to navigate and understand without visual cues. Syntax highlighting addresses this by:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Improving Readability:</span> Differentiates keys from values,
-              making the structure immediately clear.
+              <span className="font-medium">Improving Readability:</span> Differentiates keys from values, making the
+              structure immediately clear.
             </li>
             <li>
-              <span className="font-medium">Reducing Errors:</span> Helps spot missing commas, mismatched quotes,
-              or incorrect data types at a glance.
+              <span className="font-medium">Reducing Errors:</span> Helps spot missing commas, mismatched quotes, or
+              incorrect data types at a glance.
             </li>
             <li>
               <span className="font-medium">Enhancing Navigation:</span> Easier to trace nested objects and arrays.
@@ -60,8 +57,8 @@ export default function ImplementingJsonSyntaxHighlightingArticle() {
           <li className="font-medium">
             <span className="font-medium">Tokenization (Lexing):</span>
             <p className="text-sm -mt-2">
-              Breaking down the input string into a stream of tokens. Each token represents a fundamental unit, such
-              as a key string, a number, a boolean, an opening brace, a comma, etc.
+              Breaking down the input string into a stream of tokens. Each token represents a fundamental unit, such as
+              a key string, a number, a boolean, an opening brace, a comma, etc.
             </p>
           </li>
           <li className="font-medium">
@@ -75,16 +72,14 @@ export default function ImplementingJsonSyntaxHighlightingArticle() {
           <li className="font-medium">
             <span className="font-medium">Applying Styles:</span>
             <p className="text-sm -mt-2">
-              Based on the token type identified in the previous steps, wrapping the corresponding text segment in
-              an element (like a <code>&lt;span&gt;</code>) with a specific CSS class.
+              Based on the token type identified in the previous steps, wrapping the corresponding text segment in an
+              element (like a <code>&lt;span&gt;</code>) with a specific CSS class.
             </p>
           </li>
         </ol>
 
         <h2 className="text-2xl font-semibold mt-8">Techniques for Implementing JSON Syntax Highlighting</h2>
-        <p>
-          Several approaches exist, ranging from simple pattern matching to using dedicated parsing libraries.
-        </p>
+        <p>Several approaches exist, ranging from simple pattern matching to using dedicated parsing libraries.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6 space-y-4">
           <div>
@@ -120,8 +115,8 @@ function highlightJson(jsonString) {
               <span className="font-medium">Pros:</span> Can be quick to implement for basic cases, no external
               dependencies.
               <br />
-              <span className="font-medium">Cons:</span> Can become complex to handle edge cases like escaped
-              quotes within strings; not suitable for full validation.
+              <span className="font-medium">Cons:</span> Can become complex to handle edge cases like escaped quotes
+              within strings; not suitable for full validation.
             </p>
           </div>
 
@@ -179,11 +174,11 @@ function escapeHtml(unsafe) { // Basic HTML escaping
               </pre>
             </div>
             <p className="mt-2 text-sm">
-              <span className="font-medium">Pros:</span> More accurate and robust highlighting, better error
-              handling integration.
+              <span className="font-medium">Pros:</span> More accurate and robust highlighting, better error handling
+              integration.
               <br />
-              <span className="font-medium">Cons:</span> Requires adding a library dependency, might be more complex
-              to integrate initially.
+              <span className="font-medium">Cons:</span> Requires adding a library dependency, might be more complex to
+              integrate initially.
             </p>
           </div>
 
@@ -206,9 +201,7 @@ function escapeHtml(unsafe) { // Basic HTML escaping
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Implementing in a React/Next.js Environment (TSX)</h2>
-        <p>
-          In a React or Next.js application using TSX, you would typically:
-        </p>
+        <p>In a React or Next.js application using TSX, you would typically:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>Get the JSON data as a string.</li>
           <li>Choose a highlighting technique (regex, parser library, or a component library).</li>
@@ -220,11 +213,10 @@ function escapeHtml(unsafe) { // Basic HTML escaping
             Render this HTML using React&apos;s <code>dangerouslySetInnerHTML</code> property within a{" "}
             <code>&lt;pre&gt;</code> or <code>&lt;code&gt;</code> tag.
           </li>
+          <li>If using a component library, import the component and pass the JSON string as a prop.</li>
           <li>
-            If using a component library, import the component and pass the JSON string as a prop.
-          </li>
-          <li>Define CSS rules for the classes used (e.g., <code>.json-string</code>,{" "}
-            <code>.json-number</code>, <code>.json-key</code>, etc.) to apply colors and styles.
+            Define CSS rules for the classes used (e.g., <code>.json-string</code>, <code>.json-number</code>,{" "}
+            <code>.json-key</code>, etc.) to apply colors and styles.
           </li>
         </ol>
 
@@ -255,18 +247,20 @@ export default JsonHighlighter;
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This conceptual component takes a JSON string, processes it with a highlighting function (which you
-            would implement or import), and renders the resulting HTML safely using{" "}
-            <code>dangerouslySetInnerHTML</code> within a <code>&lt;code&gt;</code> block inside a{" "}
-            <code>&lt;pre&gt;</code> tag for preserving whitespace and formatting. You would need corresponding CSS for classes like{" "}
-            <code>.json-container</code>, <code>.json-string</code>, etc.
+            This conceptual component takes a JSON string, processes it with a highlighting function (which you would
+            implement or import), and renders the resulting HTML safely using <code>dangerouslySetInnerHTML</code>{" "}
+            within a <code>&lt;code&gt;</code> block inside a <code>&lt;pre&gt;</code> tag for preserving whitespace and
+            formatting. You would need corresponding CSS for classes like <code>.json-container</code>,{" "}
+            <code>.json-string</code>, etc.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Challenges</h2>
         <p>Implementing robust JSON syntax highlighting can face challenges:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Handling escaped characters correctly within strings (e.g., <code>\"</code>).</li>
+          <li>
+            Handling escaped characters correctly within strings (e.g., <code>\"</code>).
+          </li>
           <li>Dealing with comments (which are not standard JSON but often appear in configurations).</li>
           <li>Ensuring performance for very large JSON strings.</li>
           <li>Managing different coloring themes (light/dark mode).</li>
@@ -276,14 +270,14 @@ export default JsonHighlighter;
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           Syntax highlighting is an essential feature for making JSON data more manageable and understandable. While
-          simple implementations can be achieved with regular expressions, using dedicated parsing libraries or
-          existing component libraries offers more robustness and better handling of edge cases.
+          simple implementations can be achieved with regular expressions, using dedicated parsing libraries or existing
+          component libraries offers more robustness and better handling of edge cases.
         </p>
         <p>
           When implementing syntax highlighting in your application, consider the complexity of the JSON you expect to
           handle, the performance requirements, and the desired feature set (like themes or error highlighting) to
-          choose the most suitable technique or library. Providing this visual aid greatly improves the user
-          experience when interacting with JSON data.
+          choose the most suitable technique or library. Providing this visual aid greatly improves the user experience
+          when interacting with JSON data.
         </p>
       </div>
     </>

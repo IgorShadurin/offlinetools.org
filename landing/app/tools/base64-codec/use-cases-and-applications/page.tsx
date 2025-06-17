@@ -29,12 +29,14 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 in RESTful APIs: Data Transfer Best Practices",
-    description: "Guidelines for effectively using Base64 encoding when transferring binary data through RESTful API endpoints.",
+    description:
+      "Guidelines for effectively using Base64 encoding when transferring binary data through RESTful API endpoints.",
     slug: "base64-in-restful-apis-data-transfer-best-practices",
   },
   {
     title: "Email Attachments and Base64: MIME Encoding Explained",
-    description: "Understanding how Base64 enables binary attachments in email systems through MIME encoding standards.",
+    description:
+      "Understanding how Base64 enables binary attachments in email systems through MIME encoding standards.",
     slug: "email-attachments-and-base64-mime-encoding-explained",
   },
   {
@@ -54,12 +56,14 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Authentication Tokens and Base64 Encoding",
-    description: "How Base64 encoding is used in modern authentication systems like JWT, OAuth, and basic authentication.",
+    description:
+      "How Base64 encoding is used in modern authentication systems like JWT, OAuth, and basic authentication.",
     slug: "authentication-tokens-and-base64-encoding",
   },
   {
     title: "Base64 in Mobile Application Development",
-    description: "Common use cases and implementation strategies for Base64 encoding in iOS and Android application development.",
+    description:
+      "Common use cases and implementation strategies for Base64 encoding in iOS and Android application development.",
     slug: "base64-in-mobile-application-development",
   },
   {
@@ -116,7 +120,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "PDF Generation with Base64 Embedded Images",
     description: "Techniques for embedding images and resources in PDF documents using Base64 encoding.",
     slug: "pdf-generation-with-base64-embedded-images",
-  }
+  },
 ];
 
 /**
@@ -179,7 +183,8 @@ export default function Base64CodecUseCasesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Web Technologies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Use cases in web development including data URIs, embedded assets, CSS optimization, and cross-domain data transfer.
+                      Use cases in web development including data URIs, embedded assets, CSS optimization, and
+                      cross-domain data transfer.
                     </p>
                   </div>
                 </div>
@@ -191,7 +196,8 @@ export default function Base64CodecUseCasesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Data Storage and Transfer</h3>
                     <p className="text-sm text-muted-foreground">
-                      Applications in APIs, database systems, file uploads, and structured data formats like JSON and XML.
+                      Applications in APIs, database systems, file uploads, and structured data formats like JSON and
+                      XML.
                     </p>
                   </div>
                 </div>
@@ -205,7 +211,8 @@ export default function Base64CodecUseCasesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Media and Content</h3>
                     <p className="text-sm text-muted-foreground">
-                      Encoding binary media like images and documents for embedding in text-based systems and content management.
+                      Encoding binary media like images and documents for embedding in text-based systems and content
+                      management.
                     </p>
                   </div>
                 </div>
@@ -217,7 +224,8 @@ export default function Base64CodecUseCasesPage() {
                   <div>
                     <h3 className="font-medium mb-1">Systems Integration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementation in authentication systems, digital signatures, IoT communications, and blockchain applications.
+                      Implementation in authentication systems, digital signatures, IoT communications, and blockchain
+                      applications.
                     </p>
                   </div>
                 </div>
@@ -230,7 +238,10 @@ export default function Base64CodecUseCasesPage() {
                 <span>Common Application:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Email systems use Base64 extensively through MIME (Multipurpose Internet Mail Extensions) to encode binary file attachments into ASCII text format. This allows binary data like images, documents, and other files to be transmitted through email protocols that were originally designed to handle only plain text.
+                Email systems use Base64 extensively through MIME (Multipurpose Internet Mail Extensions) to encode
+                binary file attachments into ASCII text format. This allows binary data like images, documents, and
+                other files to be transmitted through email protocols that were originally designed to handle only plain
+                text.
               </p>
             </div>
           </CardContent>
@@ -240,4 +251,4 @@ export default function Base64CodecUseCasesPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

@@ -33,69 +33,63 @@ export const metadata: Metadata = {
 export default function ProgressiveDisclosureJsonFormatterArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Progressive Disclosure in Complex JSON Formatter Interfaces
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Progressive Disclosure in Complex JSON Formatter Interfaces</h1>
 
       <div className="space-y-6">
         <p>
           Working with JSON data is a common task for developers, testers, and API consumers. While simple JSON
-          structures are easy to read, real-world APIs and data stores often return deeply nested and extensive
-          JSON payloads. Presenting this complexity all at once in a formatter or viewer interface can be
-          overwhelming, hindering usability and understanding. This is where <strong>Progressive Disclosure</strong>
+          structures are easy to read, real-world APIs and data stores often return deeply nested and extensive JSON
+          payloads. Presenting this complexity all at once in a formatter or viewer interface can be overwhelming,
+          hindering usability and understanding. This is where <strong>Progressive Disclosure</strong>
           comes into play.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">What is Progressive Disclosure?</h2>
         <p>
-          Progressive disclosure is an interaction design technique that sequences information and actions
-          across multiple steps. It involves showing users only the essential information and controls
-          initially, and then gradually revealing more advanced or less frequently used options based on
-          user interaction or need. The core principle is to reduce cognitive load and prevent information overload.
+          Progressive disclosure is an interaction design technique that sequences information and actions across
+          multiple steps. It involves showing users only the essential information and controls initially, and then
+          gradually revealing more advanced or less frequently used options based on user interaction or need. The core
+          principle is to reduce cognitive load and prevent information overload.
         </p>
         <p>
           Think of a &quot;Show More&quot; button, expandable sections, or wizards that guide you through a process.
-          These are all forms of progressive disclosure. The goal is to make interfaces feel simpler,
-          less intimidating, and easier to learn by hiding complexity until it&apos;s explicitly requested.
+          These are all forms of progressive disclosure. The goal is to make interfaces feel simpler, less intimidating,
+          and easier to learn by hiding complexity until it&apos;s explicitly requested.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Apply It to JSON Formatters?</h2>
-        <p>
-          JSON formatters and viewers are perfect candidates for progressive disclosure because:
-        </p>
+        <p>JSON formatters and viewers are perfect candidates for progressive disclosure because:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Complexity:</span> JSON can have arbitrary nesting levels and contain
-            large arrays or objects with many keys. Displaying everything at once, fully expanded, can create
-            an endlessly scrolling page.
+            <span className="font-medium">Complexity:</span> JSON can have arbitrary nesting levels and contain large
+            arrays or objects with many keys. Displaying everything at once, fully expanded, can create an endlessly
+            scrolling page.
           </li>
           <li>
             <span className="font-medium">Varied User Needs:</span> Users might only need to see the top-level
-            structure, inspect a specific nested value, search for a key, compare differences, or validate
-            against a schema. Not everyone needs all features all the time.
+            structure, inspect a specific nested value, search for a key, compare differences, or validate against a
+            schema. Not everyone needs all features all the time.
           </li>
           <li>
-            <span className="font-medium">Performance:</span> Rendering massive, deeply nested JSON trees fully
-            expanded can be computationally expensive and slow down the interface.
+            <span className="font-medium">Performance:</span> Rendering massive, deeply nested JSON trees fully expanded
+            can be computationally expensive and slow down the interface.
           </li>
         </ul>
         <p>
-          By applying progressive disclosure, a JSON formatter can provide a clean, fast initial view while
-          offering powerful tools for those who need them.
+          By applying progressive disclosure, a JSON formatter can provide a clean, fast initial view while offering
+          powerful tools for those who need them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Levels of Progressive Disclosure in JSON Interfaces</h2>
-        <p>
-          Progressive disclosure can be implemented at various levels within a JSON interface:
-        </p>
+        <p>Progressive disclosure can be implemented at various levels within a JSON interface:</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Code className="w-5 h-5" /> Basic View: Prettified JSON
         </h3>
         <p>
-          The most fundamental level is presenting the JSON in a human-readable, prettified format. This involves
-          proper indentation and syntax highlighting. This is the minimum expectation but already an improvement
-          over raw, unformatted JSON.
+          The most fundamental level is presenting the JSON in a human-readable, prettified format. This involves proper
+          indentation and syntax highlighting. This is the minimum expectation but already an improvement over raw,
+          unformatted JSON.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Raw vs. Prettified JSON:</h4>
@@ -131,10 +125,14 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
           <IndentDecrease className="w-5 h-5" /> Structural Collapse/Expand
         </h3>
         <p>
-          This is arguably the most common and crucial progressive disclosure mechanism for JSON. It allows users to collapse and expand objects and arrays.
+          This is arguably the most common and crucial progressive disclosure mechanism for JSON. It allows users to
+          collapse and expand objects and arrays.
         </p>
         <p>
-          Initially, the JSON might be shown partially collapsed, perhaps only the top-level keys, or collapsed at a certain depth. Each object or array node should have a toggle icon (like <ChevronRight className="inline w-4 h-4" /> or <ChevronDown className="inline w-4 h-4" />) to reveal or hide its contents.
+          Initially, the JSON might be shown partially collapsed, perhaps only the top-level keys, or collapsed at a
+          certain depth. Each object or array node should have a toggle icon (like{" "}
+          <ChevronRight className="inline w-4 h-4" /> or <ChevronDown className="inline w-4 h-4" />) to reveal or hide
+          its contents.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Collapsed View Example:</h4>
@@ -163,21 +161,20 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
             </pre>
           </div>
         </div>
-        <p>
-          This allows users to focus on the relevant parts of the structure and drill down only when necessary.
-        </p>
+        <p>This allows users to focus on the relevant parts of the structure and drill down only when necessary.</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Eye className="w-5 h-5" /> Optional/Toggleable Views
         </h3>
         <p>
-          Users might need different representations or analyses of the JSON data. Offering these as toggleable
-          panels or views keeps the default interface clean.
+          Users might need different representations or analyses of the JSON data. Offering these as toggleable panels
+          or views keeps the default interface clean.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Raw/Formatted Toggle:</span> A simple button to switch between the raw text
-            and the prettified, collapsible view. (<Eye className="inline w-4 h-4" /> / <EyeOff className="inline w-4 h-4" /> icons).
+            and the prettified, collapsible view. (<Eye className="inline w-4 h-4" /> /{" "}
+            <EyeOff className="inline w-4 h-4" /> icons).
           </li>
           <li>
             <span className="font-medium">Diff View:</span> For comparing two JSON structures. This is a complex feature
@@ -193,24 +190,33 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
           <Settings className="w-5 h-5" /> Advanced Options & Settings
         </h3>
         <p>
-          Formatting options, editing capabilities, and advanced features should often be grouped or placed
-          in a dedicated settings area, a sidebar, or revealed through specific interactions.
+          Formatting options, editing capabilities, and advanced features should often be grouped or placed in a
+          dedicated settings area, a sidebar, or revealed through specific interactions.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Formatting Options:</span> Indentation level (<IndentDecrease className="inline w-4 h-4" /> / <IndentIncrease className="inline w-4 h-4" />), sort keys (<ArrowUpDown className="inline w-4 h-4" />), compact view. These could be in a dropdown or settings panel.
+            <span className="font-medium">Formatting Options:</span> Indentation level (
+            <IndentDecrease className="inline w-4 h-4" /> / <IndentIncrease className="inline w-4 h-4" />
+            ), sort keys (<ArrowUpDown className="inline w-4 h-4" />
+            ), compact view. These could be in a dropdown or settings panel.
           </li>
           <li>
-            <span className="font-medium">Filtering:</span> Hiding parts of the JSON based on key names or values (<ListFilter className="inline w-4 h-4" />).
+            <span className="font-medium">Filtering:</span> Hiding parts of the JSON based on key names or values (
+            <ListFilter className="inline w-4 h-4" />
+            ).
           </li>
           <li>
-            <span className="font-medium">Searching:</span> While often prominent, advanced search options (regex, case sensitivity) could be progressively revealed.
+            <span className="font-medium">Searching:</span> While often prominent, advanced search options (regex, case
+            sensitivity) could be progressively revealed.
           </li>
           <li>
-            <span className="font-medium">Validation & Schema:</span> Options to validate against a schema or highlight errors (<CircleAlert className="inline w-4 h-4" />). This might be a separate action button.
+            <span className="font-medium">Validation & Schema:</span> Options to validate against a schema or highlight
+            errors (<CircleAlert className="inline w-4 h-4" />
+            ). This might be a separate action button.
           </li>
           <li>
-            <span className="font-medium">Transformation/Querying:</span> Features like applying JQ queries (<Sparkles className="inline w-4 h-4" />) or transforming the data.
+            <span className="font-medium">Transformation/Querying:</span> Features like applying JQ queries (
+            <Sparkles className="inline w-4 h-4" />) or transforming the data.
           </li>
         </ul>
 
@@ -218,14 +224,16 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
           <Layers className="w-5 h-5" /> Contextual Information & Actions (Hover/Click)
         </h3>
         <p>
-          Information or actions relevant to a specific piece of data are best revealed when the user focuses
-          on that element, often through hovering or clicking.
+          Information or actions relevant to a specific piece of data are best revealed when the user focuses on that
+          element, often through hovering or clicking.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Hover to reveal:</span>
             <ul className="list-circle pl-6 mt-1">
-              <li>Full path to the key (e.g., <code>user.address.city</code>).</li>
+              <li>
+                Full path to the key (e.g., <code>user.address.city</code>).
+              </li>
               <li>Data type of the value (string, number, boolean, object, array, null).</li>
               <li>Length of arrays or number of keys in objects.</li>
               <li>Original string/number value for truncated displays.</li>
@@ -234,11 +242,26 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
           <li>
             <span className="font-medium">Click/Hover to reveal actions:</span>
             <ul className="list-circle pl-6 mt-1">
-              <li>Copy value (<Copy className="inline w-4 h-4" /> / <CopyCheck className="inline w-4 h-4" />).</li>
-              <li>Copy key (<FileKey className="inline w-4 h-4" />).</li>
-              <li>Copy path (<ClipboardList className="inline w-4 h-4" />).</li>
-              <li>Edit value (often reveals an input field <Pen className="inline w-4 h-4" />).</li>
-              <li>Delete key/value (<Trash2 className="inline w-4 h-4" />).</li>
+              <li>
+                Copy value (<Copy className="inline w-4 h-4" /> / <CopyCheck className="inline w-4 h-4" />
+                ).
+              </li>
+              <li>
+                Copy key (<FileKey className="inline w-4 h-4" />
+                ).
+              </li>
+              <li>
+                Copy path (<ClipboardList className="inline w-4 h-4" />
+                ).
+              </li>
+              <li>
+                Edit value (often reveals an input field <Pen className="inline w-4 h-4" />
+                ).
+              </li>
+              <li>
+                Delete key/value (<Trash2 className="inline w-4 h-4" />
+                ).
+              </li>
             </ul>
           </li>
         </ul>
@@ -264,32 +287,38 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
           </div>
         </div>
         <p>
-          These contextual revelations provide utility exactly where and when the user needs it without cluttering the default display.
+          These contextual revelations provide utility exactly where and when the user needs it without cluttering the
+          default display.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8">Designing with Progressive Disclosure in Mind</h2>
-        <p>
-          When building or improving a JSON formatter interface, consider these design principles:
-        </p>
+        <p>When building or improving a JSON formatter interface, consider these design principles:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Prioritize Core Functionality:</span> Make the primary use case (viewing and basic navigation) immediately accessible and intuitive.
+            <span className="font-medium">Prioritize Core Functionality:</span> Make the primary use case (viewing and
+            basic navigation) immediately accessible and intuitive.
           </li>
           <li>
-            <span className="font-medium">Group Related Features:</span> Put advanced formatting options together, all editing tools together, etc.
+            <span className="font-medium">Group Related Features:</span> Put advanced formatting options together, all
+            editing tools together, etc.
           </li>
           <li>
-            <span className="font-medium">Use Clear Visual Cues:</span> Toggles (<ChevronRight className="inline w-4 h-4" />), icons (<Settings className="inline w-4 h-4" />), and clear labels signal the presence of hidden options or expandable content.
+            <span className="font-medium">Use Clear Visual Cues:</span> Toggles (
+            <ChevronRight className="inline w-4 h-4" />
+            ), icons (<Settings className="inline w-4 h-4" />
+            ), and clear labels signal the presence of hidden options or expandable content.
           </li>
           <li>
-            <span className="font-medium">Maintain Consistency:</span> Use the same disclosure patterns throughout the interface (e.g., consistent expand/collapse icons).
+            <span className="font-medium">Maintain Consistency:</span> Use the same disclosure patterns throughout the
+            interface (e.g., consistent expand/collapse icons).
           </li>
           <li>
-            <span className="font-medium">Consider Defaults:</span> Decide on a sensible default collapse depth for large JSON. Maybe collapse everything beyond 2 or 3 levels deep initially.
+            <span className="font-medium">Consider Defaults:</span> Decide on a sensible default collapse depth for
+            large JSON. Maybe collapse everything beyond 2 or 3 levels deep initially.
           </li>
           <li>
-            <span className="font-medium">Allow Batch Operations:</span> For collapse/expand, offer &quot;Expand All&quot; or &quot;Collapse All&quot; options if needed.
+            <span className="font-medium">Allow Batch Operations:</span> For collapse/expand, offer &quot;Expand
+            All&quot; or &quot;Collapse All&quot; options if needed.
           </li>
         </ul>
 
@@ -306,44 +335,50 @@ export default function ProgressiveDisclosureJsonFormatterArticle() {
                   <ListFilter className="w-4 h-4" /> Filter
                 </span>
                 <span className="flex items-center space-x-1 cursor-pointer text-sm">
-                   <Settings className="w-4 h-4" /> Options
+                  <Settings className="w-4 h-4" /> Options
                 </span>
                 <span className="flex items-center space-x-1 cursor-pointer text-sm">
-                   <ZoomIn className="w-4 h-4" /> / <ZoomOut className="w-4 h-4" /> Zoom
+                  <ZoomIn className="w-4 h-4" /> / <ZoomOut className="w-4 h-4" /> Zoom
                 </span>
               </div>
             </div>
             <div className="border rounded-b-lg p-4 bg-white dark:bg-gray-900 overflow-auto">
-               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">View Area (collapsible JSON tree or raw text)</p>
-               <pre className="text-xs">
-                {`{`} <br/>
-                {`  "data": {`} <ChevronRight className="inline w-4 h-4 align-middle" /> <span className="text-gray-500 dark:text-gray-400 text-xs">{/* Click to expand */}</span> <br/>
-                {`  },`} <br/>
-                {`  "metadata": {`} <ChevronRight className="inline w-4 h-4 align-middle" /> <span className="text-gray-500 dark:text-gray-400 text-xs">{/* Click to expand */}</span> <br/>
-                {`  }`} <br/>
-                {`}`} <br/>
-               </pre>
-               <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">Status/Error Area (<CircleAlert className="inline w-4 h-4" /> Validation failed, etc.)</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                View Area (collapsible JSON tree or raw text)
+              </p>
+              <pre className="text-xs">
+                {`{`} <br />
+                {`  "data": {`} <ChevronRight className="inline w-4 h-4 align-middle" />{" "}
+                <span className="text-gray-500 dark:text-gray-400 text-xs">{/* Click to expand */}</span> <br />
+                {`  },`} <br />
+                {`  "metadata": {`} <ChevronRight className="inline w-4 h-4 align-middle" />{" "}
+                <span className="text-gray-500 dark:text-gray-400 text-xs">{/* Click to expand */}</span> <br />
+                {`  }`} <br />
+                {`}`} <br />
+              </pre>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                Status/Error Area (<CircleAlert className="inline w-4 h-4" /> Validation failed, etc.)
+              </p>
             </div>
-             <div className="p-3 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300">
-               <p>Additional Tools (e.g., Diff View, Schema Validation) - might be in a modal or separate page.</p>
-             </div>
+            <div className="p-3 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300">
+              <p>Additional Tools (e.g., Diff View, Schema Validation) - might be in a modal or separate page.</p>
+            </div>
           </div>
         </div>
         <p>
-          In this conceptual layout, the primary formatting/viewing area is central, with common actions like toggling views, filtering, and basic options accessible at the top. More advanced settings or less frequent tools are potentially hidden within menus or separate sections, revealed only when needed.
+          In this conceptual layout, the primary formatting/viewing area is central, with common actions like toggling
+          views, filtering, and basic options accessible at the top. More advanced settings or less frequent tools are
+          potentially hidden within menus or separate sections, revealed only when needed.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Progressive disclosure is an indispensable tool for managing complexity in user interfaces, and
-          JSON formatters are a prime example of where it can significantly improve usability. By starting
-          with a simple, clean view and progressively revealing structural details, contextual information,
-          and advanced features, developers can create JSON interfaces that are less intimidating for
-          novices and highly efficient for experienced users dealing with large and complex data structures.
-          Implementing structural collapse/expand is the most impactful step, but layering other levels of
-          disclosure further refines the user experience.
+          Progressive disclosure is an indispensable tool for managing complexity in user interfaces, and JSON
+          formatters are a prime example of where it can significantly improve usability. By starting with a simple,
+          clean view and progressively revealing structural details, contextual information, and advanced features,
+          developers can create JSON interfaces that are less intimidating for novices and highly efficient for
+          experienced users dealing with large and complex data structures. Implementing structural collapse/expand is
+          the most impactful step, but layering other levels of disclosure further refines the user experience.
         </p>
       </div>
     </>

@@ -14,24 +14,24 @@ import { onlineTools } from "@/components/online-tools-grid";
 import { ImageModal } from "@/components/ui/modal";
 import { useState } from "react";
 import { RecentlyVisitedTools } from "@/components/recently-visited-tools";
-import { 
-  FaEthereum, 
-  FaCode, 
-  FaHtml5, 
-  FaKey, 
-  FaFile, 
-  FaLink, 
-  FaShieldAlt, 
-  FaHashtag, 
-  FaFileAlt, 
+import {
+  FaEthereum,
+  FaCode,
+  FaHtml5,
+  FaKey,
+  FaFile,
+  FaLink,
+  FaShieldAlt,
+  FaHashtag,
+  FaFileAlt,
   FaUser,
   FaFingerprint,
   FaClock,
   FaSlash,
   FaRulerCombined,
   FaImage,
-  FaLock
-} from 'react-icons/fa';
+  FaLock,
+} from "react-icons/fa";
 
 const getToolIcon = (title: string) => {
   const iconMap: Record<string, React.ReactNode> = {
@@ -58,12 +58,12 @@ const getToolIcon = (title: string) => {
 };
 
 export default function Home() {
-  const [modalImage, setModalImage] = useState<{src: string; alt: string} | null>(null);
-  
+  const [modalImage, setModalImage] = useState<{ src: string; alt: string } | null>(null);
+
   const openModal = (src: string, alt: string) => {
     setModalImage({ src, alt });
   };
-  
+
   const closeModal = () => {
     setModalImage(null);
   };
@@ -96,16 +96,16 @@ export default function Home() {
               <RecentlyVisitedTools />
             </div>
             <div className="mt-12 md:mt-16 relative w-full max-w-5xl rounded-lg overflow-hidden">
-              <div 
-                className="cursor-pointer transition-transform hover:scale-[1.01]" 
+              <div
+                className="cursor-pointer transition-transform hover:scale-[1.01]"
                 onClick={() => openModal("/screenshots/1.jpeg", "OfflineTools Application Screenshot")}
               >
-                <Image 
-                  src="/screenshots/1.jpeg" 
-                  alt="OfflineTools Application Screenshot" 
-                  width={1280} 
+                <Image
+                  src="/screenshots/1.jpeg"
+                  alt="OfflineTools Application Screenshot"
+                  width={1280}
                   height={720}
-                  className="w-full h-auto" 
+                  className="w-full h-auto"
                   priority
                 />
               </div>
@@ -152,16 +152,16 @@ export default function Home() {
               <div className="rounded-lg border bg-background p-8 shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="text-2xl font-semibold mb-4 text-primary">Frontend Developers</h3>
                 <div className="aspect-[16/9] mb-6 overflow-hidden rounded-lg">
-                  <div 
-                    className="cursor-pointer transition-transform hover:scale-[1.02]" 
+                  <div
+                    className="cursor-pointer transition-transform hover:scale-[1.02]"
                     onClick={() => openModal("/screenshots/4.jpeg", "Frontend Developer Tools Screenshot")}
                   >
-                    <Image 
-                      src="/screenshots/4.jpeg" 
-                      alt="Frontend Developer Tools Screenshot" 
-                      width={640} 
+                    <Image
+                      src="/screenshots/4.jpeg"
+                      alt="Frontend Developer Tools Screenshot"
+                      width={640}
                       height={360}
-                      className="w-full h-auto" 
+                      className="w-full h-auto"
                     />
                   </div>
                 </div>
@@ -170,20 +170,20 @@ export default function Home() {
                   integrated in one application.
                 </p>
               </div>
-              
+
               <div className="rounded-lg border bg-background p-8 shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="text-2xl font-semibold mb-4 text-primary">Backend Engineers</h3>
                 <div className="aspect-[16/9] mb-6 overflow-hidden rounded-lg">
-                  <div 
-                    className="cursor-pointer transition-transform hover:scale-[1.02]" 
+                  <div
+                    className="cursor-pointer transition-transform hover:scale-[1.02]"
                     onClick={() => openModal("/screenshots/5.jpeg", "Backend Developer Tools Screenshot")}
                   >
-                    <Image 
-                      src="/screenshots/5.jpeg" 
-                      alt="Backend Developer Tools Screenshot" 
-                      width={640} 
+                    <Image
+                      src="/screenshots/5.jpeg"
+                      alt="Backend Developer Tools Screenshot"
+                      width={640}
                       height={360}
-                      className="w-full h-auto" 
+                      className="w-full h-auto"
                     />
                   </div>
                 </div>
@@ -212,13 +212,13 @@ export default function Home() {
             </div>
           </Container>
         </Section>
-        
+
         {/* Image Modal */}
-        <ImageModal 
-          isOpen={!!modalImage} 
-          onClose={closeModal} 
-          src={modalImage?.src || ''} 
-          alt={modalImage?.alt || ''}
+        <ImageModal
+          isOpen={!!modalImage}
+          onClose={closeModal}
+          src={modalImage?.src || ""}
+          alt={modalImage?.alt || ""}
         />
       </main>
       <Footer />

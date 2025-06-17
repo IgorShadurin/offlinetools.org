@@ -29,21 +29,32 @@ export default function JsonFormattingExtensionArticle() {
 
       <div className="space-y-8">
         <p>
-          Visual Studio Code is a powerful and popular editor, extensible in many ways. One common task developers need assistance with is formatting structured data like JSON. While VS Code includes a built-in JSON formatter, you might encounter scenarios where you need custom formatting rules, integration with specific tools, or different default settings. This guide will walk you through the process of building your own VS Code extension specifically for formatting JSON documents.
+          Visual Studio Code is a powerful and popular editor, extensible in many ways. One common task developers need
+          assistance with is formatting structured data like JSON. While VS Code includes a built-in JSON formatter, you
+          might encounter scenarios where you need custom formatting rules, integration with specific tools, or
+          different default settings. This guide will walk you through the process of building your own VS Code
+          extension specifically for formatting JSON documents.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Package className="w-6 h-6" /> Understanding VS Code Extensions
         </h2>
         <p>
-          A VS Code extension is essentially a Node.js application that runs in a separate process, called the Extension Host. It communicates with the main VS Code window (the Renderer process) via a well-defined API. The core of any extension is:
+          A VS Code extension is essentially a Node.js application that runs in a separate process, called the Extension
+          Host. It communicates with the main VS Code window (the Renderer process) via a well-defined API. The core of
+          any extension is:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <code>package.json</code>: This is the extension manifest. It declares its name, version, description, dependencies, and most importantly, its &quot;contribution points&quot; - how the extension integrates with VS Code features (like commands, keybindings, settings, language support, and formatters).
+            <code>package.json</code>: This is the extension manifest. It declares its name, version, description,
+            dependencies, and most importantly, its &quot;contribution points&quot; - how the extension integrates with
+            VS Code features (like commands, keybindings, settings, language support, and formatters).
           </li>
           <li>
-            <code>extension.ts</code> (or <code>extension.js</code>): This is the main code file containing the extension&apos;s logic. It exports an <code>activate</code> function which is called when the extension is enabled and ready to run, and an optional <code>deactivate</code> function called when the extension is disabled.
+            <code>extension.ts</code> (or <code>extension.js</code>): This is the main code file containing the
+            extension&apos;s logic. It exports an <code>activate</code> function which is called when the extension is
+            enabled and ready to run, and an optional <code>deactivate</code> function called when the extension is
+            disabled.
           </li>
         </ul>
 
@@ -51,47 +62,57 @@ export default function JsonFormattingExtensionArticle() {
           <FileJson className="w-6 h-6" /> JSON Formatting in VS Code
         </h2>
         <p>
-          VS Code allows extensions to register as formatters for specific languages. When a user triggers the format action (e.g., Save with format, Shift+Alt+F, or the &quot;Format Document&quot; command), VS Code asks registered formatters for the active document&apos;s language if they can handle the request. If multiple formatters exist for the same language, the user can choose or configure a default.
+          VS Code allows extensions to register as formatters for specific languages. When a user triggers the format
+          action (e.g., Save with format, Shift+Alt+F, or the &quot;Format Document&quot; command), VS Code asks
+          registered formatters for the active document&apos;s language if they can handle the request. If multiple
+          formatters exist for the same language, the user can choose or configure a default.
         </p>
         <p>
-          To provide formatting, your extension needs to implement the <code>vscode.DocumentFormattingEditProvider</code> interface (or <code>RangeFormattingEditProvider</code> for formatting selections). The core method you&apos;ll implement is <code>provideDocumentFormattingEdits</code> (or <code>provideDocumentRangeFormattingEdits</code>). This method receives the text document and returns an array of <code>vscode.TextEdit</code> objects, which describe the changes to be applied to the document (insertions, deletions, or replacements of text).
+          To provide formatting, your extension needs to implement the{" "}
+          <code>vscode.DocumentFormattingEditProvider</code> interface (or <code>RangeFormattingEditProvider</code> for
+          formatting selections). The core method you&apos;ll implement is <code>provideDocumentFormattingEdits</code>{" "}
+          (or <code>provideDocumentRangeFormattingEdits</code>). This method receives the text document and returns an
+          array of <code>vscode.TextEdit</code> objects, which describe the changes to be applied to the document
+          (insertions, deletions, or replacements of text).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Wrench className="w-6 h-6" /> Setting up Your Development Environment
         </h2>
-        <p>
-          The easiest way to start is by using the Yeoman extension generator for VS Code:
-        </p>
+        <p>The easiest way to start is by using the Yeoman extension generator for VS Code:</p>
         <ol className="list-decimal pl-6 space-y-2">
           <li>Ensure you have Node.js and npm installed.</li>
-          <li>Install Yeoman and the VS Code Extension generator globally:
+          <li>
+            Install Yeoman and the VS Code Extension generator globally:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                npm install -g yo generator-code
-              </code>
+              <code>npm install -g yo generator-code</code>
             </pre>
           </li>
-          <li>Run the generator:
+          <li>
+            Run the generator:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                yo code
-              </code>
+              <code>yo code</code>
             </pre>
           </li>
-          <li>Choose &quot;New Extension (TypeScript)&quot; or &quot;New Extension (JavaScript)&quot;. TypeScript is recommended for better type safety.</li>
+          <li>
+            Choose &quot;New Extension (TypeScript)&quot; or &quot;New Extension (JavaScript)&quot;. TypeScript is
+            recommended for better type safety.
+          </li>
           <li>Fill in the project details (name, identifier, description).</li>
           <li>Open the generated folder in VS Code.</li>
         </ol>
         <p>
-          The generator creates a basic project structure, including `package.json`, `src/extension.ts`, and `tsconfig.json` (if using TypeScript).
+          The generator creates a basic project structure, including `package.json`, `src/extension.ts`, and
+          `tsconfig.json` (if using TypeScript).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ListTodo className="w-6 h-6" /> Declaring the Formatter in `package.json`
         </h2>
         <p>
-          Your extension needs to tell VS Code that it provides formatting capabilities for JSON files. You do this in the <code>package.json</code> file under the <code>contributes</code> section. Add a <code>formatters</code> entry like this:
+          Your extension needs to tell VS Code that it provides formatting capabilities for JSON files. You do this in
+          the <code>package.json</code> file under the <code>contributes</code> section. Add a <code>formatters</code>{" "}
+          entry like this:
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 overflow-x-auto">
           <h3 className="text-lg font-medium mb-2">`package.json` (Snippet)</h3>
@@ -135,7 +156,9 @@ export default function JsonFormattingExtensionArticle() {
           </code>
         </pre>
         <p>
-          The <code>language</code> property specifies the language identifier (<code>json</code> and <code>jsonc</code> for JSON with comments). The <code>displayName</code> is what appears in the &quot;Format Document With...&quot; menu.
+          The <code>language</code> property specifies the language identifier (<code>json</code> and <code>jsonc</code>{" "}
+          for JSON with comments). The <code>displayName</code> is what appears in the &quot;Format Document
+          With...&quot; menu.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -145,10 +168,19 @@ export default function JsonFormattingExtensionArticle() {
           Now, write the code that performs the formatting in your <code>extension.ts</code> file. You&apos;ll need to:
         </p>
         <ol className="list-decimal pl-6 space-y-2">
-          <li>Import the <code>vscode</code> module.</li>
-          <li>Define a class or object that implements <code>vscode.DocumentFormattingEditProvider</code>.</li>
-          <li>Implement the <code>provideDocumentFormattingEdits</code> method.</li>
-          <li>Inside <code>activate</code>, register your provider using <code>vscode.languages.registerDocumentFormattingEditProvider</code>.</li>
+          <li>
+            Import the <code>vscode</code> module.
+          </li>
+          <li>
+            Define a class or object that implements <code>vscode.DocumentFormattingEditProvider</code>.
+          </li>
+          <li>
+            Implement the <code>provideDocumentFormattingEdits</code> method.
+          </li>
+          <li>
+            Inside <code>activate</code>, register your provider using{" "}
+            <code>vscode.languages.registerDocumentFormattingEditProvider</code>.
+          </li>
         </ol>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 overflow-x-auto">
           <h3 className="text-lg font-medium mb-2">`src/extension.ts` (Basic Structure)</h3>
@@ -223,39 +255,62 @@ export function deactivate() {
           </code>
         </pre>
         <p>
-          <Sparkles className="inline-block mr-1" /> In the example above, the formatting logic is very basic: it uses <code>JSON.parse</code> and <code>JSON.stringify</code>. For a real-world extension, you would likely use a more robust library like <a href="https://prettier.io/" className="text-blue-600 dark:text-blue-400 hover:underline">Prettier</a>, <a href="https://github.com/HookyQR/VSCode-JS-CSS-HTML-Formatter" className="text-blue-600 dark:text-blue-400 hover:underline">js-beautify</a>, or a custom parser/formatter to handle specific requirements not covered by the built-in <code>JSON.stringify</code> (like sorting keys, specific line breaks, etc.).
+          <Sparkles className="inline-block mr-1" /> In the example above, the formatting logic is very basic: it uses{" "}
+          <code>JSON.parse</code> and <code>JSON.stringify</code>. For a real-world extension, you would likely use a
+          more robust library like{" "}
+          <a href="https://prettier.io/" className="text-blue-600 dark:text-blue-400 hover:underline">
+            Prettier
+          </a>
+          ,{" "}
+          <a
+            href="https://github.com/HookyQR/VSCode-JS-CSS-HTML-Formatter"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            js-beautify
+          </a>
+          , or a custom parser/formatter to handle specific requirements not covered by the built-in{" "}
+          <code>JSON.stringify</code> (like sorting keys, specific line breaks, etc.).
         </p>
         <p>
-          The <code>vscode.TextEdit.replace(fullRange, formattedText)</code> part is crucial. It tells VS Code to replace the entire content of the document (from start to end) with the new <code>formattedText</code>.
+          The <code>vscode.TextEdit.replace(fullRange, formattedText)</code> part is crucial. It tells VS Code to
+          replace the entire content of the document (from start to end) with the new <code>formattedText</code>.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <TestTube className="w-6 h-6" /> Testing and Debugging
         </h2>
-        <p>
-          VS Code provides an &quot;Extension Host Development&quot; window to test your extension.
-        </p>
+        <p>VS Code provides an &quot;Extension Host Development&quot; window to test your extension.</p>
         <ol className="list-decimal pl-6 space-y-2">
           <li>Open your extension project folder in VS Code.</li>
           <li>Go to the &quot;Run and Debug&quot; view (Ctrl+Shift+D or Cmd+Shift+D).</li>
           <li>Select the &quot;Run Extension&quot; launch configuration (usually created by the generator).</li>
           <li>Click the green play button.</li>
         </ol>
-        <p>
-          This will open a new VS Code window (the Extension Host). In this new window:
-        </p>
+        <p>This will open a new VS Code window (the Extension Host). In this new window:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Open a JSON file.</li>
-          <li>The <code>console.log</code> messages from your extension will appear in the &quot;Debug Console&quot; back in your original VS Code window.</li>
-          <li>Trigger the format action (e.g., right-click in the editor and select &quot;Format Document&quot;, or use the keybinding). If multiple formatters are registered, you might be prompted to choose or can select &quot;Format Document With...&quot; to pick yours.</li>
-          <li>Set breakpoints in your <code>extension.ts</code> code in the original window to step through the logic when formatting is triggered.</li>
+          <li>
+            The <code>console.log</code> messages from your extension will appear in the &quot;Debug Console&quot; back
+            in your original VS Code window.
+          </li>
+          <li>
+            Trigger the format action (e.g., right-click in the editor and select &quot;Format Document&quot;, or use
+            the keybinding). If multiple formatters are registered, you might be prompted to choose or can select
+            &quot;Format Document With...&quot; to pick yours.
+          </li>
+          <li>
+            Set breakpoints in your <code>extension.ts</code> code in the original window to step through the logic when
+            formatting is triggered.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Settings className="w-6 h-6" /> Adding Configuration
         </h2>
         <p>
-          A good formatter often provides configuration options (e.g., indentation style, quote style, sorting keys). You can add settings to your extension by defining them in <code>package.json</code> under the <code>contributes.configuration</code> section.
+          A good formatter often provides configuration options (e.g., indentation style, quote style, sorting keys).
+          You can add settings to your extension by defining them in <code>package.json</code> under the{" "}
+          <code>contributes.configuration</code> section.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 overflow-x-auto">
           <h3 className="text-lg font-medium mb-2">`package.json` (Adding Configuration)</h3>
@@ -287,7 +342,8 @@ export function deactivate() {
           </code>
         </pre>
         <p>
-          Then, in your <code>extension.ts</code>, you can read these settings using <code>vscode.workspace.getConfiguration(&apos;myJsonFormatter&apos;)</code>.
+          Then, in your <code>extension.ts</code>, you can read these settings using{" "}
+          <code>vscode.workspace.getConfiguration(&apos;myJsonFormatter&apos;)</code>.
         </p>
         <pre className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 overflow-x-auto">
           <h3 className="text-lg font-medium mb-2">`src/extension.ts` (Reading Configuration)</h3>
@@ -319,43 +375,38 @@ if (spaceIndentation <= 0) {
           Once your extension is ready, you can publish it to the VS Code Marketplace using the <code>vsce</code> tool.
         </p>
         <ol className="list-decimal pl-6 space-y-2">
-          <li>Install <code>vsce</code> globally:
+          <li>
+            Install <code>vsce</code> globally:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                npm install -g vsce
-              </code>
+              <code>npm install -g vsce</code>
             </pre>
           </li>
           <li>Get a Personal Access Token (PAT) from Azure DevOps with permissions to manage VS Code extensions.</li>
-          <li>Create a publisher:
+          <li>
+            Create a publisher:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                vsce create-publisher &lt;publisher-name&gt;
-              </code>
+              <code>vsce create-publisher &lt;publisher-name&gt;</code>
             </pre>
             (You&apos;ll be prompted for your PAT).
           </li>
-          <li>Package your extension from your project root:
+          <li>
+            Package your extension from your project root:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                vsce package
-              </code>
+              <code>vsce package</code>
             </pre>
             This creates a <code>.vsix</code> file.
           </li>
-          <li>Publish the extension:
+          <li>
+            Publish the extension:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                vsce publish
-              </code>
+              <code>vsce publish</code>
             </pre>
             Or to publish a specific vsix file:
             <pre className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 overflow-x-auto my-2">
-              <code>
-                vsce publish -p &lt;your-pat&gt;
-              </code>
+              <code>vsce publish -p &lt;your-pat&gt;</code>
             </pre>
-            (Replace <code>&lt;your-pat&gt;</code> with your actual token or set the <code>VSCE_PAT</code> environment variable).
+            (Replace <code>&lt;your-pat&gt;</code> with your actual token or set the <code>VSCE_PAT</code> environment
+            variable).
           </li>
         </ol>
 
@@ -364,31 +415,37 @@ if (spaceIndentation <= 0) {
         </h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Performance:</strong> For very large JSON files, standard <code>JSON.parse</code> and <code>JSON.stringify</code> might be slow. Consider streaming parsers/formatters if performance is critical. Formatting should be fast enough not to block the UI.
+            <strong>Performance:</strong> For very large JSON files, standard <code>JSON.parse</code> and{" "}
+            <code>JSON.stringify</code> might be slow. Consider streaming parsers/formatters if performance is critical.
+            Formatting should be fast enough not to block the UI.
           </li>
           <li>
-            <strong>Error Handling:</strong> Robustly handle invalid JSON input. Your formatter should catch parsing errors and ideally report them to the user without crashing the extension host. Returning an empty array of edits on error is a common pattern.
+            <strong>Error Handling:</strong> Robustly handle invalid JSON input. Your formatter should catch parsing
+            errors and ideally report them to the user without crashing the extension host. Returning an empty array of
+            edits on error is a common pattern.
           </li>
           <li>
-            <strong>Configuration:</strong> Provide clear and intuitive settings. Use the configuration contribution point in <code>package.json</code> and document them in your extension&apos;s README.
+            <strong>Configuration:</strong> Provide clear and intuitive settings. Use the configuration contribution
+            point in <code>package.json</code> and document them in your extension&apos;s README.
           </li>
           <li>
-            <strong>Dependencies:</strong> If using external formatting libraries, be mindful of their size and potential compatibility issues.
+            <strong>Dependencies:</strong> If using external formatting libraries, be mindful of their size and
+            potential compatibility issues.
           </li>
           <li>
-            <strong>Localization:</strong> If you plan for international users, consider using VS Code&apos;s localization features.
+            <strong>Localization:</strong> If you plan for international users, consider using VS Code&apos;s
+            localization features.
           </li>
           <li>
-            <strong>README:</strong> Write a clear README.md file explaining what your extension does, how to install and use it, configuration options, and any known issues.
+            <strong>README:</strong> Write a clear README.md file explaining what your extension does, how to install
+            and use it, configuration options, and any known issues.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Github className="w-6 h-6" /> Further Exploration
         </h2>
-        <p>
-          The VS Code API is extensive. You could enhance your formatter extension by adding:
-        </p>
+        <p>The VS Code API is extensive. You could enhance your formatter extension by adding:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Commands to format specific selections or apply different formatting styles.</li>
           <li>Code Actions to fix minor JSON issues before formatting.</li>
@@ -396,12 +453,24 @@ if (spaceIndentation <= 0) {
           <li>Status bar items to show formatter status.</li>
         </ul>
         <p>
-          Exploring the <a href="https://code.visualstudio.com/api" className="text-blue-600 dark:text-blue-400 hover:underline">VS Code Extension API documentation</a> and looking at the source code of other formatter extensions (like Prettier or specific language formatters) on <a href="https://github.com/" className="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a> can provide deeper insights and examples.
+          Exploring the{" "}
+          <a href="https://code.visualstudio.com/api" className="text-blue-600 dark:text-blue-400 hover:underline">
+            VS Code Extension API documentation
+          </a>{" "}
+          and looking at the source code of other formatter extensions (like Prettier or specific language formatters)
+          on{" "}
+          <a href="https://github.com/" className="text-blue-600 dark:text-blue-400 hover:underline">
+            GitHub
+          </a>{" "}
+          can provide deeper insights and examples.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Building a VS Code extension for JSON formatting is a practical way to learn about VS Code extensibility and provide a useful tool for yourself and the community. By understanding the core concepts of contribution points and API providers, you can tailor the editor&apos;s behavior to your specific JSON formatting needs, moving beyond the default capabilities. Happy coding and formatting!
+          Building a VS Code extension for JSON formatting is a practical way to learn about VS Code extensibility and
+          provide a useful tool for yourself and the community. By understanding the core concepts of contribution
+          points and API providers, you can tailor the editor&apos;s behavior to your specific JSON formatting needs,
+          moving beyond the default capabilities. Happy coding and formatting!
         </p>
       </div>
     </>

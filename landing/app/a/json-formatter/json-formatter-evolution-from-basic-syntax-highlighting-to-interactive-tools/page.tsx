@@ -15,16 +15,14 @@ export default function JsonFormatterEvolutionArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web and
-          beyond. As its use exploded, so did the need for tools to help developers read, write, and validate JSON
-          data. The JSON formatter, a seemingly simple utility, has undergone a significant evolution, transforming
-          from basic text beautifiers to sophisticated interactive environments. Let&apos;s trace this journey.
+          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web and beyond.
+          As its use exploded, so did the need for tools to help developers read, write, and validate JSON data. The
+          JSON formatter, a seemingly simple utility, has undergone a significant evolution, transforming from basic
+          text beautifiers to sophisticated interactive environments. Let&apos;s trace this journey.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Beginning: Basic Syntax Highlighting and Pretty Printing</h2>
-        <p>
-          In the early days, JSON formatters primarily focused on two core tasks:
-        </p>
+        <p>In the early days, JSON formatters primarily focused on two core tasks:</p>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -46,16 +44,12 @@ export default function JsonFormatterEvolutionArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Example of basic pretty printing:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{"name":"John Doe","age":30,"isStudent":false,"courses":["Math","Science"]}`}
-            </pre>
+            <pre>{`{"name":"John Doe","age":30,"isStudent":false,"courses":["Math","Science"]}`}</pre>
           </div>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            Transforms to:
-          </p>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">Transforms to:</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-2">
             <pre>
-{`{
+              {`{
   "name": "John Doe",
   "age": 30,
   "isStudent": false,
@@ -70,9 +64,8 @@ export default function JsonFormatterEvolutionArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Adding Structure: The Tree View</h2>
         <p>
-          Recognizing that JSON represents hierarchical data, the next major step was the introduction of the tree
-          view. Instead of just showing the text, formatters started presenting JSON as an interactive tree
-          structure.
+          Recognizing that JSON represents hierarchical data, the next major step was the introduction of the tree view.
+          Instead of just showing the text, formatters started presenting JSON as an interactive tree structure.
         </p>
 
         <p>This visualization offered several advantages:</p>
@@ -105,15 +98,22 @@ Object { ... }
 
         <h2 className="text-2xl font-semibold mt-8">Ensuring Correctness: Validation and Error Detection</h2>
         <p>
-          A critical step in the evolution was integrating syntax validation. Early formatters might fail to pretty-print invalid JSON, but they didn&apos;t always clearly indicate <em>where</em> the error occurred or <em>what</em> was wrong.
+          A critical step in the evolution was integrating syntax validation. Early formatters might fail to
+          pretty-print invalid JSON, but they didn&apos;t always clearly indicate <em>where</em> the error occurred or{" "}
+          <em>what</em> was wrong.
         </p>
 
         <p>Modern formatters incorporated:</p>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Real-time syntax checking as you type or paste.</li>
-          <li>Clear error messages explaining the issue (e.g., "Expected comma", "Unexpected token", "Missing bracket").</li>
-          <li>Highlighting of the specific line or character causing the error (often in red, as discussed in other articles).</li>
+          <li>
+            Clear error messages explaining the issue (e.g., "Expected comma", "Unexpected token", "Missing bracket").
+          </li>
+          <li>
+            Highlighting of the specific line or character causing the error (often in red, as discussed in other
+            articles).
+          </li>
           <li>Pointing to common pitfalls like trailing commas, missing quotes, incorrect nesting, etc.</li>
         </ul>
 
@@ -128,15 +128,15 @@ Object { ... }
             </pre>
           </div>
           <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-            Formatter would typically highlight the second &quot;another&quot; and show an error like &quot;Expected comma before key&quot;.
+            Formatter would typically highlight the second &quot;another&quot; and show an error like &quot;Expected
+            comma before key&quot;.
           </p>
         </div>
 
-
         <h2 className="text-2xl font-semibold mt-8">Beyond Viewing: Interactive Editing</h2>
         <p>
-          The leap from a viewer to an editor marked a significant shift. Interactive formatters allowed users to
-          modify the JSON data directly within the tree view or a structured editor.
+          The leap from a viewer to an editor marked a significant shift. Interactive formatters allowed users to modify
+          the JSON data directly within the tree view or a structured editor.
         </p>
 
         <p>Key interactive editing features include:</p>
@@ -155,15 +155,13 @@ Object { ... }
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Modern Formatters: Advanced Capabilities</h2>
-        <p>
-          Today&apos;s best JSON formatters incorporate a suite of advanced features catering to complex workflows:
-        </p>
+        <p>Today&apos;s best JSON formatters incorporate a suite of advanced features catering to complex workflows:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
-              <span className="font-medium">Search and Filter:</span> Quickly find specific keys or values within
-              large JSON documents.
+              <span className="font-medium">Search and Filter:</span> Quickly find specific keys or values within large
+              JSON documents.
             </li>
             <li>
               <span className="font-medium">JSON Schema Validation:</span> Validate the JSON data against a defined
@@ -174,27 +172,27 @@ Object { ... }
               differences.
             </li>
             <li>
-              <span className="font-medium">Data Transformation:</span> Basic operations like sorting keys or
-              converting data types in bulk.
+              <span className="font-medium">Data Transformation:</span> Basic operations like sorting keys or converting
+              data types in bulk.
             </li>
             <li>
-              <span className="font-medium">Export/Import:</span> Saving the formatted or modified JSON to a file
-              or loading from a file.
+              <span className="font-medium">Export/Import:</span> Saving the formatted or modified JSON to a file or
+              loading from a file.
             </li>
             <li>
-              <span className="font-medium">Settings:</span> Customizing indentation levels (tabs vs. spaces),
-              theme, etc.
+              <span className="font-medium">Settings:</span> Customizing indentation levels (tabs vs. spaces), theme,
+              etc.
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">The User Experience Focus</h2>
         <p>
-          Beyond features, the evolution has also been heavily driven by improving the user experience. Modern tools
-          are designed to be intuitive, fast, and visually appealing. They often provide both a text editor view
-          (with syntax highlighting, validation, and potentially auto-completion) and a synchronized tree view,
-          allowing users to work in the mode they find most convenient. The emphasis is on reducing friction and
-          the cognitive load of dealing with complex data structures.
+          Beyond features, the evolution has also been heavily driven by improving the user experience. Modern tools are
+          designed to be intuitive, fast, and visually appealing. They often provide both a text editor view (with
+          syntax highlighting, validation, and potentially auto-completion) and a synchronized tree view, allowing users
+          to work in the mode they find most convenient. The emphasis is on reducing friction and the cognitive load of
+          dealing with complex data structures.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>

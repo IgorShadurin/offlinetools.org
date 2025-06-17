@@ -1,15 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Braces,
-  Users,
-  Sparkles,
-  Workflow,
-  FileJson,
-  AlignJustify,
-  Database,
-  BookOpen,
-  Settings2,
-} from "lucide-react";
+import { Braces, Users, Sparkles, Workflow, FileJson, AlignJustify, Database, BookOpen, Settings2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Creating JSON Formatter Community Showcase Programs | Offline Tools",
@@ -27,7 +17,11 @@ export default function JsonFormatterCommunityShowcaseArticle() {
 
       <div className="space-y-8">
         <p>
-          In the world of web development and data exchange, JSON (JavaScript Object Notation) is ubiquitous. It&apos;s a lightweight format for storing and transporting data, easily readable by humans and machines. However, poorly formatted or minified JSON can be difficult to read and debug. This is where JSON formatters come in. Creating a JSON formatter is a great learning exercise, and contributing such a tool to a community showcase allows you to share your work, get feedback, and collaborate with other developers.
+          In the world of web development and data exchange, JSON (JavaScript Object Notation) is ubiquitous. It&apos;s
+          a lightweight format for storing and transporting data, easily readable by humans and machines. However,
+          poorly formatted or minified JSON can be difficult to read and debug. This is where JSON formatters come in.
+          Creating a JSON formatter is a great learning exercise, and contributing such a tool to a community showcase
+          allows you to share your work, get feedback, and collaborate with other developers.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -35,11 +29,10 @@ export default function JsonFormatterCommunityShowcaseArticle() {
           What is a JSON Formatter?
         </h2>
         <p>
-          A JSON formatter (or beautifier/pretty-printer) takes a JSON string as input and outputs a new string with consistent indentation, line breaks, and spacing, making the hierarchical structure clear and easy to follow.
+          A JSON formatter (or beautifier/pretty-printer) takes a JSON string as input and outputs a new string with
+          consistent indentation, line breaks, and spacing, making the hierarchical structure clear and easy to follow.
         </p>
-        <p>
-          Key features often include:
-        </p>
+        <p>Key features often include:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Adding whitespace for readability (indentation, spaces after colons, commas).</li>
           <li>Handling nested objects and arrays correctly.</li>
@@ -54,16 +47,20 @@ export default function JsonFormatterCommunityShowcaseArticle() {
           The Community Showcase Aspect
         </h2>
         <p>
-          Building a tool is valuable, but sharing it with a community adds another layer. A &quot;Community Showcase Program&quot; could refer to:
+          Building a tool is valuable, but sharing it with a community adds another layer. A &quot;Community Showcase
+          Program&quot; could refer to:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Contributing to an existing open-source JSON formatter project.</li>
           <li>Creating your own open-source formatter project and sharing it on platforms like GitHub.</li>
           <li>Building a formatter web application and showcasing it on your portfolio or a community platform.</li>
-          <li>Developing a plugin or extension (e.g., for a code editor) that includes JSON formatting and sharing it.</li>
+          <li>
+            Developing a plugin or extension (e.g., for a code editor) that includes JSON formatting and sharing it.
+          </li>
         </ul>
         <p>
-          Participating in a community showcase allows you to demonstrate your skills, receive constructive criticism, discover new techniques, and potentially collaborate on enhancements.
+          Participating in a community showcase allows you to demonstrate your skills, receive constructive criticism,
+          discover new techniques, and potentially collaborate on enhancements.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -79,7 +76,9 @@ export default function JsonFormatterCommunityShowcaseArticle() {
           Parsing the JSON
         </h3>
         <p>
-          Most programming languages have built-in JSON parsing capabilities. In JavaScript/TypeScript, this is done using <code>JSON.parse(&#x7d;</code>. This function takes a JSON string and converts it into a native JavaScript object or array.
+          Most programming languages have built-in JSON parsing capabilities. In JavaScript/TypeScript, this is done
+          using <code>JSON.parse(&#x7d;</code>. This function takes a JSON string and converts it into a native
+          JavaScript object or array.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Basic Parsing Example (TypeScript):</h3>
@@ -97,7 +96,8 @@ export default function JsonFormatterCommunityShowcaseArticle() {
           </div>
         </div>
         <p>
-          If <code>JSON.parse(&#x7d;</code> throws an error, the input is not valid JSON. A robust formatter should handle this and provide informative feedback to the user.
+          If <code>JSON.parse(&#x7d;</code> throws an error, the input is not valid JSON. A robust formatter should
+          handle this and provide informative feedback to the user.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
@@ -105,7 +105,9 @@ export default function JsonFormatterCommunityShowcaseArticle() {
           Formatting (Serializing) the JSON
         </h3>
         <p>
-          Once you have the JavaScript object/array representation, you need to convert it back into a formatted string. The built-in <code>JSON.stringify(&#x7d;</code> method is perfect for this, especially with its optional parameters for indentation.
+          Once you have the JavaScript object/array representation, you need to convert it back into a formatted string.
+          The built-in <code>JSON.stringify(&#x7d;</code> method is perfect for this, especially with its optional
+          parameters for indentation.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Basic Formatting Example (TypeScript):</h3>
@@ -170,7 +172,9 @@ console.log(formattedFiltered);
           </div>
         </div>
         <p>
-          The <code>space</code> parameter in <code>JSON.stringify(value, replacer, space)</code> is key to formatting. It accepts a string (like <code>&quot;\t&quot;</code> or spaces like <code>&quot; &nbsp;&nbsp;&quot;</code>) or a number (for the number of spaces).
+          The <code>space</code> parameter in <code>JSON.stringify(value, replacer, space)</code> is key to formatting.
+          It accepts a string (like <code>&quot;\t&quot;</code> or spaces like <code>&quot; &nbsp;&nbsp;&quot;</code>)
+          or a number (for the number of spaces).
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
@@ -178,14 +182,29 @@ console.log(formattedFiltered);
           Beyond the Basics
         </h3>
         <p>
-          While <code>JSON.stringify(&#x7d;</code> handles the core formatting, a community-showcase quality formatter might need more:
+          While <code>JSON.stringify(&#x7d;</code> handles the core formatting, a community-showcase quality formatter
+          might need more:
         </p>
         <ul className="list-disc pl-6 space-y-2">
-          <li><strong>Error Handling:</strong> More specific error messages for invalid JSON.</li>
-          <li><strong>Performance:</strong> Handling very large JSON files efficiently.</li>
-          <li><strong>Customization:</strong> Options for sorting keys alphabetically (<code>JSON.stringify(&#x7d;</code> doesn&apos;t do this directly, requiring manual object manipulation before stringifying), controlling array indentation, etc.</li>
-          <li><strong>Validation Detail:</strong> Integrating a JSON schema validator to check structure and types.</li>
-          <li><strong>UI/UX:</strong> If building a web tool, providing a clear interface, copy-to-clipboard functionality, drag-and-drop, etc. (Note: UI aspects like useState are not used in *this* server component page, but are relevant for client-side formatter applications).</li>
+          <li>
+            <strong>Error Handling:</strong> More specific error messages for invalid JSON.
+          </li>
+          <li>
+            <strong>Performance:</strong> Handling very large JSON files efficiently.
+          </li>
+          <li>
+            <strong>Customization:</strong> Options for sorting keys alphabetically (<code>JSON.stringify(&#x7d;</code>{" "}
+            doesn&apos;t do this directly, requiring manual object manipulation before stringifying), controlling array
+            indentation, etc.
+          </li>
+          <li>
+            <strong>Validation Detail:</strong> Integrating a JSON schema validator to check structure and types.
+          </li>
+          <li>
+            <strong>UI/UX:</strong> If building a web tool, providing a clear interface, copy-to-clipboard
+            functionality, drag-and-drop, etc. (Note: UI aspects like useState are not used in *this* server component
+            page, but are relevant for client-side formatter applications).
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -204,10 +223,14 @@ console.log(formattedFiltered);
           <li>(Optional, for open source) Git, collaboration workflows, code reviews.</li>
         </ul>
         <p>
-          Start simple: use <code>JSON.parse(&#x7d;</code> and <code>JSON.stringify(&#x7d;</code> with indentation. Then, add error handling. Next, explore features like sorting keys. If you&apos;re feeling ambitious, you could even try building a formatter from scratch using a parsing technique like recursive descent, though for JSON, the built-in methods are usually sufficient and more robust for general use.
+          Start simple: use <code>JSON.parse(&#x7d;</code> and <code>JSON.stringify(&#x7d;</code> with indentation.
+          Then, add error handling. Next, explore features like sorting keys. If you&apos;re feeling ambitious, you
+          could even try building a formatter from scratch using a parsing technique like recursive descent, though for
+          JSON, the built-in methods are usually sufficient and more robust for general use.
         </p>
         <p>
-          Sharing your work on GitHub allows others to see your code, suggest improvements, and even contribute. This interaction is the core of the &quot;community showcase&quot;.
+          Sharing your work on GitHub allows others to see your code, suggest improvements, and even contribute. This
+          interaction is the core of the &quot;community showcase&quot;.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -215,7 +238,9 @@ console.log(formattedFiltered);
           Example Scenario: Building a Simple Web Tool
         </h2>
         <p>
-          Imagine building a simple web page where users can paste JSON and get it formatted. The core logic in a server-side context (like a Next.js API route or a simple server function) or client-side would look something like this (conceptual):
+          Imagine building a simple web page where users can paste JSON and get it formatted. The core logic in a
+          server-side context (like a Next.js API route or a simple server function) or client-side would look something
+          like this (conceptual):
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Conceptual Formatting Function (TypeScript):</h3>
@@ -275,12 +300,18 @@ function formatJsonString(jsonString: string, options: FormatOptions): &#x7b; fo
           </div>
         </div>
         <p>
-          This conceptual function demonstrates the core logic: parse, optionally process (like sorting), and stringify with indentation. The helper function <code>sortObjectKeys</code> would need to be implemented recursively to handle nested objects and arrays.
+          This conceptual function demonstrates the core logic: parse, optionally process (like sorting), and stringify
+          with indentation. The helper function <code>sortObjectKeys</code> would need to be implemented recursively to
+          handle nested objects and arrays.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Creating a JSON formatter program, whether as a standalone tool or a component within a larger application, is a rewarding task that reinforces fundamental programming concepts. By contributing such a program to a community showcase, you not only build a useful utility but also engage with fellow developers, gain exposure for your skills, and participate in the collaborative spirit of the development community. It&apos;s a practical way to turn learning into a tangible project that benefits others.
+          Creating a JSON formatter program, whether as a standalone tool or a component within a larger application, is
+          a rewarding task that reinforces fundamental programming concepts. By contributing such a program to a
+          community showcase, you not only build a useful utility but also engage with fellow developers, gain exposure
+          for your skills, and participate in the collaborative spirit of the development community. It&apos;s a
+          practical way to turn learning into a tangible project that benefits others.
         </p>
       </div>
     </>

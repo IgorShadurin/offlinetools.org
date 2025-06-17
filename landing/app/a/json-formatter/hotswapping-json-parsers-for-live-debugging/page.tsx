@@ -16,39 +16,38 @@ export default function HotswappingJsonParsersArticle() {
 
       <div className="space-y-6">
         <p>
-          In software development, especially when dealing with data exchange via APIs or configuration files,
-          JSON parsing is a ubiquitous task. Standard library functions like JavaScript&apos;s <code>JSON.parse()</code>
-          are highly optimized and efficient. However, their strict nature can be a hindrance during debugging
-          when you encounter unexpected or malformed JSON data. A single syntax error can cause the program
-          to crash or fail abruptly, making it difficult to diagnose the root cause in a live or complex environment.
+          In software development, especially when dealing with data exchange via APIs or configuration files, JSON
+          parsing is a ubiquitous task. Standard library functions like JavaScript&apos;s <code>JSON.parse()</code>
+          are highly optimized and efficient. However, their strict nature can be a hindrance during debugging when you
+          encounter unexpected or malformed JSON data. A single syntax error can cause the program to crash or fail
+          abruptly, making it difficult to diagnose the root cause in a live or complex environment.
         </p>
         <p>
-          This is where the concept of "hotswapping" JSON parsers for debugging becomes incredibly useful.
-          Instead of relying solely on the built-in parser, we can introduce a mechanism to substitute it
-          with a custom implementation specifically designed for debugging purposes, often without needing
-          to restart the application.
+          This is where the concept of "hotswapping" JSON parsers for debugging becomes incredibly useful. Instead of
+          relying solely on the built-in parser, we can introduce a mechanism to substitute it with a custom
+          implementation specifically designed for debugging purposes, often without needing to restart the application.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Bug className="w-6 h-6 text-green-600" /> The Debugging Challenge
         </h2>
         <p>
-          Imagine a backend service that receives JSON payloads from various sources. During development
-          or in production under certain conditions, these payloads might be malformed due to bugs
-          in the sending service, network issues, or incorrect manual input.
+          Imagine a backend service that receives JSON payloads from various sources. During development or in
+          production under certain conditions, these payloads might be malformed due to bugs in the sending service,
+          network issues, or incorrect manual input.
         </p>
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
           <p className="font-bold">The Problem:</p>
           <p>
             <code>JSON.parse()</code> is unforgiving. If the input string is not perfect, it throws a
-            <code>SyntaxError</code>. This can lead to unhandled exceptions, server crashes, or failure
-            of critical processes, often with minimal information about *why* the parsing failed (e.g.,
-            just "Unexpected token o in JSON at position X").
+            <code>SyntaxError</code>. This can lead to unhandled exceptions, server crashes, or failure of critical
+            processes, often with minimal information about *why* the parsing failed (e.g., just "Unexpected token o in
+            JSON at position X").
           </p>
         </div>
         <p>
-          Debugging this in a live system can be challenging: you might not have the exact malformed string
-          easily available, the failure might be intermittent, and adding extensive logging around every
+          Debugging this in a live system can be challenging: you might not have the exact malformed string easily
+          available, the failure might be intermittent, and adding extensive logging around every
           <code>JSON.parse</code> call can clutter the codebase and impact performance.
         </p>
 
@@ -56,20 +55,18 @@ export default function HotswappingJsonParsersArticle() {
           <Code className="w-6 h-6 text-purple-600" /> The Hotswapping Concept
         </h2>
         <p>
-          The core idea is to abstract the parsing logic behind an interface or function pointer and, in
-          a controlled debugging environment, replace the high-performance standard implementation with
-          a custom parser that offers better introspection and error reporting.
+          The core idea is to abstract the parsing logic behind an interface or function pointer and, in a controlled
+          debugging environment, replace the high-performance standard implementation with a custom parser that offers
+          better introspection and error reporting.
         </p>
         <p>
-          This "hotswap" ability means you could, for instance, flip a switch (like an environment variable
-          or a temporary debug configuration) and immediately start using the debug parser without a full
-          application redeploy or restart.
+          This "hotswap" ability means you could, for instance, flip a switch (like an environment variable or a
+          temporary debug configuration) and immediately start using the debug parser without a full application
+          redeploy or restart.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Conceptual Implementation Sketch</h3>
-        <p>
-          Let&apos;s outline how this might look conceptually in a backend Node.js/TypeScript environment.
-        </p>
+        <p>Let&apos;s outline how this might look conceptually in a backend Node.js/TypeScript environment.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Defining the Parser Interface:</h4>
@@ -88,9 +85,7 @@ const StandardParser: IJsonParser = {
           </div>
 
           <h4 className="text-lg font-medium mt-4">Creating a Debugging Parser:</h4>
-          <p>
-            A debug parser could wrap the standard parser but add logging and error handling.
-          </p>
+          <p>A debug parser could wrap the standard parser but add logging and error handling.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`const DebugParser: IJsonParser = {
@@ -116,9 +111,7 @@ const StandardParser: IJsonParser = {
           </div>
 
           <h4 className="text-lg font-medium mt-4">Switching the Parser Implementation:</h4>
-          <p>
-            Use a configuration or environment variable to decide which parser to use.
-          </p>
+          <p>Use a configuration or environment variable to decide which parser to use.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// In a configuration module or service
@@ -152,29 +145,25 @@ export function parseJsonSafely(text: string): any {
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Beaker className="w-6 h-6 text-yellow-600" /> Practical Debugging Benefits
         </h2>
-        <p>
-          By injecting a debug parser, you gain powerful capabilities when issues arise:
-        </p>
+        <p>By injecting a debug parser, you gain powerful capabilities when issues arise:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Full Input Logging:</strong> The debug parser can log the *entire* input string
-            that caused the failure, not just a truncated error message. This is invaluable for
-            reproducing the bug.
+            <strong>Full Input Logging:</strong> The debug parser can log the *entire* input string that caused the
+            failure, not just a truncated error message. This is invaluable for reproducing the bug.
           </li>
           <li>
-            <strong>Contextual Error Reporting:</strong> Log additional context, such as the source
-            of the JSON (if known), a request ID, or a user ID, helping pinpoint the scenario that
-            triggered the error.
+            <strong>Contextual Error Reporting:</strong> Log additional context, such as the source of the JSON (if
+            known), a request ID, or a user ID, helping pinpoint the scenario that triggered the error.
           </li>
           <li>
-            <strong>Graceful Handling:</strong> A more advanced debug parser could attempt partial
-            parsing, report multiple errors in a single string, or even try to "fix" minor issues
-            (like trailing commas, though be cautious with this).
+            <strong>Graceful Handling:</strong> A more advanced debug parser could attempt partial parsing, report
+            multiple errors in a single string, or even try to "fix" minor issues (like trailing commas, though be
+            cautious with this).
           </li>
           <li>
-            <strong>Profiling (Caution):</strong> While performance parsers are fast, a debug parser
-            could potentially log parsing duration for specific inputs, although this needs careful
-            implementation to avoid performance issues itself.
+            <strong>Profiling (Caution):</strong> While performance parsers are fast, a debug parser could potentially
+            log parsing duration for specific inputs, although this needs careful implementation to avoid performance
+            issues itself.
           </li>
           <li>
             <strong>Inspect Serialization:</strong> The same principle can be applied to <code>JSON.stringify()</code>
@@ -187,61 +176,58 @@ export function parseJsonSafely(text: string): any {
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Scope of Hotswap:</strong> Decide if the hotswap is application-wide, per-module,
-            or per-request. Global hotswapping is simpler but might impact unrelated parts of the system.
+            <strong>Scope of Hotswap:</strong> Decide if the hotswap is application-wide, per-module, or per-request.
+            Global hotswapping is simpler but might impact unrelated parts of the system.
           </li>
           <li>
-            <strong>Activation Mechanism:</strong> Environment variables (`process.env`) are common for
-            backend applications. Other methods could include command-line flags or a dedicated debug API endpoint
-            (use with extreme caution in production).
+            <strong>Activation Mechanism:</strong> Environment variables (`process.env`) are common for backend
+            applications. Other methods could include command-line flags or a dedicated debug API endpoint (use with
+            extreme caution in production).
           </li>
           <li>
-            <strong>Performance:</strong> Custom parsers, especially those with extensive logging or
-            complex error recovery, will be slower than native `JSON.parse`. Ensure they are only
-            active in designated debugging environments.
+            <strong>Performance:</strong> Custom parsers, especially those with extensive logging or complex error
+            recovery, will be slower than native `JSON.parse`. Ensure they are only active in designated debugging
+            environments.
           </li>
           <li>
-            <strong>Advanced Parsing Libraries:</strong> For more sophisticated needs, consider using
-            libraries like <code>jsonc-parser</code> (handles comments and trailing commas), or parser
-            generators that allow building custom parsing logic with detailed error reporting. You could
-            wrap these within your `IJsonParser` interface.
+            <strong>Advanced Parsing Libraries:</strong> For more sophisticated needs, consider using libraries like{" "}
+            <code>jsonc-parser</code> (handles comments and trailing commas), or parser generators that allow building
+            custom parsing logic with detailed error reporting. You could wrap these within your `IJsonParser`
+            interface.
           </li>
           <li>
-            <strong>Structured Logging:</strong> Integrate parser logs into your application&apos;s
-            structured logging system for easier analysis and correlation with other events.
+            <strong>Structured Logging:</strong> Integrate parser logs into your application&apos;s structured logging
+            system for easier analysis and correlation with other events.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <FileWarning className="w-6 h-6 text-orange-600" /> When Not to Hotswap
         </h2>
-        <p>
-          While powerful for debugging, hotswapping parsers is not a solution for every problem:
-        </p>
+        <p>While powerful for debugging, hotswapping parsers is not a solution for every problem:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Production Performance:</strong> Never run a verbose or slow debug parser in production
-            under normal circumstances. The performance overhead can be significant.
+            <strong>Production Performance:</strong> Never run a verbose or slow debug parser in production under normal
+            circumstances. The performance overhead can be significant.
           </li>
           <li>
-            <strong>Security:</strong> Custom parsing logic *could* potentially introduce new vulnerabilities
-            if not implemented carefully, especially when handling untrusted input. Standard `JSON.parse` is
-            highly scrutinized and generally safe.
+            <strong>Security:</strong> Custom parsing logic *could* potentially introduce new vulnerabilities if not
+            implemented carefully, especially when handling untrusted input. Standard `JSON.parse` is highly scrutinized
+            and generally safe.
           </li>
           <li>
-            <strong>Standard Compliance:</strong> Debug parsers that are too lenient might accept invalid
-            JSON, hiding potential issues in systems that consume the data later with strict parsers.
+            <strong>Standard Compliance:</strong> Debug parsers that are too lenient might accept invalid JSON, hiding
+            potential issues in systems that consume the data later with strict parsers.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Hotswapping JSON parser implementations offers a powerful technique for gaining deep insight
-          into parsing failures during live debugging sessions. By abstracting the parsing mechanism
-          and providing a switchable debug implementation, developers can quickly identify, log, and
-          understand issues caused by malformed JSON data that standard parsers would simply reject
-          with minimal information. This approach is particularly valuable in backend services
-          handling diverse or potentially unreliable data sources, turning hard crashes into
+          Hotswapping JSON parser implementations offers a powerful technique for gaining deep insight into parsing
+          failures during live debugging sessions. By abstracting the parsing mechanism and providing a switchable debug
+          implementation, developers can quickly identify, log, and understand issues caused by malformed JSON data that
+          standard parsers would simply reject with minimal information. This approach is particularly valuable in
+          backend services handling diverse or potentially unreliable data sources, turning hard crashes into
           informative logs that accelerate the debugging process.
         </p>
       </div>

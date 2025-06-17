@@ -31,8 +31,8 @@ export default function OracleJsonFunctionsPage() {
 
       <p className="text-lg mb-8">
         Oracle Database has robust support for handling JSON data directly within SQL and PL/SQL. This guide explores
-        the key built-in functions that empower developers to seamlessly integrate JSON processing into their
-        database applications, from storing and creating JSON to querying, modifying, and indexing it efficiently.
+        the key built-in functions that empower developers to seamlessly integrate JSON processing into their database
+        applications, from storing and creating JSON to querying, modifying, and indexing it efficiently.
       </p>
 
       <div className="space-y-10">
@@ -42,13 +42,11 @@ export default function OracleJsonFunctionsPage() {
             <FileJson className="mr-2 text-green-600" /> Why Use JSON in Oracle Database?
           </h2>
           <p>
-            JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans
-            to read and write and easy for machines to parse and generate. Its flexible, schema-less nature makes
-            it ideal for many modern applications, especially those dealing with diverse or evolving data structures.
+            JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read
+            and write and easy for machines to parse and generate. Its flexible, schema-less nature makes it ideal for
+            many modern applications, especially those dealing with diverse or evolving data structures.
           </p>
-          <p className="mt-2">
-            Integrating JSON support directly into the database engine allows you to:
-          </p>
+          <p className="mt-2">Integrating JSON support directly into the database engine allows you to:</p>
           <ul className="list-disc pl-6 mt-3 space-y-1">
             <li>Store schema-flexible data alongside traditional relational data.</li>
             <li>Process JSON data without extracting it into application code.</li>
@@ -62,18 +60,18 @@ export default function OracleJsonFunctionsPage() {
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Package className="mr-2 text-purple-600" /> Storing JSON Data
           </h2>
-          <p>
-            Oracle offers several ways to store JSON data in columns:
-          </p>
+          <p>Oracle offers several ways to store JSON data in columns:</p>
           <ul className="list-disc pl-6 mt-3 space-y-1">
             <li>
-              <span className="font-semibold">VARCHAR2, CLOB, BLOB:</span> You can store JSON text as strings in these traditional datatypes.
-              However, Oracle recommends using the native <code>JSON</code> datatype for better performance and validation.
+              <span className="font-semibold">VARCHAR2, CLOB, BLOB:</span> You can store JSON text as strings in these
+              traditional datatypes. However, Oracle recommends using the native <code>JSON</code> datatype for better
+              performance and validation.
             </li>
             <li>
-              <span className="font-semibold">JSON Datatype (Oracle 12c Release 2 and later):</span> This native datatype stores JSON in a
-              binary format optimized for queries and updates. It also ensures that the data stored is valid JSON.
-              Oracle internally manages the storage format (often OSON - Oracle Spatial and Graph JSON binary format).
+              <span className="font-semibold">JSON Datatype (Oracle 12c Release 2 and later):</span> This native
+              datatype stores JSON in a binary format optimized for queries and updates. It also ensures that the data
+              stored is valid JSON. Oracle internally manages the storage format (often OSON - Oracle Spatial and Graph
+              JSON binary format).
             </li>
           </ul>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -101,8 +99,8 @@ VALUES (102, '{"name": "Keyboard", "brand": "Accessory inc", "color": "Black"}')
           <div className="flex items-start p-3 bg-blue-100 border border-blue-200 rounded-md text-sm mt-4 dark:bg-blue-900 dark:border-blue-700">
             <Info className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0 dark:text-blue-300" />
             <p>
-              When using <code>VARCHAR2</code> or <code>CLOB</code>, you can add an <code>IS JSON</code> check constraint to
-              ensure data validity, although the native <code>JSON</code> type is generally preferred.
+              When using <code>VARCHAR2</code> or <code>CLOB</code>, you can add an <code>IS JSON</code> check
+              constraint to ensure data validity, although the native <code>JSON</code> type is generally preferred.
             </p>
           </div>
         </section>
@@ -123,10 +121,12 @@ VALUES (102, '{"name": "Keyboard", "brand": "Accessory inc", "color": "Black"}')
               <span className="font-semibold">JSON_ARRAY:</span> Creates a JSON array from a list of values.
             </li>
             <li>
-              <span className="font-semibold">JSON_ARRAYAGG:</span> Aggregates values from multiple rows into a single JSON array.
+              <span className="font-semibold">JSON_ARRAYAGG:</span> Aggregates values from multiple rows into a single
+              JSON array.
             </li>
             <li>
-              <span className="font-semibold">JSON_OBJECTAGG:</span> Aggregates key-value pairs from multiple rows into a single JSON object.
+              <span className="font-semibold">JSON_OBJECTAGG:</span> Aggregates key-value pairs from multiple rows into
+              a single JSON object.
             </li>
           </ul>
 
@@ -187,9 +187,10 @@ Output (example):
           <div className="flex items-start p-3 bg-yellow-100 border border-yellow-200 rounded-md text-sm mt-4 dark:bg-yellow-900 dark:border-yellow-700">
             <Lightbulb className="w-5 h-5 text-yellow-600 mr-3 flex-shrink-0 dark:text-yellow-300" />
             <p>
-              The <code>ABSENT ON NULL</code> and <code>NULL ON NULL</code> clauses can be used with <code>JSON_OBJECT</code> and
-              <code>JSON_ARRAY</code> to control whether null values result in the key/value being absent or present with a JSON null.
-              By default, it&apos;s usually <code>NULL ON NULL</code>.
+              The <code>ABSENT ON NULL</code> and <code>NULL ON NULL</code> clauses can be used with{" "}
+              <code>JSON_OBJECT</code> and
+              <code>JSON_ARRAY</code> to control whether null values result in the key/value being absent or present
+              with a JSON null. By default, it&apos;s usually <code>NULL ON NULL</code>.
             </p>
           </div>
         </section>
@@ -200,21 +201,26 @@ Output (example):
             <Search className="mr-2 text-cyan-600" /> Querying JSON Data
           </h2>
           <p>
-            Extracting data from JSON stored in Oracle is done using powerful functions that leverage
-            SQL/JSON path expressions, similar to XPath for XML.
+            Extracting data from JSON stored in Oracle is done using powerful functions that leverage SQL/JSON path
+            expressions, similar to XPath for XML.
           </p>
           <ul className="list-disc pl-6 mt-3 space-y-2">
             <li>
-              <span className="font-semibold">JSON_VALUE:</span> Extracts a scalar value (string, number, boolean, null) from JSON. Returns NULL by default if the path is not found or the result is not scalar.
+              <span className="font-semibold">JSON_VALUE:</span> Extracts a scalar value (string, number, boolean, null)
+              from JSON. Returns NULL by default if the path is not found or the result is not scalar.
             </li>
             <li>
-              <span className="font-semibold">JSON_QUERY:</span> Extracts a JSON object or array from JSON. Returns NULL by default if the path is not found or the result is scalar.
+              <span className="font-semibold">JSON_QUERY:</span> Extracts a JSON object or array from JSON. Returns NULL
+              by default if the path is not found or the result is scalar.
             </li>
             <li>
-              <span className="font-semibold">JSON_EXISTS:</span> Checks if a specific path exists within the JSON data. Returns TRUE or FALSE.
+              <span className="font-semibold">JSON_EXISTS:</span> Checks if a specific path exists within the JSON data.
+              Returns TRUE or FALSE.
             </li>
             <li>
-              <span className="font-semibold">JSON_TABLE:</span> Transforms JSON data into relational rows and columns, allowing you to query JSON structures as if they were tables. This is arguably the most powerful function for complex queries.
+              <span className="font-semibold">JSON_TABLE:</span> Transforms JSON data into relational rows and columns,
+              allowing you to query JSON structures as if they were tables. This is arguably the most powerful function
+              for complex queries.
             </li>
           </ul>
 
@@ -305,8 +311,9 @@ ORDER_ID, ITEM_ID, QTY
           <div className="flex items-start p-3 bg-blue-100 border border-blue-200 rounded-md text-sm mt-4 dark:bg-blue-900 dark:border-blue-700">
             <Info className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0 dark:text-blue-300" />
             <p>
-              SQL/JSON path expressions start with <code>$</code>, representing the context item (usually the JSON document itself).
-              Use <code>.key</code> for object members and <code>[index]</code> for array elements (0-based). <code>[*]</code> iterates over all elements in an array.
+              SQL/JSON path expressions start with <code>$</code>, representing the context item (usually the JSON
+              document itself). Use <code>.key</code> for object members and <code>[index]</code> for array elements
+              (0-based). <code>[*]</code> iterates over all elements in an array.
             </p>
           </div>
         </section>
@@ -317,8 +324,8 @@ ORDER_ID, ITEM_ID, QTY
             <Edit className="mr-2 text-teal-600" /> Modifying JSON Data
           </h2>
           <p>
-            Oracle provides the <code>JSON_TRANSFORM</code> function (Oracle 18c and later) to perform various
-            mutation operations on JSON data efficiently.
+            Oracle provides the <code>JSON_TRANSFORM</code> function (Oracle 18c and later) to perform various mutation
+            operations on JSON data efficiently.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
             <h3 className="text-lg font-medium mb-2">Example: Modifying JSON with JSON_TRANSFORM</h3>
@@ -360,8 +367,9 @@ SELECT JSON_TRANSFORM(product_info,
           <div className="flex items-start p-3 bg-blue-100 border border-blue-200 rounded-md text-sm mt-4 dark:bg-blue-900 dark:border-blue-700">
             <Info className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0 dark:text-blue-300" />
             <p>
-              <code>JSON_TRANSFORM</code> supports operations like <code>SET</code>, <code>INSERT</code>, <code>REPLACE</code>, <code>ADD</code>, and <code>REMOVE</code>.
-              <code>ADD</code> is used for adding elements to arrays, while <code>INSERT</code> can be used to insert at a specific index.
+              <code>JSON_TRANSFORM</code> supports operations like <code>SET</code>, <code>INSERT</code>,{" "}
+              <code>REPLACE</code>, <code>ADD</code>, and <code>REMOVE</code>.<code>ADD</code> is used for adding
+              elements to arrays, while <code>INSERT</code> can be used to insert at a specific index.
             </p>
           </div>
         </section>
@@ -372,17 +380,24 @@ SELECT JSON_TRANSFORM(product_info,
             <SquareAsterisk className="mr-2 text-red-600" /> Indexing JSON Data
           </h2>
           <p>
-            Effective indexing is crucial for query performance, especially with large JSON datasets. Oracle offers several options:
+            Effective indexing is crucial for query performance, especially with large JSON datasets. Oracle offers
+            several options:
           </p>
           <ul className="list-disc pl-6 mt-3 space-y-2">
             <li>
-              <span className="font-semibold">JSON Search Index (Oracle 12c Release 2 and later):</span> A special type of index optimized for searching within JSON documents. It can index scalar values, arrays, or even index everything. It&apos;s a domain index (like TEXT indexes). Oracle 21c introduced a faster type of JSON search index.
+              <span className="font-semibold">JSON Search Index (Oracle 12c Release 2 and later):</span> A special type
+              of index optimized for searching within JSON documents. It can index scalar values, arrays, or even index
+              everything. It&apos;s a domain index (like TEXT indexes). Oracle 21c introduced a faster type of JSON
+              search index.
             </li>
             <li>
-              <span className="font-semibold">Function-Based Index:</span> Create a standard B-tree index on the result of a JSON function (like <code>JSON_VALUE</code>) for a specific, frequently queried scalar path.
+              <span className="font-semibold">Function-Based Index:</span> Create a standard B-tree index on the result
+              of a JSON function (like <code>JSON_VALUE</code>) for a specific, frequently queried scalar path.
             </li>
             <li>
-              <span className="font-semibold">B-tree Index on Virtual Columns:</span> Create a virtual column that extracts a scalar value using <code>JSON_VALUE</code>, then index the virtual column. Similar to a function-based index but the extracted value is represented as a column.
+              <span className="font-semibold">B-tree Index on Virtual Columns:</span> Create a virtual column that
+              extracts a scalar value using <code>JSON_VALUE</code>, then index the virtual column. Similar to a
+              function-based index but the extracted value is represented as a column.
             </li>
           </ul>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -411,13 +426,16 @@ CREATE INDEX products_name_vc_idx ON products (product_name_vc);
           <div className="flex items-start p-3 bg-yellow-100 border border-yellow-200 rounded-md text-sm mt-4 dark:bg-yellow-900 dark:border-yellow-700">
             <Lightbulb className="w-5 h-5 text-yellow-600 mr-3 flex-shrink-0 dark:text-yellow-300" />
             <p>
-              Choose the indexing strategy based on your query patterns. Function-based indexes/virtual columns are great for queries filtering on specific scalar values. JSON Search indexes are more versatile for searches involving multiple paths or predicates within the JSON.
+              Choose the indexing strategy based on your query patterns. Function-based indexes/virtual columns are
+              great for queries filtering on specific scalar values. JSON Search indexes are more versatile for searches
+              involving multiple paths or predicates within the JSON.
             </p>
           </div>
           <div className="flex items-start p-3 bg-red-100 border border-red-200 rounded-md text-sm mt-4 dark:bg-red-900 dark:border-red-700">
             <AlertTriangle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0 dark:text-red-300" />
             <p>
-              Querying JSON without appropriate indexes can lead to full table scans and poor performance, especially on large tables. Always analyze your query execution plans.
+              Querying JSON without appropriate indexes can lead to full table scans and poor performance, especially on
+              large tables. Always analyze your query execution plans.
             </p>
           </div>
         </section>
@@ -427,17 +445,31 @@ CREATE INDEX products_name_vc_idx ON products (product_name_vc);
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <AreaChart className="mr-2 text-indigo-600" /> Performance and Best Practices
           </h2>
-          <p>
-            To ensure optimal performance when working with JSON in Oracle:
-          </p>
+          <p>To ensure optimal performance when working with JSON in Oracle:</p>
           <ul className="list-disc pl-6 mt-3 space-y-2">
-            <li>Use the native <code>JSON</code> datatype if possible (12c R2+).</li>
+            <li>
+              Use the native <code>JSON</code> datatype if possible (12c R2+).
+            </li>
             <li>Design appropriate indexes based on your most frequent query patterns.</li>
-            <li>Use <code>JSON_VALUE</code> for extracting single scalar values and <code>JSON_QUERY</code> for objects/arrays.</li>
-            <li>Leverage <code>JSON_TABLE</code> for complex queries that need to join or filter on multiple JSON fields or flatten arrays.</li>
-            <li>Be mindful of the <code>ON ERROR</code> and <code>ON EMPTY</code> clauses in query functions, as their default behavior might impact performance or results.</li>
-            <li>Avoid storing massive JSON documents in a single column if you frequently need to query small parts of them; consider normalizing structures or using appropriate indexing.</li>
-            <li>Keep your Oracle Database version updated to benefit from performance enhancements in JSON processing.</li>
+            <li>
+              Use <code>JSON_VALUE</code> for extracting single scalar values and <code>JSON_QUERY</code> for
+              objects/arrays.
+            </li>
+            <li>
+              Leverage <code>JSON_TABLE</code> for complex queries that need to join or filter on multiple JSON fields
+              or flatten arrays.
+            </li>
+            <li>
+              Be mindful of the <code>ON ERROR</code> and <code>ON EMPTY</code> clauses in query functions, as their
+              default behavior might impact performance or results.
+            </li>
+            <li>
+              Avoid storing massive JSON documents in a single column if you frequently need to query small parts of
+              them; consider normalizing structures or using appropriate indexing.
+            </li>
+            <li>
+              Keep your Oracle Database version updated to benefit from performance enhancements in JSON processing.
+            </li>
           </ul>
         </section>
 
@@ -447,7 +479,12 @@ CREATE INDEX products_name_vc_idx ON products (product_name_vc);
             <CheckCircle className="mr-2 text-green-600" /> Conclusion
           </h2>
           <p>
-            Oracle Database provides a comprehensive set of functions for handling JSON data, enabling developers to build applications that leverage the flexibility of JSON while benefiting from the robustness and performance of the Oracle platform. By understanding and utilizing functions like <code>JSON_OBJECT</code>, <code>JSON_ARRAYAGG</code>, <code>JSON_VALUE</code>, <code>JSON_QUERY</code>, <code>JSON_TABLE</code>, <code>JSON_TRANSFORM</code>, and the various indexing options, you can effectively work with JSON data directly within your SQL and PL/SQL code.
+            Oracle Database provides a comprehensive set of functions for handling JSON data, enabling developers to
+            build applications that leverage the flexibility of JSON while benefiting from the robustness and
+            performance of the Oracle platform. By understanding and utilizing functions like <code>JSON_OBJECT</code>,{" "}
+            <code>JSON_ARRAYAGG</code>, <code>JSON_VALUE</code>, <code>JSON_QUERY</code>, <code>JSON_TABLE</code>,{" "}
+            <code>JSON_TRANSFORM</code>, and the various indexing options, you can effectively work with JSON data
+            directly within your SQL and PL/SQL code.
           </p>
         </section>
       </div>

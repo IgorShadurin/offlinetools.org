@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
-import {
-  Database,
-  Gauge,
-  Zap,
-  ScrollText,
-  ListTree,
-} from "lucide-react"; // Allowed lucide-react icons
+import { Database, Gauge, Zap, ScrollText, ListTree } from "lucide-react"; // Allowed lucide-react icons
 
 export const metadata: Metadata = {
   title: "Tree View Virtualization for Massive JSON | Offline Tools",
   description:
     "Learn how to use tree view virtualization techniques to efficiently render and explore massive JSON objects without performance issues.",
 };
-
 
 export default function TreeViewVirtualizationArticle() {
   // Since we cannot use useState or hooks like useScroll,
@@ -29,14 +22,18 @@ export default function TreeViewVirtualizationArticle() {
 
       <div className="space-y-6">
         <p>
-          Viewing and navigating large hierarchical data structures, like massive JSON objects, in a graphical user interface can be challenging. A common way to visualize such data is using a tree view. However, rendering a tree view for a JSON object containing thousands or even millions of nodes can quickly lead to significant performance issues.
+          Viewing and navigating large hierarchical data structures, like massive JSON objects, in a graphical user
+          interface can be challenging. A common way to visualize such data is using a tree view. However, rendering a
+          tree view for a JSON object containing thousands or even millions of nodes can quickly lead to significant
+          performance issues.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Gauge className="h-6 w-6 text-red-500" /> The Problem: Performance Bottlenecks
         </h2>
         <p>
-          Standard tree view components typically render every single node in the tree into the Document Object Model (DOM). When the number of nodes is large:
+          Standard tree view components typically render every single node in the tree into the Document Object Model
+          (DOM). When the number of nodes is large:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>The browser has to create and manage an excessive number of DOM elements.</li>
@@ -44,30 +41,29 @@ export default function TreeViewVirtualizationArticle() {
           <li>Scrolling becomes laggy and unresponsive.</li>
           <li>Memory consumption increases dramatically, potentially crashing the browser tab.</li>
         </ul>
-        <p>
-          This makes exploring large datasets virtually impossible with a naive implementation.
-        </p>
+        <p>This makes exploring large datasets virtually impossible with a naive implementation.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Zap className="h-6 w-6 text-green-500" /> The Solution: Tree View Virtualization
         </h2>
         <p>
-          <strong>Virtualization</strong> (also known as &quot;windowing&quot;) is a technique used in UI development to improve rendering performance when dealing with long lists or large tables. Instead of rendering all items, it only renders the items that are currently visible within the viewport, plus a small buffer of items just outside the view. As the user scrolls, the components for items leaving the viewport are removed, and new components for items entering the viewport are created or recycled.
+          <strong>Virtualization</strong> (also known as &quot;windowing&quot;) is a technique used in UI development to
+          improve rendering performance when dealing with long lists or large tables. Instead of rendering all items, it
+          only renders the items that are currently visible within the viewport, plus a small buffer of items just
+          outside the view. As the user scrolls, the components for items leaving the viewport are removed, and new
+          components for items entering the viewport are created or recycled.
         </p>
-        <p>
-          Applying this concept to a tree view means:
-        </p>
+        <p>Applying this concept to a tree view means:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Only nodes currently visible in the scrollable area are rendered.</li>
           <li>The DOM size remains small, regardless of the total number of nodes in the JSON object.</li>
           <li>Rendering and scrolling performance are drastically improved.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-           Virtualization Challenges in Tree Views
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Virtualization Challenges in Tree Views</h2>
         <p>
-          While list virtualization is relatively straightforward, tree view virtualization introduces unique challenges:
+          While list virtualization is relatively straightforward, tree view virtualization introduces unique
+          challenges:
         </p>
         <h3 className="text-xl font-semibold mt-6">Variable Node Height</h3>
         <p>
@@ -79,40 +75,48 @@ export default function TreeViewVirtualizationArticle() {
           <li>Different rendering styles based on data type (object, array, primitive).</li>
         </ul>
         <p>
-          Handling variable height requires either measuring nodes after rendering or using estimated heights, making scroll position-to-item index calculation more complex than simple multiplication.
+          Handling variable height requires either measuring nodes after rendering or using estimated heights, making
+          scroll position-to-item index calculation more complex than simple multiplication.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Node Expansion and Collapse</h3>
         <p>
-          This is perhaps the biggest challenge. Expanding or collapsing a node fundamentally changes the structure of the &quot;visible list&quot; of nodes below it.
+          This is perhaps the biggest challenge. Expanding or collapsing a node fundamentally changes the structure of
+          the &quot;visible list&quot; of nodes below it.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Expanding a node adds its children (and their expanded descendants) to the list of potentially visible nodes.</li>
+          <li>
+            Expanding a node adds its children (and their expanded descendants) to the list of potentially visible
+            nodes.
+          </li>
           <li>Collapsing a node removes its children (and their descendants) from the list.</li>
-          <li>This requires dynamic recalculation of the flattened list of visible nodes and the total scrollable height.</li>
+          <li>
+            This requires dynamic recalculation of the flattened list of visible nodes and the total scrollable height.
+          </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">Efficient Data Access</h3>
         <p>
-          Navigating a massive JSON object to find children, determine types, or retrieve values efficiently is crucial, especially when only rendering a small subset of nodes. You need a performant way to access data based on a node&apos;s identifier or path.
+          Navigating a massive JSON object to find children, determine types, or retrieve values efficiently is crucial,
+          especially when only rendering a small subset of nodes. You need a performant way to access data based on a
+          node&apos;s identifier or path.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Database className="h-6 w-6 text-blue-500" /> Data Structures for Virtualization
         </h2>
         <p>
-          To apply virtualization, we need data structures that represent the tree in a way that&apos;s amenable to list-based rendering and scrolling.
+          To apply virtualization, we need data structures that represent the tree in a way that&apos;s amenable to
+          list-based rendering and scrolling.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. The Original JSON Data</h3>
-        <p>
-          This is your source of truth, potentially parsed into a JavaScript object.
-        </p>
+        <p>This is your source of truth, potentially parsed into a JavaScript object.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Example Massive JSON Snippet (Conceptual):</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`{
+          <h3 className="text-lg font-medium">Example Massive JSON Snippet (Conceptual):</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
   "root": {
     "id": "root",
     "type": "object",
@@ -143,22 +147,24 @@ export default function TreeViewVirtualizationArticle() {
     ]
   }
 }`}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
         <p>
-          In a real scenario, accessing data within this structure quickly is key. Using paths (e.g., &#x60;root.users[10].name&#x60;) or maintaining a map of node IDs to data pointers can help.
+          In a real scenario, accessing data within this structure quickly is key. Using paths (e.g.,
+          &#x60;root.users[10].name&#x60;) or maintaining a map of node IDs to data pointers can help.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">2. Flattened List of Renderable Nodes</h3>
         <p>
-          This is the core data structure for virtualization. It&apos;s a flat array containing only the nodes that are currently visible in the tree hierarchy based on expansion state.
+          This is the core data structure for virtualization. It&apos;s a flat array containing only the nodes that are
+          currently visible in the tree hierarchy based on expansion state.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Flattened Node Structure:</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`interface FlattenedNode &#x7b;
+          <h3 className="text-lg font-medium">Conceptual Flattened Node Structure:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`interface FlattenedNode &#x7b;
   id: string;          // Unique identifier for the node
   parentId: string | null; // Identifier of the parent node
   depth: number;       // Tree depth (root is 0)
@@ -180,31 +186,36 @@ export default function TreeViewVirtualizationArticle() {
   // ... This list only includes nodes *visible* in the hierarchy.
   // If user-0001 was expanded, its children ('name', 'age') would appear next.
 ]`}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">3. Expansion State Tracker</h3>
         <p>
-          You need a way to keep track of which expandable nodes are currently expanded. A simple Set of node IDs is a common approach.
+          You need a way to keep track of which expandable nodes are currently expanded. A simple Set of node IDs is a
+          common approach.
         </p>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Expansion State:</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// In a component with state (e.g., a Client Component or lifted state)
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Conceptual Expansion State:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// In a component with state (e.g., a Client Component or lifted state)
 // const [expandedNodeIds, setExpandedNodeIds] = useState<Set<string>>(new Set(['root']));
 
 // When a node is expanded/collapsed, update this set and trigger a re-render
 // This re-render will regenerate the 'Flattened List' (step 2)
 // and recalculate the total scrollable height.`}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
         <p>
-           <em>Note: Since this is a static page component without client-side state management (&#x60;useState&#x60;, &#x60;use client&#x60;), the conceptual examples show *how* state would be used in an interactive virtualized tree, but cannot implement the live behavior here. The actual state management would need to happen in a parent component or a different architecture layer.</em>
+          <em>
+            Note: Since this is a static page component without client-side state management (&#x60;useState&#x60;,
+            &#x60;use client&#x60;), the conceptual examples show *how* state would be used in an interactive
+            virtualized tree, but cannot implement the live behavior here. The actual state management would need to
+            happen in a parent component or a different architecture layer.
+          </em>
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ScrollText className="h-6 w-6 text-blue-500" /> The Virtualization Logic
@@ -212,13 +223,14 @@ export default function TreeViewVirtualizationArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. Flattening the Tree</h3>
         <p>
-          A function is needed to traverse the original JSON structure and build the flattened list (step 2 above), including only nodes whose ancestors are all expanded.
+          A function is needed to traverse the original JSON structure and build the flattened list (step 2 above),
+          including only nodes whose ancestors are all expanded.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Flattening Function:</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`function flattenTree(jsonData: any, expandedIds: Set<string>, estimatedNodeHeight: number = 25): FlattenedNode[] &#x7b;
+          <h3 className="text-lg font-medium">Conceptual Flattening Function:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`function flattenTree(jsonData: any, expandedIds: Set<string>, estimatedNodeHeight: number = 25): FlattenedNode[] &#x7b;
   const flattenedList: FlattenedNode[] = [];
 
   function traverse(node: any, parentId: string | null, depth: number, label: string) &#x7b;
@@ -261,22 +273,25 @@ export default function TreeViewVirtualizationArticle() {
 // Example Usage (would run when expansion state changes or on initial render):
 // const currentExpandedIds = new Set(['root', 'users']); // From state
 // const flattenedNodes = flattenTree(yourMassiveJsonData, currentExpandedIds);`}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
         <p>
-          This function generates the list that will be used for rendering. Note that in a variable-height scenario, the &#x60;estimatedHeight&#x60; property would be more complex, perhaps based on node type or measured values.
+          This function generates the list that will be used for rendering. Note that in a variable-height scenario, the
+          &#x60;estimatedHeight&#x60; property would be more complex, perhaps based on node type or measured values.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">2. Calculating Total Scroll Height</h3>
         <p>
-          The scrollable container needs a defined height that reflects the total height of *all* nodes in the flattened list. This allows the browser to render a scrollbar of the correct proportion. Summing the &#x60;estimatedHeight&#x60; of all nodes in the flattened list provides this.
+          The scrollable container needs a defined height that reflects the total height of *all* nodes in the flattened
+          list. This allows the browser to render a scrollbar of the correct proportion. Summing the
+          &#x60;estimatedHeight&#x60; of all nodes in the flattened list provides this.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Total Height Calculation:</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`function calculateTotalHeight(flattenedNodes: FlattenedNode[]): number &#x7b;
+          <h3 className="text-lg font-medium">Conceptual Total Height Calculation:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`function calculateTotalHeight(flattenedNodes: FlattenedNode[]): number &#x7b;
   // If using fixed height: return flattenedNodes.length * nodeHeight;
   // If using estimated height:
   return flattenedNodes.reduce((sum, node) => sum + node.estimatedHeight, 0);
@@ -284,19 +299,20 @@ export default function TreeViewVirtualizationArticle() {
   // For variable height, you'd ideally use *measured* heights after nodes render,
   // but estimates work for the initial scrollbar size.
 &#x7d;`}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">3. Determining Visible Range</h3>
         <p>
-          Based on the scroll position of the container and the heights of the items, you calculate the start and end indices of the items in the flattened list that should be rendered.
+          Based on the scroll position of the container and the heights of the items, you calculate the start and end
+          indices of the items in the flattened list that should be rendered.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Visible Range Calculation:</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// In a component that listens to scroll events:
+          <h3 className="text-lg font-medium">Conceptual Visible Range Calculation:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// In a component that listens to scroll events:
 // function calculateVisibleRange(scrollTop: number, containerHeight: number, flattenedNodes: FlattenedNode[], estimatedNodeHeight: number): &#x7b; startIndex: number, endIndex: number &#x7d; &#x7b;
 //   // Add a buffer for smooth scrolling
 //   const bufferItems = 5; // Render a few extra items outside the viewport
@@ -324,19 +340,21 @@ export default function TreeViewVirtualizationArticle() {
 // // const containerHeight = containerRef.current.clientHeight;
 // // const &#x7b; startIndex, endIndex &#x7d; = calculateVisibleRange(scrollTop, containerHeight, flattenedNodes, 25);
 `}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">4. Rendering Visible Nodes</h3>
         <p>
-          Finally, iterate through the flattened list from the calculated &#x60;startIndex&#x60; to &#x60;endIndex&#x60; and render the corresponding node components. These components should be positioned correctly based on the total height of the items *before* the &#x60;startIndex&#x60;.
+          Finally, iterate through the flattened list from the calculated &#x60;startIndex&#x60; to &#x60;endIndex&#x60;
+          and render the corresponding node components. These components should be positioned correctly based on the
+          total height of the items *before* the &#x60;startIndex&#x60;.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Rendering Loop:</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// Inside your render function, after calculating visible range and total height:
+          <h3 className="text-lg font-medium">Conceptual Rendering Loop:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// Inside your render function, after calculating visible range and total height:
 
 // Calculate the top padding/offset for the first visible item
 // This pushes the visible items down the correct amount within the scrollable container
@@ -367,17 +385,19 @@ export default function TreeViewVirtualizationArticle() {
 // Its structure is described below but not defined as a separate component here as
 // this page focuses on explaining the concept.
 `}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
         <p>
-          A simplified stand-in for what a real virtualized node component would look like is described below. It would receive data about the specific JSON node it represents and render its key/index, value preview, and an expand/collapse toggle if it has children.
+          A simplified stand-in for what a real virtualized node component would look like is described below. It would
+          receive data about the specific JSON node it represents and render its key/index, value preview, and an
+          expand/collapse toggle if it has children.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h3 className="text-lg font-medium">Conceptual Virtualized Node Component Structure (Not Rendered Here):</h3>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// This is a conceptual example, not an actual component defined in this file.
+          <h3 className="text-lg font-medium">Conceptual Virtualized Node Component Structure (Not Rendered Here):</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// This is a conceptual example, not an actual component defined in this file.
 // A real implementation would need props like:
 // type ConceptualVirtualizedTreeNodeProps = &#x7b;
 //   depth: number;
@@ -417,30 +437,35 @@ export default function TreeViewVirtualizationArticle() {
 //   </div>
 // );
 `}
-              </pre>
-            </div>
+            </pre>
+          </div>
         </div>
 
-
-        <h2 className="text-2xl font-semibold mt-8">
-          Implementing Expansion and Collapse
-        </h2>
-        <p>
-          When a user clicks an expandable node:
-        </p>
+        <h2 className="text-2xl font-semibold mt-8">Implementing Expansion and Collapse</h2>
+        <p>When a user clicks an expandable node:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>Update the expansion state (add/remove the node&apos;s ID from the &#x60;expandedNodeIds&#x60; set).</li>
           <li>Trigger a re-run of the &#x60;flattenTree&#x60; function with the new expansion state.</li>
           <li>Recalculate the &#x60;totalHeight&#x60; based on the new flattened list.</li>
-          <li>The virtualization logic (steps 3 &amp; 4 above) will automatically re-calculate the visible range and render the correct set of nodes for the new scrollable content.</li>
+          <li>
+            The virtualization logic (steps 3 &amp; 4 above) will automatically re-calculate the visible range and
+            render the correct set of nodes for the new scrollable content.
+          </li>
         </ol>
         <p>
-          This dynamic update of the flattened list and total height is key to making tree virtualization work with interactive expansion.
+          This dynamic update of the flattened list and total height is key to making tree virtualization work with
+          interactive expansion.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Tree view virtualization is an essential technique for building performant interfaces that need to display large, hierarchical datasets like massive JSON objects. By rendering only the nodes visible in the viewport, you dramatically reduce DOM overhead, leading to faster initial renders, smoother scrolling, and lower memory usage. While implementing tree virtualization is more complex than list virtualization due to variable heights and dynamic expansion, understanding the core concepts – flattening the tree based on expansion state, calculating total height, and rendering only the visible range – provides a solid foundation for building efficient data explorers.
+          Tree view virtualization is an essential technique for building performant interfaces that need to display
+          large, hierarchical datasets like massive JSON objects. By rendering only the nodes visible in the viewport,
+          you dramatically reduce DOM overhead, leading to faster initial renders, smoother scrolling, and lower memory
+          usage. While implementing tree virtualization is more complex than list virtualization due to variable heights
+          and dynamic expansion, understanding the core concepts – flattening the tree based on expansion state,
+          calculating total height, and rendering only the visible range – provides a solid foundation for building
+          efficient data explorers.
         </p>
       </div>
     </>

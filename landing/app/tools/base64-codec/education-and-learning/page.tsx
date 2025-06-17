@@ -167,7 +167,9 @@ export default function Base64CodecEducationPage() {
               <GraduationCap className="text-amber-600" size={24} />
               Learning Base64 Encoding
             </CardTitle>
-            <CardDescription>Resources and approaches for effectively understanding Base64 encoding concepts</CardDescription>
+            <CardDescription>
+              Resources and approaches for effectively understanding Base64 encoding concepts
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +181,8 @@ export default function Base64CodecEducationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Educational Resources</h3>
                     <p className="text-sm text-muted-foreground">
-                      Guides, tutorials, courses, and references for learning Base64 encoding from beginner to advanced levels.
+                      Guides, tutorials, courses, and references for learning Base64 encoding from beginner to advanced
+                      levels.
                     </p>
                   </div>
                 </div>
@@ -217,7 +220,8 @@ export default function Base64CodecEducationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Learning Techniques</h3>
                     <p className="text-sm text-muted-foreground">
-                      Pedagogical approaches including spaced repetition, peer learning, and progressive challenge paths.
+                      Pedagogical approaches including spaced repetition, peer learning, and progressive challenge
+                      paths.
                     </p>
                   </div>
                 </div>
@@ -230,7 +234,11 @@ export default function Base64CodecEducationPage() {
                 <span>Educational Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Effective Base64 learning requires both theoretical understanding and practical application. Abstract concepts like 6-bit encoding blocks are best grasped through interactive visualizations that show the transformation process. Misconceptions are common, especially around Base64's relationship to encryption (it provides none) and its purpose (data format conversion, not security). The most successful learning approaches provide progressive challenges that reinforce concepts through varied contexts and use cases.
+                Effective Base64 learning requires both theoretical understanding and practical application. Abstract
+                concepts like 6-bit encoding blocks are best grasped through interactive visualizations that show the
+                transformation process. Misconceptions are common, especially around Base64's relationship to encryption
+                (it provides none) and its purpose (data format conversion, not security). The most successful learning
+                approaches provide progressive challenges that reinforce concepts through varied contexts and use cases.
               </p>
             </div>
           </CardContent>
@@ -240,4 +248,4 @@ export default function Base64CodecEducationPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

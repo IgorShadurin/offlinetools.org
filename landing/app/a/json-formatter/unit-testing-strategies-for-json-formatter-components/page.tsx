@@ -21,13 +21,15 @@ export const metadata: Metadata = {
 export default function JsonFormatterTestingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Unit Testing Strategies for JSON Formatter Components
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Unit Testing Strategies for JSON Formatter Components</h1>
 
       <div className="space-y-6">
         <p>
-          JSON formatter components are essential tools for developers, providing a human-readable, often syntax-highlighted, view of raw JSON data. Whether it's for debugging API responses, displaying configuration, or building developer tools, these components need to be reliable and handle various JSON structures gracefully. Testing them effectively is crucial. This article explores common strategies for unit testing components designed to format and display JSON.
+          JSON formatter components are essential tools for developers, providing a human-readable, often
+          syntax-highlighted, view of raw JSON data. Whether it's for debugging API responses, displaying configuration,
+          or building developer tools, these components need to be reliable and handle various JSON structures
+          gracefully. Testing them effectively is crucial. This article explores common strategies for unit testing
+          components designed to format and display JSON.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
@@ -35,7 +37,8 @@ export default function JsonFormatterTestingArticle() {
           <span>What is a JSON Formatter Component?</span>
         </h2>
         <p>
-          At its core, a JSON formatter component takes a JSON string or a JavaScript object/array and renders it as structured HTML. This usually involves:
+          At its core, a JSON formatter component takes a JSON string or a JavaScript object/array and renders it as
+          structured HTML. This usually involves:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Parsing the JSON data.</li>
@@ -44,17 +47,13 @@ export default function JsonFormatterTestingArticle() {
           <li>Applying CSS classes for syntax highlighting (strings, numbers, booleans, null, keys).</li>
           <li>Potentially adding interactive features like collapsing sections.</li>
         </ul>
-        <p>
-          The primary goal is accurate and readable representation. Our tests should verify this.
-        </p>
+        <p>The primary goal is accurate and readable representation. Our tests should verify this.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
           <Bug className="w-7 h-7 text-red-500" />
           <span>Why is Testing Crucial?</span>
         </h2>
-        <p>
-          JSON formatters deal with potentially complex and deeply nested data. Bugs can easily hide, leading to:
-        </p>
+        <p>JSON formatters deal with potentially complex and deeply nested data. Bugs can easily hide, leading to:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Incorrect rendering (e.g., missing commas, incorrect nesting).</li>
           <li>Broken syntax highlighting.</li>
@@ -62,16 +61,16 @@ export default function JsonFormatterTestingArticle() {
           <li>Errors when encountering unexpected data types or structures.</li>
           <li>Accessibility problems.</li>
         </ul>
-        <p>
-          Robust testing ensures the component behaves correctly across a wide range of inputs.
-        </p>
+        <p>Robust testing ensures the component behaves correctly across a wide range of inputs.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
           <Camera className="w-7 h-7 text-green-500" />
           <span>Strategy 1: Snapshot Testing (The Quick Win)</span>
         </h2>
         <p>
-          Snapshot testing, often used with Jest, captures the rendered output of your component for a given input and saves it as a file. Subsequent test runs compare the current output to the saved snapshot. If they differ, the test fails, alerting you to a change.
+          Snapshot testing, often used with Jest, captures the rendered output of your component for a given input and
+          saves it as a file. Subsequent test runs compare the current output to the saved snapshot. If they differ, the
+          test fails, alerting you to a change.
         </p>
         <h3 className="text-xl font-semibold mt-6">Pros:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -88,7 +87,9 @@ export default function JsonFormatterTestingArticle() {
         </ul>
         <h3 className="text-xl font-semibold mt-6">Example (using Jest and React Testing Library):</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2"><code>jsonFormatter.test.tsx</code></h4>
+          <h4 className="text-lg font-medium mb-2">
+            <code>jsonFormatter.test.tsx</code>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`import { render, screen } from '@testing-library/react';
@@ -132,16 +133,16 @@ describe('JSONFormatter Snapshot Tests', () => {
             </pre>
           </div>
         </div>
-        <p>
-          Snapshot testing is a great first line of defense, quickly covering a lot of ground.
-        </p>
+        <p>Snapshot testing is a great first line of defense, quickly covering a lot of ground.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
           <FlaskConical className="w-7 h-7 text-purple-500" />
           <span>Strategy 2: Unit Testing Formatting Logic</span>
         </h2>
         <p>
-          Often, the core logic that transforms the JSON data structure into a description of the output (e.g., an array of token objects with types and values, or a tree structure ready for rendering) can be separated from the React component itself. Testing this pure logic function is highly effective.
+          Often, the core logic that transforms the JSON data structure into a description of the output (e.g., an array
+          of token objects with types and values, or a tree structure ready for rendering) can be separated from the
+          React component itself. Testing this pure logic function is highly effective.
         </p>
         <h3 className="text-xl font-semibold mt-6">Pros:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -155,9 +156,13 @@ describe('JSONFormatter Snapshot Tests', () => {
           <li>Doesn't test the actual rendering of the HTML or application of CSS classes.</li>
           <li>Requires the formatting logic to be extracted into a testable unit.</li>
         </ul>
-        <h3 className="text-xl font-semibold mt-6">Example (assuming a function <code>formatJsonData</code>):</h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Example (assuming a function <code>formatJsonData</code>):
+        </h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2"><code>formatLogic.test.ts</code></h4>
+          <h4 className="text-lg font-medium mb-2">
+            <code>formatLogic.test.ts</code>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`// Assume this function exists and returns a structured representation
@@ -214,16 +219,16 @@ describe('formatJsonData Logic Tests', () => {
             </pre>
           </div>
         </div>
-        <p>
-          This strategy provides high confidence in the core formatting rules, independent of the rendering layer.
-        </p>
+        <p>This strategy provides high confidence in the core formatting rules, independent of the rendering layer.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
           <MonitorPlay className="w-7 h-7 text-yellow-600" />
           <span>Strategy 3: Integration Testing (Component Rendering)</span>
         </h2>
         <p>
-          While snapshot tests check the full DOM tree, integration tests use React Testing Library or similar tools to query the rendered output and assert specific properties. This tests that your component correctly translates the formatted logic (or directly formats) into the expected HTML structure and applies the correct classes.
+          While snapshot tests check the full DOM tree, integration tests use React Testing Library or similar tools to
+          query the rendered output and assert specific properties. This tests that your component correctly translates
+          the formatted logic (or directly formats) into the expected HTML structure and applies the correct classes.
         </p>
         <h3 className="text-xl font-semibold mt-6">Pros:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -235,11 +240,15 @@ describe('formatJsonData Logic Tests', () => {
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Can be more verbose than snapshot tests.</li>
           <li>Might miss subtle rendering issues if not specifically asserted.</li>
-          <li>Still doesn't cover interactive behavior comprehensively (though Testing Library can help with user events).</li>
+          <li>
+            Still doesn't cover interactive behavior comprehensively (though Testing Library can help with user events).
+          </li>
         </ul>
         <h3 className="text-xl font-semibold mt-6">Example (using React Testing Library):</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2"><code>jsonFormatter.render.test.tsx</code></h4>
+          <h4 className="text-lg font-medium mb-2">
+            <code>jsonFormatter.render.test.tsx</code>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`import { render, screen } from '@testing-library/react';
@@ -314,25 +323,45 @@ describe('JSONFormatter Rendering Tests', () => {
           </div>
         </div>
         <p>
-          This level of testing provides confidence that the component translates the data into the expected visual output, including styling.
+          This level of testing provides confidence that the component translates the data into the expected visual
+          output, including styling.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
           <Box className="w-7 h-7 text-orange-500" />
           <span>Strategy 4: Testing Edge Cases</span>
         </h2>
-        <p>
-          JSON can be simple or complex. Your formatter needs to handle the extremes.
-        </p>
+        <p>JSON can be simple or complex. Your formatter needs to handle the extremes.</p>
         <h3 className="text-xl font-semibold mt-6">Key Edge Cases to Test:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Empty JSON:</strong> <code>&#x7b;&#x7d;</code> (empty object) and <code>[]</code> (empty array).</li>
-          <li><strong>Primitives as root:</strong> Testing with just a string (<code>"hello"</code>), number (<code>123</code>), boolean (<code>true</code>), or null directly, not wrapped in an object/array.</li>
-          <li><strong>Deep Nesting:</strong> JSON with many levels of nested objects and arrays to test recursion depth.</li>
-          <li><strong>Large Objects/Arrays:</strong> Data structures with hundreds or thousands of keys/items to check performance and rendering limits.</li>
-          <li><strong>Special Characters:</strong> Keys or string values containing quotes (<code>&quot;</code>), backslashes (<code>\</code>), newlines (<code>\n</code>), unicode characters, etc., ensuring they are displayed correctly (often escaped).</li>
-          <li><strong>JSON with unusual key names:</strong> Keys with spaces, special characters, or starting with numbers (though standard JSON keys must be strings, the *string value* can be anything).</li>
-          <li><strong>Invalid JSON:</strong> While a formatter might not *parse* invalid JSON (often relying on <code>JSON.parse</code>), if your component handles parse errors, test that it displays an appropriate error message.</li>
+          <li>
+            <strong>Empty JSON:</strong> <code>&#x7b;&#x7d;</code> (empty object) and <code>[]</code> (empty array).
+          </li>
+          <li>
+            <strong>Primitives as root:</strong> Testing with just a string (<code>"hello"</code>), number (
+            <code>123</code>), boolean (<code>true</code>), or null directly, not wrapped in an object/array.
+          </li>
+          <li>
+            <strong>Deep Nesting:</strong> JSON with many levels of nested objects and arrays to test recursion depth.
+          </li>
+          <li>
+            <strong>Large Objects/Arrays:</strong> Data structures with hundreds or thousands of keys/items to check
+            performance and rendering limits.
+          </li>
+          <li>
+            <strong>Special Characters:</strong> Keys or string values containing quotes (<code>&quot;</code>),
+            backslashes (<code>\</code>), newlines (<code>\n</code>), unicode characters, etc., ensuring they are
+            displayed correctly (often escaped).
+          </li>
+          <li>
+            <strong>JSON with unusual key names:</strong> Keys with spaces, special characters, or starting with numbers
+            (though standard JSON keys must be strings, the *string value* can be anything).
+          </li>
+          <li>
+            <strong>Invalid JSON:</strong> While a formatter might not *parse* invalid JSON (often relying on{" "}
+            <code>JSON.parse</code>), if your component handles parse errors, test that it displays an appropriate error
+            message.
+          </li>
         </ul>
         <h3 className="text-xl font-semibold mt-6">Testing Approach:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -365,16 +394,29 @@ test('renders special characters correctly in strings and keys', () => {
           <span>Strategy 5: Accessibility Testing</span>
         </h2>
         <p>
-          For a component primarily displaying information, accessibility might seem less critical than an interactive one. However, ensuring good color contrast for syntax highlighting and proper semantic HTML can greatly benefit users with visual impairments.
+          For a component primarily displaying information, accessibility might seem less critical than an interactive
+          one. However, ensuring good color contrast for syntax highlighting and proper semantic HTML can greatly
+          benefit users with visual impairments.
         </p>
         <h3 className="text-xl font-semibold mt-6">What to Test:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Color Contrast:</strong> Use tools (like <code>jest-axe</code>) to automatically check if your syntax highlighting colors meet WCAG contrast ratios against the background.</li>
-          <li><strong>Semantic HTML:</strong> Ensure elements like <code>&lt;span&gt;</code>, <code>&lt;div&gt;</code>, or <code>&lt;pre&gt;</code> are used appropriately. If it includes interactive features (like expand/collapse), ensure proper ARIA attributes and keyboard navigation.</li>
+          <li>
+            <strong>Color Contrast:</strong> Use tools (like <code>jest-axe</code>) to automatically check if your
+            syntax highlighting colors meet WCAG contrast ratios against the background.
+          </li>
+          <li>
+            <strong>Semantic HTML:</strong> Ensure elements like <code>&lt;span&gt;</code>, <code>&lt;div&gt;</code>, or{" "}
+            <code>&lt;pre&gt;</code> are used appropriately. If it includes interactive features (like expand/collapse),
+            ensure proper ARIA attributes and keyboard navigation.
+          </li>
         </ul>
-        <h3 className="text-xl font-semibold mt-6">Example (using <code>jest-axe</code> with React Testing Library):</h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Example (using <code>jest-axe</code> with React Testing Library):
+        </h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2"><code>jsonFormatter.a11y.test.tsx</code></h4>
+          <h4 className="text-lg font-medium mb-2">
+            <code>jsonFormatter.a11y.test.tsx</code>
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`import { render } from '@testing-library/react';
@@ -407,14 +449,26 @@ describe('JSONFormatter Accessibility Tests', () => {
           <span>Strategy 6: Performance Considerations (and Testing)</span>
         </h2>
         <p>
-          While strictly unit testing, performance is more of an integration/e2e concern. However, you can write unit tests to check if the component renders very large JSON datasets without crashing or taking excessively long.
+          While strictly unit testing, performance is more of an integration/e2e concern. However, you can write unit
+          tests to check if the component renders very large JSON datasets without crashing or taking excessively long.
         </p>
         <h3 className="text-xl font-semibold mt-6">Testing Approach:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Generate large JSON data structures programmatically (e.g., an array with 10,000 items, or a deeply nested object).</li>
-          <li>Use test runners that support performance timings (like Jest's <code>--detectOpenHandles</code> or custom timing logic).</li>
-          <li>Render the component with this large data and assert that the test completes within a reasonable time frame.</li>
-          <li>Note: True performance bottlenecks (like browser rendering time) are better caught with browser-based performance tools or profiling.</li>
+          <li>
+            Generate large JSON data structures programmatically (e.g., an array with 10,000 items, or a deeply nested
+            object).
+          </li>
+          <li>
+            Use test runners that support performance timings (like Jest's <code>--detectOpenHandles</code> or custom
+            timing logic).
+          </li>
+          <li>
+            Render the component with this large data and assert that the test completes within a reasonable time frame.
+          </li>
+          <li>
+            Note: True performance bottlenecks (like browser rendering time) are better caught with browser-based
+            performance tools or profiling.
+          </li>
         </ul>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example: Basic Performance Check</h4>
@@ -452,21 +506,25 @@ describe('JSONFormatter Performance Check', () => {
             </pre>
           </div>
         </div>
-        <p>
-          This test helps catch regressions that might significantly degrade performance for large inputs.
-        </p>
+        <p>This test helps catch regressions that might significantly degrade performance for large inputs.</p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-3">
           <Database className="w-7 h-7 text-indigo-500" />
           <span>Data Management in Tests: Mocking</span>
         </h2>
         <p>
-          For consistent and predictable tests, avoid using real, external data sources. Instead, define your test JSON data directly within your test files or import it from dedicated test data files. This is sometimes referred to as mocking or stubbing the data input.
+          For consistent and predictable tests, avoid using real, external data sources. Instead, define your test JSON
+          data directly within your test files or import it from dedicated test data files. This is sometimes referred
+          to as mocking or stubbing the data input.
         </p>
         <h3 className="text-xl font-semibold mt-6">Tips for Test Data:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Create a dedicated <code>__tests__/data/</code> folder.</li>
-          <li>Use files like <code>basic.json</code>, <code>nested.json</code>, <code>edge-case.json</code>.</li>
+          <li>
+            Create a dedicated <code>__tests__/data/</code> folder.
+          </li>
+          <li>
+            Use files like <code>basic.json</code>, <code>nested.json</code>, <code>edge-case.json</code>.
+          </li>
           <li>Import these JSON files into your tests.</li>
           <li>Ensure your test data covers all primitive types, nesting levels, and edge cases you identified.</li>
         </ul>
@@ -476,18 +534,33 @@ describe('JSONFormatter Performance Check', () => {
           <span>Conclusion</span>
         </h2>
         <p>
-          Testing a JSON formatter component involves verifying both the correctness of the underlying parsing/formatting logic and the accuracy of the rendered output, including syntax highlighting and structure. A combination of strategies provides the best coverage:
+          Testing a JSON formatter component involves verifying both the correctness of the underlying
+          parsing/formatting logic and the accuracy of the rendered output, including syntax highlighting and structure.
+          A combination of strategies provides the best coverage:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Snapshot tests:</strong> For broad coverage and catching unintended DOM changes.</li>
-          <li><strong>Unit tests (logic):</strong> For precise validation of formatting rules on pure data.</li>
-          <li><strong>Integration tests (rendering):</strong> To confirm data translates to expected HTML and styling.</li>
-          <li><strong>Edge case tests:</strong> To ensure robustness against unusual or complex inputs.</li>
-          <li><strong>Accessibility tests:</strong> To guarantee usability for all.</li>
-          <li><strong>Basic performance checks:</strong> To guard against significant regressions with large data.</li>
+          <li>
+            <strong>Snapshot tests:</strong> For broad coverage and catching unintended DOM changes.
+          </li>
+          <li>
+            <strong>Unit tests (logic):</strong> For precise validation of formatting rules on pure data.
+          </li>
+          <li>
+            <strong>Integration tests (rendering):</strong> To confirm data translates to expected HTML and styling.
+          </li>
+          <li>
+            <strong>Edge case tests:</strong> To ensure robustness against unusual or complex inputs.
+          </li>
+          <li>
+            <strong>Accessibility tests:</strong> To guarantee usability for all.
+          </li>
+          <li>
+            <strong>Basic performance checks:</strong> To guard against significant regressions with large data.
+          </li>
         </ul>
         <p>
-          By implementing these strategies, you can build confidence in your JSON formatter component, ensuring it reliably and accurately displays JSON data for your users.
+          By implementing these strategies, you can build confidence in your JSON formatter component, ensuring it
+          reliably and accurately displays JSON data for your users.
         </p>
       </div>
     </>

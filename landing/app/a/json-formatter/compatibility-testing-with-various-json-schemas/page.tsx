@@ -27,19 +27,19 @@ export default function JsonSchemaCompatibilityTestingArticle() {
 
       <div className="space-y-6">
         <p>
-          In modern software development, data exchange is often facilitated using structured formats like JSON.
-          As applications evolve, so too do their data structures, frequently defined and enforced using JSON Schemas.
-          Ensuring that different versions of a schema, or data produced against one schema version,
-          remain compatible with systems expecting another version is critical for maintaining stability and preventing
-          unexpected runtime errors. This is where <strong>JSON Schema compatibility testing</strong> comes in.
+          In modern software development, data exchange is often facilitated using structured formats like JSON. As
+          applications evolve, so too do their data structures, frequently defined and enforced using JSON Schemas.
+          Ensuring that different versions of a schema, or data produced against one schema version, remain compatible
+          with systems expecting another version is critical for maintaining stability and preventing unexpected runtime
+          errors. This is where <strong>JSON Schema compatibility testing</strong> comes in.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <FileJson className="w-6 h-6" /> What is a JSON Schema?
         </h2>
         <p>
-          JSON Schema is a powerful tool for defining the structure, content, and format of JSON data.
-          Think of it as a blueprint or contract for your JSON documents. It allows you to specify:
+          JSON Schema is a powerful tool for defining the structure, content, and format of JSON data. Think of it as a
+          blueprint or contract for your JSON documents. It allows you to specify:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Which properties an object should have</li>
@@ -51,8 +51,8 @@ export default function JsonSchemaCompatibilityTestingArticle() {
           <li>And much more...</li>
         </ul>
         <p>
-          Using JSON Schema provides a standardized way to validate data, automatically document APIs,
-          and generate code, but it also introduces the challenge of managing schema evolution.
+          Using JSON Schema provides a standardized way to validate data, automatically document APIs, and generate
+          code, but it also introduces the challenge of managing schema evolution.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -64,19 +64,24 @@ export default function JsonSchemaCompatibilityTestingArticle() {
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>API Evolution:</strong> Ensure clients using an older API version can still understand responses from a newer version, and vice versa.
+            <strong>API Evolution:</strong> Ensure clients using an older API version can still understand responses
+            from a newer version, and vice versa.
           </li>
           <li>
-            <strong>Data Validation:</strong> Verify that data conforms to the expected structure before processing, catching errors early.
+            <strong>Data Validation:</strong> Verify that data conforms to the expected structure before processing,
+            catching errors early.
           </li>
           <li>
-            <strong>Preventing Runtime Errors:</strong> Avoid application crashes caused by unexpected or missing data fields.
+            <strong>Preventing Runtime Errors:</strong> Avoid application crashes caused by unexpected or missing data
+            fields.
           </li>
           <li>
-            <strong>Reliable Integrations:</strong> Guarantee smooth data exchange between different services or microservices using JSON.
+            <strong>Reliable Integrations:</strong> Guarantee smooth data exchange between different services or
+            microservices using JSON.
           </li>
           <li>
-            <strong>Clear Data Contracts:</strong> Reinforce the agreed-upon format between producers and consumers of data.
+            <strong>Clear Data Contracts:</strong> Reinforce the agreed-upon format between producers and consumers of
+            data.
           </li>
         </ul>
 
@@ -96,7 +101,9 @@ export default function JsonSchemaCompatibilityTestingArticle() {
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Adding an optional property.</li>
-          <li>Adding a new value to an <code>enum</code>.</li>
+          <li>
+            Adding a new value to an <code>enum</code>.
+          </li>
           <li>Making a required property optional.</li>
         </ul>
 
@@ -107,7 +114,8 @@ export default function JsonSchemaCompatibilityTestingArticle() {
         </p>
         <p>
           This is less common in practice but can be relevant if you need to roll back a producer to an older version
-          while newer consumers might still be sending data validated against the new schema. Examples of forward-compatible changes are often limited and stricter:
+          while newer consumers might still be sending data validated against the new schema. Examples of
+          forward-compatible changes are often limited and stricter:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Potentially, some very minor constraint relaxations, but it's tricky.</li>
@@ -121,18 +129,16 @@ export default function JsonSchemaCompatibilityTestingArticle() {
           <FlaskConical className="w-6 h-6" /> Methods for Testing Compatibility
         </h2>
         <p>
-          Testing compatibility involves verifying that data validated by one schema can be handled by a system
-          designed for another. Here are common approaches:
+          Testing compatibility involves verifying that data validated by one schema can be handled by a system designed
+          for another. Here are common approaches:
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Data Validation Against Schemas</h3>
         <p>
-          The most practical way to test compatibility is to use JSON Schema validation libraries. You can take
-          a set of JSON documents and validate them against different schema versions.
+          The most practical way to test compatibility is to use JSON Schema validation libraries. You can take a set of
+          JSON documents and validate them against different schema versions.
         </p>
-        <p>
-          To check backward compatibility between Schema A (old) and Schema B (new):
-        </p>
+        <p>To check backward compatibility between Schema A (old) and Schema B (new):</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             Take data known to be valid against <strong>Schema A</strong>.
@@ -144,9 +150,7 @@ export default function JsonSchemaCompatibilityTestingArticle() {
             If <em>all</em> such data is valid against Schema B, then Schema B is backward compatible with Schema A.
           </li>
         </ul>
-        <p>
-          Similarly, for forward compatibility between Schema A (old) and Schema B (new):
-        </p>
+        <p>Similarly, for forward compatibility between Schema A (old) and Schema B (new):</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             Take data known to be valid against <strong>Schema B</strong>.
@@ -159,15 +163,16 @@ export default function JsonSchemaCompatibilityTestingArticle() {
           </li>
         </ul>
         <p>
-          This requires having a comprehensive suite of test data that covers various valid cases for each schema version.
+          This requires having a comprehensive suite of test data that covers various valid cases for each schema
+          version.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">2. Automated Schema Comparison</h3>
         <p>
           Some tools and libraries exist specifically to compare two JSON Schemas and report on the types of changes
-          made (e.g., field added, field removed, type changed, constraint added/removed). These tools can
-          often analyze the changes structurally and determine compatibility types (backward, forward, or breaking)
-          without needing test data.
+          made (e.g., field added, field removed, type changed, constraint added/removed). These tools can often analyze
+          the changes structurally and determine compatibility types (backward, forward, or breaking) without needing
+          test data.
         </p>
         <p>
           While powerful, these tools might not catch all subtle issues that validation with real data might reveal,
@@ -198,7 +203,9 @@ export default function JsonSchemaCompatibilityTestingArticle() {
         </div>
 
         <h3 className="text-lg font-medium mt-6">Schema V2 (Backward Compatible Change - Adding Optional Field):</h3>
-        <p>We add an optional <code>fullName</code> field.</p>
+        <p>
+          We add an optional <code>fullName</code> field.
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
@@ -221,12 +228,17 @@ export default function JsonSchemaCompatibilityTestingArticle() {
           <CheckSquare className="inline w-4 h-4 text-green-500" /> V2 is backward compatible with V1.
         </p>
         <p>
-          Data valid under V2 (with or without <code>fullName</code>) might *not* be valid under V1 if it includes <code>fullName</code> and V1 has <code>"additionalProperties": false</code> (as shown above).
-          <XCircle className="inline w-4 h-4 text-red-500" /> V2 is NOT forward compatible with V1 (due to <code>additionalProperties: false</code>). If <code>additionalProperties</code> were `true` or omitted, it would be forward compatible for adding optional fields.
+          Data valid under V2 (with or without <code>fullName</code>) might *not* be valid under V1 if it includes{" "}
+          <code>fullName</code> and V1 has <code>"additionalProperties": false</code> (as shown above).
+          <XCircle className="inline w-4 h-4 text-red-500" /> V2 is NOT forward compatible with V1 (due to{" "}
+          <code>additionalProperties: false</code>). If <code>additionalProperties</code> were `true` or omitted, it
+          would be forward compatible for adding optional fields.
         </p>
 
         <h3 className="text-lg font-medium mt-6">Schema V3 (Breaking Change - Removing Required Field):</h3>
-        <p>We remove the <code>email</code> field and make <code>username</code> optional.</p>
+        <p>
+          We remove the <code>email</code> field and make <code>username</code> optional.
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
@@ -246,12 +258,15 @@ export default function JsonSchemaCompatibilityTestingArticle() {
         </div>
         <p>
           Data valid under V1 (which requires <code>email</code> and <code>username</code>) will NOT be valid under V3
-          if <code>email</code> is missing or <code>username</code> is missing (though V1 data will have <code>username</code>). The removal of a required field is a breaking change.
+          if <code>email</code> is missing or <code>username</code> is missing (though V1 data will have{" "}
+          <code>username</code>). The removal of a required field is a breaking change.
           <XCircle className="inline w-4 h-4 text-red-500" /> V3 is NOT backward compatible with V1.
         </p>
 
         <h3 className="text-lg font-medium mt-6">Schema V4 (Breaking Change - Changing Type):</h3>
-        <p>We change the type of <code>id</code> from <code>integer</code> to <code>string</code>.</p>
+        <p>
+          We change the type of <code>id</code> from <code>integer</code> to <code>string</code>.
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
@@ -276,22 +291,14 @@ export default function JsonSchemaCompatibilityTestingArticle() {
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ListChecks className="w-6 h-6" /> Implementing the Tests
         </h2>
-        <p>
-          In a real-world scenario, you would automate these checks. This typically involves:
-        </p>
+        <p>In a real-world scenario, you would automate these checks. This typically involves:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>
             Defining your schemas (e.g., in <code>.json</code> or <code>.yaml</code> files).
           </li>
-          <li>
-            Creating test data files for each schema version that cover various valid instances.
-          </li>
-          <li>
-            Using a JSON Schema validation library in your test suite (e.g., Jest, Mocha).
-          </li>
-          <li>
-            Writing tests that load old data and validate it against the new schema.
-          </li>
+          <li>Creating test data files for each schema version that cover various valid instances.</li>
+          <li>Using a JSON Schema validation library in your test suite (e.g., Jest, Mocha).</li>
+          <li>Writing tests that load old data and validate it against the new schema.</li>
         </ol>
 
         <h3 className="text-lg font-medium mt-6">Conceptual Validation Test (TypeScript):</h3>
@@ -362,10 +369,12 @@ if (test3Result) {
           </div>
         </div>
         <p className="flex items-center gap-2">
-          <CheckSquare className="w-5 h-5 text-green-600" /> A successful backward compatibility test means your data producer can safely upgrade its schema without breaking older consumers.
+          <CheckSquare className="w-5 h-5 text-green-600" /> A successful backward compatibility test means your data
+          producer can safely upgrade its schema without breaking older consumers.
         </p>
         <p className="flex items-center gap-2">
-          <XCircle className="w-5 h-5 text-red-600" /> A failed backward compatibility test indicates a breaking change; you might need to support multiple schema versions or implement a migration strategy.
+          <XCircle className="w-5 h-5 text-red-600" /> A failed backward compatibility test indicates a breaking change;
+          you might need to support multiple schema versions or implement a migration strategy.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -373,22 +382,28 @@ if (test3Result) {
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Version Your Schemas:</strong> Clearly label schema versions (e.g., <code>/schemas/user/v1.json</code>, <code>/schemas/user/v2.json</code>).
+            <strong>Version Your Schemas:</strong> Clearly label schema versions (e.g.,{" "}
+            <code>/schemas/user/v1.json</code>, <code>/schemas/user/v2.json</code>).
           </li>
           <li>
-            <strong>Automate Tests:</strong> Integrate compatibility tests into your Continuous Integration (CI/CD) pipeline. Every schema change should automatically trigger these checks.
+            <strong>Automate Tests:</strong> Integrate compatibility tests into your Continuous Integration (CI/CD)
+            pipeline. Every schema change should automatically trigger these checks.
           </li>
           <li>
-            <strong>Maintain Comprehensive Test Data:</strong> Build a rich suite of valid JSON examples for each schema version, covering edge cases and all defined constraints.
+            <strong>Maintain Comprehensive Test Data:</strong> Build a rich suite of valid JSON examples for each schema
+            version, covering edge cases and all defined constraints.
           </li>
           <li>
-            <strong>Prefer Backward Compatible Changes:</strong> Design schema evolutions to be backward compatible whenever possible (e.g., adding optional fields instead of removing required ones).
+            <strong>Prefer Backward Compatible Changes:</strong> Design schema evolutions to be backward compatible
+            whenever possible (e.g., adding optional fields instead of removing required ones).
           </li>
           <li>
-            <strong>Document Changes:</strong> Clearly document schema changes and their compatibility implications for consumers.
+            <strong>Document Changes:</strong> Clearly document schema changes and their compatibility implications for
+            consumers.
           </li>
           <li>
-            <strong>Use Schema Comparison Tools:</strong> Augment data validation tests with structural schema comparison tools for a more complete picture.
+            <strong>Use Schema Comparison Tools:</strong> Augment data validation tests with structural schema
+            comparison tools for a more complete picture.
           </li>
         </ul>
 
@@ -398,27 +413,65 @@ if (test3Result) {
         <p>Popular libraries for JSON Schema validation in JavaScript/TypeScript include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <a href="https://ajv.js.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">AJV (Another JSON Schema Validator)</a>: Fast and comprehensive validator.
+            <a
+              href="https://ajv.js.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline dark:text-blue-400"
+            >
+              AJV (Another JSON Schema Validator)
+            </a>
+            : Fast and comprehensive validator.
           </li>
           <li>
-            <a href="https://github.com/button/json-schema-validator" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">json-schema-validator</a>: A lightweight alternative.
+            <a
+              href="https://github.com/button/json-schema-validator"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline dark:text-blue-400"
+            >
+              json-schema-validator
+            </a>
+            : A lightweight alternative.
           </li>
-          <li>
-            For schema comparison tools, search for "JSON schema diff" or "JSON schema compatibility checker".
-          </li>
+          <li>For schema comparison tools, search for "JSON schema diff" or "JSON schema compatibility checker".</li>
         </ul>
         <p>
-          Note that while libraries like <a href="https://zod.dev/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">Zod</a> or <a href="https://github.com/colinhacks/valibot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">Valibot</a> are excellent for defining and validating data shapes in TypeScript, they often use their own DSLs rather than standard JSON Schema. Ensure the tool/library you choose supports the standard JSON Schema specification if that is your requirement.
+          Note that while libraries like{" "}
+          <a
+            href="https://zod.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Zod
+          </a>{" "}
+          or{" "}
+          <a
+            href="https://github.com/colinhacks/valibot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Valibot
+          </a>{" "}
+          are excellent for defining and validating data shapes in TypeScript, they often use their own DSLs rather than
+          standard JSON Schema. Ensure the tool/library you choose supports the standard JSON Schema specification if
+          that is your requirement.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <CopyX className="w-6 h-6" /> Conclusion
         </h2>
         <p>
-          Compatibility testing is not an optional step but a fundamental practice when managing evolving JSON schemas, especially in API development and distributed systems. By proactively testing backward and forward compatibility using a combination of data validation and schema comparison tools, you can significantly reduce the risk of introducing breaking changes, ensure smoother deployments, and build more robust applications.
+          Compatibility testing is not an optional step but a fundamental practice when managing evolving JSON schemas,
+          especially in API development and distributed systems. By proactively testing backward and forward
+          compatibility using a combination of data validation and schema comparison tools, you can significantly reduce
+          the risk of introducing breaking changes, ensure smoother deployments, and build more robust applications.
         </p>
         <p>
-          Embrace schema versioning and automated compatibility checks in your development workflow to maintain reliable data contracts between different parts of your system and external consumers.
+          Embrace schema versioning and automated compatibility checks in your development workflow to maintain reliable
+          data contracts between different parts of your system and external consumers.
         </p>
       </div>
     </>

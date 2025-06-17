@@ -9,33 +9,31 @@ export const metadata: Metadata = {
 export default function JsonSpaceOptimizationArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Vertical vs. Horizontal Space Optimization in JSON Views
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Vertical vs. Horizontal Space Optimization in JSON Views</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is a widely used data format for data interchange. While the data
-          itself is structured, how it's presented visually can vary significantly. Two primary approaches to
-          optimizing the visual space in a JSON view are vertical (pretty-printed) and horizontal (compact)
-          optimization. Each has its own advantages and disadvantages, making the choice dependent on the specific
-          use case, whether it's human readability or machine processing efficiency.
+          JSON (JavaScript Object Notation) is a widely used data format for data interchange. While the data itself is
+          structured, how it's presented visually can vary significantly. Two primary approaches to optimizing the
+          visual space in a JSON view are vertical (pretty-printed) and horizontal (compact) optimization. Each has its
+          own advantages and disadvantages, making the choice dependent on the specific use case, whether it's human
+          readability or machine processing efficiency.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Understanding JSON Views</h2>
         <p>
-          A JSON document consists of key-value pairs and arrays. The core data structure is the same regardless
-          of formatting, but the inclusion of whitespace characters (spaces, tabs, newlines) changes its visual
-          representation. JSON formatters and viewers allow switching between different visual styles to suit the
-          user's needs.
+          A JSON document consists of key-value pairs and arrays. The core data structure is the same regardless of
+          formatting, but the inclusion of whitespace characters (spaces, tabs, newlines) changes its visual
+          representation. JSON formatters and viewers allow switching between different visual styles to suit the user's
+          needs.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Vertical Space Optimization (Pretty-Printed JSON)</h2>
         <p>
           Vertical space optimization, commonly known as "pretty-printing" or "beautifying," prioritizes human
-          readability. It achieves this by adding indentation and newlines to clearly separate keys, values, and
-          array elements. Each nested level is typically indented further than the one above it, making the hierarchy
-          easy to follow.
+          readability. It achieves this by adding indentation and newlines to clearly separate keys, values, and array
+          elements. Each nested level is typically indented further than the one above it, making the hierarchy easy to
+          follow.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Characteristics:</h3>
@@ -76,8 +74,8 @@ export default function JsonSpaceOptimizationArticle() {
         <h2 className="text-2xl font-semibold mt-8">Horizontal Space Optimization (Compact JSON)</h2>
         <p>
           Horizontal space optimization aims to minimize the total size of the JSON data by removing all unnecessary
-          whitespace characters (spaces, tabs, newlines). This results in a single, long string of characters.
-          This format is also sometimes referred to as "minified" JSON.
+          whitespace characters (spaces, tabs, newlines). This results in a single, long string of characters. This
+          format is also sometimes referred to as "minified" JSON.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Characteristics:</h3>
@@ -109,21 +107,22 @@ export default function JsonSpaceOptimizationArticle() {
               <span className="font-medium">File Size:</span> Vertical (Larger) vs. Horizontal (Smaller)
             </li>
             <li>
-              <span className="font-medium">Transmission Efficiency:</span> Vertical (Less efficient) vs. Horizontal (More efficient)
+              <span className="font-medium">Transmission Efficiency:</span> Vertical (Less efficient) vs. Horizontal
+              (More efficient)
             </li>
             <li>
-              <span className="font-medium">Processing Time:</span> Minimal difference for most parsers, though less data to read in compact format can be marginally faster.
+              <span className="font-medium">Processing Time:</span> Minimal difference for most parsers, though less
+              data to read in compact format can be marginally faster.
             </li>
             <li>
-              <span className="font-medium">Use Cases:</span> Vertical (Development, Debugging, Documentation) vs. Horizontal (APIs, Storage, Network Transmission)
+              <span className="font-medium">Use Cases:</span> Vertical (Development, Debugging, Documentation) vs.
+              Horizontal (APIs, Storage, Network Transmission)
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">When to Use Which?</h2>
-        <p>
-          The choice between vertical and horizontal optimization depends entirely on the context:
-        </p>
+        <p>The choice between vertical and horizontal optimization depends entirely on the context:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Use Vertical (Pretty-Printed) when:</h3>
@@ -145,21 +144,37 @@ export default function JsonSpaceOptimizationArticle() {
           </ul>
         </div>
 
-
         <h2 className="text-2xl font-semibold mt-8">Tools and Techniques</h2>
         <p>
-          Most code editors, IDEs, and online JSON tools provide built-in functionality to format (pretty-print)
-          or minify JSON. Programming libraries for working with JSON also offer options to control the output
-          format when serializing data.
+          Most code editors, IDEs, and online JSON tools provide built-in functionality to format (pretty-print) or
+          minify JSON. Programming libraries for working with JSON also offer options to control the output format when
+          serializing data.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Software & Libraries (Examples - without external links):</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><span className="font-medium">Visual Studio Code (VS Code):</span> Built-in "Format Document" feature formats JSON vertically.</li>
-            <li><span className="font-medium">Sublime Text:</span> Packages available for JSON formatting and minification.</li>
-            <li><span className="font-medium">Python's `json` module:</span> The `json.dumps()` function has `indent` and `separators` parameters to control output format. Setting `indent` &gt; 0 pretty-prints, setting `separators=(',', ':')` compacts.</li>
-            <li><span className="font-medium">JavaScript's `JSON` object:</span> `JSON.stringify(value, replacer, space)` allows pretty-printing using the `space` argument for indentation. Omitting `space` results in compact output.</li>
-            <li><span className="font-medium">Online JSON Formatters:</span> Many web tools offer buttons to switch between pretty-printed and compact views.</li>
+            <li>
+              <span className="font-medium">Visual Studio Code (VS Code):</span> Built-in "Format Document" feature
+              formats JSON vertically.
+            </li>
+            <li>
+              <span className="font-medium">Sublime Text:</span> Packages available for JSON formatting and
+              minification.
+            </li>
+            <li>
+              <span className="font-medium">Python's `json` module:</span> The `json.dumps()` function has `indent` and
+              `separators` parameters to control output format. Setting `indent` &gt; 0 pretty-prints, setting
+              `separators=(',', ':')` compacts.
+            </li>
+            <li>
+              <span className="font-medium">JavaScript's `JSON` object:</span> `JSON.stringify(value, replacer, space)`
+              allows pretty-printing using the `space` argument for indentation. Omitting `space` results in compact
+              output.
+            </li>
+            <li>
+              <span className="font-medium">Online JSON Formatters:</span> Many web tools offer buttons to switch
+              between pretty-printed and compact views.
+            </li>
           </ul>
           <p className="text-sm mt-3">
             These examples illustrate how common tools and programming constructs provide ways to switch between the
@@ -169,12 +184,12 @@ export default function JsonSpaceOptimizationArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Choosing between vertical and horizontal space optimization in JSON views is a matter of balancing
-          human readability against data size and transmission efficiency. Vertical formatting makes complex JSON
-          structures understandable for developers and analysts, while horizontal formatting is crucial for
-          minimizing payload size in machine-to-machine communication. Understanding these two approaches and
-          knowing when to apply each is a fundamental skill when working with JSON data. Most modern tools provide
-          easy ways to switch between these views, offering flexibility depending on the task at hand.
+          Choosing between vertical and horizontal space optimization in JSON views is a matter of balancing human
+          readability against data size and transmission efficiency. Vertical formatting makes complex JSON structures
+          understandable for developers and analysts, while horizontal formatting is crucial for minimizing payload size
+          in machine-to-machine communication. Understanding these two approaches and knowing when to apply each is a
+          fundamental skill when working with JSON data. Most modern tools provide easy ways to switch between these
+          views, offering flexibility depending on the task at hand.
         </p>
       </div>
     </>

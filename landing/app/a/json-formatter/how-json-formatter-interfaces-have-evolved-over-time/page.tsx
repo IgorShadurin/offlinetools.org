@@ -9,26 +9,22 @@ export const metadata: Metadata = {
 export default function JsonFormatterEvolutionArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        How JSON Formatter Interfaces Have Evolved Over Time
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">How JSON Formatter Interfaces Have Evolved Over Time</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web.
-          As its usage exploded, so did the need for tools to easily read, write, and validate JSON data. JSON
-          formatter interfaces, used in online tools, text editors, and IDEs, have undergone a significant
-          evolution, adapting to user needs and technological advancements. Let&apos;s trace this journey from
-          basic utilities to sophisticated interactive environments.
+          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web. As its
+          usage exploded, so did the need for tools to easily read, write, and validate JSON data. JSON formatter
+          interfaces, used in online tools, text editors, and IDEs, have undergone a significant evolution, adapting to
+          user needs and technological advancements. Let&apos;s trace this journey from basic utilities to sophisticated
+          interactive environments.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          The Early Days: Plain Text and Basic Validation
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">The Early Days: Plain Text and Basic Validation</h2>
         <p>
-          In the beginning, JSON data was primarily handled by developers directly within code or simple text
-          editors. The first &quot;formatters&quot; were often command-line tools or rudimentary web pages
-          offering little more than a text area to paste JSON and a button to &quot;Format&quot; or &quot;Validate&quot;.
+          In the beginning, JSON data was primarily handled by developers directly within code or simple text editors.
+          The first &quot;formatters&quot; were often command-line tools or rudimentary web pages offering little more
+          than a text area to paste JSON and a button to &quot;Format&quot; or &quot;Validate&quot;.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Characteristics of early interfaces:</h3>
@@ -56,14 +52,12 @@ export default function JsonFormatterEvolutionArticle() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Rise of Syntax Highlighting and Basic Error Reporting
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Rise of Syntax Highlighting and Basic Error Reporting</h2>
         <p>
           As JSON became more prevalent, interfaces started incorporating features from code editors. Syntax
-          highlighting dramatically improved readability, color-coding keys, values, strings, numbers, booleans,
-          and nulls. Error reporting became more sophisticated, often highlighting the specific character or
-          token causing the issue, rather than just the line.
+          highlighting dramatically improved readability, color-coding keys, values, strings, numbers, booleans, and
+          nulls. Error reporting became more sophisticated, often highlighting the specific character or token causing
+          the issue, rather than just the line.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Key features introduced:</h3>
@@ -88,14 +82,12 @@ export default function JsonFormatterEvolutionArticle() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Introduction of Tree Views and Interactive Exploration
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Introduction of Tree Views and Interactive Exploration</h2>
         <p>
           One of the most significant leaps was the introduction of the tree view interface. This presented the
-          hierarchical structure of JSON data visually, making it much easier to understand complex or deeply
-          nested objects. Tree views allowed users to expand and collapse nodes, hiding unnecessary details and
-          focusing on specific parts of the data.
+          hierarchical structure of JSON data visually, making it much easier to understand complex or deeply nested
+          objects. Tree views allowed users to expand and collapse nodes, hiding unnecessary details and focusing on
+          specific parts of the data.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Tree view benefits:</h3>
@@ -123,14 +115,12 @@ export default function JsonFormatterEvolutionArticle() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Advanced Features: Editing, Searching, and Validation
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Advanced Features: Editing, Searching, and Validation</h2>
         <p>
-          Modern JSON formatter interfaces are often full-fledged editors. They allow inline editing directly
-          in the formatted text or even within the tree view. Search functionality, sometimes supporting
-          JSONPath queries, became common. Validation evolved to include schema validation, ensuring data
-          adheres to a predefined structure, not just basic syntax correctness.
+          Modern JSON formatter interfaces are often full-fledged editors. They allow inline editing directly in the
+          formatted text or even within the tree view. Search functionality, sometimes supporting JSONPath queries,
+          became common. Validation evolved to include schema validation, ensuring data adheres to a predefined
+          structure, not just basic syntax correctness.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Advanced capabilities:</h3>
@@ -144,26 +134,22 @@ export default function JsonFormatterEvolutionArticle() {
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Modern Trends and Future Directions
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Modern Trends and Future Directions</h2>
         <p>
-          Today&apos;s interfaces are highly polished, often offering multiple views (text, tree, raw), themes,
-          and features like real-time formatting as you type. Some tools integrate with APIs, browser developer
-          tools, or offer desktop applications for offline use. Future evolutions might include AI-assisted
-          parsing or cleaning of malformed data, collaborative editing, and deeper integration with data
-          visualization tools.
+          Today&apos;s interfaces are highly polished, often offering multiple views (text, tree, raw), themes, and
+          features like real-time formatting as you type. Some tools integrate with APIs, browser developer tools, or
+          offer desktop applications for offline use. Future evolutions might include AI-assisted parsing or cleaning of
+          malformed data, collaborative editing, and deeper integration with data visualization tools.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          The journey of JSON formatter interfaces reflects the growing importance of JSON itself. What started
-          as simple utilities have evolved into sophisticated tools that significantly enhance productivity for
-          developers, data analysts, and anyone working with structured data. The move from basic text inputs to
-          interactive tree views, coupled with features like syntax highlighting and advanced validation, has
-          transformed how we interact with JSON, making it more accessible and manageable. As data complexity
-          increases, we can expect these interfaces to continue evolving, incorporating smarter features to meet
-          future challenges.
+          The journey of JSON formatter interfaces reflects the growing importance of JSON itself. What started as
+          simple utilities have evolved into sophisticated tools that significantly enhance productivity for developers,
+          data analysts, and anyone working with structured data. The move from basic text inputs to interactive tree
+          views, coupled with features like syntax highlighting and advanced validation, has transformed how we interact
+          with JSON, making it more accessible and manageable. As data complexity increases, we can expect these
+          interfaces to continue evolving, incorporating smarter features to meet future challenges.
         </p>
       </div>
     </>

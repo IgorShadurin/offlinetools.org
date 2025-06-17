@@ -26,21 +26,19 @@ export default function JsonFormattersForErpPage() {
 
       <div className="space-y-6 text-gray-700 dark:text-gray-300">
         <p>
-          Enterprise Resource Planning (ERP) systems are the backbone of many businesses,
-          managing crucial processes from finance and human resources to supply chain and
-          customer relationships. In today's interconnected digital landscape, ERPs rarely
-          operate in isolation. They need to exchange data with other internal modules,
-          external services (like e-commerce platforms, CRMs, WMSs), and partners.
-          JSON (JavaScript Object Notation) has emerged as a dominant format for this
-          data exchange due to its human readability, versatility, and widespread support
+          Enterprise Resource Planning (ERP) systems are the backbone of many businesses, managing crucial processes
+          from finance and human resources to supply chain and customer relationships. In today's interconnected digital
+          landscape, ERPs rarely operate in isolation. They need to exchange data with other internal modules, external
+          services (like e-commerce platforms, CRMs, WMSs), and partners. JSON (JavaScript Object Notation) has emerged
+          as a dominant format for this data exchange due to its human readability, versatility, and widespread support
           across various programming languages and platforms.
         </p>
 
         <p>
-          While simply having data in JSON format is a start, ensuring its correct structure,
-          integrity, and compatibility between different systems requires more than just parsing.
-          This is where **JSON Formatters**, in the broader sense of tools and logic for handling JSON data,
-          become indispensable components in the ERP integration architecture.
+          While simply having data in JSON format is a start, ensuring its correct structure, integrity, and
+          compatibility between different systems requires more than just parsing. This is where **JSON Formatters**, in
+          the broader sense of tools and logic for handling JSON data, become indispensable components in the ERP
+          integration architecture.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">
@@ -50,8 +48,8 @@ export default function JsonFormattersForErpPage() {
           What is a JSON Formatter in the ERP Context?
         </h2>
         <p>
-          Beyond mere "pretty printing," a JSON formatter in the context of ERP integration
-          refers to the set of processes, tools, and code responsible for:
+          Beyond mere "pretty printing," a JSON formatter in the context of ERP integration refers to the set of
+          processes, tools, and code responsible for:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
@@ -62,11 +60,11 @@ export default function JsonFormattersForErpPage() {
           </li>
           <li>
             <span className="font-semibold flex items-center">
-              <ArrowRightLeft size={18} className="mr-2 text-blue-500" /> Transformation/Mapping: {/* Corrected component name */}
+              <ArrowRightLeft size={18} className="mr-2 text-blue-500" /> Transformation/Mapping:{" "}
+              {/* Corrected component name */}
             </span>
-            Converting JSON data from one structure or naming convention to another
-            to match the requirements of the target system (e.g., converting `customer_id` to `CustomerId`,
-            or nesting address details differently).
+            Converting JSON data from one structure or naming convention to another to match the requirements of the
+            target system (e.g., converting `customer_id` to `CustomerId`, or nesting address details differently).
           </li>
           <li>
             <span className="font-semibold flex items-center">
@@ -78,8 +76,8 @@ export default function JsonFormattersForErpPage() {
             <span className="font-semibold flex items-center">
               <Code size={18} className="mr-2 text-yellow-500" /> Serialization/Deserialization:
             </span>
-            Converting internal ERP data structures into JSON strings (serialization)
-            and converting incoming JSON strings back into usable internal data structures (deserialization).
+            Converting internal ERP data structures into JSON strings (serialization) and converting incoming JSON
+            strings back into usable internal data structures (deserialization).
           </li>
           <li>
             <span className="font-semibold flex items-center">
@@ -96,26 +94,26 @@ export default function JsonFormattersForErpPage() {
           Why Formatters are Crucial for ERP Integrations
         </h2>
         <p>
-          The success of any ERP integration hinges on the accurate and reliable
-          exchange of data. Formatters play a vital role by:
+          The success of any ERP integration hinges on the accurate and reliable exchange of data. Formatters play a
+          vital role by:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Ensuring Data Quality:</strong> Validation steps prevent malformed or
-            incomplete data from entering the ERP, maintaining data integrity.
+            <strong>Ensuring Data Quality:</strong> Validation steps prevent malformed or incomplete data from entering
+            the ERP, maintaining data integrity.
           </li>
           <li>
-            <strong>Bridging System Differences:</strong> Different systems have different
-            data models and naming conventions. Transformation logic maps data between these models,
-            making integration possible without altering core ERP structures unnecessarily.
+            <strong>Bridging System Differences:</strong> Different systems have different data models and naming
+            conventions. Transformation logic maps data between these models, making integration possible without
+            altering core ERP structures unnecessarily.
           </li>
           <li>
-            <strong>Reducing Development Effort:</strong> Well-defined formatting and transformation
-            rules make integration logic clearer and easier to maintain compared to ad-hoc parsing and manipulation.
+            <strong>Reducing Development Effort:</strong> Well-defined formatting and transformation rules make
+            integration logic clearer and easier to maintain compared to ad-hoc parsing and manipulation.
           </li>
           <li>
-            <strong>Improving Debugging:</strong> Structured, validated JSON is easier to read and debug,
-            speeding up troubleshooting when integration issues arise.
+            <strong>Improving Debugging:</strong> Structured, validated JSON is easier to read and debug, speeding up
+            troubleshooting when integration issues arise.
           </li>
         </ul>
 
@@ -127,21 +125,21 @@ export default function JsonFormattersForErpPage() {
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-semibold">API Integrations:</span> Exposing ERP data
-            via APIs or consuming external APIs (e.g., getting order details from an e-commerce platform,
-            sending shipping updates to a carrier service).
+            <span className="font-semibold">API Integrations:</span> Exposing ERP data via APIs or consuming external
+            APIs (e.g., getting order details from an e-commerce platform, sending shipping updates to a carrier
+            service).
           </li>
           <li>
-            <span className="font-semibold">Data Migration:</span> Preparing data extracted
-            from legacy systems in JSON format before importing into a new ERP, or vice versa.
+            <span className="font-semibold">Data Migration:</span> Preparing data extracted from legacy systems in JSON
+            format before importing into a new ERP, or vice versa.
           </li>
           <li>
-            <span className="font-semibold">Inter-Module Communication:</span> In microservices
-            or service-oriented ERP architectures, modules might exchange data in JSON format.
+            <span className="font-semibold">Inter-Module Communication:</span> In microservices or service-oriented ERP
+            architectures, modules might exchange data in JSON format.
           </li>
           <li>
-            <span className="font-semibold">Reporting & Analytics:</span> Exporting ERP data
-            in a structured JSON format for consumption by business intelligence tools.
+            <span className="font-semibold">Reporting & Analytics:</span> Exporting ERP data in a structured JSON format
+            for consumption by business intelligence tools.
           </li>
         </ul>
 
@@ -151,16 +149,14 @@ export default function JsonFormattersForErpPage() {
           </span>
           Implementation Angles & Technical Considerations
         </h2>
-        <p>
-          Implementing robust JSON handling in an ERP integration involves several technical steps:
-        </p>
+        <p>Implementing robust JSON handling in an ERP integration involves several technical steps:</p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-white flex items-center">
           <FileJson size={20} className="mr-2" /> Parsing and Serialization
         </h3>
         <p>
-          Most languages have built-in JSON parsing (`JSON.parse` in JavaScript/TypeScript)
-          and serialization (`JSON.stringify`). These are the foundational steps.
+          Most languages have built-in JSON parsing (`JSON.parse` in JavaScript/TypeScript) and serialization
+          (`JSON.stringify`). These are the foundational steps.
         </p>
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4 text-sm overflow-x-auto">
           <pre>
@@ -189,10 +185,9 @@ console.log(productJsonString);`}
           <CheckCircle size={20} className="mr-2" /> Validation (Using JSON Schema)
         </h3>
         <p>
-          Simply parsing JSON doesn't guarantee it has the expected fields or data types.
-          JSON Schema is a powerful standard for describing the structure of JSON data.
-          Libraries like `ajv` (Another JSON Schema Validator) in Node.js (which Next.js runs on)
-          are commonly used to validate JSON payloads against a predefined schema.
+          Simply parsing JSON doesn't guarantee it has the expected fields or data types. JSON Schema is a powerful
+          standard for describing the structure of JSON data. Libraries like `ajv` (Another JSON Schema Validator) in
+          Node.js (which Next.js runs on) are commonly used to validate JSON payloads against a predefined schema.
         </p>
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4 text-sm overflow-x-auto">
           <h4 className="font-medium mb-2">Conceptual Validation Flow:</h4>
@@ -243,16 +238,14 @@ const receivedInvalidItemData = {
 // }`}
           </pre>
         </div>
-        <p>
-          Using JSON Schema makes your API contracts explicit and helps catch data issues early.
-        </p>
+        <p>Using JSON Schema makes your API contracts explicit and helps catch data issues early.</p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-white flex items-center">
           <ArrowRightLeft size={20} className="mr-2" /> Transformation and Mapping {/* Corrected component name */}
         </h3>
         <p>
-          This is often the most complex part. You need to map fields from the source JSON
-          structure to the target structure expected by the ERP (or vice versa). This can involve:
+          This is often the most complex part. You need to map fields from the source JSON structure to the target
+          structure expected by the ERP (or vice versa). This can involve:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Renaming fields.</li>
@@ -262,10 +255,9 @@ const receivedInvalidItemData = {
           <li>Handling missing or optional fields.</li>
         </ul>
         <p>
-          Manual mapping with basic object manipulation is feasible for simple cases,
-          but libraries like `lodash/fp` (for functional programming style transformations)
-          or dedicated data mapping tools/languages (like JSONata, JQ syntax implemented in libraries)
-          can be invaluable for complex transformations.
+          Manual mapping with basic object manipulation is feasible for simple cases, but libraries like `lodash/fp`
+          (for functional programming style transformations) or dedicated data mapping tools/languages (like JSONata, JQ
+          syntax implemented in libraries) can be invaluable for complex transformations.
         </p>
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4 text-sm overflow-x-auto">
           <h4 className="font-medium mb-2">Simple Transformation Example (Conceptual TS):</h4>
@@ -312,31 +304,27 @@ function transformExternalOrderToErpSalesOrder(externalOrder: ExternalOrder): Er
           </pre>
         </div>
         <p>
-          Complex transformations might involve conditional logic, lookups against ERP data,
-          or combining data from multiple parts of the source JSON.
+          Complex transformations might involve conditional logic, lookups against ERP data, or combining data from
+          multiple parts of the source JSON.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-white flex items-center">
           <Database size={20} className="mr-2" /> Handling Large Data & Performance
         </h3>
         <p>
-          For very large JSON payloads (e.g., bulk data imports), parsing the entire
-          string into memory might be inefficient or impossible. Streaming parsers can
-          process JSON chunk by chunk, which is more memory-efficient for large datasets.
-          Performance of transformation logic is also key, especially in high-throughput scenarios.
+          For very large JSON payloads (e.g., bulk data imports), parsing the entire string into memory might be
+          inefficient or impossible. Streaming parsers can process JSON chunk by chunk, which is more memory-efficient
+          for large datasets. Performance of transformation logic is also key, especially in high-throughput scenarios.
         </p>
 
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">
-          Conclusion
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">Conclusion</h2>
         <p>
-          JSON formatters, understood as the comprehensive logic for parsing, validating,
-          transforming, and serializing JSON data, are critical components in modern ERP architectures.
-          They enable seamless data exchange, ensure data quality, and bridge the gaps between
-          disparate systems. While built-in language features provide the basic parsing and serialization,
-          integrators must leverage additional tools and well-structured code, often including schema validation
-          and sophisticated mapping logic, to build robust and maintainable ERP integrations powered by JSON.
+          JSON formatters, understood as the comprehensive logic for parsing, validating, transforming, and serializing
+          JSON data, are critical components in modern ERP architectures. They enable seamless data exchange, ensure
+          data quality, and bridge the gaps between disparate systems. While built-in language features provide the
+          basic parsing and serialization, integrators must leverage additional tools and well-structured code, often
+          including schema validation and sophisticated mapping logic, to build robust and maintainable ERP integrations
+          powered by JSON.
         </p>
       </div>
     </div>

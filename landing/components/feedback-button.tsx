@@ -27,11 +27,11 @@ interface FeedbackButtonProps {
  * @param onOpenChange - Optional callback when modal open state changes
  * @param showButton - Whether to show the floating button (default: true)
  */
-export function FeedbackButton({ 
-  defaultValues, 
-  isOpen: externalIsOpen, 
+export function FeedbackButton({
+  defaultValues,
+  isOpen: externalIsOpen,
   onOpenChange: externalOnOpenChange,
-  showButton = true 
+  showButton = true,
 }: FeedbackButtonProps = {}) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");

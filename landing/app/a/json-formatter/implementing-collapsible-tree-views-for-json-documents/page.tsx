@@ -9,59 +9,55 @@ export const metadata: Metadata = {
 export default function CollapsibleJsonTreeViewsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Implementing Collapsible Tree Views for JSON Documents
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Implementing Collapsible Tree Views for JSON Documents</h1>
 
       <div className="space-y-6">
         <p>
-          JSON documents, especially large or complex ones, can be challenging
-          to read and understand in their raw text format. A collapsible tree
-          view provides a hierarchical, interactive visualization that makes it
-          much easier to explore the structure and content of JSON data. This
-          article will guide you through the concepts and steps involved in
-          implementing such a view.
+          JSON documents, especially large or complex ones, can be challenging to read and understand in their raw text
+          format. A collapsible tree view provides a hierarchical, interactive visualization that makes it much easier
+          to explore the structure and content of JSON data. This article will guide you through the concepts and steps
+          involved in implementing such a view.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">What is a Collapsible Tree View?</h2>
         <p>
-          A tree view is a graphical representation of hierarchical data. For JSON, this means
-          displaying objects and arrays as nodes in a tree structure.
+          A tree view is a graphical representation of hierarchical data. For JSON, this means displaying objects and
+          arrays as nodes in a tree structure.
         </p>
         <ul>
           <li className="mt-2">
-            <span className="font-medium">Objects ({'{...}'}):</span> Typically represented as parent nodes
-            with their key-value pairs as child nodes.
+            <span className="font-medium">Objects ({"{...}"}):</span> Typically represented as parent nodes with their
+            key-value pairs as child nodes.
           </li>
           <li className="mt-1">
-            <span className="font-medium">Arrays ('[...]'):</span> Represented as parent nodes with each
-            element as a child node, often indexed numerically.
+            <span className="font-medium">Arrays ('[...]'):</span> Represented as parent nodes with each element as a
+            child node, often indexed numerically.
           </li>
           <li className="mt-1">
-            <span className="font-medium">Primitive Values (string, number, boolean, null):</span> Represented
-            as leaf nodes.
+            <span className="font-medium">Primitive Values (string, number, boolean, null):</span> Represented as leaf
+            nodes.
           </li>
         </ul>
         <p>
-          A <em>collapsible</em> tree view adds interactivity, allowing users to expand or collapse
-          branches of the tree. This is crucial for managing complexity, enabling users to focus
-          only on the parts of the JSON structure they are currently interested in.
+          A <em>collapsible</em> tree view adds interactivity, allowing users to expand or collapse branches of the
+          tree. This is crucial for managing complexity, enabling users to focus only on the parts of the JSON structure
+          they are currently interested in.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Use a Tree View for JSON?</h2>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Improved Readability:</span> Indentation and hierarchical lines
-              clearly show the nesting level.
+              <span className="font-medium">Improved Readability:</span> Indentation and hierarchical lines clearly show
+              the nesting level.
             </li>
             <li>
-              <span className="font-medium">Easier Navigation:</span> Quickly traverse complex structures by
-              expanding and collapsing sections.
+              <span className="font-medium">Easier Navigation:</span> Quickly traverse complex structures by expanding
+              and collapsing sections.
             </li>
             <li>
-              <span className="font-medium">Focus on Relevant Data:</span> Hide irrelevant parts of the document
-              to reduce visual clutter.
+              <span className="font-medium">Focus on Relevant Data:</span> Hide irrelevant parts of the document to
+              reduce visual clutter.
             </li>
             <li>
               <span className="font-medium">Visual Debugging:</span> Helps identify unexpected structure or
@@ -71,45 +67,40 @@ export default function CollapsibleJsonTreeViewsArticle() {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Core Concepts for Implementation</h2>
-        <p>
-          Implementing a collapsible JSON tree view typically involves a few key programming concepts:
-        </p>
+        <p>Implementing a collapsible JSON tree view typically involves a few key programming concepts:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
           <div>
             <h3 className="text-lg font-medium">Recursion:</h3>
             <p className="text-sm">
-              Since JSON has a recursive structure (objects can contain objects, arrays can contain arrays),
-              the rendering logic naturally lends itself to recursion. A component or function that renders a single node
+              Since JSON has a recursive structure (objects can contain objects, arrays can contain arrays), the
+              rendering logic naturally lends itself to recursion. A component or function that renders a single node
               will call itself to render its children.
             </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">State Management (for Collapse/Expand):</h3>
             <p className="text-sm">
-              Each node (representing an object or array) needs to maintain a state indicating whether it is currently expanded or collapsed.
-              Clicking on the node toggles this state, which then affects the rendering of its children.
+              Each node (representing an object or array) needs to maintain a state indicating whether it is currently
+              expanded or collapsed. Clicking on the node toggles this state, which then affects the rendering of its
+              children.
             </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">Conditional Rendering:</h3>
-            <p className="text-sm">
-              Children of a node are only rendered if the node's state is "expanded".
-            </p>
+            <p className="text-sm">Children of a node are only rendered if the node's state is "expanded".</p>
           </div>
           <div>
             <h3 className="text-lg font-medium">Handling Different Data Types:</h3>
             <p className="text-sm">
-              The rendering logic must differentiate between objects, arrays, and primitive types to display
-              them correctly (e.g., showing keys for objects, indices for arrays, and just values for primitives).
+              The rendering logic must differentiate between objects, arrays, and primitive types to display them
+              correctly (e.g., showing keys for objects, indices for arrays, and just values for primitives).
             </p>
           </div>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Mapping JSON Structure to HTML/JSX</h2>
-        <p>
-          Consider a simple JSON object:
-        </p>
+        <p>Consider a simple JSON object:</p>
         <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto font-mono text-sm my-4">
           <pre>
             {`{
@@ -122,10 +113,8 @@ export default function CollapsibleJsonTreeViewsArticle() {
 }`}
           </pre>
         </div>
-        <p>
-          This JSON could be represented in HTML/JSX structure conceptually like this:
-        </p>
-         <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto font-mono text-sm my-4">
+        <p>This JSON could be represented in HTML/JSX structure conceptually like this:</p>
+        <div className="bg-gray-100 p-3 rounded dark:bg-gray-800 overflow-x-auto font-mono text-sm my-4">
           <pre>
             {`<ul>
   <li>
@@ -156,9 +145,9 @@ export default function CollapsibleJsonTreeViewsArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Simplified React/JSX Example</h2>
         <p>
-          Here's a conceptual example using React/JSX to demonstrate the recursive component structure
-          and state management for collapsing/expanding. This is a simplified example and would need
-          more logic for handling different types, key names, array indices, etc.
+          Here's a conceptual example using React/JSX to demonstrate the recursive component structure and state
+          management for collapsing/expanding. This is a simplified example and would need more logic for handling
+          different types, key names, array indices, etc.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">JsonTreeView.tsx (Conceptual)</h3>
@@ -270,20 +259,16 @@ const JsonTreeView: React.FC<{ json: any }> = ({ json }) => {
 export default JsonTreeView;`}
             </pre>
           </div>
-           <p className="mt-2 text-sm">
-              This example uses recursion (`JsonNode` component calling itself) and React's `useState`
-              hook to manage the `isExpanded` state for each object or array node. It conditionally
-              renders the children {`<ul>`} based on this state. Styling classes (like `ml-4` for indentation)
-              are added for visual structure.
-            </p>
+          <p className="mt-2 text-sm">
+            This example uses recursion (`JsonNode` component calling itself) and React's `useState` hook to manage the
+            `isExpanded` state for each object or array node. It conditionally renders the children {`<ul>`} based on
+            this state. Styling classes (like `ml-4` for indentation) are added for visual structure.
+          </p>
         </div>
 
-
         <h2 className="text-2xl font-semibold mt-8">Styling Considerations</h2>
-        <p>
-          Effective styling is key to a usable tree view:
-        </p>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <p>Effective styling is key to a usable tree view:</p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
               <span className="font-medium">Indentation:</span> Clearly distinguish nesting levels.
@@ -293,44 +278,42 @@ export default JsonTreeView;`}
               collapsible nodes and their current state.
             </li>
             <li>
-              <span className="font-medium">Color Coding:</span> Differentiate keys, values (strings, numbers, booleans), and structural elements ({'{'}, '[').
+              <span className="font-medium">Color Coding:</span> Differentiate keys, values (strings, numbers,
+              booleans), and structural elements ({"{"}, '[').
             </li>
             <li>
-              <span className="font-medium">Hover Effects:</span> Provide visual feedback when hovering over clickable elements.
+              <span className="font-medium">Hover Effects:</span> Provide visual feedback when hovering over clickable
+              elements.
             </li>
-             <li>
-              <span className="font-medium">Scrollability:</span> Ensure large JSON documents can be scrolled effectively.
+            <li>
+              <span className="font-medium">Scrollability:</span> Ensure large JSON documents can be scrolled
+              effectively.
             </li>
           </ul>
         </div>
 
-
-         <h2 className="text-2xl font-semibold mt-8">Using Libraries or Frameworks</h2>
-         <p>
-           While you can implement a JSON tree view from scratch (as shown conceptually above),
-           using existing libraries can save significant development time. Many UI component
-           libraries for frameworks like React, Vue, or Angular offer generic tree view components
-           that can be adapted for JSON data. Additionally, some libraries are specifically
-           designed for JSON viewing and formatting, often providing features like syntax
-           highlighting, search, and copy functionality out-of-the-box.
-           These libraries handle the complexities of recursion, state management, and rendering
-           various data types for you.
-         </p>
+        <h2 className="text-2xl font-semibold mt-8">Using Libraries or Frameworks</h2>
+        <p>
+          While you can implement a JSON tree view from scratch (as shown conceptually above), using existing libraries
+          can save significant development time. Many UI component libraries for frameworks like React, Vue, or Angular
+          offer generic tree view components that can be adapted for JSON data. Additionally, some libraries are
+          specifically designed for JSON viewing and formatting, often providing features like syntax highlighting,
+          search, and copy functionality out-of-the-box. These libraries handle the complexities of recursion, state
+          management, and rendering various data types for you.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing a collapsible tree view for JSON documents transforms raw data into an
-          interactive, easy-to-navigate structure. By understanding the core concepts of
-          recursion, state management, and conditional rendering, you can build this
-          essential visualization tool. Whether you choose to implement it from scratch
-          using frameworks like React or leverage existing libraries, a JSON tree view
-          significantly enhances the usability and understanding of your data.
+          Implementing a collapsible tree view for JSON documents transforms raw data into an interactive,
+          easy-to-navigate structure. By understanding the core concepts of recursion, state management, and conditional
+          rendering, you can build this essential visualization tool. Whether you choose to implement it from scratch
+          using frameworks like React or leverage existing libraries, a JSON tree view significantly enhances the
+          usability and understanding of your data.
         </p>
-         <p>
-           This visualization is invaluable for developers, data analysts, and anyone
-           working with JSON, making debugging and data exploration much more efficient.
-         </p>
-
+        <p>
+          This visualization is invaluable for developers, data analysts, and anyone working with JSON, making debugging
+          and data exploration much more efficient.
+        </p>
       </div>
     </>
   );

@@ -72,11 +72,11 @@ export default function PasswordStrengthMeter() {
                     {getStrengthIcon(analysis.strength)}
                     Password Strength
                   </CardTitle>
-                  <Badge 
-                    variant="outline" 
-                    style={{ 
+                  <Badge
+                    variant="outline"
+                    style={{
                       borderColor: getStrengthColor(analysis.strength),
-                      color: getStrengthColor(analysis.strength)
+                      color: getStrengthColor(analysis.strength),
                     }}
                   >
                     {getStrengthLabel(analysis.strength)}
@@ -92,11 +92,11 @@ export default function PasswordStrengthMeter() {
                   </div>
                   <div className="relative">
                     <Progress value={analysis.score} className="h-3" />
-                    <div 
+                    <div
                       className="absolute top-0 left-0 h-3 rounded-full transition-all duration-300"
-                      style={{ 
+                      style={{
                         width: `${analysis.score}%`,
-                        backgroundColor: getStrengthColor(analysis.strength)
+                        backgroundColor: getStrengthColor(analysis.strength),
                       }}
                     />
                   </div>
@@ -106,27 +106,39 @@ export default function PasswordStrengthMeter() {
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm">Security Criteria</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                    <div className={`flex items-center gap-2 ${analysis.criteria.length ? 'text-green-600' : 'text-red-500'}`}>
+                    <div
+                      className={`flex items-center gap-2 ${analysis.criteria.length ? "text-green-600" : "text-red-500"}`}
+                    >
                       {analysis.criteria.length ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                       At least 8 characters
                     </div>
-                    <div className={`flex items-center gap-2 ${analysis.criteria.hasLowercase ? 'text-green-600' : 'text-red-500'}`}>
+                    <div
+                      className={`flex items-center gap-2 ${analysis.criteria.hasLowercase ? "text-green-600" : "text-red-500"}`}
+                    >
                       {analysis.criteria.hasLowercase ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                       Lowercase letters
                     </div>
-                    <div className={`flex items-center gap-2 ${analysis.criteria.hasUppercase ? 'text-green-600' : 'text-red-500'}`}>
+                    <div
+                      className={`flex items-center gap-2 ${analysis.criteria.hasUppercase ? "text-green-600" : "text-red-500"}`}
+                    >
                       {analysis.criteria.hasUppercase ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                       Uppercase letters
                     </div>
-                    <div className={`flex items-center gap-2 ${analysis.criteria.hasNumbers ? 'text-green-600' : 'text-red-500'}`}>
+                    <div
+                      className={`flex items-center gap-2 ${analysis.criteria.hasNumbers ? "text-green-600" : "text-red-500"}`}
+                    >
                       {analysis.criteria.hasNumbers ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                       Numbers
                     </div>
-                    <div className={`flex items-center gap-2 ${analysis.criteria.hasSymbols ? 'text-green-600' : 'text-red-500'}`}>
+                    <div
+                      className={`flex items-center gap-2 ${analysis.criteria.hasSymbols ? "text-green-600" : "text-red-500"}`}
+                    >
                       {analysis.criteria.hasSymbols ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                       Special characters
                     </div>
-                    <div className={`flex items-center gap-2 ${analysis.criteria.notCommon ? 'text-green-600' : 'text-red-500'}`}>
+                    <div
+                      className={`flex items-center gap-2 ${analysis.criteria.notCommon ? "text-green-600" : "text-red-500"}`}
+                    >
                       {analysis.criteria.notCommon ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                       Not a common password
                     </div>
@@ -156,9 +168,7 @@ export default function PasswordStrengthMeter() {
                 <Shield className="h-5 w-5" />
                 Password Security Tips
               </CardTitle>
-              <CardDescription>
-                Follow these best practices to create secure passwords
-              </CardDescription>
+              <CardDescription>Follow these best practices to create secure passwords</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-sm">

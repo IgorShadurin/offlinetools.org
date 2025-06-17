@@ -3,7 +3,8 @@ import DataEncryptor from "./DataEncryptor";
 
 export const metadata: Metadata = {
   title: "Data Encryptor - Secure AES-256 Encryption Tool | OfflineTools.org",
-  description: "Encrypt and decrypt text or files using password-based AES-256 encryption with secure PBKDF2 key derivation. Client-side processing ensures your data stays private.",
+  description:
+    "Encrypt and decrypt text or files using password-based AES-256 encryption with secure PBKDF2 key derivation. Client-side processing ensures your data stays private.",
   keywords: [
     "data encryption",
     "AES-256",
@@ -14,17 +15,19 @@ export const metadata: Metadata = {
     "secure encryption",
     "client-side encryption",
     "privacy tool",
-    "data security"
+    "data security",
   ],
   openGraph: {
     title: "Data Encryptor - Secure AES-256 Encryption Tool",
-    description: "Encrypt and decrypt text or files using military-grade AES-256 encryption. All processing happens locally in your browser for maximum security.",
+    description:
+      "Encrypt and decrypt text or files using military-grade AES-256 encryption. All processing happens locally in your browser for maximum security.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Data Encryptor - Secure AES-256 Encryption Tool",
-    description: "Encrypt and decrypt text or files using military-grade AES-256 encryption. All processing happens locally in your browser for maximum security.",
+    description:
+      "Encrypt and decrypt text or files using military-grade AES-256 encryption. All processing happens locally in your browser for maximum security.",
   },
 };
 

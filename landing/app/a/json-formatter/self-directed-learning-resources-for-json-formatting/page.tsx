@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Code, Check, X, BookOpen, Wrench, Sparkles } from 'lucide-react';
+import { Code, Check, X, BookOpen, Wrench, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Self-Directed Learning Resources for JSON Formatting | Offline Tools",
@@ -23,10 +23,10 @@ export default function JsonFormattingResources() {
               Understanding JSON Formatting
             </h2>
             <p className="mb-4">
-              JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans
-              to read and write and easy for machines to parse and generate. While seemingly simple, correct
-              formatting is crucial for data to be valid and usable by applications. This page guides you
-              through essential concepts and points you to resources for self-directed learning.
+              JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans to read
+              and write and easy for machines to parse and generate. While seemingly simple, correct formatting is
+              crucial for data to be valid and usable by applications. This page guides you through essential concepts
+              and points you to resources for self-directed learning.
             </p>
             <p>
               Think of JSON as a way to represent structured data using only two structures:
@@ -46,40 +46,55 @@ export default function JsonFormattingResources() {
               <li>
                 <strong>Data is in name/value pairs.</strong>
                 <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                  <pre><code className="language-json">{`"name": "value"`}</code></pre>
+                  <pre>
+                    <code className="language-json">{`"name": "value"`}</code>
+                  </pre>
                 </div>
               </li>
               <li>
-                <strong>Data is separated by commas.</strong> This applies to elements in an array and key-value pairs in an object.
+                <strong>Data is separated by commas.</strong> This applies to elements in an array and key-value pairs
+                in an object.
                 <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                  <pre><code className="language-json">{`[ "apple", "banana", "cherry" ]`}</code></pre>
-                  <pre><code className="language-json">{`{ "city": "New York", "zip": "10001" }`}</code></pre>
+                  <pre>
+                    <code className="language-json">{`[ "apple", "banana", "cherry" ]`}</code>
+                  </pre>
+                  <pre>
+                    <code className="language-json">{`{ "city": "New York", "zip": "10001" }`}</code>
+                  </pre>
                 </div>
                 <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
                   <X className="mr-1 h-4 w-4" />
-                  <span className="font-semibold">Error: Trailing comma!</span> This is invalid JSON, though some parsers might tolerate it (don't rely on it).
+                  <span className="font-semibold">Error: Trailing comma!</span> This is invalid JSON, though some
+                  parsers might tolerate it (don't rely on it).
                   <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                    <pre><code className="language-json">{`[ "apple", "banana", "cherry", ] // INVALID JSON`}</code></pre>
+                    <pre>
+                      <code className="language-json">{`[ "apple", "banana", "cherry", ] // INVALID JSON`}</code>
+                    </pre>
                   </div>
                 </p>
               </li>
               <li>
-                <strong>Objects are enclosed in curly braces.</strong> Keys *must* be strings enclosed in double quotes. Values can be any valid JSON data type.
+                <strong>Objects are enclosed in curly braces.</strong> Keys *must* be strings enclosed in double quotes.
+                Values can be any valid JSON data type.
                 <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                  <pre><code className="language-json">
-{`{
+                  <pre>
+                    <code className="language-json">
+                      {`{
   "firstName": "John",
   "lastName": "Doe",
   "isStudent": false
 }`}
-                  </code></pre>
+                    </code>
+                  </pre>
                 </div>
               </li>
               <li>
-                <strong>Arrays are enclosed in square brackets.</strong> Elements are separated by commas and can be of different types (though often they are homogeneous).
+                <strong>Arrays are enclosed in square brackets.</strong> Elements are separated by commas and can be of
+                different types (though often they are homogeneous).
                 <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                  <pre><code className="language-json">
-{`[
+                  <pre>
+                    <code className="language-json">
+                      {`[
   "a string",
   123,
   true,
@@ -87,7 +102,8 @@ export default function JsonFormattingResources() {
   { "nested": "object" },
   [ 1, 2, 3 ]
 ]`}
-                  </code></pre>
+                    </code>
+                  </pre>
                 </div>
               </li>
               <li>
@@ -102,25 +118,32 @@ export default function JsonFormattingResources() {
                 </ul>
               </li>
               <li>
-                <strong>Keys *must* be strings in double quotes (`"key"`).</strong> Single quotes (`'key'`) or unquoted keys are invalid.
+                <strong>Keys *must* be strings in double quotes (`"key"`).</strong> Single quotes (`'key'`) or unquoted
+                keys are invalid.
                 <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                  <pre><code className="language-json">
-{`{
+                  <pre>
+                    <code className="language-json">
+                      {`{
   "validKey": "value",
   // 'invalidKey': "value", // INVALID
   // invalidKey: "value"    // INVALID
 }`}
-                  </code></pre>
+                    </code>
+                  </pre>
                 </div>
               </li>
               <li>
-                <strong>Strings must use double quotes (`"`).</strong> Special characters like double quotes, backslashes, newlines, etc., must be escaped using a backslash (`\`).
+                <strong>Strings must use double quotes (`"`).</strong> Special characters like double quotes,
+                backslashes, newlines, etc., must be escaped using a backslash (`\`).
                 <div className="bg-gray-100 p-3 rounded-md my-2 dark:bg-gray-800 overflow-x-auto">
-                  <pre><code className="language-json">{`"A string with \\"quotes\\" and a \\nnewline."`}</code></pre>
+                  <pre>
+                    <code className="language-json">{`"A string with \\"quotes\\" and a \\nnewline."`}</code>
+                  </pre>
                 </div>
               </li>
               <li>
-                <strong>Whitespace</strong> (spaces, tabs, newlines) is generally ignored between elements and values, but *not* within strings. Consistent indentation and spacing improve readability.
+                <strong>Whitespace</strong> (spaces, tabs, newlines) is generally ignored between elements and values,
+                but *not* within strings. Consistent indentation and spacing improve readability.
               </li>
             </ul>
           </section>
@@ -130,50 +153,72 @@ export default function JsonFormattingResources() {
               <X className="mr-2 h-6 w-6 text-red-500" />
               Common Formatting Pitfalls
             </h2>
-            <p className="mb-4">
-              Many errors stem from minor syntax deviations. Watch out for:
-            </p>
+            <p className="mb-4">Many errors stem from minor syntax deviations. Watch out for:</p>
             <ul className="list-disc pl-6 space-y-3">
               <li>
                 <span className="font-semibold">Using single quotes (`'`) instead of double quotes (`"`).</span>
                 <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
-                   <pre><code className="language-json">{`{ 'key': 'value' }`}</code></pre>
-                   <p className="text-sm">Use double quotes: <code>{`{ "key": "value" }`}</code></p>
+                  <pre>
+                    <code className="language-json">{`{ 'key': 'value' }`}</code>
+                  </pre>
+                  <p className="text-sm">
+                    Use double quotes: <code>{`{ "key": "value" }`}</code>
+                  </p>
                 </div>
               </li>
               <li>
                 <span className="font-semibold">Trailing commas.</span>
-                 <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
-                   <pre><code className="language-json">{`[1, 2, 3,]`}</code></pre>
-                   <p className="text-sm">Remove the last comma: <code>{`[1, 2, 3]`}</code></p>
+                <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
+                  <pre>
+                    <code className="language-json">{`[1, 2, 3,]`}</code>
+                  </pre>
+                  <p className="text-sm">
+                    Remove the last comma: <code>{`[1, 2, 3]`}</code>
+                  </p>
                 </div>
               </li>
               <li>
-                <span className="font-semibold">Forgetting commas between items in arrays or key-value pairs in objects.</span>
+                <span className="font-semibold">
+                  Forgetting commas between items in arrays or key-value pairs in objects.
+                </span>
                 <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
-                   <pre><code className="language-json">{`{ "name": "Alice" "age": 30 }`}</code></pre>
-                   <p className="text-sm">Add the comma: <code>{`{ "name": "Alice", "age": 30 }`}</code></p>
+                  <pre>
+                    <code className="language-json">{`{ "name": "Alice" "age": 30 }`}</code>
+                  </pre>
+                  <p className="text-sm">
+                    Add the comma: <code>{`{ "name": "Alice", "age": 30 }`}</code>
+                  </p>
                 </div>
               </li>
-               <li>
+              <li>
                 <span className="font-semibold">Missing quotes around keys.</span>
                 <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
-                   <pre><code className="language-json">{`{ name: "Alice" }`}</code></pre>
-                   <p className="text-sm">Quote the key: <code>{`{ "name": "Alice" }`}</code></p>
+                  <pre>
+                    <code className="language-json">{`{ name: "Alice" }`}</code>
+                  </pre>
+                  <p className="text-sm">
+                    Quote the key: <code>{`{ "name": "Alice" }`}</code>
+                  </p>
                 </div>
               </li>
               <li>
                 <span className="font-semibold">Using comments (`//` or `/* */`).</span> JSON does not support comments.
                 <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
-                   <pre><code className="language-json">{`{ "name": "Alice" // this is a name }`}</code></pre>
-                   <p className="text-sm">Remove comments.</p>
+                  <pre>
+                    <code className="language-json">{`{ "name": "Alice" // this is a name }`}</code>
+                  </pre>
+                  <p className="text-sm">Remove comments.</p>
                 </div>
               </li>
               <li>
                 <span className="font-semibold">Incorrectly escaping special characters in strings.</span>
                 <div className="bg-red-100 p-3 rounded-md my-2 dark:bg-red-900 overflow-x-auto text-red-800 dark:text-red-200">
-                   <pre><code className="language-json">{`"Path: C:\Users\Data"`}</code></pre>
-                   <p className="text-sm">Escape the backslashes: <code>{`"Path: C:\\Users\\Data"`}</code></p>
+                  <pre>
+                    <code className="language-json">{`"Path: C:\Users\Data"`}</code>
+                  </pre>
+                  <p className="text-sm">
+                    Escape the backslashes: <code>{`"Path: C:\\Users\\Data"`}</code>
+                  </p>
                 </div>
               </li>
             </ul>
@@ -185,68 +230,87 @@ export default function JsonFormattingResources() {
               Formatting & Validation Tools
             </h2>
             <p className="mb-4">
-              The best way to ensure your JSON is correct and well-formatted is to use automated tools.
-              These tools can validate syntax and automatically format your JSON for readability.
+              The best way to ensure your JSON is correct and well-formatted is to use automated tools. These tools can
+              validate syntax and automatically format your JSON for readability.
             </p>
             <p className="font-semibold mb-2">Types of tools:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                <strong>Online JSON Validators/Formatters:</strong> Websites where you can paste JSON text to validate and format it instantly. Examples include JSONLint, JSONFormatter, etc. (Search for "online JSON validator" or "online JSON formatter").
+                <strong>Online JSON Validators/Formatters:</strong> Websites where you can paste JSON text to validate
+                and format it instantly. Examples include JSONLint, JSONFormatter, etc. (Search for "online JSON
+                validator" or "online JSON formatter").
               </li>
               <li>
-                <strong>IDE/Code Editor Extensions:</strong> Most modern code editors (VS Code, Sublime Text, Atom, etc.) have built-in support or plugins for JSON syntax highlighting, validation, and auto-formatting on save.
+                <strong>IDE/Code Editor Extensions:</strong> Most modern code editors (VS Code, Sublime Text, Atom,
+                etc.) have built-in support or plugins for JSON syntax highlighting, validation, and auto-formatting on
+                save.
               </li>
               <li>
-                <strong>Command-Line Tools:</strong> Utilities like <code>jq</code> allow parsing, manipulating, and formatting JSON from the command line.
+                <strong>Command-Line Tools:</strong> Utilities like <code>jq</code> allow parsing, manipulating, and
+                formatting JSON from the command line.
               </li>
               <li>
-                <strong>Programming Language Libraries:</strong> Standard libraries in most languages (Python's <code>json</code>, Node.js's built-in <code>JSON</code> object, Java's Jackson/Gson, etc.) provide robust parsing and generation, inherently producing valid JSON. Using these libraries to generate JSON is generally safer than manually constructing strings.
+                <strong>Programming Language Libraries:</strong> Standard libraries in most languages (Python's{" "}
+                <code>json</code>, Node.js's built-in <code>JSON</code> object, Java's Jackson/Gson, etc.) provide
+                robust parsing and generation, inherently producing valid JSON. Using these libraries to generate JSON
+                is generally safer than manually constructing strings.
               </li>
             </ul>
             <div className="bg-green-100 p-3 rounded-md my-4 dark:bg-green-900 overflow-x-auto text-green-800 dark:text-green-200 flex items-center">
               <Check className="mr-2 h-5 w-5 flex-shrink-0" />
               <p className="text-sm">
-                <span className="font-semibold">Best Practice:</span> Always validate JSON from external sources or manually constructed JSON using a validator. Use your code editor's built-in formatter.
+                <span className="font-semibold">Best Practice:</span> Always validate JSON from external sources or
+                manually constructed JSON using a validator. Use your code editor's built-in formatter.
               </p>
             </div>
           </section>
 
-           <section>
+          <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center">
               <BookOpen className="mr-2 h-6 w-6 text-orange-500" />
               Resources for Deeper Learning
             </h2>
             <p className="mb-4">
-              To solidify your understanding and explore advanced topics (like JSON Schema for validation rules or JSONPath for querying), refer to these resource types:
+              To solidify your understanding and explore advanced topics (like JSON Schema for validation rules or
+              JSONPath for querying), refer to these resource types:
             </p>
             <ul className="list-disc pl-6 space-y-3">
               <li>
-                <span className="font-semibold">The Official JSON Website:</span> While brief, json.org provides the core syntax diagrams. Understanding these diagrams is key.
+                <span className="font-semibold">The Official JSON Website:</span> While brief, json.org provides the
+                core syntax diagrams. Understanding these diagrams is key.
               </li>
               <li>
-                <span className="font-semibold">MDN Web Docs:</span> Search for "JSON" on the Mozilla Developer Network. They have excellent, accessible explanations of `JSON.parse()` and `JSON.stringify()` in JavaScript, which are fundamental concepts.
+                <span className="font-semibold">MDN Web Docs:</span> Search for "JSON" on the Mozilla Developer Network.
+                They have excellent, accessible explanations of `JSON.parse()` and `JSON.stringify()` in JavaScript,
+                which are fundamental concepts.
               </li>
               <li>
-                <span className="font-semibold">Wikipedia:</span> The JSON page on Wikipedia often provides historical context and details on specifications like RFCs.
+                <span className="font-semibold">Wikipedia:</span> The JSON page on Wikipedia often provides historical
+                context and details on specifications like RFCs.
               </li>
               <li>
-                <span className="font-semibold">Online Tutorials & Courses:</span> Platforms like freeCodeCamp, Coursera, Udemy, and many developer blogs offer specific lessons on JSON syntax and usage in various programming languages. Search for "JSON tutorial" on your preferred platform.
+                <span className="font-semibold">Online Tutorials & Courses:</span> Platforms like freeCodeCamp,
+                Coursera, Udemy, and many developer blogs offer specific lessons on JSON syntax and usage in various
+                programming languages. Search for "JSON tutorial" on your preferred platform.
               </li>
               <li>
-                <span className="font-semibold">Documentation for Language-Specific JSON Libraries:</span> Whatever language you use (Python, Node.js, Java, C#, PHP, Ruby, Go, etc.), read the documentation for its standard or popular JSON handling libraries. This is where you'll learn practical usage patterns.
+                <span className="font-semibold">Documentation for Language-Specific JSON Libraries:</span> Whatever
+                language you use (Python, Node.js, Java, C#, PHP, Ruby, Go, etc.), read the documentation for its
+                standard or popular JSON handling libraries. This is where you'll learn practical usage patterns.
               </li>
             </ul>
           </section>
 
           <section>
-             <h2 className="text-2xl font-semibold mb-4 flex items-center">
+            <h2 className="text-2xl font-semibold mb-4 flex items-center">
               <Sparkles className="mr-2 h-6 w-6 text-indigo-500" />
               Summary & Key Takeaways
             </h2>
             <p className="mb-4">
-              Mastering JSON formatting is essential for any developer working with data interchange. Remember the core rules:
+              Mastering JSON formatting is essential for any developer working with data interchange. Remember the core
+              rules:
             </p>
-             <ul className="list-disc pl-6 space-y-2">
+            <ul className="list-disc pl-6 space-y-2">
               <li>Data is key-value pairs or ordered lists.</li>
               <li>Use curly braces for objects, square brackets for arrays.</li>
               <li>Always use double quotes for keys and string values.</li>
@@ -256,7 +320,10 @@ export default function JsonFormattingResources() {
               <li>Escape special characters within strings.</li>
             </ul>
             <p className="mt-4">
-              Leverage automated tools for validation and formatting. Dedicate time to practicing by writing and parsing JSON examples, and consult the official specifications and trusted resources linked above when in doubt. Self-directed learning with real-world data and consistent validation is the most effective path to mastery.
+              Leverage automated tools for validation and formatting. Dedicate time to practicing by writing and parsing
+              JSON examples, and consult the official specifications and trusted resources linked above when in doubt.
+              Self-directed learning with real-world data and consistent validation is the most effective path to
+              mastery.
             </p>
           </section>
         </div>

@@ -3,7 +3,14 @@ import { ToolArticle, ToolArticlesList } from "@/components/tool-articles-list";
 import { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { LayoutGrid, MousePointer, SlidersHorizontal, MonitorSmartphone, LayoutPanelTop, SparkleIcon } from "lucide-react";
+import {
+  LayoutGrid,
+  MousePointer,
+  SlidersHorizontal,
+  MonitorSmartphone,
+  LayoutPanelTop,
+  SparkleIcon,
+} from "lucide-react";
 
 /**
  * Metadata for the Base64 Codec User Experience Design page
@@ -116,7 +123,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Usability Testing Protocols for Base64 Tools",
     description: "Structured approaches to evaluating and improving the usability of Base64 encoding interfaces.",
     slug: "usability-testing-protocols-for-base64-tools",
-  }
+  },
 ];
 
 /**
@@ -179,7 +186,8 @@ export default function Base64CodecUserExperiencePage() {
                   <div>
                     <h3 className="font-medium mb-1">Interaction Design</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating intuitive interfaces with effective drag-and-drop, keyboard shortcuts, and feedback mechanisms.
+                      Creating intuitive interfaces with effective drag-and-drop, keyboard shortcuts, and feedback
+                      mechanisms.
                     </p>
                   </div>
                 </div>
@@ -191,7 +199,8 @@ export default function Base64CodecUserExperiencePage() {
                   <div>
                     <h3 className="font-medium mb-1">Interface Customization</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing dark mode, typography choices, and localization to enhance user comfort and accessibility.
+                      Implementing dark mode, typography choices, and localization to enhance user comfort and
+                      accessibility.
                     </p>
                   </div>
                 </div>
@@ -205,7 +214,8 @@ export default function Base64CodecUserExperiencePage() {
                   <div>
                     <h3 className="font-medium mb-1">Responsive Design</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating Base64 tools that deliver consistent experiences across desktop, tablet, and mobile devices.
+                      Creating Base64 tools that deliver consistent experiences across desktop, tablet, and mobile
+                      devices.
                     </p>
                   </div>
                 </div>
@@ -230,7 +240,10 @@ export default function Base64CodecUserExperiencePage() {
                 <span>UX Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Effective Base64 tools prioritize immediate visual feedback. When users encode or decode content, clear indicators showing process completion and prominent copy-to-clipboard functionality significantly improve user confidence and workflow efficiency. For large files, progress indicators with time estimates prevent uncertainty and abandonment during processing.
+                Effective Base64 tools prioritize immediate visual feedback. When users encode or decode content, clear
+                indicators showing process completion and prominent copy-to-clipboard functionality significantly
+                improve user confidence and workflow efficiency. For large files, progress indicators with time
+                estimates prevent uncertainty and abandonment during processing.
               </p>
             </div>
           </CardContent>
@@ -240,4 +253,4 @@ export default function Base64CodecUserExperiencePage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

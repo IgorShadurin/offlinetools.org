@@ -2,16 +2,13 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Internationalization Implementation in JSON Formatters | Offline Tools",
-  description:
-    "Explore the process and benefits of implementing internationalization (i18n) in JSON formatter tools.",
+  description: "Explore the process and benefits of implementing internationalization (i18n) in JSON formatter tools.",
 };
 
 export default function InternationalizationJsonFormattersArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Internationalization Implementation in JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Internationalization Implementation in JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
@@ -128,9 +125,10 @@ export default function InternationalizationJsonFormattersArticle() {
 
           <li className="font-medium">Handle Complexities (Plurals, Context)</li>
           <p className="text-sm -mt-2">
-            Some messages might involve dynamic content or require different translations based on quantity (pluralization)
-            or context. i18n libraries often provide features to handle these scenarios (e.g.,{" "}
-            <code>&quot;&#123;count&#125; error found&quot;</code> vs. <code>&quot;&#123;count&#125; errors found&quot;</code>).
+            Some messages might involve dynamic content or require different translations based on quantity
+            (pluralization) or context. i18n libraries often provide features to handle these scenarios (e.g.,{" "}
+            <code>&quot;&#123;count&#125; error found&quot;</code> vs.{" "}
+            <code>&quot;&#123;count&#125; errors found&quot;</code>).
           </p>
         </ol>
 
@@ -197,8 +195,8 @@ function App() {
           </div>
         </div>
         <p>
-          This example shows how a library abstracts away much of the complexity, allowing developers to focus on
-          using keys in their components and managing translation files.
+          This example shows how a library abstracts away much of the complexity, allowing developers to focus on using
+          keys in their components and managing translation files.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Challenges in i18n Implementation</h2>
@@ -212,8 +210,8 @@ function App() {
           </li>
           <li>
             <span className="font-medium">Dynamic Content:</span> Translating sentences with variables (like{" "}
-            <code>&quot;Found &#123;count&#125; errors&quot;</code>) correctly across languages, especially with different
-            pluralization rules, requires careful handling by the i18n framework.
+            <code>&quot;Found &#123;count&#125; errors&quot;</code>) correctly across languages, especially with
+            different pluralization rules, requires careful handling by the i18n framework.
           </li>
           <li>
             <span className="font-medium">Layout and Design:</span> Translated text can be longer or shorter than the
@@ -228,8 +226,8 @@ function App() {
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           Implementing internationalization in a JSON formatter transforms it from a tool serving a specific linguistic
-          group into a truly global utility. By carefully extracting translatable strings, managing language files,
-          and utilizing robust i18n libraries, developers can create a more accessible and user-friendly experience for a
+          group into a truly global utility. By carefully extracting translatable strings, managing language files, and
+          utilizing robust i18n libraries, developers can create a more accessible and user-friendly experience for a
           worldwide audience. While challenges exist, the benefits in terms of reach and user satisfaction make i18n a
           worthwhile investment for any widely used software, including essential offline tools like JSON formatters.
         </p>

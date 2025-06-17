@@ -9,44 +9,41 @@ export const metadata: Metadata = {
 export default function JsonFormatterPluginArchitectureArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Best Practices for JSON Formatter Plugin Architecture
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Best Practices for JSON Formatter Plugin Architecture</h1>
 
       <div className="space-y-6">
         <p>
           Building a JSON formatter that can adapt to future needs and different use cases often requires a plugin
           architecture. A well-designed plugin system allows developers to extend the formatter&apos;s functionality
-          without modifying the core code. This guide explores best practices for creating a robust and flexible
-          plugin architecture for your JSON formatter.
+          without modifying the core code. This guide explores best practices for creating a robust and flexible plugin
+          architecture for your JSON formatter.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Consider a Plugin Architecture?</h2>
         <p>
-          A plugin architecture offers several significant advantages, particularly for tools like JSON formatters
-          where users might have diverse requirements:
+          A plugin architecture offers several significant advantages, particularly for tools like JSON formatters where
+          users might have diverse requirements:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Extensibility:</span> Allows adding new formatting styles, validation
-              rules, or interactive features easily.
+              <span className="font-medium">Extensibility:</span> Allows adding new formatting styles, validation rules,
+              or interactive features easily.
             </li>
             <li>
-              <span className="font-medium">Modularity:</span> Breaks down functionality into smaller, manageable
-              units.
+              <span className="font-medium">Modularity:</span> Breaks down functionality into smaller, manageable units.
             </li>
             <li>
-              <span className="font-medium">Maintainability:</span> Isolates specific features, reducing the risk
-              of introducing bugs into the core.
+              <span className="font-medium">Maintainability:</span> Isolates specific features, reducing the risk of
+              introducing bugs into the core.
             </li>
             <li>
-              <span className="font-medium">Flexibility:</span> Users can enable/disable specific plugins based on
-              their needs.
+              <span className="font-medium">Flexibility:</span> Users can enable/disable specific plugins based on their
+              needs.
             </li>
             <li>
-              <span className="font-medium">Community Contributions:</span> Encourages external developers to build
-              on your tool.
+              <span className="font-medium">Community Contributions:</span> Encourages external developers to build on
+              your tool.
             </li>
           </ul>
         </div>
@@ -59,9 +56,9 @@ export default function JsonFormatterPluginArchitectureArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. Define Clear Plugin Interfaces</h3>
         <p>
-          Plugins interact with the core through well-defined interfaces or APIs. These interfaces specify what
-          methods plugins must implement and what data they receive or return. This contract is crucial for
-          decoupling the core from individual plugins.
+          Plugins interact with the core through well-defined interfaces or APIs. These interfaces specify what methods
+          plugins must implement and what data they receive or return. This contract is crucial for decoupling the core
+          from individual plugins.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example: TypeScript Interface</h4>
@@ -127,8 +124,8 @@ interface PluginOption {
 
         <h3 className="text-xl font-semibold mt-6">3. Design for Isolation and Sandboxing</h3>
         <p>
-          Plugins come from various sources and might not be fully trusted. It&apos;s critical to minimize the impact
-          a faulty or malicious plugin can have on the core application and other plugins. This can involve:
+          Plugins come from various sources and might not be fully trusted. It&apos;s critical to minimize the impact a
+          faulty or malicious plugin can have on the core application and other plugins. This can involve:
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2 mt-2">
@@ -148,9 +145,9 @@ interface PluginOption {
 
         <h3 className="text-xl font-semibold mt-6">5. Provide a Clear Configuration Mechanism</h3>
         <p>
-          Plugins often require configuration. The architecture should provide a standardized way for plugins to
-          declare their configuration options and for the core application (or user interface) to provide these
-          settings to the plugin instances.
+          Plugins often require configuration. The architecture should provide a standardized way for plugins to declare
+          their configuration options and for the core application (or user interface) to provide these settings to the
+          plugin instances.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Configuration Flow</h4>
@@ -158,21 +155,23 @@ interface PluginOption {
             <li>Plugin declares options via `getOptions()` method.</li>
             <li>Plugin Manager retrieves options and potentially exposes them to a UI.</li>
             <li>User configures options.</li>
-            <li>Core application passes configuration object to relevant plugin methods (`preprocess`, `format`,
-              `postprocess`) via the `options` parameter.</li>
+            <li>
+              Core application passes configuration object to relevant plugin methods (`preprocess`, `format`,
+              `postprocess`) via the `options` parameter.
+            </li>
           </ol>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">6. Implement Robust Error Handling</h3>
-        <p>
-          Plugins can fail. The core application must be resilient to plugin errors.
-        </p>
+        <p>Plugins can fail. The core application must be resilient to plugin errors.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>Wrap plugin calls in try-catch blocks.</li>
             <li>Log plugin errors clearly, indicating which plugin failed.</li>
-            <li>Gracefully handle plugin failures (e.g., skip the failing plugin, provide a default behavior, or
-              notify the user).</li>
+            <li>
+              Gracefully handle plugin failures (e.g., skip the failing plugin, provide a default behavior, or notify
+              the user).
+            </li>
             <li>Prevent a single plugin failure from crashing the entire application.</li>
           </ul>
         </div>
@@ -194,9 +193,7 @@ interface PluginOption {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Example: Basic Plugin Implementation</h2>
-        <p>
-          Here&apos;s a simplified example of a plugin that might add a comment to the formatted JSON output.
-        </p>
+        <p>Here&apos;s a simplified example of a plugin that might add a comment to the formatted JSON output.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">CommentPlugin.ts</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
@@ -249,9 +246,7 @@ export default CommentPlugin;`}
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Considerations for Architecture Patterns</h2>
-        <p>
-          Depending on your needs, you might adopt different patterns for plugin integration:
-        </p>
+        <p>Depending on your needs, you might adopt different patterns for plugin integration:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
@@ -260,9 +255,9 @@ export default CommentPlugin;`}
               for loose coupling.
             </li>
             <li>
-              <span className="font-medium">Hook-Based:</span> Core provides specific "hooks" (functions) that
-              plugins can register themselves with to execute logic at predefined points. Similar to event-driven but
-              often more synchronous and allows modifying data passing through the hook.
+              <span className="font-medium">Hook-Based:</span> Core provides specific "hooks" (functions) that plugins
+              can register themselves with to execute logic at predefined points. Similar to event-driven but often more
+              synchronous and allows modifying data passing through the hook.
             </li>
             <li>
               <span className="font-medium">Chain of Responsibility:</span> Plugins are arranged in a chain, and the
@@ -272,14 +267,12 @@ export default CommentPlugin;`}
           </ul>
         </div>
         <p>
-          For a JSON formatter, a combination of Hook-Based (for `preprocess`, `format`, `postprocess`) and Event-Driven (for error reporting or status updates) might be effective.
+          For a JSON formatter, a combination of Hook-Based (for `preprocess`, `format`, `postprocess`) and Event-Driven
+          (for error reporting or status updates) might be effective.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8">Challenges to Address</h2>
-        <p>
-          While powerful, plugin architectures introduce complexity:
-        </p>
+        <p>While powerful, plugin architectures introduce complexity:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
@@ -289,10 +282,12 @@ export default CommentPlugin;`}
               <span className="font-medium">Security:</span> Untrusted code execution requires careful sandboxing.
             </li>
             <li>
-              <span className="font-medium">Versioning:</span> Ensuring compatibility between the core and different plugin versions.
+              <span className="font-medium">Versioning:</span> Ensuring compatibility between the core and different
+              plugin versions.
             </li>
             <li>
-              <span className="font-medium">Debugging:</span> Troubleshooting issues that might originate in plugin code.
+              <span className="font-medium">Debugging:</span> Troubleshooting issues that might originate in plugin
+              code.
             </li>
           </ul>
         </div>
@@ -301,8 +296,9 @@ export default CommentPlugin;`}
         <p>
           A well-implemented plugin architecture can transform a simple JSON formatter into a highly adaptable and
           extensible tool. By focusing on clear interfaces, robust management, isolation, and comprehensive
-          documentation, you empower both your core development and the potential for community contributions.
-          While challenging, the benefits in terms of flexibility and longevity for your application are often well worth the effort.
+          documentation, you empower both your core development and the potential for community contributions. While
+          challenging, the benefits in terms of flexibility and longevity for your application are often well worth the
+          effort.
         </p>
       </div>
     </>

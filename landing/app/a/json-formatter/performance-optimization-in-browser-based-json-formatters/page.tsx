@@ -9,23 +9,20 @@ export const metadata: Metadata = {
 export default function JsonFormatterPerformanceArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Performance Optimization in Browser-Based JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Performance Optimization in Browser-Based JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
-          Browser-based JSON formatters are incredibly useful tools, allowing developers to quickly inspect,
-          beautify, and validate JSON data directly in their web browsers. However, dealing with large or complex
-          JSON structures can quickly lead to performance bottlenecks, resulting in slow load times, unresponsive
-          interfaces, and high memory usage. Optimizing these tools is crucial for providing a smooth user
-          experience.
+          Browser-based JSON formatters are incredibly useful tools, allowing developers to quickly inspect, beautify,
+          and validate JSON data directly in their web browsers. However, dealing with large or complex JSON structures
+          can quickly lead to performance bottlenecks, resulting in slow load times, unresponsive interfaces, and high
+          memory usage. Optimizing these tools is crucial for providing a smooth user experience.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Understanding Performance Challenges</h2>
         <p>
-          The primary performance challenges in browser-based JSON formatters stem from two main operations:
-          parsing and rendering.
+          The primary performance challenges in browser-based JSON formatters stem from two main operations: parsing and
+          rendering.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -41,8 +38,8 @@ export default function JsonFormatterPerformanceArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">1. Efficient Parsing</h2>
         <p>
-          The first step is converting the raw JSON string into a usable JavaScript object. The most efficient way
-          to do this in JavaScript is using the native <code>JSON.parse()</code> method.
+          The first step is converting the raw JSON string into a usable JavaScript object. The most efficient way to do
+          this in JavaScript is using the native <code>JSON.parse()</code> method.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -59,16 +56,15 @@ export default function JsonFormatterPerformanceArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            <code>JSON.parse()</code> is highly optimized and implemented in native code within the browser
-            engine. Avoid using <code>eval()</code> or complex regex-based parsing methods, as they are less
-            secure and significantly slower.
+            <code>JSON.parse()</code> is highly optimized and implemented in native code within the browser engine.
+            Avoid using <code>eval()</code> or complex regex-based parsing methods, as they are less secure and
+            significantly slower.
           </p>
         </div>
 
         <p>
-          For extremely large JSON files that might cause the browser to freeze during parsing, consider using
-          Web Workers. This allows parsing to happen in a background thread, keeping the main UI thread
-          responsive.
+          For extremely large JSON files that might cause the browser to freeze during parsing, consider using Web
+          Workers. This allows parsing to happen in a background thread, keeping the main UI thread responsive.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -103,8 +99,8 @@ onmessage = function(event) {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This approach prevents the parsing operation from blocking the main thread, improving perceived
-            performance for the user.
+            This approach prevents the parsing operation from blocking the main thread, improving perceived performance
+            for the user.
           </p>
         </div>
 
@@ -117,22 +113,22 @@ onmessage = function(event) {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Virtualization (Windowing):</h3>
           <p className="mt-2 text-sm">
-            Only render the elements that are currently visible within the user&apos;s viewport. As the user
-            scrolls, dynamically render/remove items. This is particularly useful for large arrays or objects
-            with many top-level keys.
+            Only render the elements that are currently visible within the user&apos;s viewport. As the user scrolls,
+            dynamically render/remove items. This is particularly useful for large arrays or objects with many top-level
+            keys.
           </p>
           <p className="mt-2 text-sm">
-            Libraries like <code>react-virtualized</code> or <code>react-window</code> implement this concept.
-            While you might not use these specific React libraries in a vanilla JS formatter, the underlying
-            principle of rendering only visible elements is key.
+            Libraries like <code>react-virtualized</code> or <code>react-window</code> implement this concept. While you
+            might not use these specific React libraries in a vanilla JS formatter, the underlying principle of
+            rendering only visible elements is key.
           </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Chunking/Lazy Rendering:</h3>
           <p className="mt-2 text-sm">
-            Instead of rendering the entire JSON tree at once, render it in smaller parts over several animation
-            frames using <code>requestAnimationFrame</code>. This allows the browser to remain responsive.
+            Instead of rendering the entire JSON tree at once, render it in smaller parts over several animation frames
+            using <code>requestAnimationFrame</code>. This allows the browser to remain responsive.
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
@@ -154,34 +150,33 @@ onmessage = function(event) {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This distributes the rendering work over time, preventing long-running script blocks that can freeze
-            the browser.
+            This distributes the rendering work over time, preventing long-running script blocks that can freeze the
+            browser.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">3. Efficient Syntax Highlighting</h2>
         <p>
-          Applying syntax highlighting involves traversing the DOM or the parsed object and applying CSS classes
-          to different types of JSON tokens (keys, strings, numbers, booleans, null).
+          Applying syntax highlighting involves traversing the DOM or the parsed object and applying CSS classes to
+          different types of JSON tokens (keys, strings, numbers, booleans, null).
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Strategies for Highlighting:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">CSS-based highlighting:</span> Define CSS classes for different token
-              types (<code>.json-key</code>, <code>.json-string</code>, etc.) and apply them during HTML
-              generation. This is efficient once the DOM is built.
+              <span className="font-medium">CSS-based highlighting:</span> Define CSS classes for different token types
+              (<code>.json-key</code>, <code>.json-string</code>, etc.) and apply them during HTML generation. This is
+              efficient once the DOM is built.
             </li>
             <li>
-              <span className="font-medium">Efficient traversal:</span> When building the HTML, recursively
-              traverse the parsed JSON object and generate the corresponding HTML structure with classes applied
-              in one pass, minimizing DOM manipulation after the initial render.
+              <span className="font-medium">Efficient traversal:</span> When building the HTML, recursively traverse the
+              parsed JSON object and generate the corresponding HTML structure with classes applied in one pass,
+              minimizing DOM manipulation after the initial render.
             </li>
             <li>
               <span className="font-medium">Avoid re-highlighting:</span> If implementing features like search or
-              editing, avoid re-highlighting the entire document for small changes. Target only the affected
-              nodes.
+              editing, avoid re-highlighting the entire document for small changes. Target only the affected nodes.
             </li>
           </ul>
         </div>
@@ -197,18 +192,17 @@ onmessage = function(event) {
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
               <span className="font-medium">Event Delegation:</span> Instead of attaching click listeners to every
-              expandable node, attach a single listener to a parent element and use event delegation to handle
-              clicks on specific nodes.
+              expandable node, attach a single listener to a parent element and use event delegation to handle clicks on
+              specific nodes.
             </li>
             <li>
               <span className="font-medium">Lazy Loading Children:</span> When a node is expanded, only render its
               direct children. Defer rendering of deeper nested structures until they are expanded.
             </li>
             <li>
-              <span className="font-medium">Debouncing/Throttling Search Input:</span> If there&apos;s a search
-              feature, avoid processing the search on every keystroke. Use debouncing (wait for a pause in
-              typing) or throttling (process at most once every X milliseconds) to limit the frequency of search
-              operations.
+              <span className="font-medium">Debouncing/Throttling Search Input:</span> If there&apos;s a search feature,
+              avoid processing the search on every keystroke. Use debouncing (wait for a pause in typing) or throttling
+              (process at most once every X milliseconds) to limit the frequency of search operations.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-2">
                 <pre>
                   {`function debounce(func, delay) {
@@ -241,30 +235,29 @@ const handleSearchInput = debounce((searchTerm) => {
           <h3 className="text-lg font-medium">Reducing Memory Footprint:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Virtualization:</span> Only keeping visible DOM elements in memory is
-              a major memory saver.
+              <span className="font-medium">Virtualization:</span> Only keeping visible DOM elements in memory is a
+              major memory saver.
             </li>
             <li>
-              <span className="font-medium">Avoid Redundant Data Structures:</span> Don&apos;t store multiple
-              copies of the parsed JSON data or the DOM structure if not necessary.
+              <span className="font-medium">Avoid Redundant Data Structures:</span> Don&apos;t store multiple copies of
+              the parsed JSON data or the DOM structure if not necessary.
             </li>
             <li>
-              <span className="font-medium">Clean up Event Listeners:</span> Ensure that when elements are removed
-              from the DOM (e.g., during virtualization), any attached event listeners are also cleaned up to
-              prevent memory leaks.
+              <span className="font-medium">Clean up Event Listeners:</span> Ensure that when elements are removed from
+              the DOM (e.g., during virtualization), any attached event listeners are also cleaned up to prevent memory
+              leaks.
             </li>
             <li>
-              <span className="font-medium">Consider JSON Streaming:</span> For truly massive JSON files (too big
-              to fit in memory), explore streaming parsers if applicable, though this is more complex to implement
-              in a simple browser formatter UI.
+              <span className="font-medium">Consider JSON Streaming:</span> For truly massive JSON files (too big to fit
+              in memory), explore streaming parsers if applicable, though this is more complex to implement in a simple
+              browser formatter UI.
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">6. Algorithmic Considerations</h2>
         <p>
-          The algorithm used to traverse the JSON structure and generate the formatted output also impacts
-          performance.
+          The algorithm used to traverse the JSON structure and generate the formatted output also impacts performance.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -273,18 +266,18 @@ const handleSearchInput = debounce((searchTerm) => {
             <li>
               <span className="font-medium">Depth-First vs. Breadth-First:</span> While both can work, recursive
               (depth-first) traversal is often simpler to implement for generating nested structures. Ensure the
-              recursion depth doesn&apos;t exceed browser limits for deeply nested JSON. Iterative approaches can
-              avoid deep recursion stacks.
+              recursion depth doesn&apos;t exceed browser limits for deeply nested JSON. Iterative approaches can avoid
+              deep recursion stacks.
             </li>
             <li>
-              <span className="font-medium">String Concatenation vs. Array Join:</span> When building the final
-              HTML string for a section, building an array of strings and then joining them (<code>[].join('')</code>)
-              can sometimes be more performant than repeated string concatenation (`+` or `+=`), especially in
-              older JavaScript engines, though modern engines have optimized concatenation.
+              <span className="font-medium">String Concatenation vs. Array Join:</span> When building the final HTML
+              string for a section, building an array of strings and then joining them (<code>[].join('')</code>) can
+              sometimes be more performant than repeated string concatenation (`+` or `+=`), especially in older
+              JavaScript engines, though modern engines have optimized concatenation.
             </li>
             <li>
-              <span className="font-medium">Minimal DOM Manipulation:</span> Generate large chunks of HTML as
-              strings first and then inject them into the DOM using methods like
+              <span className="font-medium">Minimal DOM Manipulation:</span> Generate large chunks of HTML as strings
+              first and then inject them into the DOM using methods like
               <code>element.innerHTML = htmlString</code> or fragment creation, rather than creating and appending
               elements one by one in a loop.
             </li>
@@ -292,9 +285,7 @@ const handleSearchInput = debounce((searchTerm) => {
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Tools and Browser Features for Debugging</h2>
-        <p>
-          Browser developer tools are invaluable for identifying performance bottlenecks.
-        </p>
+        <p>Browser developer tools are invaluable for identifying performance bottlenecks.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Browser DevTools:</h3>
@@ -304,15 +295,16 @@ const handleSearchInput = debounce((searchTerm) => {
               (scripting, rendering, painting). Identify long-running functions.
             </li>
             <li>
-              <span className="font-medium">Memory Tab:</span> Take heap snapshots to analyze memory usage, find
-              memory leaks, and understand which objects are consuming the most memory.
+              <span className="font-medium">Memory Tab:</span> Take heap snapshots to analyze memory usage, find memory
+              leaks, and understand which objects are consuming the most memory.
             </li>
             <li>
               <span className="font-medium">Network Tab:</span> While not directly related to formatter processing,
               check initial load times if fetching JSON from a URL.
             </li>
             <li>
-              <span className="font-medium">Console:</span> Use <code>console.time()</code> and <code>console.timeEnd()</code>
+              <span className="font-medium">Console:</span> Use <code>console.time()</code> and{" "}
+              <code>console.timeEnd()</code>
               to measure the duration of specific code blocks (e.g., parsing, rendering a section).
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-2">
                 <pre>
@@ -327,12 +319,12 @@ console.timeEnd("JSON Parsing"); // Logs the time taken`}
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Building a high-performance browser-based JSON formatter requires careful consideration of parsing
-          efficiency, rendering strategies, and interaction handling. By leveraging native browser APIs like
-          <code>JSON.parse()</code> and Web Workers, implementing techniques like virtualization and lazy
-          rendering for large datasets, optimizing syntax highlighting, and using browser developer tools for
-          analysis, you can create a tool that remains fast and responsive even when dealing with large and complex
-          JSON structures. Prioritizing these optimizations ensures a much better experience for your users.
+          Building a high-performance browser-based JSON formatter requires careful consideration of parsing efficiency,
+          rendering strategies, and interaction handling. By leveraging native browser APIs like
+          <code>JSON.parse()</code> and Web Workers, implementing techniques like virtualization and lazy rendering for
+          large datasets, optimizing syntax highlighting, and using browser developer tools for analysis, you can create
+          a tool that remains fast and responsive even when dealing with large and complex JSON structures. Prioritizing
+          these optimizations ensures a much better experience for your users.
         </p>
       </div>
     </>

@@ -17,7 +17,6 @@ export default function JsonFormatterLibrariesArticle() {
   // as it was never called and only shown as a commented-out example string in the <pre> tag.
   // This resolves the unused variable and the 'any' type error associated with its signature.
 
-
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
@@ -26,17 +25,24 @@ export default function JsonFormatterLibrariesArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is the de facto standard for data exchange on the web due to its human-readable format and lightweight structure. While parsing JSON is straightforward with <code>JSON.parse()</code>, presenting JSON data to users or developers in a clean, organized way often requires <strong>formatting</strong>. This involves adding indentation, newlines, and proper spacing to make the structure clear.
+          JSON (JavaScript Object Notation) is the de facto standard for data exchange on the web due to its
+          human-readable format and lightweight structure. While parsing JSON is straightforward with{" "}
+          <code>JSON.parse()</code>, presenting JSON data to users or developers in a clean, organized way often
+          requires <strong>formatting</strong>. This involves adding indentation, newlines, and proper spacing to make
+          the structure clear.
         </p>
         <p>
-          JavaScript provides a built-in way to stringify JSON, but its formatting capabilities are limited. This is where dedicated JSON formatter libraries come into play, offering enhanced control, features, and often better performance or specific utilities.
+          JavaScript provides a built-in way to stringify JSON, but its formatting capabilities are limited. This is
+          where dedicated JSON formatter libraries come into play, offering enhanced control, features, and often better
+          performance or specific utilities.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Code className="w-6 h-6" /> The Built-in: <code>JSON.stringify()</code>
         </h2>
         <p>
-          The standard JavaScript method <code>JSON.stringify()</code> is the simplest way to convert a JavaScript value (like an object or array) into a JSON string. It also has a basic formatting capability.
+          The standard JavaScript method <code>JSON.stringify()</code> is the simplest way to convert a JavaScript value
+          (like an object or array) into a JSON string. It also has a basic formatting capability.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
@@ -48,7 +54,7 @@ console.log(jsonString);`}
           </pre>
           <h3 className="text-lg font-medium mt-4 mb-2">Formatted Usage with Indentation:</h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
-            {`const data = ${rawJsonExample.replace(/\n/g, '\\n').replace(/"/g, '\\"')}; // Example complex data
+            {`const data = ${rawJsonExample.replace(/\n/g, "\\n").replace(/"/g, '\\"')}; // Example complex data
 const formattedJson = JSON.stringify(data, null, 2); // null for replacer, 2 spaces for indent
 console.log(formattedJson);
 /* Output:
@@ -73,22 +79,30 @@ console.log(formattedJson);
         </div>
 
         <p>
-          The third argument to <code>JSON.stringify()</code> controls indentation. You can pass a number (like <code>2</code> or <code>4</code>) for spaces, or a string (like <code>"\t"</code>) for tabs.
+          The third argument to <code>JSON.stringify()</code> controls indentation. You can pass a number (like{" "}
+          <code>2</code> or <code>4</code>) for spaces, or a string (like <code>"\t"</code>) for tabs.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Limitations of <code>JSON.stringify()</code> for Advanced Formatting:</h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Limitations of <code>JSON.stringify()</code> for Advanced Formatting:
+        </h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Limited Control:</strong> You can't easily control things like sorting keys, collapsing nested objects/arrays, or adding syntax highlighting (which is presentation, not just string formatting, but often desired alongside formatting).
+            <strong>Limited Control:</strong> You can't easily control things like sorting keys, collapsing nested
+            objects/arrays, or adding syntax highlighting (which is presentation, not just string formatting, but often
+            desired alongside formatting).
           </li>
           <li>
-            <strong>No Error Handling Display:</strong> If the input is not valid JSON (when used with <code>JSON.parse()</code> first, then stringify), stringify won't help you visualize where the error is.
+            <strong>No Error Handling Display:</strong> If the input is not valid JSON (when used with{" "}
+            <code>JSON.parse()</code> first, then stringify), stringify won't help you visualize where the error is.
           </li>
           <li>
-            <strong>No Interactive Features:</strong> Libraries designed for UI often allow collapsing sections, clicking on values, etc.
+            <strong>No Interactive Features:</strong> Libraries designed for UI often allow collapsing sections,
+            clicking on values, etc.
           </li>
           <li>
-            <strong>Replacer Function Complexity:</strong> While the second argument (replacer) allows filtering or transforming values, using it for complex structural changes or sorting keys is cumbersome.
+            <strong>Replacer Function Complexity:</strong> While the second argument (replacer) allows filtering or
+            transforming values, using it for complex structural changes or sorting keys is cumbersome.
           </li>
         </ul>
 
@@ -96,7 +110,8 @@ console.log(formattedJson);
           <Settings className="w-6 h-6" /> Why Use a Dedicated Library?
         </h2>
         <p>
-          Dedicated JSON formatter libraries often go beyond simple indentation, providing features crucial for building tools, debugging interfaces, or displaying complex data structures effectively.
+          Dedicated JSON formatter libraries often go beyond simple indentation, providing features crucial for building
+          tools, debugging interfaces, or displaying complex data structures effectively.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Key Features Offered by Libraries:</h3>
@@ -104,31 +119,36 @@ console.log(formattedJson);
           <li className="flex items-start gap-2">
             <ListOrdered className="w-5 h-5 mt-1 flex-shrink-0" />
             <div>
-              <strong>Key Sorting:</strong> Automatically sort keys within objects alphabetically for consistent and easier comparison.
+              <strong>Key Sorting:</strong> Automatically sort keys within objects alphabetically for consistent and
+              easier comparison.
             </div>
           </li>
           <li className="flex items-start gap-2">
             <Settings className="w-5 h-5 mt-1 flex-shrink-0" />
             <div>
-              <strong>Flexible Indentation:</strong> More options for indentation styles (e.g., compact arrays, specific wrapping rules).
+              <strong>Flexible Indentation:</strong> More options for indentation styles (e.g., compact arrays, specific
+              wrapping rules).
             </div>
           </li>
           <li className="flex items-start gap-2">
             <Code className="w-5 h-5 mt-1 flex-shrink-0" />
             <div>
-              <strong>Syntax Highlighting:</strong> Often integrated to color different JSON types (strings, numbers, booleans, null, keys, brackets).
+              <strong>Syntax Highlighting:</strong> Often integrated to color different JSON types (strings, numbers,
+              booleans, null, keys, brackets).
             </div>
           </li>
           <li className="flex items-start gap-2">
             <Settings className="w-5 h-5 mt-1 flex-shrink-0" />
             <div>
-              <strong>Collapsible Sections:</strong> In UI contexts, allow users to collapse/expand objects and arrays for easier navigation of large structures.
+              <strong>Collapsible Sections:</strong> In UI contexts, allow users to collapse/expand objects and arrays
+              for easier navigation of large structures.
             </div>
           </li>
           <li className="flex items-start gap-2">
             <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
             <div>
-              <strong>Error Reporting/Validation:</strong> Some libraries can validate JSON and indicate syntax errors directly in the formatted output.
+              <strong>Error Reporting/Validation:</strong> Some libraries can validate JSON and indicate syntax errors
+              directly in the formatted output.
             </div>
           </li>
           <li className="flex items-start gap-2">
@@ -143,7 +163,8 @@ console.log(formattedJson);
           <Code className="w-6 h-6" /> Conceptual Formatting Logic (Manual Example)
         </h2>
         <p>
-          To understand what libraries do under the hood, consider the basic recursive process required to format JSON. You traverse the data structure, adding indentation based on the current depth.
+          To understand what libraries do under the hood, consider the basic recursive process required to format JSON.
+          You traverse the data structure, adding indentation based on the current depth.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h3 className="text-lg font-medium mb-2">Manual Formatting Function (Illustrative):</h3>
@@ -193,23 +214,24 @@ const formatJsonManually = (data: any, indentLevel: number = 0): string => {
 };
 
 // Example usage (conceptually):
-// const myData = JSON.parse(\`${rawJsonExample.replace(/\n/g, '\\n').replace(/"/g, '\\"')}\`); // Parse first
+// const myData = JSON.parse(\`${rawJsonExample.replace(/\n/g, "\\n").replace(/"/g, '\\"')}\`); // Parse first
 // const manuallyFormatted = formatJsonManually(myData);
 // console.log(manuallyFormatted);
 /* Expected output would be similar to the formattedJsonExample above */`}
           </pre>
         </div>
         <p>
-          As you can see, even basic indentation logic requires recursion to handle nested structures. Libraries abstract this complexity and add many more features.
+          As you can see, even basic indentation logic requires recursion to handle nested structures. Libraries
+          abstract this complexity and add many more features.
         </p>
-
 
         <h2 className="2xl font-semibold mt-8 flex items-center gap-2">
           <ListOrdered className="w-6 h-6" /> Considerations When Choosing a Library
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Features:</strong> Does it provide key sorting, syntax highlighting, collapsing, etc., that you need?
+            <strong>Features:</strong> Does it provide key sorting, syntax highlighting, collapsing, etc., that you
+            need?
           </li>
           <li>
             <strong>Bundle Size:</strong> If it's for a web frontend, how much does it add to your JavaScript bundle?
@@ -224,7 +246,8 @@ const formatJsonManually = (data: any, indentLevel: number = 0): string => {
             <strong>Community & Maintenance:</strong> Is the library actively maintained and well-supported?
           </li>
           <li>
-            <strong>Usage Context:</strong> Are you formatting for a console output (Node.js), a file, or a web UI? UI libraries will likely be larger but offer interactive features.
+            <strong>Usage Context:</strong> Are you formatting for a console output (Node.js), a file, or a web UI? UI
+            libraries will likely be larger but offer interactive features.
           </li>
         </ul>
 
@@ -232,10 +255,17 @@ const formatJsonManually = (data: any, indentLevel: number = 0): string => {
           <CheckCircle className="w-6 h-6" /> Conclusion
         </h2>
         <p>
-          While <code>JSON.stringify()</code> is sufficient for basic indentation, JSON formatter libraries offer a range of powerful features like key sorting, syntax highlighting, and interactive UI elements that are invaluable for building developer tools, data visualizations, or user interfaces that display JSON. By understanding the capabilities and limitations of built-in methods versus dedicated libraries, you can choose the right tool for presenting your JSON data effectively.
+          While <code>JSON.stringify()</code> is sufficient for basic indentation, JSON formatter libraries offer a
+          range of powerful features like key sorting, syntax highlighting, and interactive UI elements that are
+          invaluable for building developer tools, data visualizations, or user interfaces that display JSON. By
+          understanding the capabilities and limitations of built-in methods versus dedicated libraries, you can choose
+          the right tool for presenting your JSON data effectively.
         </p>
         <p>
-          Remember that for backend contexts (like a Next.js API route or Node.js script) where the output isn't directly consumed by a human user needing visual formatting, the default <code>JSON.stringify()</code> is usually the most efficient and appropriate choice. Libraries shine when the JSON is part of a user-facing display or a debugging process.
+          Remember that for backend contexts (like a Next.js API route or Node.js script) where the output isn't
+          directly consumed by a human user needing visual formatting, the default <code>JSON.stringify()</code> is
+          usually the most efficient and appropriate choice. Libraries shine when the JSON is part of a user-facing
+          display or a debugging process.
         </p>
       </div>
     </>

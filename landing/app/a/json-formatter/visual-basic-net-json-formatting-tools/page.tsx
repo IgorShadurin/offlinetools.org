@@ -32,21 +32,20 @@ export default function VbNetJsonFormattingToolsPage() {
             <span>Why Format JSON in VB.NET?</span>
           </h2>
           <p>
-            Working with JSON (JavaScript Object Notation) is a common task in modern software development,
-            especially when dealing with web services, APIs, and configuration files. In Visual Basic .NET,
-            you'll frequently need to serialize .NET objects into JSON strings or deserialize JSON strings into
-            .NET objects. Beyond simple conversion, controlling the *format* of the output JSON is crucial for
-            various reasons:
+            Working with JSON (JavaScript Object Notation) is a common task in modern software development, especially
+            when dealing with web services, APIs, and configuration files. In Visual Basic .NET, you'll frequently need
+            to serialize .NET objects into JSON strings or deserialize JSON strings into .NET objects. Beyond simple
+            conversion, controlling the *format* of the output JSON is crucial for various reasons:
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
             <li>
-              <strong>Readability:</strong> Pretty-printing (indenting and adding line breaks) makes JSON
-              easier for humans to read and debug. This is vital during development and testing.
+              <strong>Readability:</strong> Pretty-printing (indenting and adding line breaks) makes JSON easier for
+              humans to read and debug. This is vital during development and testing.
             </li>
             <li>
-              <strong>Compactness:</strong> Removing unnecessary whitespace (minifying) reduces the size of the
-              JSON string. This is important for performance, especially when transferring data over networks,
-              saving storage space, or for configuration files where size matters.
+              <strong>Compactness:</strong> Removing unnecessary whitespace (minifying) reduces the size of the JSON
+              string. This is important for performance, especially when transferring data over networks, saving storage
+              space, or for configuration files where size matters.
             </li>
             <li>
               <strong>Consistency:</strong> Ensuring consistent formatting across your application improves code
@@ -54,9 +53,9 @@ export default function VbNetJsonFormattingToolsPage() {
             </li>
           </ul>
           <p className="mt-4">
-            Visual Basic .NET, particularly in modern .NET versions (.NET Core, .NET 5+), provides powerful
-            built-in capabilities to handle JSON formatting. This guide focuses on the standard{" "}
-            <code>System.Text.Json</code> library.
+            Visual Basic .NET, particularly in modern .NET versions (.NET Core, .NET 5+), provides powerful built-in
+            capabilities to handle JSON formatting. This guide focuses on the standard <code>System.Text.Json</code>{" "}
+            library.
           </p>
         </section>
 
@@ -66,8 +65,8 @@ export default function VbNetJsonFormattingToolsPage() {
             <span>Using System.Text.Json for Formatting</span>
           </h2>
           <p>
-            The <code>System.Text.Json</code> namespace provides high-performance, low-allocating JSON APIs.
-            It's the recommended built-in solution for .NET. Formatting options are controlled using the{" "}
+            The <code>System.Text.Json</code> namespace provides high-performance, low-allocating JSON APIs. It's the
+            recommended built-in solution for .NET. Formatting options are controlled using the{" "}
             <code>JsonSerializerOptions</code> class.
           </p>
 
@@ -133,8 +132,8 @@ End Module`}
             </div>
           </div>
           <p className="mt-4">
-            This will produce JSON output with line breaks and indentation, making the hierarchy of the data
-            structure visually clear.
+            This will produce JSON output with line breaks and indentation, making the hierarchy of the data structure
+            visually clear.
           </p>
 
           <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
@@ -142,8 +141,8 @@ End Module`}
             <span>Compact Formatting (Minified)</span>
           </h3>
           <p className="mt-2">
-            For a compact output, simply omit the <code>JsonSerializerOptions</code> or set{" "}
-            <code>WriteIndented</code> to <code>False</code> (which is the default behavior).
+            For a compact output, simply omit the <code>JsonSerializerOptions</code> or set <code>WriteIndented</code>{" "}
+            to <code>False</code> (which is the default behavior).
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
             <h4 className="text-lg font-medium mb-2 flex items-center space-x-2">
@@ -192,7 +191,8 @@ End Module`}
             </div>
           </div>
           <p className="mt-4">
-            This format removes all non-essential whitespace, resulting in the smallest possible JSON string for the data.
+            This format removes all non-essential whitespace, resulting in the smallest possible JSON string for the
+            data.
           </p>
         </section>
 
@@ -202,8 +202,8 @@ End Module`}
             <span>Other JsonSerializerOptions</span>
           </h2>
           <p>
-            Beyond indentation, <code>JsonSerializerOptions</code> offers several other properties that can
-            influence the output format and behavior:
+            Beyond indentation, <code>JsonSerializerOptions</code> offers several other properties that can influence
+            the output format and behavior:
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
             <li>
@@ -217,10 +217,13 @@ End Module`}
               <code>DictionaryKeyPolicy</code>: Controls how dictionary keys are written.
             </li>
             <li>
-              <code>DefaultIgnoreCondition</code>: Specifies when properties should be ignored during serialization (e.g., ignore null values).
+              <code>DefaultIgnoreCondition</code>: Specifies when properties should be ignored during serialization
+              (e.g., ignore null values).
               <br />
               <code className="text-sm">
-                <code>New JsonSerializerOptions With {`{ .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }`}</code>
+                <code>
+                  New JsonSerializerOptions With {`{ .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }`}
+                </code>
               </code>
             </li>
             <li>
@@ -312,12 +315,12 @@ End Module`}
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
             <li>
-              <strong>Pretty-printing</strong> involves writing extra characters (whitespace, newlines), which
-              slightly increases processing time and output size. Use it primarily where human readability is required.
+              <strong>Pretty-printing</strong> involves writing extra characters (whitespace, newlines), which slightly
+              increases processing time and output size. Use it primarily where human readability is required.
             </li>
             <li>
-              <strong>Compact formatting</strong> minimizes output size and is generally preferred for network
-              transport or storage to reduce bandwidth and disk usage.
+              <strong>Compact formatting</strong> minimizes output size and is generally preferred for network transport
+              or storage to reduce bandwidth and disk usage.
             </li>
           </ul>
           <p className="mt-4">
@@ -328,28 +331,27 @@ End Module`}
         </section>
 
         <section>
-           <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
+          <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
             <Wrench className="w-6 h-6 text-teal-500" /> {/* Used Wrench icon */}
             <span>Tooling and Workflow</span>
           </h2>
           <p>
-            While you can format JSON programmatically in VB.NET, developers often use external tools
-            or IDE extensions for interactive formatting during development or when inspecting JSON data.
-            However, understanding the programmatic approach is essential for applications that generate
-            or process JSON dynamically.
+            While you can format JSON programmatically in VB.NET, developers often use external tools or IDE extensions
+            for interactive formatting during development or when inspecting JSON data. However, understanding the
+            programmatic approach is essential for applications that generate or process JSON dynamically.
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
             <li>
-              <strong>IDEs:</strong> Visual Studio often has built-in or extension-based JSON formatters
-              that you can use directly on JSON files or strings within the editor.
+              <strong>IDEs:</strong> Visual Studio often has built-in or extension-based JSON formatters that you can
+              use directly on JSON files or strings within the editor.
             </li>
             <li>
-              <strong>Online Formatters:</strong> Many websites offer free JSON formatting services. Use
-              these with caution for sensitive data.
+              <strong>Online Formatters:</strong> Many websites offer free JSON formatting services. Use these with
+              caution for sensitive data.
             </li>
             <li>
-              <strong>Command-Line Tools:</strong> Tools like <code>jq</code> (though not VB.NET specific)
-              are powerful for processing and formatting JSON from the command line.
+              <strong>Command-Line Tools:</strong> Tools like <code>jq</code> (though not VB.NET specific) are powerful
+              for processing and formatting JSON from the command line.
             </li>
           </ul>
           <p className="mt-4">
@@ -364,15 +366,13 @@ End Module`}
             <span>Conclusion</span>
           </h2>
           <p>
-            Formatting JSON in Visual Basic .NET is straightforward using the built-in{" "}
-            <code>System.Text.Json</code> library and the <code>JsonSerializerOptions</code> class.
-            Whether you need human-readable, indented output for debugging or compact, minified JSON
-            for performance and size efficiency, the framework provides the necessary tools.
-            Understanding how to configure these options is a valuable skill for any VB.NET developer
+            Formatting JSON in Visual Basic .NET is straightforward using the built-in <code>System.Text.Json</code>{" "}
+            library and the <code>JsonSerializerOptions</code> class. Whether you need human-readable, indented output
+            for debugging or compact, minified JSON for performance and size efficiency, the framework provides the
+            necessary tools. Understanding how to configure these options is a valuable skill for any VB.NET developer
             working with JSON data.
           </p>
         </section>
-
       </div>
     </>
   );

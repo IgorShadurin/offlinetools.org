@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 export default function JsonPropertyOrderArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Preserving Order of Properties in JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Preserving Order of Properties in JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
@@ -26,47 +24,33 @@ export default function JsonPropertyOrderArticle() {
           order truly matters.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Does JSON Preserve Property Order? The Standard View
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Does JSON Preserve Property Order? The Standard View</h2>
         <p>
           According to the official{" "}
-          <a
-            href="https://www.json.org/"
-            className="text-blue-600 hover:underline dark:text-blue-400"
-          >
+          <a href="https://www.json.org/" className="text-blue-600 hover:underline dark:text-blue-400">
             JSON specification (ECMA-404)
           </a>
-          , an object is defined as &quot;an unordered set of name/value pairs&quot;. This means that the order in
-          which properties appear in the text representation of a JSON object is not semantically significant. Parsers
-          are free to store and process these properties in any order they see fit.
+          , an object is defined as &quot;an unordered set of name/value pairs&quot;. This means that the order in which
+          properties appear in the text representation of a JSON object is not semantically significant. Parsers are
+          free to store and process these properties in any order they see fit.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Key takeaway from the spec:</h3>
-          <p className="mt-2 text-sm">
-            JSON objects represent sets of pairs, and sets are inherently unordered.
-          </p>
+          <p className="mt-2 text-sm">JSON objects represent sets of pairs, and sets are inherently unordered.</p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Why Do Formatters Often Show Order Preservation?
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Why Do Formatters Often Show Order Preservation?</h2>
         <p>
-          Despite the specification stating that order is not guaranteed, many JSON parsers and formatters,
-          especially those based on modern JavaScript engines, tend to preserve insertion order for string keys.
-          This is largely an implementation detail derived from how JavaScript engines manage object properties (specifically, the ES2015 specification and later versions mandate insertion order for non-integer keys).
+          Despite the specification stating that order is not guaranteed, many JSON parsers and formatters, especially
+          those based on modern JavaScript engines, tend to preserve insertion order for string keys. This is largely an
+          implementation detail derived from how JavaScript engines manage object properties (specifically, the ES2015
+          specification and later versions mandate insertion order for non-integer keys).
         </p>
-        <p>
-          While convenient, relying on this behavior is risky because:
-        </p>
+        <p>While convenient, relying on this behavior is risky because:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Different parsers or libraries in different languages might behave differently.
-          </li>
-          <li>
-            Older JavaScript engines might not preserve order consistently.
-          </li>
+          <li>Different parsers or libraries in different languages might behave differently.</li>
+          <li>Older JavaScript engines might not preserve order consistently.</li>
           <li>
             The specification explicitly states order is not guaranteed, meaning any parser adhering to the spec is
             correct even if it reorders properties.
@@ -92,22 +76,23 @@ export default function JsonPropertyOrderArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This order makes sense to read, but the parser might process it as 
-            {`{"age": 30, "city": "New York", "firstName": "Jane", "lastName": "Doe"}`} 
+            This order makes sense to read, but the parser might process it as
+            {`{"age": 30, "city": "New York", "firstName": "Jane", "lastName": "Doe"}`}
             or any other permutation.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          How to Handle Data Where Order Truly Matters
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">How to Handle Data Where Order Truly Matters</h2>
         <p>
-          If the order of elements is semantically critical to your data, JSON objects (which represent unordered sets) are not the appropriate structure to enforce that order. Instead, you should use JSON arrays or include explicit ordering information within the data structure itself.
+          If the order of elements is semantically critical to your data, JSON objects (which represent unordered sets)
+          are not the appropriate structure to enforce that order. Instead, you should use JSON arrays or include
+          explicit ordering information within the data structure itself.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Method 1: Using JSON Arrays</h3>
         <p>
-          Arrays in JSON *do* preserve order. An array is an ordered collection of values. If the order of objects or specific pieces of data is important, put them into a JSON array.
+          Arrays in JSON *do* preserve order. An array is an ordered collection of values. If the order of objects or
+          specific pieces of data is important, put them into a JSON array.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Example using an Array:</h3>
@@ -138,7 +123,8 @@ export default function JsonPropertyOrderArticle() {
 
         <h3 className="text-xl font-semibold mt-6">Method 2: Adding Explicit Order Properties</h3>
         <p>
-          If you need to associate an order with items that are stored in an object (perhaps for easy lookup by a key), you can add an explicit property to each item indicating its position in the desired sequence.
+          If you need to associate an order with items that are stored in an object (perhaps for easy lookup by a key),
+          you can add an explicit property to each item indicating its position in the desired sequence.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Example using an Order Property:</h3>
@@ -154,30 +140,46 @@ export default function JsonPropertyOrderArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            While the properties `"apple"`, `"banana"`, `"orange"` in the `"items"` object might not be read in that order, you can sort them based on the `"order"` property after parsing the JSON. This structure allows quick access by key while still providing the intended sequence information.
+            While the properties `"apple"`, `"banana"`, `"orange"` in the `"items"` object might not be read in that
+            order, you can sort them based on the `"order"` property after parsing the JSON. This structure allows quick
+            access by key while still providing the intended sequence information.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Behavior in JSON Formatters and Parsers</h2>
         <p>
-          Most modern JSON formatters and parsers will read the input sequentially and, when building the in-memory representation (like a JavaScript object, Python dictionary, etc.), will often maintain the order they encountered the properties, especially for string keys. This gives the *illusion* of order preservation.
+          Most modern JSON formatters and parsers will read the input sequentially and, when building the in-memory
+          representation (like a JavaScript object, Python dictionary, etc.), will often maintain the order they
+          encountered the properties, especially for string keys. This gives the *illusion* of order preservation.
         </p>
         <p>
-          However, it's crucial to remember this is a common implementation choice, not a standard requirement. If your application logic depends on the order of keys within a JSON object, it is fundamentally brittle and could break if processed by a different parser or even a different version of the same parser.
+          However, it's crucial to remember this is a common implementation choice, not a standard requirement. If your
+          application logic depends on the order of keys within a JSON object, it is fundamentally brittle and could
+          break if processed by a different parser or even a different version of the same parser.
         </p>
 
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 dark:bg-yellow-900 dark:text-yellow-300 my-6" role="alert">
-            <p className="font-bold">Warning:</p>
-            <p>Never rely on the order of properties in a JSON object. It is not guaranteed by the standard and varies between implementations.</p>
+        <div
+          className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 dark:bg-yellow-900 dark:text-yellow-300 my-6"
+          role="alert"
+        >
+          <p className="font-bold">Warning:</p>
+          <p>
+            Never rely on the order of properties in a JSON object. It is not guaranteed by the standard and varies
+            between implementations.
+          </p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          While many JSON formatters and parsers might display or process JSON object properties in the order they appeared in the original text, this behavior is not part of the JSON standard. The specification defines objects as unordered sets of name/value pairs.
+          While many JSON formatters and parsers might display or process JSON object properties in the order they
+          appeared in the original text, this behavior is not part of the JSON standard. The specification defines
+          objects as unordered sets of name/value pairs.
         </p>
         <p>
-          For data where the sequence of elements is semantically meaningful, you should always use JSON arrays or embed explicit ordering information (like an "order" property) within your data structure. Relying on the order of keys within a JSON object is non-standard and makes your data format fragile. Use formatters for readability and validation, but design your data structures to be independent of key order within objects.
+          For data where the sequence of elements is semantically meaningful, you should always use JSON arrays or embed
+          explicit ordering information (like an "order" property) within your data structure. Relying on the order of
+          keys within a JSON object is non-standard and makes your data format fragile. Use formatters for readability
+          and validation, but design your data structures to be independent of key order within objects.
         </p>
       </div>
     </>

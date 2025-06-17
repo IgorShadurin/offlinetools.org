@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "What is Base64 Encoding? A Beginner's Guide",
-    description: "A comprehensive introduction to Base64 encoding, explaining what it is, how it works, and why it's used.",
+    description:
+      "A comprehensive introduction to Base64 encoding, explaining what it is, how it works, and why it's used.",
     slug: "what-is-base64-encoding-a-beginners-guide",
   },
   {
@@ -39,7 +40,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 vs Other Encoding Schemes: A Comparison",
-    description: "Compare Base64 with other encoding methods like Hex, URL encoding, and Base32 to understand their differences.",
+    description:
+      "Compare Base64 with other encoding methods like Hex, URL encoding, and Base32 to understand their differences.",
     slug: "base64-vs-other-encoding-schemes-a-comparison",
   },
   {
@@ -64,12 +66,14 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "URL-Safe Base64: Adapting for Web Contexts",
-    description: "Discover how URL-safe Base64 encoding modifies the standard to work better in web URLs and identifiers.",
+    description:
+      "Discover how URL-safe Base64 encoding modifies the standard to work better in web URLs and identifiers.",
     slug: "url-safe-base64-adapting-for-web-contexts",
   },
   {
     title: "Base64 Size Calculation: Understanding the Output Length",
-    description: "Learn how to calculate the size of Base64 encoded data and why it's approximately 33% larger than the original.",
+    description:
+      "Learn how to calculate the size of Base64 encoded data and why it's approximately 33% larger than the original.",
     slug: "base64-size-calculation-understanding-the-output-length",
   },
   {
@@ -116,7 +120,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Learning Path: From Base64 Basics to Advanced Usage",
     description: "A structured learning path to progress from beginner to advanced understanding of Base64 encoding.",
     slug: "learning-path-from-base64-basics-to-advanced-usage",
-  }
+  },
 ];
 
 /**
@@ -179,7 +183,8 @@ export default function Base64CodecBasicsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Core Concepts</h3>
                     <p className="text-sm text-muted-foreground">
-                      Learn the basic principles of Base64 encoding, its character set, and how binary data is converted to text.
+                      Learn the basic principles of Base64 encoding, its character set, and how binary data is converted
+                      to text.
                     </p>
                   </div>
                 </div>
@@ -230,7 +235,9 @@ export default function Base64CodecBasicsPage() {
                 <span>Base64 in a Nutshell:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Base64 is an encoding scheme that represents binary data in an ASCII string format by translating it into a radix-64 representation. It uses a set of 64 characters (A-Z, a-z, 0-9, + and /) to ensure safe data transmission where binary data might otherwise be altered.
+                Base64 is an encoding scheme that represents binary data in an ASCII string format by translating it
+                into a radix-64 representation. It uses a set of 64 characters (A-Z, a-z, 0-9, + and /) to ensure safe
+                data transmission where binary data might otherwise be altered.
               </p>
             </div>
           </CardContent>
@@ -240,4 +247,4 @@ export default function Base64CodecBasicsPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

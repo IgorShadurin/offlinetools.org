@@ -17,20 +17,30 @@ export default function ZigJsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is a ubiquitous data interchange format. While many languages offer robust, built-in JSON handling, implementing such tools in a systems language like Zig presents unique challenges and opportunities. This page explores different ways to approach building JSON formatters in Zig, from simple re-serialization to more involved parsing and manipulation.
+          JSON (JavaScript Object Notation) is a ubiquitous data interchange format. While many languages offer robust,
+          built-in JSON handling, implementing such tools in a systems language like Zig presents unique challenges and
+          opportunities. This page explores different ways to approach building JSON formatters in Zig, from simple
+          re-serialization to more involved parsing and manipulation.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <FileJson className="w-7 h-7 mr-2 text-green-500" />
           Why Format JSON?
         </h2>
-        <p>
-          JSON formatting serves several key purposes:
-        </p>
+        <p>JSON formatting serves several key purposes:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Readability:</strong> Pretty-printing with indentation and line breaks makes complex JSON structures easy for humans to read and debug.</li>
-          <li><strong>Compactness:</strong> Removing unnecessary whitespace can reduce file size, useful for network transmission or storage.</li>
-          <li><strong>Standardization:</strong> Ensuring consistent spacing, key ordering (though not strictly part of the JSON spec, it's sometimes done), and escaping helps in diffing or processing output from different sources.</li>
+          <li>
+            <strong>Readability:</strong> Pretty-printing with indentation and line breaks makes complex JSON structures
+            easy for humans to read and debug.
+          </li>
+          <li>
+            <strong>Compactness:</strong> Removing unnecessary whitespace can reduce file size, useful for network
+            transmission or storage.
+          </li>
+          <li>
+            <strong>Standardization:</strong> Ensuring consistent spacing, key ordering (though not strictly part of the
+            JSON spec, it's sometimes done), and escaping helps in diffing or processing output from different sources.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -38,27 +48,31 @@ export default function ZigJsonFormatterArticle() {
           Zig's Appeal for Such Tasks
         </h2>
         <p>
-          Zig is a modern systems programming language known for its focus on explicitness, performance, memory control, and preventing hidden control flow/allocations. These characteristics make it well-suited for building high-performance command-line tools, server-side applications, and libraries where processing data formats efficiently is crucial. A JSON formatter in Zig can be faster and use less memory than implementations in garbage-collected languages, especially for large inputs.
+          Zig is a modern systems programming language known for its focus on explicitness, performance, memory control,
+          and preventing hidden control flow/allocations. These characteristics make it well-suited for building
+          high-performance command-line tools, server-side applications, and libraries where processing data formats
+          efficiently is crucial. A JSON formatter in Zig can be faster and use less memory than implementations in
+          garbage-collected languages, especially for large inputs.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Ruler className="w-7 h-7 mr-2 text-red-500" />
           Approaches to JSON Formatting
         </h2>
-        <p>
-          There are several ways to implement a JSON formatter in Zig, each with trade-offs:
-        </p>
+        <p>There are several ways to implement a JSON formatter in Zig, each with trade-offs:</p>
 
-        <h3 className="text-xl font-semibold mt-6">
-          1. Parse and Re-serialize
-        </h3>
+        <h3 className="text-xl font-semibold mt-6">1. Parse and Re-serialize</h3>
         <p>
-          This is the most common and robust approach. You parse the input JSON string into an in-memory data structure (like a tree of Zig structs and unions representing objects, arrays, strings, numbers, booleans, and null), and then serialize that data structure back into a JSON string with the desired formatting.
+          This is the most common and robust approach. You parse the input JSON string into an in-memory data structure
+          (like a tree of Zig structs and unions representing objects, arrays, strings, numbers, booleans, and null),
+          and then serialize that data structure back into a JSON string with the desired formatting.
         </p>
         <p>
-          <strong>Pros:</strong> Handles nested structures correctly, validates the input JSON during parsing, allows for potential manipulation of the data structure before re-serializing.
+          <strong>Pros:</strong> Handles nested structures correctly, validates the input JSON during parsing, allows
+          for potential manipulation of the data structure before re-serializing.
           <br />
-          <strong>Cons:</strong> Requires parsing the entire input into memory, which can be memory-intensive for very large JSON files.
+          <strong>Cons:</strong> Requires parsing the entire input into memory, which can be memory-intensive for very
+          large JSON files.
         </p>
 
         <h4 className="text-lg font-semibold mt-4">Conceptual Zig Code Structure (Parsing & Re-serializing):</h4>
@@ -200,22 +214,30 @@ pub fn main() !void {
           </pre>
         </div>
         <p>
-          <em>Note: The provided Zig code is conceptual and simplifies error handling and memory management for clarity. A real implementation would use Zig's error union types extensively and manage memory carefully, especially with complex data structures allocated on the heap. Libraries like <code>std.json</code> provide the necessary parsing and serialization tools.</em>
+          <em>
+            Note: The provided Zig code is conceptual and simplifies error handling and memory management for clarity. A
+            real implementation would use Zig's error union types extensively and manage memory carefully, especially
+            with complex data structures allocated on the heap. Libraries like <code>std.json</code> provide the
+            necessary parsing and serialization tools.
+          </em>
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">
-          2. Streaming/Event-Based Formatting
-        </h3>
+        <h3 className="text-xl font-semibold mt-6">2. Streaming/Event-Based Formatting</h3>
         <p>
-          This approach involves reading the JSON input character by character or token by token and writing the formatted output directly, without building a complete in-memory tree. It's more complex to implement but can handle arbitrary large JSON files with minimal memory usage.
+          This approach involves reading the JSON input character by character or token by token and writing the
+          formatted output directly, without building a complete in-memory tree. It's more complex to implement but can
+          handle arbitrary large JSON files with minimal memory usage.
         </p>
         <p>
-          A parser emits events (e.g., "start object", "key", "value", "end array"), and the formatter listens to these events, managing indentation and whitespace as it writes the output.
+          A parser emits events (e.g., "start object", "key", "value", "end array"), and the formatter listens to these
+          events, managing indentation and whitespace as it writes the output.
         </p>
         <p>
-          <strong>Pros:</strong> Extremely memory efficient, suitable for processing JSON streams or files larger than available memory.
+          <strong>Pros:</strong> Extremely memory efficient, suitable for processing JSON streams or files larger than
+          available memory.
           <br />
-          <strong>Cons:</strong> More complex to implement, requires careful state management (e.g., tracking current nesting level, whether a comma is needed).
+          <strong>Cons:</strong> More complex to implement, requires careful state management (e.g., tracking current
+          nesting level, whether a comma is needed).
         </p>
 
         <h4 className="text-lg font-semibold mt-4">Conceptual Idea (Streaming):</h4>
@@ -411,15 +433,22 @@ pub fn main_streaming() !void {
           </pre>
         </div>
         <p>
-          <em>Note: The streaming example is even more abstract as implementing a robust streaming parser is significantly more complex than a tree-building one. It serves to illustrate the event-driven concept. Managing indentation and commas correctly in a streaming fashion requires careful state management based on the current nesting level and whether the previous token was a key, value, or container start.</em>
+          <em>
+            Note: The streaming example is even more abstract as implementing a robust streaming parser is significantly
+            more complex than a tree-building one. It serves to illustrate the event-driven concept. Managing
+            indentation and commas correctly in a streaming fashion requires careful state management based on the
+            current nesting level and whether the previous token was a key, value, or container start.
+          </em>
         </p>
 
-
-        <h3 className="text-xl font-semibold mt-6">
-          3. Simple Regex/String Manipulation (Limited Use)
-        </h3>
+        <h3 className="text-xl font-semibold mt-6">3. Simple Regex/String Manipulation (Limited Use)</h3>
         <p>
-          For extremely simple cases (e.g., removing whitespace from compact JSON without nested structures or complex strings), basic string processing might seem tempting. However, this approach is highly discouraged for general-purpose JSON as it cannot correctly handle nested objects/arrays, quoted strings containing whitespace or structure characters (<code>&#x7b;</code>, <code>&#x7d;</code>, <code>[</code>, <code>]</code>, <code>:</code>, <code>,</code>), or comments (though comments are not standard JSON, some parsers accept them).
+          For extremely simple cases (e.g., removing whitespace from compact JSON without nested structures or complex
+          strings), basic string processing might seem tempting. However, this approach is highly discouraged for
+          general-purpose JSON as it cannot correctly handle nested objects/arrays, quoted strings containing whitespace
+          or structure characters (<code>&#x7b;</code>, <code>&#x7d;</code>, <code>[</code>, <code>]</code>,{" "}
+          <code>:</code>, <code>,</code>), or comments (though comments are not standard JSON, some parsers accept
+          them).
         </p>
         <p>
           <strong>Pros:</strong> Trivial for truly basic cases.
@@ -432,47 +461,76 @@ pub fn main_streaming() !void {
           Memory Management in Zig
         </h2>
         <p>
-          A critical aspect of building any non-trivial application in Zig is explicit memory management. For a JSON formatter:
+          A critical aspect of building any non-trivial application in Zig is explicit memory management. For a JSON
+          formatter:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Parse-and-Re-serialize:</strong> The in-memory data structure will likely require dynamic allocation (e.g., for strings, arrays, hash maps). You must use an allocator (like <code>std.heap.GeneralPurposeAllocator</code> or <code>std.heap.ArenaAllocator</code>) and ensure all allocated memory is freed after use to prevent leaks. Using an arena allocator for the parsing phase can simplify cleanup.</li>
-          <li><strong>Streaming:</strong> While much more memory efficient for the JSON data itself, the parser and formatter state (like the nesting stack and comma flags in the conceptual example) will still require some dynamic allocation, which needs to be managed.</li>
-        </ul>
-        <p>
-          Zig's <code>defer</code> statement is invaluable for ensuring deallocation calls happen when a function scope is exited.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">
-          Choosing an Implementation Approach
-        </h2>
-        <p>
-          For most practical JSON formatting tools in Zig, the <strong>Parse-and-Re-serialize</strong> approach is the most balanced choice. It leverages existing JSON parsing libraries and is conceptually straightforward to implement the serialization logic. The main consideration is memory usage for very large inputs.
-        </p>
-        <p>
-          The <strong>Streaming</strong> approach is ideal when memory is extremely constrained or when dealing with continuous streams of JSON data. It's significantly harder to implement correctly from scratch.
-        </p>
-        <p>
-          Avoid simple string manipulation for anything beyond the most trivial, non-standard-compliant cases.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">
-          Key Considerations for Implementation
-        </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Library Choice:</strong> Decide whether to use Zig's standard library's <code>std.json</code> (which is still evolving but capable) or an external Zig JSON library.
+          <li>
+            <strong>Parse-and-Re-serialize:</strong> The in-memory data structure will likely require dynamic allocation
+            (e.g., for strings, arrays, hash maps). You must use an allocator (like{" "}
+            <code>std.heap.GeneralPurposeAllocator</code> or <code>std.heap.ArenaAllocator</code>) and ensure all
+            allocated memory is freed after use to prevent leaks. Using an arena allocator for the parsing phase can
+            simplify cleanup.
           </li>
-          <li><strong>Error Handling:</strong> JSON parsing can fail for many reasons (syntax errors, unexpected EOF, etc.). Your formatter should gracefully handle and report these errors using Zig's error unions.</li>
-          <li><strong>Formatting Options:</strong> Support configurable indentation (spaces, tabs, count), line endings, and whether to produce pretty-printed or compact output.</li>
-          <li><strong>Memory Efficiency:</strong> Pay close attention to allocations, especially when using the parse-and-re-serialize method. Consider using an arena allocator for the parsed data tree.</li>
-          <li><strong>String Escaping:</strong> Correctly handle escaping of special characters within JSON strings (e.g., <code>"</code>, <code>\</code>, newline, tab, etc.). Libraries usually handle this.</li>
-          <li><strong>Number Formatting:</strong> Ensure numbers are formatted correctly, handling integers and floating-point values according to JSON's number representation.</li>
+          <li>
+            <strong>Streaming:</strong> While much more memory efficient for the JSON data itself, the parser and
+            formatter state (like the nesting stack and comma flags in the conceptual example) will still require some
+            dynamic allocation, which needs to be managed.
+          </li>
+        </ul>
+        <p>
+          Zig's <code>defer</code> statement is invaluable for ensuring deallocation calls happen when a function scope
+          is exited.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Choosing an Implementation Approach</h2>
+        <p>
+          For most practical JSON formatting tools in Zig, the <strong>Parse-and-Re-serialize</strong> approach is the
+          most balanced choice. It leverages existing JSON parsing libraries and is conceptually straightforward to
+          implement the serialization logic. The main consideration is memory usage for very large inputs.
+        </p>
+        <p>
+          The <strong>Streaming</strong> approach is ideal when memory is extremely constrained or when dealing with
+          continuous streams of JSON data. It's significantly harder to implement correctly from scratch.
+        </p>
+        <p>Avoid simple string manipulation for anything beyond the most trivial, non-standard-compliant cases.</p>
+
+        <h2 className="text-2xl font-semibold mt-8">Key Considerations for Implementation</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Library Choice:</strong> Decide whether to use Zig's standard library's <code>std.json</code> (which
+            is still evolving but capable) or an external Zig JSON library.
+          </li>
+          <li>
+            <strong>Error Handling:</strong> JSON parsing can fail for many reasons (syntax errors, unexpected EOF,
+            etc.). Your formatter should gracefully handle and report these errors using Zig's error unions.
+          </li>
+          <li>
+            <strong>Formatting Options:</strong> Support configurable indentation (spaces, tabs, count), line endings,
+            and whether to produce pretty-printed or compact output.
+          </li>
+          <li>
+            <strong>Memory Efficiency:</strong> Pay close attention to allocations, especially when using the
+            parse-and-re-serialize method. Consider using an arena allocator for the parsed data tree.
+          </li>
+          <li>
+            <strong>String Escaping:</strong> Correctly handle escaping of special characters within JSON strings (e.g.,{" "}
+            <code>"</code>, <code>\</code>, newline, tab, etc.). Libraries usually handle this.
+          </li>
+          <li>
+            <strong>Number Formatting:</strong> Ensure numbers are formatted correctly, handling integers and
+            floating-point values according to JSON's number representation.
+          </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Conclusion
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing a JSON formatter in Zig is a great way to learn about parsing, serialization, and explicit memory management. While the parse-and-re-serialize method using Zig's standard library or external libraries is the most common and practical, the streaming approach offers significant memory advantages for large datasets at the cost of increased implementation complexity. Choosing the right method depends on the specific requirements regarding performance, memory limits, and development time. Regardless of the method, Zig's power and control make it possible to build highly efficient and reliable JSON processing tools.
+          Implementing a JSON formatter in Zig is a great way to learn about parsing, serialization, and explicit memory
+          management. While the parse-and-re-serialize method using Zig's standard library or external libraries is the
+          most common and practical, the streaming approach offers significant memory advantages for large datasets at
+          the cost of increased implementation complexity. Choosing the right method depends on the specific
+          requirements regarding performance, memory limits, and development time. Regardless of the method, Zig's power
+          and control make it possible to build highly efficient and reliable JSON processing tools.
         </p>
       </div>
     </>

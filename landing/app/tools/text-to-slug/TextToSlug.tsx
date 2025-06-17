@@ -28,9 +28,9 @@ export default function TextToSlug() {
       lowercase,
       removeNumbers,
       removeStopWords,
-      strict
+      strict,
     };
-    
+
     const result = textToSlug(inputText, options);
     setOutputSlug(result);
   };
@@ -120,7 +120,7 @@ export default function TextToSlug() {
               {/* Separator Selection */}
               <div className="space-y-3">
                 <Label className="text-sm font-medium">Separator</Label>
-                
+
                 {/* Mobile: Dropdown Select */}
                 <div className="md:hidden">
                   <Select value={getSeparatorSelectValue()} onValueChange={handleSeparatorSelectChange}>
@@ -204,8 +204,6 @@ export default function TextToSlug() {
             </div>
             <div className="w-full md:w-1/2">{/* Empty space to align with options */}</div>
           </div>
-
-
         </div>
       </Container>
 

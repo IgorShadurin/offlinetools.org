@@ -7,7 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { extractTextFromHtml, HtmlLinkHandlingOption, HtmlTextExtractorOptions, DEFAULT_HTML_TEXT_EXTRACTOR_OPTIONS } from "shared";
+import {
+  extractTextFromHtml,
+  HtmlLinkHandlingOption,
+  HtmlTextExtractorOptions,
+  DEFAULT_HTML_TEXT_EXTRACTOR_OPTIONS,
+} from "shared";
 import { useState } from "react";
 import { AlertCircle, Check, Copy } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -84,17 +89,11 @@ export default function HtmlTextExtractor() {
 
         <div className="flex items-center gap-2 mb-4">
           <span className="text-sm text-muted-foreground">Related tools:</span>
-          <Link
-            href="/tools/json-formatter"
-            className="text-sm inline-flex items-center gap-1 hover:underline"
-          >
+          <Link href="/tools/json-formatter" className="text-sm inline-flex items-center gap-1 hover:underline">
             <LinkIcon className="h-3.5 w-3.5" />
             JSON Formatter
           </Link>
-          <Link
-            href="/tools/url-encoder"
-            className="text-sm inline-flex items-center gap-1 hover:underline"
-          >
+          <Link href="/tools/url-encoder" className="text-sm inline-flex items-center gap-1 hover:underline">
             <LinkIcon className="h-3.5 w-3.5" />
             URL Encoder/Decoder
           </Link>
@@ -161,10 +160,7 @@ export default function HtmlTextExtractor() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="link-handling">Link Handling</Label>
-                  <Select
-                    value={options.linkHandling}
-                    onValueChange={handleLinkHandlingChange}
-                  >
+                  <Select value={options.linkHandling} onValueChange={handleLinkHandlingChange}>
                     <SelectTrigger id="link-handling">
                       <SelectValue placeholder="Select link handling" />
                     </SelectTrigger>

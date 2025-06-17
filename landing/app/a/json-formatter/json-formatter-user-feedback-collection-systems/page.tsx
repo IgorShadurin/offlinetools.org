@@ -38,11 +38,11 @@ export default function JsonFormatterFeedbackArticle() {
             Why Feedback is Crucial <Speech className="w-7 h-7" />
           </h2>
           <p>
-            Building a great JSON formatter isn&apos;t just about writing clean code; it&apos;s about meeting
-            user needs. Whether it&apos;s a web tool, a desktop application, or a library,
-            understanding how users interact with it and what they expect is paramount. User feedback provides
-            invaluable insights that drive improvements, fix issues, and guide future development. For a JSON
-            formatter, specific feedback on formatting styles, error handling, performance, and usability is key.
+            Building a great JSON formatter isn&apos;t just about writing clean code; it&apos;s about meeting user
+            needs. Whether it&apos;s a web tool, a desktop application, or a library, understanding how users interact
+            with it and what they expect is paramount. User feedback provides invaluable insights that drive
+            improvements, fix issues, and guide future development. For a JSON formatter, specific feedback on
+            formatting styles, error handling, performance, and usability is key.
           </p>
         </section>
 
@@ -50,46 +50,44 @@ export default function JsonFormatterFeedbackArticle() {
           <h2 className="text-3xl font-semibold mb-4 flex items-center gap-2">
             Types of Feedback to Collect <ListTree className="w-7 h-7" />
           </h2>
-          <p>
-            Consider the different dimensions of user experience where a formatter can shine or falter:
-          </p>
+          <p>Consider the different dimensions of user experience where a formatter can shine or falter:</p>
           <ul className="list-disc pl-6 space-y-3 mt-4">
             <li className="flex items-start gap-2">
               <Bug className="w-5 h-5 mt-1 text-red-500" />
               <div>
                 <strong>Bug Reports:</strong> Users encountering incorrect formatting for specific JSON structures,
-                errors during processing, or unexpected behavior. Collecting details like the input JSON
-                (if possible and anonymized), the expected output, and steps to reproduce is vital.
+                errors during processing, or unexpected behavior. Collecting details like the input JSON (if possible
+                and anonymized), the expected output, and steps to reproduce is vital.
               </div>
             </li>
             <li className="flex items-start gap-2">
               <Sparkles className="w-5 h-5 mt-1 text-yellow-500" />
               <div>
-                <strong>Feature Requests:</strong> Users often have ideas for new features, such as different
-                formatting options (e.g., compact, verbose, specific indent styles), sorting keys, syntax
-                highlighting improvements, integration with other tools, or handling larger files.
+                <strong>Feature Requests:</strong> Users often have ideas for new features, such as different formatting
+                options (e.g., compact, verbose, specific indent styles), sorting keys, syntax highlighting
+                improvements, integration with other tools, or handling larger files.
               </div>
             </li>
             <li className="flex items-start gap-2">
               <LaptopMinimal className="w-5 h-5 mt-1 text-blue-500" />
               <div>
-                <strong>Usability Issues:</strong> Feedback on the user interface, ease of copy/pasting,
-                clarity of error messages, accessibility, and overall workflow. Is it easy for users to find
-                the options they need? Is the output clear?
+                <strong>Usability Issues:</strong> Feedback on the user interface, ease of copy/pasting, clarity of
+                error messages, accessibility, and overall workflow. Is it easy for users to find the options they need?
+                Is the output clear?
               </div>
             </li>
             <li className="flex items-start gap-2">
               <Gauge className="w-5 h-5 mt-1 text-green-500" />
               <div>
-                <strong>Performance:</strong> How fast is the formatter, especially with large or complex JSON?
-                Does it freeze? Does it consume excessive resources?
+                <strong>Performance:</strong> How fast is the formatter, especially with large or complex JSON? Does it
+                freeze? Does it consume excessive resources?
               </div>
             </li>
             <li className="flex items-start gap-2">
               <UsersRound className="w-5 h-5 mt-1 text-purple-500" />
               <div>
-                <strong>General Satisfaction/Comments:</strong> Open-ended feedback about what users like or dislike,
-                or suggestions that don&apos;t fit neatly into the above categories.
+                <strong>General Satisfaction/Comments:</strong> Open-ended feedback about what users like or dislike, or
+                suggestions that don&apos;t fit neatly into the above categories.
               </div>
             </li>
           </ul>
@@ -126,16 +124,17 @@ export default function JsonFormatterFeedbackArticle() {
             <li className="flex items-start gap-2">
               <Rocket className="w-5 h-5 mt-1 text-green-500" />
               <div>
-                <strong>Public Issue Trackers (e.g., GitHub Issues):</strong> If your tool is open source or community-driven,
-                using platforms like GitHub allows for transparency, discussion, and tracking of feedback.
+                <strong>Public Issue Trackers (e.g., GitHub Issues):</strong> If your tool is open source or
+                community-driven, using platforms like GitHub allows for transparency, discussion, and tracking of
+                feedback.
               </div>
             </li>
             <li className="flex items-start gap-2">
               <Wrench className="w-5 h-5 mt-1 text-purple-500" />
               <div>
                 <strong>Third-Party Feedback Tools:</strong> Services like UserVoice, Canny, or simple survey tools
-                (e.g., Google Forms, SurveyMonkey) offer pre-built systems for collecting, organizing, and
-                prioritizing feedback, sometimes with features like voting on requests.
+                (e.g., Google Forms, SurveyMonkey) offer pre-built systems for collecting, organizing, and prioritizing
+                feedback, sometimes with features like voting on requests.
               </div>
             </li>
           </ul>
@@ -145,13 +144,11 @@ export default function JsonFormatterFeedbackArticle() {
           <h2 className="text-3xl font-semibold mb-4 flex items-center gap-2">
             Technical Implementation Considerations <Wrench className="w-7 h-7" />
           </h2>
-          <p>
-            Implementing a feedback system involves deciding how the feedback data will be sent and stored.
-          </p>
+          <p>Implementing a feedback system involves deciding how the feedback data will be sent and stored.</p>
           <h3 className="text-2xl font-semibold mb-3 mt-6">Simple API Endpoint Approach</h3>
           <p>
-            A common approach, especially for in-app forms, is to have the client (browser JavaScript, desktop app)
-            send the feedback data to a backend API endpoint.
+            A common approach, especially for in-app forms, is to have the client (browser JavaScript, desktop app) send
+            the feedback data to a backend API endpoint.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
             <h4 className="text-xl font-medium mb-2">Conceptual API Endpoint (`/api/feedback`):</h4>
@@ -226,15 +223,15 @@ export default async function handler(
               </pre>
             </div>
             <p className="mt-2">
-              This server-side code (`pages/api/feedback.ts`) receives the POST request. Inside the handler,
-              you implement the logic to store or forward the feedback data.
+              This server-side code (`pages/api/feedback.ts`) receives the POST request. Inside the handler, you
+              implement the logic to store or forward the feedback data.
             </p>
           </div>
 
           <h3 className="text-2xl font-semibold mb-3 mt-6">Using Third-Party Services</h3>
           <p>
-            Instead of building the backend and storage yourself, you can integrate with a service.
-            Many services provide an API endpoint or even client-side JavaScript libraries.
+            Instead of building the backend and storage yourself, you can integrate with a service. Many services
+            provide an API endpoint or even client-side JavaScript libraries.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
             <h4 className="text-xl font-medium mb-2">Conceptual Integration with a Service:</h4>
@@ -293,8 +290,8 @@ export default async function handler(
               </pre>
             </div>
             <p className="mt-2">
-              Using a backend proxy (`/api/feedback-proxy`) is recommended if the service requires an API key
-              that should not be exposed on the client side.
+              Using a backend proxy (`/api/feedback-proxy`) is recommended if the service requires an API key that
+              should not be exposed on the client side.
             </p>
           </div>
         </section>
@@ -306,24 +303,26 @@ export default async function handler(
           <p>Once collected, feedback needs to be stored and managed:</p>
           <ul className="list-disc pl-6 space-y-3 mt-4">
             <li>
-              <strong>Databases:</strong> For structured storage, allowing easy querying and reporting.
-              Examples: PostgreSQL, MongoDB, or even a simple SQLite file for smaller applications.
+              <strong>Databases:</strong> For structured storage, allowing easy querying and reporting. Examples:
+              PostgreSQL, MongoDB, or even a simple SQLite file for smaller applications.
             </li>
             <li>
-              <strong>Files:</strong> Appending feedback to a log file (e.g., JSON Lines format) is simple but less scalable.
+              <strong>Files:</strong> Appending feedback to a log file (e.g., JSON Lines format) is simple but less
+              scalable.
             </li>
             <li>
-              <strong>Issue Trackers/Project Boards:</strong> Converting feedback (especially bug reports and feature requests)
-              into issues or tasks on platforms like GitHub, Jira, Trello, etc., integrates feedback into the development workflow.
+              <strong>Issue Trackers/Project Boards:</strong> Converting feedback (especially bug reports and feature
+              requests) into issues or tasks on platforms like GitHub, Jira, Trello, etc., integrates feedback into the
+              development workflow.
             </li>
             <li>
-              <strong>Dedicated Feedback Platforms:</strong> Third-party services provide dashboards to view, categorize,
-              prioritize, and manage feedback.
+              <strong>Dedicated Feedback Platforms:</strong> Third-party services provide dashboards to view,
+              categorize, prioritize, and manage feedback.
             </li>
           </ul>
           <p className="mt-4">
-            Regardless of the storage method, consider including metadata with each feedback entry: timestamp, user agent,
-            page/feature being used, and potentially a unique user ID (anonymized if necessary).
+            Regardless of the storage method, consider including metadata with each feedback entry: timestamp, user
+            agent, page/feature being used, and potentially a unique user ID (anonymized if necessary).
           </p>
         </section>
 
@@ -332,23 +331,25 @@ export default async function handler(
             Closing the Loop <Bell className="w-7 h-7" />
           </h2>
           <p>
-            A crucial but often overlooked part is letting users know their feedback was received and what action was taken.
-            This encourages future feedback and builds goodwill.
+            A crucial but often overlooked part is letting users know their feedback was received and what action was
+            taken. This encourages future feedback and builds goodwill.
           </p>
           <ul className="list-disc pl-6 space-y-3 mt-4">
             <li>
-              <strong>Acknowledgement:</strong> A simple &quot;Thank you for your feedback!&quot; message after submission.
+              <strong>Acknowledgement:</strong> A simple &quot;Thank you for your feedback!&quot; message after
+              submission.
             </li>
             <li>
-              <strong>Status Updates:</strong> If using a public platform or if users provide an email, you might inform them
-              when a bug they reported is fixed or a feature they requested is implemented.
+              <strong>Status Updates:</strong> If using a public platform or if users provide an email, you might inform
+              them when a bug they reported is fixed or a feature they requested is implemented.
             </li>
             <li>
               <strong>Public Changelog/Blog:</strong> Announcing fixes and new features derived from user feedback.
             </li>
           </ul>
           <p className="mt-4 flex items-center gap-2">
-            Building a feedback culture helps foster a community around your tool. <HeartHandshake className="w-6 h-6 text-pink-500" />
+            Building a feedback culture helps foster a community around your tool.{" "}
+            <HeartHandshake className="w-6 h-6 text-pink-500" />
           </p>
         </section>
 
@@ -357,11 +358,11 @@ export default async function handler(
             Conclusion <Speech className="w-7 h-7" />
           </h2>
           <p>
-            Implementing a robust feedback collection system for your JSON formatter, whether simple or complex,
-            is an investment in its quality and success. It provides the necessary insights to evolve the tool
-            in ways that truly benefit its users. By considering what types of feedback are most valuable,
-            choosing appropriate collection methods and storage, and remembering to communicate back to users,
-            you can create a powerful loop of continuous improvement.
+            Implementing a robust feedback collection system for your JSON formatter, whether simple or complex, is an
+            investment in its quality and success. It provides the necessary insights to evolve the tool in ways that
+            truly benefit its users. By considering what types of feedback are most valuable, choosing appropriate
+            collection methods and storage, and remembering to communicate back to users, you can create a powerful loop
+            of continuous improvement.
           </p>
         </section>
       </div>

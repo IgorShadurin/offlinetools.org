@@ -30,50 +30,65 @@ export default function DynamicJsonConfigGenerationArticle() {
 
       <div className="space-y-6">
         <p>
-          In modern software development, applications often need different configurations depending on the environment they are running in – be it development, staging, production, or feature branches. Managing these configurations manually or by simply committing static JSON files for each environment can quickly become cumbersome, error-prone, and pose security risks (especially with sensitive data).
+          In modern software development, applications often need different configurations depending on the environment
+          they are running in – be it development, staging, production, or feature branches. Managing these
+          configurations manually or by simply committing static JSON files for each environment can quickly become
+          cumbersome, error-prone, and pose security risks (especially with sensitive data).
         </p>
         <p>
-          This is where <strong>dynamic JSON configuration generation in build pipelines</strong> becomes invaluable. Instead of storing pre-configured files, you generate the necessary configuration JSON during your build or deployment process, injecting environment-specific values at runtime.
+          This is where <strong>dynamic JSON configuration generation in build pipelines</strong> becomes invaluable.
+          Instead of storing pre-configured files, you generate the necessary configuration JSON during your build or
+          deployment process, injecting environment-specific values at runtime.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Cog className="w-6 h-6" /> What is Dynamic Configuration Generation?
         </h2>
         <p>
-          At its core, dynamic configuration generation involves using automated scripts or tools within your CI/CD pipeline to create or modify configuration files based on the specific environment or context of the build/deployment. For JSON configurations, this typically means:
+          At its core, dynamic configuration generation involves using automated scripts or tools within your CI/CD
+          pipeline to create or modify configuration files based on the specific environment or context of the
+          build/deployment. For JSON configurations, this typically means:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Reading environment variables &#x7b;e.g., `API_URL`, `DATABASE_PORT`, `FEATURE_FLAG_X`&#x7d;.</li>
           <li>Fetching secrets from a secure vault &#x7b;e.g., API keys, passwords&#x7d;.</li>
           <li>Determining environment-specific settings based on the branch name or deployment target.</li>
           <li>Using these values to populate a template JSON file or construct a JSON object programmatically.</li>
-          <li>Saving the resulting JSON file to be included in the application&apos;s build artifact or deployed alongside it.</li>
+          <li>
+            Saving the resulting JSON file to be included in the application&apos;s build artifact or deployed alongside
+            it.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Zap className="w-6 h-6" /> Why Adopt This Approach?
         </h2>
-        <p>
-          There are several compelling reasons to dynamically generate your JSON configurations:
-        </p>
+        <p>There are several compelling reasons to dynamically generate your JSON configurations:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Environment Specificity:</strong> Easily manage distinct settings for different environments without manual file swapping or complex conditional logic within the application code itself.
+            <strong>Environment Specificity:</strong> Easily manage distinct settings for different environments without
+            manual file swapping or complex conditional logic within the application code itself.
           </li>
           <li>
-            <Shield className="inline w-5 h-5 mr-1" /> <strong>Security:</strong> Crucially, sensitive information like API keys or database credentials are not hardcoded or stored in source control. They are injected securely from environment variables or secret management systems during the pipeline execution.
+            <Shield className="inline w-5 h-5 mr-1" /> <strong>Security:</strong> Crucially, sensitive information like
+            API keys or database credentials are not hardcoded or stored in source control. They are injected securely
+            from environment variables or secret management systems during the pipeline execution.
           </li>
           <li>
-            <strong>Reduced Redundancy:</strong> Avoid duplicating entire JSON files for minor variations between environments. A single template or script can handle multiple environments.
+            <strong>Reduced Redundancy:</strong> Avoid duplicating entire JSON files for minor variations between
+            environments. A single template or script can handle multiple environments.
           </li>
           <li>
-            <strong>Consistency:</strong> Ensures that the deployed configuration is always derived from known, trusted inputs (like pipeline variables) rather than potentially stale static files.
+            <strong>Consistency:</strong> Ensures that the deployed configuration is always derived from known, trusted
+            inputs (like pipeline variables) rather than potentially stale static files.
           </li>
           <li>
-            <strong>Flexibility:</strong> Allows for runtime adjustments, like enabling or disabling feature flags based on the deployment environment or user group.
+            <strong>Flexibility:</strong> Allows for runtime adjustments, like enabling or disabling feature flags based
+            on the deployment environment or user group.
           </li>
           <li>
-            <GitFork className="inline w-5 h-5 mr-1" /> <strong>Branching Strategy Support:</strong> Makes it easier to deploy configurations specific to feature branches or testing environments.
+            <GitFork className="inline w-5 h-5 mr-1" /> <strong>Branching Strategy Support:</strong> Makes it easier to
+            deploy configurations specific to feature branches or testing environments.
           </li>
         </ul>
 
@@ -100,7 +115,8 @@ export default function DynamicJsonConfigGenerationArticle() {
           <Wrench className="w-5 h-5" /> 1. Templating
         </h3>
         <p>
-          Use a base JSON file with placeholder variables and a scripting language or templating engine to replace these placeholders with actual values from the environment.
+          Use a base JSON file with placeholder variables and a scripting language or templating engine to replace these
+          placeholders with actual values from the environment.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Basic Template (`config.template.json`)</h4>
@@ -114,7 +130,9 @@ export default function DynamicJsonConfigGenerationArticle() {
   }
 }`}
           </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Example: Simple Node.js Templating Script (`generate-config.js`)</h4>
+          <h4 className="text-lg font-medium mb-2 mt-4">
+            Example: Simple Node.js Templating Script (`generate-config.js`)
+          </h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
             {`const fs = require('fs');
 
@@ -131,19 +149,19 @@ fs.writeFileSync('config.json', config);
 console.log('Generated config.json');
 `}
           </pre>
-          <p className="mt-2 text-sm italic">
-            Pipeline step: `node generate-config.js` before the main build.
-          </p>
+          <p className="mt-2 text-sm italic">Pipeline step: `node generate-config.js` before the main build.</p>
         </div>
         <p>
-          More sophisticated templating engines (like Handlebars, EJS, or even shell tools like `envsubst`) offer richer syntax and features.
+          More sophisticated templating engines (like Handlebars, EJS, or even shell tools like `envsubst`) offer richer
+          syntax and features.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Terminal className="w-5 h-5" /> 2. Scripting Programmatically
         </h3>
         <p>
-          Write a script that reads environment variables and directly constructs the JSON object in memory, then writes it to a file. This is more flexible for complex logic or transformations.
+          Write a script that reads environment variables and directly constructs the JSON object in memory, then writes
+          it to a file. This is more flexible for complex logic or transformations.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h4 className="text-lg font-medium mb-2">Example: Node.js Script (`generate-config-programmatic.js`)</h4>
@@ -186,51 +204,99 @@ console.log('Generated config.json programmatically');
           <Package className="w-5 h-5" /> 3. Build Tool/CI/CD Specific Features
         </h3>
         <p>
-          Many build tools &#x7b;like Webpack with plugins like `DefinePlugin` or `EnvironmentPlugin`&#x7d; or CI/CD platforms have built-in ways to inject environment variables directly into the code or build process, which can then be used to construct the JSON.
+          Many build tools &#x7b;like Webpack with plugins like `DefinePlugin` or `EnvironmentPlugin`&#x7d; or CI/CD
+          platforms have built-in ways to inject environment variables directly into the code or build process, which
+          can then be used to construct the JSON.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Webpack/Vite:</strong> Use `process.env` variables directly in your application code and let the build tool substitute them with values from the environment where the build is running. This might involve having a small config file loaded by the app that references these `process.env` values.</li>
-          <li><strong>CI/CD Platforms:</strong> Tools like GitHub Actions, GitLab CI, Jenkins, Azure DevOps, AWS CodeBuild, etc., provide ways to define environment variables and secrets that are available to your build jobs. You can often execute simple shell commands or scripts directly within the pipeline definition to generate the JSON.</li>
+          <li>
+            <strong>Webpack/Vite:</strong> Use `process.env` variables directly in your application code and let the
+            build tool substitute them with values from the environment where the build is running. This might involve
+            having a small config file loaded by the app that references these `process.env` values.
+          </li>
+          <li>
+            <strong>CI/CD Platforms:</strong> Tools like GitHub Actions, GitLab CI, Jenkins, Azure DevOps, AWS
+            CodeBuild, etc., provide ways to define environment variables and secrets that are available to your build
+            jobs. You can often execute simple shell commands or scripts directly within the pipeline definition to
+            generate the JSON.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Cloud className="w-6 h-6" /> Integrating with Build Pipelines
         </h2>
         <p>
-          The dynamic generation step should typically occur early in your build pipeline, after checking out the code but before packaging or bundling the application.
+          The dynamic generation step should typically occur early in your build pipeline, after checking out the code
+          but before packaging or bundling the application.
         </p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
-          <li><strong>Checkout Code:</strong> Retrieve the source code from your repository.</li>
-          <li><strong>Set Environment Variables:</strong> The CI/CD platform loads environment-specific variables and secrets for the job.</li>
-          <li><strong>Generate Configuration:</strong> Execute the script or templating command to create the final `config.json` (or similar) file.</li>
           <li>
-            <PackageCheck className="inline w-5 h-5 mr-1" /> <strong>Build Application:</strong> Run your application&apos;s build process (e.g., `npm run build`, `yarn build`, Webpack, Parcel). The generated `config.json` should be placed in a location where the build process can include it in the final artifact (e.g., the build output directory).
+            <strong>Checkout Code:</strong> Retrieve the source code from your repository.
           </li>
-          <li><strong>Package Artifact:</strong> Create the deployable artifact (Docker image, zip file, etc.) which now includes the dynamically generated configuration file.</li>
           <li>
-            <ServerCog className="inline w-5 h-5 mr-1" /> <strong>Deploy:</strong> Deploy the artifact to the target environment.
+            <strong>Set Environment Variables:</strong> The CI/CD platform loads environment-specific variables and
+            secrets for the job.
+          </li>
+          <li>
+            <strong>Generate Configuration:</strong> Execute the script or templating command to create the final
+            `config.json` (or similar) file.
+          </li>
+          <li>
+            <PackageCheck className="inline w-5 h-5 mr-1" /> <strong>Build Application:</strong> Run your
+            application&apos;s build process (e.g., `npm run build`, `yarn build`, Webpack, Parcel). The generated
+            `config.json` should be placed in a location where the build process can include it in the final artifact
+            (e.g., the build output directory).
+          </li>
+          <li>
+            <strong>Package Artifact:</strong> Create the deployable artifact (Docker image, zip file, etc.) which now
+            includes the dynamically generated configuration file.
+          </li>
+          <li>
+            <ServerCog className="inline w-5 h-5 mr-1" /> <strong>Deploy:</strong> Deploy the artifact to the target
+            environment.
           </li>
         </ol>
         <p>
-          Alternatively, configuration generation can happen during the *deployment* phase, especially if the configuration depends on the specific server or instance being deployed to. This might involve injecting variables directly into files on the target machine or via container orchestration tools.
+          Alternatively, configuration generation can happen during the *deployment* phase, especially if the
+          configuration depends on the specific server or instance being deployed to. This might involve injecting
+          variables directly into files on the target machine or via container orchestration tools.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Shield className="w-6 h-6" /> Security Considerations
         </h2>
         <p>
-          While dynamic generation significantly improves security by keeping secrets out of source control, it&apos;s vital to use the secure mechanisms provided by your CI/CD platform or cloud provider for managing sensitive variables.
+          While dynamic generation significantly improves security by keeping secrets out of source control, it&apos;s
+          vital to use the secure mechanisms provided by your CI/CD platform or cloud provider for managing sensitive
+          variables.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Use Secrets Management:</strong> Never store API keys, passwords, or other sensitive data directly in plain text environment variables within your pipeline configuration files &#x7b;like `.gitlab-ci.yml`, `.github/workflows/*.yml`&#x7d;. Use the platform&apos;s dedicated &quot;Secrets&quot; or &quot;Variables&quot; management interface, which encrypts these values.</li>
-          <li><strong>Limit Variable Exposure:</strong> Only expose necessary variables to the build job.</li>
-          <li><strong>Review Script Permissions:</strong> Ensure your configuration generation script only has access to the minimum necessary environment variables.</li>
-          <li><strong>Avoid Logging Secrets:</strong> Be careful not to print sensitive variables to the pipeline logs during the generation process.</li>
+          <li>
+            <strong>Use Secrets Management:</strong> Never store API keys, passwords, or other sensitive data directly
+            in plain text environment variables within your pipeline configuration files &#x7b;like `.gitlab-ci.yml`,
+            `.github/workflows/*.yml`&#x7d;. Use the platform&apos;s dedicated &quot;Secrets&quot; or
+            &quot;Variables&quot; management interface, which encrypts these values.
+          </li>
+          <li>
+            <strong>Limit Variable Exposure:</strong> Only expose necessary variables to the build job.
+          </li>
+          <li>
+            <strong>Review Script Permissions:</strong> Ensure your configuration generation script only has access to
+            the minimum necessary environment variables.
+          </li>
+          <li>
+            <strong>Avoid Logging Secrets:</strong> Be careful not to print sensitive variables to the pipeline logs
+            during the generation process.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Conclusion</h2>
         <p>
-          Implementing dynamic JSON configuration generation in your build pipelines is a robust and secure pattern for managing environment-specific settings. It reduces manual effort, minimizes the risk of deploying incorrect configurations, and, most importantly, prevents sensitive data from being committed to your code repository. By leveraging simple scripts or build tool features, you can create a more maintainable, secure, and scalable configuration management strategy for your applications across different environments.
+          Implementing dynamic JSON configuration generation in your build pipelines is a robust and secure pattern for
+          managing environment-specific settings. It reduces manual effort, minimizes the risk of deploying incorrect
+          configurations, and, most importantly, prevents sensitive data from being committed to your code repository.
+          By leveraging simple scripts or build tool features, you can create a more maintainable, secure, and scalable
+          configuration management strategy for your applications across different environments.
         </p>
       </div>
     </>

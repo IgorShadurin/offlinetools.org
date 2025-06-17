@@ -18,18 +18,33 @@ export default function PersonGeneratorExplanation() {
         <div>
           <h3 className="text-xl font-semibold mb-2">Common Use Cases</h3>
           <ol className="list-decimal pl-6 space-y-3">
-            <li><strong>Database seeding</strong><p>Fill development databases with sample user records.</p></li>
-            <li><strong>UI mockups</strong><p>Populate designs with realistic names and contact details.</p></li>
-            <li><strong>Testing exports</strong><p>Generate bulk data to test CSV or JSON import features.</p></li>
-            <li><strong>Privacy protection</strong><p>Use fake data instead of real customer information.</p></li>
-            <li><strong>Education</strong><p>Demonstrate data processing pipelines without sensitive data.</p></li>
+            <li>
+              <strong>Database seeding</strong>
+              <p>Fill development databases with sample user records.</p>
+            </li>
+            <li>
+              <strong>UI mockups</strong>
+              <p>Populate designs with realistic names and contact details.</p>
+            </li>
+            <li>
+              <strong>Testing exports</strong>
+              <p>Generate bulk data to test CSV or JSON import features.</p>
+            </li>
+            <li>
+              <strong>Privacy protection</strong>
+              <p>Use fake data instead of real customer information.</p>
+            </li>
+            <li>
+              <strong>Education</strong>
+              <p>Demonstrate data processing pipelines without sensitive data.</p>
+            </li>
           </ol>
         </div>
         <div>
           <h3 className="text-xl font-semibold mb-2">Technical Details</h3>
           <p>
-            Person records are generated with the @faker-js/faker library and formatted
-            using built-in conversion functions. Templates replace variables like
+            Person records are generated with the @faker-js/faker library and formatted using built-in conversion
+            functions. Templates replace variables like
             <code>{`{{firstName}}`}</code> with generated values.
           </p>
         </div>

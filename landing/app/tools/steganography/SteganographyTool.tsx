@@ -22,7 +22,7 @@ import { useState, useRef, ChangeEvent, useCallback } from "react";
 
 export default function SteganographyTool() {
   const [activeTab, setActiveTab] = useState<"embed" | "extract">("embed");
-  
+
   const [embedImageFile, setEmbedImageFile] = useState<File | null>(null);
   const [embedText, setEmbedText] = useState("");
   const [embedPassword, setEmbedPassword] = useState("");
@@ -30,7 +30,7 @@ export default function SteganographyTool() {
   const [embedResult, setEmbedResult] = useState<EmbedResult | null>(null);
   const [isEmbedding, setIsEmbedding] = useState(false);
   const [embedError, setEmbedError] = useState<string | null>(null);
-  
+
   const [extractImageFile, setExtractImageFile] = useState<File | null>(null);
   const [extractPassword, setExtractPassword] = useState("");
   const [showExtractPassword, setShowExtractPassword] = useState(false);
@@ -203,13 +203,9 @@ export default function SteganographyTool() {
                     >
                       <div className="text-center">
                         <FileUp className="mx-auto h-8 w-8 mb-2" />
-                        <p className="text-sm">
-                          {embedImageFile ? embedImageFile.name : "Click to select image"}
-                        </p>
+                        <p className="text-sm">{embedImageFile ? embedImageFile.name : "Click to select image"}</p>
                         {embedImageFile && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {formatFileSize(embedImageFile.size)}
-                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">{formatFileSize(embedImageFile.size)}</p>
                         )}
                       </div>
                     </Button>
@@ -262,9 +258,7 @@ export default function SteganographyTool() {
                 <Alert>
                   <Download className="h-4 w-4" />
                   <AlertTitle>Success!</AlertTitle>
-                  <AlertDescription>
-                    Text has been successfully embedded in the image.
-                  </AlertDescription>
+                  <AlertDescription>Text has been successfully embedded in the image.</AlertDescription>
                 </Alert>
               )}
 
@@ -274,9 +268,7 @@ export default function SteganographyTool() {
                     <Download className="mr-2 h-4 w-4" />
                     Download Steganography Image
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    File: {embedResult.steganographyFileName}
-                  </p>
+                  <p className="text-xs text-muted-foreground text-center">File: {embedResult.steganographyFileName}</p>
                 </div>
               )}
 
@@ -311,13 +303,9 @@ export default function SteganographyTool() {
                     >
                       <div className="text-center">
                         <FileUp className="mx-auto h-8 w-8 mb-2" />
-                        <p className="text-sm">
-                          {extractImageFile ? extractImageFile.name : "Click to select image"}
-                        </p>
+                        <p className="text-sm">{extractImageFile ? extractImageFile.name : "Click to select image"}</p>
                         {extractImageFile && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {formatFileSize(extractImageFile.size)}
-                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">{formatFileSize(extractImageFile.size)}</p>
                         )}
                       </div>
                     </Button>
@@ -360,9 +348,7 @@ export default function SteganographyTool() {
                   <Alert>
                     <Unlock className="h-4 w-4" />
                     <AlertTitle>Text Extracted Successfully!</AlertTitle>
-                    <AlertDescription>
-                      The hidden text has been extracted from the image.
-                    </AlertDescription>
+                    <AlertDescription>The hidden text has been extracted from the image.</AlertDescription>
                   </Alert>
 
                   <div>
@@ -385,11 +371,7 @@ export default function SteganographyTool() {
                 </div>
               )}
 
-              <Button
-                onClick={handleExtract}
-                disabled={!extractImageFile || isExtracting}
-                className="w-full"
-              >
+              <Button onClick={handleExtract} disabled={!extractImageFile || isExtracting} className="w-full">
                 {isExtracting ? "Extracting..." : "Extract Text from Image"}
               </Button>
             </div>
@@ -400,17 +382,20 @@ export default function SteganographyTool() {
           <h3 className="text-lg font-semibold mb-4">How Steganography Works</h3>
           <div className="space-y-3 text-sm text-muted-foreground">
             <p>
-              <strong>Steganography</strong> is the practice of hiding information within other non-secret data. 
-              This tool uses the LSB (Least Significant Bit) method to embed text into image pixels.
+              <strong>Steganography</strong> is the practice of hiding information within other non-secret data. This
+              tool uses the LSB (Least Significant Bit) method to embed text into image pixels.
             </p>
             <p>
-              <strong>Security:</strong> All processing happens locally in your browser. Your images and text never leave your device.
+              <strong>Security:</strong> All processing happens locally in your browser. Your images and text never
+              leave your device.
             </p>
             <p>
-              <strong>Password Protection:</strong> When you provide a password, your text is encrypted using AES encryption before being embedded.
+              <strong>Password Protection:</strong> When you provide a password, your text is encrypted using AES
+              encryption before being embedded.
             </p>
             <p>
-              <strong>Text Hiding:</strong> This tool can hide any text content within images, from passwords to private notes.
+              <strong>Text Hiding:</strong> This tool can hide any text content within images, from passwords to private
+              notes.
             </p>
           </div>
         </div>

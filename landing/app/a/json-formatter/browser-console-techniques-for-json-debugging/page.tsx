@@ -15,18 +15,21 @@ export default function JsonDebuggingConsolePage() {
       </h1>
 
       <p className="text-lg mb-8 text-gray-700 dark:text-gray-300">
-        Dealing with JSON data is a daily task for web developers. Whether it's API responses, configuration files, or data structures within your application, understanding how to quickly inspect and debug JSON in the browser console can save you significant time and effort. This article explores several powerful techniques using the developer console built into modern browsers.
+        Dealing with JSON data is a daily task for web developers. Whether it's API responses, configuration files, or
+        data structures within your application, understanding how to quickly inspect and debug JSON in the browser
+        console can save you significant time and effort. This article explores several powerful techniques using the
+        developer console built into modern browsers.
       </p>
 
       <div className="space-y-8">
-
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Terminal className="mr-2 h-6 w-6 text-blue-600" />
             1. The Basics: `console.log()` and Direct Inspection
           </h2>
           <p>
-            The most fundamental tool is <code>console.log()</code>. When you log a JavaScript object or array (which is how JSON is represented in JavaScript), the console provides an interactive view.
+            The most fundamental tool is <code>console.log()</code>. When you log a JavaScript object or array (which is
+            how JSON is represented in JavaScript), the console provides an interactive view.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Simple Log</h3>
@@ -46,7 +49,8 @@ console.log(jsonData);`}
             </pre>
           </div>
           <p>
-            In the console, clicking the triangle next to the logged object/array will expand it, allowing you to navigate through nested properties and values. This is often sufficient for initial inspection.
+            In the console, clicking the triangle next to the logged object/array will expand it, allowing you to
+            navigate through nested properties and values. This is often sufficient for initial inspection.
           </p>
         </section>
 
@@ -56,7 +60,10 @@ console.log(jsonData);`}
             2. Detailed View: `console.dir()`
           </h2>
           <p>
-            While <code>console.log()</code> is great, sometimes it formats output differently depending on the object type. For a consistent, detailed, tree-like view of a JavaScript object's properties, including those not enumerable by <code>console.log()</code>, use <code>console.dir()</code>. This is particularly useful for inspecting complex objects that might contain more than just simple JSON data.
+            While <code>console.log()</code> is great, sometimes it formats output differently depending on the object
+            type. For a consistent, detailed, tree-like view of a JavaScript object's properties, including those not
+            enumerable by <code>console.log()</code>, use <code>console.dir()</code>. This is particularly useful for
+            inspecting complex objects that might contain more than just simple JSON data.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Using `console.dir()`</h3>
@@ -76,7 +83,8 @@ console.dir(complexObject);`}
             </pre>
           </div>
           <p>
-            You'll see that <code>console.dir()</code> provides a more structured and complete representation, making it easier to explore the object's internals.
+            You'll see that <code>console.dir()</code> provides a more structured and complete representation, making it
+            easier to explore the object's internals.
           </p>
         </section>
 
@@ -86,7 +94,9 @@ console.dir(complexObject);`}
             3. Parsing and Stringifying in the Console
           </h2>
           <p>
-            Sometimes you have JSON as a string and need to parse it, or you have an object and need its JSON string representation. The console is a live JavaScript environment where you can use <code>JSON.parse()</code> and <code>JSON.stringify()</code> directly.
+            Sometimes you have JSON as a string and need to parse it, or you have an object and need its JSON string
+            representation. The console is a live JavaScript environment where you can use <code>JSON.parse()</code> and{" "}
+            <code>JSON.stringify()</code> directly.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Parse and Stringify</h3>
@@ -111,7 +121,8 @@ console.log(formattedJson);`}
             </pre>
           </div>
           <p>
-            Using <code>JSON.stringify(obj, null, 2)</code> is particularly useful for pretty-printing JSON strings in the console or before copying them.
+            Using <code>JSON.stringify(obj, null, 2)</code> is particularly useful for pretty-printing JSON strings in
+            the console or before copying them.
           </p>
         </section>
 
@@ -121,7 +132,8 @@ console.log(formattedJson);`}
             4. Copying Data with `copy()`
           </h2>
           <p>
-            Need to grab that large JSON object from the console to paste into a text editor or JSON formatter? Most browser consoles provide a handy <code>copy()</code> function.
+            Need to grab that large JSON object from the console to paste into a text editor or JSON formatter? Most
+            browser consoles provide a handy <code>copy()</code> function.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Copying Data</h3>
@@ -133,7 +145,9 @@ copy(largeDataObject); // This copies the object's string representation to your
             </pre>
           </div>
           <p>
-            If you copy an object directly, it often copies its string representation (similar to <code>JSON.stringify</code> but browser-dependent). You can also chain it with <code>JSON.stringify</code> for more control:
+            If you copy an object directly, it often copies its string representation (similar to{" "}
+            <code>JSON.stringify</code> but browser-dependent). You can also chain it with <code>JSON.stringify</code>{" "}
+            for more control:
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
@@ -143,9 +157,7 @@ copy(largeDataObject); // This copies the object's string representation to your
 copy(JSON.stringify(largeDataObject, null, 2));`}
             </pre>
           </div>
-          <p>
-            This is invaluable for extracting complex data structures for external analysis or sharing.
-          </p>
+          <p>This is invaluable for extracting complex data structures for external analysis or sharing.</p>
         </section>
 
         <section>
@@ -154,7 +166,8 @@ copy(JSON.stringify(largeDataObject, null, 2));`}
             5. Accessing Nested Properties Directly
           </h2>
           <p>
-            Once you've logged or stopped at a breakpoint where your JSON data is available as a variable, you can access its nested properties directly in the console's command line.
+            Once you've logged or stopped at a breakpoint where your JSON data is available as a variable, you can
+            access its nested properties directly in the console's command line.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Accessing Nested Data</h3>
@@ -183,7 +196,10 @@ console.log(jsonData.user.profile.hasOwnProperty('settings'));`}
             </pre>
           </div>
           <p>
-            The console remembers the scope of the currently executing function (if paused at a breakpoint) or the global scope, allowing you to interact with variables. After logging an object, modern consoles often provide a temporary variable reference (like `$1`, `$2`, etc.) to the last logged items, which you can then use for exploration:
+            The console remembers the scope of the currently executing function (if paused at a breakpoint) or the
+            global scope, allowing you to interact with variables. After logging an object, modern consoles often
+            provide a temporary variable reference (like `$1`, `$2`, etc.) to the last logged items, which you can then
+            use for exploration:
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Using Console Variables</h3>
@@ -207,7 +223,8 @@ $1.user.orders[0].id`}
             6. Filtering Console Output
           </h2>
           <p>
-            When your application logs a lot of data, finding specific JSON output can be challenging. The browser console's filter bar is your friend. You can filter by:
+            When your application logs a lot of data, finding specific JSON output can be challenging. The browser
+            console's filter bar is your friend. You can filter by:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Log level (Errors, Warnings, Info, Logs, Debug)</li>
@@ -215,12 +232,11 @@ $1.user.orders[0].id`}
             <li>Source URL</li>
           </ul>
           <p>
-            Additionally, you can right-click on a logged message in some browsers and select "Filter" -&gt; "Show only from this source" or "Hide messages like this".
+            Additionally, you can right-click on a logged message in some browsers and select "Filter" -&gt; "Show only
+            from this source" or "Hide messages like this".
           </p>
-          <p>
-            For JSON debugging, logging your data with a descriptive label makes it easy to find later:
-          </p>
-           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <p>For JSON debugging, logging your data with a descriptive label makes it easy to find later:</p>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Logging with Labels for Filtering</h3>
             <pre>
               {`const apiResponse = &#x7b; /* ... extensive API data ... */ &#x7d;;
@@ -231,28 +247,42 @@ console.log('USER_DATA_DEBUG:', userData);`}
             </pre>
           </div>
           <p>
-            You can then type "API_RESPONSE_DEBUG" or "USER_DATA_DEBUG" into the console's filter bar to see only those specific logs.
+            You can then type "API_RESPONSE_DEBUG" or "USER_DATA_DEBUG" into the console's filter bar to see only those
+            specific logs.
           </p>
         </section>
 
-         <section>
+        <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Code className="mr-2 h-6 w-6 text-pink-600" />
             7. Using Breakpoints in the Sources Tab
           </h2>
           <p>
-            While logging is great, sometimes you need to inspect the JSON data at a very specific point in your code's execution. This is where breakpoints in the "Sources" tab become essential.
+            While logging is great, sometimes you need to inspect the JSON data at a very specific point in your code's
+            execution. This is where breakpoints in the "Sources" tab become essential.
           </p>
           <ol className="list-decimal pl-6 space-y-2">
             <li>Go to the "Sources" tab in your browser's developer tools.</li>
             <li>Find the JavaScript file containing the code that handles the JSON data.</li>
-            <li>Click on the line number where the JSON data (as a variable) is in scope. A blue marker indicates a breakpoint.</li>
-            <li>Trigger the code execution that reaches this line (e.g., click a button, refresh the page if it's on load).</li>
+            <li>
+              Click on the line number where the JSON data (as a variable) is in scope. A blue marker indicates a
+              breakpoint.
+            </li>
+            <li>
+              Trigger the code execution that reaches this line (e.g., click a button, refresh the page if it's on
+              load).
+            </li>
             <li>Execution will pause at your breakpoint.</li>
-            <li>In the "Scope" panel (usually on the right), expand the variables section to see the JSON data object.</li>
-            <li>In the "Console" tab (which is still active while paused), you can now directly access and inspect the variable by name, using the techniques mentioned above (<code>console.log()</code>, <code>console.dir()</code>, accessing nested properties).</li>
+            <li>
+              In the "Scope" panel (usually on the right), expand the variables section to see the JSON data object.
+            </li>
+            <li>
+              In the "Console" tab (which is still active while paused), you can now directly access and inspect the
+              variable by name, using the techniques mentioned above (<code>console.log()</code>,{" "}
+              <code>console.dir()</code>, accessing nested properties).
+            </li>
           </ol>
-           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example Scenario: Debugging API Response</h3>
             <pre>
               {`async function fetchUserData(userId) &#x7b;
@@ -267,19 +297,22 @@ console.log('USER_DATA_DEBUG:', userData);`}
             </pre>
           </div>
           <p>
-            Breakpoints offer a much deeper and more controlled inspection than just sprinkling <code>console.log</code> everywhere.
+            Breakpoints offer a much deeper and more controlled inspection than just sprinkling <code>console.log</code>{" "}
+            everywhere.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
-             <Terminal className="mr-2 h-6 w-6 text-blue-600" />
+            <Terminal className="mr-2 h-6 w-6 text-blue-600" />
             8. Experimenting in the Console Command Line
           </h2>
           <p>
-            Beyond just viewing data, the console command line is a live JavaScript environment. You can manipulate the JSON object (or its variable reference if available) to test transformations or access specific pieces of data.
+            Beyond just viewing data, the console command line is a live JavaScript environment. You can manipulate the
+            JSON object (or its variable reference if available) to test transformations or access specific pieces of
+            data.
           </p>
-           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <h3 className="text-lg font-medium mb-2">Example: Live Manipulation</h3>
             <pre>
               {`const productData = &#x7b;
@@ -303,18 +336,22 @@ $1.items[0].quantity = 1; // Modifies the object in the console's memory`}
             </pre>
           </div>
           <p>
-            This allows you to quickly prototype data processing logic or verify values derived from the JSON without changing and re-running your application code repeatedly.
+            This allows you to quickly prototype data processing logic or verify values derived from the JSON without
+            changing and re-running your application code repeatedly.
           </p>
         </section>
-
       </div>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
-         <Bug className="mr-2 h-6 w-6 text-red-600" />
+        <Bug className="mr-2 h-6 w-6 text-red-600" />
         Conclusion
       </h2>
       <p className="text-lg text-gray-700 dark:text-gray-300">
-        The browser console is a powerful, often underutilized, tool for debugging JSON. From simple logging and detailed inspection with <code>console.dir()</code> to parsing/stringifying, copying data, accessing nested properties, filtering output, utilizing breakpoints, and live manipulation, these techniques provide a comprehensive toolkit for understanding and troubleshooting your JSON data flow. Mastering these console methods will significantly boost your debugging efficiency. Happy debugging!
+        The browser console is a powerful, often underutilized, tool for debugging JSON. From simple logging and
+        detailed inspection with <code>console.dir()</code> to parsing/stringifying, copying data, accessing nested
+        properties, filtering output, utilizing breakpoints, and live manipulation, these techniques provide a
+        comprehensive toolkit for understanding and troubleshooting your JSON data flow. Mastering these console methods
+        will significantly boost your debugging efficiency. Happy debugging!
       </p>
     </div>
   );

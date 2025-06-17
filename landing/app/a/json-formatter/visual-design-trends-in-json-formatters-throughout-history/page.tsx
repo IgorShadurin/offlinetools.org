@@ -9,24 +9,22 @@ export const metadata: Metadata = {
 export default function JsonFormatterDesignTrendsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Visual Design Trends in JSON Formatters Throughout History
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Visual Design Trends in JSON Formatters Throughout History</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web
-          and beyond. As its usage exploded, so did the need for tools to make working with it easier. JSON
-          formatters, validators, and viewers are essential utilities for developers. But how have the visual
-          designs of these tools evolved over time, and what trends have shaped their appearance and
-          functionality? Let's take a historical journey through the design trends of JSON formatters.
+          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web and beyond.
+          As its usage exploded, so did the need for tools to make working with it easier. JSON formatters, validators,
+          and viewers are essential utilities for developers. But how have the visual designs of these tools evolved
+          over time, and what trends have shaped their appearance and functionality? Let's take a historical journey
+          through the design trends of JSON formatters.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Early Days: Plain Text and Basic Highlighting</h2>
         <p>
           In the beginning, JSON was often handled within simple text editors or basic web forms. The earliest
-          "formatters" were often command-line utilities or simple scripts that would pretty-print the JSON
-          string with indentation. Visual design was minimal, focusing purely on structure through whitespace.
+          "formatters" were often command-line utilities or simple scripts that would pretty-print the JSON string with
+          indentation. Visual design was minimal, focusing purely on structure through whitespace.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -40,21 +38,17 @@ export default function JsonFormatterDesignTrendsArticle() {
         </div>
 
         <p>
-          Syntax highlighting, borrowed from code editors, was one of the first major visual improvements. It
-          made different parts of the JSON (keys, values, strings, numbers, booleans, null) visually distinct,
-          significantly improving readability.
+          Syntax highlighting, borrowed from code editors, was one of the first major visual improvements. It made
+          different parts of the JSON (keys, values, strings, numbers, booleans, null) visually distinct, significantly
+          improving readability.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Example of early vs. highlighted JSON:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Early Plain Text:</h4>
-            <pre>
-              {`{"user":{"name":"Alice","age":30,"isActive":true,"address":null}}`}
-            </pre>
-            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-4 mb-2">
-              With Basic Highlighting:
-            </h4>
+            <pre>{`{"user":{"name":"Alice","age":30,"isActive":true,"address":null}}`}</pre>
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-4 mb-2">With Basic Highlighting:</h4>
             <pre>
               {`{<span style="color: #007700;">"user"</span>:{<span style="color: #007700;">"name"</span>:<span style="color: #aa5500;">"Alice"</span>,<span style="color: #007700;">"age"</span>:<span style="color: #009999;">30</span>,<span style="color: #007700;">"isActive"</span>:<span style="color: #007700;">true</span>,<span style="color: #007700;">"address"</span>:<span style="color: #aa5500;">null</span>}}`}
               {/* Note: Actual highlighting colors vary greatly */}
@@ -67,9 +61,9 @@ export default function JsonFormatterDesignTrendsArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">The Rich Web App Era: Interaction and Structure</h2>
         <p>
-          As web technologies advanced, so did online JSON tools. This era saw a shift from static text output
-          to interactive interfaces. The tree view became a popular design pattern, allowing users to collapse
-          and expand objects and arrays, mirroring the hierarchical nature of JSON.
+          As web technologies advanced, so did online JSON tools. This era saw a shift from static text output to
+          interactive interfaces. The tree view became a popular design pattern, allowing users to collapse and expand
+          objects and arrays, mirroring the hierarchical nature of JSON.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -84,16 +78,16 @@ export default function JsonFormatterDesignTrendsArticle() {
         </div>
 
         <p>
-          This interactive design was a significant leap forward, making large JSON documents much more
-          manageable for debugging and exploration. Instead of scrolling through thousands of lines of flat
-          text, users could navigate the structure logically.
+          This interactive design was a significant leap forward, making large JSON documents much more manageable for
+          debugging and exploration. Instead of scrolling through thousands of lines of flat text, users could navigate
+          the structure logically.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Focus on Usability and Readability</h2>
         <p>
-          Beyond basic interaction, tools began refining the user experience for better readability and
-          efficiency. This included options for different indentation levels, themes (light/dark modes), and
-          features like inline editing directly within the formatted view or tree.
+          Beyond basic interaction, tools began refining the user experience for better readability and efficiency. This
+          included options for different indentation levels, themes (light/dark modes), and features like inline editing
+          directly within the formatted view or tree.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -108,9 +102,8 @@ export default function JsonFormatterDesignTrendsArticle() {
         </div>
 
         <p>
-          The introduction of dark mode wasn't just an aesthetic choice; it addressed eye strain for users who
-          spent long hours looking at code and data, aligning JSON formatters with modern developer tool
-          trends.
+          The introduction of dark mode wasn't just an aesthetic choice; it addressed eye strain for users who spent
+          long hours looking at code and data, aligning JSON formatters with modern developer tool trends.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -135,17 +128,15 @@ export default function JsonFormatterDesignTrendsArticle() {
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            Different indentations affect code density and personal preference.
-          </p>
+          <p className="mt-2 text-sm">Different indentations affect code density and personal preference.</p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Modern JSON Tools: Integrated Features and Smartness</h2>
         <p>
-          Modern JSON formatters often go beyond simple formatting and validation. They integrate features
-          like schema validation, comparison tools, transformation capabilities (like converting to CSV or
-          XML), and even AI-assisted explanations or suggestions. The visual design reflects this complexity,
-          often incorporating multi-panel layouts and dedicated sections for different tasks.
+          Modern JSON formatters often go beyond simple formatting and validation. They integrate features like schema
+          validation, comparison tools, transformation capabilities (like converting to CSV or XML), and even
+          AI-assisted explanations or suggestions. The visual design reflects this complexity, often incorporating
+          multi-panel layouts and dedicated sections for different tasks.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -161,34 +152,33 @@ export default function JsonFormatterDesignTrendsArticle() {
         </div>
 
         <p>
-          Design in modern tools emphasizes efficiency and context. Errors might link directly to validation
-          rules, and data points might offer quick actions like copying their path (e.g.,{" "}
-          <code>user.address.city</code>).
+          Design in modern tools emphasizes efficiency and context. Errors might link directly to validation rules, and
+          data points might offer quick actions like copying their path (e.g., <code>user.address.city</code>).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Purpose Behind the Design</h2>
         <p>
-          The evolution of JSON formatter design isn't just about making tools look pretty; it's fundamentally
-          about improving the user's workflow:
+          The evolution of JSON formatter design isn't just about making tools look pretty; it's fundamentally about
+          improving the user's workflow:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Readability:</span> Making complex, nested data easy to scan and
-              understand at a glance (highlighting, indentation, themes).
+              <span className="font-medium">Readability:</span> Making complex, nested data easy to scan and understand
+              at a glance (highlighting, indentation, themes).
             </li>
             <li>
-              <span className="font-medium">Debuggability:</span> Quickly identifying syntax errors and
-              understanding the structure to find data issues (error highlighting, tree views).
+              <span className="font-medium">Debuggability:</span> Quickly identifying syntax errors and understanding
+              the structure to find data issues (error highlighting, tree views).
             </li>
             <li>
-              <span className="font-medium">Efficiency:</span> Enabling faster interaction with the data (copy
-              nodes, search, filter, collapse).
+              <span className="font-medium">Efficiency:</span> Enabling faster interaction with the data (copy nodes,
+              search, filter, collapse).
             </li>
             <li>
-              <span className="font-medium">Accessibility:</span> Catering to different user needs (dark mode,
-              font size options).
+              <span className="font-medium">Accessibility:</span> Catering to different user needs (dark mode, font size
+              options).
             </li>
             <li>
               <span className="font-medium">Integration:</span> Providing related functionality within a single
@@ -199,18 +189,17 @@ export default function JsonFormatterDesignTrendsArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          From humble beginnings as simple pretty-printers, JSON formatters have evolved into sophisticated
-          tools with rich visual designs. Each trend—from basic highlighting and indentation to interactive
-          tree views, dark modes, and integrated validation—has aimed to make the process of working with JSON
-          data more intuitive, efficient, and less prone to errors.
+          From humble beginnings as simple pretty-printers, JSON formatters have evolved into sophisticated tools with
+          rich visual designs. Each trend—from basic highlighting and indentation to interactive tree views, dark modes,
+          and integrated validation—has aimed to make the process of working with JSON data more intuitive, efficient,
+          and less prone to errors.
         </p>
         <p>
           The design choices reflect the growing complexity of data handled and the increasing expectations of
-          developers for tools that are not only functional but also pleasant and effective to use. As JSON
-          continues to be a cornerstone of data exchange, we can expect visual designs to keep adapting,
-          incorporating new paradigms like AI assistance and even more seamless integration into development
-          workflows. The journey of JSON formatter design is a microcosm of the evolution of developer tools
-          towards greater usability and power.
+          developers for tools that are not only functional but also pleasant and effective to use. As JSON continues to
+          be a cornerstone of data exchange, we can expect visual designs to keep adapting, incorporating new paradigms
+          like AI assistance and even more seamless integration into development workflows. The journey of JSON
+          formatter design is a microcosm of the evolution of developer tools towards greater usability and power.
         </p>
       </div>
     </>

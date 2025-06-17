@@ -21,22 +21,20 @@ export const metadata: Metadata = {
 export default function CommunityJsonSchemaReposArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Community-Driven JSON Schema Repositories
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Community-Driven JSON Schema Repositories</h1>
 
       <div className="space-y-6">
         <p>
-          JSON Schema is a powerful tool for describing the structure and constraints of JSON data. It allows you
-          to validate JSON documents, autogenerate documentation, and provide clear expectations for data formats.
-          While defining schemas for your own projects is essential, many data structures are common across different
+          JSON Schema is a powerful tool for describing the structure and constraints of JSON data. It allows you to
+          validate JSON documents, autogenerate documentation, and provide clear expectations for data formats. While
+          defining schemas for your own projects is essential, many data structures are common across different
           applications, domains, or even industries. This is where the concept of{" "}
           <strong>community-driven JSON Schema repositories</strong> becomes incredibly valuable.
         </p>
         <p>
-          Instead of every developer or team reinventing the wheel for common data shapes (like addresses, user profiles,
-          product descriptions, or standard API response structures), a community can collaborate to define, maintain,
-          and share high-quality, standardized JSON Schemas.
+          Instead of every developer or team reinventing the wheel for common data shapes (like addresses, user
+          profiles, product descriptions, or standard API response structures), a community can collaborate to define,
+          maintain, and share high-quality, standardized JSON Schemas.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -49,9 +47,9 @@ export default function CommunityJsonSchemaReposArticle() {
           version control systems to track changes, manage contributions, and provide discoverability.
         </p>
         <p>
-          The &quot;community-driven&quot; aspect means that the collection isn&apos;t owned or dictated by a single entity,
-          but rather evolves through collaborative processes – proposals for new schemas or changes to existing ones
-          are discussed, reviewed, and accepted by contributors according to established guidelines.
+          The &quot;community-driven&quot; aspect means that the collection isn&apos;t owned or dictated by a single
+          entity, but rather evolves through collaborative processes – proposals for new schemas or changes to existing
+          ones are discussed, reviewed, and accepted by contributors according to established guidelines.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -70,24 +68,24 @@ export default function CommunityJsonSchemaReposArticle() {
           <li className="flex items-start">
             <Users className="w-5 h-5 mr-2 mt-1 text-blue-500 flex-shrink-0" />
             <div>
-              <strong>Reusability:</strong> Avoids duplicating effort. Why write a new schema for an email address or a date-time
-              string when a well-defined, community-approved one already exists?
+              <strong>Reusability:</strong> Avoids duplicating effort. Why write a new schema for an email address or a
+              date-time string when a well-defined, community-approved one already exists?
             </div>
-          {/* Correcting the list item below to use flex layout and span for icon */}
+            {/* Correcting the list item below to use flex layout and span for icon */}
           </li>
           <li className="flex items-start">
             <GitFork className="w-5 h-5 mr-2 mt-1 text-purple-500 flex-shrink-0" />
             <div>
-              <strong>Collaboration & Quality:</strong> Schemas benefit from review and contributions from multiple experts,
-              leading to more robust, comprehensive, and well-tested definitions that consider various edge cases and
-              use scenarios.
+              <strong>Collaboration & Quality:</strong> Schemas benefit from review and contributions from multiple
+              experts, leading to more robust, comprehensive, and well-tested definitions that consider various edge
+              cases and use scenarios.
             </div>
           </li>
           <li className="flex items-start">
             <Cloud className="w-5 h-5 mr-2 mt-1 text-gray-500 flex-shrink-0" />
             <div>
-              <strong>Discoverability:</strong> Centralized repositories make it easier to find existing schemas for common concepts
-              or to see how others have tackled similar data modeling challenges.
+              <strong>Discoverability:</strong> Centralized repositories make it easier to find existing schemas for
+              common concepts or to see how others have tackled similar data modeling challenges.
             </div>
           </li>
         </ul>
@@ -102,7 +100,9 @@ export default function CommunityJsonSchemaReposArticle() {
         <p>Consider a simple schema for a geographical coordinate pair:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2"><code>geo.json</code> (Example)</h3>
+          <h3 className="text-lg font-medium mb-2">
+            <code>geo.json</code> (Example)
+          </h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
             {`{
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -140,12 +140,14 @@ export default function CommunityJsonSchemaReposArticle() {
         </div>
 
         <p>
-          Another common pattern is referencing schemas from the repository using the <code>$ref</code> keyword.
-          Imagine a schema for a &quot;Location&quot; that uses the coordinate schema:
+          Another common pattern is referencing schemas from the repository using the <code>$ref</code> keyword. Imagine
+          a schema for a &quot;Location&quot; that uses the coordinate schema:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-           <h3 className="text-lg font-medium mb-2"><code>location.json</code> (Example)</h3>
+          <h3 className="text-lg font-medium mb-2">
+            <code>location.json</code> (Example)
+          </h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
             {`{
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -196,24 +198,34 @@ export default function CommunityJsonSchemaReposArticle() {
         </h2>
         <p>Community schemas can be applied in numerous scenarios:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>API Development:</strong> Standardize request and response payloads for common entities (users, products, orders) across different services or APIs from different providers.</li>
-          <li><strong>Data Exchange Formats:</strong> Define common data structures for exchanging information between organizations or systems (e.g., supply chain data, healthcare records, sensor data).</li>
-          <li><strong>Configuration Files:</strong> Provide schemas for well-known configuration file formats used by popular tools or frameworks.</li>
-          <li><strong>Document Databases:</strong> Guide the structure of documents stored in NoSQL databases like MongoDB or Couchbase.</li>
+          <li>
+            <strong>API Development:</strong> Standardize request and response payloads for common entities (users,
+            products, orders) across different services or APIs from different providers.
+          </li>
+          <li>
+            <strong>Data Exchange Formats:</strong> Define common data structures for exchanging information between
+            organizations or systems (e.g., supply chain data, healthcare records, sensor data).
+          </li>
+          <li>
+            <strong>Configuration Files:</strong> Provide schemas for well-known configuration file formats used by
+            popular tools or frameworks.
+          </li>
+          <li>
+            <strong>Document Databases:</strong> Guide the structure of documents stored in NoSQL databases like MongoDB
+            or Couchbase.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Search className="w-6 h-6 mr-2" /> Finding and Contributing
         </h2>
         <p>
-          Finding existing community-driven repositories often involves searching platforms like GitHub for &quot;JSON Schema&quot;
-          combined with domain-specific terms (e.g., &quot;healthcare JSON Schema&quot;, &quot;e-commerce JSON Schema&quot;).
-          Look for repositories with active communities, clear documentation, contribution guidelines, and established
-          processes for schema evolution.
+          Finding existing community-driven repositories often involves searching platforms like GitHub for &quot;JSON
+          Schema&quot; combined with domain-specific terms (e.g., &quot;healthcare JSON Schema&quot;, &quot;e-commerce
+          JSON Schema&quot;). Look for repositories with active communities, clear documentation, contribution
+          guidelines, and established processes for schema evolution.
         </p>
-        <p>
-          Contributing typically follows the standard open-source model:
-        </p>
+        <p>Contributing typically follows the standard open-source model:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>Fork the repository.</li>
           <li>Discuss proposed changes or new schemas via issues.</li>
@@ -227,10 +239,21 @@ export default function CommunityJsonSchemaReposArticle() {
         </h2>
         <p>While beneficial, challenges exist:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Trust and Authority:</strong> Who governs the schema evolution? Ensuring schemas are well-designed and trustworthy is crucial.</li>
-          <li><strong>Scope Creep:</strong> Repositories can become overly broad or include too many niche schemas.</li>
-          <li><strong>Versioning and Breaking Changes:</strong> Managing updates and ensuring backward compatibility is complex as schemas evolve. Clear versioning strategies (like Semantic Versioning) are vital.</li>
-          <li><strong>Discoverability (within the repo):</strong> As repositories grow, organizing and searching for schemas can become challenging.</li>
+          <li>
+            <strong>Trust and Authority:</strong> Who governs the schema evolution? Ensuring schemas are well-designed
+            and trustworthy is crucial.
+          </li>
+          <li>
+            <strong>Scope Creep:</strong> Repositories can become overly broad or include too many niche schemas.
+          </li>
+          <li>
+            <strong>Versioning and Breaking Changes:</strong> Managing updates and ensuring backward compatibility is
+            complex as schemas evolve. Clear versioning strategies (like Semantic Versioning) are vital.
+          </li>
+          <li>
+            <strong>Discoverability (within the repo):</strong> As repositories grow, organizing and searching for
+            schemas can become challenging.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
@@ -238,9 +261,9 @@ export default function CommunityJsonSchemaReposArticle() {
           Community-driven JSON Schema repositories represent a powerful model for fostering data standardization and
           collaboration within specific domains or the broader developer community. By pooling expertise and effort,
           developers can rely on robust, well-defined schemas for common data structures, significantly improving
-          interoperability, reducing boilerplate, and enhancing the overall quality of data handling in their applications.
-          As the use of JSON Schema continues to grow, these shared resources will become increasingly important for building
-          a more connected and standardized data ecosystem.
+          interoperability, reducing boilerplate, and enhancing the overall quality of data handling in their
+          applications. As the use of JSON Schema continues to grow, these shared resources will become increasingly
+          important for building a more connected and standardized data ecosystem.
         </p>
       </div>
     </>

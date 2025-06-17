@@ -1,5 +1,17 @@
 import type { Metadata } from "next";
-import { Clock, Microscope, Target, Code, AlertCircle, Zap, MemoryStick, Binary, GitFork, Bug, ScrollText } from "lucide-react"; // Only allowed icons
+import {
+  Clock,
+  Microscope,
+  Target,
+  Code,
+  AlertCircle,
+  Zap,
+  MemoryStick,
+  Binary,
+  GitFork,
+  Bug,
+  ScrollText,
+} from "lucide-react"; // Only allowed icons
 
 export const metadata: Metadata = {
   title: "JSON Parser Tracing and Profiling Techniques | Offline Tools",
@@ -10,16 +22,18 @@ export const metadata: Metadata = {
 export default function JsonParserTracingProfilingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        JSON Parser Tracing and Profiling Techniques
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">JSON Parser Tracing and Profiling Techniques</h1>
 
       <div className="space-y-6">
         <p>
-          JSON parsing is a common operation in modern software, from web services communicating data to configuration file readers. While built-in parsers like JavaScript&apos;s <code>JSON.parse</code> are highly optimized, understanding the internal workings and performance characteristics of a parser is crucial when debugging complex data structures, identifying performance bottlenecks, or working with custom parsing logic.
+          JSON parsing is a common operation in modern software, from web services communicating data to configuration
+          file readers. While built-in parsers like JavaScript&apos;s <code>JSON.parse</code> are highly optimized,
+          understanding the internal workings and performance characteristics of a parser is crucial when debugging
+          complex data structures, identifying performance bottlenecks, or working with custom parsing logic.
         </p>
         <p>
-          This article explores techniques for <strong>tracing</strong> and <strong>profiling</strong> JSON parsers, providing insights into how they process data and where potential issues might lie.
+          This article explores techniques for <strong>tracing</strong> and <strong>profiling</strong> JSON parsers,
+          providing insights into how they process data and where potential issues might lie.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -27,15 +41,21 @@ export default function JsonParserTracingProfilingArticle() {
           What is Tracing?
         </h2>
         <p>
-          Tracing a parser involves following its execution path step-by-step as it consumes the input JSON string. This is akin to walking through the code with a debugger, but often involves adding explicit output (like log messages) to record the parser&apos;s state and actions at various points.
+          Tracing a parser involves following its execution path step-by-step as it consumes the input JSON string. This
+          is akin to walking through the code with a debugger, but often involves adding explicit output (like log
+          messages) to record the parser&apos;s state and actions at various points.
         </p>
-        <p>
-          Key information you might trace includes:
-        </p>
+        <p>Key information you might trace includes:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Tokenization steps (what token was identified at which position).</li>
-          <li>Function calls within the parser (e.g., entering <code>parseObject</code>, <code>parseArray</code>, <code>parseValue</code>).</li>
-          <li>Consumption of specific tokens (e.g., consuming a <code>:</code>, <code>,</code>, <code>&#x7b;</code>, <code>&#x7d;</code>, <code>[</code>, <code>]</code>).</li>
+          <li>
+            Function calls within the parser (e.g., entering <code>parseObject</code>, <code>parseArray</code>,{" "}
+            <code>parseValue</code>).
+          </li>
+          <li>
+            Consumption of specific tokens (e.g., consuming a <code>:</code>, <code>,</code>, <code>&#x7b;</code>,{" "}
+            <code>&#x7d;</code>, <code>[</code>, <code>]</code>).
+          </li>
           <li>Values being parsed or added to the resulting data structure.</li>
           <li>Detection of errors or unexpected input.</li>
           <li>Depth of nested structures.</li>
@@ -43,7 +63,8 @@ export default function JsonParserTracingProfilingArticle() {
 
         <h3 className="text-xl font-semibold mt-6">Implementing Basic Tracing</h3>
         <p>
-          The simplest form of tracing is adding print statements (e.g., <code>console.log</code> in JavaScript/TypeScript) at strategic points in your parser code.
+          The simplest form of tracing is adding print statements (e.g., <code>console.log</code> in
+          JavaScript/TypeScript) at strategic points in your parser code.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -117,10 +138,13 @@ class ParserWithTracing {
             </pre>
           </div>
           <p className="mt-4">
-            By strategically placing <code>console.log</code> statements, you can generate a detailed log of the parser&apos;s actions, which is invaluable for understanding exactly *how* a specific piece of JSON was processed or why an error occurred.
+            By strategically placing <code>console.log</code> statements, you can generate a detailed log of the
+            parser&apos;s actions, which is invaluable for understanding exactly *how* a specific piece of JSON was
+            processed or why an error occurred.
           </p>
           <p>
-            For more complex parsers or production systems, consider using a dedicated logging library that allows different log levels (DEBUG, INFO, ERROR) and structured logging formats (like JSON) for easier analysis.
+            For more complex parsers or production systems, consider using a dedicated logging library that allows
+            different log levels (DEBUG, INFO, ERROR) and structured logging formats (like JSON) for easier analysis.
           </p>
         </div>
 
@@ -129,21 +153,35 @@ class ParserWithTracing {
           What is Profiling?
         </h2>
         <p>
-          Profiling a parser focuses on its performance characteristics – how much time and memory it consumes. The goal is to identify bottlenecks: which parts of the parsing process are the slowest or use the most resources.
+          Profiling a parser focuses on its performance characteristics – how much time and memory it consumes. The goal
+          is to identify bottlenecks: which parts of the parsing process are the slowest or use the most resources.
         </p>
-        <p>
-          Key metrics for profiling include:
-        </p>
+        <p>Key metrics for profiling include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-medium flex items-center gap-2"><Clock className="w-4 h-4" /> Execution Time:</span> How long does the overall parsing take? How much time is spent in specific functions (e.g., tokenization vs. parsing structure)?</li>
-          <li><span className="font-medium flex items-center gap-2"><MemoryStick className="w-4 h-4" /> Memory Usage:</span> How much memory is allocated during parsing? Are there patterns that lead to excessive memory consumption or potential leaks?</li>
-          <li><span className="font-medium flex items-center gap-2"><GitFork className="w-4 h-4" /> Function Call Counts:</span> How many times are key parsing functions called? (Useful for recursive parsers to see depth/frequency).</li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <Clock className="w-4 h-4" /> Execution Time:
+            </span>{" "}
+            How long does the overall parsing take? How much time is spent in specific functions (e.g., tokenization vs.
+            parsing structure)?
+          </li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <MemoryStick className="w-4 h-4" /> Memory Usage:
+            </span>{" "}
+            How much memory is allocated during parsing? Are there patterns that lead to excessive memory consumption or
+            potential leaks?
+          </li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <GitFork className="w-4 h-4" /> Function Call Counts:
+            </span>{" "}
+            How many times are key parsing functions called? (Useful for recursive parsers to see depth/frequency).
+          </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">Implementing Basic Profiling</h3>
-        <p>
-          Similar to tracing, you can add instrumentation to your code to collect profiling data.
-        </p>
+        <p>Similar to tracing, you can add instrumentation to your code to collect profiling data.</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
@@ -190,7 +228,17 @@ class ParserWithTracing {
             </pre>
           </div>
           <p className="mt-4">
-            Using <code>console.time</code> and <code>console.timeEnd</code> provides a simple way to measure the duration of specific code blocks. For more detailed timing, you can use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance_API" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline">Performance API</a> (<code>performance.mark</code>, <code>performance.measure</code>).
+            Using <code>console.time</code> and <code>console.timeEnd</code> provides a simple way to measure the
+            duration of specific code blocks. For more detailed timing, you can use the{" "}
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/Performance_API"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 underline"
+            >
+              Performance API
+            </a>{" "}
+            (<code>performance.mark</code>, <code>performance.measure</code>).
           </p>
         </div>
 
@@ -243,40 +291,79 @@ class ParserWithTracing {
             </pre>
           </div>
           <p className="mt-4">
-            Counting function calls can reveal how often different parser rules are invoked, which is particularly insightful for deeply nested or complex JSON structures.
+            Counting function calls can reveal how often different parser rules are invoked, which is particularly
+            insightful for deeply nested or complex JSON structures.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">Using External Tools</h3>
-        <p>
-          Beyond manual instrumentation, professional profiling tools offer more detailed insights:
-        </p>
+        <p>Beyond manual instrumentation, professional profiling tools offer more detailed insights:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-medium">Browser Developer Tools:</span> The &quot;Performance&quot; and &quot;Memory&quot; tabs in browsers like Chrome or Firefox are powerful for profiling client-side JavaScript parsers (or Node.js code if debugging remotely). They provide flame charts, call trees, and memory heap snapshots.</li>
-          <li><span className="font-medium">Node.js Profiler:</span> Node.js has built-in profiling capabilities (e.g., using <code>--prof</code> flag) that generate V8 profiler output, which can be analyzed using tools like <code>&quot;0x&quot;</code> or browser devtools.</li>
-          <li><span className="font-medium">Language/Platform Specific Profilers:</span> Other languages have their own profiling tools (e.g., VisualVM for Java, cProfile for Python).</li>
-          <li><span className="font-medium">Application Performance Monitoring (APM) Tools:</span> For production environments, APM tools can provide distributed tracing and profiling across your system, including backend JSON processing.</li>
+          <li>
+            <span className="font-medium">Browser Developer Tools:</span> The &quot;Performance&quot; and
+            &quot;Memory&quot; tabs in browsers like Chrome or Firefox are powerful for profiling client-side JavaScript
+            parsers (or Node.js code if debugging remotely). They provide flame charts, call trees, and memory heap
+            snapshots.
+          </li>
+          <li>
+            <span className="font-medium">Node.js Profiler:</span> Node.js has built-in profiling capabilities (e.g.,
+            using <code>--prof</code> flag) that generate V8 profiler output, which can be analyzed using tools like{" "}
+            <code>&quot;0x&quot;</code> or browser devtools.
+          </li>
+          <li>
+            <span className="font-medium">Language/Platform Specific Profilers:</span> Other languages have their own
+            profiling tools (e.g., VisualVM for Java, cProfile for Python).
+          </li>
+          <li>
+            <span className="font-medium">Application Performance Monitoring (APM) Tools:</span> For production
+            environments, APM tools can provide distributed tracing and profiling across your system, including backend
+            JSON processing.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Target className="w-6 h-6" />
           When to Use Tracing and Profiling
         </h2>
-        <p>
-          These techniques are most useful in specific scenarios:
-        </p>
+        <p>These techniques are most useful in specific scenarios:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-medium flex items-center gap-2"><Bug className="w-4 h-4" /> Debugging Complex Errors:</span> When a parser fails on specific input, tracing shows the exact sequence of tokens and function calls leading up to the error.</li>
-          <li><span className="font-medium flex items-center gap-2"><Zap className="w-4 h-4" /> Identifying Performance Bottlenecks:</span> Profiling highlights which parser functions or input patterns consume the most time or memory, guiding optimization efforts.</li>
-          <li><span className="font-medium flex items-center gap-2"><ScrollText className="w-4 h-4" /> Understanding Parser Behavior:</span> For educational purposes or when working with unfamiliar parser code, tracing helps demystify the parsing process.</li>
-          <li><span className="font-medium flex items-center gap-2"><AlertCircle className="w-4 h-4" /> Handling Large or Malformed Data:</span> Profiling can reveal issues specific to handling very large JSON files or inputs that deviate from the expected format.</li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <Bug className="w-4 h-4" /> Debugging Complex Errors:
+            </span>{" "}
+            When a parser fails on specific input, tracing shows the exact sequence of tokens and function calls leading
+            up to the error.
+          </li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <Zap className="w-4 h-4" /> Identifying Performance Bottlenecks:
+            </span>{" "}
+            Profiling highlights which parser functions or input patterns consume the most time or memory, guiding
+            optimization efforts.
+          </li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <ScrollText className="w-4 h-4" /> Understanding Parser Behavior:
+            </span>{" "}
+            For educational purposes or when working with unfamiliar parser code, tracing helps demystify the parsing
+            process.
+          </li>
+          <li>
+            <span className="font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" /> Handling Large or Malformed Data:
+            </span>{" "}
+            Profiling can reveal issues specific to handling very large JSON files or inputs that deviate from the
+            expected format.
+          </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Conclusion
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Tracing and profiling are essential skills for understanding and optimizing software, and JSON parsers are no exception. By adding simple log statements or using built-in/external profiling tools, developers can gain deep insights into how a parser behaves, diagnose errors efficiently, and pinpoint performance bottlenecks. Whether you&apos;re working with a hand-written parser or debugging unexpected behavior in a library, these techniques provide the visibility needed to tackle challenges effectively.
+          Tracing and profiling are essential skills for understanding and optimizing software, and JSON parsers are no
+          exception. By adding simple log statements or using built-in/external profiling tools, developers can gain
+          deep insights into how a parser behaves, diagnose errors efficiently, and pinpoint performance bottlenecks.
+          Whether you&apos;re working with a hand-written parser or debugging unexpected behavior in a library, these
+          techniques provide the visibility needed to tackle challenges effectively.
         </p>
       </div>
     </>

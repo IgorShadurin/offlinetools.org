@@ -9,23 +9,21 @@ export const metadata: Metadata = {
 export default function JsonFormatterMilestonesArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        JSON Formatter Milestones: Key Innovations Through the Years
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">JSON Formatter Milestones: Key Innovations Through the Years</h1>
 
       <div className="space-y-6">
         <p>
           JSON (JavaScript Object Notation) has become the de facto standard for data interchange. As its usage
-          exploded, so did the need for tools to make reading, writing, and validating JSON easier. JSON
-          formatters, often overlooked but essential, have undergone a significant evolution. Let&apos;s trace the
-          key milestones and innovations that have shaped these tools over the years.
+          exploded, so did the need for tools to make reading, writing, and validating JSON easier. JSON formatters,
+          often overlooked but essential, have undergone a significant evolution. Let&apos;s trace the key milestones
+          and innovations that have shaped these tools over the years.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">The Beginning: Basic Indentation (Early 2000s)</h2>
         <p>
-          In the early days of JSON adoption, the primary challenge was often simply making minified or
-          compact JSON strings readable. The first formatters focused on adding whitespace and indentation to
-          structure the data hierarchically.
+          In the early days of JSON adoption, the primary challenge was often simply making minified or compact JSON
+          strings readable. The first formatters focused on adding whitespace and indentation to structure the data
+          hierarchically.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -52,8 +50,8 @@ export default function JsonFormatterMilestonesArticle() {
         <p>
           As JSON became more complex, users needed help identifying errors. The next major milestone was the
           introduction of syntax highlighting and basic validation. Syntax highlighting used colors to differentiate
-          keys, strings, numbers, booleans, and null values, making the structure visually clearer. Validation
-          added the ability to check if the JSON string adhered to the official JSON specification.
+          keys, strings, numbers, booleans, and null values, making the structure visually clearer. Validation added the
+          ability to check if the JSON string adhered to the official JSON specification.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -74,11 +72,13 @@ export default function JsonFormatterMilestonesArticle() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Interactive Tree Views and Navigation (Late 2000s - Early 2010s)</h2>
+        <h2 className="text-2xl font-semibold mt-8">
+          Interactive Tree Views and Navigation (Late 2000s - Early 2010s)
+        </h2>
         <p>
-          For large or deeply nested JSON objects, simple indentation wasn&apos;t enough. Interactive tree views
-          allowed users to collapse and expand sections of the JSON, making it easier to navigate and focus on
-          specific parts of the data without being overwhelmed by the full structure.
+          For large or deeply nested JSON objects, simple indentation wasn&apos;t enough. Interactive tree views allowed
+          users to collapse and expand sections of the JSON, making it easier to navigate and focus on specific parts of
+          the data without being overwhelmed by the full structure.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -93,9 +93,9 @@ export default function JsonFormatterMilestonesArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Real-time Formatting and Error Reporting (Early 2010s)</h2>
         <p>
-          Moving beyond static formatting, tools began offering real-time capabilities. As users typed or pasted
-          JSON, the formatter would instantly apply indentation, syntax highlighting, and crucially, show errors
-          as they occurred. This immediate feedback loop significantly sped up the debugging process.
+          Moving beyond static formatting, tools began offering real-time capabilities. As users typed or pasted JSON,
+          the formatter would instantly apply indentation, syntax highlighting, and crucially, show errors as they
+          occurred. This immediate feedback loop significantly sped up the debugging process.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -108,10 +108,12 @@ export default function JsonFormatterMilestonesArticle() {
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Advanced Features: Schema Validation, Transformation, and Filtering (Mid-2010s - Present)</h2>
+        <h2 className="text-2xl font-semibold mt-8">
+          Advanced Features: Schema Validation, Transformation, and Filtering (Mid-2010s - Present)
+        </h2>
         <p>
-          Modern JSON formatters and editors have become far more sophisticated, incorporating features that go
-          beyond mere presentation.
+          Modern JSON formatters and editors have become far more sophisticated, incorporating features that go beyond
+          mere presentation.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -120,21 +122,19 @@ export default function JsonFormatterMilestonesArticle() {
             <li>
               <span className="font-medium">JSON Schema Validation:</span>
               <p className="text-sm">
-                Validating JSON not just for syntax, but against a defined schema to ensure data types and
-                structure conform to expectations. Essential for APIs and data processing pipelines.
+                Validating JSON not just for syntax, but against a defined schema to ensure data types and structure
+                conform to expectations. Essential for APIs and data processing pipelines.
               </p>
             </li>
             <li>
               <span className="font-medium">JSON to XML/YAML/CSV Conversion:</span>
-              <p className="text-sm">
-                Adding functionalities to transform JSON data into other common data formats.
-              </p>
+              <p className="text-sm">Adding functionalities to transform JSON data into other common data formats.</p>
             </li>
             <li>
               <span className="font-medium">Data Filtering and Querying:</span>
               <p className="text-sm">
-                Tools that allow users to apply filters or run queries (like using JMESPath or JSONPath) to
-                extract specific data points from large JSON documents.
+                Tools that allow users to apply filters or run queries (like using JMESPath or JSONPath) to extract
+                specific data points from large JSON documents.
               </p>
             </li>
             <li>
@@ -154,8 +154,8 @@ export default function JsonFormatterMilestonesArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Example: Using JSON Schema Validation</h2>
         <p>
-          Consider validating a user profile JSON against a schema to ensure required fields are present and have
-          the correct types.
+          Consider validating a user profile JSON against a schema to ensure required fields are present and have the
+          correct types.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400">JSON Schema:</h3>
@@ -184,7 +184,9 @@ export default function JsonFormatterMilestonesArticle() {
 }`}
             </pre>
           </div>
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400 mt-4">Invalid JSON Data (Missing email, incorrect age type):</h3>
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400 mt-4">
+            Invalid JSON Data (Missing email, incorrect age type):
+          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
@@ -203,27 +205,26 @@ export default function JsonFormatterMilestonesArticle() {
         <h2 className="text-2xl font-semibold mt-8">Looking Ahead</h2>
         <p>
           The evolution of JSON formatters mirrors the increasing complexity and scale of data handling. Future
-          innovations might focus on AI-assisted error correction, integration with data visualization tools,
-          or even more sophisticated performance handling for petabyte-scale data.
+          innovations might focus on AI-assisted error correction, integration with data visualization tools, or even
+          more sophisticated performance handling for petabyte-scale data.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
           <h3 className="text-lg font-medium">The Role of Offline Tools:</h3>
           <p className="mt-2">
-            Offline JSON formatters and validators are particularly valuable for handling sensitive data,
-            working in environments without internet access, or processing very large files without browser
-            limitations. Their development continues to incorporate these milestones, providing robust
-            functionality locally.
+            Offline JSON formatters and validators are particularly valuable for handling sensitive data, working in
+            environments without internet access, or processing very large files without browser limitations. Their
+            development continues to incorporate these milestones, providing robust functionality locally.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          From humble beginnings as simple indentation tools, JSON formatters have evolved into powerful,
-          feature-rich applications. Syntax highlighting, real-time validation, interactive tree views, and
-          advanced capabilities like schema validation and transformation have fundamentally changed how
-          developers and data professionals interact with JSON. Understanding this evolution highlights the
-          growing importance of effective data tooling in the digital age.
+          From humble beginnings as simple indentation tools, JSON formatters have evolved into powerful, feature-rich
+          applications. Syntax highlighting, real-time validation, interactive tree views, and advanced capabilities
+          like schema validation and transformation have fundamentally changed how developers and data professionals
+          interact with JSON. Understanding this evolution highlights the growing importance of effective data tooling
+          in the digital age.
         </p>
       </div>
     </>

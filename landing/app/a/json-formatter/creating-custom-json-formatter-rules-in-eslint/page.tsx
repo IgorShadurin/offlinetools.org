@@ -23,49 +23,42 @@ export default function CustomJsonFormatterRulesArticle() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <FileJson2 className="w-8 h-8" /> Creating Custom JSON Formatter Rules
-        in ESLint
+        <FileJson2 className="w-8 h-8" /> Creating Custom JSON Formatter Rules in ESLint
       </h1>
 
       <div className="space-y-6 text-lg">
         <p>
-          Maintaining consistent formatting and structure across all files in a
-          project is crucial for readability and collaboration. While ESLint is
-          primarily known for linting JavaScript and TypeScript, it can also be
-          extended to enforce rules on other file types, including JSON.
+          Maintaining consistent formatting and structure across all files in a project is crucial for readability and
+          collaboration. While ESLint is primarily known for linting JavaScript and TypeScript, it can also be extended
+          to enforce rules on other file types, including JSON.
         </p>
         <p>
-          Standard JSON formatters exist, but sometimes you need to enforce
-          specific rules that go beyond simple indentation or spacing – rules
-          about the presence of certain keys, the order of properties, or the
-          format of values. This is where custom ESLint rules become invaluable.
+          Standard JSON formatters exist, but sometimes you need to enforce specific rules that go beyond simple
+          indentation or spacing – rules about the presence of certain keys, the order of properties, or the format of
+          values. This is where custom ESLint rules become invaluable.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Lightbulb className="w-6 h-6" /> Why Custom JSON Rules?
         </h2>
-        <p>
-          You might need custom JSON rules for various reasons:
-        </p>
+        <p>You might need custom JSON rules for various reasons:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <span className="font-semibold">Configuration Consistency:</span>{" "}
-            Enforce specific structures or required fields in configuration files
-            (e.g., <code>package.json</code>, <code>tsconfig.json</code>, custom
-            config files).
+            <span className="font-semibold">Configuration Consistency:</span> Enforce specific structures or required
+            fields in configuration files (e.g., <code>package.json</code>, <code>tsconfig.json</code>, custom config
+            files).
           </li>
           <li>
-            <span className="font-semibold">API Contract Validation:</span> If you
-            define API payloads or data structures in JSON, linting can help
-            ensure they conform to expected formats.
+            <span className="font-semibold">API Contract Validation:</span> If you define API payloads or data
+            structures in JSON, linting can help ensure they conform to expected formats.
           </li>
           <li>
-            <span className="font-semibold">Localization Files:</span> Ensure
-            translation files have all necessary keys and consistent structures.
+            <span className="font-semibold">Localization Files:</span> Ensure translation files have all necessary keys
+            and consistent structures.
           </li>
           <li>
-            <span className="font-semibold">Code Generation Input:</span> Validate
-            JSON files used as input for code generation processes.
+            <span className="font-semibold">Code Generation Input:</span> Validate JSON files used as input for code
+            generation processes.
           </li>
         </ul>
 
@@ -73,10 +66,9 @@ export default function CustomJsonFormatterRulesArticle() {
           <BookOpen className="w-6 h-6" /> ESLint Basics & JSON
         </h2>
         <p>
-          ESLint works by parsing code into an Abstract Syntax Tree (AST) and
-          then traversing this tree, allowing rules to visit specific node types
-          (like function calls, variable declarations, object properties).
-          For JavaScript, ESLint uses parsers like Esprima, Acorn, or
+          ESLint works by parsing code into an Abstract Syntax Tree (AST) and then traversing this tree, allowing rules
+          to visit specific node types (like function calls, variable declarations, object properties). For JavaScript,
+          ESLint uses parsers like Esprima, Acorn, or
           <a
             href="https://typescript-eslint.io/"
             target="_blank"
@@ -88,12 +80,10 @@ export default function CustomJsonFormatterRulesArticle() {
           .
         </p>
         <p>
-          To lint file types other than standard JavaScript/TypeScript, ESLint
-          relies on <span className="font-semibold">processors</span>. A processor
-          extracts code from a file (or transforms it) so ESLint can lint it.
-          For JSON files, the most common approach is to use a plugin that
-          includes a processor and defines rules specifically for JSON AST. The
-          de facto standard for this is{" "}
+          To lint file types other than standard JavaScript/TypeScript, ESLint relies on{" "}
+          <span className="font-semibold">processors</span>. A processor extracts code from a file (or transforms it) so
+          ESLint can lint it. For JSON files, the most common approach is to use a plugin that includes a processor and
+          defines rules specifically for JSON AST. The de facto standard for this is{" "}
           <a
             href="https://github.com/eslint-community/eslint-plugin-jsonc"
             target="_blank"
@@ -111,53 +101,45 @@ export default function CustomJsonFormatterRulesArticle() {
           >
             eslint-plugin-json
           </a>
-          ). We will focus on the concepts applicable when using such a plugin,
-          specifically how to write a rule that understands a JSON AST.
+          ). We will focus on the concepts applicable when using such a plugin, specifically how to write a rule that
+          understands a JSON AST.
         </p>
         <p>
-          <code>eslint-plugin-jsonc</code> provides a parser and processor that
-          turns JSON text into an AST similar to ESTree (the standard AST for
-          JS), but with node types relevant to JSON (e.g.,{" "}
-          <code>JSONObjectExpression</code>, <code>JSONArrayExpression</code>,{" "}
-          <code>JSONProperty</code>, <code>JSONIdentifier</code>,{" "}
-          <code>JSONLiteral</code>).
+          <code>eslint-plugin-jsonc</code> provides a parser and processor that turns JSON text into an AST similar to
+          ESTree (the standard AST for JS), but with node types relevant to JSON (e.g.,{" "}
+          <code>JSONObjectExpression</code>, <code>JSONArrayExpression</code>, <code>JSONProperty</code>,{" "}
+          <code>JSONIdentifier</code>, <code>JSONLiteral</code>).
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Hammer className="w-6 h-6" /> Structure of a Custom Rule
         </h2>
-        <p>
-          An ESLint rule is an object with two main parts:
-        </p>
+        <p>An ESLint rule is an object with two main parts:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <code>meta</code>: Provides metadata about the rule (type,
-            description, fixability, schema for options).
+            <code>meta</code>: Provides metadata about the rule (type, description, fixability, schema for options).
           </li>
           <li>
-            <code>create</code>: A function that returns an object where keys are
-            AST node types (or selectors) and values are functions that ESLint
-            calls when traversing the AST and encountering a matching node.
+            <code>create</code>: A function that returns an object where keys are AST node types (or selectors) and
+            values are functions that ESLint calls when traversing the AST and encountering a matching node.
           </li>
         </ul>
         <p>
-          For JSON rules using <code>eslint-plugin-jsonc</code>, you'll subscribe
-          to node types like <code>JSONObjectExpression</code>,{" "}
-          <code>JSONProperty</code>, <code>JSONLiteral</code>, etc.
+          For JSON rules using <code>eslint-plugin-jsonc</code>, you'll subscribe to node types like{" "}
+          <code>JSONObjectExpression</code>, <code>JSONProperty</code>, <code>JSONLiteral</code>, etc.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Palette className="w-6 h-6" /> Creating a Custom Rule for JSON
         </h2>
-        <p>
-          Let's outline the steps and provide examples.
-        </p>
+        <p>Let's outline the steps and provide examples.</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Settings2 className="w-5 h-5" /> 1. Setup: Project Structure & Plugin
         </h3>
         <p>
-          Custom rules are typically bundled in an ESLint plugin. For project-specific rules, you can create a local plugin directory.
+          Custom rules are typically bundled in an ESLint plugin. For project-specific rules, you can create a local
+          plugin directory.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example Local Plugin Structure:</h4>
@@ -185,9 +167,7 @@ export default function CustomJsonFormatterRulesArticle() {
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <CodeXml className="w-5 h-5" /> 2. Define the Rule File (`my-json-rule.js`)
         </h3>
-        <p>
-          This file will contain the rule definition object.
-        </p>
+        <p>This file will contain the rule definition object.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             {`// my-eslint-plugin/rules/my-json-rule.js
@@ -246,20 +226,16 @@ module.exports = {
   },
 };`}
           </pre>
-          <p>
-            Key parts:
-          </p>
+          <p>Key parts:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <code>meta.type</code>: How ESLint should treat issues from this
-              rule.
+              <code>meta.type</code>: How ESLint should treat issues from this rule.
             </li>
             <li>
               <code>meta.docs</code>: Description and category.
             </li>
             <li>
-              <code>meta.fixable</code>: Indicates if ESLint can automatically fix
-              the issue.
+              <code>meta.fixable</code>: Indicates if ESLint can automatically fix the issue.
             </li>
             <li>
               <code>meta.schema</code>: Defines options the rule accepts.
@@ -269,8 +245,8 @@ module.exports = {
               provides methods like <code>context.report()</code> to flag issues.
             </li>
             <li>
-              Visitor functions (e.g., <code>JSONObjectExpression(node)</code>):
-              These are called during the AST traversal. The <code>node</code> argument is the AST node being visited.
+              Visitor functions (e.g., <code>JSONObjectExpression(node)</code>): These are called during the AST
+              traversal. The <code>node</code> argument is the AST node being visited.
             </li>
           </ul>
         </div>
@@ -278,9 +254,7 @@ module.exports = {
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <ListChecks className="w-5 h-5" /> 3. Example: Enforcing Key Order
         </h3>
-        <p>
-          Let's create a rule that checks if properties in a JSON object are sorted alphabetically.
-        </p>
+        <p>Let's create a rule that checks if properties in a JSON object are sorted alphabetically.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">
             <code>my-eslint-plugin/rules/sort-json-keys.js</code>:
@@ -361,11 +335,10 @@ module.exports = {
 };`}
           </pre>
           <p>
-            This rule iterates through the properties of each object it encounters.
-            It extracts the key names, sorts them, and then compares the original order
-            to the sorted order. If a key is found out of place, it reports an error.
-            Implementing the <code>fixer</code> function for sorting is more complex
-            as it needs to know the source code range of multiple properties to rearrange them.
+            This rule iterates through the properties of each object it encounters. It extracts the key names, sorts
+            them, and then compares the original order to the sorted order. If a key is found out of place, it reports
+            an error. Implementing the <code>fixer</code> function for sorting is more complex as it needs to know the
+            source code range of multiple properties to rearrange them.
           </p>
         </div>
 
@@ -373,8 +346,8 @@ module.exports = {
           <Code className="w-5 h-5" /> 4. Example: Validating Specific Key Values
         </h3>
         <p>
-          Let's create a rule that checks if the <code>"version"</code> key in{" "}
-          <code>package.json</code> matches a specific pattern (e.g., semver).
+          Let's create a rule that checks if the <code>"version"</code> key in <code>package.json</code> matches a
+          specific pattern (e.g., semver).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">
@@ -434,21 +407,16 @@ module.exports = {
 };`}
           </pre>
           <p>
-            This rule uses an AST selector string{" "}
-            <code>'JSONProperty[key.name="version"]'</code> to target only
-            property nodes whose key is named "version". Inside the visitor
-            function, it accesses the <code>value</code> node of the property
-            and checks if it's a string literal matching a basic semver pattern.
+            This rule uses an AST selector string <code>'JSONProperty[key.name="version"]'</code> to target only
+            property nodes whose key is named "version". Inside the visitor function, it accesses the <code>value</code>{" "}
+            node of the property and checks if it's a string literal matching a basic semver pattern.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Plug2 className="w-5 h-5" /> 5. Integrate into ESLint Configuration
         </h3>
-        <p>
-          Once you have your local plugin, you need to tell ESLint about it and
-          configure the rules.
-        </p>
+        <p>Once you have your local plugin, you need to tell ESLint about it and configure the rules.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">
             Example <code>.eslintrc.js</code> or <code>.eslintrc.json</code>:
@@ -506,9 +474,7 @@ module.exports = {
   // ... rest of your config
 };`}
           </pre>
-          <p>
-            Important points for JSON linting:
-          </p>
+          <p>Important points for JSON linting:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
               Include <code>"jsonc"</code> in the <code>plugins</code> array.
@@ -517,15 +483,13 @@ module.exports = {
               Include your local plugin path in the <code>plugins</code> array.
             </li>
             <li>
-              Use the <code>overrides</code> section to specify rules that only
-              apply to JSON files.
+              Use the <code>overrides</code> section to specify rules that only apply to JSON files.
             </li>
             <li>
               Inside the JSON override, set <code>parser: "jsonc-eslint-parser"</code>.
             </li>
             <li>
-              Configure your custom rules using the format{" "}
-              <code>"plugin-name/rule-name"</code>.
+              Configure your custom rules using the format <code>"plugin-name/rule-name"</code>.
             </li>
           </ul>
         </div>
@@ -533,9 +497,7 @@ module.exports = {
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <ListChecks className="w-5 h-5" /> 6. Running ESLint
         </h3>
-        <p>
-          With the configuration set up, you can run ESLint from your terminal:
-        </p>
+        <p>With the configuration set up, you can run ESLint from your terminal:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             {`# Lint specific JSON files
@@ -547,51 +509,46 @@ npx eslint "**/*.json"
 # Lint all files in the project
 npx eslint .`}
           </pre>
-          <p>
-            ESLint will use the overrides to apply the JSON parser and your custom
-            rules to the specified files.
-          </p>
+          <p>ESLint will use the overrides to apply the JSON parser and your custom rules to the specified files.</p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <Lightbulb className="w-6 h-6" /> Advanced Considerations
         </h2>
         <ul className="list-disc pl-6 space-y-2">
-            <li>
-                <span className="font-semibold">Fixers:</span> Implementing auto-fixing (`meta.fixable`) requires careful
-                use of the <code>fixer</code> object provided in the <code>context.report</code> function.
-                For simple changes (like adding a missing key), it's straightforward. For complex changes (like sorting),
-                it's much harder and often relies on replacing larger sections of code or even the entire file content based
-                on the desired structure.
-            </li>
-            <li>
-                <span className="font-semibold">Options:</span> Use <code>meta.schema</code> to define options
-                for your rule, allowing users to customize its behavior (e.g., specifying the required
-                keys or the sorting order). Access options via <code>context.options</code>.
-            </li>
-             <li>
-                <span className="font-semibold">Testing:</span> Thoroughly test your rules using ESLint's
-                <code>RuleTester</code>. This involves providing valid and invalid code examples and
-                asserting that the rule reports errors correctly (and fixes them if applicable).
-            </li>
-             <li>
-                <span className="font-semibold">JSON with Comments/Trailing Commas (JSONC):</span> <code>eslint-plugin-jsonc</code>
-                also handles JSONC format. If your files allow comments, make sure your rules
-                are robust enough to handle them or only apply the rules to standard JSON files.
-            </li>
+          <li>
+            <span className="font-semibold">Fixers:</span> Implementing auto-fixing (`meta.fixable`) requires careful
+            use of the <code>fixer</code> object provided in the <code>context.report</code> function. For simple
+            changes (like adding a missing key), it's straightforward. For complex changes (like sorting), it's much
+            harder and often relies on replacing larger sections of code or even the entire file content based on the
+            desired structure.
+          </li>
+          <li>
+            <span className="font-semibold">Options:</span> Use <code>meta.schema</code> to define options for your
+            rule, allowing users to customize its behavior (e.g., specifying the required keys or the sorting order).
+            Access options via <code>context.options</code>.
+          </li>
+          <li>
+            <span className="font-semibold">Testing:</span> Thoroughly test your rules using ESLint's
+            <code>RuleTester</code>. This involves providing valid and invalid code examples and asserting that the rule
+            reports errors correctly (and fixes them if applicable).
+          </li>
+          <li>
+            <span className="font-semibold">JSON with Comments/Trailing Commas (JSONC):</span>{" "}
+            <code>eslint-plugin-jsonc</code>
+            also handles JSONC format. If your files allow comments, make sure your rules are robust enough to handle
+            them or only apply the rules to standard JSON files.
+          </li>
         </ul>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
           <BookOpen className="w-6 h-6" /> Conclusion
         </h2>
         <p>
-          While the standard JSON specification is quite simple, the JSON files used
-          in real-world projects often have specific structural or content
-          requirements. By leveraging ESLint's plugin architecture and a processor
-          like <code>eslint-plugin-jsonc</code>, you can create powerful custom
-          rules to enforce these project-specific conventions. This ensures greater
-          consistency, reduces errors, and improves the maintainability of your
+          While the standard JSON specification is quite simple, the JSON files used in real-world projects often have
+          specific structural or content requirements. By leveraging ESLint's plugin architecture and a processor like{" "}
+          <code>eslint-plugin-jsonc</code>, you can create powerful custom rules to enforce these project-specific
+          conventions. This ensures greater consistency, reduces errors, and improves the maintainability of your
           configuration and data files, just like ESLint does for your code.
         </p>
       </div>

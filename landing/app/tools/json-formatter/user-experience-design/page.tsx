@@ -10,8 +10,7 @@ import { Smile, Paintbrush, MousePointer, MonitorSmartphone, Palette } from "luc
  */
 export const metadata: Metadata = {
   title: "JSON Formatter User Experience Design | Offline Tools",
-  description:
-    "Design principles and patterns for creating intuitive and effective JSON formatter interfaces"
+  description: "Design principles and patterns for creating intuitive and effective JSON formatter interfaces",
 };
 
 /**
@@ -20,12 +19,14 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "Principles of Intuitive JSON Formatter Interface Design",
-    description: "Learn the fundamental design principles that make JSON formatters intuitive and easy to use for developers of all skill levels.",
+    description:
+      "Learn the fundamental design principles that make JSON formatters intuitive and easy to use for developers of all skill levels.",
     slug: "principles-of-intuitive-json-formatter-interface-design",
   },
   {
     title: "Color Theory for JSON Syntax Highlighting",
-    description: "Explore the application of color theory to create effective, visually pleasing JSON syntax highlighting schemes.",
+    description:
+      "Explore the application of color theory to create effective, visually pleasing JSON syntax highlighting schemes.",
     slug: "color-theory-for-json-syntax-highlighting",
   },
   {
@@ -35,47 +36,56 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Designing JSON Tree View Navigation for Intuitive Use",
-    description: "Best practices for creating navigable, intuitive tree views that make complex JSON structures easier to understand.",
+    description:
+      "Best practices for creating navigable, intuitive tree views that make complex JSON structures easier to understand.",
     slug: "designing-json-tree-view-navigation-for-intuitive-use",
   },
   {
     title: "User Testing Methodologies for JSON Formatting Tools",
-    description: "Effective techniques for conducting user tests that lead to better, more usable JSON formatter interfaces.",
+    description:
+      "Effective techniques for conducting user tests that lead to better, more usable JSON formatter interfaces.",
     slug: "user-testing-methodologies-for-json-formatting-tools",
   },
   {
     title: "Minimalist Design Approaches for JSON Formatters",
-    description: "How to apply minimalist design principles to create clean, focused JSON formatting tools without sacrificing functionality.",
+    description:
+      "How to apply minimalist design principles to create clean, focused JSON formatting tools without sacrificing functionality.",
     slug: "minimalist-design-approaches-for-json-formatters",
   },
   {
     title: "Progressive Disclosure in Complex JSON Formatter Interfaces",
-    description: "Strategies for gradually revealing functionality in JSON formatters to avoid overwhelming users while maintaining power.",
+    description:
+      "Strategies for gradually revealing functionality in JSON formatters to avoid overwhelming users while maintaining power.",
     slug: "progressive-disclosure-in-complex-json-formatter-interfaces",
   },
   {
     title: "Visual Hierarchy in JSON Formatter UI Design",
-    description: "Techniques for establishing effective visual hierarchy that guides users through JSON formatting interfaces.",
+    description:
+      "Techniques for establishing effective visual hierarchy that guides users through JSON formatting interfaces.",
     slug: "visual-hierarchy-in-json-formatter-ui-design",
   },
   {
     title: "Cognitive Load Reduction Strategies for JSON Tools",
-    description: "Design approaches that minimize cognitive effort and make JSON tools more approachable and efficient.",
+    description:
+      "Design approaches that minimize cognitive effort and make JSON tools more approachable and efficient.",
     slug: "cognitive-load-reduction-strategies-for-json-tools",
   },
   {
     title: "User Onboarding Design for JSON Formatting Applications",
-    description: "Create effective onboarding experiences that help users quickly understand and get value from JSON formatters.",
+    description:
+      "Create effective onboarding experiences that help users quickly understand and get value from JSON formatters.",
     slug: "user-onboarding-design-for-json-formatting-applications",
   },
   {
     title: "Microinteractions in JSON Formatter UI: Small Details, Big Impact",
-    description: "How thoughtful microinteractions can significantly improve the user experience of JSON formatting tools.",
+    description:
+      "How thoughtful microinteractions can significantly improve the user experience of JSON formatting tools.",
     slug: "microinteractions-in-json-formatter-ui-small-details-big-impact",
   },
   {
     title: "Affordance Design in JSON Formatter Controls",
-    description: "Creating intuitive controls in JSON formatters that clearly communicate their function and usage to users.",
+    description:
+      "Creating intuitive controls in JSON formatters that clearly communicate their function and usage to users.",
     slug: "affordance-design-in-json-formatter-controls",
   },
   {
@@ -85,12 +95,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Mobile-First Design for JSON Formatting Tools",
-    description: "Best practices for creating JSON formatters that excel on mobile devices while scaling up to desktop environments.",
+    description:
+      "Best practices for creating JSON formatters that excel on mobile devices while scaling up to desktop environments.",
     slug: "mobile-first-design-for-json-formatting-tools",
   },
   {
     title: "Information Architecture for Feature-Rich JSON Formatters",
-    description: "Structuring complex JSON formatter interfaces to make features discoverable and accessible for users.",
+    description:
+      "Structuring complex JSON formatter interfaces to make features discoverable and accessible for users.",
     slug: "information-architecture-for-feature-rich-json-formatters",
   },
   {
@@ -105,7 +117,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Visual Feedback Mechanisms in JSON Validation",
-    description: "Effective ways to provide visual feedback for validation errors and successes in JSON formatting tools.",
+    description:
+      "Effective ways to provide visual feedback for validation errors and successes in JSON formatting tools.",
     slug: "visual-feedback-mechanisms-in-json-validation",
   },
   {
@@ -120,7 +133,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Designing JSON Formatter Interfaces for Non-Technical Users",
-    description: "How to create JSON formatters that are approachable and usable for people without technical backgrounds.",
+    description:
+      "How to create JSON formatters that are approachable and usable for people without technical backgrounds.",
     slug: "designing-json-formatter-interfaces-for-non-technical-users",
   },
   {
@@ -135,12 +149,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Design System Creation for JSON Formatting Tools",
-    description: "Building comprehensive design systems that ensure consistency and quality across JSON formatting tools.",
+    description:
+      "Building comprehensive design systems that ensure consistency and quality across JSON formatting tools.",
     slug: "design-system-creation-for-json-formatting-tools",
   },
   {
     title: "Gestalt Principles in JSON Formatter Layout Design",
-    description: "Applying Gestalt psychology principles to create intuitive, perceptually pleasing JSON formatter layouts.",
+    description:
+      "Applying Gestalt psychology principles to create intuitive, perceptually pleasing JSON formatter layouts.",
     slug: "gestalt-principles-in-json-formatter-layout-design",
   },
   {
@@ -155,7 +171,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Icon Design for JSON Formatter Control Elements",
-    description: "Creating clear, intuitive icons for JSON formatter controls that effectively communicate their function.",
+    description:
+      "Creating clear, intuitive icons for JSON formatter controls that effectively communicate their function.",
     slug: "icon-design-for-json-formatter-control-elements",
   },
   {
@@ -175,7 +192,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Designing for Different JSON Skill Levels: Beginner to Expert",
-    description: "Creating interfaces that serve users at all skill levels, from JSON beginners to experienced developers.",
+    description:
+      "Creating interfaces that serve users at all skill levels, from JSON beginners to experienced developers.",
     slug: "designing-for-different-json-skill-levels-beginner-to-expert",
   },
   {
@@ -185,7 +203,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Designing Effective Error Messages for JSON Validation",
-    description: "Creating clear, actionable error messages that help users quickly fix validation issues in JSON documents.",
+    description:
+      "Creating clear, actionable error messages that help users quickly fix validation issues in JSON documents.",
     slug: "designing-effective-error-messages-for-json-validation",
   },
   {
@@ -255,7 +274,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Emotional Design in Error Recovery for JSON Formatters",
-    description: "Using emotional design principles to create more supportive error recovery experiences in JSON tools.",
+    description:
+      "Using emotional design principles to create more supportive error recovery experiences in JSON tools.",
     slug: "emotional-design-in-error-recovery-for-json-formatters",
   },
   {
@@ -265,9 +285,10 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Future Trends in JSON Formatter UX Design",
-    description: "Emerging UX design trends and approaches that will shape the next generation of JSON formatting tools.",
+    description:
+      "Emerging UX design trends and approaches that will shape the next generation of JSON formatting tools.",
     slug: "future-trends-in-json-formatter-ux-design",
-  }
+  },
 ];
 
 /**
@@ -330,7 +351,8 @@ export default function JsonFormatterUxPage() {
                   <div>
                     <h3 className="font-medium mb-1">Visual Hierarchy</h3>
                     <p className="text-sm text-muted-foreground">
-                      Employing effective visual organization through indentation, color coding, and typography to make JSON structure immediately understandable.
+                      Employing effective visual organization through indentation, color coding, and typography to make
+                      JSON structure immediately understandable.
                     </p>
                   </div>
                 </div>
@@ -342,7 +364,8 @@ export default function JsonFormatterUxPage() {
                   <div>
                     <h3 className="font-medium mb-1">Interaction Design</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating intuitive controls for collapsing/expanding nodes, searching content, and navigating through complex nested structures.
+                      Creating intuitive controls for collapsing/expanding nodes, searching content, and navigating
+                      through complex nested structures.
                     </p>
                   </div>
                 </div>
@@ -356,7 +379,8 @@ export default function JsonFormatterUxPage() {
                   <div>
                     <h3 className="font-medium mb-1">Visual Feedback</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing clear visual cues for validation errors, successful operations, and interactive elements to guide users through the formatting process.
+                      Implementing clear visual cues for validation errors, successful operations, and interactive
+                      elements to guide users through the formatting process.
                     </p>
                   </div>
                 </div>
@@ -368,7 +392,8 @@ export default function JsonFormatterUxPage() {
                   <div>
                     <h3 className="font-medium mb-1">Responsive Design</h3>
                     <p className="text-sm text-muted-foreground">
-                      Designing interfaces that adapt gracefully across device sizes while maintaining usability and feature access on desktop and mobile platforms.
+                      Designing interfaces that adapt gracefully across device sizes while maintaining usability and
+                      feature access on desktop and mobile platforms.
                     </p>
                   </div>
                 </div>
@@ -381,7 +406,8 @@ export default function JsonFormatterUxPage() {
                 <span>Design Principle:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                The most effective JSON formatter interfaces balance simplicity with power, keeping common actions immediately accessible while making advanced features discoverable through progressive disclosure.
+                The most effective JSON formatter interfaces balance simplicity with power, keeping common actions
+                immediately accessible while making advanced features discoverable through progressive disclosure.
               </p>
             </div>
           </CardContent>
@@ -391,4 +417,4 @@ export default function JsonFormatterUxPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

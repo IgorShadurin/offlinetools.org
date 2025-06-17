@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 export default function OptimizingDomRenderingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Optimizing DOM Rendering for Large JSON Structures
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Optimizing DOM Rendering for Large JSON Structures</h1>
 
       <div className="space-y-6">
         <p>
@@ -22,9 +20,7 @@ export default function OptimizingDomRenderingArticle() {
           efficient web applications.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          The Challenge: Why Large JSON Hurts DOM Performance
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">The Challenge: Why Large JSON Hurts DOM Performance</h2>
         <p>
           When you have a large JSON structure containing, say, an array of 10,000 objects, and you attempt to render
           each object as a DOM element (like a table row or a list item), the browser faces several challenges:
@@ -33,16 +29,16 @@ export default function OptimizingDomRenderingArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">High Memory Usage:</span> Each DOM node consumes memory. A large number
-              of nodes quickly adds up.
+              <span className="font-medium">High Memory Usage:</span> Each DOM node consumes memory. A large number of
+              nodes quickly adds up.
             </li>
             <li>
               <span className="font-medium">Increased Rendering Time:</span> Browsers need time to calculate layouts,
               paint pixels, and compose layers for a large number of elements.
             </li>
             <li>
-              <span className="font-medium">Slow DOM Manipulations:</span> Adding, removing, or updating many DOM
-              nodes becomes slow and can block the main thread, leading to unresponsiveness.
+              <span className="font-medium">Slow DOM Manipulations:</span> Adding, removing, or updating many DOM nodes
+              becomes slow and can block the main thread, leading to unresponsiveness.
             </li>
             <li>
               <span className="font-medium">Complex Reflows and Repaints:</span> Changes to styles or content can
@@ -60,10 +56,9 @@ export default function OptimizingDomRenderingArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. Virtualization (Windowing)</h3>
         <p>
-          Virtualization, or windowing, is a technique where you only render the items that are currently visible
-          within the user&apos;s viewport. As the user scrolls, the system dynamically renders new items entering the
-          viewport and removes items leaving it. This dramatically reduces the number of DOM nodes present at any given
-          time.
+          Virtualization, or windowing, is a technique where you only render the items that are currently visible within
+          the user&apos;s viewport. As the user scrolls, the system dynamically renders new items entering the viewport
+          and removes items leaving it. This dramatically reduces the number of DOM nodes present at any given time.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Concept:</h4>
@@ -101,15 +96,14 @@ function renderVisibleItems(scrollTop) {
 
         <h3 className="text-xl font-semibold mt-6">2. Pagination</h3>
         <p>
-          Pagination involves splitting the large dataset into smaller chunks or &quot;pages&quot; and only loading
-          and rendering one page at a time. Users navigate between pages using controls (e.g., &quot;Next&quot;,
+          Pagination involves splitting the large dataset into smaller chunks or &quot;pages&quot; and only loading and
+          rendering one page at a time. Users navigate between pages using controls (e.g., &quot;Next&quot;,
           &quot;Previous&quot;, page numbers).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Concept:</h4>
           <p className="text-sm mt-2">
-            If you have 10,000 items, display 100 items per page. This means only 100 items are ever in the DOM at
-            once.
+            If you have 10,000 items, display 100 items per page. This means only 100 items are ever in the DOM at once.
           </p>
           <h4 className="text-lg font-medium mt-3">Example Logic (Conceptual):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
@@ -141,8 +135,8 @@ function renderPage(pageNumber) {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Concept:</h4>
           <p className="text-sm mt-2">
-            Load the first 50 items. When the user scrolls close to the bottom, fetch the next 50 and append them to
-            the list.
+            Load the first 50 items. When the user scrolls close to the bottom, fetch the next 50 and append them to the
+            list.
           </p>
           <h4 className="text-lg font-medium mt-3">Example Logic (Conceptual):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
@@ -170,12 +164,10 @@ function loadMoreItems() {
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">
-          4. Process Data Before Rendering
-        </h3>
+        <h3 className="text-xl font-semibold mt-6">4. Process Data Before Rendering</h3>
         <p>
-          Sometimes, the JSON structure itself is complex or contains data that doesn&apos;t need to be fully
-          rendered. Simplify the data structure or extract only the necessary information before creating DOM elements.
+          Sometimes, the JSON structure itself is complex or contains data that doesn&apos;t need to be fully rendered.
+          Simplify the data structure or extract only the necessary information before creating DOM elements.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Concept:</h4>
@@ -213,8 +205,8 @@ const simpleData = complexData.map(item => ({
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Concept:</h4>
           <p className="text-sm mt-2">
-            Instead of creating a complex structure for each list item, use a flatter structure and rely on CSS Grid
-            or Flexbox to arrange content within a single container element per item.
+            Instead of creating a complex structure for each list item, use a flatter structure and rely on CSS Grid or
+            Flexbox to arrange content within a single container element per item.
           </p>
           <h4 className="text-lg font-medium mt-3">Less Optimal Structure Per Item:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
@@ -251,15 +243,13 @@ const simpleData = complexData.map(item => ({
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            Reducing the number of nested elements per item, especially when dealing with thousands of items, can make
-            a noticeable difference.
+            Reducing the number of nested elements per item, especially when dealing with thousands of items, can make a
+            noticeable difference.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Choosing the Right Technique</h2>
-        <p>
-          The best technique depends on the nature of your data and how the user interacts with it:
-        </p>
+        <p>The best technique depends on the nature of your data and how the user interacts with it:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
@@ -277,8 +267,8 @@ const simpleData = complexData.map(item => ({
               scrolls extensively.
             </li>
             <li>
-              <span className="font-medium">Data Processing/Simplification:</span> Apply this universally. Always
-              work with the minimum necessary data structure for rendering.
+              <span className="font-medium">Data Processing/Simplification:</span> Apply this universally. Always work
+              with the minimum necessary data structure for rendering.
             </li>
             <li>
               <span className="font-medium">Minimize DOM Nodes Per Item:</span> Apply this universally. Optimize the
@@ -288,9 +278,7 @@ const simpleData = complexData.map(item => ({
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Implementation Considerations</h2>
-        <p>
-          When implementing these techniques, keep the following in mind:
-        </p>
+        <p>When implementing these techniques, keep the following in mind:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Browser Performance APIs:</span> Use tools like the Performance API,
@@ -302,12 +290,12 @@ const simpleData = complexData.map(item => ({
             This helps the rendering engine efficiently update the DOM.
           </li>
           <li>
-            <span className="font-medium">Avoid Inline Styles:</span> While sometimes necessary for virtualization
-            (like setting item position/height), rely on CSS classes as much as possible.
+            <span className="font-medium">Avoid Inline Styles:</span> While sometimes necessary for virtualization (like
+            setting item position/height), rely on CSS classes as much as possible.
           </li>
           <li>
-            <span className="font-medium">Debounce/Throttle Scroll Events:</span> If manually implementing lazy
-            loading based on scroll position, use debouncing or throttling to limit the frequency of calculations.
+            <span className="font-medium">Debounce/Throttle Scroll Events:</span> If manually implementing lazy loading
+            based on scroll position, use debouncing or throttling to limit the frequency of calculations.
           </li>
           <li>
             <span className="font-medium">Server-Side Processing:</span> For truly massive datasets, performing

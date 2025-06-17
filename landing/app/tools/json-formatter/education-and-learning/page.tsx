@@ -10,8 +10,7 @@ import { GraduationCap, BookOpen, Lightbulb, PenTool, Library } from "lucide-rea
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Education and Learning | Offline Tools",
-  description:
-    "Resources and approaches for learning JSON formatting techniques and concepts"
+  description: "Resources and approaches for learning JSON formatting techniques and concepts",
 };
 
 /**
@@ -25,22 +24,26 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Teaching JSON Structure Through Visual Formatters",
-    description: "How visual JSON formatting tools can help learners understand nested data structures more intuitively.",
+    description:
+      "How visual JSON formatting tools can help learners understand nested data structures more intuitively.",
     slug: "teaching-json-structure-through-visual-formatters",
   },
   {
     title: "Interactive JSON Learning Tools for Beginners",
-    description: "Hands-on tools and applications that make learning JSON concepts engaging and accessible for beginners.",
+    description:
+      "Hands-on tools and applications that make learning JSON concepts engaging and accessible for beginners.",
     slug: "interactive-json-learning-tools-for-beginners",
   },
   {
     title: "Common JSON Mistakes and How Formatters Help Identify Them",
-    description: "Typical errors made when writing JSON and how formatter tools can help detect and correct these issues.",
+    description:
+      "Typical errors made when writing JSON and how formatter tools can help detect and correct these issues.",
     slug: "common-json-mistakes-and-how-formatters-help-identify-them",
   },
   {
     title: "From Text to Tree: Understanding JSON Visualization",
-    description: "How tree-based visualizations of JSON data help bridge the gap between text representation and logical structure.",
+    description:
+      "How tree-based visualizations of JSON data help bridge the gap between text representation and logical structure.",
     slug: "from-text-to-tree-understanding-json-visualization",
   },
   {
@@ -50,7 +53,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Creating Curriculum Materials Around JSON Formatters",
-    description: "Approaches for developing educational content that incorporates JSON formatting tools in classroom settings.",
+    description:
+      "Approaches for developing educational content that incorporates JSON formatting tools in classroom settings.",
     slug: "creating-curriculum-materials-around-json-formatters",
   },
   {
@@ -90,7 +94,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Learning Paths: From JSON Basics to Advanced Formatting",
-    description: "Structured learning journeys that guide students from JSON fundamentals to sophisticated formatting skills.",
+    description:
+      "Structured learning journeys that guide students from JSON fundamentals to sophisticated formatting skills.",
     slug: "learning-paths-from-json-basics-to-advanced-formatting",
   },
   {
@@ -120,7 +125,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Using JSON Formatters in Computer Science Education",
-    description: "Incorporating JSON formatting tools into computer science curricula to teach data structure concepts.",
+    description:
+      "Incorporating JSON formatting tools into computer science curricula to teach data structure concepts.",
     slug: "using-json-formatters-in-computer-science-education",
   },
   {
@@ -160,7 +166,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Teaching JSON Internationalization Through Formatters",
-    description: "Using JSON formatting tools to demonstrate concepts related to international character sets and localization.",
+    description:
+      "Using JSON formatting tools to demonstrate concepts related to international character sets and localization.",
     slug: "teaching-json-internationalization-through-formatters",
   },
   {
@@ -267,7 +274,7 @@ const jsonFormatterArticles: ToolArticle[] = [
     title: "Future of JSON Education: AI-Assisted Learning Tools",
     description: "Emerging AI technologies that are transforming how people learn and master JSON formatting.",
     slug: "future-of-json-education-ai-assisted-learning-tools",
-  }
+  },
 ];
 
 /**
@@ -330,7 +337,8 @@ export default function JsonFormatterEducationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Learning Resources</h3>
                     <p className="text-sm text-muted-foreground">
-                      Educational materials including tutorials, courses, documentation, and interactive exercises designed to teach JSON concepts from basic to advanced.
+                      Educational materials including tutorials, courses, documentation, and interactive exercises
+                      designed to teach JSON concepts from basic to advanced.
                     </p>
                   </div>
                 </div>
@@ -342,7 +350,8 @@ export default function JsonFormatterEducationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Practice Environments</h3>
                     <p className="text-sm text-muted-foreground">
-                      Sandbox environments, coding challenges, and real-world examples that allow learners to experiment with JSON formatting techniques in a hands-on manner.
+                      Sandbox environments, coding challenges, and real-world examples that allow learners to experiment
+                      with JSON formatting techniques in a hands-on manner.
                     </p>
                   </div>
                 </div>
@@ -356,7 +365,8 @@ export default function JsonFormatterEducationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Teaching Approaches</h3>
                     <p className="text-sm text-muted-foreground">
-                      Pedagogical strategies for teaching JSON concepts effectively, from visual learning aids to project-based approaches that reinforce understanding.
+                      Pedagogical strategies for teaching JSON concepts effectively, from visual learning aids to
+                      project-based approaches that reinforce understanding.
                     </p>
                   </div>
                 </div>
@@ -368,7 +378,8 @@ export default function JsonFormatterEducationPage() {
                   <div>
                     <h3 className="font-medium mb-1">Community Knowledge</h3>
                     <p className="text-sm text-muted-foreground">
-                      Leveraging community forums, open source documentation, and collaborative learning platforms to enhance understanding of JSON formatting concepts.
+                      Leveraging community forums, open source documentation, and collaborative learning platforms to
+                      enhance understanding of JSON formatting concepts.
                     </p>
                   </div>
                 </div>
@@ -381,7 +392,8 @@ export default function JsonFormatterEducationPage() {
                 <span>Learning Path:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                For beginners, start with basic JSON syntax and structure before progressing to validation, schema design, and more complex topics like efficient parsing and transformation techniques.
+                For beginners, start with basic JSON syntax and structure before progressing to validation, schema
+                design, and more complex topics like efficient parsing and transformation techniques.
               </p>
             </div>
           </CardContent>
@@ -391,4 +403,4 @@ export default function JsonFormatterEducationPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

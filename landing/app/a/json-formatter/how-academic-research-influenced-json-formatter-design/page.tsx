@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 export default function AcademicInfluenceOnJsonFormattersArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        How Academic Research Influenced JSON Formatter Design
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">How Academic Research Influenced JSON Formatter Design</h1>
 
       <div className="space-y-6">
         <p>
@@ -32,18 +30,18 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
               <span className="font-medium">Formal Grammars:</span> JSON's structure is defined by a formal grammar,
-              specifically a context-free grammar. This mathematical description allows for precise definition of
-              valid JSON.
+              specifically a context-free grammar. This mathematical description allows for precise definition of valid
+              JSON.
             </li>
             <li>
-              <span className="font-medium">Parsing Algorithms:</span> Algorithms like LR parsers (e.g., LALR, SLR)
-              or recursive descent, developed in academia, are fundamental to reading and validating JSON input.
-              The parser builds an internal representation (like an Abstract Syntax Tree or AST) of the JSON structure.
+              <span className="font-medium">Parsing Algorithms:</span> Algorithms like LR parsers (e.g., LALR, SLR) or
+              recursive descent, developed in academia, are fundamental to reading and validating JSON input. The parser
+              builds an internal representation (like an Abstract Syntax Tree or AST) of the JSON structure.
             </li>
             <li>
               <span className="font-medium">Error Detection:</span> Research into robust parsing techniques enables
-              formatters to not just parse valid JSON but also identify syntax errors and provide informative
-              messages and locations (like the red error highlighting discussed in other articles).
+              formatters to not just parse valid JSON but also identify syntax errors and provide informative messages
+              and locations (like the red error highlighting discussed in other articles).
             </li>
           </ul>
         </div>
@@ -85,7 +83,9 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">3. Pretty-Printing and Code Formatting</h2>
         <p>
-          The primary function of a formatter is "pretty-printing" – converting a machine-readable format into a human-readable one. This isn't unique to JSON; it's a long-standing area of research in programming language environments.
+          The primary function of a formatter is "pretty-printing" – converting a machine-readable format into a
+          human-readable one. This isn't unique to JSON; it's a long-standing area of research in programming language
+          environments.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -103,8 +103,8 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
             </li>
             <li>
               <span className="font-medium">Syntax Highlighting:</span> Coloring different elements (keys, strings,
-              numbers, brackets) based on their type is driven by the parser's output (the AST) and principles of
-              visual programming language design to improve code comprehension.
+              numbers, brackets) based on their type is driven by the parser's output (the AST) and principles of visual
+              programming language design to improve code comprehension.
             </li>
           </ul>
         </div>
@@ -124,9 +124,10 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
           <h3 className="text-lg font-medium">HCI Principles Applied:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Collapsible Sections:</span> The ability to collapse complex objects or arrays
-              into a single line (e.g., showing <code>{`{...}`}</code> or <code>`[...]`</code>) is a direct application of
-              information hiding principles to manage complexity in large datasets. This relies on the underlying tree structure.
+              <span className="font-medium">Collapsible Sections:</span> The ability to collapse complex objects or
+              arrays into a single line (e.g., showing <code>{`{...}`}</code> or <code>`[...]`</code>) is a direct
+              application of information hiding principles to manage complexity in large datasets. This relies on the
+              underlying tree structure.
             </li>
             <li>
               <span className="font-medium">Error Highlighting and Feedback:</span> Providing immediate visual feedback
@@ -135,12 +136,12 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
             </li>
             <li>
               <span className="font-medium">Search and Filtering:</span> Features allowing users to search for specific
-              keys or values, or filter data based on criteria, utilize algorithms and interface designs developed
-              in information retrieval and data visualization research.
+              keys or values, or filter data based on criteria, utilize algorithms and interface designs developed in
+              information retrieval and data visualization research.
             </li>
             <li>
-              <span className="font-medium">Accessibility:</span> Considerations for users with disabilities (e.g., color
-              contrast for syntax highlighting, keyboard navigation) stem from accessibility research in HCI.
+              <span className="font-medium">Accessibility:</span> Considerations for users with disabilities (e.g.,
+              color contrast for syntax highlighting, keyboard navigation) stem from accessibility research in HCI.
             </li>
           </ul>
         </div>
@@ -151,9 +152,7 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">5. Example: Pretty-Printing Algorithm Concept</h2>
-        <p>
-          Consider a simplified pretty-printing concept influenced by AST traversal.
-        </p>
+        <p>Consider a simplified pretty-printing concept influenced by AST traversal.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Conceptual Algorithm Sketch (Simplified):</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -192,8 +191,8 @@ export default function AcademicInfluenceOnJsonFormattersArticle() {
           </div>
           <p className="mt-2 text-sm">
             This recursive structure, inspired by tree traversal algorithms used on ASTs, is fundamental to
-            automatically generating formatted output based on the nested structure of the data. Real-world algorithms are
-            more complex, handling line wrapping, comments (in related formats), and user preferences.
+            automatically generating formatted output based on the nested structure of the data. Real-world algorithms
+            are more complex, handling line wrapping, comments (in related formats), and user preferences.
           </p>
         </div>
 

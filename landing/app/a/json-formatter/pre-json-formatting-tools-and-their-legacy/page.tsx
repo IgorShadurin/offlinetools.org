@@ -9,24 +9,22 @@ export const metadata: Metadata = {
 export default function PreJsonFormattingToolsArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Pre-JSON Formatting Tools and Their Legacy
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Pre-JSON Formatting Tools and Their Legacy</h1>
 
       <div className="space-y-6">
         <p>
           Before JSON (JavaScript Object Notation) became the ubiquitous standard for data interchange, developers
-          relied on various formats and tools to structure, store, and transmit data. Understanding these
-          precursors provides valuable context for why JSON gained popularity and highlights the evolution of data
-          handling practices. This article delves into the world of pre-JSON formatting, the tools used to
-          process these formats, and their enduring legacy.
+          relied on various formats and tools to structure, store, and transmit data. Understanding these precursors
+          provides valuable context for why JSON gained popularity and highlights the evolution of data handling
+          practices. This article delves into the world of pre-JSON formatting, the tools used to process these formats,
+          and their enduring legacy.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">A World Without Widespread JSON</h2>
         <p>
-          In the decades leading up to JSON's widespread adoption (roughly pre-2000s to mid-2000s), several methods
-          were used for serializing structured data, configuring applications, and exchanging information. These
-          formats often arose from specific needs or limitations of the time.
+          In the decades leading up to JSON's widespread adoption (roughly pre-2000s to mid-2000s), several methods were
+          used for serializing structured data, configuring applications, and exchanging information. These formats
+          often arose from specific needs or limitations of the time.
         </p>
 
         <h2 className="2xl font-semibold mt-8">Common Pre-JSON Formats and Tools</h2>
@@ -58,17 +56,17 @@ export default function PreJsonFormattingToolsArticle() {
           </ul>
           <h4 className="text-lg font-medium mt-4 mb-2">Legacy &amp; Why JSON Supplanted It:</h4>
           <p className="text-sm">
-            XML's verbosity and the complexity of its parsing APIs (DOM vs. SAX) made it less ideal for simpler
-            web data exchange compared to JSON. However, XML remains prevalent in enterprise systems, document
-            formats (like Office Open XML, SVG), and configuration files where its schema validation and rich
-            markup capabilities are valuable.
+            XML's verbosity and the complexity of its parsing APIs (DOM vs. SAX) made it less ideal for simpler web data
+            exchange compared to JSON. However, XML remains prevalent in enterprise systems, document formats (like
+            Office Open XML, SVG), and configuration files where its schema validation and rich markup capabilities are
+            valuable.
           </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">2. INI Files (Initialization Files)</h3>
         <p>
-          INI files are a simple configuration file format used widely in Windows and other systems. They consist
-          of sections, keys, and values.
+          INI files are a simple configuration file format used widely in Windows and other systems. They consist of
+          sections, keys, and values.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example INI:</h4>
@@ -92,8 +90,8 @@ Password=secret`}
           </ul>
           <h4 className="text-lg font-medium mt-4 mb-2">Legacy &amp; Current Use:</h4>
           <p className="text-sm">
-            INI files are still used for basic application configuration, especially where nested structures or
-            complex data types aren't needed. They are easy to read and edit manually.
+            INI files are still used for basic application configuration, especially where nested structures or complex
+            data types aren't needed. They are easy to read and edit manually.
           </p>
         </div>
 
@@ -120,16 +118,15 @@ Value2A,"Value, with comma",Value2C`}
           </ul>
           <h4 className="text-lg font-medium mt-4 mb-2">Legacy &amp; Current Use:</h4>
           <p className="text-sm">
-            CSV remains the de facto standard for exchanging simple tabular data between disparate systems that may
-            not share complex data models. It's widely supported and easy to generate.
+            CSV remains the de facto standard for exchanging simple tabular data between disparate systems that may not
+            share complex data models. It's widely supported and easy to generate.
           </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">4. YAML (YAML Ain't Markup Language)</h3>
         <p>
-          YAML emerged concurrently with or slightly after JSON, aiming to be even more human-readable,
-          particularly for configuration files and data serialization. It supports complex structures like nested
-          lists and maps.
+          YAML emerged concurrently with or slightly after JSON, aiming to be even more human-readable, particularly for
+          configuration files and data serialization. It supports complex structures like nested lists and maps.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example YAML:</h4>
@@ -151,16 +148,16 @@ Value2A,"Value, with comma",Value2C`}
           </ul>
           <h4 className="text-lg font-medium mt-4 mb-2">Legacy &amp; Current Use:</h4>
           <p className="text-sm">
-            While not strictly "pre-JSON" for web data exchange, YAML predates JSON's dominance in certain domains.
-            It's now a primary format for configuration files, container orchestration, and developer tools due to
-            its readability and support for features like anchors and tags.
+            While not strictly "pre-JSON" for web data exchange, YAML predates JSON's dominance in certain domains. It's
+            now a primary format for configuration files, container orchestration, and developer tools due to its
+            readability and support for features like anchors and tags.
           </p>
         </div>
 
         <h3 className="text-xl font-medium mt-6">5. Custom Delimited/Positional Formats</h3>
         <p>
-          Before standard formats were widespread, many applications used simple custom delimited files (e.g., pipe
-          `|` or tab `\t` separated) or fixed-width positional formats to store and exchange data.
+          Before standard formats were widespread, many applications used simple custom delimited files (e.g., pipe `|`
+          or tab `\t` separated) or fixed-width positional formats to store and exchange data.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example Pipe-Delimited:</h4>
@@ -214,9 +211,9 @@ Prod002   GadgetB   0003550`}
           </ul>
           <h4 className="text-lg font-medium mt-4 mb-2">Legacy &amp; Current Use:</h4>
           <p className="text-sm">
-            Proprietary binary formats are still common in performance-critical applications, game data, media
-            files, and areas where data size must be minimized. However, even these often have associated metadata
-            or configuration stored in human-readable formats.
+            Proprietary binary formats are still common in performance-critical applications, game data, media files,
+            and areas where data size must be minimized. However, even these often have associated metadata or
+            configuration stored in human-readable formats.
           </p>
         </div>
 
@@ -224,40 +221,40 @@ Prod002   GadgetB   0003550`}
         <p>
           JSON gained traction rapidly due to its direct mapping to common data structures in programming languages
           (objects/dictionaries and arrays), its relative simplicity compared to XML, and its native support in
-          JavaScript (hence the name). Tools for parsing and generating JSON were quickly developed for almost
-          every programming language, making data exchange straightforward.
+          JavaScript (hence the name). Tools for parsing and generating JSON were quickly developed for almost every
+          programming language, making data exchange straightforward.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Legacy Formats Today: Why They Persist</h2>
         <p>
-          Despite JSON's dominance in web APIs and many new applications, the pre-JSON formats and their
-          associated tools haven't disappeared. They persist for several reasons:
+          Despite JSON's dominance in web APIs and many new applications, the pre-JSON formats and their associated
+          tools haven't disappeared. They persist for several reasons:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Backward Compatibility:</span> Legacy systems often require interfacing
-            with data in older formats.
+            <span className="font-medium">Backward Compatibility:</span> Legacy systems often require interfacing with
+            data in older formats.
           </li>
           <li>
             <span className="font-medium">Specific Use Cases:</span> CSV for tabular data, INI/YAML for human-editable
             configuration, XML for document structures and schemas, binary for performance.
           </li>
           <li>
-            <span className="font-medium">Industry Standards:</span> Some industries have standards built around XML
-            or other specific formats.
+            <span className="font-medium">Industry Standards:</span> Some industries have standards built around XML or
+            other specific formats.
           </li>
           <li>
-            <span className="font-medium">Simplicity for Certain Tasks:</span> For very simple data, formats like
-            INI or basic delimited files can be easier to work with than setting up JSON structures.
+            <span className="font-medium">Simplicity for Certain Tasks:</span> For very simple data, formats like INI or
+            basic delimited files can be easier to work with than setting up JSON structures.
           </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
           <h3 className="text-lg font-medium">Modern "Offline Tools" and Legacy Formats:</h3>
           <p className="mt-2 text-sm">
-            Many modern "offline tools" (desktop applications, command-line utilities, developer tools) still need
-            to read and write these legacy formats. Libraries and utilities continue to be maintained and developed
-            to parse, format, and validate XML, INI, CSV, and YAML files, demonstrating the long tail of these
+            Many modern "offline tools" (desktop applications, command-line utilities, developer tools) still need to
+            read and write these legacy formats. Libraries and utilities continue to be maintained and developed to
+            parse, format, and validate XML, INI, CSV, and YAML files, demonstrating the long tail of these
             technologies. Tools that convert between formats (e.g., XML to JSON, CSV to JSON) are also common and
             essential for migration and interoperability.
           </p>
@@ -265,13 +262,13 @@ Prod002   GadgetB   0003550`}
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          The landscape of data formatting and serialization has evolved significantly. While JSON has streamlined
-          data exchange, particularly on the web, the formats and tools that came before it laid essential
-          groundwork and continue to play vital roles in various domains. Understanding the history and the
-          strengths/weaknesses of formats like XML, INI, CSV, YAML, and even custom formats provides valuable
-          insight into the challenges of data handling and the design principles that led to JSON's success. The
-          "legacy" of these formats is evident in their continued use and the ongoing need for tools to process
-          them, reminding us that the right format often depends on the specific task at hand.
+          The landscape of data formatting and serialization has evolved significantly. While JSON has streamlined data
+          exchange, particularly on the web, the formats and tools that came before it laid essential groundwork and
+          continue to play vital roles in various domains. Understanding the history and the strengths/weaknesses of
+          formats like XML, INI, CSV, YAML, and even custom formats provides valuable insight into the challenges of
+          data handling and the design principles that led to JSON's success. The "legacy" of these formats is evident
+          in their continued use and the ongoing need for tools to process them, reminding us that the right format
+          often depends on the specific task at hand.
         </p>
       </div>
     </>

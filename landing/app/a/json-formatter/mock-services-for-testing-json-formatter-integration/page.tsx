@@ -28,59 +28,77 @@ export default function MockServicesJsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Integrating a <span className="font-medium">JSON formatter</span> into a larger application often involves fetching JSON data from external sources like APIs, databases, or files. Ensuring that your formatter behaves correctly with various real-world data structures and handling potential issues requires robust testing. This is where <span className="font-medium">mock services</span> become invaluable.
+          Integrating a <span className="font-medium">JSON formatter</span> into a larger application often involves
+          fetching JSON data from external sources like APIs, databases, or files. Ensuring that your formatter behaves
+          correctly with various real-world data structures and handling potential issues requires robust testing. This
+          is where <span className="font-medium">mock services</span> become invaluable.
         </p>
         <p>
-          This article explores why and how to use mock services to test the integration points of your JSON formatter, making your testing process more reliable, faster, and less dependent on external factors.
+          This article explores why and how to use mock services to test the integration points of your JSON formatter,
+          making your testing process more reliable, faster, and less dependent on external factors.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Network size={24} /> The Challenge of Testing with Real Dependencies
         </h2>
         <p>
-          Imagine your JSON formatter component or function needs to fetch JSON data from a backend API endpoint before formatting it. Testing this integration directly with the real API presents several challenges:
+          Imagine your JSON formatter component or function needs to fetch JSON data from a backend API endpoint before
+          formatting it. Testing this integration directly with the real API presents several challenges:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Dependency on External Service Availability:</span> If the API is down, slow, or returns unexpected errors, your tests will fail, even if your formatter logic is perfectly fine.
+            <span className="font-medium">Dependency on External Service Availability:</span> If the API is down, slow,
+            or returns unexpected errors, your tests will fail, even if your formatter logic is perfectly fine.
           </li>
           <li>
-            <span className="font-medium">Speed:</span> Making real network requests adds significant time to your test suite execution, slowing down development feedback cycles.
+            <span className="font-medium">Speed:</span> Making real network requests adds significant time to your test
+            suite execution, slowing down development feedback cycles.
           </li>
           <li>
-            <span className="font-medium">Controlling Data:</span> It&apos;s difficult to consistently get specific data shapes, sizes, or error responses from a real API, making it hard to test edge cases like malformed JSON, deeply nested structures, or large payloads.
+            <span className="font-medium">Controlling Data:</span> It&apos;s difficult to consistently get specific data
+            shapes, sizes, or error responses from a real API, making it hard to test edge cases like malformed JSON,
+            deeply nested structures, or large payloads.
           </li>
           <li>
-            <span className="font-medium">Cost/Rate Limits:</span> Repeatedly hitting an external API during testing can incur costs or trigger rate limits.
+            <span className="font-medium">Cost/Rate Limits:</span> Repeatedly hitting an external API during testing can
+            incur costs or trigger rate limits.
           </li>
         </ul>
         <p>
-          These issues lead to <span className="font-medium">flaky tests</span> – tests that sometimes pass and sometimes fail for reasons unrelated to the code being tested.
+          These issues lead to <span className="font-medium">flaky tests</span> – tests that sometimes pass and
+          sometimes fail for reasons unrelated to the code being tested.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Plug size={24} /> Introducing Mock Services
         </h2>
         <p>
-          Mock services (or mocks) are controlled substitutes for external dependencies. Instead of making a real call to an API or database, your code interacts with a mock object or service that simulates the behavior of the real dependency.
+          Mock services (or mocks) are controlled substitutes for external dependencies. Instead of making a real call
+          to an API or database, your code interacts with a mock object or service that simulates the behavior of the
+          real dependency.
         </p>
         <p>
-          For testing a JSON formatter that fetches data, a mock service would intercept the outgoing request (or be directly called by your code) and return a predefined JSON response, status code, or error, without ever hitting the actual external endpoint.
+          For testing a JSON formatter that fetches data, a mock service would intercept the outgoing request (or be
+          directly called by your code) and return a predefined JSON response, status code, or error, without ever
+          hitting the actual external endpoint.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Benefits of Using Mocks:</h3>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li className="flex items-start gap-2">
             <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-1" />
-            <span className="font-medium">Isolation:</span> Tests focus solely on your JSON formatter&apos;s logic, independent of external service state.
+            <span className="font-medium">Isolation:</span> Tests focus solely on your JSON formatter&apos;s logic,
+            independent of external service state.
           </li>
           <li className="flex items-start gap-2">
             <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-1" />
-            <span className="font-medium">Speed:</span> Mocks respond instantly, dramatically speeding up test execution.
+            <span className="font-medium">Speed:</span> Mocks respond instantly, dramatically speeding up test
+            execution.
           </li>
           <li className="flex items-start gap-2">
             <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-1" />
-            <span className="font-medium">Control:</span> You can precisely control the data and responses returned by the mock, allowing you to test all possible scenarios, including errors, empty states, and malformed data.
+            <span className="font-medium">Control:</span> You can precisely control the data and responses returned by
+            the mock, allowing you to test all possible scenarios, including errors, empty states, and malformed data.
           </li>
           <li className="flex items-start gap-2">
             <CheckCircle size={20} className="text-green-500 flex-shrink-0 mt-1" />
@@ -92,17 +110,20 @@ export default function MockServicesJsonFormatterArticle() {
           <Layers size={24} /> Types of Mock Services for JSON Formatting Tests
         </h2>
         <p>
-          There are several ways to implement mock services, depending on your application&apos;s architecture and testing framework.
+          There are several ways to implement mock services, depending on your application&apos;s architecture and
+          testing framework.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <BookOpenText size={20} /> 1. In-Memory Mocks (Simple Functions/Objects)
         </h3>
         <p>
-          The simplest approach is to replace the actual data-fetching logic with a function or object that returns predefined data. This is suitable for unit testing components or functions that directly call a data utility.
+          The simplest approach is to replace the actual data-fetching logic with a function or object that returns
+          predefined data. This is suitable for unit testing components or functions that directly call a data utility.
         </p>
         <p>
-          <span className="font-medium">Scenario:</span> Your formatter is a function that takes a promise resolving to JSON data.
+          <span className="font-medium">Scenario:</span> Your formatter is a function that takes a promise resolving to
+          JSON data.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Original Code (Conceptual):</h4>
@@ -192,20 +213,28 @@ describe('JSON Formatter Integration with In-Memory Mock', () => {
           </div>
         </div>
         <p>
-          This approach is effective for unit tests where you control the specific function being called. It requires modifying the test setup to inject or mock the dependency.
+          This approach is effective for unit tests where you control the specific function being called. It requires
+          modifying the test setup to inject or mock the dependency.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Laptop size={20} /> 2. HTTP Request Interception (e.g., `msw`)
         </h3>
         <p>
-          Modern web applications often use the browser&apos;s `fetch` API or libraries like `axios` for HTTP requests. <span className="font-medium">Mock Service Worker (msw)</span> is a popular library that intercepts network requests at the service worker or Node.js level. This means your application code doesn&apos;t need to know it&apos;s being mocked; it makes the regular `fetch` or `axios` call, and `msw` intercepts it before it leaves the application context.
+          Modern web applications often use the browser&apos;s `fetch` API or libraries like `axios` for HTTP requests.{" "}
+          <span className="font-medium">Mock Service Worker (msw)</span> is a popular library that intercepts network
+          requests at the service worker or Node.js level. This means your application code doesn&apos;t need to know
+          it&apos;s being mocked; it makes the regular `fetch` or `axios` call, and `msw` intercepts it before it leaves
+          the application context.
         </p>
         <p>
-          This is excellent for integration tests where you want to test a component or module that performs HTTP requests internally, without changing its code.
+          This is excellent for integration tests where you want to test a component or module that performs HTTP
+          requests internally, without changing its code.
         </p>
         <p>
-          <span className="font-medium">Scenario:</span> Your React component or Next.js page component fetches data using `fetch` or `axios` when it mounts or a button is clicked, and then passes the result to your JSON formatter logic.
+          <span className="font-medium">Scenario:</span> Your React component or Next.js page component fetches data
+          using `fetch` or `axios` when it mounts or a button is clicked, and then passes the result to your JSON
+          formatter logic.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Using `msw` (Conceptual Setup):</h4>
@@ -366,17 +395,22 @@ describe('JSON Formatter Integration with msw', () => {
           </div>
         </div>
         <p>
-          `msw` is powerful because it operates at the network layer, providing a realistic mocking experience without altering your application code&apos;s data fetching logic.
+          `msw` is powerful because it operates at the network layer, providing a realistic mocking experience without
+          altering your application code&apos;s data fetching logic.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Server size={20} /> 3. Dedicated Mock Servers
         </h3>
         <p>
-          For larger projects or scenarios requiring more complex mock behaviors (like statefulness, delayed responses, or dynamic responses based on request headers/bodies), setting up a dedicated mock server might be beneficial. Tools like WireMock, Mockoon, or JSON Server can run as separate processes or Docker containers.
+          For larger projects or scenarios requiring more complex mock behaviors (like statefulness, delayed responses,
+          or dynamic responses based on request headers/bodies), setting up a dedicated mock server might be beneficial.
+          Tools like WireMock, Mockoon, or JSON Server can run as separate processes or Docker containers.
         </p>
         <p>
-          <span className="font-medium">Scenario:</span> You are testing a feature that involves multiple API calls or requires simulating different server states over time. Your application is configured to point to the mock server&apos;s URL during testing.
+          <span className="font-medium">Scenario:</span> You are testing a feature that involves multiple API calls or
+          requires simulating different server states over time. Your application is configured to point to the mock
+          server&apos;s URL during testing.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example with JSON Server (Conceptual):</h4>
@@ -438,29 +472,54 @@ describe('JSON Formatter Integration with Dedicated Mock Server', () => {
           </div>
         </div>
         <p>
-          Dedicated mock servers offer high flexibility and realism but add another dependency (the mock server process) to your testing environment setup. They are often used for integration or API contract testing alongside unit/component testing.
+          Dedicated mock servers offer high flexibility and realism but add another dependency (the mock server process)
+          to your testing environment setup. They are often used for integration or API contract testing alongside
+          unit/component testing.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <MousePointerClick size={24} /> Designing Mocks for JSON Formatting Tests
         </h2>
-        <p>
-          When creating mocks for testing your JSON formatter, consider covering a wide range of JSON scenarios:
-        </p>
+        <p>When creating mocks for testing your JSON formatter, consider covering a wide range of JSON scenarios:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-medium">Simple objects/arrays:</span> Basic structures.</li>
-          <li><span className="font-medium">Nested objects/arrays:</span> Test recursion handling.</li>
-          <li><span className="font-medium">Various data types:</span> Strings, numbers (integers, floats, scientific notation), booleans, null.</li>
-          <li><span className="font-medium">Empty objects (`&#x7b;&#x7d;`) and arrays (`[]`).</span></li>
-          <li><span className="font-medium">Objects with special characters in keys/values.</span></li>
-          <li><span className="font-medium">Very large JSON payloads:</span> Test performance or memory handling.</li>
-          <li><span className="font-medium">Malformed JSON:</span> Test error handling and parsing resilience. (e.g., trailing commas, missing quotes, incorrect escape sequences).</li>
-          <li><span className="font-medium">Non-JSON responses:</span> Test how your code handles receiving HTML or plain text when JSON is expected.</li>
-          <li><span className="font-medium">Different HTTP status codes:</span> 200 OK, 404 Not Found, 500 Internal Server Error, etc., and how your code responds before attempting to parse the body as JSON.</li>
-          <li><span className="font-medium">Responses with different `Content-Type` headers.</span></li>
+          <li>
+            <span className="font-medium">Simple objects/arrays:</span> Basic structures.
+          </li>
+          <li>
+            <span className="font-medium">Nested objects/arrays:</span> Test recursion handling.
+          </li>
+          <li>
+            <span className="font-medium">Various data types:</span> Strings, numbers (integers, floats, scientific
+            notation), booleans, null.
+          </li>
+          <li>
+            <span className="font-medium">Empty objects (`&#x7b;&#x7d;`) and arrays (`[]`).</span>
+          </li>
+          <li>
+            <span className="font-medium">Objects with special characters in keys/values.</span>
+          </li>
+          <li>
+            <span className="font-medium">Very large JSON payloads:</span> Test performance or memory handling.
+          </li>
+          <li>
+            <span className="font-medium">Malformed JSON:</span> Test error handling and parsing resilience. (e.g.,
+            trailing commas, missing quotes, incorrect escape sequences).
+          </li>
+          <li>
+            <span className="font-medium">Non-JSON responses:</span> Test how your code handles receiving HTML or plain
+            text when JSON is expected.
+          </li>
+          <li>
+            <span className="font-medium">Different HTTP status codes:</span> 200 OK, 404 Not Found, 500 Internal Server
+            Error, etc., and how your code responds before attempting to parse the body as JSON.
+          </li>
+          <li>
+            <span className="font-medium">Responses with different `Content-Type` headers.</span>
+          </li>
         </ul>
         <p>
-          By providing mocks for these varied scenarios, you can ensure your JSON formatter integration is robust and handles real-world data and API behaviors gracefully.
+          By providing mocks for these varied scenarios, you can ensure your JSON formatter integration is robust and
+          handles real-world data and API behaviors gracefully.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -470,29 +529,52 @@ describe('JSON Formatter Integration with Dedicated Mock Server', () => {
           While often used interchangeably in a general sense, it&apos;s worth noting the specific testing concepts:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-medium">Stub:</span> A test double that provides canned answers to calls made during the test. It doesn&apos;t verify interaction. (e.g., providing a static JSON response).</li>
-          <li><span className="font-medium">Spy:</span> A test double that wraps a real object/function and logs interactions (like calls made, arguments received). It&apos;s used to verify interaction. (e.g., checking if `fetchJsonData` was called with the correct URL).</li>
-          <li><span className="font-medium">Mock:</span> A test double that, like a stub, provides canned answers, but also verifies expectations about the calls made to it during the test. (e.g., expecting `mockedFetchJsonData` to be called exactly once with a specific URL, and throwing an error if it wasn&apos;t).</li>
+          <li>
+            <span className="font-medium">Stub:</span> A test double that provides canned answers to calls made during
+            the test. It doesn&apos;t verify interaction. (e.g., providing a static JSON response).
+          </li>
+          <li>
+            <span className="font-medium">Spy:</span> A test double that wraps a real object/function and logs
+            interactions (like calls made, arguments received). It&apos;s used to verify interaction. (e.g., checking if
+            `fetchJsonData` was called with the correct URL).
+          </li>
+          <li>
+            <span className="font-medium">Mock:</span> A test double that, like a stub, provides canned answers, but
+            also verifies expectations about the calls made to it during the test. (e.g., expecting
+            `mockedFetchJsonData` to be called exactly once with a specific URL, and throwing an error if it
+            wasn&apos;t).
+          </li>
         </ul>
         <p>
-          In the context of mock services for API integration, you are often using objects or tools that combine stubbing (providing fake responses) and mocking (allowing verification of requests made to the mock endpoint). Libraries like `msw` allow for both.
+          In the context of mock services for API integration, you are often using objects or tools that combine
+          stubbing (providing fake responses) and mocking (allowing verification of requests made to the mock endpoint).
+          Libraries like `msw` allow for both.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <XCircle size={24} /> When Mocks Are Not Enough
         </h2>
         <p>
-          While mocks are excellent for isolating and speeding up tests, they replace the real dependency. They don&apos;t verify that your understanding of the API contract is correct or that the network infrastructure between your application and the real API works.
+          While mocks are excellent for isolating and speeding up tests, they replace the real dependency. They
+          don&apos;t verify that your understanding of the API contract is correct or that the network infrastructure
+          between your application and the real API works.
         </p>
         <p>
-          For this, you still need <span className="font-medium">end-to-end tests</span> or <span className="font-medium">integration tests</span> that use the actual external dependencies. These tests are slower and more brittle but are crucial for confidence in the final deployed application. Mocks complement these tests; they don&apos;t entirely replace them.
+          For this, you still need <span className="font-medium">end-to-end tests</span> or{" "}
+          <span className="font-medium">integration tests</span> that use the actual external dependencies. These tests
+          are slower and more brittle but are crucial for confidence in the final deployed application. Mocks complement
+          these tests; they don&apos;t entirely replace them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <BookOpenText size={24} /> Conclusion
         </h2>
         <p>
-          Using mock services is a fundamental strategy for building robust and maintainable tests for any code that interacts with external dependencies, including JSON formatters that fetch data. By controlling the input data and simulated network conditions, you can test your formatter&apos;s logic exhaustively, leading to higher confidence in its correctness and resilience. Choose the mocking strategy (in-memory, HTTP interception, or dedicated server) that best fits your project&apos;s complexity and testing goals.
+          Using mock services is a fundamental strategy for building robust and maintainable tests for any code that
+          interacts with external dependencies, including JSON formatters that fetch data. By controlling the input data
+          and simulated network conditions, you can test your formatter&apos;s logic exhaustively, leading to higher
+          confidence in its correctness and resilience. Choose the mocking strategy (in-memory, HTTP interception, or
+          dedicated server) that best fits your project&apos;s complexity and testing goals.
         </p>
       </div>
     </>

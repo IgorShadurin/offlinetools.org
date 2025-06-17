@@ -17,24 +17,19 @@ export const metadata: Metadata = {
 export default function RJsonToolsPage() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        R Language Tools for JSON Formatting and Analysis
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">R Language Tools for JSON Formatting and Analysis</h1>
 
       <div className="space-y-6">
         <p>
-          The R language is a powerful environment for statistical computing and
-          graphics, widely used in data analysis, visualization, and machine
-          learning. In today&apos;s data landscape, JSON (JavaScript Object
-          Notation) has become a ubiquitous format for data exchange,
-          especially in web APIs and NoSQL databases. Bridging the gap between
-          R&apos;s analytical capabilities and JSON data sources is a common and
-          essential task for many data scientists and developers.
+          The R language is a powerful environment for statistical computing and graphics, widely used in data analysis,
+          visualization, and machine learning. In today&apos;s data landscape, JSON (JavaScript Object Notation) has
+          become a ubiquitous format for data exchange, especially in web APIs and NoSQL databases. Bridging the gap
+          between R&apos;s analytical capabilities and JSON data sources is a common and essential task for many data
+          scientists and developers.
         </p>
         <p>
-          This page explores the key R packages and techniques available for
-          efficiently handling JSON data, from simple reading and writing to
-          analyzing complex, nested structures.
+          This page explores the key R packages and techniques available for efficiently handling JSON data, from simple
+          reading and writing to analyzing complex, nested structures.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -43,29 +38,23 @@ export default function RJsonToolsPage() {
           </span>
           Why Process JSON in R?
         </h2>
-        <p>
-          Integrating JSON data into an R workflow is crucial for several
-          reasons:
-        </p>
+        <p>Integrating JSON data into an R workflow is crucial for several reasons:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Data Acquisition:</strong> Many modern data sources (web
-            APIs, databases) provide data in JSON format. R needs to read and
-            parse this data.
+            <strong>Data Acquisition:</strong> Many modern data sources (web APIs, databases) provide data in JSON
+            format. R needs to read and parse this data.
           </li>
           <li>
-            <strong>Data Preparation:</strong> Transforming raw JSON into R data
-            structures (data frames, lists) is necessary for analysis.
+            <strong>Data Preparation:</strong> Transforming raw JSON into R data structures (data frames, lists) is
+            necessary for analysis.
           </li>
           <li>
-            <strong>Data Export:</strong> R results or data need to be exported
-            in JSON format for use in web applications, other services, or for
-            storage.
+            <strong>Data Export:</strong> R results or data need to be exported in JSON format for use in web
+            applications, other services, or for storage.
           </li>
           <li>
-            <strong>Analysis of Semi-structured Data:</strong> JSON&apos;s
-            flexible nature allows for semi-structured data, which R can
-            process and analyze statistically.
+            <strong>Analysis of Semi-structured Data:</strong> JSON&apos;s flexible nature allows for semi-structured
+            data, which R can process and analyze statistically.
           </li>
         </ul>
 
@@ -76,19 +65,17 @@ export default function RJsonToolsPage() {
           Key R Packages for JSON
         </h2>
         <p>
-          Several packages in R facilitate working with JSON. The most popular
-          and generally recommended is `jsonlite`, but others like `rjson` and
-          `ndjson` have their uses.
+          Several packages in R facilitate working with JSON. The most popular and generally recommended is `jsonlite`,
+          but others like `rjson` and `ndjson` have their uses.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <code>jsonlite</code>: The Modern Standard
         </h3>
         <p>
-          The `jsonlite` package is designed to be a robust and convenient
-          interface for converting between JSON data and R objects, particularly
-          excelling at handling complex and nested structures. It provides a
-          simple and consistent API.
+          The `jsonlite` package is designed to be a robust and convenient interface for converting between JSON data
+          and R objects, particularly excelling at handling complex and nested structures. It provides a simple and
+          consistent API.
         </p>
         <p>Key functions include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -121,11 +108,9 @@ library(jsonlite)`}
           <code>rjson</code>: An Older Alternative
         </h3>
         <p>
-          The `rjson` package is another option, often faster for very simple
-          JSON structures but less intuitive and sometimes less robust for
-          complex or non-standard JSON compared to `jsonlite`. `jsonlite` is
-          generally preferred for new projects due to its features and ease of
-          use.
+          The `rjson` package is another option, often faster for very simple JSON structures but less intuitive and
+          sometimes less robust for complex or non-standard JSON compared to `jsonlite`. `jsonlite` is generally
+          preferred for new projects due to its features and ease of use.
         </p>
         <p>Key functions:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -150,9 +135,8 @@ library(rjson)`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Note: While it has the same function names, the behavior and options
-            differ significantly from `jsonlite`. Using both in the same script
-            without careful management can lead to confusion.
+            Note: While it has the same function names, the behavior and options differ significantly from `jsonlite`.
+            Using both in the same script without careful management can lead to confusion.
           </p>
         </div>
 
@@ -160,11 +144,9 @@ library(rjson)`}
           <code>ndjson</code>: For JSON Lines
         </h3>
         <p>
-          JSON Lines (or newline-delimited JSON, ndjson) is a format where each
-          line is a separate, valid JSON object. This is common in log files
-          and streaming data. The `ndjson` package is specifically designed to
-          efficiently read and write data in this format, handling large files
-          line by line.
+          JSON Lines (or newline-delimited JSON, ndjson) is a format where each line is a separate, valid JSON object.
+          This is common in log files and streaming data. The `ndjson` package is specifically designed to efficiently
+          read and write data in this format, handling large files line by line.
         </p>
         <p>Key functions:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -196,10 +178,7 @@ library(ndjson)`}
           </span>
           Common Tasks with <code>jsonlite</code> Examples
         </h2>
-        <p>
-          Let&apos;s focus on `jsonlite`, as it&apos;s the most versatile for
-          general JSON handling.
-        </p>
+        <p>Let&apos;s focus on `jsonlite`, as it&apos;s the most versatile for general JSON handling.</p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <span className="mr-2">
@@ -208,14 +187,11 @@ library(ndjson)`}
           Reading JSON
         </h3>
         <p>
-          You can read JSON directly from a string, a local file, or a URL.
-          `jsonlite` attempts to convert the JSON structure into the most
-          appropriate R object, typically a list or a data frame.
+          You can read JSON directly from a string, a local file, or a URL. `jsonlite` attempts to convert the JSON
+          structure into the most appropriate R object, typically a list or a data frame.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Reading from a String:
-          </h4>
+          <h4 className="text-lg font-medium mb-2">Reading from a String:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`library(jsonlite)
@@ -254,9 +230,7 @@ str(r_data_from_file)`}
         </div>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Reading from a URL:</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Reading from a public API endpoint.
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Reading from a public API endpoint.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`# Example using the JSONPlaceholder API
@@ -278,13 +252,11 @@ str(post_data)`}
           Writing JSON
         </h3>
         <p>
-          Converting R objects (like data frames, lists, vectors) into JSON
-          strings or files is straightforward using `toJSON()`.
+          Converting R objects (like data frames, lists, vectors) into JSON strings or files is straightforward using
+          `toJSON()`.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Writing an R List/Data Frame to JSON:
-          </h4>
+          <h4 className="text-lg font-medium mb-2">Writing an R List/Data Frame to JSON:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`library(jsonlite)
@@ -314,15 +286,12 @@ cat(json_output_df)`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            By default, `toJSON` serializes data frames as arrays of objects
-            (each row becomes a JSON object). You can change this behavior using
-            the `dataframe` argument.
+            By default, `toJSON` serializes data frames as arrays of objects (each row becomes a JSON object). You can
+            change this behavior using the `dataframe` argument.
           </p>
         </div>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Writing JSON to a File:
-          </h4>
+          <h4 className="text-lg font-medium mb-2">Writing JSON to a File:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`library(jsonlite)
@@ -349,14 +318,11 @@ readLines("output_data.json")`}
           Handling Complex and Nested JSON
         </h3>
         <p>
-          One of `jsonlite`&apos;s strengths is handling nested JSON. By default,
-          it often represents nested objects as nested lists in R and arrays as
-          vectors or data frames.
+          One of `jsonlite`&apos;s strengths is handling nested JSON. By default, it often represents nested objects as
+          nested lists in R and arrays as vectors or data frames.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Parsing Nested Structures:
-          </h4>
+          <h4 className="text-lg font-medium mb-2">Parsing Nested Structures:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`library(jsonlite)
@@ -394,10 +360,9 @@ print(r_nested_data$orders$amount[2])`}
           Flattening JSON
         </h3>
         <p>
-          Sometimes, complex nested JSON isn&apos;t ideal for direct analysis in
-          R data frames. `jsonlite` provides the `flatten()` option in
-          `fromJSON` to help convert nested structures into a &quot;wider&quot;
-          data frame by concatenating column names.
+          Sometimes, complex nested JSON isn&apos;t ideal for direct analysis in R data frames. `jsonlite` provides the
+          `flatten()` option in `fromJSON` to help convert nested structures into a &quot;wider&quot; data frame by
+          concatenating column names.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">
@@ -423,11 +388,9 @@ str(r_flattened_data)
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Be cautious with `flatten = TRUE` on very complex or deeply nested
-            JSON with inconsistent structures; it might not produce the desired
-            flat data frame. You might need manual processing for complex
-            lists-of-lists or lists-of-data-frames that don&apos;t auto-convert
-            nicely.
+            Be cautious with `flatten = TRUE` on very complex or deeply nested JSON with inconsistent structures; it
+            might not produce the desired flat data frame. You might need manual processing for complex lists-of-lists
+            or lists-of-data-frames that don&apos;t auto-convert nicely.
           </p>
         </div>
 
@@ -438,9 +401,8 @@ str(r_flattened_data)
           Formatting JSON (Pretty Printing)
         </h3>
         <p>
-          JSON data retrieved from sources might be minified (without whitespace
-          or indentation) to save space. `jsonlite` can format it for human
-          readability.
+          JSON data retrieved from sources might be minified (without whitespace or indentation) to save space.
+          `jsonlite` can format it for human readability.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">
@@ -468,16 +430,12 @@ cat(pretty_json)
           Working with JSON Lines (`ndjson`)
         </h3>
         <p>
-          For large files where each line is a separate JSON object, the `ndjson`
-          package is highly efficient as it processes data line by line.
+          For large files where each line is a separate JSON object, the `ndjson` package is highly efficient as it
+          processes data line by line.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Reading ndjson:
-          </h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Assume you have a file named `log.ndjson`.
-          </p>
+          <h4 className="text-lg font-medium mb-2">Reading ndjson:</h4>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Assume you have a file named `log.ndjson`.</p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`# First, create a dummy log.ndjson file
@@ -491,15 +449,12 @@ str(ndjson_data)`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            `stream_in` can take a file path or a connection object. For very
-            large files, consider processing in chunks or piping directly from
-            a source.
+            `stream_in` can take a file path or a connection object. For very large files, consider processing in chunks
+            or piping directly from a source.
           </p>
         </div>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Writing ndjson:
-          </h4>
+          <h4 className="text-lg font-medium mb-2">Writing ndjson:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`library(ndjson)
@@ -527,50 +482,41 @@ readLines("output.ndjson")`}
           Analysis Considerations
         </h2>
         <p>
-          Once JSON is parsed into R data structures (often lists or data
-          frames), you can use standard R functions and packages for analysis.
+          Once JSON is parsed into R data structures (often lists or data frames), you can use standard R functions and
+          packages for analysis.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Data Frames:</strong> If `fromJSON` successfully parses into
-            a data frame (common for JSON arrays of objects with consistent
-            keys), you can use packages like `dplyr`, `tidyr`, and base R
-            functions for manipulation and analysis.
+            <strong>Data Frames:</strong> If `fromJSON` successfully parses into a data frame (common for JSON arrays of
+            objects with consistent keys), you can use packages like `dplyr`, `tidyr`, and base R functions for
+            manipulation and analysis.
           </li>
           <li>
-            <strong>Lists:</strong> For deeply nested or irregular JSON, `fromJSON`
-            might return a complex list structure. You might need to use list
-            manipulation functions (`lapply`, `sapply`, `purrr` package functions
-            like `map`, `map_dfr`) to extract, transform, or flatten the data into
-            a usable format like a data frame.
+            <strong>Lists:</strong> For deeply nested or irregular JSON, `fromJSON` might return a complex list
+            structure. You might need to use list manipulation functions (`lapply`, `sapply`, `purrr` package functions
+            like `map`, `map_dfr`) to extract, transform, or flatten the data into a usable format like a data frame.
           </li>
           <li>
-            <strong>JSON Schema:</strong> While R packages can parse JSON, they
-            typically don&apos;t validate against a JSON schema. For schema validation,
-            you might need external tools or libraries used via system calls or
+            <strong>JSON Schema:</strong> While R packages can parse JSON, they typically don&apos;t validate against a
+            JSON schema. For schema validation, you might need external tools or libraries used via system calls or
             APIs.
           </li>
           <li>
-            <strong>Performance:</strong> For extremely large JSON files, memory
-            can become an issue. `ndjson` is better for line-delimited data. For
-            single, large JSON objects, streaming parsers (less common in
-            standard R packages) or processing on a platform better suited for
-            large file I/O might be necessary.
+            <strong>Performance:</strong> For extremely large JSON files, memory can become an issue. `ndjson` is better
+            for line-delimited data. For single, large JSON objects, streaming parsers (less common in standard R
+            packages) or processing on a platform better suited for large file I/O might be necessary.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          R offers excellent tools, primarily through the `jsonlite` package, for
-          interacting with JSON data. Whether you need to ingest data from web
-          APIs, work with configuration files, or process log streams, these
-          packages provide flexible and powerful capabilities. Understanding how
-          `jsonlite` converts JSON types to R types and how to handle nested
-          structures is key to effectively integrating JSON data into your R-based
-          data analysis workflows. For the specific format of JSON Lines, the
-          `ndjson` package offers an optimized solution. By mastering these tools,
-          you can unlock access to a vast amount of data available in JSON format
-          and bring it into the powerful analytical environment of R.
+          R offers excellent tools, primarily through the `jsonlite` package, for interacting with JSON data. Whether
+          you need to ingest data from web APIs, work with configuration files, or process log streams, these packages
+          provide flexible and powerful capabilities. Understanding how `jsonlite` converts JSON types to R types and
+          how to handle nested structures is key to effectively integrating JSON data into your R-based data analysis
+          workflows. For the specific format of JSON Lines, the `ndjson` package offers an optimized solution. By
+          mastering these tools, you can unlock access to a vast amount of data available in JSON format and bring it
+          into the powerful analytical environment of R.
         </p>
       </div>
     </>

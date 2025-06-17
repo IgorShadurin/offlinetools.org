@@ -24,17 +24,20 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Character Set: Standard and Variants",
-    description: "Understanding the standard Base64 alphabet and its variants, including URL-safe and filename-safe options.",
+    description:
+      "Understanding the standard Base64 alphabet and its variants, including URL-safe and filename-safe options.",
     slug: "base64-character-set-standard-and-variants",
   },
   {
     title: "Padding in Base64: Purpose and Implementation Standards",
-    description: "The rationale behind Base64 padding characters and the standards for their use in different contexts.",
+    description:
+      "The rationale behind Base64 padding characters and the standards for their use in different contexts.",
     slug: "padding-in-base64-purpose-and-implementation-standards",
   },
   {
     title: "Line Breaking Conventions in Base64 Encodings",
-    description: "Standards and best practices for handling line wrapping in Base64 encoded data for various applications.",
+    description:
+      "Standards and best practices for handling line wrapping in Base64 encoded data for various applications.",
     slug: "line-breaking-conventions-in-base64-encodings",
   },
   {
@@ -49,7 +52,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Output Formatting Best Practices",
-    description: "Guidelines for properly formatting Base64 encoded output for different applications and environments.",
+    description:
+      "Guidelines for properly formatting Base64 encoded output for different applications and environments.",
     slug: "base64-output-formatting-best-practices",
   },
   {
@@ -116,7 +120,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Base64 in Authentication: OAuth and JWT Standards",
     description: "Technical standards for Base64 encoding in modern authentication protocols like OAuth and JWTs.",
     slug: "base64-in-authentication-oauth-and-jwt-standards",
-  }
+  },
 ];
 
 /**
@@ -167,7 +171,9 @@ export default function Base64CodecStandardsPage() {
               <BookIcon className="text-sky-600" size={24} />
               Base64 Standards and Guidelines
             </CardTitle>
-            <CardDescription>Official specifications and recommended practices for Base64 encoding and decoding</CardDescription>
+            <CardDescription>
+              Official specifications and recommended practices for Base64 encoding and decoding
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +185,8 @@ export default function Base64CodecStandardsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Official Specifications</h3>
                     <p className="text-sm text-muted-foreground">
-                      RFC documents, MIME standards, and protocol specifications that define Base64 encoding standards and variants.
+                      RFC documents, MIME standards, and protocol specifications that define Base64 encoding standards
+                      and variants.
                     </p>
                   </div>
                 </div>
@@ -191,7 +198,8 @@ export default function Base64CodecStandardsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Format Standards</h3>
                     <p className="text-sm text-muted-foreground">
-                      Line breaking conventions, padding requirements, and character set specifications for different Base64 applications.
+                      Line breaking conventions, padding requirements, and character set specifications for different
+                      Base64 applications.
                     </p>
                   </div>
                 </div>
@@ -205,7 +213,8 @@ export default function Base64CodecStandardsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Implementation Guidelines</h3>
                     <p className="text-sm text-muted-foreground">
-                      Best practices for error handling, validation, performance optimization, and interoperability across systems.
+                      Best practices for error handling, validation, performance optimization, and interoperability
+                      across systems.
                     </p>
                   </div>
                 </div>
@@ -230,7 +239,9 @@ export default function Base64CodecStandardsPage() {
                 <span>Standards Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                RFC 4648 is the definitive standard for Base64 encoding, published in 2006 to clarify ambiguities in earlier specifications. It defines both the standard and URL-safe Base64 alphabets, padding requirements, and decoding processes that conformant implementations should follow.
+                RFC 4648 is the definitive standard for Base64 encoding, published in 2006 to clarify ambiguities in
+                earlier specifications. It defines both the standard and URL-safe Base64 alphabets, padding
+                requirements, and decoding processes that conformant implementations should follow.
               </p>
             </div>
           </CardContent>
@@ -240,4 +251,4 @@ export default function Base64CodecStandardsPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

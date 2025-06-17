@@ -27,11 +27,10 @@ export default function JsonFormattersDataMigrationArticle() {
 
       <div className="space-y-6 text-lg">
         <p>
-          Data migration is a critical, often complex process involving moving data from one system to another.
-          A common challenge is dealing with data in inconsistent formats, especially when the source data
-          comes from various places or has evolved over time.{" "}
-          <strong>JSON (JavaScript Object Notation)</strong> is a ubiquitous format, but even JSON data can vary
-          significantly in structure, naming conventions, and data types. This is where{" "}
+          Data migration is a critical, often complex process involving moving data from one system to another. A common
+          challenge is dealing with data in inconsistent formats, especially when the source data comes from various
+          places or has evolved over time. <strong>JSON (JavaScript Object Notation)</strong> is a ubiquitous format,
+          but even JSON data can vary significantly in structure, naming conventions, and data types. This is where{" "}
           <strong>JSON formatters and processors</strong> become indispensable tools.
         </p>
 
@@ -40,22 +39,25 @@ export default function JsonFormattersDataMigrationArticle() {
           <span>What are JSON Formatters & Processors?</span>
         </h2>
         <p>
-          At its simplest, a "JSON formatter" might refer to a tool that pretty-prints JSON, making it readable
-          by adding indentation and line breaks. However, in the context of data migration, the term extends
-          to tools and processes that can:
+          At its simplest, a "JSON formatter" might refer to a tool that pretty-prints JSON, making it readable by
+          adding indentation and line breaks. However, in the context of data migration, the term extends to tools and
+          processes that can:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-medium">Standardize:</span> Ensure consistency in structure and key names.
           </li>
           <li>
-            <span className="font-medium">Validate:</span> Check if the data conforms to a specific schema or set of rules.
+            <span className="font-medium">Validate:</span> Check if the data conforms to a specific schema or set of
+            rules.
           </li>
           <li>
-            <span className="font-medium">Transform:</span> Modify the data's structure, values, or types to fit the target system's requirements.
+            <span className="font-medium">Transform:</span> Modify the data's structure, values, or types to fit the
+            target system's requirements.
           </li>
           <li>
-            <span className="font-medium">Clean:</span> Handle missing data, remove duplicates, correct malformed entries.
+            <span className="font-medium">Clean:</span> Handle missing data, remove duplicates, correct malformed
+            entries.
           </li>
         </ul>
         <p>
@@ -68,37 +70,36 @@ export default function JsonFormattersDataMigrationArticle() {
           <span>Why Use Them for Data Migration?</span>
         </h2>
         <p>
-          Data migration projects often involve integrating data from disparate sources. Even if all sources
-          provide JSON, their internal structure might differ. Using formatters and processors helps bridge
-          this gap:
+          Data migration projects often involve integrating data from disparate sources. Even if all sources provide
+          JSON, their internal structure might differ. Using formatters and processors helps bridge this gap:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Ensuring Data Quality:</strong> Identify and correct errors, inconsistencies, and missing values before
-              they corrupt the target system.
+              <strong>Ensuring Data Quality:</strong> Identify and correct errors, inconsistencies, and missing values
+              before they corrupt the target system.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Meeting Target Schema Requirements:</strong> Reshape source JSON to precisely match the expected structure
-              of the target database tables or document structures.
+              <strong>Meeting Target Schema Requirements:</strong> Reshape source JSON to precisely match the expected
+              structure of the target database tables or document structures.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Simplifying Development:</strong> Separate the concerns of data extraction, transformation, and loading.
-              JSON processing focuses solely on the transformation phase for JSON data.
+              <strong>Simplifying Development:</strong> Separate the concerns of data extraction, transformation, and
+              loading. JSON processing focuses solely on the transformation phase for JSON data.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Improving Performance:</strong> Clean and transform data efficiently in bulk, reducing the load on the
-              target system during ingestion.
+              <strong>Improving Performance:</strong> Clean and transform data efficiently in bulk, reducing the load on
+              the target system during ingestion.
             </div>
           </li>
         </ul>
@@ -113,11 +114,12 @@ export default function JsonFormattersDataMigrationArticle() {
           <span>1. Validation</span>
         </h3>
         <p>
-          Before transforming or loading, validating the incoming JSON is crucial. This verifies that the data
-          adheres to an expected structure or type definition.
+          Before transforming or loading, validating the incoming JSON is crucial. This verifies that the data adheres
+          to an expected structure or type definition.
         </p>
         <p>
-          <strong>Use Case:</strong> Ensure all user records have a required `email` field and that its value is a string.
+          <strong>Use Case:</strong> Ensure all user records have a required `email` field and that its value is a
+          string.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center space-x-2 mb-2">
@@ -165,8 +167,8 @@ function isValidUserForMigration(user: any): user is UserData {
             </pre>
           </div>
           <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
-            This example shows basic programmatic validation. In real projects, you'd often use JSON Schema
-            validators for more complex rules.
+            This example shows basic programmatic validation. In real projects, you'd often use JSON Schema validators
+            for more complex rules.
           </p>
         </div>
 
@@ -175,12 +177,12 @@ function isValidUserForMigration(user: any): user is UserData {
           <span>2. Transformation</span>
         </h3>
         <p>
-          Transforming JSON involves changing its structure, renaming keys, mapping values, combining fields,
-          or splitting complex objects into simpler ones to match the target schema.
+          Transforming JSON involves changing its structure, renaming keys, mapping values, combining fields, or
+          splitting complex objects into simpler ones to match the target schema.
         </p>
         <p>
-          <strong>Use Case:</strong> Rename a key from `user_name` to `fullName`, extract `city` from a nested `address` object,
-          and remove a field like `source_id` that isn't needed in the target system.
+          <strong>Use Case:</strong> Rename a key from `user_name` to `fullName`, extract `city` from a nested `address`
+          object, and remove a field like `source_id` that isn't needed in the target system.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center space-x-2 mb-2">
@@ -254,8 +256,8 @@ function transformUserForTarget(sourceUser: SourceUser): TargetUser {
             </pre>
           </div>
           <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
-            This function takes a `SourceUser` object and returns a `TargetUser` object, performing the
-            necessary key remapping and data extraction.
+            This function takes a `SourceUser` object and returns a `TargetUser` object, performing the necessary key
+            remapping and data extraction.
           </p>
         </div>
 
@@ -264,39 +266,38 @@ function transformUserForTarget(sourceUser: SourceUser): TargetUser {
           <span>3. Structuring/Restructuring</span>
         </h3>
         <p>
-          This is a form of transformation but focuses specifically on changing the hierarchy of the data.
-          This is often needed when migrating from a document database (flexible JSON) to a relational database
-          (fixed table structures), or vice versa.
+          This is a form of transformation but focuses specifically on changing the hierarchy of the data. This is often
+          needed when migrating from a document database (flexible JSON) to a relational database (fixed table
+          structures), or vice versa.
         </p>
         <p>
-          <strong>Use Case:</strong> Flatten an array of addresses nested within a user object into separate address records,
-          or embed related data into a single document.
+          <strong>Use Case:</strong> Flatten an array of addresses nested within a user object into separate address
+          records, or embed related data into a single document.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Wrench size={24} />
           <span>Approaches & Tools (Conceptual)</span>
         </h2>
-        <p>
-          You can implement JSON formatting and processing using various methods:
-        </p>
+        <p>You can implement JSON formatting and processing using various methods:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Manual Scripting:</strong> Using native language features (like `JSON.parse` and `JSON.stringify` in JavaScript/TypeScript)
-            combined with custom code for validation and transformation logic (as shown in the examples above). This offers maximum flexibility
-            but requires writing and maintaining the code yourself.
+            <strong>Manual Scripting:</strong> Using native language features (like `JSON.parse` and `JSON.stringify` in
+            JavaScript/TypeScript) combined with custom code for validation and transformation logic (as shown in the
+            examples above). This offers maximum flexibility but requires writing and maintaining the code yourself.
           </li>
           <li>
-            <strong>Command- Line Tools:</strong> Tools like `jq` are powerful for filtering, mapping, and transforming JSON data directly
-            from the command line. Useful for batch processing large files.
+            <strong>Command- Line Tools:</strong> Tools like `jq` are powerful for filtering, mapping, and transforming
+            JSON data directly from the command line. Useful for batch processing large files.
           </li>
           <li>
-            <strong>Programming Libraries:</strong> Many languages have libraries specifically designed for JSON processing, validation (e.g.,
-            implementing JSON Schema), and complex transformations (e.g., JSONata, JMESPath concepts, although we cannot use external libraries here).
+            <strong>Programming Libraries:</strong> Many languages have libraries specifically designed for JSON
+            processing, validation (e.g., implementing JSON Schema), and complex transformations (e.g., JSONata,
+            JMESPath concepts, although we cannot use external libraries here).
           </li>
           <li>
-            <strong>ETL Tools:</strong> Enterprise-level ETL (Extract, Transform, Load) platforms often have built-in capabilities for
-            parsing and transforming JSON data as part of a larger migration pipeline.
+            <strong>ETL Tools:</strong> Enterprise-level ETL (Extract, Transform, Load) platforms often have built-in
+            capabilities for parsing and transforming JSON data as part of a larger migration pipeline.
           </li>
         </ul>
 
@@ -308,43 +309,46 @@ function transformUserForTarget(sourceUser: SourceUser): TargetUser {
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Define Target Schema Clearly:</strong> Understand the exact structure, data types, and constraints of the destination system.
+              <strong>Define Target Schema Clearly:</strong> Understand the exact structure, data types, and constraints
+              of the destination system.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Profile Source Data:</strong> Analyze the source JSON to understand its variations, potential errors, and common patterns.
+              <strong>Profile Source Data:</strong> Analyze the source JSON to understand its variations, potential
+              errors, and common patterns.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Implement Robust Validation:</strong> Validate early in the process to catch bad data before complex transformations.
+              <strong>Implement Robust Validation:</strong> Validate early in the process to catch bad data before
+              complex transformations.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Handle Errors Gracefully:</strong> Log errors, skip invalid records, or quarantine them for manual review instead of stopping
-              the entire migration.
+              <strong>Handle Errors Gracefully:</strong> Log errors, skip invalid records, or quarantine them for manual
+              review instead of stopping the entire migration.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Test Thoroughly:</strong> Use representative samples of source data to test your processing logic and compare output against
-              expected results.
+              <strong>Test Thoroughly:</strong> Use representative samples of source data to test your processing logic
+              and compare output against expected results.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
             <div>
-              <strong>Process in Batches:</strong> For large datasets, process the JSON in chunks to manage memory and resources.
+              <strong>Process in Batches:</strong> For large datasets, process the JSON in chunks to manage memory and
+              resources.
             </div>
           </li>
         </ul>
-
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <BookOpen size={24} />
@@ -355,7 +359,8 @@ function transformUserForTarget(sourceUser: SourceUser): TargetUser {
           in the data migration toolkit. By enabling standardization, rigorous validation, and flexible transformation,
           they help ensure that data arrives at its destination accurately, reliably, and in the correct format,
           significantly reducing risks and effort in complex migration projects. Whether you use simple scripts or
-          sophisticated tooling, mastering JSON processing is key to successful data migration in a world dominated by JSON data.
+          sophisticated tooling, mastering JSON processing is key to successful data migration in a world dominated by
+          JSON data.
         </p>
       </div>
     </>

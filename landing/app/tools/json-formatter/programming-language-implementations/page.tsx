@@ -10,8 +10,7 @@ import { Code, GitBranch, Hash, Terminal, Layers } from "lucide-react";
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Programming Language Implementations | Offline Tools",
-  description:
-    "Learn about JSON formatter implementations across different programming languages"
+  description: "Learn about JSON formatter implementations across different programming languages",
 };
 
 /**
@@ -20,7 +19,8 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "JSON Formatter Libraries in JavaScript: A Comprehensive Guide",
-    description: "An overview of the most popular and efficient JavaScript libraries for JSON formatting and manipulation.",
+    description:
+      "An overview of the most popular and efficient JavaScript libraries for JSON formatting and manipulation.",
     slug: "json-formatter-libraries-in-javascript-a-comprehensive-guide",
   },
   {
@@ -35,7 +35,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "C# and .NET JSON Formatter Implementation",
-    description: "How C# and the .NET framework handle JSON formatting through System.Text.Json and third-party options.",
+    description:
+      "How C# and the .NET framework handle JSON formatting through System.Text.Json and third-party options.",
     slug: "c-sharp-and-net-json-formatter-implementation",
   },
   {
@@ -50,7 +51,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Rust's Approach to JSON Formatting and Serialization",
-    description: "How Rust's ecosystem handles JSON with libraries like serde_json, emphasizing safety and performance.",
+    description:
+      "How Rust's ecosystem handles JSON with libraries like serde_json, emphasizing safety and performance.",
     slug: "rusts-approach-to-json-formatting-and-serialization",
   },
   {
@@ -75,12 +77,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Node.js JSON Formatter Modules and Packages",
-    description: "Essential Node.js packages for JSON formatting, validation, and transformation in server applications.",
+    description:
+      "Essential Node.js packages for JSON formatting, validation, and transformation in server applications.",
     slug: "nodejs-json-formatter-modules-and-packages",
   },
   {
     title: "C++ JSON Library Performance Comparison",
-    description: "Benchmarking popular C++ JSON libraries like RapidJSON, nlohmann/json, and simdjson for speed and efficiency.",
+    description:
+      "Benchmarking popular C++ JSON libraries like RapidJSON, nlohmann/json, and simdjson for speed and efficiency.",
     slug: "cpp-json-library-performance-comparison",
   },
   {
@@ -95,7 +99,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Dart and Flutter JSON Formatting Solutions",
-    description: "JSON processing strategies for Flutter apps, including Dart's convert library and code generation tools.",
+    description:
+      "JSON processing strategies for Flutter apps, including Dart's convert library and code generation tools.",
     slug: "dart-and-flutter-json-formatting-solutions",
   },
   {
@@ -105,7 +110,8 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Clojure's Data-Oriented Approach to JSON Formatting",
-    description: "Exploring Clojure's philosophy for JSON handling through data transformation and libraries like data.json.",
+    description:
+      "Exploring Clojure's philosophy for JSON handling through data transformation and libraries like data.json.",
     slug: "clojures-data-oriented-approach-to-json-formatting",
   },
   {
@@ -267,7 +273,7 @@ const jsonFormatterArticles: ToolArticle[] = [
     title: "Cross-Language JSON Formatter API Design",
     description: "Designing JSON formatter APIs that work consistently across multiple programming languages.",
     slug: "cross-language-json-formatter-api-design",
-  }
+  },
 ];
 
 /**
@@ -308,7 +314,9 @@ export default function JsonFormatterProgrammingLanguagePage() {
                 <li aria-current="page">Programming Language Implementations</li>
               </ol>
             </nav>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight">JSON Formatter Programming Language Implementations</h1>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight">
+              JSON Formatter Programming Language Implementations
+            </h1>
           </div>
         </div>
 
@@ -330,7 +338,8 @@ export default function JsonFormatterProgrammingLanguagePage() {
                   <div>
                     <h3 className="font-medium mb-1">Native Language Libraries</h3>
                     <p className="text-sm text-muted-foreground">
-                      Comparing built-in JSON parsing and formatting capabilities across languages such as JavaScript, Python, Java, C#, Go, Rust, and Ruby.
+                      Comparing built-in JSON parsing and formatting capabilities across languages such as JavaScript,
+                      Python, Java, C#, Go, Rust, and Ruby.
                     </p>
                   </div>
                 </div>
@@ -342,7 +351,8 @@ export default function JsonFormatterProgrammingLanguagePage() {
                   <div>
                     <h3 className="font-medium mb-1">Implementation Differences</h3>
                     <p className="text-sm text-muted-foreground">
-                      Understanding how language-specific features influence JSON formatter implementations, from dynamic typing to strict compilation and memory management.
+                      Understanding how language-specific features influence JSON formatter implementations, from
+                      dynamic typing to strict compilation and memory management.
                     </p>
                   </div>
                 </div>
@@ -356,7 +366,8 @@ export default function JsonFormatterProgrammingLanguagePage() {
                   <div>
                     <h3 className="font-medium mb-1">Cross-Platform Concerns</h3>
                     <p className="text-sm text-muted-foreground">
-                      Addressing challenges in creating consistent JSON formatting behavior across different language environments and operating systems.
+                      Addressing challenges in creating consistent JSON formatting behavior across different language
+                      environments and operating systems.
                     </p>
                   </div>
                 </div>
@@ -368,7 +379,8 @@ export default function JsonFormatterProgrammingLanguagePage() {
                   <div>
                     <h3 className="font-medium mb-1">Popular Libraries</h3>
                     <p className="text-sm text-muted-foreground">
-                      Exploring specialized third-party JSON formatting libraries that enhance the capabilities of standard language implementations.
+                      Exploring specialized third-party JSON formatting libraries that enhance the capabilities of
+                      standard language implementations.
                     </p>
                   </div>
                 </div>
@@ -381,7 +393,9 @@ export default function JsonFormatterProgrammingLanguagePage() {
                 <span>Language Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                While JSON originated in JavaScript, many of the most performant JSON parsers and formatters are now implemented in systems languages like Rust and C++, often with bindings available for higher-level languages.
+                While JSON originated in JavaScript, many of the most performant JSON parsers and formatters are now
+                implemented in systems languages like Rust and C++, often with bindings available for higher-level
+                languages.
               </p>
             </div>
           </CardContent>
@@ -391,4 +405,4 @@ export default function JsonFormatterProgrammingLanguagePage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

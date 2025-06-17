@@ -9,16 +9,14 @@ export const metadata: Metadata = {
 export default function JsonYamlConversionArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Converting Between JSON and YAML in Hybrid Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Converting Between JSON and YAML in Hybrid Formatters</h1>
 
       <div className="space-y-6">
         <p>
           JSON (JavaScript Object Notation) and YAML (YAML Ain&apos;t Markup Language) are two widely used data
-          serialization formats, each with distinct strengths and use cases. While JSON is favored for its
-          simplicity and direct mapping to JavaScript objects, YAML is often preferred for its human-readable syntax,
-          especially in configuration files and data interchange where readability is paramount.
+          serialization formats, each with distinct strengths and use cases. While JSON is favored for its simplicity
+          and direct mapping to JavaScript objects, YAML is often preferred for its human-readable syntax, especially in
+          configuration files and data interchange where readability is paramount.
         </p>
 
         <p>
@@ -34,7 +32,9 @@ export default function JsonYamlConversionArticle() {
           <ul className="list-disc pl-6 space-y-1 mt-2 text-sm">
             <li>Lightweight data-interchange format.</li>
             <li>Easy for machines to parse and generate.</li>
-            <li>Based on a subset of the JavaScript Programming Language Standard ECMA-262 3rd Edition - December 1999.</li>
+            <li>
+              Based on a subset of the JavaScript Programming Language Standard ECMA-262 3rd Edition - December 1999.
+            </li>
             <li>Uses key-value pairs (objects) and ordered lists of values (arrays).</li>
           </ul>
           <h4 className="font-medium mt-3">Example JSON:</h4>
@@ -88,22 +88,27 @@ export default function JsonYamlConversionArticle() {
           <li>Validate the input syntax before attempting conversion.</li>
         </ul>
         <p>
-          Using a dedicated tool simplifies the conversion process, reduces the risk of manual errors, and ensures
-          the output conforms to the rules of the target format.
+          Using a dedicated tool simplifies the conversion process, reduces the risk of manual errors, and ensures the
+          output conforms to the rules of the target format.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Converting JSON to YAML</h2>
         <p>
           Converting JSON to YAML involves taking the structured data from the JSON object and representing it using
-          YAML&apos;s indentation-based syntax. Arrays become lists prefixed with hyphens, objects become nested key-value pairs,
-          and scalar values (strings, numbers, booleans, null) are represented directly.
+          YAML&apos;s indentation-based syntax. Arrays become lists prefixed with hyphens, objects become nested
+          key-value pairs, and scalar values (strings, numbers, booleans, null) are represented directly.
         </p>
         <p>Most hybrid tools perform these steps automatically:</p>
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>Parse the input JSON string into an internal data structure (like a tree or object graph).</li>
           <li>Traverse the internal structure.</li>
-          <li>For each key-value pair in an object, write the key followed by a colon, space, and the value, using appropriate indentation for nesting.</li>
-          <li>For each item in an array, write a hyphen followed by a space and the item&apos;s value, using indentation.</li>
+          <li>
+            For each key-value pair in an object, write the key followed by a colon, space, and the value, using
+            appropriate indentation for nesting.
+          </li>
+          <li>
+            For each item in an array, write a hyphen followed by a space and the item&apos;s value, using indentation.
+          </li>
           <li>Handle scalar values based on their type.</li>
         </ol>
 
@@ -185,7 +190,10 @@ spec:
         <ol className="list-decimal pl-6 space-y-2 my-4">
           <li>Parse the input YAML string, interpreting indentation to determine the data structure.</li>
           <li>Build an internal data structure representing the parsed data.</li>
-          <li>Serialize the internal structure into a JSON string, following JSON&apos;s syntax rules (using `{}`, `[]`, `:`, `,`, `""`).</li>
+          <li>
+            Serialize the internal structure into a JSON string, following JSON&apos;s syntax rules (using `{}`, `[]`,
+            `:`, `,`, `""`).
+          </li>
           <li>Ensure keys and string values are enclosed in double quotes.</li>
           <li>Format the output with appropriate indentation (usually 2 or 4 spaces) for readability.</li>
         </ol>
@@ -229,31 +237,55 @@ user:
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
           <div>
             <h3 className="text-lg font-medium">Data Type Mapping:</h3>
-            <p className="text-sm">Ensure the tool correctly maps data types (e.g., YAML&apos;s explicit types like `!!str`, `!!int` to JSON&apos;s implicit types).</p>
+            <p className="text-sm">
+              Ensure the tool correctly maps data types (e.g., YAML&apos;s explicit types like `!!str`, `!!int` to
+              JSON&apos;s implicit types).
+            </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">Comments:</h3>
-            <p className="text-sm">JSON does not support comments. When converting YAML to JSON, comments will be lost. When converting JSON to YAML, you cannot add comments via the JSON input.</p>
+            <p className="text-sm">
+              JSON does not support comments. When converting YAML to JSON, comments will be lost. When converting JSON
+              to YAML, you cannot add comments via the JSON input.
+            </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">YAML Anchors and Aliases:</h3>
-            <p className="text-sm">YAML supports anchors (`&amp;`) and aliases (`*`) for reusing data structures. JSON has no direct equivalent. Tools typically expand aliases into their full content during conversion to JSON, potentially increasing redundancy.</p>
+            <p className="text-sm">
+              YAML supports anchors (`&amp;`) and aliases (`*`) for reusing data structures. JSON has no direct
+              equivalent. Tools typically expand aliases into their full content during conversion to JSON, potentially
+              increasing redundancy.
+            </p>
           </div>
           <div>
             <h3 className="text-lg font-medium">Formatting and Style:</h3>
-            <p className="text-sm">The output format (indentation, spacing) might differ between tools. Choose a tool that offers desired formatting options.</p>
+            <p className="text-sm">
+              The output format (indentation, spacing) might differ between tools. Choose a tool that offers desired
+              formatting options.
+            </p>
           </div>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Troubleshooting Common Issues</h2>
         <p>If your conversion fails or produces unexpected results:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-medium">Check Input Syntax:</span> Ensure your source JSON or YAML is valid *before* attempting conversion. Use a linter or validator for the source format first.</li>
-          <li><span className="font-medium">Verify Data Types:</span> Sometimes, implicit type conversion can cause issues. Be mindful of how numbers, booleans, or strings might be interpreted.</li>
-          <li><span className="font-medium">Look for Special YAML Features:</span> If converting YAML to JSON, anchors, aliases, or tags might not be handled as expected by all tools.</li>
-          <li><span className="font-medium">Examine Complex Structures:</span> Nested arrays or objects can sometimes reveal edge cases in converters. Test smaller sections if a large document fails.</li>
+          <li>
+            <span className="font-medium">Check Input Syntax:</span> Ensure your source JSON or YAML is valid *before*
+            attempting conversion. Use a linter or validator for the source format first.
+          </li>
+          <li>
+            <span className="font-medium">Verify Data Types:</span> Sometimes, implicit type conversion can cause
+            issues. Be mindful of how numbers, booleans, or strings might be interpreted.
+          </li>
+          <li>
+            <span className="font-medium">Look for Special YAML Features:</span> If converting YAML to JSON, anchors,
+            aliases, or tags might not be handled as expected by all tools.
+          </li>
+          <li>
+            <span className="font-medium">Examine Complex Structures:</span> Nested arrays or objects can sometimes
+            reveal edge cases in converters. Test smaller sections if a large document fails.
+          </li>
         </ul>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>

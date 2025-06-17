@@ -42,9 +42,9 @@ export default function DownloadableJsonFormattersArticle() {
             </h2>
             <p>
               JSON (JavaScript Object Notation) is the de facto standard for data interchange on the web and in APIs.
-              It&apos;s simple, human-readable, and widely supported. However, raw JSON files or API responses
-              can often be inconsistent in their formatting. Whitespace (spaces, tabs, newlines),
-              key ordering in objects, and indentation levels can vary wildly.
+              It&apos;s simple, human-readable, and widely supported. However, raw JSON files or API responses can often
+              be inconsistent in their formatting. Whitespace (spaces, tabs, newlines), key ordering in objects, and
+              indentation levels can vary wildly.
             </p>
             <div className="flex justify-center space-x-6 my-6">
               <Monitor size={40} />
@@ -52,10 +52,10 @@ export default function DownloadableJsonFormattersArticle() {
               <Tablet size={40} />
             </div>
             <p>
-              This inconsistency poses significant challenges for developers working across different devices,
-              operating systems, editors, or even teams. A JSON file formatted nicely on one machine might
-              look like a messy, single line of text on another. Debugging becomes harder, and simple tasks
-              like comparing two versions of a JSON file become tedious due to irrelevant whitespace differences.
+              This inconsistency poses significant challenges for developers working across different devices, operating
+              systems, editors, or even teams. A JSON file formatted nicely on one machine might look like a messy,
+              single line of text on another. Debugging becomes harder, and simple tasks like comparing two versions of
+              a JSON file become tedious due to irrelevant whitespace differences.
             </p>
           </section>
 
@@ -66,21 +66,21 @@ export default function DownloadableJsonFormattersArticle() {
             <p>Consistent JSON formatting is not just about aesthetics; it has practical benefits:</p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
               <li>
-                <strong>Improved Readability:</strong> Properly indented and formatted JSON is much easier for humans to read and understand,
-                reducing cognitive load during development and debugging.
+                <strong>Improved Readability:</strong> Properly indented and formatted JSON is much easier for humans to
+                read and understand, reducing cognitive load during development and debugging.
               </li>
               <li>
-                <strong>Easier Diffing and Version Control:</strong> When JSON files are consistently formatted,
-                version control systems (<GitCompare size={18} className="inline-block mx-1" /> like Git) can accurately show
+                <strong>Easier Diffing and Version Control:</strong> When JSON files are consistently formatted, version
+                control systems (<GitCompare size={18} className="inline-block mx-1" /> like Git) can accurately show
                 meaningful changes, ignoring whitespace. This makes code reviews and tracking modifications simpler.
               </li>
               <li>
-                <strong>Predictable Tooling:</strong> Many development tools, scripts, and automated processes
-                expect a certain level of formatting predictability. Consistent JSON ensures these tools work reliably.
+                <strong>Predictable Tooling:</strong> Many development tools, scripts, and automated processes expect a
+                certain level of formatting predictability. Consistent JSON ensures these tools work reliably.
               </li>
               <li>
-                <strong>Collaboration:</strong> Teams working on the same project benefit immensely from a shared standard
-                for how JSON data should look.
+                <strong>Collaboration:</strong> Teams working on the same project benefit immensely from a shared
+                standard for how JSON data should look.
               </li>
             </ul>
           </section>
@@ -90,13 +90,14 @@ export default function DownloadableJsonFormattersArticle() {
               <Download size={24} className="mr-2 text-purple-500" /> The Solution: Downloadable JSON Formatters
             </h2>
             <p>
-              While many online JSON formatters exist, they often require sending your potentially sensitive data
-              to a third-party server. Downloadable JSON formatters offer an alternative: they run entirely on the user&apos;s
-              device, typically within a web browser (<HardDrive size={18} className="inline-block mx-1" /> offline capability) or as a desktop application.
+              While many online JSON formatters exist, they often require sending your potentially sensitive data to a
+              third-party server. Downloadable JSON formatters offer an alternative: they run entirely on the
+              user&apos;s device, typically within a web browser (<HardDrive size={18} className="inline-block mx-1" />{" "}
+              offline capability) or as a desktop application.
             </p>
             <p>
-              By providing a tool that users can download or access locally, developers can ensure that the
-              formatting rules are applied consistently regardless of the user&apos;s environment or internet connection.
+              By providing a tool that users can download or access locally, developers can ensure that the formatting
+              rules are applied consistently regardless of the user&apos;s environment or internet connection.
             </p>
           </section>
 
@@ -105,13 +106,11 @@ export default function DownloadableJsonFormattersArticle() {
               <Cog size={24} className="mr-2 text-gray-600" /> How Downloadable Formatters Work (Client-Side)
             </h2>
             <p>
-              Downloadable JSON formatters built using modern web technologies (like HTML, CSS, and JavaScript/TypeScript)
-              operate entirely client-side. This means:
+              Downloadable JSON formatters built using modern web technologies (like HTML, CSS, and
+              JavaScript/TypeScript) operate entirely client-side. This means:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>
-                The user loads the application (either from a file or a web server).
-              </li>
+              <li>The user loads the application (either from a file or a web server).</li>
               <li>
                 All the necessary code (<Code size={18} className="inline-block mx-1" />) is downloaded to the browser.
               </li>
@@ -120,8 +119,9 @@ export default function DownloadableJsonFormattersArticle() {
                 JavaScript engine.
               </li>
               <li>
-                The formatted output is then presented to the user, often with options to copy or download
-                the result (<Download size={18} className="inline-block mx-1" />).
+                The formatted output is then presented to the user, often with options to copy or download the result (
+                <Download size={18} className="inline-block mx-1" />
+                ).
               </li>
             </ul>
             <p>
@@ -137,26 +137,27 @@ export default function DownloadableJsonFormattersArticle() {
             <p>Opting for a client-side, downloadable approach offers several advantages:</p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
               <li>
-                <strong>Privacy and Security:</strong> Data is processed locally, eliminating the risk of sensitive information
-                being intercepted or stored by a third-party service. This is paramount when dealing with
+                <strong>Privacy and Security:</strong> Data is processed locally, eliminating the risk of sensitive
+                information being intercepted or stored by a third-party service. This is paramount when dealing with
                 proprietary or personal data.
               </li>
               <li>
-                <strong>Speed and Performance:</strong> Processing happens instantly in the browser (<Clock size={18} className="inline-block mx-1" />),
-                without the latency of sending data to a server and waiting for a response.
+                <strong>Speed and Performance:</strong> Processing happens instantly in the browser (
+                <Clock size={18} className="inline-block mx-1" />
+                ), without the latency of sending data to a server and waiting for a response.
               </li>
               <li>
                 <strong>Offline Accessibility:</strong> Once downloaded, the formatter can be used even without an
-                internet connection (<HardDrive size={18} className="inline-block mx-1" />). This is ideal for developers
-                working in restricted environments or on the go.
+                internet connection (<HardDrive size={18} className="inline-block mx-1" />
+                ). This is ideal for developers working in restricted environments or on the go.
               </li>
               <li>
-                <strong>Consistent Results:</strong> Everyone using the same version of the downloadable formatter
-                gets the exact same output for the same input, ensuring true consistency across a team or organization.
+                <strong>Consistent Results:</strong> Everyone using the same version of the downloadable formatter gets
+                the exact same output for the same input, ensuring true consistency across a team or organization.
               </li>
               <li>
-                <strong>No Server Costs:</strong> For the provider, hosting a static file is significantly cheaper
-                and simpler than running a dynamic web service.
+                <strong>No Server Costs:</strong> For the provider, hosting a static file is significantly cheaper and
+                simpler than running a dynamic web service.
               </li>
             </ul>
           </section>
@@ -166,9 +167,9 @@ export default function DownloadableJsonFormattersArticle() {
               <Code size={24} className="mr-2 text-gray-800" /> Implementing the Core Formatting Logic
             </h2>
             <p>
-              The core of a JSON formatter is the logic that takes a raw JSON string and produces a
-              well-formatted output string. While complex parsers and stringifiers exist, the fundamental
-              task of pretty-printing JSON involves:
+              The core of a JSON formatter is the logic that takes a raw JSON string and produces a well-formatted
+              output string. While complex parsers and stringifiers exist, the fundamental task of pretty-printing JSON
+              involves:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
               <li>Parsing the JSON string into a native JavaScript object/array structure.</li>
@@ -232,8 +233,8 @@ const formattedComplexJson = formatJson(complexJson, '\\t'); // Use tabs
                 </pre>
               </div>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                This simple function demonstrates the core principle using built-in browser capabilities.
-                A real formatter might add features like sorting keys, syntax highlighting, validation, etc.
+                This simple function demonstrates the core principle using built-in browser capabilities. A real
+                formatter might add features like sorting keys, syntax highlighting, validation, etc.
               </p>
             </div>
           </section>
@@ -243,11 +244,11 @@ const formattedComplexJson = formatJson(complexJson, '\\t'); // Use tabs
               <Download size={24} className="mr-2 text-purple-500" /> Distribution: Making it Downloadable
             </h2>
             <p>
-              Turning a client-side web application into a &quot;downloadable&quot; formatter is straightforward.
-              The entire application (HTML, CSS, JavaScript files) can be bundled together.
-              Users can then download this bundle as a ZIP file and open the main HTML file
-              (<Code size={18} className="inline-block mx-1" />) directly in their web browser, no web server required after the initial download.
-              Alternatively, technologies like Electron can wrap the web application in a native desktop shell.
+              Turning a client-side web application into a &quot;downloadable&quot; formatter is straightforward. The
+              entire application (HTML, CSS, JavaScript files) can be bundled together. Users can then download this
+              bundle as a ZIP file and open the main HTML file (<Code size={18} className="inline-block mx-1" />)
+              directly in their web browser, no web server required after the initial download. Alternatively,
+              technologies like Electron can wrap the web application in a native desktop shell.
             </p>
           </section>
 
@@ -258,18 +259,19 @@ const formattedComplexJson = formatJson(complexJson, '\\t'); // Use tabs
             <p>While powerful, client-side formatting has limitations:</p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
               <li>
-                <strong>Large Files:</strong> Processing extremely large JSON files (<FileJson size={18} className="inline-block mx-1" />)
-                in the browser can consume significant memory and might freeze the browser tab.
-                Using Web Workers can help mitigate this by running the processing in a background thread.
+                <strong>Large Files:</strong> Processing extremely large JSON files (
+                <FileJson size={18} className="inline-block mx-1" />) in the browser can consume significant memory and
+                might freeze the browser tab. Using Web Workers can help mitigate this by running the processing in a
+                background thread.
               </li>
               <li>
-                <strong>Browser Compatibility:</strong> Ensure the JavaScript/TypeScript code is compatible
-                with the target browsers.
+                <strong>Browser Compatibility:</strong> Ensure the JavaScript/TypeScript code is compatible with the
+                target browsers.
               </li>
               <li>
-                <strong>Feature Scope:</strong> Complex features like advanced validation against a schema
-                might be more resource-intensive client-side compared to a robust server implementation,
-                but simple formatting is well within reach.
+                <strong>Feature Scope:</strong> Complex features like advanced validation against a schema might be more
+                resource-intensive client-side compared to a robust server implementation, but simple formatting is well
+                within reach.
               </li>
             </ul>
           </section>
@@ -279,12 +281,12 @@ const formattedComplexJson = formatJson(complexJson, '\\t'); // Use tabs
               <FileJson size={24} className="mr-2 text-orange-500" /> Conclusion
             </h2>
             <p>
-              Providing downloadable, client-side JSON formatters is an excellent way to empower developers
-              with a consistent, fast, private, and offline-capable tool. By leveraging the power of modern web
-              browsers and simple built-in functions like <code>JSON.stringify</code>, developers can build and
-              distribute utilities that significantly improve workflow efficiency and data readability across
-              diverse environments. This approach directly addresses the inconsistency problem at its root,
-              leading to smoother debugging, easier collaboration, and more reliable tooling.
+              Providing downloadable, client-side JSON formatters is an excellent way to empower developers with a
+              consistent, fast, private, and offline-capable tool. By leveraging the power of modern web browsers and
+              simple built-in functions like <code>JSON.stringify</code>, developers can build and distribute utilities
+              that significantly improve workflow efficiency and data readability across diverse environments. This
+              approach directly addresses the inconsistency problem at its root, leading to smoother debugging, easier
+              collaboration, and more reliable tooling.
             </p>
           </section>
         </div>

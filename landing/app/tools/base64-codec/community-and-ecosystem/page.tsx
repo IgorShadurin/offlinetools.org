@@ -167,7 +167,9 @@ export default function Base64CodecCommunityPage() {
               <Users className="text-orange-600" size={24} />
               Building Base64 Communities
             </CardTitle>
-            <CardDescription>Nurturing open source ecosystems around Base64 encoding tools and standards</CardDescription>
+            <CardDescription>
+              Nurturing open source ecosystems around Base64 encoding tools and standards
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +181,8 @@ export default function Base64CodecCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Community Building</h3>
                     <p className="text-sm text-muted-foreground">
-                      Creating inclusive, supportive environments for collaboration on Base64 encoding tools and standards.
+                      Creating inclusive, supportive environments for collaboration on Base64 encoding tools and
+                      standards.
                     </p>
                   </div>
                 </div>
@@ -205,7 +208,8 @@ export default function Base64CodecCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Collaboration Models</h3>
                     <p className="text-sm text-muted-foreground">
-                      Governance structures, contribution workflows, and quality assurance for community-driven Base64 projects.
+                      Governance structures, contribution workflows, and quality assurance for community-driven Base64
+                      projects.
                     </p>
                   </div>
                 </div>
@@ -217,7 +221,8 @@ export default function Base64CodecCommunityPage() {
                   <div>
                     <h3 className="font-medium mb-1">Community Programs</h3>
                     <p className="text-sm text-muted-foreground">
-                      Events, recognition initiatives, and educational resources to encourage participation in Base64 tool development.
+                      Events, recognition initiatives, and educational resources to encourage participation in Base64
+                      tool development.
                     </p>
                   </div>
                 </div>
@@ -230,7 +235,12 @@ export default function Base64CodecCommunityPage() {
                 <span>Community Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Successful Base64 tool communities balance technical excellence with accessibility to newcomers. While Base64 encoding is a relatively simple concept, creating truly robust implementations requires deep consideration of edge cases, performance optimization, and cross-platform compatibility. The most thriving Base64 tool projects maintain comprehensive test suites that serve dual purposes: ensuring quality and providing clear examples that help new contributors understand the expectations and standards of the project.
+                Successful Base64 tool communities balance technical excellence with accessibility to newcomers. While
+                Base64 encoding is a relatively simple concept, creating truly robust implementations requires deep
+                consideration of edge cases, performance optimization, and cross-platform compatibility. The most
+                thriving Base64 tool projects maintain comprehensive test suites that serve dual purposes: ensuring
+                quality and providing clear examples that help new contributors understand the expectations and
+                standards of the project.
               </p>
             </div>
           </CardContent>
@@ -240,4 +250,4 @@ export default function Base64CodecCommunityPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

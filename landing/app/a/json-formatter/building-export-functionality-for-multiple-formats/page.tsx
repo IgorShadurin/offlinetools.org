@@ -9,16 +9,14 @@ export const metadata: Metadata = {
 export default function BuildingExportFunctionalityArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Building Export Functionality for Multiple Formats
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Building Export Functionality for Multiple Formats</h1>
 
       <div className="space-y-6">
         <p>
-          Providing users with the ability to export data from your application is a crucial feature for usability
-          and data management. Whether it&apos;s exporting a table as a CSV, downloading a report as a PDF, or
-          saving configuration as JSON, supporting multiple formats caters to diverse user needs. This article explores
-          the considerations and techniques involved in building versatile export functionality.
+          Providing users with the ability to export data from your application is a crucial feature for usability and
+          data management. Whether it&apos;s exporting a table as a CSV, downloading a report as a PDF, or saving
+          configuration as JSON, supporting multiple formats caters to diverse user needs. This article explores the
+          considerations and techniques involved in building versatile export functionality.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">Why Offer Multiple Export Formats?</h2>
@@ -28,29 +26,27 @@ export default function BuildingExportFunctionalityArticle() {
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">CSV (Comma Separated Values):</span> Ideal for spreadsheet
-            applications (Excel, Google Sheets) and simple data exchange.
+            <span className="font-medium">CSV (Comma Separated Values):</span> Ideal for spreadsheet applications
+            (Excel, Google Sheets) and simple data exchange.
           </li>
           <li>
-            <span className="font-medium">JSON (JavaScript Object Notation):</span> Excellent for
-            developers, data transfer between systems, and programmatic access.
+            <span className="font-medium">JSON (JavaScript Object Notation):</span> Excellent for developers, data
+            transfer between systems, and programmatic access.
           </li>
           <li>
-            <span className="font-medium">PDF (Portable Document Format):</span> Best for reports,
-            documents, and preserving layout for printing or sharing.
+            <span className="font-medium">PDF (Portable Document Format):</span> Best for reports, documents, and
+            preserving layout for printing or sharing.
           </li>
           <li>
-            <span className="font-medium">XML (Extensible Markup Language):</span> Another structured
-            data format, often used in enterprise systems.
+            <span className="font-medium">XML (Extensible Markup Language):</span> Another structured data format, often
+            used in enterprise systems.
           </li>
           <li>
-            <span className="font-medium">Excel (XLSX):</span> Provides rich formatting and features
-            specific to spreadsheet software.
+            <span className="font-medium">Excel (XLSX):</span> Provides rich formatting and features specific to
+            spreadsheet software.
           </li>
         </ul>
-        <p>
-          Supporting various formats makes your application&apos;s data more accessible and interoperable.
-        </p>
+        <p>Supporting various formats makes your application&apos;s data more accessible and interoperable.</p>
 
         <h2 className="text-2xl font-semibold mt-8">Implementation Approaches</h2>
         <p>
@@ -61,18 +57,36 @@ export default function BuildingExportFunctionalityArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Client-Side Export:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><span className="font-medium">Pros:</span> Faster for small to medium datasets, reduces server load, works offline (if data is already loaded).</li>
-            <li><span className="font-medium">Cons:</span> Limited by browser memory, unsuitable for very large datasets, complex formatting (like PDF) is harder, browser compatibility issues.</li>
-            <li><span className="font-medium">Common use cases:</span> Exporting data currently displayed in a table (CSV, JSON), simple text files.</li>
+            <li>
+              <span className="font-medium">Pros:</span> Faster for small to medium datasets, reduces server load, works
+              offline (if data is already loaded).
+            </li>
+            <li>
+              <span className="font-medium">Cons:</span> Limited by browser memory, unsuitable for very large datasets,
+              complex formatting (like PDF) is harder, browser compatibility issues.
+            </li>
+            <li>
+              <span className="font-medium">Common use cases:</span> Exporting data currently displayed in a table (CSV,
+              JSON), simple text files.
+            </li>
           </ul>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Server-Side Export:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li><span className="font-medium">Pros:</span> Handles large datasets, consistent formatting across users, access to server resources (libraries for PDF/Excel generation), better security for sensitive data.</li>
-            <li><span className="font-medium">Cons:</span> Increases server load, requires server-side code, may involve delays for large exports, requires an internet connection.</li>
-            <li><span className="font-medium">Common use cases:</span> Generating complex reports (PDF, XLSX), exporting entire database tables, scheduled exports.</li>
+            <li>
+              <span className="font-medium">Pros:</span> Handles large datasets, consistent formatting across users,
+              access to server resources (libraries for PDF/Excel generation), better security for sensitive data.
+            </li>
+            <li>
+              <span className="font-medium">Cons:</span> Increases server load, requires server-side code, may involve
+              delays for large exports, requires an internet connection.
+            </li>
+            <li>
+              <span className="font-medium">Common use cases:</span> Generating complex reports (PDF, XLSX), exporting
+              entire database tables, scheduled exports.
+            </li>
           </ul>
         </div>
 
@@ -87,7 +101,7 @@ export default function BuildingExportFunctionalityArticle() {
           <h4 className="text-lg font-medium">Client-Side CSV Example (Conceptual):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-{`function exportToCsv(filename, data) {
+              {`function exportToCsv(filename, data) {
   const csvRows = [];
   // Add header row
   const headers = Object.keys(data[0]);
@@ -117,19 +131,21 @@ export default function BuildingExportFunctionalityArticle() {
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This client-side approach constructs the CSV string and triggers a download using a Blob and an <code>&amp;lt;a&amp;gt;</code> tag.
+            This client-side approach constructs the CSV string and triggers a download using a Blob and an{" "}
+            <code>&amp;lt;a&amp;gt;</code> tag.
           </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Server-Side CSV (Conceptual):</h4>
           <p className="text-sm">
-            A server-side approach involves an API endpoint that fetches data, formats it as CSV, and sends it back
-            with the correct <code>Content-Type: text/csv</code> and <code>Content-Disposition: attachment; filename=</code> headers.
+            A server-side approach involves an API endpoint that fetches data, formats it as CSV, and sends it back with
+            the correct <code>Content-Type: text/csv</code> and <code>Content-Disposition: attachment; filename=</code>{" "}
+            headers.
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-2">
             <pre>
-{`// Example Next.js API Route (pages/api/export-csv.js or app/api/export-csv/route.js)
+              {`// Example Next.js API Route (pages/api/export-csv.js or app/api/export-csv/route.js)
 import { fetchDatabaseData } from '../../lib/data'; // Your data fetching logic
 
 export async function GET(request) {
@@ -161,21 +177,16 @@ export async function GET(request) {
 `}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            The client would simply make a GET request to this API endpoint.
-          </p>
+          <p className="mt-2 text-sm">The client would simply make a GET request to this API endpoint.</p>
         </div>
 
-
         <h3 className="text-xl font-semibold mt-6 mb-3">JSON Export</h3>
-        <p>
-          JSON export is often the simplest, especially if your data is already in JavaScript object format.
-        </p>
+        <p>JSON export is often the simplest, especially if your data is already in JavaScript object format.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Client-Side JSON Example (Conceptual):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-{`function exportToJson(filename, data) {
+              {`function exportToJson(filename, data) {
   const jsonString = JSON.stringify(data, null, 2); // Pretty print with 2 spaces
   const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
   const link = document.createElement('a');
@@ -199,7 +210,7 @@ export async function GET(request) {
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-2">
             <pre>
-{`// Example Next.js API Route
+              {`// Example Next.js API Route
 import { fetchDatabaseData } from '../../lib/data';
 
 export async function GET(request) {
@@ -226,10 +237,14 @@ export async function GET(request) {
           <h4 className="text-lg font-medium">Approaches for PDF:</h4>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Server-side Libraries:</span> Use libraries like <code>pdfmake</code>, <code>jsPDF</code> (can be client-side too), <code>wkhtmltopdf</code> (requires external binary), or headless browsers like Puppeteer to render HTML to PDF. This offers more control over formatting.
+              <span className="font-medium">Server-side Libraries:</span> Use libraries like <code>pdfmake</code>,{" "}
+              <code>jsPDF</code> (can be client-side too), <code>wkhtmltopdf</code> (requires external binary), or
+              headless browsers like Puppeteer to render HTML to PDF. This offers more control over formatting.
             </li>
             <li>
-              <span className="font-medium">Client-side Libraries:</span> Libraries like <code>jsPDF</code> or <code>html2canvas</code> followed by <code>jsPDF</code> can convert visible DOM elements into a PDF. This is limited by what&apos;s on screen and browser capabilities.
+              <span className="font-medium">Client-side Libraries:</span> Libraries like <code>jsPDF</code> or{" "}
+              <code>html2canvas</code> followed by <code>jsPDF</code> can convert visible DOM elements into a PDF. This
+              is limited by what&apos;s on screen and browser capabilities.
             </li>
             <li>
               <span className="font-medium">Third-party APIs:</span> Services dedicated to PDF generation.
@@ -240,14 +255,14 @@ export async function GET(request) {
           </p>
         </div>
 
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Server-Side PDF Example (Conceptual using Puppeteer):</h4>
-           <p className="text-sm">
-             This approach renders an HTML page (possibly generated dynamically or based on data) to a PDF on the server.
-           </p>
+          <p className="text-sm">
+            This approach renders an HTML page (possibly generated dynamically or based on data) to a PDF on the server.
+          </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-2">
             <pre>
-{`// Example Next.js API Route (pages/api/export-pdf.js or app/api/export-pdf/route.js)
+              {`// Example Next.js API Route (pages/api/export-pdf.js or app/api/export-pdf/route.js)
 // Remember to install puppeteer: npm install puppeteer
 import puppeteer from 'puppeteer';
 import { fetchDatabaseData } from '../../lib/data';
@@ -279,19 +294,18 @@ export async function GET(request) {
           </div>
         </div>
 
-
         <h3 className="text-xl font-semibold mt-6 mb-3">Excel (XLSX) Export</h3>
-        <p>
-          Generating proper XLSX files often requires dedicated libraries, as it&apos;s a complex binary format.
-        </p>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <p>Generating proper XLSX files often requires dedicated libraries, as it&apos;s a complex binary format.</p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Approaches for XLSX:</h4>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Server-side Libraries:</span> Libraries like <code>exceljs</code> or <code>node-xlsx</code> are powerful for creating XLSX files with formatting, multiple sheets, etc.
+              <span className="font-medium">Server-side Libraries:</span> Libraries like <code>exceljs</code> or{" "}
+              <code>node-xlsx</code> are powerful for creating XLSX files with formatting, multiple sheets, etc.
             </li>
             <li>
-              <span className="font-medium">Client-side Libraries:</span> Libraries like <code>xlsx</code> (SheetJS) can also work client-side but might be heavy depending on features needed.
+              <span className="font-medium">Client-side Libraries:</span> Libraries like <code>xlsx</code> (SheetJS) can
+              also work client-side but might be heavy depending on features needed.
             </li>
           </ul>
           <p className="mt-2 text-sm">
@@ -302,35 +316,43 @@ export async function GET(request) {
         <h2 className="text-2xl font-semibold mt-8">General Considerations</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Data Preparation:</span> Ensure the data is correctly formatted for the target export format. Handle data types (numbers, dates), escaping special characters (commas/quotes in CSV, HTML entities in PDF), and missing values.
+            <span className="font-medium">Data Preparation:</span> Ensure the data is correctly formatted for the target
+            export format. Handle data types (numbers, dates), escaping special characters (commas/quotes in CSV, HTML
+            entities in PDF), and missing values.
           </li>
           <li>
-            <span className="font-medium">Performance:</span> For large datasets, consider streaming the export data instead of loading it all into memory. Implement pagination or background processing for very large exports.
+            <span className="font-medium">Performance:</span> For large datasets, consider streaming the export data
+            instead of loading it all into memory. Implement pagination or background processing for very large exports.
           </li>
           <li>
-            <span className="font-medium">Security:</span> Ensure users can only export data they have permission to access. Sanitize any user-provided input used in generating filenames or content.
+            <span className="font-medium">Security:</span> Ensure users can only export data they have permission to
+            access. Sanitize any user-provided input used in generating filenames or content.
           </li>
           <li>
-            <span className="font-medium">User Experience:</span> Provide feedback during the export process (e.g., loading indicators). Offer clear options for format selection. Consider providing estimated file size or export time for large exports.
+            <span className="font-medium">User Experience:</span> Provide feedback during the export process (e.g.,
+            loading indicators). Offer clear options for format selection. Consider providing estimated file size or
+            export time for large exports.
           </li>
-           <li>
-            <span className="font-medium">Naming Convention:</span> Use a consistent and informative filename for the downloaded file (e.g., <code>data_YYYY-MM-DD.csv</code>).
+          <li>
+            <span className="font-medium">Naming Convention:</span> Use a consistent and informative filename for the
+            downloaded file (e.g., <code>data_YYYY-MM-DD.csv</code>).
           </li>
-           <li>
-            <span className="font-medium">Error Handling:</span> Gracefully handle errors like network issues, server errors, or issues during file generation.
+          <li>
+            <span className="font-medium">Error Handling:</span> Gracefully handle errors like network issues, server
+            errors, or issues during file generation.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Structuring Your Code</h2>
         <p>
-          For maintainability, consider abstracting your export logic. You could have a service or utility module
-          that takes data and a format type, returning the generated file or triggering the download.
+          For maintainability, consider abstracting your export logic. You could have a service or utility module that
+          takes data and a format type, returning the generated file or triggering the download.
         </p>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Abstracted Export Function (Conceptual):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-{`// exportUtils.js
+              {`// exportUtils.js
 import { exportToCsv } from './csvExporter'; // Your CSV logic
 import { exportToJson } from './jsonExporter'; // Your JSON logic
 // Import others...
@@ -356,19 +378,16 @@ export function initiateExport(data, format, filename = 'export') {
 `}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            This pattern keeps the component clean and separates the export logic.
-          </p>
+          <p className="mt-2 text-sm">This pattern keeps the component clean and separates the export logic.</p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
           Building flexible export functionality is a valuable addition to most applications. By understanding the
-          characteristics of different formats, choosing appropriate client-side or server-side implementations,
-          and considering performance and usability aspects, you can provide users with powerful tools for
-          managing and utilizing their data outside of your application. Always test your export features thoroughly
-          with various datasets and formats.
+          characteristics of different formats, choosing appropriate client-side or server-side implementations, and
+          considering performance and usability aspects, you can provide users with powerful tools for managing and
+          utilizing their data outside of your application. Always test your export features thoroughly with various
+          datasets and formats.
         </p>
       </div>
     </>

@@ -30,9 +30,9 @@ export default function AdvancedJsonDebuggingArticle() {
       <section className="space-y-6 text-gray-700 dark:text-gray-300">
         <p>
           Working with APIs, databases, and configurations often involves handling JSON data. While simple JSON
-          structures are easy to inspect, debugging issues with large, deeply nested, or inconsistent JSON can
-          quickly become a tedious task using just basic methods. This article explores advanced techniques to help
-          developers of all levels efficiently debug complex JSON structures.
+          structures are easy to inspect, debugging issues with large, deeply nested, or inconsistent JSON can quickly
+          become a tedious task using just basic methods. This article explores advanced techniques to help developers
+          of all levels efficiently debug complex JSON structures.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center space-x-2">
@@ -40,8 +40,8 @@ export default function AdvancedJsonDebuggingArticle() {
           <span>Why Basic Debugging Falls Short with Complex JSON</span>
         </h2>
         <p>
-          The go-to method for many is <code>console.log()</code> or pausing execution in a debugger and
-          inspecting a variable. This works well for small, predictable JSON. However, when dealing with:
+          The go-to method for many is <code>console.log()</code> or pausing execution in a debugger and inspecting a
+          variable. This works well for small, predictable JSON. However, when dealing with:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Deeply nested objects and arrays.</li>
@@ -51,8 +51,8 @@ export default function AdvancedJsonDebuggingArticle() {
           <li>Errors occurring within loops or complex data processing logic.</li>
         </ul>
         <p>
-          Simply printing the entire object can clutter your console and make it nearly impossible to find the
-          specific piece of data causing the problem.
+          Simply printing the entire object can clutter your console and make it nearly impossible to find the specific
+          piece of data causing the problem.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center space-x-2">
@@ -66,11 +66,13 @@ export default function AdvancedJsonDebuggingArticle() {
 
         <h3 className="text-xl font-semibold mt-6">Browser Developer Tools</h3>
         <p>
-          Most modern browser developer tools automatically pretty-print JSON responses in the "Network" tab and
-          JSON objects logged to the console. Use the Network tab to inspect the actual response body of API calls.
+          Most modern browser developer tools automatically pretty-print JSON responses in the "Network" tab and JSON
+          objects logged to the console. Use the Network tab to inspect the actual response body of API calls.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Using <code>JSON.stringify()</code> for Console Output</h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Using <code>JSON.stringify()</code> for Console Output
+        </h3>
         <p>
           When logging objects in your code, use the third argument of <code>JSON.stringify()</code> to control
           indentation.
@@ -112,13 +114,16 @@ console.log("Pretty Tabs:", JSON.stringify(complexData, null, '\\t'));`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Using <code>JSON.stringify(data, null, 2)</code> makes the console output much easier to read for nested structures.
+            Using <code>JSON.stringify(data, null, 2)</code> makes the console output much easier to read for nested
+            structures.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">Online Formatters/Viewers</h3>
         <p>
-          For very large JSON blobs or API responses, copy the JSON string into an online JSON formatter or viewer. These tools often provide syntax highlighting, collapsible sections, and tree views. Be cautious with sensitive data on public online tools.
+          For very large JSON blobs or API responses, copy the JSON string into an online JSON formatter or viewer.
+          These tools often provide syntax highlighting, collapsible sections, and tree views. Be cautious with
+          sensitive data on public online tools.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center space-x-2">
@@ -126,10 +131,13 @@ console.log("Pretty Tabs:", JSON.stringify(complexData, null, '\\t'));`}
           <span>Technique 2: Schema Validation</span>
         </h2>
         <p>
-          Inconsistent data is a common source of bugs. JSON Schema is a powerful tool to define the structure, data types, and constraints of your JSON. Validating your JSON against a schema can pinpoint exactly where the data deviates from the expected format.
+          Inconsistent data is a common source of bugs. JSON Schema is a powerful tool to define the structure, data
+          types, and constraints of your JSON. Validating your JSON against a schema can pinpoint exactly where the data
+          deviates from the expected format.
         </p>
         <p>
-          Libraries exist in most languages (like <code>ajv</code> in JavaScript/TypeScript) to perform this validation programmatically.
+          Libraries exist in most languages (like <code>ajv</code> in JavaScript/TypeScript) to perform this validation
+          programmatically.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Example: Simple JSON Schema</h4>
@@ -196,8 +204,8 @@ console.log("Pretty Tabs:", JSON.stringify(complexData, null, '\\t'));`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Validating against such a schema immediately tells you if <code>address.zip</code> is missing or
-            if <code>orders</code> is not an array, pointing you directly to the data issue.
+            Validating against such a schema immediately tells you if <code>address.zip</code> is missing or if{" "}
+            <code>orders</code> is not an array, pointing you directly to the data issue.
           </p>
         </div>
 
@@ -206,12 +214,13 @@ console.log("Pretty Tabs:", JSON.stringify(complexData, null, '\\t'));`}
           <span>Technique 3: Path-Based Querying (JSONPath)</span>
         </h2>
         <p>
-          When you need to inspect a specific value or a subset of data within a large JSON, traversing nested
-          objects and arrays manually in the debugger is inefficient. JSONPath is a query language for JSON, similar to
-          XPath for XML. It allows you to select elements using path expressions.
+          When you need to inspect a specific value or a subset of data within a large JSON, traversing nested objects
+          and arrays manually in the debugger is inefficient. JSONPath is a query language for JSON, similar to XPath
+          for XML. It allows you to select elements using path expressions.
         </p>
         <p>
-          Many online JSON viewers and command-line tools (like <code>jq</code>, though not allowed here) support JSONPath.
+          Many online JSON viewers and command-line tools (like <code>jq</code>, though not allowed here) support
+          JSONPath.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Example: JSONPath Expressions</h4>
@@ -231,8 +240,8 @@ $..id                     // Selects all fields named 'id' anywhere in the struc
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Use JSONPath queries in compatible tools to quickly extract the data you need to examine without
-            manual traversal.
+            Use JSONPath queries in compatible tools to quickly extract the data you need to examine without manual
+            traversal.
           </p>
         </div>
 
@@ -246,7 +255,8 @@ $..id                     // Selects all fields named 'id' anywhere in the struc
           highlight the differences, making it easy to spot unexpected modifications or missing data.
         </p>
         <p>
-          Many online JSON diff tools are available, or you can use command-line utilities (like <code>diff</code> with JSON-aware plugins or <code>jq</code>) or even code libraries designed for object comparison.
+          Many online JSON diff tools are available, or you can use command-line utilities (like <code>diff</code> with
+          JSON-aware plugins or <code>jq</code>) or even code libraries designed for object comparison.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Conceptual Diff Example</h4>
@@ -286,20 +296,20 @@ $..id                     // Selects all fields named 'id' anywhere in the struc
           <span>Technique 5: Visualizers and Tree Views</span>
         </h2>
         <p>
-          For very large or deeply nested JSON, a visual tree representation is invaluable. These tools display
-          the JSON structure as an expandable/collapsible tree, allowing you to navigate and inspect specific
-          branches without being overwhelmed by the entire document.
+          For very large or deeply nested JSON, a visual tree representation is invaluable. These tools display the JSON
+          structure as an expandable/collapsible tree, allowing you to navigate and inspect specific branches without
+          being overwhelmed by the entire document.
         </p>
         <p>
-          Browser developer tools (especially for objects in the console), many IDEs (like VS Code with extensions),
-          and online JSON viewers provide this functionality.
+          Browser developer tools (especially for objects in the console), many IDEs (like VS Code with extensions), and
+          online JSON viewers provide this functionality.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Benefit of Tree Views</h4>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Instead of scanning lines of text, you can collapse irrelevant sections (like a large array) and expand
-            only the specific object or array you suspect contains the bug. This hierarchical view mirrors the
-            data's structure and improves navigation.
+            Instead of scanning lines of text, you can collapse irrelevant sections (like a large array) and expand only
+            the specific object or array you suspect contains the bug. This hierarchical view mirrors the data's
+            structure and improves navigation.
           </p>
         </div>
 
@@ -308,20 +318,28 @@ $..id                     // Selects all fields named 'id' anywhere in the struc
           <span>Technique 6: Debugging API Responses in the Network Tab</span>
         </h2>
         <p>
-          When debugging frontend issues related to data from a backend API, the browser's Network tab is your best friend.
+          When debugging frontend issues related to data from a backend API, the browser's Network tab is your best
+          friend.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Inspect the Response Body:</strong> Look at the "Response" or "Preview" tab for the specific API call. Browsers usually pretty-print the JSON and often provide a tree view. This shows you the *exact* data received from the server, ruling out client-side parsing or processing errors.
+            <strong>Inspect the Response Body:</strong> Look at the "Response" or "Preview" tab for the specific API
+            call. Browsers usually pretty-print the JSON and often provide a tree view. This shows you the *exact* data
+            received from the server, ruling out client-side parsing or processing errors.
           </li>
           <li>
-            <strong>Check Headers and Status Codes:</strong> Ensure the <code>Content-Type</code> header is <code>application/json</code> and the status code is as expected (e.g., <code>200 OK</code>, not <code>400 Bad Request</code> or <code>500 Internal Server Error</code>).
+            <strong>Check Headers and Status Codes:</strong> Ensure the <code>Content-Type</code> header is{" "}
+            <code>application/json</code> and the status code is as expected (e.g., <code>200 OK</code>, not{" "}
+            <code>400 Bad Request</code> or <code>500 Internal Server Error</code>).
           </li>
           <li>
-            <strong>View Request Payload:</strong> If debugging a POST/PUT request, check the "Request" or "Payload" tab to see the JSON data sent to the server.
+            <strong>View Request Payload:</strong> If debugging a POST/PUT request, check the "Request" or "Payload" tab
+            to see the JSON data sent to the server.
           </li>
           <li>
-            <strong>Copy as cURL:</strong> Most browsers allow you to "Copy as cURL". You can then run this command in your terminal to replicate the API request outside your application, which is useful for isolating whether the issue is in the client code or the server response.
+            <strong>Copy as cURL:</strong> Most browsers allow you to "Copy as cURL". You can then run this command in
+            your terminal to replicate the API request outside your application, which is useful for isolating whether
+            the issue is in the client code or the server response.
           </li>
         </ul>
 
@@ -330,7 +348,9 @@ $..id                     // Selects all fields named 'id' anywhere in the struc
           <span>Technique 7: Leveraging Types and Interfaces (TypeScript)</span>
         </h2>
         <p>
-          If you're using TypeScript, defining interfaces or types that accurately represent your JSON structure can catch many data-related bugs *before* you even run your code. The compiler will alert you if you try to access properties that might not exist or have the wrong type according to your definitions.
+          If you're using TypeScript, defining interfaces or types that accurately represent your JSON structure can
+          catch many data-related bugs *before* you even run your code. The compiler will alert you if you try to access
+          properties that might not exist or have the wrong type according to your definitions.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Example: TypeScript Interface</h4>
@@ -388,8 +408,8 @@ function processUser(user: User) {
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            While types don't replace runtime validation for external data, they provide strong compile-time
-            checks within your codebase, significantly reducing data structure-related bugs.
+            While types don't replace runtime validation for external data, they provide strong compile-time checks
+            within your codebase, significantly reducing data structure-related bugs.
           </p>
         </div>
 
@@ -398,27 +418,27 @@ function processUser(user: User) {
           <span>Technique 8: Handling Very Large JSON Files</span>
         </h2>
         <p>
-          Sometimes the JSON you need to debug is enormous (hundreds of MB or GB). Standard tools and methods
-          might struggle to load or process these files.
+          Sometimes the JSON you need to debug is enormous (hundreds of MB or GB). Standard tools and methods might
+          struggle to load or process these files.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Streaming Parsers:</strong> Instead of loading the whole file into memory, use libraries
-            that can parse JSON as a stream (e.g., <code>jsonstream</code> or <code>clarinet</code> in Node.js).
-            This allows you to process data chunk by chunk or listen for specific events (like finding an object
-            in an array), reducing memory usage.
+            <strong>Streaming Parsers:</strong> Instead of loading the whole file into memory, use libraries that can
+            parse JSON as a stream (e.g., <code>jsonstream</code> or <code>clarinet</code> in Node.js). This allows you
+            to process data chunk by chunk or listen for specific events (like finding an object in an array), reducing
+            memory usage.
           </li>
           <li>
-            <strong>Sampling:</strong> If you only need to understand the structure or debug logic applied to
-            individual items in a large array, process only the first N items or a random sample.
+            <strong>Sampling:</strong> If you only need to understand the structure or debug logic applied to individual
+            items in a large array, process only the first N items or a random sample.
           </li>
           <li>
-            <strong>Command-line Tools:</strong> Tools like <code>jq</code> (if your environment allows) are
-            highly optimized for processing large JSON files from the command line.
+            <strong>Command-line Tools:</strong> Tools like <code>jq</code> (if your environment allows) are highly
+            optimized for processing large JSON files from the command line.
           </li>
           <li>
-            <strong>Specialized Editors:</strong> Some text editors or IDEs are better equipped to handle very
-            large files than standard web browsers or simple text editors.
+            <strong>Specialized Editors:</strong> Some text editors or IDEs are better equipped to handle very large
+            files than standard web browsers or simple text editors.
           </li>
         </ul>
 
@@ -429,10 +449,10 @@ function processUser(user: User) {
         <p>
           Debugging complex JSON doesn't have to be a frustrating experience. By moving beyond simple console logging
           and utilizing techniques like pretty-printing, schema validation, path-based querying, diffing, visualizers,
-          network tab inspection, and leveraging strong typing, you can gain much better insight into your data.
-          Choose the right tool or technique based on the complexity and size of the JSON and the nature of the bug
-          you're trying to find. Mastering these methods will save you significant time and effort when working with
-          real-world data structures.
+          network tab inspection, and leveraging strong typing, you can gain much better insight into your data. Choose
+          the right tool or technique based on the complexity and size of the JSON and the nature of the bug you're
+          trying to find. Mastering these methods will save you significant time and effort when working with real-world
+          data structures.
         </p>
       </section>
     </article>

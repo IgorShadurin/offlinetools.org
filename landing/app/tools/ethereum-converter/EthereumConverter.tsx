@@ -20,7 +20,7 @@ export default function EthereumConverter() {
     [EthereumUnit.Finney]: "",
     [EthereumUnit.Ether]: "",
   });
-  
+
   const [activeUnit, setActiveUnit] = useState<EthereumUnit>(EthereumUnit.Ether);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<EthereumUnit | null>(null);
@@ -28,9 +28,9 @@ export default function EthereumConverter() {
   const handleValueChange = (value: string, unit: EthereumUnit) => {
     try {
       setActiveUnit(unit);
-      
+
       setError(null);
-      
+
       if (!value.trim()) {
         setValues({
           [EthereumUnit.Wei]: "",
@@ -41,7 +41,7 @@ export default function EthereumConverter() {
         });
         return;
       }
-      
+
       const newValues: Record<EthereumUnit, string> = {
         [EthereumUnit.Wei]: "",
         [EthereumUnit.Gwei]: "",
@@ -49,15 +49,15 @@ export default function EthereumConverter() {
         [EthereumUnit.Finney]: "",
         [EthereumUnit.Ether]: "",
       };
-      
+
       newValues[unit] = value;
-      
+
       Object.values(EthereumUnit).forEach((toUnit) => {
         if (toUnit !== unit) {
           newValues[toUnit] = convertEthereumUnit(value, unit, toUnit);
         }
       });
-      
+
       setValues(newValues);
     } catch (error) {
       setError((error as Error).message);
@@ -106,7 +106,7 @@ export default function EthereumConverter() {
               <div className="w-full md:w-4/6">
                 <Input
                   id={`${unit}-input`}
-                  className={`font-mono w-full ${activeUnit === unit ? 'border-primary' : ''}`}
+                  className={`font-mono w-full ${activeUnit === unit ? "border-primary" : ""}`}
                   placeholder={`Enter ${unit} value...`}
                   value={values[unit]}
                   onChange={(e) => handleValueChange(e.target.value, unit)}

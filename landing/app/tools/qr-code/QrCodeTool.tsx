@@ -8,20 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  generateQrCode,
-  decodeQrCode,
-  QrCodeOptions,
-} from "shared";
+import { generateQrCode, decodeQrCode, QrCodeOptions } from "shared";
 import { useState, useRef } from "react";
-import {
-  AlertCircle,
-  Check,
-  Copy,
-  Download,
-  HelpCircle,
-  Link as LinkIcon,
-} from "lucide-react";
+import { AlertCircle, Check, Copy, Download, HelpCircle, Link as LinkIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 
@@ -29,9 +18,7 @@ export default function QrCodeTool() {
   const [mode, setMode] = useState<"generate" | "decode">("generate");
   const [textInput, setTextInput] = useState("");
   const [size, setSize] = useState(256);
-  const [errorCorrection, setErrorCorrection] = useState<QrCodeOptions["errorCorrectionLevel"]>(
-    "M"
-  );
+  const [errorCorrection, setErrorCorrection] = useState<QrCodeOptions["errorCorrectionLevel"]>("M");
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [decodeResult, setDecodeResult] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -99,10 +86,7 @@ export default function QrCodeTool() {
   return (
     <>
       <Container className="py-8 md:py-12">
-        <SectionHeading
-          title="QR Code Tool"
-          description="Generate QR codes from text or decode them from images."
-        />
+        <SectionHeading title="QR Code Tool" description="Generate QR codes from text or decode them from images." />
         <div className="mb-4 flex items-center text-sm text-muted-foreground gap-2">
           <LinkIcon className="h-4 w-4" />
           <span>Related tool: </span>
@@ -111,12 +95,7 @@ export default function QrCodeTool() {
           </Link>
         </div>
         <div className="space-y-6">
-          <Tabs
-            defaultValue="generate"
-            value={mode}
-            onValueChange={handleTabChange}
-            className="w-full"
-          >
+          <Tabs defaultValue="generate" value={mode} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
               <TabsTrigger value="generate">Generate</TabsTrigger>
               <TabsTrigger value="decode">Decode</TabsTrigger>
@@ -125,7 +104,9 @@ export default function QrCodeTool() {
           {mode === "generate" ? (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="qr-input" className="block mb-2">Text / URL</Label>
+                <Label htmlFor="qr-input" className="block mb-2">
+                  Text / URL
+                </Label>
                 <Textarea
                   id="qr-input"
                   className="w-full"
@@ -136,7 +117,9 @@ export default function QrCodeTool() {
               </div>
               <div className="flex flex-wrap gap-4 items-end">
                 <div>
-                  <Label htmlFor="size" className="block mb-2">Size (px)</Label>
+                  <Label htmlFor="size" className="block mb-2">
+                    Size (px)
+                  </Label>
                   <Input
                     id="size"
                     type="number"
@@ -195,12 +178,7 @@ export default function QrCodeTool() {
                 <div className="flex flex-col items-center gap-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={qrDataUrl} alt="QR code" width={size} height={size} />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex items-center gap-1"
-                    onClick={handleDownload}
-                  >
+                  <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleDownload}>
                     <Download className="h-4 w-4" />
                     Download
                   </Button>
@@ -209,32 +187,19 @@ export default function QrCodeTool() {
             </div>
           ) : (
             <div className="space-y-4">
-              <Input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
+              <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} />
               {decodeResult && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="decode-output" className="block mb-2">Decoded Text</Label>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex items-center gap-1"
-                      onClick={handleCopy}
-                    >
+                    <Label htmlFor="decode-output" className="block mb-2">
+                      Decoded Text
+                    </Label>
+                    <Button size="sm" variant="outline" className="flex items-center gap-1" onClick={handleCopy}>
                       {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       {copied ? "Copied!" : "Copy"}
                     </Button>
                   </div>
-                  <Textarea
-                    id="decode-output"
-                    className="w-full h-32"
-                    value={decodeResult}
-                    readOnly
-                  />
+                  <Textarea id="decode-output" className="w-full h-32" value={decodeResult} readOnly />
                 </div>
               )}
               {error && (

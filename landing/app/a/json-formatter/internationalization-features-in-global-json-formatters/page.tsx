@@ -9,14 +9,12 @@ export const metadata: Metadata = {
 export default function InternationalizationFeaturesArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Internationalization Features in Global JSON Formatters
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Internationalization Features in Global JSON Formatters</h1>
 
       <div className="space-y-6">
         <p>
-          JSON formatters are essential tools for developers and data analysts worldwide, helping to make raw JSON
-          data readable and understandable. Given their global user base, many modern JSON formatters incorporate
+          JSON formatters are essential tools for developers and data analysts worldwide, helping to make raw JSON data
+          readable and understandable. Given their global user base, many modern JSON formatters incorporate
           internationalization (i18n) features to enhance usability for non-English speakers and adapt to various
           regional preferences. This article explores what these features are and why they are important.
         </p>
@@ -30,8 +28,8 @@ export default function InternationalizationFeaturesArticle() {
           translating text.
         </p>
         <p>
-          For a JSON formatter, i18n primarily focuses on the user interface and how it presents information to the user,
-          rather than how it formats the JSON data itself (JSON syntax is language-agnostic).
+          For a JSON formatter, i18n primarily focuses on the user interface and how it presents information to the
+          user, rather than how it formats the JSON data itself (JSON syntax is language-agnostic).
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -48,8 +46,8 @@ export default function InternationalizationFeaturesArticle() {
 
         <h3 className="text-xl font-semibold mt-6">1. User Interface Language (Localization)</h3>
         <p>
-          The most prominent i18n feature is the ability to display the formatter's user interface in multiple languages.
-          This involves translating all user-facing text, including:
+          The most prominent i18n feature is the ability to display the formatter's user interface in multiple
+          languages. This involves translating all user-facing text, including:
         </p>
         <ul className="list-disc pl-6 space-y-1 my-2">
           <li>Menu items and button labels (e.g., "Format", "Validate", "Copy").</li>
@@ -93,10 +91,10 @@ export default function InternationalizationFeaturesArticle() {
         <h3 className="text-xl font-semibold mt-6">3. Display of Numbers and Dates (Less Common)</h3>
         <p>
           Pure JSON formatters typically display numbers and strings as they are. However, if a formatter had advanced
-          features like data type recognition and visualization, it might display numeric values or strings
-          interpreted as dates using locale-specific formats (e.g., using commas or periods as decimal separators,
-          different date order like DD/MM/YYYY vs. MM/DD/YYYY). This is less common in basic formatters but relevant
-          for more sophisticated data viewers built upon JSON parsing.
+          features like data type recognition and visualization, it might display numeric values or strings interpreted
+          as dates using locale-specific formats (e.g., using commas or periods as decimal separators, different date
+          order like DD/MM/YYYY vs. MM/DD/YYYY). This is less common in basic formatters but relevant for more
+          sophisticated data viewers built upon JSON parsing.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">4. Text Directionality</h3>
@@ -113,23 +111,25 @@ export default function InternationalizationFeaturesArticle() {
         </p>
         <ul className="list-disc pl-6 space-y-2 my-2">
           <li>
-            <span className="font-medium">Increases Accessibility:</span> Makes the tool usable for a broader range of users who may not be fluent in English.
+            <span className="font-medium">Increases Accessibility:</span> Makes the tool usable for a broader range of
+            users who may not be fluent in English.
           </li>
           <li>
-            <span className="font-medium">Reduces Errors:</span> Clearer error messages and instructions in a native language help users understand and fix issues faster.
+            <span className="font-medium">Reduces Errors:</span> Clearer error messages and instructions in a native
+            language help users understand and fix issues faster.
           </li>
           <li>
-            <span className="font-medium">Improves User Experience:</span> Users are generally more comfortable and efficient when using tools in their preferred language.
+            <span className="font-medium">Improves User Experience:</span> Users are generally more comfortable and
+            efficient when using tools in their preferred language.
           </li>
           <li>
-            <span className="font-medium">Promotes Global Adoption:</span> Localized tools are more likely to be adopted by teams and companies across different regions.
+            <span className="font-medium">Promotes Global Adoption:</span> Localized tools are more likely to be adopted
+            by teams and companies across different regions.
           </li>
         </ul>
 
         <h2 className="2xl font-semibold mt-8">Finding Formatters with Good I18n Support</h2>
-        <p>
-          When choosing a JSON formatter, especially for a diverse team, look for indicators of i18n support:
-        </p>
+        <p>When choosing a JSON formatter, especially for a diverse team, look for indicators of i18n support:</p>
         <ul className="list-disc pl-6 space-y-2 my-2">
           <li>Check if the tool offers language selection options in its settings.</li>
           <li>Read reviews or documentation mentioning international users or localization efforts.</li>
@@ -139,13 +139,15 @@ export default function InternationalizationFeaturesArticle() {
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
           <h3 className="text-lg font-medium">Note:</h3>
           <p className="mt-2">
-            The core JSON standard (<a href="https://www.json.org/" className="text-blue-600 dark:text-blue-400">json.org</a>)
-            defines the data format itself, which is locale-independent (using UTF-8 strings, period for decimal points
-            in numbers). I18n features are properties of the *software tool* that processes or displays JSON, not of the
-            JSON data format specifications.
+            The core JSON standard (
+            <a href="https://www.json.org/" className="text-blue-600 dark:text-blue-400">
+              json.org
+            </a>
+            ) defines the data format itself, which is locale-independent (using UTF-8 strings, period for decimal
+            points in numbers). I18n features are properties of the *software tool* that processes or displays JSON, not
+            of the JSON data format specifications.
           </p>
         </div>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>

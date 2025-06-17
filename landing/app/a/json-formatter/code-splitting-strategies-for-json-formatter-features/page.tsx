@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Zap,
-  Boxes,
-  Component,
-  Layers,
-  Check,
-  AlertCircle,
-} from "lucide-react";
+import { Zap, Boxes, Component, Layers, Check, AlertCircle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Code Splitting Strategies for JSON Formatter Features | Offline Tools",
@@ -17,9 +10,7 @@ export const metadata: Metadata = {
 export default function CodeSplittingJsonFormatterPage() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Code Splitting Strategies for JSON Formatter Features
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Code Splitting Strategies for JSON Formatter Features</h1>
 
       <div className="space-y-6">
         <p>
@@ -48,9 +39,7 @@ export default function CodeSplittingJsonFormatterPage() {
           one large bundle, the browser only loads the code necessary for the functionality being used on the current
           view or interaction.
         </p>
-        <p>
-          For a JSON formatter with many features, code splitting can provide significant benefits:
-        </p>
+        <p>For a JSON formatter with many features, code splitting can provide significant benefits:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <div className="flex items-center gap-2">
@@ -74,27 +63,28 @@ export default function CodeSplittingJsonFormatterPage() {
           <li>
             <div className="flex items-center gap-2">
               <Check className="w-5 h-5 text-green-500" />
-              <strong>Easier Maintenance:</strong> Separating features into distinct modules can make the codebase more organized.
+              <strong>Easier Maintenance:</strong> Separating features into distinct modules can make the codebase more
+              organized.
             </div>
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          Strategies for Splitting JSON Formatter Features
-        </h2>
+        <h2 className="text-2xl font-semibold mt-8">Strategies for Splitting JSON Formatter Features</h2>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Component className="w-5 h-5 text-purple-500" /> 1. Component-Based Splitting
         </h3>
         <p>
-          If a feature has a dedicated UI component (e.g., a complex JSON Schema validation results panel, a side-by-side diff viewer, a collapsible tree view), you can split the component and its associated logic.
+          If a feature has a dedicated UI component (e.g., a complex JSON Schema validation results panel, a
+          side-by-side diff viewer, a collapsible tree view), you can split the component and its associated logic.
         </p>
         <p>
-          While client-side React applications commonly use <code>React.lazy</code> and <code>Suspense</code> for this, in a Next.js server component context (like this page), the splitting happens at the build stage. You would structure your application such that these components are imported dynamically *within* a client component that uses them. However, the principle of separating the component code into its own file remains key.
+          While client-side React applications commonly use <code>React.lazy</code> and <code>Suspense</code> for this,
+          in a Next.js server component context (like this page), the splitting happens at the build stage. You would
+          structure your application such that these components are imported dynamically *within* a client component
+          that uses them. However, the principle of separating the component code into its own file remains key.
         </p>
-        <p>
-          Consider a dedicated diffing feature:
-        </p>
+        <p>Consider a dedicated diffing feature:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">src/components/JsonDiffViewer.tsx (Conceptual Client Component):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
@@ -138,7 +128,9 @@ export default function JsonDiffViewer({ jsonA, jsonB }: JsonDiffViewerProps) {
 }`}
             </pre>
           </div>
-          <h4 className="text-lg font-medium mt-4 mb-2">src/app/formatter/page.tsx (Main Page Component - Server Component):</h4>
+          <h4 className="text-lg font-medium mt-4 mb-2">
+            src/app/formatter/page.tsx (Main Page Component - Server Component):
+          </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
               {`// This is a server component, it orchestrates rendering
@@ -193,14 +185,20 @@ export default function FormatterPage({ searchParams }: FormatterPageProps) {
           </div>
         </div>
         <p>
-          By separating the UI and logic for the diff viewer into <code>JsonDiffViewer.tsx</code>, even a static import here helps modularize the code. The true code splitting comes when a parent <strong>client component</strong> uses dynamic imports (`import(...)`) and React&apos;s `lazy`/`Suspense` to load `JsonDiffViewer` only when needed (e.g., when a &quot;Show Diff&quot; button is clicked). Since this page is a server component, we demonstrate conditional rendering based on server inputs, which achieves a similar goal of only rendering the relevant part, although the bundling strategy depends on how dynamic imports are managed in the client layer.
+          By separating the UI and logic for the diff viewer into <code>JsonDiffViewer.tsx</code>, even a static import
+          here helps modularize the code. The true code splitting comes when a parent <strong>client component</strong>{" "}
+          uses dynamic imports (`import(...)`) and React&apos;s `lazy`/`Suspense` to load `JsonDiffViewer` only when
+          needed (e.g., when a &quot;Show Diff&quot; button is clicked). Since this page is a server component, we
+          demonstrate conditional rendering based on server inputs, which achieves a similar goal of only rendering the
+          relevant part, although the bundling strategy depends on how dynamic imports are managed in the client layer.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <Layers className="w-5 h-5 text-orange-500" /> 2. Feature/Module-Based Splitting
         </h3>
         <p>
-          This strategy focuses on splitting core logical modules that might be used by multiple components or are simply large and independent. Examples include:
+          This strategy focuses on splitting core logical modules that might be used by multiple components or are
+          simply large and independent. Examples include:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>The JSON parsing library/logic itself</li>
@@ -209,7 +207,8 @@ export default function FormatterPage({ searchParams }: FormatterPageProps) {
           <li>Filtering/querying logic</li>
         </ul>
         <p>
-          These are typically plain JavaScript/TypeScript modules (functions, classes, data structures) that don&apos;t necessarily have direct UI attached.
+          These are typically plain JavaScript/TypeScript modules (functions, classes, data structures) that don&apos;t
+          necessarily have direct UI attached.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">src/lib/jsonDiff.ts:</h4>
@@ -299,15 +298,15 @@ export function validateJson(jsonString: string, schemaString: string): Validati
         </div>
         <p>
           In this model, the main application code or UI components can use dynamic imports (`import(...)`) to load{" "}
-          <code>./lib/jsonDiff.ts</code> or <code>./lib/jsonSchemaValidator.ts</code> only when the user interacts
-          with the corresponding feature (e.g., clicks a &quot;Run Validation&quot; button or activates the diff view).
-          This ensures the code for unused features doesn&apos;t add to the initial bundle size.
+          <code>./lib/jsonDiff.ts</code> or <code>./lib/jsonSchemaValidator.ts</code> only when the user interacts with
+          the corresponding feature (e.g., clicks a &quot;Run Validation&quot; button or activates the diff view). This
+          ensures the code for unused features doesn&apos;t add to the initial bundle size.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example of Dynamic Import in a Client Component:</h4>
           <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-            (Note: This code snippet shows dynamic import which is typically done in client components.
-            This specific page is a server component and cannot directly use <code>useState</code> or client-side effects.)
+            (Note: This code snippet shows dynamic import which is typically done in client components. This specific
+            page is a server component and cannot directly use <code>useState</code> or client-side effects.)
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
@@ -359,22 +358,35 @@ export function validateJson(jsonString: string, schemaString: string): Validati
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Managing Dependencies:</strong> Ensure that splitting a module doesn&apos;t break dependencies or create circular imports.
+            <strong>Managing Dependencies:</strong> Ensure that splitting a module doesn&apos;t break dependencies or
+            create circular imports.
           </li>
           <li>
-            <strong>Loading States:</strong> When dynamically importing, there will be a brief moment while the code chunk loads. You need to provide feedback to the user (e.g., a loading spinner or message) using `Suspense` boundaries (in client components).
+            <strong>Loading States:</strong> When dynamically importing, there will be a brief moment while the code
+            chunk loads. You need to provide feedback to the user (e.g., a loading spinner or message) using `Suspense`
+            boundaries (in client components).
           </li>
           <li>
-            <strong>Granularity:</strong> Decide how small to make the chunks. Too many small chunks can increase overhead from network requests. Too few means less benefit.
+            <strong>Granularity:</strong> Decide how small to make the chunks. Too many small chunks can increase
+            overhead from network requests. Too few means less benefit.
           </li>
           <li>
-            <strong>Server Components:</strong> Remember that `React.lazy` and `Suspense` are client-side features. In a Next.js App Router with Server Components, code splitting primarily affects the client bundle. You structure your Server Components to conditionally render client components or pass data down, and the *client components* are where dynamic imports for UI or complex logic often happen based on user interaction or state.
+            <strong>Server Components:</strong> Remember that `React.lazy` and `Suspense` are client-side features. In a
+            Next.js App Router with Server Components, code splitting primarily affects the client bundle. You structure
+            your Server Components to conditionally render client components or pass data down, and the *client
+            components* are where dynamic imports for UI or complex logic often happen based on user interaction or
+            state.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing code splitting for a feature-rich JSON formatter is a crucial step for optimizing performance. By strategically breaking down your application into smaller, loadable chunks based on components or distinct logical features, you can significantly reduce the initial load time and improve the overall user experience. While the specific implementation details vary between client and server components in frameworks like Next.js, the core principle of identifying and isolating code that isn&apos;t immediately needed remains the same.
+          Implementing code splitting for a feature-rich JSON formatter is a crucial step for optimizing performance. By
+          strategically breaking down your application into smaller, loadable chunks based on components or distinct
+          logical features, you can significantly reduce the initial load time and improve the overall user experience.
+          While the specific implementation details vary between client and server components in frameworks like
+          Next.js, the core principle of identifying and isolating code that isn&apos;t immediately needed remains the
+          same.
         </p>
       </div>
     </>

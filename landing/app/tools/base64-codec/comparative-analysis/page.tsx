@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "Comparing Base64 Encoding Libraries: Feature Matrix",
-    description: "A comprehensive comparison of features across popular Base64 encoding libraries in different ecosystems.",
+    description:
+      "A comprehensive comparison of features across popular Base64 encoding libraries in different ecosystems.",
     slug: "comparing-base64-encoding-libraries-feature-matrix",
   },
   {
@@ -54,7 +55,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Implementation Approaches: Library vs Custom Code",
-    description: "Weighing the benefits of using established libraries versus implementing custom Base64 encoding logic.",
+    description:
+      "Weighing the benefits of using established libraries versus implementing custom Base64 encoding logic.",
     slug: "base64-implementation-approaches-library-vs-custom-code",
   },
   {
@@ -116,7 +118,7 @@ const base64CodecArticles: ToolArticle[] = [
     title: "Base64 Tools User Interface Comparison: UX Analysis",
     description: "Evaluating the user experience design of various Base64 encoding and decoding tools.",
     slug: "base64-tools-user-interface-comparison-ux-analysis",
-  }
+  },
 ];
 
 /**
@@ -167,7 +169,9 @@ export default function Base64CodecComparativeAnalysisPage() {
               <BarChart2 className="text-purple-600" size={24} />
               Comparing Base64 Solutions
             </CardTitle>
-            <CardDescription>Analytical comparison of different Base64 tools, formats, and implementations</CardDescription>
+            <CardDescription>
+              Analytical comparison of different Base64 tools, formats, and implementations
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -191,7 +195,8 @@ export default function Base64CodecComparativeAnalysisPage() {
                   <div>
                     <h3 className="font-medium mb-1">Performance Benchmarks</h3>
                     <p className="text-sm text-muted-foreground">
-                      Quantitative analysis of encoding speed, memory usage, and efficiency across Base64 implementations.
+                      Quantitative analysis of encoding speed, memory usage, and efficiency across Base64
+                      implementations.
                     </p>
                   </div>
                 </div>
@@ -217,7 +222,8 @@ export default function Base64CodecComparativeAnalysisPage() {
                   <div>
                     <h3 className="font-medium mb-1">Implementation Strategies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Comparing different approaches to Base64 implementation, from built-in functions to custom solutions.
+                      Comparing different approaches to Base64 implementation, from built-in functions to custom
+                      solutions.
                     </p>
                   </div>
                 </div>
@@ -230,7 +236,10 @@ export default function Base64CodecComparativeAnalysisPage() {
                 <span>Comparative Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                When comparing Base64 to other encoding schemes, it offers a balanced tradeoff: it's more compact than hexadecimal (33% overhead vs. 100%) while still using only printable ASCII characters. Base32 provides better human readability but at the cost of 60% size overhead, making Base64 the preferred choice for most binary-to-text encoding scenarios.
+                When comparing Base64 to other encoding schemes, it offers a balanced tradeoff: it's more compact than
+                hexadecimal (33% overhead vs. 100%) while still using only printable ASCII characters. Base32 provides
+                better human readability but at the cost of 60% size overhead, making Base64 the preferred choice for
+                most binary-to-text encoding scenarios.
               </p>
             </div>
           </CardContent>
@@ -240,4 +249,4 @@ export default function Base64CodecComparativeAnalysisPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

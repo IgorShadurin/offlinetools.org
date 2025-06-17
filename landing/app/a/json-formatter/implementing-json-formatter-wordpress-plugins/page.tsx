@@ -10,24 +10,21 @@ export const metadata: Metadata = {
 export default function JsonFormatterWordPressPluginArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Implementing JSON Formatter WordPress Plugins
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Implementing JSON Formatter WordPress Plugins</h1>
 
       <div className="space-y-6">
         <p>
-          In web development, working with JSON (JavaScript Object Notation) is incredibly common,
-          especially when dealing with APIs, configuration files, or storing structured data. However,
-          raw JSON, particularly when minified or deeply nested, can be challenging to read and
-          debug. A <strong>JSON Formatter</strong> is a tool that takes raw JSON text and presents
-          it in a human-readable format, typically with indentation and syntax highlighting.
+          In web development, working with JSON (JavaScript Object Notation) is incredibly common, especially when
+          dealing with APIs, configuration files, or storing structured data. However, raw JSON, particularly when
+          minified or deeply nested, can be challenging to read and debug. A <strong>JSON Formatter</strong> is a tool
+          that takes raw JSON text and presents it in a human-readable format, typically with indentation and syntax
+          highlighting.
         </p>
         <p>
-          For WordPress developers, integrating JSON formatting capabilities into a plugin can be
-          immensely useful. Whether you need to display data from an external API, provide a tool
-          for users to format their own JSON inputs, or visualize JSON stored in post metadata or
-          plugin settings, a custom JSON formatter plugin can enhance the WordPress experience
-          for both administrators and potentially site visitors.
+          For WordPress developers, integrating JSON formatting capabilities into a plugin can be immensely useful.
+          Whether you need to display data from an external API, provide a tool for users to format their own JSON
+          inputs, or visualize JSON stored in post metadata or plugin settings, a custom JSON formatter plugin can
+          enhance the WordPress experience for both administrators and potentially site visitors.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -35,14 +32,25 @@ export default function JsonFormatterWordPressPluginArticle() {
           <span>Why Implement a JSON Formatter Plugin?</span>
         </h2>
         <p>
-          Beyond basic readability, here are several reasons why you might build or use
-          a JSON formatter within WordPress:
+          Beyond basic readability, here are several reasons why you might build or use a JSON formatter within
+          WordPress:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><strong>Debugging:</strong> Easily inspect JSON responses from APIs or data stored in the database.</li>
-          <li><strong>User Input:</strong> Provide a formatted input area for users who need to enter JSON data into plugin settings or custom fields.</li>
-          <li><strong>Data Visualization:</strong> Display structured data from APIs or custom sources on the frontend in a clear, formatted way.</li>
-          <li><strong>Developer Tools:</strong> Offer a utility within the WordPress admin area for developers to format arbitrary JSON strings.</li>
+          <li>
+            <strong>Debugging:</strong> Easily inspect JSON responses from APIs or data stored in the database.
+          </li>
+          <li>
+            <strong>User Input:</strong> Provide a formatted input area for users who need to enter JSON data into
+            plugin settings or custom fields.
+          </li>
+          <li>
+            <strong>Data Visualization:</strong> Display structured data from APIs or custom sources on the frontend in
+            a clear, formatted way.
+          </li>
+          <li>
+            <strong>Developer Tools:</strong> Offer a utility within the WordPress admin area for developers to format
+            arbitrary JSON strings.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -50,24 +58,29 @@ export default function JsonFormatterWordPressPluginArticle() {
           <span>Where to Integrate in WordPress</span>
         </h2>
         <p>
-          A JSON formatter plugin can live in various parts of the WordPress ecosystem, depending
-          on its primary use case:
+          A JSON formatter plugin can live in various parts of the WordPress ecosystem, depending on its primary use
+          case:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Shortcode:</strong> Allows users to insert a JSON string directly into a post or page, which is then formatted on the frontend. Useful for displaying specific data pulled from an API.
+            <strong>Shortcode:</strong> Allows users to insert a JSON string directly into a post or page, which is then
+            formatted on the frontend. Useful for displaying specific data pulled from an API.
           </li>
           <li>
-            <strong>Gutenberg Block:</strong> Provides a dedicated block in the Block Editor for users to paste JSON or fetch it from a source (like a custom field), and display it formatted.
+            <strong>Gutenberg Block:</strong> Provides a dedicated block in the Block Editor for users to paste JSON or
+            fetch it from a source (like a custom field), and display it formatted.
           </li>
           <li>
-            <strong>Admin Page/Submenu:</strong> A dedicated page within the WordPress admin menu serving as a standalone JSON formatting utility.
+            <strong>Admin Page/Submenu:</strong> A dedicated page within the WordPress admin menu serving as a
+            standalone JSON formatting utility.
           </li>
           <li>
-            <strong>Metabox:</strong> Attach a formatter to a post type's edit screen to format and display JSON stored in post metadata.
+            <strong>Metabox:</strong> Attach a formatter to a post type's edit screen to format and display JSON stored
+            in post metadata.
           </li>
           <li>
-            <strong>Settings Page Field:</strong> If a plugin stores settings as JSON, a formatter can display the current settings in a readable way.
+            <strong>Settings Page Field:</strong> If a plugin stores settings as JSON, a formatter can display the
+            current settings in a readable way.
           </li>
         </ul>
 
@@ -76,14 +89,14 @@ export default function JsonFormatterWordPressPluginArticle() {
           <span>Implementation Approaches</span>
         </h2>
         <p>
-          There are two primary approaches to formatting JSON: server-side (PHP) and client-side (JavaScript).
-          Often, a combination of both is used.
+          There are two primary approaches to formatting JSON: server-side (PHP) and client-side (JavaScript). Often, a
+          combination of both is used.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">1. Server-Side Formatting (PHP)</h3>
         <p>
-          PHP has built-in functions like <code>json_encode()</code> which can be used to format JSON.
-          While primarily for encoding PHP data to JSON, it also has options for pretty-printing.
+          PHP has built-in functions like <code>json_encode()</code> which can be used to format JSON. While primarily
+          for encoding PHP data to JSON, it also has options for pretty-printing.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Basic PHP Formatting Example:</h4>
@@ -130,9 +143,8 @@ function format_json_php($json_string) {
 
         <h3 className="text-xl font-semibold mt-6">2. Client-Side Formatting (JavaScript)</h3>
         <p>
-          Formatting JSON in the browser allows for dynamic features like syntax highlighting,
-          collapsible nodes, and faster processing for large JSON strings (as it offloads
-          the work from the server).
+          Formatting JSON in the browser allows for dynamic features like syntax highlighting, collapsible nodes, and
+          faster processing for large JSON strings (as it offloads the work from the server).
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Basic JavaScript Formatting Example:</h4>
@@ -182,16 +194,16 @@ function escapeHTML(str) {
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            This provides formatting. For syntax highlighting and interactive features, you'll likely
-            need to manually parse the JSON string and wrap different parts in
+            This provides formatting. For syntax highlighting and interactive features, you'll likely need to manually
+            parse the JSON string and wrap different parts in
             <code>&lt;span&gt;</code> tags with CSS classes, or use a dedicated JavaScript library.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">3. Combining PHP and JavaScript</h3>
         <p>
-          A common pattern in WordPress is to use PHP to retrieve or handle the JSON data
-          and then pass it to JavaScript for client-side formatting and display.
+          A common pattern in WordPress is to use PHP to retrieve or handle the JSON data and then pass it to JavaScript
+          for client-side formatting and display.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Conceptual PHP (to pass data) and JS (to format):</h4>
@@ -275,8 +287,8 @@ document.addEventListener('DOMContentLoaded', function() {
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            This pattern is versatile. PHP handles data retrieval/storage, and JavaScript provides
-            the interactive formatting UI on the frontend.
+            This pattern is versatile. PHP handles data retrieval/storage, and JavaScript provides the interactive
+            formatting UI on the frontend.
           </p>
         </div>
 
@@ -286,22 +298,31 @@ document.addEventListener('DOMContentLoaded', function() {
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>JSON Parsing & Stringifying:</strong> Use built-in functions (`json_decode`/`json_encode` in PHP, `JSON.parse`/`JSON.stringify` in JS). Handle potential errors during parsing (invalid JSON input).
+            <strong>JSON Parsing & Stringifying:</strong> Use built-in functions (`json_decode`/`json_encode` in PHP,
+            `JSON.parse`/`JSON.stringify` in JS). Handle potential errors during parsing (invalid JSON input).
           </li>
           <li>
-            <strong>Error Handling:</strong> Clearly indicate to the user if the input is not valid JSON. Display the error message from the parser.
+            <strong>Error Handling:</strong> Clearly indicate to the user if the input is not valid JSON. Display the
+            error message from the parser.
           </li>
           <li>
-            <strong>Input Source:</strong> How does the JSON get into the formatter? Is it copy-pasted into a textarea, pulled from a URL (requires server-side fetch), read from a custom field, etc.? This affects where you put the formatting logic.
+            <strong>Input Source:</strong> How does the JSON get into the formatter? Is it copy-pasted into a textarea,
+            pulled from a URL (requires server-side fetch), read from a custom field, etc.? This affects where you put
+            the formatting logic.
           </li>
           <li>
-            <strong>Output Display:</strong> Simple `&lt;pre&gt;` and `&lt;code&gt;` tags work for basic pre-formatted text. For syntax highlighting, you'll need CSS and potentially JavaScript to add classes to different JSON elements (keys, values, types).
+            <strong>Output Display:</strong> Simple `&lt;pre&gt;` and `&lt;code&gt;` tags work for basic pre-formatted
+            text. For syntax highlighting, you'll need CSS and potentially JavaScript to add classes to different JSON
+            elements (keys, values, types).
           </li>
           <li>
-            <strong>Syntax Highlighting:</strong> You can implement this manually by iterating through the parsed JSON and generating HTML with classed spans, or use a dedicated library (like a client-side JSON formatter/highlighter library).
+            <strong>Syntax Highlighting:</strong> You can implement this manually by iterating through the parsed JSON
+            and generating HTML with classed spans, or use a dedicated library (like a client-side JSON
+            formatter/highlighter library).
           </li>
           <li>
-            <strong>Performance:</strong> For very large JSON strings, client-side formatting is generally better as it doesn't block the server. Be mindful of browser performance with extremely large inputs.
+            <strong>Performance:</strong> For very large JSON strings, client-side formatting is generally better as it
+            doesn't block the server. Be mindful of browser performance with extremely large inputs.
           </li>
         </ul>
 
@@ -309,30 +330,35 @@ document.addEventListener('DOMContentLoaded', function() {
           <ShieldCheck className="w-6 h-6 text-yellow-500" />
           <span>Security</span>
         </h2>
-        <p>
-          When building any WordPress plugin, security is paramount. Pay close attention to:
-        </p>
+        <p>When building any WordPress plugin, security is paramount. Pay close attention to:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Input Sanitization:</strong> If accepting JSON input from users (frontend or admin), sanitize it appropriately before processing or saving. However, raw JSON needs to be parsed as is, so sanitization often applies to *where* the JSON comes from or how it's handled *after* parsing, not the JSON structure itself. Using functions like `wp_kses_post` or ensuring data passed to `json_decode` is the literal JSON string is important.
+            <strong>Input Sanitization:</strong> If accepting JSON input from users (frontend or admin), sanitize it
+            appropriately before processing or saving. However, raw JSON needs to be parsed as is, so sanitization often
+            applies to *where* the JSON comes from or how it's handled *after* parsing, not the JSON structure itself.
+            Using functions like `wp_kses_post` or ensuring data passed to `json_decode` is the literal JSON string is
+            important.
           </li>
           <li>
-            <strong>Output Escaping:</strong> Always escape output that contains potentially unsafe characters before displaying it in HTML. For the formatted JSON string, use `htmlspecialchars()` in PHP or a similar function/method in JavaScript (like the `escapeHTML` example) before putting it inside `&lt;code&gt;` or rendering with a JS framework, unless the library handles escaping internally.
+            <strong>Output Escaping:</strong> Always escape output that contains potentially unsafe characters before
+            displaying it in HTML. For the formatted JSON string, use `htmlspecialchars()` in PHP or a similar
+            function/method in JavaScript (like the `escapeHTML` example) before putting it inside `&lt;code&gt;` or
+            rendering with a JS framework, unless the library handles escaping internally.
           </li>
           <li>
-            <strong>AJAX Endpoints:</strong> If your formatter uses AJAX to fetch or process JSON, ensure endpoints are properly secured with nonces and capability checks.
+            <strong>AJAX Endpoints:</strong> If your formatter uses AJAX to fetch or process JSON, ensure endpoints are
+            properly secured with nonces and capability checks.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing a JSON formatter plugin in WordPress involves deciding where the functionality
-          best fits within the WordPress admin or frontend, choosing between server-side PHP,
-          client-side JavaScript, or a combination, and paying close attention to error handling,
-          user experience, and security. While PHP offers basic formatting, JavaScript provides
-          the flexibility for rich, interactive displays with syntax highlighting. By leveraging
-          WordPress's plugin architecture (shortcodes, blocks, admin pages), you can create a
-          valuable tool for working with JSON data more effectively within the platform.
+          Implementing a JSON formatter plugin in WordPress involves deciding where the functionality best fits within
+          the WordPress admin or frontend, choosing between server-side PHP, client-side JavaScript, or a combination,
+          and paying close attention to error handling, user experience, and security. While PHP offers basic
+          formatting, JavaScript provides the flexibility for rich, interactive displays with syntax highlighting. By
+          leveraging WordPress's plugin architecture (shortcodes, blocks, admin pages), you can create a valuable tool
+          for working with JSON data more effectively within the platform.
         </p>
       </div>
     </>

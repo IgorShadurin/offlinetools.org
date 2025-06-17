@@ -16,23 +16,24 @@ export default function GoJsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Formatting JSON data is a common task in backend development. It involves taking structured JSON
-          data, often represented as Go structs or maps, and converting it into a string format
-          that adheres to the JSON specification. While simply converting to a JSON string is easy,
-          <em>formatting</em> typically implies adding indentation and newlines to make the output human-readable.
-          Go's standard library provides robust tools for this.
+          Formatting JSON data is a common task in backend development. It involves taking structured JSON data, often
+          represented as Go structs or maps, and converting it into a string format that adheres to the JSON
+          specification. While simply converting to a JSON string is easy,
+          <em>formatting</em> typically implies adding indentation and newlines to make the output human-readable. Go's
+          standard library provides robust tools for this.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <CheckCircle className="w-6 h-6 mr-2 text-green-600" /> Why Format JSON?
         </h2>
         <p>
-          Even though machines don't strictly need formatted JSON (parsers can handle compact JSON),
-          formatting is crucial for:
+          Even though machines don't strictly need formatted JSON (parsers can handle compact JSON), formatting is
+          crucial for:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Readability:</strong> Makes inspecting JSON data in logs, debugging tools, or API responses much easier.
+            <strong>Readability:</strong> Makes inspecting JSON data in logs, debugging tools, or API responses much
+            easier.
           </li>
           <li>
             <strong>Debugging:</strong> Quickly spot structural issues or incorrect values in complex JSON structures.
@@ -47,8 +48,8 @@ export default function GoJsonFormatterArticle() {
         </h2>
         <p>
           Go's built-in <code>encoding/json</code> package is the primary tool for working with JSON. It provides
-          functions for both *marshaling* (Go data to JSON) and *unmarshaling* (JSON to Go data). For formatting,
-          we primarily use the marshaling capabilities.
+          functions for both *marshaling* (Go data to JSON) and *unmarshaling* (JSON to Go data). For formatting, we
+          primarily use the marshaling capabilities.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Basic Marshaling vs. Formatted Marshaling</h3>
@@ -87,12 +88,14 @@ func main() {
 `}
             </pre>
           </div>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">Output: <code>&#x7b;&quot;Name&quot;:&quot;Alice&quot;,&quot;Age&quot;:30&#x7d;</code></p>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            Output: <code>&#x7b;&quot;Name&quot;:&quot;Alice&quot;,&quot;Age&quot;:30&#x7d;</code>
+          </p>
         </div>
 
         <p>
-          To get a human-readable, indented output, you use the <code>json.MarshalIndent</code> function.
-          It takes the Go value and two additional string arguments: a <code>prefix</code> and an <code>indent</code> string.
+          To get a human-readable, indented output, you use the <code>json.MarshalIndent</code> function. It takes the
+          Go value and two additional string arguments: a <code>prefix</code> and an <code>indent</code> string.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -101,28 +104,30 @@ func main() {
         <p>
           <code>MarshalIndent</code> signature:
         </p>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`func MarshalIndent(v any, prefix, indent string) ([]byte, error)`}
-            </pre>
+            <pre>{`func MarshalIndent(v any, prefix, indent string) ([]byte, error)`}</pre>
           </div>
-         </div>
+        </div>
         <p>
           <ul>
             <li>
               <code>v any</code>: The Go value to encode.
             </li>
             <li>
-              <code>prefix string</code>: A string prepended to each line of the output. Commonly an empty string <code>""</code>.
+              <code>prefix string</code>: A string prepended to each line of the output. Commonly an empty string{" "}
+              <code>""</code>.
             </li>
             <li>
-              <code>indent string</code>: A string used for one level of indentation. Commonly <code>"\t"</code> (tab) or <code>" "</code> (two spaces).
+              <code>indent string</code>: A string used for one level of indentation. Commonly <code>"\t"</code> (tab)
+              or <code>" "</code> (two spaces).
             </li>
           </ul>
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Example with <code>MarshalIndent</code></h3>
+        <h3 className="text-xl font-semibold mt-6">
+          Example with <code>MarshalIndent</code>
+        </h3>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Using Two Spaces for Indentation:</h4>
@@ -166,9 +171,9 @@ func main() {
             </pre>
           </div>
           <h4 className="text-lg font-medium mt-4">Expected Output:</h4>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-             <pre>
-{`{
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`{
   "id": 101,
   "name": "Go T-Shirt",
   "price": 25.99,
@@ -179,12 +184,12 @@ func main() {
   ],
   "isInStock": "true"
 }`}
-             </pre>
-           </div>
+            </pre>
+          </div>
         </div>
 
         <h3 className="text-xl font-semibold mt-6">Using Tabs for Indentation:</h3>
-         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
               {`// ... using the same Product struct and value as above ...
@@ -204,10 +209,10 @@ func main() {
 `}
             </pre>
           </div>
-           <h4 className="text-lg font-medium mt-4">Expected Output:</h4>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-             <pre>
-{`{
+          <h4 className="text-lg font-medium mt-4">Expected Output:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`{
 \t"id": 101,
 \t"name": "Go T-Shirt",
 \t"price": 25.99,
@@ -218,15 +223,17 @@ func main() {
 \t],
 \t"isInStock": "true"
 }`}
-             </pre>
-           </div>
-         </div>
+            </pre>
+          </div>
+        </div>
 
-         <h3 className="text-xl font-semibold mt-6">Using a Prefix:</h3>
-         <p>
-           The <code>prefix</code> string is added to the beginning of *every* line, including the first and the closing brace/bracket. This is less common for standard JSON formatting but can be useful for log messages or embedding JSON within other text formats.
-         </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <h3 className="text-xl font-semibold mt-6">Using a Prefix:</h3>
+        <p>
+          The <code>prefix</code> string is added to the beginning of *every* line, including the first and the closing
+          brace/bracket. This is less common for standard JSON formatting but can be useful for log messages or
+          embedding JSON within other text formats.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
               {`// ... using the same Product struct and value as above ...
@@ -246,10 +253,10 @@ func main() {
 `}
             </pre>
           </div>
-           <h4 className="text-lg font-medium mt-4">Expected Output:</h4>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-             <pre>
-{`LOG: {
+          <h4 className="text-lg font-medium mt-4">Expected Output:</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`LOG: {
 LOG:   "id": 101,
 LOG:   "name": "Go T-Shirt",
 LOG:   "price": 25.99,
@@ -260,38 +267,44 @@ LOG:     "programming"
 LOG:   ],
 LOG:   "isInStock": "true"
 LOG: }`}
-             </pre>
-           </div>
-         </div>
+            </pre>
+          </div>
+        </div>
 
-         <h2 className="text-2xl font-semibold mt-8">Handling Different Data Types</h2>
-         <p>
-           <code>json.MarshalIndent</code> works seamlessly with various Go data types that can be encoded to JSON:
-         </p>
-         <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>
-              <strong>Structs:</strong> Fields are encoded based on their exported names or `json` struct tags.
-            </li>
-            <li>
-              <strong>Maps:</strong> Maps with string keys are encoded as JSON objects.
-            </li>
-            <li>
-              <strong>Slices/Arrays:</strong> Encoded as JSON arrays.
-            </li>
-            <li>
-              <strong>Primitive Types:</strong> Numbers, strings, booleans, null (for `nil` pointers/interfaces) are encoded directly.
-            </li>
-         </ul>
-         <p>Struct tags (`json:"..."`) are crucial for controlling how fields are named, omitted (`omitempty`), or encoded (`string`).</p>
+        <h2 className="text-2xl font-semibold mt-8">Handling Different Data Types</h2>
+        <p>
+          <code>json.MarshalIndent</code> works seamlessly with various Go data types that can be encoded to JSON:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Structs:</strong> Fields are encoded based on their exported names or `json` struct tags.
+          </li>
+          <li>
+            <strong>Maps:</strong> Maps with string keys are encoded as JSON objects.
+          </li>
+          <li>
+            <strong>Slices/Arrays:</strong> Encoded as JSON arrays.
+          </li>
+          <li>
+            <strong>Primitive Types:</strong> Numbers, strings, booleans, null (for `nil` pointers/interfaces) are
+            encoded directly.
+          </li>
+        </ul>
+        <p>
+          Struct tags (`json:"..."`) are crucial for controlling how fields are named, omitted (`omitempty`), or encoded
+          (`string`).
+        </p>
 
-         <h2 className="text-2xl font-semibold mt-8">Streaming JSON Encoding</h2>
-         <p>
-           For very large JSON objects or arrays, marshaling the entire structure into memory using <code>Marshal</code> or <code>MarshalIndent</code> might consume excessive memory. In such cases, streaming encoders are preferred.
-         </p>
-         <p>
-           The <code>json.NewEncoder</code> function creates an encoder that writes directly to an <code>io.Writer</code> (like <code>os.Stdout</code>, an <code>http.ResponseWriter</code>, or a file).
-         </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <h2 className="text-2xl font-semibold mt-8">Streaming JSON Encoding</h2>
+        <p>
+          For very large JSON objects or arrays, marshaling the entire structure into memory using <code>Marshal</code>{" "}
+          or <code>MarshalIndent</code> might consume excessive memory. In such cases, streaming encoders are preferred.
+        </p>
+        <p>
+          The <code>json.NewEncoder</code> function creates an encoder that writes directly to an <code>io.Writer</code>{" "}
+          (like <code>os.Stdout</code>, an <code>http.ResponseWriter</code>, or a file).
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium">Streaming Encoder Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
@@ -332,10 +345,10 @@ func main() {
 `}
             </pre>
           </div>
-           <h4 className="text-lg font-medium mt-4">Expected Output (to Standard Output):</h4>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-             <pre>
-{`[
+          <h4 className="text-lg font-medium mt-4">Expected Output (to Standard Output):</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`[
   {
     "name": "Apple",
     "value": 1
@@ -349,24 +362,22 @@ func main() {
     "value": 3
   }
 ]`}
-             </pre>
-           </div>
-         </div>
+            </pre>
+          </div>
+        </div>
         <p>
-          Using <code>json.NewEncoder</code> with <code>SetIndent</code> is the most efficient way
-          to output formatted JSON directly to a stream or response writer without buffering the
-          entire formatted string in memory first.
+          Using <code>json.NewEncoder</code> with <code>SetIndent</code> is the most efficient way to output formatted
+          JSON directly to a stream or response writer without buffering the entire formatted string in memory first.
         </p>
-
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Go's <code>encoding/json</code> package provides simple yet powerful functions for formatting JSON output.
-          For most common use cases, <code>json.MarshalIndent</code> with appropriate <code>prefix</code>
-          and <code>indent</code> strings is sufficient. For scenarios involving large datasets or
-          direct output to network connections/files, the streaming approach with <code>json.NewEncoder</code>
-          and <code>SetIndent</code> offers a more memory-efficient solution. Understanding these
-          standard library tools is fundamental for effective JSON handling in Go applications.
+          Go's <code>encoding/json</code> package provides simple yet powerful functions for formatting JSON output. For
+          most common use cases, <code>json.MarshalIndent</code> with appropriate <code>prefix</code>
+          and <code>indent</code> strings is sufficient. For scenarios involving large datasets or direct output to
+          network connections/files, the streaming approach with <code>json.NewEncoder</code>
+          and <code>SetIndent</code> offers a more memory-efficient solution. Understanding these standard library tools
+          is fundamental for effective JSON handling in Go applications.
         </p>
       </div>
     </>

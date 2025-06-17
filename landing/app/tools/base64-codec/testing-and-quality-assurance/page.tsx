@@ -64,7 +64,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Cross-Platform Testing for Base64 Tools",
-    description: "Ensuring Base64 implementations work consistently across different operating systems and environments.",
+    description:
+      "Ensuring Base64 implementations work consistently across different operating systems and environments.",
     slug: "cross-platform-testing-for-base64-tools",
   },
   {
@@ -167,7 +168,9 @@ export default function Base64CodecTestingPage() {
               <TestTube className="text-cyan-600" size={24} />
               Ensuring Base64 Reliability
             </CardTitle>
-            <CardDescription>Methodologies and approaches for verifying Base64 encoding quality and correctness</CardDescription>
+            <CardDescription>
+              Methodologies and approaches for verifying Base64 encoding quality and correctness
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +182,8 @@ export default function Base64CodecTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Testing Methodologies</h3>
                     <p className="text-sm text-muted-foreground">
-                      From unit testing to property-based approaches, implementing comprehensive validation for Base64 functionality.
+                      From unit testing to property-based approaches, implementing comprehensive validation for Base64
+                      functionality.
                     </p>
                   </div>
                 </div>
@@ -191,7 +195,8 @@ export default function Base64CodecTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Error Discovery</h3>
                     <p className="text-sm text-muted-foreground">
-                      Using fuzzing, edge case testing, and error simulation to identify potential issues in Base64 implementations.
+                      Using fuzzing, edge case testing, and error simulation to identify potential issues in Base64
+                      implementations.
                     </p>
                   </div>
                 </div>
@@ -205,7 +210,8 @@ export default function Base64CodecTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Quality Standards</h3>
                     <p className="text-sm text-muted-foreground">
-                      Establishing conformance testing against official standards and specifications for Base64 encoding.
+                      Establishing conformance testing against official standards and specifications for Base64
+                      encoding.
                     </p>
                   </div>
                 </div>
@@ -217,7 +223,8 @@ export default function Base64CodecTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Performance Validation</h3>
                     <p className="text-sm text-muted-foreground">
-                      Benchmarking and stress testing Base64 implementations to ensure efficiency under various conditions.
+                      Benchmarking and stress testing Base64 implementations to ensure efficiency under various
+                      conditions.
                     </p>
                   </div>
                 </div>
@@ -230,7 +237,11 @@ export default function Base64CodecTestingPage() {
                 <span>Testing Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Effective Base64 testing requires special attention to boundary conditions - particularly at the 3-byte input boundaries where padding characters are introduced. The most robust test suites include validation of varied input lengths, character set edge cases, and handling of non-standard Base64 variants. When combined with property testing (ensuring encode-decode roundtrips produce original input), these approaches can dramatically reduce defect rates in Base64 implementations.
+                Effective Base64 testing requires special attention to boundary conditions - particularly at the 3-byte
+                input boundaries where padding characters are introduced. The most robust test suites include validation
+                of varied input lengths, character set edge cases, and handling of non-standard Base64 variants. When
+                combined with property testing (ensuring encode-decode roundtrips produce original input), these
+                approaches can dramatically reduce defect rates in Base64 implementations.
               </p>
             </div>
           </CardContent>
@@ -240,4 +251,4 @@ export default function Base64CodecTestingPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

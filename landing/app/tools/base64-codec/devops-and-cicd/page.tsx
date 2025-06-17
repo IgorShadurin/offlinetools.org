@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "Base64 Encoding in CI/CD Pipeline Variables",
-    description: "Strategies for safely managing binary data and sensitive information in CI/CD pipelines using Base64.",
+    description:
+      "Strategies for safely managing binary data and sensitive information in CI/CD pipelines using Base64.",
     slug: "base64-encoding-in-cicd-pipeline-variables",
   },
   {
@@ -29,7 +30,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 and Infrastructure as Code: Best Practices",
-    description: "Effective approaches for handling Base64 encoded data in Terraform, CloudFormation, and other IaC tools.",
+    description:
+      "Effective approaches for handling Base64 encoded data in Terraform, CloudFormation, and other IaC tools.",
     slug: "base64-and-infrastructure-as-code-best-practices",
   },
   {
@@ -49,7 +51,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Encoding in Pipeline Automation Scripts",
-    description: "Techniques for handling Base64 encoding and decoding in Bash, PowerShell, and other automation scripts.",
+    description:
+      "Techniques for handling Base64 encoding and decoding in Bash, PowerShell, and other automation scripts.",
     slug: "base64-encoding-in-pipeline-automation-scripts",
   },
   {
@@ -79,7 +82,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 in Cross-Environment Configuration Management",
-    description: "Using Base64 encoding to maintain consistent configuration data across development, staging, and production.",
+    description:
+      "Using Base64 encoding to maintain consistent configuration data across development, staging, and production.",
     slug: "base64-in-cross-environment-configuration-management",
   },
   {
@@ -104,7 +108,8 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Base64 Encoding for Artifact Repository Storage",
-    description: "Techniques for storing and retrieving Base64 encoded assets in artifact repositories like Nexus and Artifactory.",
+    description:
+      "Techniques for storing and retrieving Base64 encoded assets in artifact repositories like Nexus and Artifactory.",
     slug: "base64-encoding-for-artifact-repository-storage",
   },
   {
@@ -167,7 +172,9 @@ export default function Base64CodecDevOpsPage() {
               <GitBranch className="text-violet-600" size={24} />
               Base64 in Automation Workflows
             </CardTitle>
-            <CardDescription>Integrating Base64 encoding into deployment pipelines and infrastructure automation</CardDescription>
+            <CardDescription>
+              Integrating Base64 encoding into deployment pipelines and infrastructure automation
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,7 +186,8 @@ export default function Base64CodecDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Pipeline Integration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Techniques for incorporating Base64 encoding and decoding steps within CI/CD workflows and build processes.
+                      Techniques for incorporating Base64 encoding and decoding steps within CI/CD workflows and build
+                      processes.
                     </p>
                   </div>
                 </div>
@@ -191,7 +199,8 @@ export default function Base64CodecDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Container Orchestration</h3>
                     <p className="text-sm text-muted-foreground">
-                      Managing Base64 encoded secrets, configurations, and resources in containerized environments and Kubernetes.
+                      Managing Base64 encoded secrets, configurations, and resources in containerized environments and
+                      Kubernetes.
                     </p>
                   </div>
                 </div>
@@ -205,7 +214,8 @@ export default function Base64CodecDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Automation Scripts</h3>
                     <p className="text-sm text-muted-foreground">
-                      Implementing Base64 encoding operations in shell scripts, DevOps tools, and infrastructure as code.
+                      Implementing Base64 encoding operations in shell scripts, DevOps tools, and infrastructure as
+                      code.
                     </p>
                   </div>
                 </div>
@@ -217,7 +227,8 @@ export default function Base64CodecDevOpsPage() {
                   <div>
                     <h3 className="font-medium mb-1">Deployment Strategies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Leveraging Base64 for binary data handling in deployment artifacts, templates, and cross-environment configurations.
+                      Leveraging Base64 for binary data handling in deployment artifacts, templates, and
+                      cross-environment configurations.
                     </p>
                   </div>
                 </div>
@@ -230,7 +241,12 @@ export default function Base64CodecDevOpsPage() {
                 <span>DevOps Insight:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                In modern CI/CD pipelines, Base64 encoding serves as a critical bridge between text-based configuration systems and binary assets. While Kubernetes secrets are automatically Base64 encoded, many DevOps engineers overlook that this encoding provides zero security benefits without additional encryption. Best practice involves combining Base64 with dedicated secret management systems like HashiCorp Vault or cloud provider key management services, which handle encryption/decryption while maintaining the Base64 format's pipeline compatibility.
+                In modern CI/CD pipelines, Base64 encoding serves as a critical bridge between text-based configuration
+                systems and binary assets. While Kubernetes secrets are automatically Base64 encoded, many DevOps
+                engineers overlook that this encoding provides zero security benefits without additional encryption.
+                Best practice involves combining Base64 with dedicated secret management systems like HashiCorp Vault or
+                cloud provider key management services, which handle encryption/decryption while maintaining the Base64
+                format's pipeline compatibility.
               </p>
             </div>
           </CardContent>
@@ -240,4 +256,4 @@ export default function Base64CodecDevOpsPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

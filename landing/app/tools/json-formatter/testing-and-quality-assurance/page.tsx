@@ -10,8 +10,7 @@ import { TestTube, CheckSquare, Target, FileSearch, CircleCheck } from "lucide-r
  */
 export const metadata: Metadata = {
   title: "JSON Formatter Testing and Quality Assurance | Offline Tools",
-  description:
-    "Methods for ensuring JSON formatter reliability, correctness, and quality"
+  description: "Methods for ensuring JSON formatter reliability, correctness, and quality",
 };
 
 /**
@@ -20,17 +19,20 @@ export const metadata: Metadata = {
 const jsonFormatterArticles: ToolArticle[] = [
   {
     title: "Unit Testing Strategies for JSON Formatter Components",
-    description: "Effective approaches for writing unit tests that validate individual JSON formatter components and functions.",
+    description:
+      "Effective approaches for writing unit tests that validate individual JSON formatter components and functions.",
     slug: "unit-testing-strategies-for-json-formatter-components",
   },
   {
     title: "End-to-End Testing for JSON Formatting Tools",
-    description: "Implementing comprehensive end-to-end tests that verify complete JSON formatting workflows and user interactions.",
+    description:
+      "Implementing comprehensive end-to-end tests that verify complete JSON formatting workflows and user interactions.",
     slug: "end-to-end-testing-for-json-formatting-tools",
   },
   {
     title: "Creating Test Fixtures for JSON Formatter Validation",
-    description: "Building effective test fixtures and sample data to thoroughly validate JSON formatter functionality.",
+    description:
+      "Building effective test fixtures and sample data to thoroughly validate JSON formatter functionality.",
     slug: "creating-test-fixtures-for-json-formatter-validation",
   },
   {
@@ -45,12 +47,14 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Accessibility Testing for JSON Formatting Tools",
-    description: "Methods for verifying that JSON formatters meet accessibility standards and work with assistive technologies.",
+    description:
+      "Methods for verifying that JSON formatters meet accessibility standards and work with assistive technologies.",
     slug: "accessibility-testing-for-json-formatting-tools",
   },
   {
     title: "Security Testing Frameworks for JSON Formatters",
-    description: "Tools and approaches for identifying and addressing security vulnerabilities in JSON processing tools.",
+    description:
+      "Tools and approaches for identifying and addressing security vulnerabilities in JSON processing tools.",
     slug: "security-testing-frameworks-for-json-formatters",
   },
   {
@@ -265,9 +269,10 @@ const jsonFormatterArticles: ToolArticle[] = [
   },
   {
     title: "Test Case Prioritization for JSON Formatter Releases",
-    description: "Strategies for determining which tests are most important to run before releasing JSON formatting tools.",
+    description:
+      "Strategies for determining which tests are most important to run before releasing JSON formatting tools.",
     slug: "test-case-prioritization-for-json-formatter-releases",
-  }
+  },
 ];
 
 /**
@@ -330,7 +335,8 @@ export default function JsonFormatterTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Test Methodologies</h3>
                     <p className="text-sm text-muted-foreground">
-                      Comprehensive testing approaches including unit testing, integration testing, and end-to-end testing to validate JSON formatter behavior across scenarios.
+                      Comprehensive testing approaches including unit testing, integration testing, and end-to-end
+                      testing to validate JSON formatter behavior across scenarios.
                     </p>
                   </div>
                 </div>
@@ -342,7 +348,8 @@ export default function JsonFormatterTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Edge Case Testing</h3>
                     <p className="text-sm text-muted-foreground">
-                      Strategies for identifying and testing boundary conditions, including malformed JSON, extremely large files, and unusual character encodings.
+                      Strategies for identifying and testing boundary conditions, including malformed JSON, extremely
+                      large files, and unusual character encodings.
                     </p>
                   </div>
                 </div>
@@ -356,7 +363,8 @@ export default function JsonFormatterTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Quality Metrics</h3>
                     <p className="text-sm text-muted-foreground">
-                      Measuring and monitoring JSON formatter quality through code coverage, performance benchmarks, error rates, and user satisfaction metrics.
+                      Measuring and monitoring JSON formatter quality through code coverage, performance benchmarks,
+                      error rates, and user satisfaction metrics.
                     </p>
                   </div>
                 </div>
@@ -368,7 +376,8 @@ export default function JsonFormatterTestingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Conformance Testing</h3>
                     <p className="text-sm text-muted-foreground">
-                      Verifying formatter adherence to JSON standards and specifications through comprehensive test suites and compatibility verification.
+                      Verifying formatter adherence to JSON standards and specifications through comprehensive test
+                      suites and compatibility verification.
                     </p>
                   </div>
                 </div>
@@ -381,7 +390,8 @@ export default function JsonFormatterTestingPage() {
                 <span>Testing Best Practice:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                Maintain a comprehensive test corpus of diverse JSON files representing both common and edge cases to ensure your formatter handles all variations correctly across different environments.
+                Maintain a comprehensive test corpus of diverse JSON files representing both common and edge cases to
+                ensure your formatter handles all variations correctly across different environments.
               </p>
             </div>
           </CardContent>
@@ -391,4 +401,4 @@ export default function JsonFormatterTestingPage() {
       <ToolArticlesList toolName="JSON Formatter" toolSlug="json-formatter" articles={jsonFormatterArticles} />
     </Container>
   );
-} 
+}

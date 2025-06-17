@@ -1,33 +1,28 @@
-"use client"
+"use client";
 
-import { Container } from "@/components/ui/container"
-import { SectionHeading } from "@/components/ui/section"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { 
-  estimateSpeechLength, 
-  formatTime, 
-  SpeechSpeed, 
-  SPEECH_SPEED_WPM 
-} from "shared"
-import { useState, useEffect } from "react"
-import { AlertCircle, Check, Copy, Clock, Link as LinkIcon } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import Link from "next/link"
-import SpeechLengthEstimatorExplanation from "./SpeechLengthEstimatorExplanation"
+import { Container } from "@/components/ui/container";
+import { SectionHeading } from "@/components/ui/section";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { estimateSpeechLength, formatTime, SpeechSpeed, SPEECH_SPEED_WPM } from "shared";
+import { useState, useEffect } from "react";
+import { AlertCircle, Check, Copy, Clock, Link as LinkIcon } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
+import SpeechLengthEstimatorExplanation from "./SpeechLengthEstimatorExplanation";
 
 export default function SpeechLengthEstimator() {
-  const [text, setText] = useState("")
-  const [result, setResult] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
-  const [speedOption, setSpeedOption] = useState<SpeechSpeed>(SpeechSpeed.NORMAL)
-  const [customWpm, setCustomWpm] = useState(String(SPEECH_SPEED_WPM[SpeechSpeed.CUSTOM]))
-  const [includePauses, setIncludePauses] = useState(true)
+  const [text, setText] = useState("");
+  const [result, setResult] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [speedOption, setSpeedOption] = useState<SpeechSpeed>(SpeechSpeed.NORMAL);
+  const [customWpm, setCustomWpm] = useState(String(SPEECH_SPEED_WPM[SpeechSpeed.CUSTOM]));
+  const [includePauses, setIncludePauses] = useState(true);
 
   useEffect(() => {
     try {
@@ -136,11 +131,7 @@ export default function SpeechLengthEstimator() {
 
               {/* Include pauses option */}
               <div className="flex items-center space-x-2">
-                <Switch
-                  id="include-pauses"
-                  checked={includePauses}
-                  onCheckedChange={setIncludePauses}
-                />
+                <Switch id="include-pauses" checked={includePauses} onCheckedChange={setIncludePauses} />
                 <Label htmlFor="include-pauses" className="cursor-pointer">
                   Include pauses for punctuation
                 </Label>
@@ -166,10 +157,9 @@ export default function SpeechLengthEstimator() {
                 <div className="bg-muted rounded-md p-6 min-h-[100px] flex flex-col justify-center items-center">
                   <div className="text-4xl font-mono">{result}</div>
                   <div className="text-sm text-muted-foreground mt-2">
-                    {result !== "0:00" ? 
-                      `at ${speedOption === SpeechSpeed.CUSTOM ? customWpm : SPEECH_SPEED_WPM[speedOption]} words per minute` : 
-                      "No text to estimate"
-                    }
+                    {result !== "0:00"
+                      ? `at ${speedOption === SpeechSpeed.CUSTOM ? customWpm : SPEECH_SPEED_WPM[speedOption]} words per minute`
+                      : "No text to estimate"}
                   </div>
                 </div>
               )}
@@ -202,7 +192,14 @@ export default function SpeechLengthEstimator() {
                 <div className="text-sm">
                   <div className="flex justify-between">
                     <span>Words:</span>
-                    <span>{text ? text.trim().split(/\s+/).filter(w => w.length > 0).length : 0}</span>
+                    <span>
+                      {text
+                        ? text
+                            .trim()
+                            .split(/\s+/)
+                            .filter((w) => w.length > 0).length
+                        : 0}
+                    </span>
                   </div>
                   <div className="flex justify-between mt-1">
                     <span>Characters (with spaces):</span>
@@ -210,7 +207,7 @@ export default function SpeechLengthEstimator() {
                   </div>
                   <div className="flex justify-between mt-1">
                     <span>Characters (without spaces):</span>
-                    <span>{text ? text.replace(/\s/g, '').length : 0}</span>
+                    <span>{text ? text.replace(/\s/g, "").length : 0}</span>
                   </div>
                 </div>
               </div>

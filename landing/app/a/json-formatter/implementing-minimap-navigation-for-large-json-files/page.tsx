@@ -9,25 +9,22 @@ export const metadata: Metadata = {
 export default function MinimapJsonNavigationArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Implementing Minimap Navigation for Large JSON Files
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Implementing Minimap Navigation for Large JSON Files</h1>
 
       <div className="space-y-6">
         <p>
-          Working with large JSON files can be challenging. Scrolling through thousands of lines of nested data
-          makes it difficult to maintain context and quickly navigate to specific sections. This is where
-          minimap navigation becomes incredibly useful. A minimap provides a high-level overview of the entire
-          document, acting as a miniature representation that helps you orient yourself and jump to different
-          parts of the file efficiently.
+          Working with large JSON files can be challenging. Scrolling through thousands of lines of nested data makes it
+          difficult to maintain context and quickly navigate to specific sections. This is where minimap navigation
+          becomes incredibly useful. A minimap provides a high-level overview of the entire document, acting as a
+          miniature representation that helps you orient yourself and jump to different parts of the file efficiently.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">What is a Minimap?</h2>
         <p>
-          Inspired by code editors like VS Code or Sublime Text, a minimap is a compressed visual outline of a
-          document, typically displayed on the side of the main content area. It shows a scaled-down version
-          of the text, highlighting syntax elements or structural components, and usually includes a visible
-          area representing the current viewport within the main document.
+          Inspired by code editors like VS Code or Sublime Text, a minimap is a compressed visual outline of a document,
+          typically displayed on the side of the main content area. It shows a scaled-down version of the text,
+          highlighting syntax elements or structural components, and usually includes a visible area representing the
+          current viewport within the main document.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -42,44 +39,43 @@ export default function MinimapJsonNavigationArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Why Use a Minimap for JSON?</h2>
         <p>
-          For large JSON files, a minimap transforms navigation from a linear, tedious process to a much more
-          visual and intuitive one. Instead of endlessly scrolling, you can see the overall structure at a
-          glance.
+          For large JSON files, a minimap transforms navigation from a linear, tedious process to a much more visual and
+          intuitive one. Instead of endlessly scrolling, you can see the overall structure at a glance.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium">Benefits for JSON exploration:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Quick Orientation:</span> Get a sense of the document's size and
-              overall structure immediately.
+              <span className="font-medium">Quick Orientation:</span> Get a sense of the document's size and overall
+              structure immediately.
             </li>
             <li>
-              <span className="font-medium">Fast Navigation:</span> Quickly jump to the beginning, end, or any
-              visually distinct section (e.g., a large array or deeply nested object).
+              <span className="font-medium">Fast Navigation:</span> Quickly jump to the beginning, end, or any visually
+              distinct section (e.g., a large array or deeply nested object).
             </li>
             <li>
-              <span className="font-medium">Identify Structure:</span> See where large objects `{}` or arrays
-              `[]` are located, or where nested data blocks begin and end.
+              <span className="font-medium">Identify Structure:</span> See where large objects `{}` or arrays `[]` are
+              located, or where nested data blocks begin and end.
             </li>
             <li>
-              <span className="font-medium">Spot Anomalies:</span> Easily notice unusually large sections or
-              structural inconsistencies.
+              <span className="font-medium">Spot Anomalies:</span> Easily notice unusually large sections or structural
+              inconsistencies.
             </li>
           </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conceptual Implementation Aspects</h2>
         <p>
-          Implementing a minimap for a JSON viewer involves rendering a scaled-down version of the content.
-          Unlike plain text where each character block is just miniaturized, a JSON minimap benefits from
-          representing the *structure* rather than just the characters.
+          Implementing a minimap for a JSON viewer involves rendering a scaled-down version of the content. Unlike plain
+          text where each character block is just miniaturized, a JSON minimap benefits from representing the
+          *structure* rather than just the characters.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Rendering the Minimap</h3>
         <p>
-          Instead of drawing every character, a JSON minimap might represent different JSON elements with small
-          colored blocks or lines:
+          Instead of drawing every character, a JSON minimap might represent different JSON elements with small colored
+          blocks or lines:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>Objects (`{}`) and Arrays (`[]`) might be represented by distinct background colors or shapes.</li>
@@ -88,36 +84,37 @@ export default function MinimapJsonNavigationArticle() {
           <li>Commas and colons might be rendered as thin lines or small dots.</li>
         </ul>
         <p>
-          The vertical position of these blocks in the minimap corresponds to the vertical position of the
-          actual JSON element in the main view. The width of the minimap is fixed, and the height is scaled
-          proportionally to the full height of the JSON document.
+          The vertical position of these blocks in the minimap corresponds to the vertical position of the actual JSON
+          element in the main view. The width of the minimap is fixed, and the height is scaled proportionally to the
+          full height of the JSON document.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Handling Large Files Efficiently</h3>
         <p>
-          Rendering a minimap for a massive file (e.g., hundreds of megabytes) requires performance
-          considerations. Full rendering of the minimap at once might be slow. Techniques like virtualization
-          (rendering only the parts of the minimap currently in or near the viewport) or using a canvas for
-          drawing can improve performance.
+          Rendering a minimap for a massive file (e.g., hundreds of megabytes) requires performance considerations. Full
+          rendering of the minimap at once might be slow. Techniques like virtualization (rendering only the parts of
+          the minimap currently in or near the viewport) or using a canvas for drawing can improve performance.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Synchronization and Interaction</h3>
-        <p>
-          The minimap needs to be synchronized with the main view:
-        </p>
+        <p>The minimap needs to be synchronized with the main view:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>When the user scrolls the main view, the minimap's viewport indicator moves accordingly.</li>
-          <li>When the user clicks or drags the viewport indicator on the minimap, the main view scrolls to
-            the corresponding position.</li>
-          <li>Hovering over the minimap might show a tooltip or highlight the corresponding line in the main
-            view for better precision.</li>
+          <li>
+            When the user clicks or drags the viewport indicator on the minimap, the main view scrolls to the
+            corresponding position.
+          </li>
+          <li>
+            Hovering over the minimap might show a tooltip or highlight the corresponding line in the main view for
+            better precision.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conceptual Code Sketch (Client-side Rendering)</h2>
         <p>
-          While a full implementation is complex, here's a simplified conceptual sketch showing how one might
-          render small blocks representing JSON tokens based on their type. This would typically run in a
-          browser environment where the JSON content is loaded.
+          While a full implementation is complex, here's a simplified conceptual sketch showing how one might render
+          small blocks representing JSON tokens based on their type. This would typically run in a browser environment
+          where the JSON content is loaded.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -199,9 +196,9 @@ const renderMinimapTokens = (jsonTokens, minimapHeight, lineHeight) => {
 
         <h2 className="text-2xl font-semibold mt-8">Integrating with Existing Tools</h2>
         <p>
-          If you are building a custom JSON viewer or tool, you might integrate a minimap component from a
-          UI library or build one yourself following the principles above. For users of popular code editors
-          or online JSON tools, minimaps are often a built-in feature or available as plugins.
+          If you are building a custom JSON viewer or tool, you might integrate a minimap component from a UI library or
+          build one yourself following the principles above. For users of popular code editors or online JSON tools,
+          minimaps are often a built-in feature or available as plugins.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -216,12 +213,11 @@ const renderMinimapTokens = (jsonTokens, minimapHeight, lineHeight) => {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Minimap navigation is a powerful UI pattern that significantly enhances the usability of editors and
-          viewers for long documents, including large JSON files. By providing a compact, interactive overview
-          of the file structure, it allows developers and data professionals to quickly understand, navigate,
-          and work with complex JSON data more efficiently. Whether you implement it yourself or use a tool
-          that offers it, a minimap is an invaluable feature for tackling the challenges posed by ever-growing
-          JSON datasets.
+          Minimap navigation is a powerful UI pattern that significantly enhances the usability of editors and viewers
+          for long documents, including large JSON files. By providing a compact, interactive overview of the file
+          structure, it allows developers and data professionals to quickly understand, navigate, and work with complex
+          JSON data more efficiently. Whether you implement it yourself or use a tool that offers it, a minimap is an
+          invaluable feature for tackling the challenges posed by ever-growing JSON datasets.
         </p>
       </div>
     </>

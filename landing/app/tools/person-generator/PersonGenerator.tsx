@@ -152,11 +152,7 @@ export default function PersonGenerator() {
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   {ALL_FIELDS.map((f) => (
                     <label key={f} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={f}
-                        checked={fields.includes(f)}
-                        onCheckedChange={() => toggleField(f)}
-                      />
+                      <Checkbox id={f} checked={fields.includes(f)} onCheckedChange={() => toggleField(f)} />
                       <span className="capitalize">{f}</span>
                     </label>
                   ))}
@@ -165,7 +161,11 @@ export default function PersonGenerator() {
 
               <div>
                 <Label>Format</Label>
-                <RadioGroup value={format} onValueChange={(v) => setFormat(v as PersonOutputFormat)} className="mt-2 space-y-1">
+                <RadioGroup
+                  value={format}
+                  onValueChange={(v) => setFormat(v as PersonOutputFormat)}
+                  className="mt-2 space-y-1"
+                >
                   {Object.values(PersonOutputFormat).map((v) => (
                     <div key={v} className="flex items-center space-x-2">
                       <RadioGroupItem value={v} id={v} />
@@ -176,7 +176,12 @@ export default function PersonGenerator() {
               </div>
 
               {format === PersonOutputFormat.CUSTOM && (
-                <Button type="button" variant="outline" onClick={() => setShowTemplate(true)} className="mt-2 flex items-center gap-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowTemplate(true)}
+                  className="mt-2 flex items-center gap-1"
+                >
                   <Pencil className="h-4 w-4" /> Edit Template
                 </Button>
               )}
@@ -203,7 +208,12 @@ export default function PersonGenerator() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               ) : (
-                <Textarea className="min-h-[300px] font-mono" value={output} readOnly placeholder="Generated data will appear here" />
+                <Textarea
+                  className="min-h-[300px] font-mono"
+                  value={output}
+                  readOnly
+                  placeholder="Generated data will appear here"
+                />
               )}
               {output && (
                 <Button onClick={handleSave} className="w-full mt-4 flex items-center gap-1" variant="outline">
@@ -227,9 +237,15 @@ export default function PersonGenerator() {
             <p className="text-sm text-muted-foreground">
               Available variables: {ALL_FIELDS.map((f) => `{{${f}}}`).join(", ")}
             </p>
-            <Textarea value={template} onChange={(e) => setTemplate(e.target.value)} className="font-mono min-h-[150px]" />
+            <Textarea
+              value={template}
+              onChange={(e) => setTemplate(e.target.value)}
+              className="font-mono min-h-[150px]"
+            />
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={resetTemplate}>Reset</Button>
+              <Button variant="outline" onClick={resetTemplate}>
+                Reset
+              </Button>
               <Button onClick={saveTemplate}>Save</Button>
             </div>
           </Dialog.Content>

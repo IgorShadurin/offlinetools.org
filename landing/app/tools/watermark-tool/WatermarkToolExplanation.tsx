@@ -10,16 +10,17 @@ export default function WatermarkToolExplanation() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span>
+                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  1
+                </span>
                 Upload Watermark
               </CardTitle>
-              <CardDescription>
-                Choose your watermark image (PNG, JPG, WEBP, or GIF)
-              </CardDescription>
+              <CardDescription>Choose your watermark image (PNG, JPG, WEBP, or GIF)</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Select a high-quality image to use as your watermark. The tool will automatically scale it proportionally to fit your target images.
+                Select a high-quality image to use as your watermark. The tool will automatically scale it
+                proportionally to fit your target images.
               </p>
             </CardContent>
           </Card>
@@ -27,12 +28,12 @@ export default function WatermarkToolExplanation() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</span>
+                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  2
+                </span>
                 Configure Settings
               </CardTitle>
-              <CardDescription>
-                Adjust position, opacity, scale, and margin
-              </CardDescription>
+              <CardDescription>Adjust position, opacity, scale, and margin</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -44,16 +45,17 @@ export default function WatermarkToolExplanation() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</span>
+                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  3
+                </span>
                 Select Mode
               </CardTitle>
-              <CardDescription>
-                Choose between batch processing or single image mode
-              </CardDescription>
+              <CardDescription>Choose between batch processing or single image mode</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Batch mode processes multiple images at once. Single image mode allows precise drag-and-drop positioning.
+                Batch mode processes multiple images at once. Single image mode allows precise drag-and-drop
+                positioning.
               </p>
             </CardContent>
           </Card>
@@ -61,16 +63,17 @@ export default function WatermarkToolExplanation() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</span>
+                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  4
+                </span>
                 Process & Download
               </CardTitle>
-              <CardDescription>
-                Apply watermarks and save your images
-              </CardDescription>
+              <CardDescription>Apply watermarks and save your images</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Click process to apply watermarks. Download individual images or use "Download All" for batch processing.
+                Click process to apply watermarks. Download individual images or use "Download All" for batch
+                processing.
               </p>
             </CardContent>
           </Card>
@@ -113,13 +116,15 @@ export default function WatermarkToolExplanation() {
           <div className="border-l-4 border-blue-500 pl-4">
             <h4 className="font-medium">Watermark Design</h4>
             <p className="text-sm text-muted-foreground">
-              Use PNG images with transparency for best results. Avoid overly complex designs that may become unclear when scaled down.
+              Use PNG images with transparency for best results. Avoid overly complex designs that may become unclear
+              when scaled down.
             </p>
           </div>
           <div className="border-l-4 border-green-500 pl-4">
             <h4 className="font-medium">Opacity Settings</h4>
             <p className="text-sm text-muted-foreground">
-              Set opacity between 50-80% for subtle watermarks that don't overpower your content while still being visible.
+              Set opacity between 50-80% for subtle watermarks that don't overpower your content while still being
+              visible.
             </p>
           </div>
           <div className="border-l-4 border-purple-500 pl-4">

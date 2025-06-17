@@ -24,61 +24,55 @@ export default function RootCauseAnalysisJsonErrors() {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <Bug className="text-red-500" size={32} /> Root Cause Analysis of Common
-        JSON Processing Errors
+        <Bug className="text-red-500" size={32} /> Root Cause Analysis of Common JSON Processing Errors
       </h1>
 
       <div className="space-y-6 text-gray-700 dark:text-gray-300">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for
-          data exchange on the web and across many applications. Its
-          simplicity, human-readability, and native support in JavaScript make
-          it incredibly popular. However, processing JSON isn't always smooth
-          sailing. Developers frequently encounter errors ranging from simple
-          syntax issues to complex data mismatches. Understanding the root
-          causes of these errors is crucial for efficient debugging and building
-          robust applications.
+          JSON (JavaScript Object Notation) has become the de facto standard for data exchange on the web and across
+          many applications. Its simplicity, human-readability, and native support in JavaScript make it incredibly
+          popular. However, processing JSON isn't always smooth sailing. Developers frequently encounter errors ranging
+          from simple syntax issues to complex data mismatches. Understanding the root causes of these errors is crucial
+          for efficient debugging and building robust applications.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <FileWarning size={24} /> Common Categories of JSON Processing Errors
         </h2>
         <p>
-          JSON processing errors typically fall into a few main categories, often
-          signaled by specific error messages from parsers or libraries.
+          JSON processing errors typically fall into a few main categories, often signaled by specific error messages
+          from parsers or libraries.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <XCircle className="text-red-500" size={18} />
             </span>
-            <strong>Syntax Errors:</strong> The JSON string does not conform to
-            the strict JSON specification. This is the most common type.
+            <strong>Syntax Errors:</strong> The JSON string does not conform to the strict JSON specification. This is
+            the most common type.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <AlertCircle className="text-orange-500" size={18} />
             </span>
-            <strong>Schema/Type Mismatches:</strong> The JSON syntax is valid,
-            but the data structure or types of values do not match what the
-            application expects (e.g., expecting an array but receiving an
-            object, expecting a number but getting a string).
+            <strong>Schema/Type Mismatches:</strong> The JSON syntax is valid, but the data structure or types of values
+            do not match what the application expects (e.g., expecting an array but receiving an object, expecting a
+            number but getting a string).
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <Code size={18} />
             </span>
-            <strong>Encoding Issues:</strong> Problems related to character
-            encoding, especially with non-ASCII characters.
+            <strong>Encoding Issues:</strong> Problems related to character encoding, especially with non-ASCII
+            characters.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <ClipboardList size={18} />
             </span>
-            <strong>Data Integrity/Content Issues:</strong> The JSON is valid
-            and matches the schema, but the *content* itself is invalid or
-            missing required information according to business logic (e.g., a
-            required field is null when it shouldn't be, an ID is not found).
+            <strong>Data Integrity/Content Issues:</strong> The JSON is valid and matches the schema, but the *content*
+            itself is invalid or missing required information according to business logic (e.g., a required field is
+            null when it shouldn't be, an ID is not found).
           </li>
         </ul>
 
@@ -90,16 +84,14 @@ export default function RootCauseAnalysisJsonErrors() {
           <XCircle className="text-red-500" size={22} /> Syntax Errors
         </h3>
         <p>
-          Syntax errors are violations of the JSON specification's grammar. JSON
-          is a strict subset of JavaScript object literal syntax, but with key
-          differences.
+          Syntax errors are violations of the JSON specification's grammar. JSON is a strict subset of JavaScript object
+          literal syntax, but with key differences.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
           <h4 className="text-lg font-medium">Common Syntax Violations:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Trailing Commas:</strong> JSON does NOT allow trailing
-              commas in arrays or objects.
+              <strong>Trailing Commas:</strong> JSON does NOT allow trailing commas in arrays or objects.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -111,13 +103,12 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Often generated by hand or by code that uses
-                JavaScript object literal syntax but assumes it's valid JSON.
+                Root Cause: Often generated by hand or by code that uses JavaScript object literal syntax but assumes
+                it's valid JSON.
               </p>
             </li>
             <li>
-              <strong>Unquoted Keys:</strong> Object keys MUST be double-quoted
-              strings.
+              <strong>Unquoted Keys:</strong> Object keys MUST be double-quoted strings.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -128,13 +119,11 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Similar to trailing commas, this comes from confusing
-                JavaScript object literals with JSON.
+                Root Cause: Similar to trailing commas, this comes from confusing JavaScript object literals with JSON.
               </p>
             </li>
             <li>
-              <strong>Single Quotes:</strong> Strings (both keys and values)
-              MUST use double quotes.
+              <strong>Single Quotes:</strong> Strings (both keys and values) MUST use double quotes.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -144,16 +133,12 @@ export default function RootCauseAnalysisJsonErrors() {
                   </code>
                 </pre>
               </div>
-              <p className="text-sm italic mt-1">
-                Root Cause: JavaScript habit bleeding into JSON generation.
-              </p>
+              <p className="text-sm italic mt-1">Root Cause: JavaScript habit bleeding into JSON generation.</p>
             </li>
             <li>
-              <strong>Unescaped Special Characters:</strong> Certain characters
-              within strings must be escaped with a backslash (`\`), such as `"`
-              (`\"`), `\` (`\\`), newline (`\n`), carriage return (`\r`), tab
-              (`\t`), form feed (`\f`), and backspace (`\b`). Unicode characters
-              can be escaped using `\uXXXX`.
+              <strong>Unescaped Special Characters:</strong> Certain characters within strings must be escaped with a
+              backslash (`\`), such as `"` (`\"`), `\` (`\\`), newline (`\n`), carriage return (`\r`), tab (`\t`), form
+              feed (`\f`), and backspace (`\b`). Unicode characters can be escaped using `\uXXXX`.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -164,13 +149,13 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Improper handling of string serialization, especially
-                when data contains user input or special text.
+                Root Cause: Improper handling of string serialization, especially when data contains user input or
+                special text.
               </p>
             </li>
             <li>
-              <strong>Missing Commas:</strong> Items in arrays and key-value
-              pairs in objects must be separated by commas.
+              <strong>Missing Commas:</strong> Items in arrays and key-value pairs in objects must be separated by
+              commas.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -182,14 +167,12 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Typo during manual creation or bug in code generating
-                JSON.
+                Root Cause: Typo during manual creation or bug in code generating JSON.
               </p>
             </li>
             <li>
-              <strong>Incorrect Bracketing/Bracing:</strong> Mismatched or
-              missing opening/closing braces (`&#x7b;`, `&#x7d;`) or brackets
-              (`[`, `]`).
+              <strong>Incorrect Bracketing/Bracing:</strong> Mismatched or missing opening/closing braces (`&#x7b;`,
+              `&#x7d;`) or brackets (`[`, `]`).
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -201,16 +184,14 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Errors in string concatenation, templating, or manual
-                JSON construction. Often happens with dynamic JSON generation.
+                Root Cause: Errors in string concatenation, templating, or manual JSON construction. Often happens with
+                dynamic JSON generation.
               </p>
             </li>
             <li>
-              <strong>Invalid JSON Values:</strong> JSON only allows objects,
-              arrays, strings, numbers, booleans (`true`, `false`), and `null`.
-              JavaScript specific types like `undefined`, `NaN`, `Infinity`,
-              regular expressions, or function definitions are NOT valid JSON
-              values.
+              <strong>Invalid JSON Values:</strong> JSON only allows objects, arrays, strings, numbers, booleans
+              (`true`, `false`), and `null`. JavaScript specific types like `undefined`, `NaN`, `Infinity`, regular
+              expressions, or function definitions are NOT valid JSON values.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -221,59 +202,49 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Attempting to serialize JavaScript objects directly
-                without proper handling of invalid types.
+                Root Cause: Attempting to serialize JavaScript objects directly without proper handling of invalid
+                types.
               </p>
             </li>
           </ul>
 
-          <h4 className="text-lg font-medium mt-4">
-            Diagnosing and Fixing Syntax Errors:
-          </h4>
+          <h4 className="text-lg font-medium mt-4">Diagnosing and Fixing Syntax Errors:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Parser Error Messages:</strong> JSON parsers are usually
-              good at reporting *where* the error occurred (line number, column
-              number). Pay close attention to the reported location. The error
-              might be *just before* the reported position.
+              <strong>Parser Error Messages:</strong> JSON parsers are usually good at reporting *where* the error
+              occurred (line number, column number). Pay close attention to the reported location. The error might be
+              *just before* the reported position.
             </li>
             <li>
-              <strong>JSON Validators:</strong> Use online or offline JSON
-              validation tools. They highlight syntax errors and often provide
-              more descriptive explanations than basic parser errors.
+              <strong>JSON Validators:</strong> Use online or offline JSON validation tools. They highlight syntax
+              errors and often provide more descriptive explanations than basic parser errors.
             </li>
             <li>
-              <strong>Inspect the Raw String:</strong> Log or inspect the exact
-              JSON string being processed. Don't rely on how a debugger might
-              format a JavaScript object that *should* become JSON; look at the
-              actual string representation.
+              <strong>Inspect the Raw String:</strong> Log or inspect the exact JSON string being processed. Don't rely
+              on how a debugger might format a JavaScript object that *should* become JSON; look at the actual string
+              representation.
             </li>
             <li>
-              <strong>Use Robust JSON Libraries:</strong> Rely on built-in or
-              well-vetted libraries (`JSON.parse`, `JSON.stringify` in
-              JavaScript, or equivalents in other languages) for serialization
-              and parsing, as they handle escaping and value validation
-              correctly. Avoid manual string concatenation for complex JSON.
+              <strong>Use Robust JSON Libraries:</strong> Rely on built-in or well-vetted libraries (`JSON.parse`,
+              `JSON.stringify` in JavaScript, or equivalents in other languages) for serialization and parsing, as they
+              handle escaping and value validation correctly. Avoid manual string concatenation for complex JSON.
             </li>
           </ul>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <AlertCircle className="text-orange-500" size={22} /> Schema / Type
-          Mismatch Errors
+          <AlertCircle className="text-orange-500" size={22} /> Schema / Type Mismatch Errors
         </h3>
         <p>
-          These errors occur when the JSON is syntactically correct but doesn't
-          match the expected structure or data types required by the consuming
-          code. This often leads to runtime errors like "cannot access property
-          of undefined," "type error," or failed data validation.
+          These errors occur when the JSON is syntactically correct but doesn't match the expected structure or data
+          types required by the consuming code. This often leads to runtime errors like "cannot access property of
+          undefined," "type error," or failed data validation.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
           <h4 className="text-lg font-medium">Common Mismatches:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Missing Fields:</strong> The JSON object lacks a required
-              key-value pair.
+              <strong>Missing Fields:</strong> The JSON object lacks a required key-value pair.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -283,14 +254,13 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: API changes, optional fields treated as required by
-                the consumer, or bugs in the data source.
+                Root Cause: API changes, optional fields treated as required by the consumer, or bugs in the data
+                source.
               </p>
             </li>
             <li>
-              <strong>Unexpected Types:</strong> A field exists, but its value
-              is of the wrong JSON type (e.g., a number where a string is
-              expected, an object where an array is expected).
+              <strong>Unexpected Types:</strong> A field exists, but its value is of the wrong JSON type (e.g., a number
+              where a string is expected, an object where an array is expected).
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -300,13 +270,13 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Inconsistent data sources, API versioning issues,
-                misunderstanding of data types between systems.
+                Root Cause: Inconsistent data sources, API versioning issues, misunderstanding of data types between
+                systems.
               </p>
             </li>
             <li>
-              <strong>Incorrect Structure (Object vs. Array):</strong> The top
-              level or a nested structure is the wrong fundamental type.
+              <strong>Incorrect Structure (Object vs. Array):</strong> The top level or a nested structure is the wrong
+              fundamental type.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -316,14 +286,12 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: API endpoint change, wrapper added/removed around
-                the main data payload.
+                Root Cause: API endpoint change, wrapper added/removed around the main data payload.
               </p>
             </li>
             <li>
-              <strong>Null Values Where Not Expected:</strong> A field exists
-              and has the correct type, but its value is `null` when the
-              consuming logic doesn't handle `null`.
+              <strong>Null Values Where Not Expected:</strong> A field exists and has the correct type, but its value is
+              `null` when the consuming logic doesn't handle `null`.
               <div className="bg-white p-3 rounded dark:bg-gray-800 my-4">
                 <pre>
                   <code className="language-json">
@@ -334,26 +302,21 @@ export default function RootCauseAnalysisJsonErrors() {
                 </pre>
               </div>
               <p className="text-sm italic mt-1">
-                Root Cause: Data source allows nulls, but consuming code treats
-                the field as non-nullable.
+                Root Cause: Data source allows nulls, but consuming code treats the field as non-nullable.
               </p>
             </li>
           </ul>
 
-          <h4 className="text-lg font-medium mt-4">
-            Diagnosing and Fixing Schema/Type Mismatches:
-          </h4>
+          <h4 className="text-lg font-medium mt-4">Diagnosing and Fixing Schema/Type Mismatches:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Compare Actual JSON to Expected Schema:</strong> Get a
-              sample of the JSON causing the error and compare it side-by-side
-              with the documentation or code that defines the expected structure.
+              <strong>Compare Actual JSON to Expected Schema:</strong> Get a sample of the JSON causing the error and
+              compare it side-by-side with the documentation or code that defines the expected structure.
             </li>
             <li>
-              <strong>Add Runtime Checks:</strong> In the consuming code, add
-              checks for the existence of fields and the type of values before
-              accessing them. This makes the code more resilient to variations
-              in the incoming data.
+              <strong>Add Runtime Checks:</strong> In the consuming code, add checks for the existence of fields and the
+              type of values before accessing them. This makes the code more resilient to variations in the incoming
+              data.
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-typescript">
@@ -378,17 +341,13 @@ const processUserData = (data: any) => &#x7b;
               </div>
             </li>
             <li>
-              <strong>Use JSON Schema Validation:</strong> Define a formal JSON
-              Schema for your expected data structure and use a library to
-              validate incoming JSON against it. This provides explicit
-              validation errors before your application code attempts to process
-              malformed data.
+              <strong>Use JSON Schema Validation:</strong> Define a formal JSON Schema for your expected data structure
+              and use a library to validate incoming JSON against it. This provides explicit validation errors before
+              your application code attempts to process malformed data.
             </li>
             <li>
-              <strong>Improve Documentation and Communication:</strong> Ensure
-              API documentation clearly specifies required fields, data types,
-              and nullable fields. Coordinate changes between data producers and
-              consumers.
+              <strong>Improve Documentation and Communication:</strong> Ensure API documentation clearly specifies
+              required fields, data types, and nullable fields. Coordinate changes between data producers and consumers.
             </li>
           </ul>
         </div>
@@ -397,52 +356,43 @@ const processUserData = (data: any) => &#x7b;
           <Code size={22} /> Encoding Issues
         </h3>
         <p>
-          JSON strings should ideally be encoded in UTF-8. Processing JSON with
-          an incorrect encoding can lead to parsing errors or corrupted characters.
+          JSON strings should ideally be encoded in UTF-8. Processing JSON with an incorrect encoding can lead to
+          parsing errors or corrupted characters.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
           <h4 className="text-lg font-medium">Common Encoding Problems:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Wrong Encoding Header:</strong> The `Content-Type` header
-              (e.g., `application/json`) might specify an encoding other than
-              UTF-8, or the server might send data in a different encoding than
-              specified.
+              <strong>Wrong Encoding Header:</strong> The `Content-Type` header (e.g., `application/json`) might specify
+              an encoding other than UTF-8, or the server might send data in a different encoding than specified.
             </li>
             <li>
-              <strong>Reading File with Wrong Encoding:</strong> If reading JSON
-              from a file, using the wrong encoding to read the file stream.
+              <strong>Reading File with Wrong Encoding:</strong> If reading JSON from a file, using the wrong encoding
+              to read the file stream.
             </li>
             <li>
-              <strong>Databases/Storage Encoding Issues:</strong> Data stored
-              in a database or file system with an incompatible encoding, leading
-              to garbled characters when retrieved and serialized to JSON.
+              <strong>Databases/Storage Encoding Issues:</strong> Data stored in a database or file system with an
+              incompatible encoding, leading to garbled characters when retrieved and serialized to JSON.
             </li>
           </ul>
 
-          <h4 className="text-lg font-medium mt-4">
-            Diagnosing and Fixing Encoding Issues:
-          </h4>
+          <h4 className="text-lg font-medium mt-4">Diagnosing and Fixing Encoding Issues:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Check `Content-Type` Header:</strong> For network
-              requests, inspect the response headers. Ensure `Content-Type` is
-              `application/json` and ideally includes `; charset=utf-8`.
+              <strong>Check `Content-Type` Header:</strong> For network requests, inspect the response headers. Ensure
+              `Content-Type` is `application/json` and ideally includes `; charset=utf-8`.
             </li>
             <li>
-              <strong>Verify File Reading Encoding:</strong> When reading files,
-              explicitly specify UTF-8 encoding in your file reading functions.
+              <strong>Verify File Reading Encoding:</strong> When reading files, explicitly specify UTF-8 encoding in
+              your file reading functions.
             </li>
             <li>
-              <strong>Standardize Encoding:</strong> Ensure all parts of your
-              stack (database, application code, network communication) consistently
-              use UTF-8.
+              <strong>Standardize Encoding:</strong> Ensure all parts of your stack (database, application code, network
+              communication) consistently use UTF-8.
             </li>
             <li>
-              <strong>Look for Replacement Characters:</strong> If you see `�`
-              (the replacement character) or sequences of seemingly random bytes
-              in strings after parsing, it's a strong indicator of an encoding
-              problem.
+              <strong>Look for Replacement Characters:</strong> If you see `�` (the replacement character) or sequences
+              of seemingly random bytes in strings after parsing, it's a strong indicator of an encoding problem.
             </li>
           </ul>
         </div>
@@ -451,18 +401,16 @@ const processUserData = (data: any) => &#x7b;
           <ClipboardList size={22} /> Data Integrity / Content Errors
         </h3>
         <p>
-          These are the hardest to catch with basic JSON parsing or schema
-          validation because the JSON is technically "valid" but doesn't make
-          sense in the context of the application's logic.
+          These are the hardest to catch with basic JSON parsing or schema validation because the JSON is technically
+          "valid" but doesn't make sense in the context of the application's logic.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
           <h4 className="text-lg font-medium">Common Content Problems:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Invalid Values (within type):</strong> A field is a string
-              but contains data that isn't a valid instance of what's expected
-              (e.g., an email field contains "N/A", a date string field contains
-              an unparseable format).
+              <strong>Invalid Values (within type):</strong> A field is a string but contains data that isn't a valid
+              instance of what's expected (e.g., an email field contains "N/A", a date string field contains an
+              unparseable format).
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
                 <pre>
                   <code className="language-json">
@@ -474,34 +422,27 @@ const processUserData = (data: any) => &#x7b;
               </div>
             </li>
             <li>
-              <strong>Referential Integrity:</strong> IDs that don't exist in
-              another part of the data or database.
+              <strong>Referential Integrity:</strong> IDs that don't exist in another part of the data or database.
             </li>
             <li>
-              <strong>Business Logic Violations:</strong> A combination of
-              values is invalid according to application rules (e.g., an order
-              status is "shipped" but there's no shipping date).
+              <strong>Business Logic Violations:</strong> A combination of values is invalid according to application
+              rules (e.g., an order status is "shipped" but there's no shipping date).
             </li>
           </ul>
 
-          <h4 className="text-lg font-medium mt-4">
-            Diagnosing and Fixing Content Errors:
-          </h4>
+          <h4 className="text-lg font-medium mt-4">Diagnosing and Fixing Content Errors:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Implement Business Logic Validation:</strong> After parsing
-              and basic schema validation, add code to check if the data makes
-              sense according to your application's rules.
+              <strong>Implement Business Logic Validation:</strong> After parsing and basic schema validation, add code
+              to check if the data makes sense according to your application's rules.
             </li>
             <li>
-              <strong>Log Invalid Data:</strong> When validation fails, log the
-              specific data payload that caused the issue to help trace the
-              problem back to the source.
+              <strong>Log Invalid Data:</strong> When validation fails, log the specific data payload that caused the
+              issue to help trace the problem back to the source.
             </li>
             <li>
-              <strong>Improve Data Source Quality:</strong> Address issues at
-              the source of the data generation (e.g., API endpoint, database
-              ETL process) to prevent invalid data from being created.
+              <strong>Improve Data Source Quality:</strong> Address issues at the source of the data generation (e.g.,
+              API endpoint, database ETL process) to prevent invalid data from being created.
             </li>
           </ul>
         </div>
@@ -509,61 +450,51 @@ const processUserData = (data: any) => &#x7b;
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ShieldCheck size={24} /> Preventing JSON Processing Errors
         </h2>
-        <p>
-          Prevention is always better than cure. Here are strategies to minimize
-          JSON processing errors:
-        </p>
+        <p>Prevention is always better than cure. Here are strategies to minimize JSON processing errors:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <Hammer size={18} />
             </span>
-            <strong>Use Standard Libraries:</strong> Always use your language's
-            built-in or well-established third-party libraries for encoding and
-            decoding JSON. They handle the nuances of the specification correctly.
+            <strong>Use Standard Libraries:</strong> Always use your language's built-in or well-established third-party
+            libraries for encoding and decoding JSON. They handle the nuances of the specification correctly.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <ListChecks size={18} />
             </span>
-            <strong>Formalize Data Contracts:</strong> Use tools like JSON Schema,
-            OpenAPI (Swagger), or gRPC/Protocol Buffers to define your data
-            structures explicitly.
+            <strong>Formalize Data Contracts:</strong> Use tools like JSON Schema, OpenAPI (Swagger), or gRPC/Protocol
+            Buffers to define your data structures explicitly.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <Wrench size={18} />
             </span>
-            <strong>Implement Validation Layers:</strong> Validate incoming JSON
-            at the earliest possible point. This can be basic type checks, JSON
-            Schema validation, or more complex business logic validation. Fail
-            fast and provide clear error messages.
+            <strong>Implement Validation Layers:</strong> Validate incoming JSON at the earliest possible point. This
+            can be basic type checks, JSON Schema validation, or more complex business logic validation. Fail fast and
+            provide clear error messages.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <Lightbulb size={18} />
             </span>
-            <strong>Handle Optional/Nullable Fields Explicitly:</strong> In your
-            consuming code, always assume fields might be missing or `null` unless
-            your schema validation guarantees they are not. Use techniques like
-            default values (`??` in JavaScript/TypeScript), optional chaining
-            (`?.`), or explicit null checks.
+            <strong>Handle Optional/Nullable Fields Explicitly:</strong> In your consuming code, always assume fields
+            might be missing or `null` unless your schema validation guarantees they are not. Use techniques like
+            default values (`??` in JavaScript/TypeScript), optional chaining (`?.`), or explicit null checks.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <Wrench size={18} /> {/* Replaced Tool with Wrench */}
             </span>
-            <strong>Comprehensive Testing:</strong> Write tests with edge cases,
-            including missing fields, incorrect types, extra fields, and invalid
-            values to ensure your processing logic is robust.
+            <strong>Comprehensive Testing:</strong> Write tests with edge cases, including missing fields, incorrect
+            types, extra fields, and invalid values to ensure your processing logic is robust.
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1">
               <ClipboardList size={18} />
             </span>
-            <strong>Log and Monitor:</strong> Implement logging for JSON processing
-            failures. Monitor these logs to identify patterns and data sources
-            causing frequent issues.
+            <strong>Log and Monitor:</strong> Implement logging for JSON processing failures. Monitor these logs to
+            identify patterns and data sources causing frequent issues.
           </li>
         </ul>
 
@@ -571,14 +502,11 @@ const processUserData = (data: any) => &#x7b;
           <Rocket size={24} /> Conclusion
         </h2>
         <p>
-          Processing JSON is a fundamental task, but errors are inevitable. By
-          understanding the distinct categories of errors &mdash; syntax,
-          schema/type, encoding, and content &mdash; and their common root causes,
-          developers can more effectively diagnose problems. Adopting best practices
-          like using standard libraries, implementing validation, and formalizing
-          data contracts are key to preventing many errors from occurring in the
-          first place and building more resilient systems that handle imperfect
-          data gracefully.
+          Processing JSON is a fundamental task, but errors are inevitable. By understanding the distinct categories of
+          errors &mdash; syntax, schema/type, encoding, and content &mdash; and their common root causes, developers can
+          more effectively diagnose problems. Adopting best practices like using standard libraries, implementing
+          validation, and formalizing data contracts are key to preventing many errors from occurring in the first place
+          and building more resilient systems that handle imperfect data gracefully.
         </p>
       </div>
     </>

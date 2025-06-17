@@ -19,12 +19,14 @@ export const metadata: Metadata = {
 const base64CodecArticles: ToolArticle[] = [
   {
     title: "Common Base64 Encoding and Decoding Errors",
-    description: "Learn about the most frequent errors encountered during Base64 encoding and decoding operations and how to resolve them.",
+    description:
+      "Learn about the most frequent errors encountered during Base64 encoding and decoding operations and how to resolve them.",
     slug: "common-base64-encoding-and-decoding-errors",
   },
   {
     title: "Handling Invalid Characters in Base64 Input",
-    description: "Discover techniques for detecting and managing invalid characters in Base64 strings to prevent decoding failures.",
+    description:
+      "Discover techniques for detecting and managing invalid characters in Base64 strings to prevent decoding failures.",
     slug: "handling-invalid-characters-in-base64-input",
   },
   {
@@ -34,12 +36,14 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Debugging Non-ASCII Character Encoding Issues in Base64",
-    description: "Explore strategies for resolving problems with encoding and decoding text containing special or non-ASCII characters.",
+    description:
+      "Explore strategies for resolving problems with encoding and decoding text containing special or non-ASCII characters.",
     slug: "debugging-non-ascii-character-encoding-issues-in-base64",
   },
   {
     title: "URL-Safe vs Standard Base64: Common Confusion and Errors",
-    description: "Understand the differences between URL-safe and standard Base64 encodings, and how to avoid related mistakes.",
+    description:
+      "Understand the differences between URL-safe and standard Base64 encodings, and how to avoid related mistakes.",
     slug: "url-safe-vs-standard-base64-common-confusion-and-errors",
   },
   {
@@ -54,32 +58,38 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Diagnosing and Fixing UTF-8 Encoding Problems in Base64",
-    description: "Troubleshoot character encoding issues that occur when Base64 encoding and decoding text with UTF-8 characters.",
+    description:
+      "Troubleshoot character encoding issues that occur when Base64 encoding and decoding text with UTF-8 characters.",
     slug: "diagnosing-and-fixing-utf-8-encoding-problems-in-base64",
   },
   {
     title: "Binary Data Corruption in Base64: Causes and Solutions",
-    description: "Identify the sources of binary data corruption when using Base64 encoding and learn prevention techniques.",
+    description:
+      "Identify the sources of binary data corruption when using Base64 encoding and learn prevention techniques.",
     slug: "binary-data-corruption-in-base64-causes-and-solutions",
   },
   {
     title: "Cross-Platform Base64 Issues and How to Fix Them",
-    description: "Navigate and resolve Base64 encoding inconsistencies across different programming languages and platforms.",
+    description:
+      "Navigate and resolve Base64 encoding inconsistencies across different programming languages and platforms.",
     slug: "cross-platform-base64-issues-and-how-to-fix-them",
   },
   {
     title: "Automated Error Correction for Base64 Strings",
-    description: "Explore algorithms and techniques for automatically detecting and correcting common Base64 encoding errors.",
+    description:
+      "Explore algorithms and techniques for automatically detecting and correcting common Base64 encoding errors.",
     slug: "automated-error-correction-for-base64-strings",
   },
   {
     title: "Handling Overflow and Length Errors in Base64 Processing",
-    description: "Learn about buffer overflows and length-related issues when encoding or decoding large data with Base64.",
+    description:
+      "Learn about buffer overflows and length-related issues when encoding or decoding large data with Base64.",
     slug: "handling-overflow-and-length-errors-in-base64-processing",
   },
   {
     title: "Performance Bottlenecks in Base64 Error Checking",
-    description: "Optimize error detection routines in Base64 processing to maintain performance while ensuring data integrity.",
+    description:
+      "Optimize error detection routines in Base64 processing to maintain performance while ensuring data integrity.",
     slug: "performance-bottlenecks-in-base64-error-checking",
   },
   {
@@ -89,34 +99,40 @@ const base64CodecArticles: ToolArticle[] = [
   },
   {
     title: "Logging and Monitoring Base64 Errors in Applications",
-    description: "Implement effective logging and monitoring strategies to track Base64 encoding/decoding issues in production.",
+    description:
+      "Implement effective logging and monitoring strategies to track Base64 encoding/decoding issues in production.",
     slug: "logging-and-monitoring-base64-errors-in-applications",
   },
   {
     title: "Preventing Base64 Injection Attacks",
-    description: "Understand and mitigate security vulnerabilities related to improper handling of Base64 encoded user input.",
+    description:
+      "Understand and mitigate security vulnerabilities related to improper handling of Base64 encoded user input.",
     slug: "preventing-base64-injection-attacks",
   },
   {
     title: "Testing Frameworks for Base64 Error Detection",
-    description: "Learn how to create comprehensive test suites to identify and prevent Base64 encoding and decoding errors.",
+    description:
+      "Learn how to create comprehensive test suites to identify and prevent Base64 encoding and decoding errors.",
     slug: "testing-frameworks-for-base64-error-detection",
   },
   {
     title: "Error Messages in Base64 Libraries: Improving Usability",
-    description: "Design better error messages for Base64 libraries to help developers quickly identify and fix issues.",
+    description:
+      "Design better error messages for Base64 libraries to help developers quickly identify and fix issues.",
     slug: "error-messages-in-base64-libraries-improving-usability",
   },
   {
     title: "WebSocket Binary Data Base64 Encoding Issues",
-    description: "Troubleshoot specific problems that arise when using Base64 for encoding binary data in WebSocket communications.",
+    description:
+      "Troubleshoot specific problems that arise when using Base64 for encoding binary data in WebSocket communications.",
     slug: "websocket-binary-data-base64-encoding-issues",
   },
   {
     title: "Mobile App Considerations for Base64 Error Handling",
-    description: "Address unique challenges and constraints when implementing Base64 error handling in mobile applications.",
+    description:
+      "Address unique challenges and constraints when implementing Base64 error handling in mobile applications.",
     slug: "mobile-app-considerations-for-base64-error-handling",
-  }
+  },
 ];
 
 /**
@@ -179,7 +195,8 @@ export default function Base64CodecErrorHandlingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Common Errors</h3>
                     <p className="text-sm text-muted-foreground">
-                      Identifying and fixing padding issues, invalid characters, and line break problems in Base64 strings.
+                      Identifying and fixing padding issues, invalid characters, and line break problems in Base64
+                      strings.
                     </p>
                   </div>
                 </div>
@@ -205,7 +222,8 @@ export default function Base64CodecErrorHandlingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Implementation Practices</h3>
                     <p className="text-sm text-muted-foreground">
-                      Building robust error handling into your Base64 encoding and decoding operations across different platforms.
+                      Building robust error handling into your Base64 encoding and decoding operations across different
+                      platforms.
                     </p>
                   </div>
                 </div>
@@ -217,7 +235,8 @@ export default function Base64CodecErrorHandlingPage() {
                   <div>
                     <h3 className="font-medium mb-1">Validation Techniques</h3>
                     <p className="text-sm text-muted-foreground">
-                      Strategies for validating Base64 strings before processing and gracefully handling encoding failures.
+                      Strategies for validating Base64 strings before processing and gracefully handling encoding
+                      failures.
                     </p>
                   </div>
                 </div>
@@ -230,7 +249,9 @@ export default function Base64CodecErrorHandlingPage() {
                 <span>Debugging Tip:</span>
               </div>
               <p className="mt-1 text-muted-foreground">
-                When troubleshooting Base64 decoding failures, first check for missing padding characters (=), non-Base64 characters in the input string, or incorrect character substitutions if using URL-safe encoding.
+                When troubleshooting Base64 decoding failures, first check for missing padding characters (=),
+                non-Base64 characters in the input string, or incorrect character substitutions if using URL-safe
+                encoding.
               </p>
             </div>
           </CardContent>
@@ -240,4 +261,4 @@ export default function Base64CodecErrorHandlingPage() {
       <ToolArticlesList toolName="Base64 Codec" toolSlug="base64-codec" articles={base64CodecArticles} />
     </Container>
   );
-} 
+}

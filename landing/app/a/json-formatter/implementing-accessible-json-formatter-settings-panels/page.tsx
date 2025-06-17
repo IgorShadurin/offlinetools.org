@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Settings,
-  Accessibility,
-  Check,
-  Info,
-  Code,
-  BookOpenText,
-} from "lucide-react";
+import { Settings, Accessibility, Check, Info, Code, BookOpenText } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Implementing Accessible JSON Formatter Settings Panels | Offline Tools",
@@ -19,67 +12,65 @@ export default function AccessibleJsonFormatterSettingsArticle() {
     <article className="container mx-auto py-8 px-4 prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert">
       <header className="flex items-center space-x-4 mb-8">
         <Settings className="w-10 h-10 text-blue-600 dark:text-blue-400" />
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Implementing Accessible JSON Formatter Settings Panels
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold">Implementing Accessible JSON Formatter Settings Panels</h1>
       </header>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">
-          Why Accessibility Matters in Settings Panels
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4">Why Accessibility Matters in Settings Panels</h2>
         <p>
-          Settings panels are where users customize their experience. For a JSON formatter,
-          these settings might control indentation, sorting, theme, or other display options.
-          If these controls are not accessible, users with disabilities might be unable
-          to configure the tool to meet their needs, severely limiting its usability.
+          Settings panels are where users customize their experience. For a JSON formatter, these settings might control
+          indentation, sorting, theme, or other display options. If these controls are not accessible, users with
+          disabilities might be unable to configure the tool to meet their needs, severely limiting its usability.
         </p>
         <p>
-          Accessible design ensures that everyone, including those using screen readers,
-          keyboard navigation, or other assistive technologies, can easily understand and interact
-          with your settings.
+          Accessible design ensures that everyone, including those using screen readers, keyboard navigation, or other
+          assistive technologies, can easily understand and interact with your settings.
         </p>
         <div className="flex items-center space-x-2 text-blue-600 dark:text-blue-400 mt-4">
           <Accessibility className="w-6 h-6" />
-          <span>Accessibility isn&apos;t just a feature, it&apos;s a fundamental requirement for inclusive software.</span>
+          <span>
+            Accessibility isn&apos;t just a feature, it&apos;s a fundamental requirement for inclusive software.
+          </span>
         </div>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Common JSON Formatter Settings
-        </h2>
-        <p>
-          A typical JSON formatter might expose settings for:
-        </p>
+        <h2 className="text-2xl font-semibold mb-4">Common JSON Formatter Settings</h2>
+        <p>A typical JSON formatter might expose settings for:</p>
         <ul className="list-disc list-inside space-y-2">
-          <li><strong>Indentation Type:</strong> Spaces or Tabs</li>
-          <li><strong>Indentation Size:</strong> Number of spaces/tabs (e.g., 2, 4)</li>
-          <li><strong>Key Sorting:</strong> Alphabetical sorting of object keys</li>
-          <li><strong>Array Formatting:</strong> Inline short arrays, break long arrays</li>
-          <li><strong>Theme:</strong> Light, Dark, System</li>
-          <li><strong>Font Size:</strong> Adjust text size</li>
+          <li>
+            <strong>Indentation Type:</strong> Spaces or Tabs
+          </li>
+          <li>
+            <strong>Indentation Size:</strong> Number of spaces/tabs (e.g., 2, 4)
+          </li>
+          <li>
+            <strong>Key Sorting:</strong> Alphabetical sorting of object keys
+          </li>
+          <li>
+            <strong>Array Formatting:</strong> Inline short arrays, break long arrays
+          </li>
+          <li>
+            <strong>Theme:</strong> Light, Dark, System
+          </li>
+          <li>
+            <strong>Font Size:</strong> Adjust text size
+          </li>
         </ul>
-        <p>
-          Each of these settings requires an appropriate and accessible input control.
-        </p>
+        <p>Each of these settings requires an appropriate and accessible input control.</p>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Building Accessible Input Controls
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4">Building Accessible Input Controls</h2>
         <p>
-          The foundation of accessible forms lies in using semantic HTML elements correctly
-          and ensuring that every input has a clearly associated label.
+          The foundation of accessible forms lies in using semantic HTML elements correctly and ensuring that every
+          input has a clearly associated label.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          1. Text Inputs (e.g., Indentation Size)
-        </h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">1. Text Inputs (e.g., Indentation Size)</h3>
         <p>
-          For settings requiring a number or text input, use the standard <code>&lt;input&gt;</code> tag
-          with appropriate <code>type</code> and a linked <code>&lt;label&gt;</code>.
+          For settings requiring a number or text input, use the standard <code>&lt;input&gt;</code> tag with
+          appropriate <code>type</code> and a linked <code>&lt;label&gt;</code>.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example: Indentation Size</h4>
@@ -108,16 +99,17 @@ export default function AccessibleJsonFormatterSettingsArticle() {
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 flex items-start space-x-2">
             <Info className="w-4 h-4 flex-shrink-0 mt-1" />
             <span>
-              Using <code>htmlFor</code> on the <code>&lt;label&gt;</code> linked to the <code>id</code> of the <code>&lt;input&gt;</code> is crucial for screen readers. <code>aria-describedby</code> links the input to additional descriptive text.
+              Using <code>htmlFor</code> on the <code>&lt;label&gt;</code> linked to the <code>id</code> of the{" "}
+              <code>&lt;input&gt;</code> is crucial for screen readers. <code>aria-describedby</code> links the input to
+              additional descriptive text.
             </span>
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          2. Select Menus (e.g., Indentation Type, Theme)
-        </h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">2. Select Menus (e.g., Indentation Type, Theme)</h3>
         <p>
-          Use the <code>&lt;select&gt;</code> and <code>&lt;option&gt;</code> elements. Again, a linked <code>&lt;label&gt;</code> is essential.
+          Use the <code>&lt;select&gt;</code> and <code>&lt;option&gt;</code> elements. Again, a linked{" "}
+          <code>&lt;label&gt;</code> is essential.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Example: Indentation Type</h4>
@@ -142,14 +134,13 @@ export default function AccessibleJsonFormatterSettingsArticle() {
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 flex items-start space-x-2">
             <Info className="w-4 h-4 flex-shrink-0 mt-1" />
             <span>
-              Native <code>&lt;select&gt;</code> elements are generally well-supported by assistive technologies. Avoid building custom dropdowns unless absolutely necessary and ensure they follow ARIA Authoring Practices.
+              Native <code>&lt;select&gt;</code> elements are generally well-supported by assistive technologies. Avoid
+              building custom dropdowns unless absolutely necessary and ensure they follow ARIA Authoring Practices.
             </span>
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          3. Checkboxes (e.g., Key Sorting)
-        </h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">3. Checkboxes (e.g., Key Sorting)</h3>
         <p>
           Use the standard <code>&lt;input type="checkbox"&gt;</code> with a linked <code>&lt;label&gt;</code>.
         </p>
@@ -179,29 +170,32 @@ export default function AccessibleJsonFormatterSettingsArticle() {
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 flex items-start space-x-2">
             <Info className="w-4 h-4 flex-shrink-0 mt-1" />
             <span>
-              Ensure the clickable area for the checkbox includes the label text. Clicking the label should toggle the checkbox.
+              Ensure the clickable area for the checkbox includes the label text. Clicking the label should toggle the
+              checkbox.
             </span>
           </p>
         </div>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Keyboard Navigation and Focus Management
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4">Keyboard Navigation and Focus Management</h2>
         <p>
           Keyboard users (including those using screen readers or who cannot use a mouse) must be able to navigate
           through all settings controls using standard keys like Tab, Shift+Tab, Space, and Enter.
         </p>
         <ul className="list-disc list-inside space-y-2">
           <li>
-            <strong>Tab Order:</strong> Ensure the logical order of controls in your HTML matches the visual order. Native HTML elements handle this correctly by default.
+            <strong>Tab Order:</strong> Ensure the logical order of controls in your HTML matches the visual order.
+            Native HTML elements handle this correctly by default.
           </li>
           <li>
-            <strong>Focus Indicators:</strong> Make sure the browser&apos;s default focus outline (or a custom one with sufficient contrast) is clearly visible on the currently focused element.
+            <strong>Focus Indicators:</strong> Make sure the browser&apos;s default focus outline (or a custom one with
+            sufficient contrast) is clearly visible on the currently focused element.
           </li>
           <li>
-            <strong>Interact with Keys:</strong> Checkboxes should toggle with Space. Select menus should open and change options with Space, Enter, and Arrow keys. Text inputs should be editable. Native controls provide this automatically.
+            <strong>Interact with Keys:</strong> Checkboxes should toggle with Space. Select menus should open and
+            change options with Space, Enter, and Arrow keys. Text inputs should be editable. Native controls provide
+            this automatically.
           </li>
         </ul>
         <p>
@@ -210,19 +204,19 @@ export default function AccessibleJsonFormatterSettingsArticle() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          ARIA Attributes
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4">ARIA Attributes</h2>
         <p>
-          While semantic HTML and labels cover most basic form accessibility, ARIA (Accessible Rich Internet Applications)
-          attributes can provide additional context or handle more complex scenarios, such as:
+          While semantic HTML and labels cover most basic form accessibility, ARIA (Accessible Rich Internet
+          Applications) attributes can provide additional context or handle more complex scenarios, such as:
         </p>
         <ul className="list-disc list-inside space-y-2">
           <li>
-            <code>aria-label</code> / <code>aria-labelledby</code>: Provide an accessible name if a visual label isn&apos;t suitable (less common for simple settings).
+            <code>aria-label</code> / <code>aria-labelledby</code>: Provide an accessible name if a visual label
+            isn&apos;t suitable (less common for simple settings).
           </li>
           <li>
-            <code>aria-describedby</code>: Link an input to additional descriptive text, hints, or error messages (as shown in the text input example).
+            <code>aria-describedby</code>: Link an input to additional descriptive text, hints, or error messages (as
+            shown in the text input example).
           </li>
           <li>
             <code>aria-invalid="true"</code>: Indicate that an input&apos;s current value is invalid.
@@ -234,27 +228,29 @@ export default function AccessibleJsonFormatterSettingsArticle() {
         <p className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-300 mt-4">
           <BookOpenText className="w-5 h-5 flex-shrink-0 mt-1" />
           <span>
-            <strong>Rule of Thumb:</strong> Use semantic HTML first. Only use ARIA when HTML doesn&apos;t provide the necessary semantics or for complex widgets (which settings panels usually aren&apos;t). The ARIA Authoring Practices Guide is an excellent resource.
+            <strong>Rule of Thumb:</strong> Use semantic HTML first. Only use ARIA when HTML doesn&apos;t provide the
+            necessary semantics or for complex widgets (which settings panels usually aren&apos;t). The ARIA Authoring
+            Practices Guide is an excellent resource.
           </span>
         </p>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Visual Design Considerations
-        </h2>
-        <p>
-          Accessibility isn&apos;t just for screen readers; it&apos;s also about visual clarity.
-        </p>
+        <h2 className="text-2xl font-semibold mb-4">Visual Design Considerations</h2>
+        <p>Accessibility isn&apos;t just for screen readers; it&apos;s also about visual clarity.</p>
         <ul className="list-disc list-inside space-y-2">
           <li>
-            <strong>Color Contrast:</strong> Ensure sufficient contrast between text and background for labels, input values, and helper text. Use WCAG 2.1 guidelines (AA or AAA level).
+            <strong>Color Contrast:</strong> Ensure sufficient contrast between text and background for labels, input
+            values, and helper text. Use WCAG 2.1 guidelines (AA or AAA level).
           </li>
           <li>
-            <strong>Font Size and Spacing:</strong> Use readable font sizes (at least 16px for body text is a good baseline) and provide adequate spacing between form elements.
+            <strong>Font Size and Spacing:</strong> Use readable font sizes (at least 16px for body text is a good
+            baseline) and provide adequate spacing between form elements.
           </li>
           <li>
-            <strong>Error Indication:</strong> Clearly indicate validation errors visually (e.g., red border) and programmatically (e.g., using <code>aria-invalid</code> and associating an error message via <code>aria-describedby</code>).
+            <strong>Error Indication:</strong> Clearly indicate validation errors visually (e.g., red border) and
+            programmatically (e.g., using <code>aria-invalid</code> and associating an error message via{" "}
+            <code>aria-describedby</code>).
           </li>
           <li>
             <strong>Responsiveness:</strong> Settings panels should be usable on different screen sizes.
@@ -263,11 +259,12 @@ export default function AccessibleJsonFormatterSettingsArticle() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Putting It Together (Static Example)
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4">Putting It Together (Static Example)</h2>
         <p>
-          Here&apos;s a simplified, static representation of how a collection of accessible settings controls might be structured in TSX. Remember, this example uses <code>defaultValue</code> and <code>defaultChecked</code> because state management (`useState`) is not allowed in this context. A real application would manage these values dynamically.
+          Here&apos;s a simplified, static representation of how a collection of accessible settings controls might be
+          structured in TSX. Remember, this example uses <code>defaultValue</code> and <code>defaultChecked</code>{" "}
+          because state management (`useState`) is not allowed in this context. A real application would manage these
+          values dynamically.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium mb-2">Static Settings Panel Structure</h4>
@@ -351,28 +348,29 @@ export default function AccessibleJsonFormatterSettingsArticle() {
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 flex items-start space-x-2">
             <Code className="w-4 h-4 flex-shrink-0 mt-1" />
             <span>
-              Notice the use of unique <code>id</code> attributes for each input, linked via <code>htmlFor</code> in the corresponding <code>&lt;label&gt;</code>. This is the cornerstone of accessible form controls.
+              Notice the use of unique <code>id</code> attributes for each input, linked via <code>htmlFor</code> in the
+              corresponding <code>&lt;label&gt;</code>. This is the cornerstone of accessible form controls.
             </span>
           </p>
         </div>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Testing Accessibility
-        </h2>
-        <p>
-          Building accessible interfaces requires testing.
-        </p>
+        <h2 className="text-2xl font-semibold mb-4">Testing Accessibility</h2>
+        <p>Building accessible interfaces requires testing.</p>
         <ul className="list-disc list-inside space-y-2">
           <li>
-            <strong>Keyboard Test:</strong> Can you navigate through all settings using only the Tab and Shift+Tab keys? Can you interact with each control (change values, check boxes) using Space, Enter, and Arrow keys?
+            <strong>Keyboard Test:</strong> Can you navigate through all settings using only the Tab and Shift+Tab keys?
+            Can you interact with each control (change values, check boxes) using Space, Enter, and Arrow keys?
           </li>
           <li>
-            <strong>Screen Reader Test:</strong> Use a screen reader (like VoiceOver on macOS, NVDA or JAWS on Windows, or TalkBack on Android) to navigate the panel. Do labels correctly announce the purpose of each control? Is helper text read out?
+            <strong>Screen Reader Test:</strong> Use a screen reader (like VoiceOver on macOS, NVDA or JAWS on Windows,
+            or TalkBack on Android) to navigate the panel. Do labels correctly announce the purpose of each control? Is
+            helper text read out?
           </li>
           <li>
-            <strong>Automated Tools:</strong> Use browser extensions (Axe DevTools, WAVE) or build tools (eslint-plugin-jsx-a11y) to catch common accessibility issues.
+            <strong>Automated Tools:</strong> Use browser extensions (Axe DevTools, WAVE) or build tools
+            (eslint-plugin-jsx-a11y) to catch common accessibility issues.
           </li>
           <li>
             <strong>Color Contrast Analyzers:</strong> Verify sufficient color contrast.
@@ -387,7 +385,11 @@ export default function AccessibleJsonFormatterSettingsArticle() {
       <section className="mt-8">
         <h2 className="text-2xl font-semibold mb-4">Conclusion</h2>
         <p>
-          Implementing accessible settings panels for your JSON formatter is a crucial step towards creating an inclusive and user-friendly tool. By focusing on semantic HTML, correct labeling, keyboard navigation, and thoughtful visual design, you can ensure that all users, regardless of their abilities, can easily configure the formatter to suit their needs. Start with the basics: a linked <code>&lt;label&gt;</code> for every input, and build from there.
+          Implementing accessible settings panels for your JSON formatter is a crucial step towards creating an
+          inclusive and user-friendly tool. By focusing on semantic HTML, correct labeling, keyboard navigation, and
+          thoughtful visual design, you can ensure that all users, regardless of their abilities, can easily configure
+          the formatter to suit their needs. Start with the basics: a linked <code>&lt;label&gt;</code> for every input,
+          and build from there.
         </p>
       </section>
     </article>

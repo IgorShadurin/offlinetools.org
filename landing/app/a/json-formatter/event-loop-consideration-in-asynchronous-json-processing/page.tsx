@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 export default function EventLoopJsonProcessingArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Event Loop Consideration in Asynchronous JSON Processing
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Event Loop Consideration in Asynchronous JSON Processing</h1>
 
       <div className="space-y-6">
         <p>
@@ -27,44 +25,42 @@ export default function EventLoopJsonProcessingArticle() {
           <Activity className="w-6 h-6 text-blue-500" /> The JavaScript Event Loop - A Quick Recap
         </h2>
         <p>
-          JavaScript is single-threaded by nature. This means it can only execute one piece of code at a time. The
-          Event Loop is the mechanism that allows JavaScript to handle asynchronous operations (like network
-          requests, timers, or I/O) in a non-blocking way, despite being single-threaded.
+          JavaScript is single-threaded by nature. This means it can only execute one piece of code at a time. The Event
+          Loop is the mechanism that allows JavaScript to handle asynchronous operations (like network requests, timers,
+          or I/O) in a non-blocking way, despite being single-threaded.
         </p>
-        <p>
-          Think of it like this:
-        </p>
+        <p>Think of it like this:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             The <strong>Call Stack</strong> is where synchronous functions are executed. When a function is called,
             it&apos;s pushed onto the stack. When it returns, it&apos;s popped off.
           </li>
           <li>
-            <strong>Web APIs (Browser) / C++ APIs (Node.js)</strong> handle asynchronous tasks in the background
-            (e.g., fetching data, reading files, timers).
+            <strong>Web APIs (Browser) / C++ APIs (Node.js)</strong> handle asynchronous tasks in the background (e.g.,
+            fetching data, reading files, timers).
           </li>
           <li>
-            The <strong>Callback Queue (Task Queue)</strong> holds callback functions waiting to be executed once
-            their asynchronous task is complete.
+            The <strong>Callback Queue (Task Queue)</strong> holds callback functions waiting to be executed once their
+            asynchronous task is complete.
           </li>
           <li>
-            The <strong>Event Loop</strong> constantly checks if the Call Stack is empty. If it is, it takes the
-            first callback from the Callback Queue and pushes it onto the Call Stack for execution.
+            The <strong>Event Loop</strong> constantly checks if the Call Stack is empty. If it is, it takes the first
+            callback from the Callback Queue and pushes it onto the Call Stack for execution.
           </li>
         </ul>
         <p>
-          The crucial point is that <strong>anything running on the Call Stack blocks the Event Loop</strong>.
-          While a synchronous function is executing, the Event Loop cannot push any new callbacks from the queue
-          onto the stack.
+          The crucial point is that <strong>anything running on the Call Stack blocks the Event Loop</strong>. While a
+          synchronous function is executing, the Event Loop cannot push any new callbacks from the queue onto the stack.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <LoaderCircle className="w-6 h-6 text-yellow-500 animate-spin" /> The Blocking Nature of <code>JSON.parse()</code>
+          <LoaderCircle className="w-6 h-6 text-yellow-500 animate-spin" /> The Blocking Nature of{" "}
+          <code>JSON.parse()</code>
         </h2>
         <p>
           <code>JSON.parse()</code> is a synchronous function. When you call it with a JSON string, the JavaScript
-          engine parses the entire string and builds the corresponding JavaScript object in memory all at once.
-          During this parsing process, nothing else can happen on the main thread.
+          engine parses the entire string and builds the corresponding JavaScript object in memory all at once. During
+          this parsing process, nothing else can happen on the main thread.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -77,18 +73,16 @@ console.log(data); // Output: { name: 'Alice', age: 30 }
 // Event loop continues immediately after this.`}
             </pre>
           </div>
-          <p className="mt-3">
-            This is fast and efficient for small data. The time spent parsing is negligible.
-          </p>
+          <p className="mt-3">This is fast and efficient for small data. The time spent parsing is negligible.</p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <AlertCircle className="w-6 h-6 text-red-500" /> The Problem: Large JSON Payloads
         </h2>
         <p>
-          Consider receiving a JSON response that is tens or hundreds of megabytes in size. Passing this entire
-          string to <code>JSON.parse()</code> will cause the main thread to spend a significant amount of time
-          dedicated solely to parsing.
+          Consider receiving a JSON response that is tens or hundreds of megabytes in size. Passing this entire string
+          to <code>JSON.parse()</code> will cause the main thread to spend a significant amount of time dedicated solely
+          to parsing.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
@@ -114,8 +108,8 @@ console.log("Parsing finished.");
             </pre>
           </div>
           <p className="mt-3">
-            <AlertCircle className="w-5 h-5 inline-block mr-1 text-red-500" /> This blocking behavior is critical
-            to avoid in environments where responsiveness or concurrency is important.
+            <AlertCircle className="w-5 h-5 inline-block mr-1 text-red-500" /> This blocking behavior is critical to
+            avoid in environments where responsiveness or concurrency is important.
           </p>
         </div>
 
@@ -123,37 +117,37 @@ console.log("Parsing finished.");
           <ArrowRight className="w-6 h-6 text-green-500" /> Asynchronous JSON Processing Techniques
         </h2>
         <p>
-          To prevent blocking the event loop, we need ways to process large JSON data incrementally or offload the
-          heavy parsing work to another thread.
+          To prevent blocking the event loop, we need ways to process large JSON data incrementally or offload the heavy
+          parsing work to another thread.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-         <SquareStack className="w-5 h-5 text-green-500" /> 1. Streaming Parsers
+          <SquareStack className="w-5 h-5 text-green-500" /> 1. Streaming Parsers
         </h3>
         <p>
-          Instead of loading the entire JSON string into memory and then parsing it, streaming parsers process the
-          input data piece by piece as it becomes available (e.g., from a network request stream or a file stream).
-          They emit events (like <code>&apos;onValue&apos;</code>, <code>&apos;onObjectStart&apos;</code>,
+          Instead of loading the entire JSON string into memory and then parsing it, streaming parsers process the input
+          data piece by piece as it becomes available (e.g., from a network request stream or a file stream). They emit
+          events (like <code>&apos;onValue&apos;</code>, <code>&apos;onObjectStart&apos;</code>,
           <code>&apos;onArrayEnd&apos;</code>) as they encounter different parts of the JSON structure.
         </p>
         <p>
           This doesn&apos;t mean the parsing itself is inherently asynchronous in the sense of using Promises or
           Callbacks for each byte. The asynchronous part is reading the input stream. The parser logic processes chunks
-          of data synchronously as they arrive, but yields control back to the event loop between chunks, allowing
-          other tasks to run.
+          of data synchronously as they arrive, but yields control back to the event loop between chunks, allowing other
+          tasks to run.
         </p>
         <p>
           Libraries like <code>&apos;streamsearch&apos;</code>, <code>&apos;clarinet&apos;</code>, or
-          <code>&apos;saxes&apos;</code> (though SAX is for XML, the event-driven concept applies) in Node.js
-          implement this pattern. Many network libraries (like Node.js <code>http</code> or <code>fetch</code> in
-          modern environments) provide data as streams.
+          <code>&apos;saxes&apos;</code> (though SAX is for XML, the event-driven concept applies) in Node.js implement
+          this pattern. Many network libraries (like Node.js <code>http</code> or <code>fetch</code> in modern
+          environments) provide data as streams.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-           <h3 className="text-lg font-medium mb-2">Conceptual Streaming Parser Flow:</h3>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-             <pre>
-{`// This is conceptual - actual implementation requires a streaming parser library
+          <h3 className="text-lg font-medium mb-2">Conceptual Streaming Parser Flow:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`// This is conceptual - actual implementation requires a streaming parser library
 
 // Imagine receiving a stream of data chunks
 dataStream.on('data', (chunk) => {
@@ -182,27 +176,35 @@ dataStream.on('error', (err) => {
             </pre>
           </div>
           <p className="mt-3">
-            This approach consumes less memory at any given time (it doesn&apos;t need the whole JSON in a single string)
-            and allows the event loop to remain responsive.
+            This approach consumes less memory at any given time (it doesn&apos;t need the whole JSON in a single
+            string) and allows the event loop to remain responsive.
           </p>
         </div>
 
-
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <Users className="w-5 h-5 text-green-500" /> <Cog className="w-5 h-5 text-green-500" /> 2. Worker Threads (Node.js)
+          <Users className="w-5 h-5 text-green-500" /> <Cog className="w-5 h-5 text-green-500" /> 2. Worker Threads
+          (Node.js)
         </h3>
         <p>
-          Node.js offers <a href="https://nodejs.org/api/worker_threads.html" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Worker Threads</a>
-          which allow you to run CPU-intensive JavaScript operations in separate threads, completely offloading
-          the work from the main event loop thread. This is ideal for tasks like parsing large JSON strings
-          synchronously using <code>JSON.parse()</code>, but doing it in a context that doesn&apos;t block the main server process.
+          Node.js offers{" "}
+          <a
+            href="https://nodejs.org/api/worker_threads.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            Worker Threads
+          </a>
+          which allow you to run CPU-intensive JavaScript operations in separate threads, completely offloading the work
+          from the main event loop thread. This is ideal for tasks like parsing large JSON strings synchronously using{" "}
+          <code>JSON.parse()</code>, but doing it in a context that doesn&apos;t block the main server process.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-           <h3 className="text-lg font-medium mb-2">Conceptual Worker Thread Usage (Node.js):</h3>
-           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-             <pre>
-{`// In your main application thread:
+          <h3 className="text-lg font-medium mb-2">Conceptual Worker Thread Usage (Node.js):</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`// In your main application thread:
 import { Worker } from 'worker_threads';
 
 const hugeJsonString = '...very long JSON string...'; // Still need to load the string
@@ -261,10 +263,10 @@ console.log("Main thread: Event loop is FREE to handle other tasks.");
 
         <h3 className="text-xl font-semibold mt-6">3. Chunking/Yielding (Manual Approach)</h3>
         <p>
-          For very specific scenarios or simpler processing needs, you could potentially read the JSON data in
-          chunks and manually yield control back to the event loop periodically using <code>setTimeout(..., 0)</code>
-          or <code>setImmediate</code> (in Node.js). However, implementing a robust, spec-compliant JSON parser
-          this way is complex and error-prone compared to using dedicated libraries or workers.
+          For very specific scenarios or simpler processing needs, you could potentially read the JSON data in chunks
+          and manually yield control back to the event loop periodically using <code>setTimeout(..., 0)</code>
+          or <code>setImmediate</code> (in Node.js). However, implementing a robust, spec-compliant JSON parser this way
+          is complex and error-prone compared to using dedicated libraries or workers.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
@@ -280,8 +282,8 @@ console.log("Main thread: Event loop is FREE to handle other tasks.");
             handle new incoming requests while parsing is happening elsewhere (in streams or workers).
           </li>
           <li>
-            <strong>Better Resource Utilization:</strong> Streaming can reduce peak memory usage compared to loading
-            an entire large JSON into a single string before parsing. Workers can utilize multi-core processors.
+            <strong>Better Resource Utilization:</strong> Streaming can reduce peak memory usage compared to loading an
+            entire large JSON into a single string before parsing. Workers can utilize multi-core processors.
           </li>
         </ul>
 
@@ -293,22 +295,25 @@ console.log("Main thread: Event loop is FREE to handle other tasks.");
           </li>
           <li>
             <strong>Large JSON (&gt; 100MB) in Node.js (Server):</strong> Consider Worker Threads for CPU-bound parsing
-            of already-loaded data, or streaming parsers if processing data as it arrives (e.g., from a large file or network response) is feasible and beneficial.
+            of already-loaded data, or streaming parsers if processing data as it arrives (e.g., from a large file or
+            network response) is feasible and beneficial.
           </li>
           <li>
-            <strong>Large JSON (&gt; a few MB) in the Browser:</strong> Streaming parsers are generally the best approach
-            to process data incrementally as it&apos;s downloaded via Fetch/XHR streams without blocking the UI. Web Workers could also be used for parsing a fully downloaded string, but streams are often preferred for reducing peak memory.
+            <strong>Large JSON (&gt; a few MB) in the Browser:</strong> Streaming parsers are generally the best
+            approach to process data incrementally as it&apos;s downloaded via Fetch/XHR streams without blocking the
+            UI. Web Workers could also be used for parsing a fully downloaded string, but streams are often preferred
+            for reducing peak memory.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          While <code>JSON.parse()</code> is perfectly fine for most cases, understanding its synchronous nature and
-          the potential for blocking the event loop is crucial when dealing with significant amounts of data. By
-          leveraging asynchronous techniques like streaming parsers or worker threads, developers can build more
-          responsive browser applications and highly concurrent Node.js servers that handle large JSON payloads
-          efficiently without freezing the main thread. Always consider the size of your data and the execution
-          environment when deciding how to process JSON.
+          While <code>JSON.parse()</code> is perfectly fine for most cases, understanding its synchronous nature and the
+          potential for blocking the event loop is crucial when dealing with significant amounts of data. By leveraging
+          asynchronous techniques like streaming parsers or worker threads, developers can build more responsive browser
+          applications and highly concurrent Node.js servers that handle large JSON payloads efficiently without
+          freezing the main thread. Always consider the size of your data and the execution environment when deciding
+          how to process JSON.
         </p>
       </div>
     </>

@@ -29,8 +29,11 @@ export default function StateTransitionTestingJsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON formatter interfaces are common tools used by developers and others to prettify, validate, and sometimes manipulate JSON data. While seemingly simple, a robust formatter needs to handle various user inputs and states correctly. Testing these interfaces can go beyond simple input/output checks;
-          <strong className="font-semibold">State Transition Testing (STT)</strong> offers a structured approach to uncover edge cases and ensure reliability across different scenarios.
+          JSON formatter interfaces are common tools used by developers and others to prettify, validate, and sometimes
+          manipulate JSON data. While seemingly simple, a robust formatter needs to handle various user inputs and
+          states correctly. Testing these interfaces can go beyond simple input/output checks;
+          <strong className="font-semibold">State Transition Testing (STT)</strong> offers a structured approach to
+          uncover edge cases and ensure reliability across different scenarios.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -38,10 +41,14 @@ export default function StateTransitionTestingJsonFormatterArticle() {
           What is State Transition Testing?
         </h2>
         <p>
-          State Transition Testing is a black-box testing technique used to test systems that exhibit stateful behavior. A system is considered stateful if its future behavior depends not only on the current input but also on its history (i.e., its current state).
+          State Transition Testing is a black-box testing technique used to test systems that exhibit stateful behavior.
+          A system is considered stateful if its future behavior depends not only on the current input but also on its
+          history (i.e., its current state).
         </p>
         <p>
-          The core idea is to model the system as a finite-state machine (FSM), identifying the different states the system can be in, the events that trigger transitions between these states, and the resulting states after each transition. Test cases are then designed to traverse these states and transitions.
+          The core idea is to model the system as a finite-state machine (FSM), identifying the different states the
+          system can be in, the events that trigger transitions between these states, and the resulting states after
+          each transition. Test cases are then designed to traverse these states and transitions.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -49,37 +56,44 @@ export default function StateTransitionTestingJsonFormatterArticle() {
           Applying STT to a JSON Formatter Interface
         </h2>
         <p>
-          Consider a typical web-based JSON formatter interface. It might have an input area for raw JSON, a button to format, an output area for the result, and perhaps validation messages. This interface is stateful: the output and available actions (like enabling/disabling the format button) depend on what&apos;s currently in the input area (its state).
+          Consider a typical web-based JSON formatter interface. It might have an input area for raw JSON, a button to
+          format, an output area for the result, and perhaps validation messages. This interface is stateful: the output
+          and available actions (like enabling/disabling the format button) depend on what&apos;s currently in the input
+          area (its state).
         </p>
 
         <h3 className="text-xl font-semibold mt-6">
           <LayoutList className="w-5 h-5 mr-2 text-teal-500" />
           Identifying States
         </h3>
-        <p>
-          For a JSON formatter interface, possible states might include:
-        </p>
+        <p>For a JSON formatter interface, possible states might include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
             <span className="font-semibold">Empty Input:</span> The input area is completely empty.
           </li>
           <li>
-            <span className="font-semibold">Partial Input:</span> The input area contains text, but it&apos;s not yet valid or complete JSON.
+            <span className="font-semibold">Partial Input:</span> The input area contains text, but it&apos;s not yet
+            valid or complete JSON.
           </li>
           <li>
-            <span className="font-semibold">Valid JSON Input:</span> The input area contains text that is syntactically correct JSON.
+            <span className="font-semibold">Valid JSON Input:</span> The input area contains text that is syntactically
+            correct JSON.
           </li>
           <li>
-            <span className="font-semibold">Invalid JSON Input:</span> The input area contains text that is syntactically incorrect JSON.
+            <span className="font-semibold">Invalid JSON Input:</span> The input area contains text that is
+            syntactically incorrect JSON.
           </li>
           <li>
-            <span className="font-semibold">Formatted Output Displayed:</span> The output area shows correctly formatted JSON (implies Valid JSON Input state was reached).
+            <span className="font-semibold">Formatted Output Displayed:</span> The output area shows correctly formatted
+            JSON (implies Valid JSON Input state was reached).
           </li>
           <li>
-            <span className="font-semibold">Error Message Displayed:</span> An error message is shown (implies Invalid JSON Input state was reached, or a formatting error occurred).
+            <span className="font-semibold">Error Message Displayed:</span> An error message is shown (implies Invalid
+            JSON Input state was reached, or a formatting error occurred).
           </li>
           <li>
-            <span className="font-semibold">Formatting in Progress (Optional):</span> A temporary state shown while processing large inputs.
+            <span className="font-semibold">Formatting in Progress (Optional):</span> A temporary state shown while
+            processing large inputs.
           </li>
         </ul>
 
@@ -87,18 +101,34 @@ export default function StateTransitionTestingJsonFormatterArticle() {
           <ChevronRight className="w-5 h-5 mr-2 text-red-500" />
           Identifying Events (Transitions)
         </h3>
-        <p>
-          Events that trigger state changes are typically user actions or system responses:
-        </p>
+        <p>Events that trigger state changes are typically user actions or system responses:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-semibold">Type Character(s):</span> User types into the input.</li>
-          <li><span className="font-semibold">Delete Character(s):</span> User removes text from the input.</li>
-          <li><span className="font-semibold">Paste Text:</span> User pastes content into the input.</li>
-          <li><span className="font-semibold">Clear Input:</span> User clears the input field (e.g., clicks a clear button).</li>
-          <li><span className="font-semibold">Click Format Button:</span> User triggers the formatting process.</li>
-          <li><span className="font-semibold">Load Example:</span> User loads predefined example JSON.</li>
-          <li><span className="font-semibold">Formatting Success:</span> System finishes formatting valid JSON.</li>
-          <li><span className="font-semibold">Formatting Failure:</span> System fails to format (e.g., encounters invalid syntax).</li>
+          <li>
+            <span className="font-semibold">Type Character(s):</span> User types into the input.
+          </li>
+          <li>
+            <span className="font-semibold">Delete Character(s):</span> User removes text from the input.
+          </li>
+          <li>
+            <span className="font-semibold">Paste Text:</span> User pastes content into the input.
+          </li>
+          <li>
+            <span className="font-semibold">Clear Input:</span> User clears the input field (e.g., clicks a clear
+            button).
+          </li>
+          <li>
+            <span className="font-semibold">Click Format Button:</span> User triggers the formatting process.
+          </li>
+          <li>
+            <span className="font-semibold">Load Example:</span> User loads predefined example JSON.
+          </li>
+          <li>
+            <span className="font-semibold">Formatting Success:</span> System finishes formatting valid JSON.
+          </li>
+          <li>
+            <span className="font-semibold">Formatting Failure:</span> System fails to format (e.g., encounters invalid
+            syntax).
+          </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6">
@@ -106,21 +136,68 @@ export default function StateTransitionTestingJsonFormatterArticle() {
           Mapping Transitions
         </h3>
         <p>
-          Now, we map how events cause transitions between states. This is often visualized in a state transition diagram or captured in a table.
+          Now, we map how events cause transitions between states. This is often visualized in a state transition
+          diagram or captured in a table.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center"><ArrowRight className="w-5 h-5 mr-2" />Example Transitions:</h3>
+          <h3 className="text-lg font-medium flex items-center">
+            <ArrowRight className="w-5 h-5 mr-2" />
+            Example Transitions:
+          </h3>
           <ul className="list-disc pl-6 space-y-2 my-4">
-            <li><span className="font-semibold">Empty Input</span> + <span className="font-semibold">Type &#x7b;</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Partial Input</span></li>
-            <li><span className="font-semibold">Partial Input</span> + <span className="font-semibold">Type valid JSON suffix</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Valid JSON Input</span></li>
-            <li><span className="font-semibold">Partial Input</span> + <span className="font-semibold">Type invalid character</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Invalid JSON Input</span></li>
-            <li><span className="font-semibold">Empty Input</span> + <span className="font-semibold">Paste valid JSON</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Valid JSON Input</span></li>
-            <li><span className="font-semibold">Empty Input</span> + <span className="font-semibold">Paste invalid JSON</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Invalid JSON Input</span></li>
-            <li><span className="font-semibold">Valid JSON Input</span> + <span className="font-semibold">Click Format Button</span> + <span className="font-semibold">Formatting Success</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Formatted Output Displayed</span></li>
-            <li><span className="font-semibold">Invalid JSON Input</span> + <span className="font-semibold">Click Format Button</span> + <span className="font-semibold">Formatting Failure</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Error Message Displayed</span></li>
-            <li><span className="font-semibold">Valid JSON Input</span> + <span className="font-semibold">Delete All Text</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Empty Input</span></li>
-            <li><span className="font-semibold">Formatted Output Displayed</span> + <span className="font-semibold">Type Character</span> <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Partial Input</span> (as input changes from formatted valid JSON)</li>
+            <li>
+              <span className="font-semibold">Empty Input</span> + <span className="font-semibold">Type &#x7b;</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" /> <span className="font-semibold">Partial Input</span>
+            </li>
+            <li>
+              <span className="font-semibold">Partial Input</span> +{" "}
+              <span className="font-semibold">Type valid JSON suffix</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Valid JSON Input</span>
+            </li>
+            <li>
+              <span className="font-semibold">Partial Input</span> +{" "}
+              <span className="font-semibold">Type invalid character</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Invalid JSON Input</span>
+            </li>
+            <li>
+              <span className="font-semibold">Empty Input</span> +{" "}
+              <span className="font-semibold">Paste valid JSON</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Valid JSON Input</span>
+            </li>
+            <li>
+              <span className="font-semibold">Empty Input</span> +{" "}
+              <span className="font-semibold">Paste invalid JSON</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Invalid JSON Input</span>
+            </li>
+            <li>
+              <span className="font-semibold">Valid JSON Input</span> +{" "}
+              <span className="font-semibold">Click Format Button</span> +{" "}
+              <span className="font-semibold">Formatting Success</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Formatted Output Displayed</span>
+            </li>
+            <li>
+              <span className="font-semibold">Invalid JSON Input</span> +{" "}
+              <span className="font-semibold">Click Format Button</span> +{" "}
+              <span className="font-semibold">Formatting Failure</span>{" "}
+              <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Error Message Displayed</span>
+            </li>
+            <li>
+              <span className="font-semibold">Valid JSON Input</span> +{" "}
+              <span className="font-semibold">Delete All Text</span> <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Empty Input</span>
+            </li>
+            <li>
+              <span className="font-semibold">Formatted Output Displayed</span> +{" "}
+              <span className="font-semibold">Type Character</span> <CornerDownRight className="inline w-4 h-4 mx-1" />{" "}
+              <span className="font-semibold">Partial Input</span> (as input changes from formatted valid JSON)
+            </li>
           </ul>
         </div>
 
@@ -128,13 +205,21 @@ export default function StateTransitionTestingJsonFormatterArticle() {
           <TestTube className="w-5 h-5 mr-2 text-blue-500" />
           Generating Test Cases
         </h3>
-        <p>
-          From the state transition diagram/table, you can generate test cases. Common strategies include:
-        </p>
+        <p>From the state transition diagram/table, you can generate test cases. Common strategies include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-semibold">All States Coverage:</span> Create tests that visit every defined state at least once.</li>
-          <li><span className="font-semibold">All Transitions Coverage:</span> Create tests that execute every defined transition at least once. This is often the most valuable for UI testing.</li>
-          <li><span className="font-semibold">Specific Path Coverage:</span> Test specific sequences of states and transitions, often representing common user flows or suspected problematic paths (e.g., editing invalid JSON until it becomes valid and then formatting).</li>
+          <li>
+            <span className="font-semibold">All States Coverage:</span> Create tests that visit every defined state at
+            least once.
+          </li>
+          <li>
+            <span className="font-semibold">All Transitions Coverage:</span> Create tests that execute every defined
+            transition at least once. This is often the most valuable for UI testing.
+          </li>
+          <li>
+            <span className="font-semibold">Specific Path Coverage:</span> Test specific sequences of states and
+            transitions, often representing common user flows or suspected problematic paths (e.g., editing invalid JSON
+            until it becomes valid and then formatting).
+          </li>
         </ul>
 
         <h4 className="text-lg font-semibold mt-4">Example Test Case (All Transitions Strategy):</h4>
@@ -179,10 +264,22 @@ Initial State: Empty Input
           Benefits of STT for UI Testing
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-semibold">Systematic Coverage:</span> Helps ensure all states and transitions are considered, reducing the chance of missing test scenarios, especially edge cases.</li>
-          <li><span className="font-semibold">Improved Understanding:</span> Forces clarity on how the interface should behave under different inputs and sequences of actions.</li>
-          <li><span className="font-semibold">Easier Communication:</span> State diagrams provide a clear visual model for discussing behavior with designers, product managers, and other developers.</li>
-          <li><span className="font-semibold">Easier Maintenance:</span> When requirements change, the state model can be updated, and corresponding test cases can be easily identified and modified.</li>
+          <li>
+            <span className="font-semibold">Systematic Coverage:</span> Helps ensure all states and transitions are
+            considered, reducing the chance of missing test scenarios, especially edge cases.
+          </li>
+          <li>
+            <span className="font-semibold">Improved Understanding:</span> Forces clarity on how the interface should
+            behave under different inputs and sequences of actions.
+          </li>
+          <li>
+            <span className="font-semibold">Easier Communication:</span> State diagrams provide a clear visual model for
+            discussing behavior with designers, product managers, and other developers.
+          </li>
+          <li>
+            <span className="font-semibold">Easier Maintenance:</span> When requirements change, the state model can be
+            updated, and corresponding test cases can be easily identified and modified.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -190,8 +287,15 @@ Initial State: Empty Input
           Challenges
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li><span className="font-semibold">Complexity:</span> For very large and complex interfaces with many states and events, the state model can become unwieldy. Simplification or focusing on key parts of the interface might be necessary.</li>
-          <li><span className="font-semibold">Defining States:</span> Clearly defining the boundaries between states can sometimes be ambiguous.</li>
+          <li>
+            <span className="font-semibold">Complexity:</span> For very large and complex interfaces with many states
+            and events, the state model can become unwieldy. Simplification or focusing on key parts of the interface
+            might be necessary.
+          </li>
+          <li>
+            <span className="font-semibold">Defining States:</span> Clearly defining the boundaries between states can
+            sometimes be ambiguous.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
@@ -199,7 +303,8 @@ Initial State: Empty Input
           Implementation Considerations
         </h2>
         <p>
-          When implementing these tests using a testing framework (like Jest with Testing Library), you&apos;ll simulate user actions and assert the interface&apos;s state by checking:
+          When implementing these tests using a testing framework (like Jest with Testing Library), you&apos;ll simulate
+          user actions and assert the interface&apos;s state by checking:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>The content of the input and output areas.</li>
@@ -213,7 +318,11 @@ Initial State: Empty Input
           Conclusion
         </h2>
         <p>
-          State Transition Testing provides a systematic and powerful method for testing user interfaces that exhibit stateful behavior, such as JSON formatters. By explicitly modeling the states and transitions, developers and testers can generate comprehensive test cases, ensuring the interface is robust and behaves as expected across a wide range of user interactions and data inputs. While it requires initial effort to define the state model, the clarity and test coverage gained are invaluable for building reliable applications.
+          State Transition Testing provides a systematic and powerful method for testing user interfaces that exhibit
+          stateful behavior, such as JSON formatters. By explicitly modeling the states and transitions, developers and
+          testers can generate comprehensive test cases, ensuring the interface is robust and behaves as expected across
+          a wide range of user interactions and data inputs. While it requires initial effort to define the state model,
+          the clarity and test coverage gained are invaluable for building reliable applications.
         </p>
       </div>
     </>

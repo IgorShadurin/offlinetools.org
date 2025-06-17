@@ -18,7 +18,8 @@ export const onlineTools = [
   {
     title: "HTML Text Extractor",
     path: "/tools/html-text-extractor",
-    description: "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
+    description:
+      "Extract plain text from HTML content with customizable options for handling links, images, and formatting.",
   },
   {
     title: "Base64 Encoder/Decoder",
@@ -84,7 +85,8 @@ export const onlineTools = [
   {
     title: "Unit Converter",
     path: "/tools/unit-converter",
-    description: "Convert between units of length, weight, temperature, volume, area, energy, and power with precision.",
+    description:
+      "Convert between units of length, weight, temperature, volume, area, energy, and power with precision.",
   },
   {
     title: "Password Strength Meter",
@@ -109,7 +111,8 @@ export const onlineTools = [
   {
     title: "Data Encryptor",
     path: "/tools/data-encryptor",
-    description: "Encrypt and decrypt text or files using password-based AES-256 encryption with secure key derivation.",
+    description:
+      "Encrypt and decrypt text or files using password-based AES-256 encryption with secure key derivation.",
   },
   {
     title: "Steganography Tool",
