@@ -260,7 +260,7 @@ export function BinaryBase64Codec({ className = "" }: BinaryBase64CodecProps) {
                       id="file-upload" 
                     />
                     <Label htmlFor="file-upload" className="flex flex-col items-center justify-center cursor-pointer">
-                      <FileUp className="h-12 w-12 text-gray-400 mb-3" />
+                      <Upload className="h-8 w-8 text-gray-400 mb-2" />
                       <span className="font-medium mb-2 text-lg">
                         {fileName ? fileName : "Choose a file"}
                       </span>
