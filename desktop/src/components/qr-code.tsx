@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
-import { Download, AlertCircle, Check, Copy, HelpCircle } from "lucide-react";
+import { Download, AlertCircle, Check, Copy, HelpCircle, QrCode } from "lucide-react";
 import { generateQrCode, decodeQrCode, QrCodeOptions } from "shared/qr-code";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
@@ -81,12 +81,12 @@ export function QrCodeTool({ className = "" }: QrCodeToolProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>QR Code Tool</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <QrCode className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">QR Code Tool</h1>
+      </div>
           <div className="space-y-4 flex-1 flex flex-col">
             <Tabs value={mode} onValueChange={handleTabChange} className="w-auto">
               <TabsList className="grid grid-cols-2 w-[200px]">
@@ -190,8 +190,6 @@ export function QrCodeTool({ className = "" }: QrCodeToolProps) {
               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

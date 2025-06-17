@@ -4,7 +4,7 @@ import { Textarea } from './ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
-import { Eye, EyeOff, Download, Upload, Lock, Unlock, FileText } from 'lucide-react';
+import { Eye, EyeOff, Download, Upload, Lock, Unlock, FileText, Shield } from 'lucide-react';
 import {
   embedTextInImage,
   extractTextFromImage,
@@ -159,14 +159,12 @@ export function Steganography({ className }: SteganographyProps) {
   }, []);
 
   return (
-    <div className={className}>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold">Steganography Tool</h1>
-          <p className="text-muted-foreground">
-            Hide any text securely within images using steganography
-          </p>
-        </div>
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Shield className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Steganography</h1>
+      </div>
 
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'embed' | 'extract')}>
           <TabsList className="grid w-full grid-cols-2">
@@ -194,20 +192,29 @@ export function Steganography({ className }: SteganographyProps) {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label htmlFor="embed-image" className="block mb-1 text-sm font-medium">Select Image</label>
-                    <input
-                      id="embed-image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleEmbedImageSelect}
-                      ref={embedFileInputRef}
-                      className="w-full border rounded h-8 px-2 text-sm"
-                    />
-                    {embedImage && (
-                      <p className="text-sm text-muted-foreground">
-                        Selected: {embedImage.name} ({(embedImage.size / 1024 / 1024).toFixed(2)} MB)
-                      </p>
-                    )}
+                    <label className="block mb-1 text-sm font-medium">Select Image</label>
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-4 text-center">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleEmbedImageSelect}
+                        ref={embedFileInputRef}
+                        className="hidden"
+                        id="embed-image-upload"
+                      />
+                      <label htmlFor="embed-image-upload" className="flex flex-col items-center justify-center cursor-pointer">
+                        <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                        <span className="text-sm font-medium mb-1">
+                          {embedImage ? embedImage.name : "Choose image to embed text"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {embedImage 
+                            ? `${(embedImage.size / 1024 / 1024).toFixed(2)} MB` 
+                            : "PNG, JPG, WEBP, or GIF"
+                          }
+                        </span>
+                      </label>
+                    </div>
                   </div>
                   
                   <div className="space-y-2">
@@ -302,20 +309,29 @@ export function Steganography({ className }: SteganographyProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="extract-image" className="block mb-1 text-sm font-medium">Select Image</label>
-                  <input
-                    id="extract-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleExtractImageSelect}
-                    ref={extractFileInputRef}
-                    className="w-full border rounded h-8 px-2 text-sm"
-                  />
-                  {extractImage && (
-                    <p className="text-sm text-muted-foreground">
-                      Selected: {extractImage.name} ({(extractImage.size / 1024 / 1024).toFixed(2)} MB)
-                    </p>
-                  )}
+                  <label className="block mb-1 text-sm font-medium">Select Image</label>
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-4 text-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleExtractImageSelect}
+                      ref={extractFileInputRef}
+                      className="hidden"
+                      id="extract-image-upload"
+                    />
+                    <label htmlFor="extract-image-upload" className="flex flex-col items-center justify-center cursor-pointer">
+                      <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                      <span className="text-sm font-medium mb-1">
+                        {extractImage ? extractImage.name : "Choose image to extract text"}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {extractImage 
+                          ? `${(extractImage.size / 1024 / 1024).toFixed(2)} MB` 
+                          : "PNG, JPG, WEBP, or GIF"
+                        }
+                      </span>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -393,7 +409,6 @@ export function Steganography({ className }: SteganographyProps) {
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
     </div>
   );
 }

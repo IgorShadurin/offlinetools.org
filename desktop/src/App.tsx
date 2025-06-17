@@ -38,12 +38,14 @@ import { TimezoneConverter } from './components/timezone-converter'
 import { Steganography } from './components/steganography'
 import { DataEncryptor } from './components/data-encryptor'
 import { HtmlTextExtractor } from './components/html-text-extractor'
+import { BinaryBase64Codec } from './components/binary-base64-codec'
 
 // List of tools
 const tools: Tool[] = [
   { id: 'clipboard-detector', name: 'Clipboard Detector', icon: <ClipboardIcon size={16} /> },
   { id: 'json-formatter', name: 'JSON Format/Validate', icon: <BracketsIcon size={16} /> },
-  { id: 'base64-string', name: 'Base64 String Encode/Decode', icon: <Hash size={16} /> },
+  { id: 'base64-string', name: 'Base64 String', icon: <Hash size={16} /> },
+  { id: 'binary-base64-codec', name: 'Base64 Binary', icon: <FileText size={16} /> },
   { id: 'url-encoder', name: 'URL Encoder/Decoder', icon: <Link2Icon size={16} /> },
   { id: 'html-text-extractor', name: 'HTML Text Extractor', icon: <FileText size={16} /> },
   { id: 'uuid-generator', name: 'UUID Generator', icon: <Fingerprint size={16} /> },
@@ -57,7 +59,7 @@ const tools: Tool[] = [
   { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
   { id: 'image-resizer', name: 'Image Resizer', icon: <Image size={16} /> },
-  { id: 'steganography', name: 'Steganography Tool', icon: <Lock size={16} /> },
+  { id: 'steganography', name: 'Steganography', icon: <Lock size={16} /> },
   { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
@@ -180,6 +182,8 @@ function App() {
           <Steganography className="min-h-full" />
         ) : selectedTool === 'data-encryptor' ? (
           <DataEncryptor className="min-h-full" />
+        ) : selectedTool === 'binary-base64-codec' ? (
+          <BinaryBase64Codec className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (

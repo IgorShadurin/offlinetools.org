@@ -70,7 +70,7 @@ describe('Text Utility tests', async () => {
     
     await waitForComponentTitle(page!, COMPONENT_TITLE);
     
-    await expect(page!.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     await takeScreenshot(page!, 'text-utility', 'component-loaded');
   });

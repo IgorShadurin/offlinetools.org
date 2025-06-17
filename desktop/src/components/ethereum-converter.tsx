@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { AlertCircle, Check, Copy } from "lucide-react";
+import { AlertCircle, Check, Copy, Hash } from "lucide-react";
 import { convertEthereumUnit, EthereumUnit } from "shared/ethereum-converter";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 
 /**
  * Props for the EthereumConverter component
@@ -89,13 +89,12 @@ export function EthereumConverter({ className = "" }: EthereumConverterProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>Ethereum Unit Converter</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Hash className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Ethereum Unit Converter</h1>
+      </div>
           <div className="space-y-4 flex-1 flex flex-col">
             {error && (
               <div className="rounded-md bg-destructive/15 p-3 text-destructive">
@@ -130,8 +129,6 @@ export function EthereumConverter({ className = "" }: EthereumConverterProps) {
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

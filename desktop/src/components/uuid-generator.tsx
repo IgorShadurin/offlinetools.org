@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertCircle, Check, Copy, RefreshCw } from "lucide-react";
+import { AlertCircle, Check, Copy, RefreshCw, Fingerprint } from "lucide-react";
 import {
   generateUUID,
   generateMultipleUUIDs,
@@ -9,7 +9,7 @@ import {
 } from "shared/uuid-generator";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface UuidGeneratorProps {
@@ -102,12 +102,12 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
   const needsCustomNamespace = needsNameInput && namespace === UUIDNamespace.CUSTOM;
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>UUID Generator</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Fingerprint className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">UUID Generator</h1>
+      </div>
           <div className="space-y-4 flex-1 flex flex-col">
             <Tabs value={mode} onValueChange={handleTabChange} className="w-auto">
               <TabsList className="grid grid-cols-2 w-[200px]">
@@ -250,8 +250,6 @@ export function UuidGenerator({ className = "" }: UuidGeneratorProps) {
               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

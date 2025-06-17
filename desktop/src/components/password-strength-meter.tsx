@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { analyzePassword, getStrengthColor, getStrengthLabel, PasswordStrength } from 'shared'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
-import { Shield, Check, X, AlertTriangle, Eye, EyeOff } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { Shield, Check, X, AlertTriangle, Eye, EyeOff, ShieldCheck } from 'lucide-react'
 
 interface PasswordStrengthMeterProps {
   className?: string
@@ -31,9 +32,14 @@ export function PasswordStrengthMeter({ className }: PasswordStrengthMeterProps)
   }
 
   return (
-    <div className={`p-6 space-y-6 ${className}`}>
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <ShieldCheck className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Password Strength Meter</h1>
+      </div>
+      
       <div className="text-center">
-        <h3 className="text-xl font-bold mb-2">Password Strength Meter</h3>
         <p className="text-muted-foreground">
           Analyze your password strength and get security recommendations
         </p>

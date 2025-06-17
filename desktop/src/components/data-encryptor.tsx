@@ -10,7 +10,7 @@ import {
 } from "shared/data-encryptor";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 // Using regular HTML input and label elements like other desktop components
 
@@ -209,16 +209,12 @@ export function DataEncryptor({ className = "" }: DataEncryptorProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Data Encryptor
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Shield className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Data Encryptor</h1>
+      </div>
           <div className="space-y-4 flex-1 flex flex-col">
             {/* Mode Selection */}
             <div className="flex flex-row justify-between items-center">
@@ -427,8 +423,6 @@ export function DataEncryptor({ className = "" }: DataEncryptorProps) {
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 } 

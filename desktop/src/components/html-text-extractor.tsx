@@ -8,7 +8,7 @@ import {
 } from "shared/html-text-extractor";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Alert } from "./ui/alert";
 import { Input } from "./ui/input";
 import { Select, SelectOption } from "./ui/select";
@@ -135,15 +135,12 @@ export function HtmlTextExtractor({ className = "" }: HtmlTextExtractorProps) {
   };
 
   return (
-    <div className={`flex flex-col h-full ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-          <div className="flex items-center space-x-2">
-            <FileText className="h-5 w-5 text-blue-500" />
-            <CardTitle>HTML Text Extractor</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col space-y-4">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <FileText className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">HTML Text Extractor</h1>
+      </div>
           {/* Input/Output Section */}
           <div className="flex gap-4 flex-1">
             {/* Input Section */}
@@ -271,8 +268,6 @@ export function HtmlTextExtractor({ className = "" }: HtmlTextExtractorProps) {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
     </div>
   );
 } 

@@ -65,7 +65,7 @@ describe('Image Resizer tests', async () => {
     
     await takeScreenshot(page, 'image-resizer', 'image-resizer-view');
     
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     const uploadLabel = page.locator('label[for="image-upload"]');
     await expect(uploadLabel.isVisible()).resolves.toBe(true);

@@ -75,7 +75,7 @@ describe('HTML Text Extractor tests', async () => {
     await takeScreenshot(page, 'html-text-extractor', 'html-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test HTML data
     await fillTextareaInput(page, '<p>Hello <strong>World</strong>!</p>');

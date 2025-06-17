@@ -65,7 +65,7 @@ describe('Watermark Tool tests', async () => {
     
     await takeScreenshot(page, 'watermark-tool', 'watermark-view');
     
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     const batchTab = page.locator('button:has-text("Batch Processing")').first();
     await expect(batchTab.isVisible()).resolves.toBe(true);

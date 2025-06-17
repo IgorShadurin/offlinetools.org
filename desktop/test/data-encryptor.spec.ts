@@ -82,7 +82,7 @@ describe('Data Encryptor tests', async () => {
     await takeScreenshot(page, 'data-encryptor', 'navigation-success');
     
     // Verify correct component loaded
-    await expect(page.$eval('h3', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
   });
 
   test('should display basic UI elements', async () => {

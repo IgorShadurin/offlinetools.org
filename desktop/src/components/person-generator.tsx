@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Check, Copy, FileDown, Pencil } from "lucide-react";
+import { Check, Copy, FileDown, Pencil, Users } from "lucide-react";
 import {
   generatePeople,
   formatPeople,
@@ -12,7 +12,7 @@ import {
 } from "shared";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
 import { Alert, AlertDescription } from "./ui/alert";
 import Modal from "./update/Modal";
 
@@ -95,12 +95,12 @@ export function PersonGenerator({ className = "" }: PersonGeneratorProps) {
   };
 
   return (
-    <div className={`p-4 h-full flex flex-col ${className}`}>
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle>Person Generator</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col">
+    <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
+      {/* Title */}
+      <div className="flex items-center gap-2">
+        <Users className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Person Generator</h1>
+      </div>
           <div className="space-y-6 flex-1 flex flex-col">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
               <div className="space-y-4">
@@ -206,8 +206,6 @@ export function PersonGenerator({ className = "" }: PersonGeneratorProps) {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
       <Modal
         open={showTemplate}
