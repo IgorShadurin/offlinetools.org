@@ -57,47 +57,11 @@ Example paths:
 7. Include handling for empty/undefined inputs
 8. Provide good defaults in a DEFAULT_OPTIONS constant
 
-Example implementation pattern:
-
-```typescript
-/**
- * Options for the feature
- */
-export interface FeatureOptions {
-  // Define options here
-  optionOne: boolean;
-}
-
-/**
- * Default options for the feature
- */
-export const DEFAULT_OPTIONS: FeatureOptions = {
-  // Default values
-  optionOne: false
-};
-
-/**
- * Main function for the feature
- * @param input - The input to process
- * @param options - Optional configuration
- * @returns The processed output
- * @throws Error if processing fails
- */
-export function featureFunction(
-  input: string,
-  options: FeatureOptions = DEFAULT_OPTIONS
-): string {
-  try {
-    // Handle empty input
-    if (!input) return "";
-
-    // Implementation
-    return "processed result";
-  } catch (error) {
-    throw new Error(`Feature processing failed: ${(error as Error).message}`);
-  }
-}
-```
+### Implementation Reference:
+- **Pattern Reference**: `/shared/src/data-encryptor/index.ts` for complete implementation
+- **Interface Pattern**: `/shared/src/json-formatter/index.ts` for options interface
+- **Error Handling**: `/shared/src/text-hash-generator/index.ts` for error patterns
+- **Testing Pattern**: `/shared/src/base64-codec/index.test.ts` for comprehensive tests
 
 ## Step 2: Test the Feature Implementation
 
@@ -110,85 +74,63 @@ Create comprehensive tests in `index.test.ts` to cover:
 5. Empty and undefined inputs
 6. Unicode/special character handling
 
+### **Testing Strategy & Requirements**
+
+#### **CRITICAL: Feature-First Testing Approach**
+**AI agents MUST follow this testing workflow to optimize development speed and resource usage:**
+
+#### **Phase 1: Feature-Specific Testing (REQUIRED FIRST)**
+1. **Create tests first** in `shared/src/{feature-name}/index.test.ts`
+2. **Run ONLY the feature tests** during development:
+   ```bash
+   # Run specific feature tests only
+   cd shared && pnpm test src/{feature-name}/index.test.ts
+   
+   # Examples:
+   cd shared && pnpm test src/data-encryptor/index.test.ts
+   cd shared && pnpm test src/json-formatter/index.test.ts
+   cd shared && pnpm test src/base64-codec/index.test.ts
+   ```
+3. **Fix issues rapidly** by focusing only on the feature being developed
+4. **Iterate quickly** with faster feedback (0.5-1s vs 10s+ for all tests)
+
+#### **Phase 2: Full Test Suite (ONLY AFTER FEATURE TESTS PASS)**
+```bash
+# Run all shared tests only when feature is complete
+cd shared && pnpm test
+```
+
+### **Performance Benefits of Feature-First Testing**
+- **Speed**: 0.5-1s vs 10s+ (10-20x faster)
+- **Resource Usage**: Lower CPU/memory consumption
+- **Focus**: Immediate feedback on specific feature issues
+- **Debugging**: Easier to isolate and fix problems
+- **Development Flow**: Faster iteration cycles
+
 ### Test Framework
 
 Unless otherwise specified, use Jest as the testing framework for the shared library. The project is already configured with Jest, and test files should follow Jest's conventions and assertions.
 
-Example test structure:
-
-```typescript
-import { featureFunction, FeatureOptions } from './index';
-
-describe('Feature Name', () => {
-  describe('featureFunction', () => {
-    // Test with valid inputs
-    it('should correctly process valid input', () => {
-      const result = featureFunction('valid input');
-      expect(result).toBe('expected output');
-    });
-
-    // Test with different options
-    it('should respect provided options', () => {
-      const options: FeatureOptions = { optionOne: true };
-      const result = featureFunction('input', options);
-      expect(result).toBe('expected output with options');
-    });
-
-    // Test with empty inputs
-    it('should return empty string for empty input', () => {
-      expect(featureFunction('')).toBe('');
-      expect(featureFunction(undefined as unknown as string)).toBe('');
-    });
-
-    // Test with special characters
-    it('should handle special and unicode characters correctly', () => {
-      const input = 'Special chars: &%$#@! and Unicode: こんにちは世界';
-      const expected = 'expected output with special chars';
-      expect(featureFunction(input)).toBe(expected);
-    });
-
-    // Test error handling
-    it('should throw an error for invalid input', () => {
-      expect(() => {
-        featureFunction('invalid input that causes error');
-      }).toThrow('Feature processing failed');
-    });
-  });
-});
-```
-
-Run tests using: `cd shared && pnpm test`
+### Test Structure Reference:
+- **Complete Test Pattern**: `/shared/src/data-encryptor/index.test.ts`
+- **Options Testing**: `/shared/src/json-formatter/index.test.ts` 
+- **Error Testing**: `/shared/src/text-hash-generator/index.test.ts`
+- **Edge Case Testing**: `/shared/src/base64-codec/index.test.ts`
 
 ## Step 3: Export the Feature from Shared
 
 Add the export to `shared/src/index.ts`:
-
-```typescript
-// Existing exports...
-
-// Export new feature
-export * from './feature-name';
-```
+- **Reference Pattern**: See existing exports in `/shared/src/index.ts`
+- **Export Pattern**: Use `export * from './feature-name';`
 
 ## Step 3.1: Register Clipboard Detection
 
 Each tool can advertise its clipboard capabilities through a small registration file. This keeps the detector decoupled from individual tools and avoids merge conflicts.
 
 1. **Create a registration file**:
-   Add `clipboard-registration.ts` inside your tool folder (e.g. `shared/src/json-formatter/clipboard-registration.ts`).
-   Export a `ClipboardToolRegistration` object and call `registerClipboardTool`:
-
-   ```ts
-   import { registerClipboardTool, type ClipboardToolRegistration, Tool } from '../clipboard-detector'
-
-   export const myToolClipboard: ClipboardToolRegistration = {
-     id: Tool.MY_TOOL,
-     supportedTypes: ['string'],
-     detect: (content) => {/* optional detection */}
-   }
-
-   registerClipboardTool(myToolClipboard)
-   ```
+   Add `clipboard-registration.ts` inside your tool folder
+   - **Reference**: `/shared/src/json-formatter/clipboard-registration.ts`
+   - **Pattern**: Export `ClipboardToolRegistration` object and call `registerClipboardTool`
 
 2. **Update tests**: add or adjust test cases in `clipboard-detector/index.test.ts` to ensure your tool appears when expected.
 
@@ -198,121 +140,53 @@ With this plugin style registration, the clipboard detector automatically includ
 
 Create a new tool implementation with a client component and a server component:
 
-1. First, create the client component at `landing/app/tools/feature-name/FeatureName.tsx`:
-   - Use the "use client" directive at the top of the file
-   - Import the feature functions from "shared" package
-   - Implement the user interface with all interactive functionality
-   - Ensure mobile responsiveness with responsive classes
+### Component Structure:
 
-Example client component structure:
+1. **Client Component** at `landing/app/tools/feature-name/FeatureName.tsx`:
+   - Use "use client" directive at the top
+   - Import feature functions from "shared" package
+   - Implement UI with all interactive functionality
+   - Ensure mobile responsiveness
+   - **Reference**: `/landing/app/tools/json-formatter/JsonFormatter.tsx` for complete pattern
 
-```tsx
-"use client"
-
-import { Container } from "@/components/ui/container"
-import { SectionHeading } from "@/components/ui/section"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// Import other UI components as needed
-import { featureFunction, FeatureOptions } from "shared"
-import { useState } from "react"
-import { AlertCircle, Check, Copy } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-
-export default function FeatureName() {
-  // State management
-  const [input, setInput] = useState("")
-  const [output, setOutput] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
-
-  // Handle processing
-  const handleProcess = () => {
-    try {
-      const result = featureFunction(input)
-      setOutput(result)
-      setError(null)
-    } catch (error) {
-      setError((error as Error).message)
-      setOutput("")
-    }
-  }
-
-  // Handle copy to clipboard
-  const handleCopy = () => {
-    navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  return (
-    <>
-      <Container className="py-8 md:py-12">
-        <SectionHeading
-          title="Feature Name"
-          description="Description of what this tool does and how it helps users."
-        />
-
-        {/* UI Implementation */}
-                {/* Follow the pattern of existing tools like JSON Formatter */}
-                {/* Ensure responsiveness with mobile-first classes */}
-      </Container>
-    </>
-  )
-}
-```
-
-2. Then, create the server component at `landing/app/tools/feature-name/page.tsx`:
+2. **Server Component** at `landing/app/tools/feature-name/page.tsx`:
    - Import the client component
    - Export metadata for the page
    - Return the client component
+   - **Reference**: `/landing/app/tools/json-formatter/page.tsx` for structure
 
-Example server component structure:
+## **Design Recommendations for Landing Components**
 
-```tsx
-import FeatureName from "./FeatureName"
+### **UI Component Standards (REQUIRED)**
+- **Custom Components**: Always use components from `/landing/components/ui/`
+- **Layout Reference**: `/landing/app/tools/data-encryptor/DataEncryptor.tsx`
+- **Button Reference**: `/landing/app/tools/json-formatter/JsonFormatter.tsx` lines 150-160
+- **Form Reference**: `/landing/app/tools/base64-codec/Base64Codec.tsx` input patterns
 
-export const metadata = {
-  title: "Feature Name",
-  description: "Concise description of what this tool does. Keep it informative and under 160 characters for optimal SEO.",
-}
+### **Component Standards**
+- **Container**: Use `Container` component with `py-8 md:py-12` padding
+- **Headings**: Use `SectionHeading` component for title and description
+- **Buttons**: Use `Button` component with proper variants (`default`, `outline`, `ghost`)
+- **Text Areas**: Use `Textarea` with `font-mono` class for code/data display
+- **Labels**: Use `Label` component for form inputs
+- **Alerts**: Use `Alert` component for error display with proper variants
 
-export default function FeatureNamePage() {
-  return <FeatureName />
-}
-```
+### **Layout Patterns**
+- **Two-Column**: Use `flex-wrap md:flex-nowrap` for side-by-side input/output
+- **Responsive**: Each column uses `w-full md:w-1/2` for mobile-first design
+- **Spacing**: Use consistent gap classes (`gap-4`, `gap-6`) for proper spacing
+- **Mobile Stack**: Ensure columns stack vertically on mobile devices
 
-Example paths:
-- Client component: `landing/app/tools/json-validator/JsonValidator.tsx`
-- Server component: `landing/app/tools/json-validator/page.tsx`
+### **Icon Standards**
+- **Import**: From `lucide-react` package exclusively
+- **Sizing**: Use `h-4 w-4` for icons in buttons, `h-5 w-5` for standalone icons
+- **Positioning**: Proper spacing with text using flex layouts and gap classes
 
-### UI Component Patterns
-
-When implementing your tool's UI, follow these consistent layout patterns observed in existing tools:
-
-1. **Two-column Layout**: Use a two-column layout with input on the left and output on the right
-   - Use `flex-wrap md:flex-nowrap` for responsive behavior
-   - Each column should use `w-full md:w-1/2` for responsive width
-
-2. **Standard Sections**:
-   - Section Heading: Use the SectionHeading component for title and description
-   - Related Tools: Include links to related tools with the LinkIcon
-   - Labels: Add clear labels for input and output areas
-   - Copy Button: Add a copy button for output
-   - Error Display: Use Alert component for error messages
-
-3. **Mobile Adaptations**:
-   - Stack columns vertically on mobile
-   - Adapt complex UI elements (like radio buttons to dropdowns)
-   - Ensure adequate spacing with responsive gap classes
-
-4. **Consistent UI Elements**:
-   - Use Textarea with font-mono class for code/text input/output
-   - Use Button component for actions
-   - Use consistent height classes (min-h-[250px] for textareas)
-   - Add placeholders to all input fields
+### **State Management Patterns**
+- **State Reference**: `/landing/app/tools/json-formatter/JsonFormatter.tsx` for complete state management
+- **Error Handling**: `/landing/app/tools/base64-codec/Base64Codec.tsx` error state patterns
+- **Copy Functionality**: `/landing/app/tools/text-hash-generator/TextHashGenerator.tsx` copy implementation
+- **Form Validation**: `/landing/app/tools/url-encoder/UrlEncoder.tsx` input validation patterns
 
 ## Step 4.1: Implement Explanation Card
 
@@ -353,19 +227,9 @@ The explanation card should include these standard sections:
 
 ## Step 5: Add the Tool to Online Tools List
 
-Add the new tool to the list in `landing/components/online-tools-grid.tsx`. Make sure to include the title, path, and a concise description that explains what the tool does:
-
-```typescript
-export const onlineTools = [
-  // Existing tools...
-  {
-    title: "Feature Name",     // User-friendly name
-    path: "/tools/feature-name", // URL path to the tool page
-    description: "Clear, concise description of what this tool does and what problem it solves for users."
-  },
-  // Rest of tools...
-]
-```
+Add the new tool to the list in `landing/components/online-tools-grid.tsx`:
+- **Reference Pattern**: See existing entries in `/landing/components/online-tools-grid.tsx`
+- **Structure**: Include title, path, and concise description
 
 ### Guidelines for Tool Descriptions:
 
@@ -374,15 +238,11 @@ export const onlineTools = [
 3. **Use action verbs**: Start with verbs like "Convert", "Format", "Validate", etc.
 4. **Be specific**: Mention key features or options that make the tool valuable
 5. **Maintain consistency**: Follow the pattern of existing tool descriptions
+6. **Reference Examples**: See existing descriptions in `/landing/components/online-tools-grid.tsx`
 
-Examples of good descriptions:
-- "Format and beautify your JSON with customizable indentation options."
-- "Convert text to Base64 or decode Base64 to plaintext with URL-safe option."
-- "Validate XML against schemas and highlight errors with detailed reports."
-
-The same description should be used in two places:
-1. In the `onlineTools` array in `landing/components/online-tools-grid.tsx`
-2. In the `SectionHeading` component of your tool's page
+**Consistency Requirements**:
+- Use same description in `onlineTools` array and `SectionHeading` component
+- **Reference**: See how JSON Formatter maintains consistent descriptions
 
 ## Step 6: Link Related Tools
 
@@ -448,19 +308,39 @@ When implementing error handling in your tool:
 
 ## Final Checks
 
-After completing all steps:
+After completing all steps, follow this testing sequence:
 
-1. Run linting and type checking: `cd landing && pnpm lint && pnpm types:check`
-2. Ensure mobile responsiveness of the UI by testing at various breakpoints
-3. Test the feature with various inputs including:
+### **Phase 1: Feature-Specific Testing**
+```bash
+# Test shared feature implementation
+cd shared && pnpm test src/{feature-name}/index.test.ts
+```
+
+### **Phase 2: Full Testing Suite (ONLY AFTER FEATURE TESTS PASS)**
+```bash
+# Run all shared tests
+cd shared && pnpm test
+
+# Run all landing tests and checks
+cd landing && pnpm lint && pnpm types:check
+```
+
+### **Manual Testing Requirements**
+1. Ensure mobile responsiveness of the UI by testing at various breakpoints
+2. Test the feature with various inputs including:
    - Normal expected input
    - Empty input
    - Very large input
    - Unicode and special characters
    - Malformed input that should trigger errors
-4. Verify proper error handling and display
-5. Check that all links to related tools work correctly
-6. Validate that copy functionality works as expected
+3. Verify proper error handling and display
+4. Check that all links to related tools work correctly
+5. Validate that copy functionality works as expected
+
+### **Performance Testing Benefits**
+- **Feature Tests**: 0.5-1s feedback during development
+- **Full Suite**: Run only when feature is complete
+- **Development Speed**: 10-20x faster iteration cycles
 
 Remember to follow the general project rules:
 - Use pnpm for dependency management

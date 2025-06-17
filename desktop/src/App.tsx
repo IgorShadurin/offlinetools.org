@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   Type,
   QrCode,
-  Image
+  Image,
+  Lock
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -33,6 +34,8 @@ import { WatermarkTool } from './components/watermark-tool'
 import { QrCodeTool } from './components/qr-code'
 import { ImageResizer } from './components/image-resizer'
 import { TimezoneConverter } from './components/timezone-converter'
+import { Steganography } from './components/steganography'
+import { DataEncryptor } from './components/data-encryptor'
 
 // List of tools
 const tools: Tool[] = [
@@ -51,6 +54,8 @@ const tools: Tool[] = [
   { id: 'password-strength-meter', name: 'Password Strength Meter', icon: <ShieldCheck size={16} /> },
   { id: 'watermark-tool', name: 'Watermark Tool', icon: <Image size={16} /> },
   { id: 'image-resizer', name: 'Image Resizer', icon: <Image size={16} /> },
+  { id: 'steganography', name: 'Steganography Tool', icon: <Lock size={16} /> },
+  { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
 
@@ -166,6 +171,10 @@ function App() {
           <ImageResizer className="min-h-full" />
         ) : selectedTool === 'timezone-converter' ? (
           <TimezoneConverter className="min-h-full" />
+        ) : selectedTool === 'steganography' ? (
+          <Steganography className="min-h-full" />
+        ) : selectedTool === 'data-encryptor' ? (
+          <DataEncryptor className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (

@@ -22,7 +22,9 @@ export enum Tool {
   PERSON_GENERATOR = 'person-generator',
   TEXT_UTILITY = 'text-utility',
   WATERMARK_TOOL = 'watermark-tool',
-  TIMEZONE_CONVERTER = 'timezone-converter'
+  TIMEZONE_CONVERTER = 'timezone-converter',
+  DATA_ENCRYPTOR = 'data-encryptor',
+  STEGANOGRAPHY = 'steganography'
 }
 
 /**
