@@ -22,6 +22,7 @@ export enum Tool {
   PERSON_GENERATOR = 'person-generator',
   TEXT_UTILITY = 'text-utility',
   WATERMARK_TOOL = 'watermark-tool',
+  DATA_ENCRYPTOR = 'data-encryptor',
   STEGANOGRAPHY = 'steganography'
 }
 

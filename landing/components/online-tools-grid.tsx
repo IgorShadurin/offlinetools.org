@@ -102,6 +102,11 @@ export const onlineTools = [
     description: "Add watermarks to images with customizable positioning and batch processing support.",
   },
   {
+    title: "Data Encryptor",
+    path: "/tools/data-encryptor",
+    description: "Encrypt and decrypt text or files using password-based AES-256 encryption with secure key derivation.",
+  },
+  {
     title: "Steganography Tool",
     path: "/tools/steganography",
     description: "Hide any text securely within images using advanced steganography techniques.",
