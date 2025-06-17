@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { AlertCircle, Check, Copy, Eye, EyeOff, Upload, Download, Shield } from "lucide-react";
+import { AlertCircle, Check, Copy, Eye, EyeOff, Upload, Download, Shield, FileIcon } from "lucide-react";
 import { 
   encryptText, 
   decryptText, 
@@ -29,7 +29,7 @@ interface DataEncryptorProps {
  */
 export function DataEncryptor({ className = "" }: DataEncryptorProps) {
   const [mode, setMode] = useState<"encrypt" | "decrypt">("encrypt");
-  const [inputType, setInputType] = useState<"text" | "file">("text");
+  const [inputType, setInputType] = useState<"text" | "file">("file");
   const [textInput, setTextInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -286,140 +286,145 @@ export function DataEncryptor({ className = "" }: DataEncryptorProps) {
               </div>
             </div>
 
-            {/* File Input */}
-            {inputType === "file" && (
-              <div className="flex flex-col space-y-2">
-                <label htmlFor="file-input" className="text-sm font-medium">
-                  {mode === "encrypt" ? "File to encrypt" : "Encrypted file"}
-                </label>
-                <div className="flex items-center space-x-2">
-                  <input
-                    id="file-input"
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileSelect}
-                    className="flex-1 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Browse
-                  </Button>
-                </div>
-                {selectedFile && (
-                  <p className="text-sm text-muted-foreground">
-                    Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
-                  </p>
+                                    {/* Input and Output Sections - Side by Side */}
+            <div className="flex-1 flex gap-4 min-h-0">
+              {/* Input Section */}
+              <div className="flex-1 flex flex-col min-h-0">
+                {inputType === "file" ? (
+                  <div className="flex flex-col space-y-2 h-full">
+                    <label className="text-sm font-medium">
+                      {mode === "encrypt" ? "File to encrypt" : "Encrypted file"}
+                    </label>
+                    <div className="flex-1 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center flex items-center justify-center min-h-[150px]">
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        id="file-upload"
+                      />
+                      <label htmlFor="file-upload" className="flex flex-col items-center justify-center cursor-pointer">
+                        <FileIcon className="h-10 w-10 text-gray-400 mb-2" />
+                        <span className="text-lg font-medium mb-1">
+                          {selectedFile ? selectedFile.name : "Choose file"}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {selectedFile 
+                            ? `${(selectedFile.size / 1024).toFixed(2)} KB` 
+                            : "Select any file to encrypt/decrypt"
+                          }
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col h-full">
+                    <div className="mb-1 flex justify-between">
+                      <label htmlFor="input-text" className="text-sm font-medium">
+                        {mode === "encrypt" ? "Text to encrypt" : "Encrypted data to decrypt"}
+                      </label>
+                    </div>
+                    <Textarea
+                      id="input-text"
+                      className="flex-1 min-h-[150px] font-mono"
+                      placeholder={
+                        mode === "encrypt"
+                          ? "Enter text to encrypt..."
+                          : "Paste encrypted data here..."
+                      }
+                      value={textInput}
+                      onChange={(e) => setTextInput(e.target.value)}
+                    />
+                  </div>
                 )}
               </div>
-            )}
 
-            {/* Text Input */}
-            {inputType === "text" && (
-                             <div className="flex-1 flex flex-col min-h-0">
-                 <div className="mb-1 flex justify-between">
-                   <label htmlFor="input-text" className="text-sm font-medium">
-                     {mode === "encrypt" ? "Text to encrypt" : "Encrypted data to decrypt"}
-                   </label>
-                 </div>
-                <Textarea
-                  id="input-text"
-                  className="flex-1 min-h-[150px] font-mono"
-                  placeholder={
-                    mode === "encrypt"
-                      ? "Enter text to encrypt..."
-                      : "Paste encrypted data here..."
-                  }
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
-                />
+              {/* Output Section */}
+              <div className="flex-1 flex flex-col min-h-0">
+                <div className="mb-1 flex justify-between">
+                  <label htmlFor="output-text" className="text-sm font-medium">
+                    {mode === "encrypt" ? "Encrypted output" : "Decrypted output"}
+                  </label>
+                  <div className="flex gap-2">
+                    {output && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex items-center gap-1 h-7 px-2 text-xs"
+                        onClick={handleCopy}
+                      >
+                        {copied ? (
+                          <Check className="h-3 w-3" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                        {copied ? "Copied!" : "Copy"}
+                      </Button>
+                    )}
+                    {output && !decryptedFile && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex items-center gap-1 h-7 px-2 text-xs"
+                        onClick={handleSaveOutput}
+                      >
+                        <Download className="h-3 w-3" />
+                        Save
+                      </Button>
+                    )}
+                    {decryptedFile && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex items-center gap-1 h-7 px-2 text-xs"
+                        onClick={handleDownload}
+                      >
+                        <Download className="h-3 w-3" />
+                        Download
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {error ? (
+                  <div className="rounded-md bg-destructive/15 p-3 text-destructive">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4" />
+                      <div className="font-medium">Error</div>
+                    </div>
+                    <div className="mt-2 text-sm">{error}</div>
+                  </div>
+                ) : (
+                  <Textarea
+                    id="output-text"
+                    className="flex-1 min-h-[150px] font-mono"
+                    placeholder={
+                      mode === "encrypt"
+                        ? "Encrypted data will appear here..."
+                        : "Decrypted data will appear here..."
+                    }
+                    value={output}
+                    readOnly
+                  />
+                )}
               </div>
-            )}
+            </div>
 
             {/* Process Button */}
             <div className="flex justify-center my-2">
               <Button 
                 onClick={handleProcess} 
                 size="default"
-                disabled={isProcessing}
+                disabled={
+                  isProcessing || 
+                  !password || 
+                  (inputType === "file" && !selectedFile) || 
+                  (inputType === "text" && !textInput.trim())
+                }
                 className="min-w-[120px]"
               >
                 {isProcessing ? "Processing..." : (mode === "encrypt" ? "Encrypt" : "Decrypt")}
               </Button>
-            </div>
-
-                         {/* Output Section */}
-             <div className="flex-1 flex flex-col min-h-0">
-               <div className="mb-1 flex justify-between">
-                 <label htmlFor="output-text" className="text-sm font-medium">
-                   {mode === "encrypt" ? "Encrypted output" : "Decrypted output"}
-                 </label>
-                <div className="flex gap-2">
-                  {output && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex items-center gap-1 h-7 px-2 text-xs"
-                      onClick={handleCopy}
-                    >
-                      {copied ? (
-                        <Check className="h-3 w-3" />
-                      ) : (
-                        <Copy className="h-3 w-3" />
-                      )}
-                      {copied ? "Copied!" : "Copy"}
-                    </Button>
-                  )}
-                  {output && !decryptedFile && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex items-center gap-1 h-7 px-2 text-xs"
-                      onClick={handleSaveOutput}
-                    >
-                      <Download className="h-3 w-3" />
-                      Save
-                    </Button>
-                  )}
-                  {decryptedFile && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex items-center gap-1 h-7 px-2 text-xs"
-                      onClick={handleDownload}
-                    >
-                      <Download className="h-3 w-3" />
-                      Download
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {error ? (
-                <div className="rounded-md bg-destructive/15 p-3 text-destructive">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4" />
-                    <div className="font-medium">Error</div>
-                  </div>
-                  <div className="mt-2 text-sm">{error}</div>
-                </div>
-              ) : (
-                <Textarea
-                  id="output-text"
-                  className="flex-1 min-h-[150px] font-mono"
-                  placeholder={
-                    mode === "encrypt"
-                      ? "Encrypted data will appear here..."
-                      : "Decrypted data will appear here..."
-                  }
-                  value={output}
-                  readOnly
-                />
-              )}
             </div>
           </div>
         </CardContent>

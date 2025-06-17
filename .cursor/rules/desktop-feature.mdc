@@ -29,6 +29,32 @@ alwaysApply: false
    - Follow existing patterns like in `/desktop/src/components/json-formatter.tsx`
    - Adapt Next.js components to match desktop styling
 
+## **Design Recommendations**
+
+### **Custom UI Components (REQUIRED)**
+- **Use custom UI components** from `/desktop/src/components/ui/` instead of native HTML elements
+- **Button Reference**: `/desktop/src/components/data-encryptor.tsx` lines 184-194
+- **Input Reference**: `/desktop/src/components/data-encryptor.tsx` lines 136-147
+- **Layout Reference**: `/desktop/src/components/data-encryptor.tsx` lines 88-98
+
+### **Component Standards**
+- **Buttons**: Always use `Button` component with proper `size`, `variant`, and `disabled` props
+- **Text Areas**: Use `Textarea` component with `font-mono` class for code/data display
+- **Inputs**: Use `Input` component for text inputs with proper validation
+- **Labels**: Use semantic `label` elements with proper `htmlFor` attributes
+
+### **Layout Patterns**
+- **Horizontal Layout**: Use `flex gap-4` for side-by-side input/output sections
+- **File Upload**: Custom styled with hidden native input, see data-encryptor implementation
+- **Button Groups**: Use `flex gap-2` for action button groupings
+- **Responsive**: Ensure mobile compatibility with proper flex wrapping
+
+### **Icon Standards**
+- **Import**: From `lucide-react` package only
+- **Sizing**: Use `h-3 w-3` for small buttons, `h-4 w-4` for regular buttons
+- **Positioning**: Proper spacing with text using flex layouts
+- **Reference**: `/desktop/src/components/data-encryptor.tsx` icon usage patterns
+
 4. **Update Desktop App**
    - Add to tools list in `/desktop/src/App.tsx`:
      ```tsx
