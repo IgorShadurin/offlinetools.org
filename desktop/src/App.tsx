@@ -40,6 +40,7 @@ import { DataEncryptor } from './components/data-encryptor'
 import { HtmlTextExtractor } from './components/html-text-extractor'
 import { BinaryBase64Codec } from './components/binary-base64-codec'
 import { TextToSlug } from './components/text-to-slug'
+import { FileGenerator } from './components/file-generator'
 
 // List of tools
 const tools: Tool[] = [
@@ -63,6 +64,7 @@ const tools: Tool[] = [
   { id: 'image-resizer', name: 'Image Resizer', icon: <Image size={16} /> },
   { id: 'steganography', name: 'Steganography', icon: <Lock size={16} /> },
   { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} /> },
+  { id: 'file-generator', name: 'File Generator', icon: <FileText size={16} /> },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} /> },
 ]
 
@@ -188,6 +190,8 @@ function App() {
           <BinaryBase64Codec className="min-h-full" />
         ) : selectedTool === 'text-to-slug' ? (
           <TextToSlug className="min-h-full" />
+        ) : selectedTool === 'file-generator' ? (
+          <FileGenerator className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : (
