@@ -77,10 +77,10 @@ const comparisonFeatures: ComparisonFeature[] = [
 /**
  * Renders a feature value in the comparison table
  */
-const FeatureValue = ({ value }: { value: boolean | string }) => {
+const FeatureValue = ({ value, isOfflineTools = false }: { value: boolean | string; isOfflineTools?: boolean }) => {
   if (typeof value === "boolean") {
     return value ? (
-      <Check className="h-5 w-5 text-green-600 mx-auto" />
+      <Check className={`h-5 w-5 mx-auto ${isOfflineTools ? 'text-green-700' : 'text-green-600'}`} />
     ) : (
       <X className="h-5 w-5 text-red-500 mx-auto" />
     );
@@ -88,7 +88,7 @@ const FeatureValue = ({ value }: { value: boolean | string }) => {
   if (value === "partial") {
     return <Minus className="h-5 w-5 text-yellow-600 mx-auto" />;
   }
-  return <span className="text-sm font-medium text-center block">{value}</span>;
+  return <span className={`text-sm font-medium text-center block ${isOfflineTools ? 'text-primary font-semibold' : ''}`}>{value}</span>;
 };
 
 /**
@@ -123,7 +123,10 @@ export default function ComparisonPage() {
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-3 px-4 font-semibold">Feature</th>
-                        <th className="text-center py-3 px-4 font-semibold text-primary">OfflineTools</th>
+                        <th className="text-center py-4 px-6 font-bold text-lg text-primary bg-primary/5 border-l-4 border-primary relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-primary/10 rounded-sm"></div>
+                          <span className="relative">OfflineTools</span>
+                        </th>
                         <th className="text-center py-3 px-4 font-semibold">DevUtils</th>
                         <th className="text-center py-3 px-4 font-semibold">DevToys</th>
                       </tr>
@@ -132,8 +135,8 @@ export default function ComparisonPage() {
                       {comparisonFeatures.map((item, index) => (
                         <tr key={index} className="border-b hover:bg-muted/50">
                           <td className="py-3 px-4 text-sm">{item.feature}</td>
-                          <td className="py-3 px-4 text-center">
-                            <FeatureValue value={item.offlinetools} />
+                          <td className="py-4 px-6 text-center bg-primary/5 border-l-4 border-primary/30 font-medium">
+                            <FeatureValue value={item.offlinetools} isOfflineTools={true} />
                           </td>
                           <td className="py-3 px-4 text-center">
                             <FeatureValue value={item.devutils} />
