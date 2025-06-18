@@ -68,6 +68,7 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
    * @returns Size and unit
    */
   const sliderToSize = (value: number) => {
+    const base = useBinary ? 1024 : 1000;
     const index = Math.floor(value / (100 / (sizePresets.length - 1)));
     const nextIndex = Math.min(index + 1, sizePresets.length - 1);
 
@@ -100,7 +101,7 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
     if (lowerPreset.unit === FileSizeUnit.KB && upperPreset.unit === FileSizeUnit.MB) {
       if (segmentPosition < 0.5) {
         const position = segmentPosition * 2;
-        const size = lowerPreset.value + position * (1000 - lowerPreset.value);
+        const size = lowerPreset.value + position * (base - lowerPreset.value);
         return {
           size: Math.round(size).toString(),
           unit: FileSizeUnit.KB,
@@ -116,7 +117,7 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
     } else if (lowerPreset.unit === FileSizeUnit.MB && upperPreset.unit === FileSizeUnit.GB) {
       if (segmentPosition < 0.5) {
         const position = segmentPosition * 2;
-        const size = lowerPreset.value + position * (1000 - lowerPreset.value);
+        const size = lowerPreset.value + position * (base - lowerPreset.value);
         return {
           size: Math.round(size).toString(),
           unit: FileSizeUnit.MB,
@@ -241,17 +242,7 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
     return fullFilename.substring(lastDotIndex + 1);
   };
 
-  /**
-   * Get the filename without extension
-   * @returns Filename without extension
-   */
-  const getFilenameWithoutExtension = (): string => {
-    const lastDotIndex = fullFilename.lastIndexOf('.');
-    if (lastDotIndex === -1) {
-      return fullFilename;
-    }
-    return fullFilename.substring(0, lastDotIndex);
-  };
+
 
   /**
    * Generate file options from current state
