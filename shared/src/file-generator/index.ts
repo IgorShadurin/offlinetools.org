@@ -56,6 +56,8 @@ export interface FileGeneratorOptions {
   customHexValue?: string;
   /** Progress callback function */
   onProgress?: (progress: number) => void;
+  /** Whether to use binary (1024) or decimal (1000) calculation */
+  useBinary?: boolean;
 }
 
 /**
@@ -66,24 +68,28 @@ export const DEFAULT_FILE_GENERATOR_OPTIONS: FileGeneratorOptions = {
   unit: FileSizeUnit.KB,
   extension: 'txt',
   contentType: FileContentType.Random,
+  useBinary: true,
 };
 
 /**
  * Converts a size with unit to bytes
  * @param size - Size value
  * @param unit - Size unit
+ * @param useBinary - Whether to use binary (1024) or decimal (1000) calculation
  * @returns Size in bytes
  */
-export function convertToBytes(size: number, unit: FileSizeUnit): number {
+export function convertToBytes(size: number, unit: FileSizeUnit, useBinary: boolean = true): number {
+  const base = useBinary ? 1024 : 1000;
+  
   switch (unit) {
     case FileSizeUnit.Bytes:
       return size;
     case FileSizeUnit.KB:
-      return size * 1024;
+      return size * base;
     case FileSizeUnit.MB:
-      return size * 1024 * 1024;
+      return size * base * base;
     case FileSizeUnit.GB:
-      return size * 1024 * 1024 * 1024;
+      return size * base * base * base;
     default:
       return size;
   }
@@ -111,8 +117,8 @@ export function validateHexString(hexString: string): string {
   return cleanedHex;
 }
 
-// Chunk size for streaming (1MB)
-const CHUNK_SIZE = 1024 * 1024;
+// Optimized chunk size for large files (8MB for better performance)
+const CHUNK_SIZE = 8 * 1024 * 1024;
 
 /**
  * Creates a pattern generator function based on content type
@@ -123,6 +129,19 @@ const CHUNK_SIZE = 1024 * 1024;
 function createPatternGenerator(contentType: FileContentType, customHexValue?: string) {
   switch (contentType) {
     case FileContentType.Random:
+      // Use crypto.getRandomValues for better performance, respecting the 64KB limit
+      if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+        const buffer = new Uint8Array(1024); // Buffer for random values
+        let bufferIndex = buffer.length; // Start with empty buffer
+        
+        return (): number => {
+          if (bufferIndex >= buffer.length) {
+            crypto.getRandomValues(buffer);
+            bufferIndex = 0;
+          }
+          return buffer[bufferIndex++];
+        };
+      }
       return (): number => Math.floor(Math.random() * 256);
       
     case FileContentType.Zeros:
@@ -155,6 +174,71 @@ function createPatternGenerator(contentType: FileContentType, customHexValue?: s
 }
 
 /**
+ * Optimized chunk generator that uses pre-allocated buffers for better performance
+ * @param contentType - The content type
+ * @param customHexValue - Optional custom hex value for CustomHex type
+ * @param chunkSize - Size of chunks to generate
+ * @returns Function that generates chunks
+ */
+function createOptimizedChunkGenerator(
+  contentType: FileContentType, 
+  customHexValue?: string, 
+  chunkSize: number = CHUNK_SIZE
+) {
+  switch (contentType) {
+    case FileContentType.Random:
+      return (size: number): Uint8Array => {
+        const chunk = new Uint8Array(size);
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+          // crypto.getRandomValues has a limit of 65536 bytes (64KB)
+          const maxCryptoBytes = 65536;
+          let offset = 0;
+          
+          while (offset < size) {
+            const remainingBytes = size - offset;
+            const bytesToGenerate = Math.min(maxCryptoBytes, remainingBytes);
+            const subChunk = new Uint8Array(bytesToGenerate);
+            crypto.getRandomValues(subChunk);
+            chunk.set(subChunk, offset);
+            offset += bytesToGenerate;
+          }
+        } else {
+          for (let i = 0; i < size; i++) {
+            chunk[i] = Math.floor(Math.random() * 256);
+          }
+        }
+        return chunk;
+      };
+      
+    case FileContentType.Zeros:
+      return (size: number): Uint8Array => new Uint8Array(size); // Already filled with zeros
+      
+    case FileContentType.CustomHex: {
+      if (!customHexValue) {
+        throw new Error('Custom hex value is required for CustomHex content type');
+      }
+      
+      const hexValue = validateHexString(customHexValue);
+      const pattern = new Uint8Array(hexValue.length / 2);
+      for (let i = 0; i < hexValue.length; i += 2) {
+        pattern[i / 2] = parseInt(hexValue.substring(i, i + 2), 16);
+      }
+      
+      return (size: number): Uint8Array => {
+        const chunk = new Uint8Array(size);
+        for (let i = 0; i < size; i++) {
+          chunk[i] = pattern[i % pattern.length];
+        }
+        return chunk;
+      };
+    }
+    
+    default:
+      throw new Error(`Unsupported content type: ${contentType}`);
+  }
+}
+
+/**
  * Generates file content in chunks with progress reporting
  * @param options - File generator options
  * @returns Promise that resolves to a Blob with the generated content
@@ -162,7 +246,7 @@ function createPatternGenerator(contentType: FileContentType, customHexValue?: s
  */
 export async function generateFileContent(options: FileGeneratorOptions): Promise<Blob> {
   try {
-    const sizeInBytes = convertToBytes(options.size, options.unit);
+    const sizeInBytes = convertToBytes(options.size, options.unit, options.useBinary ?? true);
     
     if (sizeInBytes <= 0) {
       throw new Error('File size must be greater than 0');
@@ -171,6 +255,11 @@ export async function generateFileContent(options: FileGeneratorOptions): Promis
     // Cap the size at a reasonable limit (10GB) to prevent memory issues
     if (sizeInBytes > 10 * 1024 * 1024 * 1024) {
       throw new Error('File size exceeds the maximum limit of 10GB');
+    }
+
+    // For large files (>100MB), use optimized chunk generation
+    if (sizeInBytes > 100 * 1024 * 1024) {
+      return generateLargeFileContent(options, sizeInBytes);
     }
 
     const generateByte = createPatternGenerator(
@@ -236,6 +325,44 @@ export async function generateFileContent(options: FileGeneratorOptions): Promis
 }
 
 /**
+ * Optimized file content generation for large files (>100MB)
+ * @param options - File generator options
+ * @param sizeInBytes - Size in bytes
+ * @returns Promise that resolves to a Blob with the generated content
+ */
+async function generateLargeFileContent(options: FileGeneratorOptions, sizeInBytes: number): Promise<Blob> {
+  const generateChunk = createOptimizedChunkGenerator(
+    options.contentType,
+    options.contentType === FileContentType.CustomHex ? options.customHexValue : undefined
+  );
+  
+  const chunks: Uint8Array[] = [];
+  let bytesGenerated = 0;
+  
+  while (bytesGenerated < sizeInBytes) {
+    const remainingBytes = sizeInBytes - bytesGenerated;
+    const currentChunkSize = Math.min(CHUNK_SIZE, remainingBytes);
+    
+    const chunk = generateChunk(currentChunkSize);
+    chunks.push(chunk);
+    bytesGenerated += currentChunkSize;
+    
+    // Report progress
+    if (options.onProgress) {
+      const progress = Math.min(100, Math.round((bytesGenerated / sizeInBytes) * 100));
+      options.onProgress(progress);
+    }
+    
+    // Yield control to prevent blocking
+    if (chunks.length % 10 === 0) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
+  }
+  
+  return new Blob(chunks, { type: 'application/octet-stream' });
+}
+
+/**
  * Checks if the File System Access API is supported
  * @returns Whether the File System Access API is supported
  */
@@ -244,10 +371,9 @@ export function isFileSystemAccessSupported(): boolean {
 }
 
 /**
- * Saves a file using the File System Access API with streaming writes
+ * Optimized file generation that streams directly to disk using File System Access API
  * @param options - File generator options
  * @param filename - Suggested filename
- * @param onProgress - Optional progress callback
  * @returns Promise that resolves when the file is saved
  */
 export async function saveFileWithPicker(
@@ -255,7 +381,7 @@ export async function saveFileWithPicker(
   filename: string
 ): Promise<void> {
   try {
-    const sizeInBytes = convertToBytes(options.size, options.unit);
+    const sizeInBytes = convertToBytes(options.size, options.unit, options.useBinary ?? true);
     
     if (sizeInBytes <= 0) {
       throw new Error('File size must be greater than 0');
@@ -278,30 +404,30 @@ export async function saveFileWithPicker(
       }]
     });
     
-    // Create the pattern generator function based on content type
-    const generateByte = createPatternGenerator(
+    // Create a writable stream to the file
+    const writable = await fileHandle.createWritable();
+    
+    // Use optimized generation for large files
+    const generateChunk = createOptimizedChunkGenerator(
       options.contentType, 
       options.contentType === FileContentType.CustomHex ? options.customHexValue : undefined
     );
     
-    // Create a writable stream to the file
-    const writable = await fileHandle.createWritable();
+    // Use larger chunk size for better performance on large files
+    const dynamicChunkSize = sizeInBytes > 1024 * 1024 * 1024 ? // 1GB
+      16 * 1024 * 1024 : // 16MB for files > 1GB
+      8 * 1024 * 1024;   // 8MB for smaller files
     
-    // Use a smaller chunk size for better progress reporting
-    const chunkSize = Math.min(1024 * 1024, sizeInBytes); // 1MB or less
     let bytesWritten = 0;
     
-    // Generate and write in chunks
+    // Generate and write in optimized chunks
     while (bytesWritten < sizeInBytes) {
       // Determine this chunk's size
       const remainingBytes = sizeInBytes - bytesWritten;
-      const currentChunkSize = Math.min(chunkSize, remainingBytes);
+      const currentChunkSize = Math.min(dynamicChunkSize, remainingBytes);
       
-      // Generate this chunk
-      const chunk = new Uint8Array(currentChunkSize);
-      for (let i = 0; i < currentChunkSize; i++) {
-        chunk[i] = generateByte();
-      }
+      // Generate this chunk using optimized method
+      const chunk = generateChunk(currentChunkSize);
       
       // Write the chunk
       await writable.write(chunk);
@@ -313,8 +439,16 @@ export async function saveFileWithPicker(
         options.onProgress(progress);
       }
       
-      // Let the UI update by waiting for the next animation frame
-      await new Promise(resolve => requestAnimationFrame(resolve));
+      // For very large files, yield control less frequently for better performance
+      if (sizeInBytes > 1024 * 1024 * 1024) { // 1GB+
+        // Only yield every 64MB to maximize throughput
+        if (bytesWritten % (64 * 1024 * 1024) === 0) {
+          await new Promise(resolve => setTimeout(resolve, 0));
+        }
+      } else {
+        // For smaller files, yield more frequently for UI responsiveness
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
     }
     
     // Close the file

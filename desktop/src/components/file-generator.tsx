@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
-import { AlertCircle, FileText, Download, Loader2, CheckCircle } from "lucide-react";
+import { AlertCircle, FileText, Download, Loader2, FolderOpen } from "lucide-react";
 import { 
-  generateFileContent, 
-  generateFileDownloadUrl, 
-  FileSizeUnit, 
-  FileContentType, 
+  saveFileWithPicker,
+  isFileSystemAccessSupported,
+  FileSizeUnit,
+  FileContentType,
   convertToBytes,
   type FileGeneratorOptions 
 } from "shared/file-generator";
@@ -34,6 +34,7 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
   const [contentType, setContentType] = useState<FileContentType>(FileContentType.Random);
   const [customHexValue, setCustomHexValue] = useState("FF");
   const [sliderValue, setSliderValue] = useState(0); // 0-100 slider value
+  const [useBinary, setUseBinary] = useState(true); // true = 1024, false = 1000
   
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -41,6 +42,12 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadFilename, setDownloadFilename] = useState<string>("");
   const [success, setSuccess] = useState(false);
+  const [fsApiSupported, setFsApiSupported] = useState(false);
+
+  // Check File System Access API support on mount
+  useEffect(() => {
+    setFsApiSupported(isFileSystemAccessSupported());
+  }, []);
 
   // Size presets for slider markers
   const sizePresets = [
@@ -258,11 +265,12 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
       contentType,
       customHexValue: contentType === FileContentType.CustomHex ? customHexValue : undefined,
       onProgress: handleProgress,
+      useBinary,
     };
   };
 
   /**
-   * Generate and download the file
+   * Generate file using optimized streaming approach
    */
   const handleGenerateFile = async () => {
     try {
@@ -270,12 +278,6 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
       setProgress(0);
       setError(null);
       setSuccess(false);
-      
-      // Clear previous download URL
-      if (downloadUrl) {
-        URL.revokeObjectURL(downloadUrl);
-        setDownloadUrl(null);
-      }
 
       const options = getFileOptions();
       
@@ -298,37 +300,57 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
         }
       }
 
-      // Generate file content
-      const content = await generateFileContent(options);
-      
-      // Create download URL
-      const { url } = generateFileDownloadUrl(content, getCurrentExtension());
-      setDownloadUrl(url);
-      
-      const finalFilename = fullFilename;
-      setDownloadFilename(finalFilename);
-      
-      setSuccess(true);
-      setProgress(100);
-      
-      // Auto-download the file
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = finalFilename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Use File System Access API for all files when supported
+      if (fsApiSupported) {
+        // Use the optimized streaming approach - ask where to save first, then generate directly to disk
+        await saveFileWithPicker(options, fullFilename);
+        
+        setSuccess(true);
+        setProgress(100);
+      } else {
+        // Fallback to traditional approach for unsupported browsers
+        // Clear previous download URL
+        if (downloadUrl) {
+          URL.revokeObjectURL(downloadUrl);
+          setDownloadUrl(null);
+        }
+
+        // Generate file content in memory
+        const { generateFileContent, generateFileDownloadUrl } = await import("shared/file-generator");
+        const content = await generateFileContent(options);
+        
+        // Create download URL
+        const { url } = generateFileDownloadUrl(content, getCurrentExtension());
+        setDownloadUrl(url);
+        
+        const finalFilename = fullFilename;
+        setDownloadFilename(finalFilename);
+        
+        setSuccess(true);
+        setProgress(100);
+        
+        // Auto-download the file
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = finalFilename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
       
     } catch (error) {
-      setError((error as Error).message);
+      if ((error as Error).name === 'AbortError') {
+        // User cancelled the file picker
+        setError("File generation cancelled");
+      } else {
+        setError((error as Error).message);
+      }
       setProgress(0);
       setSuccess(false);
     } finally {
       setIsGenerating(false);
     }
   };
-
-
 
   /**
    * Get display text for file size
@@ -338,12 +360,13 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
     const sizeValue = Number(selectedSize);
     if (isNaN(sizeValue) || sizeValue <= 0) return "0 B";
     
-    const bytes = convertToBytes(sizeValue, unit);
+    const bytes = convertToBytes(sizeValue, unit, useBinary);
+    const base = useBinary ? 1024 : 1000;
     
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+    if (bytes < base) return `${bytes} B`;
+    if (bytes < base * base) return `${(bytes / base).toFixed(1)} KB`;
+    if (bytes < base * base * base) return `${(bytes / (base * base)).toFixed(1)} MB`;
+    return `${(bytes / (base * base * base)).toFixed(1)} GB`;
   };
 
   return (
@@ -370,7 +393,7 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
           {/* File Size */}
           <div className="space-y-2">
             <Label>File Size</Label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <Input
                 type="number"
                 min="1"
@@ -389,6 +412,19 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
                 <SelectOption value={FileSizeUnit.MB}>MB</SelectOption>
                 <SelectOption value={FileSizeUnit.GB}>GB</SelectOption>
               </Select>
+              {/* Binary/Decimal Calculation Checkbox */}
+              <div className="flex items-center space-x-2 ml-2">
+                <input
+                  type="checkbox"
+                  id="decimal-calc"
+                  checked={!useBinary}
+                  onChange={(e) => setUseBinary(!e.target.checked)}
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="decimal-calc" className="text-sm text-muted-foreground cursor-pointer">
+                  Use decimal (1000) like macOS
+                </Label>
+              </div>
             </div>
 
             {/* Size Slider */}
@@ -504,15 +540,24 @@ export function FileGenerator({ className = "" }: FileGeneratorProps) {
             className="w-full h-12 text-base"
             disabled={isGenerating || !fullFilename.trim() || Number(selectedSize) <= 0}
           >
-            {isGenerating ? (
+                        {isGenerating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating...
+                {progress > 0 ? `Generating... ${progress}%` : "Generating..."}
               </>
             ) : (
               <>
-                <Download className="mr-2 h-4 w-4" />
-                Generate
+                {fsApiSupported ? (
+                  <>
+                    <FolderOpen className="mr-2 h-4 w-4" />
+                    Save As...
+                  </>
+                ) : (
+                  <>
+                    <Download className="mr-2 h-4 w-4" />
+                    Generate
+                  </>
+                )}
               </>
             )}
           </Button>

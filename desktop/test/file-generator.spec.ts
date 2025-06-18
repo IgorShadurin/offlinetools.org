@@ -108,7 +108,11 @@ describe('File Generator tests', async () => {
     const sizeInput = await page.$('input[type="number"]');
     expect(sizeInput).not.toBeNull();
     
-    const generateButton = await page.$('button:has-text("Generate")');
+    // Look for either "Generate" or "Save As..." button text
+    let generateButton = await page.$('button:has-text("Generate")');
+    if (!generateButton) {
+      generateButton = await page.$('button:has-text("Save As...")');
+    }
     expect(generateButton).not.toBeNull();
     
     // Check for content type radio buttons
@@ -189,7 +193,13 @@ describe('File Generator tests', async () => {
     await fillFilenameInput(page, '');
     
         // Check that generate button is disabled
-    const generateButton = await page.waitForSelector('button:has-text("Generate")');
+    // Try to find either button text
+    let generateButton = await page.$('button:has-text("Generate")');
+    if (!generateButton) {
+      generateButton = await page.waitForSelector('button:has-text("Save As...")');
+    } else {
+      generateButton = await page.waitForSelector('button:has-text("Generate")');
+    }
     const isDisabled = await generateButton.isDisabled();
     expect(isDisabled).toBe(true);
 
