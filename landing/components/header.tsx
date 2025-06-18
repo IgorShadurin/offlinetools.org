@@ -27,6 +27,9 @@ export function Header() {
               <Link href="/pricing" className="text-sm font-medium transition-colors hover:text-foreground/80">
                 Pricing
               </Link>
+              <Link href="/comparison" className="text-sm font-medium transition-colors hover:text-foreground/80">
+                Comparison
+              </Link>
               <Link href="/tools" className="text-sm font-medium transition-colors hover:text-foreground/80">
                 Online Tools
               </Link>
@@ -85,6 +88,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pricing
+              </Link>
+              <Link
+                href="/comparison"
+                className="text-sm font-medium transition-colors hover:text-foreground/80"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Comparison
               </Link>
               <Link
                 href="/tools"
