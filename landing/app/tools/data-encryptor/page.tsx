@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import DataEncryptor from "./DataEncryptor";
 
 export const metadata: Metadata = {
-  title: "Data Encryptor - Secure AES-256 Encryption Tool | OfflineTools.org",
+  title: "Data Encryptor",
   description:
     "Encrypt and decrypt text or files using password-based AES-256 encryption with secure PBKDF2 key derivation. Client-side processing ensures your data stays private.",
   keywords: [

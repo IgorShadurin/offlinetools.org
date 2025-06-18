@@ -77,39 +77,47 @@ export default function Home() {
 
         {/* Hero Section */}
         <section className="relative py-20 md:py-28">
-          <Container className="flex flex-col items-center text-center">
-            <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6">
-              One-Stop Developer Toolbox
-            </h1>
-            <p className="max-w-2xl text-lg text-muted-foreground mb-8 md:mb-10">
-              A collection of essential offline developer tools to boost your productivity. Available for macOS,
-              Windows, and Linux.
-            </p>
-            <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <Button size="lg" className="text-base py-2.5 px-5 font-medium" asChild>
-                <Link href="/download" className="flex items-center gap-2">
-                  <Download className="h-5 w-5" /> Download Now
-                </Link>
-              </Button>
-            </div>
-            <div className="w-full max-w-2xl mt-6">
-              <RecentlyVisitedTools />
-            </div>
-            <div className="mt-12 md:mt-16 relative w-full max-w-5xl rounded-lg overflow-hidden">
-              <div
-                className="cursor-pointer transition-transform hover:scale-[1.01]"
-                onClick={() => openModal("/screenshots/1.jpeg", "OfflineTools Application Screenshot")}
-              >
-                <Image
-                  src="/screenshots/1.jpeg"
-                  alt="OfflineTools Application Screenshot"
-                  width={1280}
-                  height={720}
-                  className="w-full h-auto"
-                  priority
-                />
-              </div>
-            </div>
+          <Container>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-center">
+              {/* Text Content - 1/3 width */}
+              <div className="lg:col-span-1 order-1 lg:order-1 text-center lg:text-left">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+                  One-Stop Developer Toolbox
+                </h1>
+                <p className="text-lg text-muted-foreground mb-8">
+                  A collection of essential offline developer tools to boost your productivity. Available for macOS,
+                  Windows, and Linux.
+                </p>
+                <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
+                  <Button size="lg" className="text-base py-2.5 px-5 font-medium" asChild>
+                    <Link href="/download" className="flex items-center gap-2">
+                      <Download className="h-5 w-5" /> Download Now
+                    </Link>
+                  </Button>
+                </div>
+                                 <div className="w-full mt-6">
+                   <RecentlyVisitedTools />
+                 </div>
+               </div>
+
+               {/* Video Section - 2/3 width */}
+               <div className="lg:col-span-2 order-2 lg:order-2">
+                 <div className="relative w-full rounded-lg overflow-hidden shadow-2xl">
+                   <video
+                     autoPlay
+                     loop
+                     playsInline
+                     muted
+                     poster="/main.webp"
+                     className="w-full h-auto"
+                     style={{ aspectRatio: "16/9" }}
+                   >
+                     <source src="/main.mp4" type="video/mp4" />
+                     Your browser does not support the video tag.
+                   </video>
+                 </div>
+               </div>
+             </div>
           </Container>
         </section>
 
