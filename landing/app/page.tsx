@@ -191,17 +191,24 @@ export default function Home() {
         </Section>
 
         {/* Use Cases */}
-        <Section id="use-cases" className="bg-gray-50 dark:bg-gray-900/50">
+        <Section id="use-cases">
           <Container>
             <h2 className="text-3xl font-bold text-center mb-4">For every developer workflow</h2>
-            <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+            <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-16">
               OfflineTools adapts to how you work, whether you&apos;re a frontend developer, backend engineer, or DevOps
               specialist.
             </p>
-            <div className="grid gap-10 max-w-3xl mx-auto">
-              <div className="rounded-lg border bg-background p-8 shadow-sm hover:shadow-md transition-shadow">
-                <h3 className="text-2xl font-semibold mb-4 text-primary">Frontend Developers</h3>
-                <div className="aspect-[16/9] mb-6 overflow-hidden rounded-lg">
+            
+            {/* Frontend Developers - Text Left, Image Right */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center mb-20">
+              <div className="lg:col-span-1 order-2 lg:order-1">
+                <h3 className="text-3xl font-bold mb-6 text-primary">Frontend Developers</h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Streamline your frontend workflow with tools for JSON formatting, CSS manipulation, color conversion, and more. All integrated in one powerful application for maximum productivity.
+                </p>
+              </div>
+              <div className="lg:col-span-2 order-1 lg:order-2">
+                <div className="aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
                   <div
                     className="cursor-pointer transition-transform hover:scale-[1.02]"
                     onClick={() => openModal("/screenshots/4.jpeg", "Frontend Developer Tools Screenshot")}
@@ -209,21 +216,19 @@ export default function Home() {
                     <Image
                       src="/screenshots/4.jpeg"
                       alt="Frontend Developer Tools Screenshot"
-                      width={640}
-                      height={360}
+                      width={960}
+                      height={540}
                       className="w-full h-auto"
                     />
                   </div>
                 </div>
-                <p className="text-muted-foreground text-center max-w-lg mx-auto">
-                  Streamline your frontend workflow with tools for JSON, CSS, color manipulation, and more, all
-                  integrated in one application.
-                </p>
               </div>
+            </div>
 
-              <div className="rounded-lg border bg-background p-8 shadow-sm hover:shadow-md transition-shadow">
-                <h3 className="text-2xl font-semibold mb-4 text-primary">Backend Engineers</h3>
-                <div className="aspect-[16/9] mb-6 overflow-hidden rounded-lg">
+            {/* Backend Engineers - Image Left, Text Right */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+              <div className="lg:col-span-2 order-2 lg:order-1">
+                <div className="aspect-[16/9] overflow-hidden rounded-lg shadow-lg">
                   <div
                     className="cursor-pointer transition-transform hover:scale-[1.02]"
                     onClick={() => openModal("/screenshots/5.jpeg", "Backend Developer Tools Screenshot")}
@@ -231,15 +236,17 @@ export default function Home() {
                     <Image
                       src="/screenshots/5.jpeg"
                       alt="Backend Developer Tools Screenshot"
-                      width={640}
-                      height={360}
+                      width={960}
+                      height={540}
                       className="w-full h-auto"
                     />
                   </div>
                 </div>
-                <p className="text-muted-foreground text-center max-w-lg mx-auto">
-                  Decode JWTs, generate UUIDs, hash strings, and test regular expressions without leaving your desktop
-                  or exposing sensitive data online.
+              </div>
+              <div className="lg:col-span-1 order-1 lg:order-2">
+                <h3 className="text-3xl font-bold mb-6 text-primary">Backend Engineers</h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Decode JWTs, generate UUIDs, create secure hashes, and test regular expressions without leaving your desktop or exposing sensitive data online. Privacy-first development tools.
                 </p>
               </div>
             </div>
