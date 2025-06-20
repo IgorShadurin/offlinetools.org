@@ -102,6 +102,10 @@ export default function OnlineTimer() {
         const newTime = prev - 1;
         
         if (newTime <= 0) {
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
           setTimerState(TimerState.FINISHED);
           clearTimerState();
           playSuccessSound();
