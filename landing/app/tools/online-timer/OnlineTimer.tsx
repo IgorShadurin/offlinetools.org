@@ -207,9 +207,6 @@ export default function OnlineTimer() {
   };
 
   const getTimerDisplay = () => {
-    if (timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) {
-      return formatTimerTime(remainingTime);
-    }
     return timeInput;
   };
 

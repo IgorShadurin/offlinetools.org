@@ -201,9 +201,6 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
   };
 
   const getTimerDisplay = () => {
-    if (timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) {
-      return formatTimerTime(remainingTime);
-    }
     return timeInput;
   };
 
