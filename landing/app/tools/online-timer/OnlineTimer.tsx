@@ -54,7 +54,6 @@ export default function OnlineTimer() {
     const savedState = loadTimerState();
     if (savedState && savedState.state !== TimerState.FINISHED) {
       setRemainingTime(savedState.remainingTime);
-      setTimeInput(formatTimerTime(savedState.remainingTime));
       setTimerState(savedState.state);
     }
   }, [mounted]);
@@ -95,7 +94,24 @@ export default function OnlineTimer() {
       clearInterval(intervalRef.current);
     }
 
+    let timeToUse: number;
+    if (timerState === TimerState.PAUSED) {
+      timeToUse = remainingTime;
+    } else if (timerState === TimerState.FINISHED) {
+      timeToUse = initialTime;
+    } else {
+      try {
+        timeToUse = parseTimeString(timeInput);
+        setInitialTime(timeToUse);
+      } catch (err) {
+        setError((err as Error).message);
+        return;
+      }
+    }
+    
+    setRemainingTime(timeToUse);
     setTimerState(TimerState.RUNNING);
+    setError(null);
 
     intervalRef.current = setInterval(() => {
       setRemainingTime(prev => {
@@ -120,7 +136,7 @@ export default function OnlineTimer() {
         return newTime;
       });
     }, 1000);
-  }, [enableTickSound, playTickSound, playSuccessSound]);
+  }, [enableTickSound, playTickSound, playSuccessSound, timerState, remainingTime, initialTime, timeInput]);
 
   const pauseTimer = useCallback(() => {
     if (intervalRef.current) {
@@ -187,7 +203,6 @@ export default function OnlineTimer() {
 
   const handleTimeInputBlur = () => {
     if (timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) {
-      setTimeInput(formatTimerTime(remainingTime));
       return;
     }
 
@@ -207,9 +222,6 @@ export default function OnlineTimer() {
   };
 
   const getTimerDisplay = () => {
-    if (timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) {
-      return formatTimerTime(remainingTime);
-    }
     return timeInput;
   };
 
@@ -326,7 +338,11 @@ export default function OnlineTimer() {
             <div className="space-y-6">
               <div className="bg-muted rounded-lg p-8 text-center">
                 <div className={`text-6xl font-mono font-bold ${getTimerColor()}`}>
-                  {mounted ? getTimerDisplay() : '--:--'}
+                  {mounted ? (
+                    timerState === TimerState.RUNNING || timerState === TimerState.PAUSED 
+                      ? formatTimerTime(remainingTime)
+                      : timeInput
+                  ) : '--:--'}
                 </div>
                 <div className="text-sm text-muted-foreground mt-2">
                   {timerState === TimerState.FINISHED && 'Timer finished!'}
@@ -377,7 +393,7 @@ export default function OnlineTimer() {
                   </Button>
                 )}
 
-                {(timerState === TimerState.RUNNING || timerState === TimerState.PAUSED || timerState === TimerState.FINISHED) && (
+                {(timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) && (
                   <Button
                     onClick={stopTimer}
                     variant="outline"
@@ -385,6 +401,16 @@ export default function OnlineTimer() {
                   >
                     <Square className="mr-2 h-4 w-4" />
                     Stop
+                  </Button>
+                )}
+
+                {timerState === TimerState.FINISHED && (
+                  <Button
+                    onClick={startTimer}
+                    className="flex-1 h-12"
+                  >
+                    <Play className="mr-2 h-4 w-4" />
+                    Start
                   </Button>
                 )}
               </div>
