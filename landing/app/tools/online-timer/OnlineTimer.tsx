@@ -323,7 +323,11 @@ export default function OnlineTimer() {
             <div className="space-y-6">
               <div className="bg-muted rounded-lg p-8 text-center">
                 <div className={`text-6xl font-mono font-bold ${getTimerColor()}`}>
-                  {mounted ? getTimerDisplay() : '--:--'}
+                  {mounted ? (
+                    timerState === TimerState.RUNNING || timerState === TimerState.PAUSED 
+                      ? formatTimerTime(remainingTime)
+                      : timeInput
+                  ) : '--:--'}
                 </div>
                 <div className="text-sm text-muted-foreground mt-2">
                   {timerState === TimerState.FINISHED && 'Timer finished!'}
