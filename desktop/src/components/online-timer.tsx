@@ -91,7 +91,21 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
       clearInterval(intervalRef.current);
     }
 
-    const timeToUse = timerState === TimerState.FINISHED ? initialTime : remainingTime;
+    let timeToUse = remainingTime;
+    if (timerState !== TimerState.PAUSED) {
+      try {
+        const parsedTime = parseTimeString(timeInput);
+        if (validateTimerTime(parsedTime)) {
+          timeToUse = parsedTime;
+          setInitialTime(parsedTime);
+        } else {
+          timeToUse = initialTime;
+        }
+      } catch {
+        timeToUse = initialTime;
+      }
+    }
+    
     setRemainingTime(timeToUse);
     setTimerState(TimerState.RUNNING);
 
