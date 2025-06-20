@@ -364,7 +364,7 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
                 </Button>
               )}
 
-              {(timerState === TimerState.RUNNING || timerState === TimerState.PAUSED || timerState === TimerState.FINISHED) && (
+              {(timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) && (
                 <Button
                   onClick={stopTimer}
                   variant="outline"
@@ -372,6 +372,16 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
                 >
                   <Square className="mr-2 h-4 w-4" />
                   Stop
+                </Button>
+              )}
+
+              {timerState === TimerState.FINISHED && (
+                <Button
+                  onClick={stopTimer}
+                  className="flex-1 h-12"
+                >
+                  <Play className="mr-2 h-4 w-4" />
+                  Start
                 </Button>
               )}
             </div>
