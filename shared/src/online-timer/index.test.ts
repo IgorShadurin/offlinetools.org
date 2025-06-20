@@ -12,7 +12,12 @@ import {
   clearTimerState
 } from './index';
 
-const localStorageMock = (() => {
+const localStorageMock = (function(): {
+  getItem: (key: string) => string | null;
+  setItem: (key: string, value: string) => void;
+  removeItem: (key: string) => void;
+  clear: () => void;
+} {
   let store: Record<string, string> = {};
   return {
     getItem: (key: string): string | null => store[key] || null,
@@ -24,7 +29,11 @@ const localStorageMock = (() => {
 
 Object.defineProperty(global, 'window', {
   value: {
-    localStorage: localStorageMock
+    localStorage: {
+      ...localStorageMock,
+      length: 0,
+      key: (): string | null => null
+    }
   },
   writable: true
 });
@@ -130,7 +139,7 @@ describe('Online Timer', () => {
       });
 
       it('should merge with defaults for partial saved options', () => {
-        localStorage.setItem('onlineTimerOptions', JSON.stringify({ enableTickSound: false }));
+        localStorageMock.setItem('onlineTimerOptions', JSON.stringify({ enableTickSound: false }));
         
         const loaded = loadTimerOptions();
         expect(loaded).toEqual({
@@ -140,7 +149,7 @@ describe('Online Timer', () => {
       });
 
       it('should handle corrupted localStorage data', () => {
-        localStorage.setItem('onlineTimerOptions', 'invalid json');
+        localStorageMock.setItem('onlineTimerOptions', 'invalid json');
         
         const loaded = loadTimerOptions();
         expect(loaded).toEqual(DEFAULT_TIMER_OPTIONS);
@@ -164,7 +173,7 @@ describe('Online Timer', () => {
       });
 
       it('should handle corrupted state data', () => {
-        localStorage.setItem('onlineTimerState', 'invalid json');
+        localStorageMock.setItem('onlineTimerState', 'invalid json');
         
         const loaded = loadTimerState();
         expect(loaded).toBeNull();
