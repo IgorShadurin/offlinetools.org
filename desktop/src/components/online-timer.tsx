@@ -377,7 +377,7 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
 
               {timerState === TimerState.FINISHED && (
                 <Button
-                  onClick={stopTimer}
+                  onClick={startTimer}
                   className="flex-1 h-12"
                 >
                   <Play className="mr-2 h-4 w-4" />
