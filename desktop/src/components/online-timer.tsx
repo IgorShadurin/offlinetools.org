@@ -50,7 +50,6 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
     const savedState = loadTimerState();
     if (savedState && savedState.state !== TimerState.FINISHED) {
       setRemainingTime(savedState.remainingTime);
-      setTimeInput(formatTimerTime(savedState.remainingTime));
       setTimerState(savedState.state);
     }
   }, [mounted]);
@@ -91,23 +90,24 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
       clearInterval(intervalRef.current);
     }
 
-    let timeToUse = remainingTime;
-    if (timerState !== TimerState.PAUSED) {
+    let timeToUse: number;
+    if (timerState === TimerState.PAUSED) {
+      timeToUse = remainingTime;
+    } else if (timerState === TimerState.FINISHED) {
+      timeToUse = initialTime;
+    } else {
       try {
-        const parsedTime = parseTimeString(timeInput);
-        if (validateTimerTime(parsedTime)) {
-          timeToUse = parsedTime;
-          setInitialTime(parsedTime);
-        } else {
-          timeToUse = initialTime;
-        }
-      } catch {
-        timeToUse = initialTime;
+        timeToUse = parseTimeString(timeInput);
+        setInitialTime(timeToUse);
+      } catch (err) {
+        setError((err as Error).message);
+        return;
       }
     }
     
     setRemainingTime(timeToUse);
     setTimerState(TimerState.RUNNING);
+    setError(null);
 
     intervalRef.current = setInterval(() => {
       setRemainingTime(prev => {
@@ -132,7 +132,7 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
         return newTime;
       });
     }, 1000);
-  }, [enableTickSound, playTickSound, playSuccessSound]);
+  }, [enableTickSound, playTickSound, playSuccessSound, timerState, remainingTime, initialTime, timeInput]);
 
   const pauseTimer = useCallback(() => {
     if (intervalRef.current) {
@@ -197,7 +197,6 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
 
   const handleTimeInputBlur = () => {
     if (timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) {
-      setTimeInput(formatTimerTime(remainingTime));
       return;
     }
 
