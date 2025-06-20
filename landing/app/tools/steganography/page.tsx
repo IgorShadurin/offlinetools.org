@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import SteganographyTool from "./SteganographyTool";
 
 export const metadata: Metadata = {
-  title: "Steganography Tool - Hide Text in Images | OfflineTools",
+  title: "Steganography",
   description:
     "Hide mnemonic phrases and sensitive text within images using steganography. Supports password encryption and secure client-side processing.",
   keywords: [

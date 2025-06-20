@@ -6,7 +6,7 @@ export default function TimezonePage() {
 }
 
 export const metadata = {
-  title: "Timezone Converter - OfflineTools",
+  title: "Timezone Converter",
   description:
     "Convert time between different timezones around the world. Easy-to-use timezone converter with popular cities and real-time conversion.",
 };
