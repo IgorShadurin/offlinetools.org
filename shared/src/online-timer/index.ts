@@ -112,8 +112,8 @@ export function playSound(soundPath: string): Promise<void> {
       }
       
       const audio = new Audio(soundPath);
-      audio.onended = () => resolve();
-      audio.onerror = () => reject(new Error(`Failed to play sound: ${soundPath}`));
+      audio.onended = (): void => resolve();
+      audio.onerror = (): void => reject(new Error(`Failed to play sound: ${soundPath}`));
       audio.play().catch(reject);
     } catch (error) {
       reject(error);
@@ -130,7 +130,6 @@ export function saveTimerOptions(options: TimerOptions): void {
     try {
       localStorage.setItem('onlineTimerOptions', JSON.stringify(options));
     } catch (error) {
-      console.error('Error saving timer options:', error);
     }
   }
 }
@@ -147,7 +146,6 @@ export function loadTimerOptions(): TimerOptions {
         return { ...DEFAULT_TIMER_OPTIONS, ...JSON.parse(saved) };
       }
     } catch (error) {
-      console.error('Error loading timer options:', error);
     }
   }
   return DEFAULT_TIMER_OPTIONS;
@@ -167,7 +165,6 @@ export function saveTimerState(remainingTime: number, state: TimerState): void {
         timestamp: Date.now()
       }));
     } catch (error) {
-      console.error('Error saving timer state:', error);
     }
   }
 }
@@ -188,7 +185,6 @@ export function loadTimerState(): { remainingTime: number; state: TimerState } |
         };
       }
     } catch (error) {
-      console.error('Error loading timer state:', error);
     }
   }
   return null;
@@ -202,7 +198,6 @@ export function clearTimerState(): void {
     try {
       localStorage.removeItem('onlineTimerState');
     } catch (error) {
-      console.error('Error clearing timer state:', error);
     }
   }
 }
