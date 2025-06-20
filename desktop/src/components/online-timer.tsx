@@ -163,6 +163,28 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.electron?.ipcRenderer) {
+      const handleClearTimerState = () => {
+        clearTimerState();
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        setTimerState(TimerState.STOPPED);
+        setRemainingTime(TimerPreset.SIXTY_MINUTES);
+        setTimeInput(formatTimerTime(TimerPreset.SIXTY_MINUTES));
+        setError(null);
+      };
+
+      const removeListener = window.electron.ipcRenderer.on('clear-timer-state-on-exit', handleClearTimerState);
+      
+      return () => {
+        removeListener?.();
+      };
+    }
+  }, []);
+
   const handlePresetClick = (preset: TimerPreset) => {
     if (timerState === TimerState.RUNNING || timerState === TimerState.PAUSED) {
       return;

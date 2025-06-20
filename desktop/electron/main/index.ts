@@ -434,6 +434,9 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
+  if (win && win.webContents) {
+    win.webContents.send('clear-timer-state-on-exit')
+  }
   win = null
   stopAutoUpdateChecker()
   if (process.platform !== 'darwin') app.quit()
@@ -453,6 +456,12 @@ app.on('activate', () => {
     allWindows[0].focus()
   } else {
     createWindow()
+  }
+})
+
+app.on('before-quit', () => {
+  if (win && win.webContents) {
+    win.webContents.send('clear-timer-state-on-exit')
   }
 })
 
