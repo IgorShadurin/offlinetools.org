@@ -24,7 +24,8 @@ export enum Tool {
   WATERMARK_TOOL = 'watermark-tool',
   TIMEZONE_CONVERTER = 'timezone-converter',
   DATA_ENCRYPTOR = 'data-encryptor',
-  STEGANOGRAPHY = 'steganography'
+  STEGANOGRAPHY = 'steganography',
+  ONLINE_TIMER = 'online-timer'
 }
 
 /**

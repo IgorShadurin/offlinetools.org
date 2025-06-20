@@ -95,6 +95,7 @@ export * from './watermark-tool/clipboard-registration';
 export * from './timezone-converter/clipboard-registration';
 export * from './data-encryptor/clipboard-registration';
 export * from './steganography/clipboard-registration';
+export * from './online-timer/clipboard-registration';
 
 // Export Unit Converter
 export * from './unit-converter';
@@ -126,5 +127,11 @@ export * from './data-encryptor';
 // Export Steganography
 export * from './steganography';
 
+// Export Online Timer
+export * from './online-timer';
+
 // Export Timezone Converter
 export * from './timezone-converter';
+
+// Export Online Timer
+export * from './online-timer';
