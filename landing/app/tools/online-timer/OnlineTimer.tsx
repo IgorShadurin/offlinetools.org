@@ -95,6 +95,7 @@ export default function OnlineTimer() {
       clearInterval(intervalRef.current);
     }
 
+    setRemainingTime(initialTime);
     setTimerState(TimerState.RUNNING);
 
     intervalRef.current = setInterval(() => {
