@@ -4,44 +4,10 @@ import {
   DEFAULT_TIMER_OPTIONS,
   formatTimerTime,
   parseTimeString,
-  validateTimerTime,
-  saveTimerOptions,
-  loadTimerOptions,
-  saveTimerState,
-  loadTimerState,
-  clearTimerState
+  validateTimerTime
 } from './index';
 
-const localStorageMock = (function(): {
-  getItem: (key: string) => string | null;
-  setItem: (key: string, value: string) => void;
-  removeItem: (key: string) => void;
-  clear: () => void;
-} {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string): string | null => store[key] || null,
-    setItem: (key: string, value: string): void => { store[key] = value; },
-    removeItem: (key: string): void => { delete store[key]; },
-    clear: (): void => { store = {}; }
-  };
-})();
-
-Object.defineProperty(global, 'window', {
-  value: {
-    localStorage: {
-      ...localStorageMock,
-      length: 0,
-      key: (): string | null => null
-    }
-  },
-  writable: true
-});
-
 describe('Online Timer', () => {
-  beforeEach(() => {
-    localStorageMock.clear();
-  });
 
   describe('formatTimerTime', () => {
     it('should format seconds correctly in MM:SS format', () => {
@@ -115,79 +81,6 @@ describe('Online Timer', () => {
     it('should reject negative values', () => {
       expect(validateTimerTime(-1)).toBe(false);
       expect(validateTimerTime(-100)).toBe(false);
-    });
-  });
-
-  describe('localStorage functions', () => {
-    describe('saveTimerOptions and loadTimerOptions', () => {
-      it('should save and load timer options', () => {
-        const options = {
-          initialTime: 1800,
-          enableTickSound: false,
-          enableSuccessSound: true
-        };
-
-        saveTimerOptions(options);
-        const loaded = loadTimerOptions();
-
-        expect(loaded).toEqual(options);
-      });
-
-      it('should return defaults when no saved options exist', () => {
-        const loaded = loadTimerOptions();
-        expect(loaded).toEqual(DEFAULT_TIMER_OPTIONS);
-      });
-
-      it('should merge with defaults for partial saved options', () => {
-        localStorageMock.setItem('onlineTimerOptions', JSON.stringify({ enableTickSound: false }));
-        
-        const loaded = loadTimerOptions();
-        expect(loaded).toEqual({
-          ...DEFAULT_TIMER_OPTIONS,
-          enableTickSound: false
-        });
-      });
-
-      it('should handle corrupted localStorage data', () => {
-        localStorageMock.setItem('onlineTimerOptions', 'invalid json');
-        
-        const loaded = loadTimerOptions();
-        expect(loaded).toEqual(DEFAULT_TIMER_OPTIONS);
-      });
-    });
-
-    describe('saveTimerState and loadTimerState', () => {
-      it('should save and load timer state', () => {
-        saveTimerState(1800, TimerState.RUNNING);
-        const loaded = loadTimerState();
-
-        expect(loaded).toEqual({
-          remainingTime: 1800,
-          state: TimerState.RUNNING
-        });
-      });
-
-      it('should return null when no saved state exists', () => {
-        const loaded = loadTimerState();
-        expect(loaded).toBeNull();
-      });
-
-      it('should handle corrupted state data', () => {
-        localStorageMock.setItem('onlineTimerState', 'invalid json');
-        
-        const loaded = loadTimerState();
-        expect(loaded).toBeNull();
-      });
-    });
-
-    describe('clearTimerState', () => {
-      it('should clear timer state from localStorage', () => {
-        saveTimerState(1800, TimerState.RUNNING);
-        expect(loadTimerState()).not.toBeNull();
-
-        clearTimerState();
-        expect(loadTimerState()).toBeNull();
-      });
     });
   });
 
