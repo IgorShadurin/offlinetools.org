@@ -119,6 +119,11 @@ export const onlineTools = [
     path: "/tools/steganography",
     description: "Hide any text securely within images using advanced steganography techniques.",
   },
+  {
+    title: "Online Timer",
+    path: "/tools/online-timer",
+    description: "Countdown timer with preset options, sound notifications, and localStorage persistence.",
+  },
 ];
 
 /**
