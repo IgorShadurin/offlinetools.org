@@ -223,7 +223,7 @@ export default function OnlineTimer() {
       <Container className="py-8 md:py-12">
         <SectionHeading
           title="Online Timer"
-          description="Countdown timer with preset options, sound notifications, and localStorage persistence."
+          description="Countdown timer with preset options and sound notifications. Perfect for Pomodoro technique, cooking, studying, and productivity sessions."
         />
 
         <div className="mb-6 flex items-center">
