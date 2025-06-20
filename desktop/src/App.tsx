@@ -41,6 +41,7 @@ import { HtmlTextExtractor } from './components/html-text-extractor'
 import { BinaryBase64Codec } from './components/binary-base64-codec'
 import { TextToSlug } from './components/text-to-slug'
 import { FileGenerator } from './components/file-generator'
+import { OnlineTimer } from './components/online-timer'
 
 // List of tools
 const tools: Tool[] = [
@@ -53,6 +54,7 @@ const tools: Tool[] = [
   { id: 'uuid-generator', name: 'UUID Generator', icon: <Fingerprint size={16} /> },
   { id: 'person-generator', name: 'Person Generator', icon: <Users size={16} /> },
   { id: 'speech-length-estimator', name: 'Speech Length Estimator', icon: <Clock size={16} /> },
+  { id: 'online-timer', name: 'Online Timer', icon: <Clock size={16} /> },
   { id: 'timezone-converter', name: 'Timezone Converter', icon: <Clock size={16} /> },
   { id: 'ethereum-converter', name: 'Ethereum Converter', icon: <Hash size={16} /> },
   { id: 'unit-converter', name: 'Unit Converter', icon: <Hash size={16} /> },
@@ -166,6 +168,8 @@ function App() {
           <PersonGenerator className="min-h-full" />
         ) : selectedTool === 'speech-length-estimator' ? (
           <SpeechLengthEstimator className="min-h-full" />
+        ) : selectedTool === 'online-timer' ? (
+          <OnlineTimer className="min-h-full" />
         ) : selectedTool === 'ethereum-converter' ? (
           <EthereumConverter className="min-h-full" />
         ) : selectedTool === 'unit-converter' ? (
