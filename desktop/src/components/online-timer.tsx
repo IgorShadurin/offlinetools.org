@@ -220,7 +220,7 @@ export function OnlineTimer({ className = "" }: OnlineTimerProps) {
     <div className={`p-6 h-full flex flex-col space-y-6 ${className}`}>
       <div className="flex items-center gap-2">
         <Clock className="h-6 w-6" />
-        <h1 className="text-2xl font-bold">Online Timer</h1>
+        <h1 className="text-2xl font-bold">Timer</h1>
       </div>
 
       <div className="flex gap-4 flex-1">

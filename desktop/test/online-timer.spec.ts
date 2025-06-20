@@ -22,8 +22,8 @@ const root = path.join(__dirname, '..')
 let electronApp: ElectronApplication | null = null
 let page: Page | null = null
 
-const TOOL_BUTTON_NAME = 'Online Timer';
-const COMPONENT_TITLE = 'Online Timer';
+const TOOL_BUTTON_NAME = 'Timer';
+const COMPONENT_TITLE = 'Timer';
 
 const isCI = process.env.CI === 'true';
 
