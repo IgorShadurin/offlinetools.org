@@ -14,14 +14,14 @@ export const metadata: Metadata = {
     "offline tool",
   ],
   openGraph: {
-    title: "Steganography",
+    title: "Steganography Tool - Hide Text in Images",
     description:
       "Hide mnemonic phrases and sensitive text within images using steganography. Supports password encryption and secure client-side processing.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Steganography",
+    title: "Steganography Tool - Hide Text in Images",
     description:
       "Hide mnemonic phrases and sensitive text within images using steganography. Supports password encryption and secure client-side processing.",
   },

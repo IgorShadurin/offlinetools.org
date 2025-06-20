@@ -6,11 +6,11 @@ export const metadata = generateMetadata({
   title: "Text to Slug Converter",
   description: "Convert text to URL-friendly slugs with customizable separators and character handling options.",
   openGraph: {
-    title: "Text to Slug Converter",
+    title: "Text to Slug Converter - Free Online Tool",
     description: "Convert text to URL-friendly slugs with customizable separators and character handling options.",
   },
   twitter: {
-    title: "Text to Slug Converter",
+    title: "Text to Slug Converter - Free Online Tool",
     description: "Convert text to URL-friendly slugs with customizable separators and character handling options.",
   },
 });

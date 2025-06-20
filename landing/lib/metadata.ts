@@ -17,7 +17,7 @@ export const siteConfig = {
 export const toolTitles = {
   jsonFormatter: {
     base: "JSON Formatter",
-    extended: "JSON Formatter - Format and Beautify JSON",
+    extended: "JSON Formatter - Format and Beautify JSON Easily",
   },
   base64Codec: {
     base: "Base64 Encoder/Decoder",
@@ -37,11 +37,11 @@ export const toolTitles = {
   },
   fileGenerator: {
     base: "File Generator",
-    extended: "File Generator - Create Test Files",
+    extended: "File Generator - Create Test Files Quickly and Easily",
   },
   fileHashCompare: {
     base: "File Hash Compare",
-    extended: "File Hash Compare - Verify File Integrity",
+    extended: "File Hash Compare - Verify File Integrity and Security",
   },
   uuidGenerator: {
     base: "UUID Generator",
@@ -49,7 +49,7 @@ export const toolTitles = {
   },
   imageResizer: {
     base: "Image Resizer",
-    extended: "Image Resizer - Resize Images Offline",
+    extended: "Image Resizer - Resize Images Offline in Your Browser",
   },
   qrCode: {
     base: "QR Code Tool",

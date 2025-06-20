@@ -7,14 +7,14 @@ export const metadata: Metadata = {
     "Add watermarks to your images with customizable positioning and batch processing support. Client-side processing ensures your images stay private.",
   keywords: ["watermark", "image watermark", "batch watermark", "photo watermark", "image processing", "offline tool"],
   openGraph: {
-    title: "Watermark",
+    title: "Watermark Tool - Add Watermarks to Images",
     description:
       "Add watermarks to your images with customizable positioning and batch processing support. Client-side processing ensures your images stay private.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Watermark",
+    title: "Watermark Tool - Add Watermarks to Images",
     description:
       "Add watermarks to your images with customizable positioning and batch processing support. Client-side processing ensures your images stay private.",
   },
