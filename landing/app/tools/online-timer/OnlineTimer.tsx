@@ -23,7 +23,7 @@ import {
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { AlertCircle, Play, Pause, Square, Clock, Volume2, VolumeX, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
-import OnlineTimerExplanation from "./OnlineTimerExplanation";
+
 
 export default function OnlineTimer() {
   const [mounted, setMounted] = useState(false);
@@ -116,7 +116,7 @@ export default function OnlineTimer() {
         return newTime;
       });
     }, 1000);
-  }, [remainingTime, enableTickSound, playTickSound, playSuccessSound]);
+  }, [enableTickSound, playTickSound, playSuccessSound]);
 
   const pauseTimer = useCallback(() => {
     if (intervalRef.current) {
@@ -409,9 +409,6 @@ export default function OnlineTimer() {
           </div>
         </div>
 
-        <div className="mt-12">
-          <OnlineTimerExplanation />
-        </div>
       </Container>
     </>
   );

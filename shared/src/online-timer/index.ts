@@ -101,7 +101,7 @@ export function validateTimerTime(seconds: number): boolean {
 /**
  * Play sound file
  * @param soundPath - Path to the sound file
- * @returns Promise that resolves when sound finishes playing
+ * @returns Promise that resolves immediately after starting playback
  */
 export function playSound(soundPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -112,9 +112,10 @@ export function playSound(soundPath: string): Promise<void> {
       }
       
       const audio = new Audio(soundPath);
-      audio.onended = (): void => resolve();
       audio.onerror = (): void => reject(new Error(`Failed to play sound: ${soundPath}`));
-      audio.play().catch(reject);
+      audio.play()
+        .then(() => resolve())
+        .catch(reject);
     } catch (error) {
       reject(error);
     }
