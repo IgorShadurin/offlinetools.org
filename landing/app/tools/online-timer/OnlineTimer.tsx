@@ -95,7 +95,8 @@ export default function OnlineTimer() {
       clearInterval(intervalRef.current);
     }
 
-    setRemainingTime(initialTime);
+    const timeToUse = timerState === TimerState.FINISHED ? initialTime : remainingTime;
+    setRemainingTime(timeToUse);
     setTimerState(TimerState.RUNNING);
 
     intervalRef.current = setInterval(() => {
