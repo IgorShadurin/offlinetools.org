@@ -45,7 +45,7 @@ describe('JSON Format/Validate tests', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -59,7 +59,7 @@ describe('JSON Format/Validate tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
@@ -70,31 +70,31 @@ describe('JSON Format/Validate tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot of initial state
-    await takeScreenshot(page, 'json-formatter', 'initial-view');
+    await takeScreenshot(page!, 'json-formatter', 'initial-view');
     
     // Verify correct component is loaded
     await waitForComponentTitle(page, COMPONENT_TITLE);
     
     // Verify component title
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Take screenshot of loaded component
-    await takeScreenshot(page, 'json-formatter', 'component-loaded');
+    await takeScreenshot(page!, 'json-formatter', 'component-loaded');
   });
 
   test('should format valid JSON correctly', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate (or ensure we're there)
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input unformatted JSON
     const unformattedJson = '{"name":"John","age":30,"city":"New York","skills":["JavaScript","HTML","CSS"],"address":{"street":"123 Main St","zip":"10001","country":"USA"}}';
     await fillTextareaInput(page, unformattedJson);
-    await takeScreenshot(page, 'json-formatter', 'unformatted-input');
+    await takeScreenshot(page!, 'json-formatter', 'unformatted-input');
     
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
@@ -103,7 +103,7 @@ describe('JSON Format/Validate tests', async () => {
     const formattedOutput = await waitForTextareaOutput(page, { hasLineBreaks: true });
     
     // Take screenshot of formatted result
-    await takeScreenshot(page, 'json-formatter', 'formatted-output', true);
+    await takeScreenshot(page!, 'json-formatter', 'formatted-output', true);
     
     // Verify spacing is correct (the line breaks were already verified by waitForTextareaOutput)
     expect(formattedOutput).toContain('  ');
@@ -113,12 +113,12 @@ describe('JSON Format/Validate tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input invalid JSON
     const invalidJson = '{"name":"John","age":30,city:"New York"}'; // Missing quotes around city
     await fillTextareaInput(page, invalidJson);
-    await takeScreenshot(page, 'json-formatter', 'invalid-json-input');
+    await takeScreenshot(page!, 'json-formatter', 'invalid-json-input');
     
     // Click format button
     await (await findButtonByText(page, 'Format JSON')).click();
@@ -127,14 +127,14 @@ describe('JSON Format/Validate tests', async () => {
     await waitForTextareaOutput(page, { hasError: true });
     
     // Take screenshot of validation error
-    await takeScreenshot(page, 'json-formatter', 'validation-error', true);
+    await takeScreenshot(page!, 'json-formatter', 'validation-error', true);
   });
 
   test('should clear input and output when Clear button is clicked', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to JSON Format/Validate
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input some JSON
     await fillTextareaInput(page, '{"test": "data"}');
@@ -150,13 +150,13 @@ describe('JSON Format/Validate tests', async () => {
     expect(await getTextareaOutput(page, 1)).not.toBe('');
     
     // Take screenshot before clearing
-    await takeScreenshot(page, 'json-formatter', 'before-clear');
+    await takeScreenshot(page!, 'json-formatter', 'before-clear');
     
     // Click Clear button
     await (await findButtonByText(page, 'Clear')).click();
     
     // Wait for textareas to be cleared
-    await page.waitForFunction(() => {
+    await page!.waitForFunction(() => {
       const textareas = document.querySelectorAll('textarea');
       return textareas.length >= 2 && 
              textareas[0].value === '' && 
@@ -164,10 +164,10 @@ describe('JSON Format/Validate tests', async () => {
     }, { timeout: 2000 });
     
     // Take screenshot after clearing
-    await takeScreenshot(page, 'json-formatter', 'after-clear', true);
+    await takeScreenshot(page!, 'json-formatter', 'after-clear', true);
     
     // Verify both textareas are empty
     expect(await getTextareaOutput(page, 0)).toBe('');
     expect(await getTextareaOutput(page, 1)).toBe('');
   });
-}); 
+});        

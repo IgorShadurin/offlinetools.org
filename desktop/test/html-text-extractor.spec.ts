@@ -44,7 +44,7 @@ describe('HTML Text Extractor tests', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -69,17 +69,17 @@ describe('HTML Text Extractor tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to HTML Text Extractor tool
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot after navigation
-    await takeScreenshot(page, 'html-text-extractor', 'html-view');
+    await takeScreenshot(page!, 'html-text-extractor', 'html-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test HTML data
     await fillTextareaInput(page, '<p>Hello <strong>World</strong>!</p>');
-    await takeScreenshot(page, 'html-text-extractor', 'after-input');
+    await takeScreenshot(page!, 'html-text-extractor', 'after-input');
     
     // Extract the text and wait for result
     await (await findButtonByText(page, 'Extract Text')).click();
@@ -92,6 +92,6 @@ describe('HTML Text Extractor tests', async () => {
     expect(output).toContain('Hello World!');
     
     // Capture final state
-    await takeScreenshot(page, 'html-text-extractor', 'after-extraction', true);
+    await takeScreenshot(page!, 'html-text-extractor', 'after-extraction', true);
   });
-}) 
+})        

@@ -41,7 +41,7 @@ describe('Clipboard Detector tests', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -55,7 +55,7 @@ describe('Clipboard Detector tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
@@ -66,13 +66,13 @@ describe('Clipboard Detector tests', async () => {
     expect(page).not.toBeNull();
     
     // Take screenshot of initial state
-    await takeScreenshot(page, 'clipboard-detector', 'initial-view');
+    await takeScreenshot(page!, 'clipboard-detector', 'initial-view');
     
     // Wait for the sidebar to be visible
-    await page.waitForSelector('div.w-64', { state: 'visible' });
+    await page!.waitForSelector('div.w-64', { state: 'visible' });
 
     // Verify the clipboard detector is the first tool and selected by default
-    const firstTool = await page.locator('button:has-text("Clipboard Detector")').first();
+    const firstTool = await page!.locator('button:has-text("Clipboard Detector")').first();
     expect(await firstTool.isVisible()).toBe(true);
     
     const className = await firstTool.getAttribute('class');
@@ -82,7 +82,7 @@ describe('Clipboard Detector tests', async () => {
     await waitForComponentTitle(page, COMPONENT_TITLE);
     
     // Take screenshot of loaded component
-    await takeScreenshot(page, 'clipboard-detector', 'component-loaded');
+    await takeScreenshot(page!, 'clipboard-detector', 'component-loaded');
   });
 
   test('should refresh clipboard when clicking the refresh button', async () => {
@@ -92,13 +92,13 @@ describe('Clipboard Detector tests', async () => {
     await waitForComponentTitle(page, COMPONENT_TITLE);
 
     // Find and click the refresh button
-    const refreshButton = await findButtonByText(page, 'Refresh');
+    const refreshButton = await findButtonByText(page!, 'Refresh');
     expect(refreshButton).not.toBeNull();
     await refreshButton?.click();
 
     // Take screenshot after refresh
-    await takeScreenshot(page, 'clipboard-detector', 'after-refresh');
+    await takeScreenshot(page!, 'clipboard-detector', 'after-refresh');
     
     // The test passes if we've reached this point without errors
   });
-}); 
+});      

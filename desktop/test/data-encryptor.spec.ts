@@ -76,29 +76,29 @@ describe('Data Encryptor tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Data Encryptor tool
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot after navigation
-    await takeScreenshot(page, 'data-encryptor', 'navigation-success');
+    await takeScreenshot(page!, 'data-encryptor', 'navigation-success');
     
     // Verify correct component loaded
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
   });
 
   test('should display basic UI elements', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Data Encryptor tool
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Wait for basic elements to be present
-    const passwordInput = await page.$('input[type="password"], input[type="text"]');
+    const passwordInput = await page!.$('input[type="password"], input[type="text"]');
     expect(passwordInput).not.toBeNull();
     
-    const textareas = await page.$$('textarea');
+    const textareas = await page!.$$('textarea');
     expect(textareas.length).toBeGreaterThan(0);
     
     // Take screenshot showing the UI
-    await takeScreenshot(page, 'data-encryptor', 'ui-elements');
+    await takeScreenshot(page!, 'data-encryptor', 'ui-elements');
   });
-}); 
+});        

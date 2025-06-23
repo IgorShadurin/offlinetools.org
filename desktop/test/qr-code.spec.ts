@@ -34,7 +34,7 @@ describe('QR Code Tool tests', async () => {
     electronApp = await launchElectronWithRetry()
     page = await electronApp.firstWindow()
     const loadTimeout = isCI ? 30000 : 10000
-    await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout })
+    await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout })
     const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page)
     await mainWin.evaluate(async (win) => {
       win.webContents.executeJavaScript('// Test initialization complete')
@@ -43,14 +43,14 @@ describe('QR Code Tool tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err))
+      await page!.close().catch(err => console.error('Error closing page:', err))
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err))
     }
     const tmp = path.join(root, 'test-qr.png')
     if (fs.existsSync(tmp)) fs.unlinkSync(tmp)
-  })
+  }, process.env.CI === 'true' ? 120000 : 60000)
 
   test('should generate QR code from text', async () => {
     expect(page).not.toBeNull()

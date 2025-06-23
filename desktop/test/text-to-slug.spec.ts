@@ -40,7 +40,7 @@ describe('Text to Slug Tool', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -54,7 +54,7 @@ describe('Text to Slug Tool', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
@@ -65,22 +65,22 @@ describe('Text to Slug Tool', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Text to Slug tool
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot
-    await takeScreenshot(page, 'text-to-slug', 'text-to-slug-main-view');
+    await takeScreenshot(page!, 'text-to-slug', 'text-to-slug-main-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Check input and output areas
-    const inputText = await page.$('#input-text');
-    const outputSlug = await page.$('#output-slug');
+    const inputText = await page!.$('#input-text');
+    const outputSlug = await page!.$('#output-slug');
     expect(inputText).not.toBeNull();
     expect(outputSlug).not.toBeNull();
     
     // Check generate button
-    const generateButton = await page.$('button:has-text("Generate Slug")');
+    const generateButton = await page!.$('button:has-text("Generate Slug")');
     expect(generateButton).not.toBeNull();
   });
 
@@ -88,36 +88,36 @@ describe('Text to Slug Tool', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to tool first
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input some text
-    await page.fill('#input-text', 'Hello World Test');
+    await page!.fill('#input-text', 'Hello World Test');
     
     // Click generate button
-    await page.click('button:has-text("Generate Slug")');
+    await page!.click('button:has-text("Generate Slug")');
     
     // Check output
-    const outputValue = await page.inputValue('#output-slug');
+    const outputValue = await page!.inputValue('#output-slug');
     expect(outputValue).toBe('hello-world-test');
     
     // Take screenshot
-    await takeScreenshot(page, 'text-to-slug', 'basic-slug-generation');
+    await takeScreenshot(page!, 'text-to-slug', 'basic-slug-generation');
   });
 
   test('should handle text with special characters', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to tool first
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input text with special characters
-    await page.fill('#input-text', 'Hello, World! How are you?');
+    await page!.fill('#input-text', 'Hello, World! How are you?');
     
     // Click generate button
-    await page.click('button:has-text("Generate Slug")');
+    await page!.click('button:has-text("Generate Slug")');
     
     // Check output
-    const outputValue = await page.inputValue('#output-slug');
+    const outputValue = await page!.inputValue('#output-slug');
     expect(outputValue).toBe('hello-world-how-are-you');
   });
 
@@ -125,45 +125,45 @@ describe('Text to Slug Tool', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to tool first
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Input some text
-    await page.fill('#input-text', 'Hello World Test');
+    await page!.fill('#input-text', 'Hello World Test');
     
     // Select underscore separator
-    await page.click('#underscore');
+    await page!.click('#underscore');
     
     // Click generate button
-    await page.click('button:has-text("Generate Slug")');
+    await page!.click('button:has-text("Generate Slug")');
     
     // Check output uses underscores
-    const outputValue = await page.inputValue('#output-slug');
+    const outputValue = await page!.inputValue('#output-slug');
     expect(outputValue).toBe('hello_world_test');
     
     // Take screenshot
-    await takeScreenshot(page, 'text-to-slug', 'underscore-separator');
+    await takeScreenshot(page!, 'text-to-slug', 'underscore-separator');
   });
 
   test('should handle real-world blog title example', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to tool first
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Ensure dash separator is selected (reset from previous test)
-    await page.click('#dash');
+    await page!.click('#dash');
     
     // Input real blog title
-    await page.fill('#input-text', 'How to Build a Modern Web Application with React & TypeScript');
+    await page!.fill('#input-text', 'How to Build a Modern Web Application with React & TypeScript');
     
     // Click generate button
-    await page.click('button:has-text("Generate Slug")');
+    await page!.click('button:has-text("Generate Slug")');
     
     // Check realistic output
-    const outputValue = await page.inputValue('#output-slug');
+    const outputValue = await page!.inputValue('#output-slug');
     expect(outputValue).toBe('how-to-build-a-modern-web-application-with-react-typescript');
     
     // Take screenshot
-    await takeScreenshot(page, 'text-to-slug', 'real-world-example');
+    await takeScreenshot(page!, 'text-to-slug', 'real-world-example');
   });
-}); 
+});          

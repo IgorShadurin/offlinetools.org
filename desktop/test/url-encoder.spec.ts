@@ -44,7 +44,7 @@ describe('URL Encoder/Decoder tests', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -58,7 +58,7 @@ describe('URL Encoder/Decoder tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
@@ -69,16 +69,16 @@ describe('URL Encoder/Decoder tests', async () => {
     expect(page).not.toBeNull();
     
     // Take a screenshot of the initial state
-    await takeScreenshot(page, 'url-encoder', 'initial-state');
+    await takeScreenshot(page!, 'url-encoder', 'initial-state');
     
     // Navigate to URL Encoder/Decoder
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take a screenshot to verify we're on the URL Encoder page
-    await takeScreenshot(page, 'url-encoder', 'url-encoder-page');
+    await takeScreenshot(page!, 'url-encoder', 'url-encoder-page');
     
     // Verify component title
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
     // Input test data with spaces and special characters
     const testData = 'https://example.com/path with spaces?query=special chars!@#$%^&*()';
@@ -91,25 +91,25 @@ describe('URL Encoder/Decoder tests', async () => {
     await waitForTextareaOutput(page, { contains: '%20' });
     
     // Take a screenshot of the encoded result
-    await takeScreenshot(page, 'url-encoder', 'after-component-loaded', true);
+    await takeScreenshot(page!, 'url-encoder', 'after-component-loaded', true);
   });
 
   test('should decode URL encoded text', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to URL Encoder/Decoder
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Switch to Decode tab
     await (await findButtonByText(page, 'Decode')).click();
     
     // Take a screenshot of the decode tab
-    await takeScreenshot(page, 'url-decoder', 'decode-tab-view');
+    await takeScreenshot(page!, 'url-decoder', 'decode-tab-view');
     
     // Input encoded test data
     const encodedData = 'https%3A%2F%2Fexample.com%2Fpath%20with%20spaces%3Fquery%3Dspecial%20chars%21%40%23%24%25%5E%26%2A%28%29';
     await fillTextareaInput(page, encodedData);
-    await takeScreenshot(page, 'url-decoder', 'after-input');
+    await takeScreenshot(page!, 'url-decoder', 'after-input');
     
     // Click the Decode URL button
     await (await findButtonByText(page, 'Decode URL')).click();
@@ -118,6 +118,6 @@ describe('URL Encoder/Decoder tests', async () => {
     await waitForTextareaOutput(page, { contains: 'example.com' });
     
     // Take a screenshot of the decoded result
-    await takeScreenshot(page, 'url-decoder', 'after-decoding', true);
+    await takeScreenshot(page!, 'url-decoder', 'after-decoding', true);
   });
-}); 
+});        

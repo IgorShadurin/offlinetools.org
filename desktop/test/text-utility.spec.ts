@@ -40,7 +40,7 @@ describe('Text Utility tests', async () => {
       page = await electronApp.firstWindow();
       
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -59,7 +59,7 @@ describe('Text Utility tests', async () => {
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
     }
-  });
+  }, process.env.CI === 'true' ? 120000 : 60000); // 2 minutes in CI, 1 minute locally
 
   test('should navigate to Text Utility', async () => {
     expect(page).not.toBeNull();

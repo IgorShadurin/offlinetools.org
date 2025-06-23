@@ -36,7 +36,7 @@ describe('Image Resizer tests', async () => {
       page = await electronApp.firstWindow();
       
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -50,7 +50,7 @@ describe('Image Resizer tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
@@ -63,11 +63,11 @@ describe('Image Resizer tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    await takeScreenshot(page, 'image-resizer', 'image-resizer-view');
+    await takeScreenshot(page!, 'image-resizer', 'image-resizer-view');
     
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
     
-    const uploadLabel = page.locator('label[for="image-upload"]');
+    const uploadLabel = page!.locator('label[for="image-upload"]');
     await expect(uploadLabel.isVisible()).resolves.toBe(true);
   });
 
@@ -77,13 +77,13 @@ describe('Image Resizer tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const uploadLabel = page.locator('label[for="image-upload"]');
+    const uploadLabel = page!.locator('label[for="image-upload"]');
     expect(await uploadLabel.count()).toBeGreaterThan(0);
     
     const uploadText = uploadLabel.locator('span').first();
     await expect(uploadText.textContent()).resolves.toBe('Choose image to resize');
     
-    await takeScreenshot(page, 'image-resizer', 'upload-area');
+    await takeScreenshot(page!, 'image-resizer', 'upload-area');
   });
 
   test('should show width and height inputs', async () => {
@@ -92,15 +92,15 @@ describe('Image Resizer tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const widthInput = page.locator('input#width');
+    const widthInput = page!.locator('input#width');
     expect(await widthInput.count()).toBeGreaterThan(0);
     await expect(widthInput.getAttribute('type')).resolves.toBe('number');
     
-    const heightInput = page.locator('input#height');
+    const heightInput = page!.locator('input#height');
     expect(await heightInput.count()).toBeGreaterThan(0);
     await expect(heightInput.getAttribute('type')).resolves.toBe('number');
     
-    await takeScreenshot(page, 'image-resizer', 'dimension-inputs');
+    await takeScreenshot(page!, 'image-resizer', 'dimension-inputs');
   });
 
   test('should show aspect ratio checkbox', async () => {
@@ -109,14 +109,14 @@ describe('Image Resizer tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const aspectRatioCheckbox = page.locator('input[type="checkbox"]');
+    const aspectRatioCheckbox = page!.locator('input[type="checkbox"]');
     expect(await aspectRatioCheckbox.count()).toBeGreaterThan(0);
     await expect(aspectRatioCheckbox.isChecked()).resolves.toBe(true);
     
-    const aspectRatioLabel = page.locator('text=Keep aspect ratio');
+    const aspectRatioLabel = page!.locator('text=Keep aspect ratio');
     expect(await aspectRatioLabel.count()).toBeGreaterThan(0);
     
-    await takeScreenshot(page, 'image-resizer', 'aspect-ratio-option');
+    await takeScreenshot(page!, 'image-resizer', 'aspect-ratio-option');
   });
 
   test('should show resize button in disabled state initially', async () => {
@@ -131,7 +131,7 @@ describe('Image Resizer tests', async () => {
       await expect(resizeButton.isDisabled()).resolves.toBe(true);
     }
     
-    await takeScreenshot(page, 'image-resizer', 'resize-button-disabled');
+    await takeScreenshot(page!, 'image-resizer', 'resize-button-disabled');
   });
 
   test('should show clear button', async () => {
@@ -143,7 +143,7 @@ describe('Image Resizer tests', async () => {
     const clearButton = await findButtonByText(page, 'Clear');
     expect(clearButton).toBeTruthy();
     
-    await takeScreenshot(page, 'image-resizer', 'clear-button');
+    await takeScreenshot(page!, 'image-resizer', 'clear-button');
   });
 
   test('should have proper input validation', async () => {
@@ -152,12 +152,12 @@ describe('Image Resizer tests', async () => {
     
     await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
-    const widthInput = page.locator('input#width');
-    const heightInput = page.locator('input#height');
+    const widthInput = page!.locator('input#width');
+    const heightInput = page!.locator('input#height');
     
     await expect(widthInput.getAttribute('min')).resolves.toBe('1');
     await expect(heightInput.getAttribute('min')).resolves.toBe('1');
     
-    await takeScreenshot(page, 'image-resizer', 'input-validation');
+    await takeScreenshot(page!, 'image-resizer', 'input-validation');
   });
 });

@@ -24,7 +24,7 @@ describe('Person Generator tests', async () => {
       electronApp = await launchElectronWithRetry()
       page = await electronApp.firstWindow()
       const loadTimeout = isCI ? 30000 : 10000
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout })
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout })
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page)
       await mainWin.evaluate(async (win) => {
         win.webContents.executeJavaScript('// Test initialization complete')
@@ -37,7 +37,7 @@ describe('Person Generator tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err))
+      await page!.close().catch(err => console.error('Error closing page:', err))
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err))
@@ -48,15 +48,15 @@ describe('Person Generator tests', async () => {
     expect(page).not.toBeNull()
     if (!page) return
 
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE)
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE)
 
-    const countInput = page.locator('input#count')
+    const countInput = page!.locator('input#count')
     await countInput.fill('2')
 
-    await (await findButtonByText(page, 'Generate'))?.click()
+    await (await findButtonByText(page!, 'Generate'))?.click()
 
-    await waitForTextareaOutput(page, { notEmpty: true, index: 0 })
+    await waitForTextareaOutput(page!, { notEmpty: true, index: 0 })
 
-    await takeScreenshot(page, 'person-generator', 'generated', true)
+    await takeScreenshot(page!, 'person-generator', 'generated', true)
   })
 })

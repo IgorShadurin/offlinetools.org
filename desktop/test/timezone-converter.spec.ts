@@ -37,7 +37,7 @@ describe('Timezone Converter tests', async () => {
       page = await electronApp.firstWindow();
       
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -51,12 +51,12 @@ describe('Timezone Converter tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
     }
-  });
+  }, process.env.CI === 'true' ? 120000 : 60000); // 2 minutes in CI, 1 minute locally
 
   test('should navigate to timezone converter and display basic elements', async () => {
     expect(page).not.toBeNull();

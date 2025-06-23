@@ -40,7 +40,7 @@ describe('Base64 Encoder/Decoder tests', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -65,25 +65,25 @@ describe('Base64 Encoder/Decoder tests', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Base64 tool
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot
-    await takeScreenshot(page, 'base64-encoder', 'base64-encoder-view');
+    await takeScreenshot(page!, 'base64-encoder', 'base64-encoder-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
   });
 
   test('should switch to Base64 Decoder when clicked', async () => {
     expect(page).not.toBeNull();
     
     // Navigate to Base64 tool
-    await navigateToTool(page, TOOL_BUTTON_NAME, COMPONENT_TITLE);
+    await navigateToTool(page!, TOOL_BUTTON_NAME, COMPONENT_TITLE);
     
     // Take screenshot
-    await takeScreenshot(page, 'base64-decoder', 'base64-decoder-view');
+    await takeScreenshot(page!, 'base64-decoder', 'base64-decoder-view');
     
     // Verify correct component loaded
-    await expect(page.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
+    await expect(page!.$eval('h1', el => el.textContent)).resolves.toBe(COMPONENT_TITLE);
   });
-}); 
+});        

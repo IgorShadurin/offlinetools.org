@@ -32,7 +32,7 @@ describe('[electron-vite-react] e2e tests', async () => {
       
       // Use longer timeout in CI
       const loadTimeout = isCI ? 30000 : 10000;
-      await page.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
+      await page!.waitForLoadState('domcontentloaded', { timeout: loadTimeout });
       
       const mainWin: JSHandle<BrowserWindow> = await electronApp.browserWindow(page);
       await mainWin.evaluate(async (win) => {
@@ -46,7 +46,7 @@ describe('[electron-vite-react] e2e tests', async () => {
 
   afterAll(async () => {
     if (page) {
-      await page.close().catch(err => console.error('Error closing page:', err));
+      await page!.close().catch(err => console.error('Error closing page:', err));
     }
     if (electronApp) {
       await electronApp.close().catch(err => console.error('Error closing app:', err));
@@ -58,9 +58,9 @@ describe('[electron-vite-react] e2e tests', async () => {
     expect(page).not.toBeNull();
     
     // Take initial screenshot
-    await takeScreenshot(page, 'e2e-startup', 'initial-view');
+    await takeScreenshot(page!, 'e2e-startup', 'initial-view');
     
-    const title = await page.title();
+    const title = await page!.title();
     expect(title).toBe('Offline Tools');
   });
 
@@ -70,14 +70,14 @@ describe('[electron-vite-react] e2e tests', async () => {
     
     // Use longer timeout in CI
     const waitTimeout = isCI ? 15000 : 5000;
-    await page.waitForLoadState('domcontentloaded', { timeout: waitTimeout });
+    await page!.waitForLoadState('domcontentloaded', { timeout: waitTimeout });
     
     // Take screenshot of sidebar
-    await takeScreenshot(page, 'e2e-sidebar', 'sidebar-view');
+    await takeScreenshot(page!, 'e2e-sidebar', 'sidebar-view');
     
     // Look for any interactive element that should be present in the sidebar
     // This ensures the sidebar content has loaded before we check for specific buttons
-    await page.waitForFunction(() => {
+    await page!.waitForFunction(() => {
       // Check if there are any buttons rendered on the page
       return document.querySelectorAll('button').length > 0;
     }, { timeout: waitTimeout });
