@@ -31,4 +31,7 @@ User-agent: YandexBot
 Allow: /
 
 # Crawl delay to prevent server overload
-Crawl-delay: 1 
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://offlinetools.org/sitemap.xml 
