@@ -1,19 +1,14 @@
 import JsonFormatter from "./JsonFormatter";
 import { StructuredData } from "@/components/structured-data";
-import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata";
+import { generateToolMetadata } from "@/lib/metadata";
 
-export const metadata = generateMetadata({
-  title: toolTitles.jsonFormatter.base,
-  description: toolDescriptions.jsonFormatter,
-  openGraph: {
-    title: toolTitles.jsonFormatter.extended,
-    description: toolDescriptions.jsonFormatter,
-  },
-  twitter: {
-    title: toolTitles.jsonFormatter.extended,
-    description: toolDescriptions.jsonFormatter,
-  },
-});
+// Use enhanced tool metadata with comprehensive SEO
+export const metadata = generateToolMetadata(
+  "jsonFormatter",
+  "JSON Formatter - Format and Validate JSON Online",
+  "Format, validate, and beautify JSON data with syntax highlighting and error detection. All processing happens locally for enhanced privacy and security. Perfect for developers working with APIs, configuration files, and data structures.",
+  "/tools/json-formatter"
+);
 
 export default function JsonFormatterPage() {
   return (

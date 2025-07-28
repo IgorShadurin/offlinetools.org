@@ -1,0 +1,89 @@
+# OfflineTools
+
+> OfflineTools is a collection of essential offline developer tools that prioritize privacy and offline functionality. All data processing happens locally in your browser without server transmission, ensuring complete privacy and security. Perfect for developers who value data protection and need reliable tools that work offline.
+
+## Core Tools
+
+- [JSON Formatter](https://offlinetools.org/tools/json-formatter) - Format, validate, and beautify JSON data with syntax highlighting and error detection
+- [Base64 Encoder/Decoder](https://offlinetools.org/tools/base64-codec) - Convert text to/from Base64 encoding with URL-safe options
+- [Binary Base64 Codec](https://offlinetools.org/tools/binary-base64-codec) - Convert binary files to/from Base64 encoding
+- [URL Encoder/Decoder](https://offlinetools.org/tools/url-encoder) - Safely encode text for URLs with modern and legacy support
+- [Text Hash Generator](https://offlinetools.org/tools/text-hash-generator) - Generate cryptographic hashes using MD5, SHA-1, SHA-256, SHA-3, and more
+- [File Hash Compare](https://offlinetools.org/tools/file-hash-compare) - Calculate and compare file hashes for integrity verification
+- [UUID Generator](https://offlinetools.org/tools/uuid-generator) - Generate RFC4122 compliant UUIDs in various formats (v1, v4, v5, v6, v7)
+- [QR Code Tool](https://offlinetools.org/tools/qr-code) - Generate QR codes from text or decode them from uploaded images
+
+## Additional Tools
+
+- [File Generator](https://offlinetools.org/tools/file-generator) - Create test files with custom content, size, and format
+- [Image Resizer](https://offlinetools.org/tools/image-resizer) - Resize images to custom dimensions in your browser
+- [Text Utilities](https://offlinetools.org/tools/text-utility) - Various text processing and manipulation tools
+- [Password Strength Meter](https://offlinetools.org/tools/password-strength-meter) - Evaluate password security and strength
+- [Speech Length Estimator](https://offlinetools.org/tools/speech-length-estimator) - Estimate speech duration for presentations
+- [Person Generator](https://offlinetools.org/tools/person-generator) - Generate random person data for testing
+- [Data Encryptor](https://offlinetools.org/tools/data-encryptor) - Encrypt and decrypt data using various algorithms
+- [Online Timer](https://offlinetools.org/tools/online-timer) - Set timers and alarms for productivity
+- [Text to Slug](https://offlinetools.org/tools/text-to-slug) - Convert text to URL-friendly slugs
+- [Unit Converter](https://offlinetools.org/tools/unit-converter) - Convert between different units of measurement
+- [Timezone Converter](https://offlinetools.org/tools/timezone-converter) - Convert times between different timezones
+- [Ethereum Converter](https://offlinetools.org/tools/ethereum-converter) - Convert between Ethereum units (Wei, Gwei, Ether)
+- [HTML Text Extractor](https://offlinetools.org/tools/html-text-extractor) - Extract plain text from HTML content
+- [Watermark Tool](https://offlinetools.org/tools/watermark-tool) - Add watermarks to images
+- [Steganography](https://offlinetools.org/tools/steganography) - Hide text messages within images
+
+## Documentation
+
+- [About](https://offlinetools.org/about) - Learn about our mission and privacy-first approach
+- [FAQ](https://offlinetools.org/faq) - Frequently asked questions about our tools and services
+- [Documentation](https://offlinetools.org/docs) - Technical documentation and usage guides
+- [Privacy Policy](https://offlinetools.org/privacy) - How we protect your data and privacy
+- [Terms of Service](https://offlinetools.org/terms) - Terms and conditions for using our services
+
+## Desktop Application
+
+- [Download](https://offlinetools.org/download) - Download our desktop application for Windows, macOS, and Linux
+- [Desktop Features](https://offlinetools.org/comparison) - Compare web and desktop versions
+
+## Blog & Articles
+
+- [Blog](https://offlinetools.org/blog) - Latest articles about developer tools and privacy
+- [Offline Tools Guide](https://offlinetools.org/blog/what-developer-tools-can-be-used-offline) - Comprehensive guide to offline development tools
+- [JSON Formatter Articles](https://offlinetools.org/a/json-formatter) - In-depth articles about JSON formatting and validation
+
+## Contact & Support
+
+- [Contact](https://offlinetools.org/contact) - Get in touch with our team
+- [Feedback](https://offlinetools.org/api/feedback) - Submit feedback and feature requests
+- [Support Email](mailto:igor.shadurin@gmail.com) - Direct support contact
+
+## Optional Resources
+
+- [Tool Categories](https://offlinetools.org/tools) - Browse all tools by category
+- [Careers](https://offlinetools.org/careers) - Join our team
+- [Pricing](https://offlinetools.org/pricing) - Free to use, optional premium features
+
+## Key Features
+
+- **Privacy-First**: All processing happens locally in your browser
+- **Offline Functionality**: Tools work without internet connection
+- **Cross-Platform**: Available as web app and desktop application
+- **No Registration Required**: Use tools immediately without sign-up
+- **Open Source**: Many tools are open source on GitHub
+- **Developer Focused**: Built by developers, for developers
+- **Regular Updates**: Continuously improving with new features
+
+## Technology Stack
+
+- **Frontend**: TypeScript, Next.js, Tailwind CSS
+- **Desktop**: Electron for cross-platform compatibility
+- **Processing**: Client-side JavaScript for privacy
+- **Hosting**: Vercel for fast global delivery
+
+## GitHub Repository
+
+- [Source Code](https://github.com/igorShadurin/offlinetools.org) - View source code and contribute
+
+Last updated: 2025-07-28
+Generated for: Large Language Models and AI assistants
+Contact: igor.shadurin@gmail.com
+Website: https://offlinetools.org 

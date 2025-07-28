@@ -1,19 +1,14 @@
 import Base64Codec from "./Base64Codec";
 import { StructuredData } from "@/components/structured-data";
-import { generateMetadata, toolDescriptions, toolTitles } from "@/lib/metadata";
+import { generateToolMetadata } from "@/lib/metadata";
 
-export const metadata = generateMetadata({
-  title: toolTitles.base64Codec.base,
-  description: toolDescriptions.base64Codec,
-  openGraph: {
-    title: toolTitles.base64Codec.extended,
-    description: toolDescriptions.base64Codec,
-  },
-  twitter: {
-    title: toolTitles.base64Codec.extended,
-    description: toolDescriptions.base64Codec,
-  },
-});
+// Use enhanced tool metadata with comprehensive SEO
+export const metadata = generateToolMetadata(
+  "base64Codec",
+  "Base64 Encoder/Decoder - Convert Text to Base64 Online",
+  "Convert text to Base64 or decode Base64 to plaintext with URL-safe option. Securely process data in your browser without server communication. Essential for web developers handling encoded data and API authentication.",
+  "/tools/base64-codec"
+);
 
 export default function Base64CodecPage() {
   return (
@@ -21,7 +16,7 @@ export default function Base64CodecPage() {
       <StructuredData
         type="tool"
         toolName="Base64 Encoder/Decoder"
-        toolDescription="Convert text to Base64 or decode Base64 to plaintext with URL-safe option. Process data directly in your browser with no server communication."
+        toolDescription="Convert text to Base64 or decode Base64 to plaintext with URL-safe option and privacy-first processing."
         toolUrl="/tools/base64-codec"
         toolCategory="DeveloperTool"
       />

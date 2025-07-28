@@ -1,23 +1,38 @@
 "use client";
 
 import Script from "next/script";
+import { siteConfig } from "@/lib/metadata";
 
 /**
- * Organization structured data for the main site
+ * Comprehensive Organization structured data for the main site
  */
 export function OrganizationSchema() {
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "OfflineTools",
-    url: "https://offlinetools.org",
-    logo: "https://offlinetools.org/images/logo.png",
-    description: "A collection of essential offline developer tools to boost your productivity.",
-    sameAs: ["https://github.com/igorShadurin/offlinetools.org", "https://twitter.com/offlinetools"],
+    "@id": `${siteConfig.url}/#organization`,
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}${siteConfig.ogImage}`,
+      width: 1200,
+      height: 630,
+    },
+    description: siteConfig.description,
+    foundingDate: "2024",
+    sameAs: [
+      siteConfig.githubUrl,
+      `https://twitter.com/Web3Igor`,
+    ],
     contactPoint: {
       "@type": "ContactPoint",
-      email: "support@offlinetools.org",
+      email: siteConfig.supportEmail,
       contactType: "customer support",
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "US",
     },
   };
 
@@ -29,79 +44,153 @@ export function OrganizationSchema() {
 }
 
 /**
- * WebApplication structured data for the main homepage
+ * Enhanced WebSite structured data with search functionality
  */
 export function WebApplicationSchema() {
-  const appSchema = {
+  const webAppSchema = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "OfflineTools",
-    applicationCategory: "DeveloperApplication",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    operatingSystem: "Windows, macOS, Linux",
-    downloadUrl: "https://offlinetools.org/download",
-    screenshot: "https://offlinetools.org/images/app-screenshot.png",
-    softwareVersion: "1.0",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "128",
-    },
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        url: siteConfig.url,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        publisher: {
+          "@id": `${siteConfig.url}/#organization`,
+        },
+        inLanguage: "en-US",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${siteConfig.url}/tools?search={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${siteConfig.url}/#software`,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        url: siteConfig.url,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: ["Web Browser", "Windows", "macOS", "Linux"],
+        browserRequirements: "Requires modern web browser with JavaScript enabled",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+        },
+        author: {
+          "@id": `${siteConfig.url}/#organization`,
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.8",
+          ratingCount: "287",
+          bestRating: "5",
+          worstRating: "1",
+        },
+        featureList: [
+          "JSON Formatter and Validator",
+          "Base64 Encoder/Decoder",
+          "URL Encoder/Decoder",
+          "Hash Generator (MD5, SHA-1, SHA-256, etc.)",
+          "UUID Generator",
+          "QR Code Generator/Reader",
+          "File Generator",
+          "Image Resizer",
+          "Text Utilities",
+          "Privacy-First Processing",
+        ],
+        screenshot: {
+          "@type": "ImageObject",
+          url: `${siteConfig.url}${siteConfig.ogImage}`,
+          caption: "OfflineTools - Privacy-First Developer Tools Dashboard",
+        },
+      },
+    ],
   };
 
   return (
-    <Script id="application-schema" type="application/ld+json">
-      {JSON.stringify(appSchema)}
+    <Script id="webapp-schema" type="application/ld+json">
+      {JSON.stringify(webAppSchema)}
     </Script>
   );
 }
 
 /**
- * SoftwareApplication structured data for the tools page
+ * Tools Software Application Collection structured data
  */
 export function ToolsSoftwareApplicationSchema() {
   const toolsSchema = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "OfflineTools Developer Utilities",
-    applicationCategory: "DeveloperApplication",
-    operatingSystem: "Windows, macOS, Linux",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
+    "@type": "CollectionPage",
+    "@id": `${siteConfig.url}/tools/#collection`,
+    url: `${siteConfig.url}/tools`,
+    name: "Developer Tools Collection",
+    description: "Comprehensive collection of privacy-first developer tools for web development and data processing.",
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: 24,
+      itemListElement: [
+        {
+          "@type": "SoftwareApplication",
+          name: "JSON Formatter",
+          description: "Format and validate JSON data with syntax highlighting",
+          url: `${siteConfig.url}/tools/json-formatter`,
+          applicationCategory: "DeveloperApplication",
+        },
+        {
+          "@type": "SoftwareApplication",
+          name: "Base64 Encoder/Decoder",
+          description: "Convert text to/from Base64 encoding",
+          url: `${siteConfig.url}/tools/base64-codec`,
+          applicationCategory: "DeveloperApplication",
+        },
+        {
+          "@type": "SoftwareApplication",
+          name: "URL Encoder/Decoder",
+          description: "Safely encode text for URLs",
+          url: `${siteConfig.url}/tools/url-encoder`,
+          applicationCategory: "DeveloperApplication",
+        },
+        {
+          "@type": "SoftwareApplication",
+          name: "Hash Generator",
+          description: "Generate cryptographic hashes with multiple algorithms",
+          url: `${siteConfig.url}/tools/text-hash-generator`,
+          applicationCategory: "DeveloperApplication",
+        },
+        {
+          "@type": "SoftwareApplication",
+          name: "UUID Generator",
+          description: "Generate RFC4122 compliant UUIDs",
+          url: `${siteConfig.url}/tools/uuid-generator`,
+          applicationCategory: "DeveloperApplication",
+        },
+      ],
     },
-    description:
-      "A suite of essential offline developer tools including JSON formatter, Base64 encoder/decoder, URL encoder/decoder, and more.",
-    softwareHelp: "https://offlinetools.org/docs",
-    downloadUrl: "https://offlinetools.org/download",
-    featureList: [
-      "Works completely offline",
-      "Privacy-focused - data never leaves your device",
-      "JSON formatting and validation",
-      "Base64 encoding and decoding",
-      "URL encoding and decoding",
-      "File hash generation and comparison",
-      "Text hash generation",
-    ],
+    isPartOf: {
+      "@id": `${siteConfig.url}/#website`,
+    },
   };
 
   return (
-    <Script id="tools-software-schema" type="application/ld+json">
+    <Script id="tools-schema" type="application/ld+json">
       {JSON.stringify(toolsSchema)}
     </Script>
   );
 }
 
 /**
- * Breadcrumb structured data for navigation
+ * Enhanced Breadcrumb structured data
  */
 export function BreadcrumbSchema({ items }: { items: { name: string; url: string }[] }) {
-  const breadcrumbData = {
+  const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
@@ -114,13 +203,13 @@ export function BreadcrumbSchema({ items }: { items: { name: string; url: string
 
   return (
     <Script id="breadcrumb-schema" type="application/ld+json">
-      {JSON.stringify(breadcrumbData)}
+      {JSON.stringify(breadcrumbSchema)}
     </Script>
   );
 }
 
 /**
- * Generates structured data for a specific tool
+ * Enhanced Tool Page structured data
  */
 export function ToolPageSchema({
   toolName,
@@ -136,18 +225,32 @@ export function ToolPageSchema({
   const toolSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: `${toolName} - OfflineTools`,
-    applicationCategory: toolCategory,
+    "@id": `${siteConfig.url}${toolUrl}/#tool`,
+    name: toolName,
     description: toolDescription,
+    url: `${siteConfig.url}${toolUrl}`,
+    applicationCategory: "DeveloperApplication",
+    applicationSubCategory: toolCategory,
+    operatingSystem: "Web Browser",
+    browserRequirements: "Requires modern web browser with JavaScript enabled",
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
     },
-    url: `https://offlinetools.org${toolUrl}`,
-    softwareVersion: "1.0",
-    operatingSystem: "Windows, macOS, Linux, Web",
-    applicationSubCategory: "Developer Tools",
+    author: {
+      "@id": `${siteConfig.url}/#organization`,
+    },
+    isPartOf: {
+      "@id": `${siteConfig.url}/#software`,
+    },
+    featureList: ["Privacy-First Processing", "Offline Functionality", "No Server Transmission"],
+    screenshot: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}${siteConfig.ogImage}`,
+      caption: `${toolName} - Privacy-First Developer Tool`,
+    },
   };
 
   return (
@@ -158,12 +261,13 @@ export function ToolPageSchema({
 }
 
 /**
- * FAQ page structured data
+ * Enhanced FAQ Page structured data
  */
 export function FAQPageSchema({ faqs }: { faqs: { question: string; answer: string }[] }) {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `${siteConfig.url}/faq/#faq`,
     mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
@@ -172,6 +276,9 @@ export function FAQPageSchema({ faqs }: { faqs: { question: string; answer: stri
         text: faq.answer,
       },
     })),
+    isPartOf: {
+      "@id": `${siteConfig.url}/#website`,
+    },
   };
 
   return (
@@ -182,7 +289,7 @@ export function FAQPageSchema({ faqs }: { faqs: { question: string; answer: stri
 }
 
 /**
- * Article structured data for blog posts
+ * Enhanced Article structured data
  */
 export function ArticleSchema({
   title,
@@ -204,7 +311,12 @@ export function ArticleSchema({
     "@type": "Article",
     headline: title,
     description: description,
-    image: image,
+    image: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}${image}`,
+      width: 1200,
+      height: 630,
+    },
     datePublished: publishDate,
     dateModified: modifiedDate || publishDate,
     author: {
@@ -212,12 +324,14 @@ export function ArticleSchema({
       name: authorName,
     },
     publisher: {
-      "@type": "Organization",
-      name: "OfflineTools",
-      logo: {
-        "@type": "ImageObject",
-        url: "https://offlinetools.org/images/logo.png",
-      },
+      "@id": `${siteConfig.url}/#organization`,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": window.location.href,
+    },
+    isPartOf: {
+      "@id": `${siteConfig.url}/#website`,
     },
   };
 

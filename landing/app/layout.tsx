@@ -18,10 +18,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Use the metadata utility for consistent metadata
+// Use the enhanced metadata utility for comprehensive SEO
 export const metadata: Metadata = generateMetadata();
 
-// Export viewport configuration
+// Use enhanced viewport configuration
 export { viewport };
 
 export default function RootLayout({
@@ -32,16 +32,33 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Improved meta viewport tag with best practices */}
+        {/* Enhanced meta viewport tag with best practices */}
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"
         />
-        {/* Canonical URL to prevent duplicate content issues */}
-        <link rel="canonical" href="https://offlinetools.org" />
-        {/* Adding cache control directives */}
+        
+        {/* Preconnect to external domains for performance */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://vercel.live" />
+        
+        {/* DNS prefetch for additional performance */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//www.clarity.ms" />
+        
+        {/* Enhanced security headers */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        
+        {/* Improved cache control directives */}
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        {/* Clarity tracking code for https://offlinetools.org/ */}
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
+        
+        {/* Enhanced Clarity tracking code for https://offlinetools.org/ */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
