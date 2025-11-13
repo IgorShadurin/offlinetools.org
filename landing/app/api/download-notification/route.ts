@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const formattedMessage = [
-      "📥 New Download Request",
+      "[offlinetools.org] 📥 New Download Request",
       "",
       `💻 Platform: ${PLATFORM_LABELS[platform]} (${platform})`,
       `🌐 IP Address: ${getClientIp(request)}`,
