@@ -13,6 +13,16 @@ import { useState, useRef, ChangeEvent } from "react";
 import Link from "next/link";
 import BinaryBase64CodecExplanation from "./BinaryBase64CodecExplanation";
 
+const toBlobPart = (data: Uint8Array): ArrayBuffer => {
+  if (data.buffer instanceof ArrayBuffer) {
+    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+  }
+
+  const buffer = new ArrayBuffer(data.byteLength);
+  new Uint8Array(buffer).set(data);
+  return buffer;
+};
+
 export default function BinaryBase64Codec() {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [urlSafe, setUrlSafe] = useState(false);
@@ -119,7 +129,8 @@ export default function BinaryBase64Codec() {
   const handleDownload = () => {
     if (!binaryData) return;
 
-    const blob = new Blob([binaryData], { type: fileType || "application/octet-stream" });
+    const blobPart = toBlobPart(binaryData);
+    const blob = new Blob([blobPart], { type: fileType || "application/octet-stream" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
