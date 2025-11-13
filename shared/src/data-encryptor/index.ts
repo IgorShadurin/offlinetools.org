@@ -38,9 +38,23 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
+function normalizeArrayBufferView(view: Uint8Array): ArrayBuffer {
+  if (view.buffer instanceof ArrayBuffer) {
+    if (view.byteOffset === 0 && view.byteLength === view.buffer.byteLength) {
+      return view.buffer;
+    }
+    return view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength);
+  }
+
+  const buffer = new ArrayBuffer(view.byteLength);
+  new Uint8Array(buffer).set(view);
+  return buffer;
+}
+
 async function deriveKey(password: string, salt: Uint8Array, iterations: number): Promise<CryptoKey> {
   const encoder = new TextEncoder();
   const passwordBuffer = encoder.encode(password);
+  const normalizedSalt = normalizeArrayBufferView(salt);
   
   const importedKey = await crypto.subtle.importKey(
     'raw',
@@ -53,7 +67,7 @@ async function deriveKey(password: string, salt: Uint8Array, iterations: number)
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: salt,
+      salt: normalizedSalt,
       iterations: iterations,
       hash: 'SHA-256'
     },
@@ -82,9 +96,11 @@ export async function encryptText(
   const iterations = options.iterations || DEFAULT_ITERATIONS;
   const encoder = new TextEncoder();
   const data = encoder.encode(text);
+  const dataBuffer = normalizeArrayBufferView(data);
   
   const salt = crypto.getRandomValues(new Uint8Array(SALT_LENGTH));
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+  const ivBuffer = normalizeArrayBufferView(iv);
   
   try {
     const key = await deriveKey(options.password, salt, iterations);
@@ -92,10 +108,10 @@ export async function encryptText(
     const encryptedBuffer = await crypto.subtle.encrypt(
       {
         name: 'AES-CBC',
-        iv: iv
+        iv: ivBuffer
       },
       key,
-      data
+      dataBuffer
     );
     
     return {
@@ -129,6 +145,7 @@ export async function decryptText(
   try {
     const salt = new Uint8Array(base64ToArrayBuffer(options.salt));
     const iv = new Uint8Array(base64ToArrayBuffer(options.iv));
+    const ivBuffer = normalizeArrayBufferView(iv);
     const data = base64ToArrayBuffer(encryptedData);
     
     const key = await deriveKey(options.password, salt, iterations);
@@ -136,7 +153,7 @@ export async function decryptText(
     const decryptedBuffer = await crypto.subtle.decrypt(
       {
         name: 'AES-CBC',
-        iv: iv
+        iv: ivBuffer
       },
       key,
       data
@@ -169,6 +186,7 @@ export async function encryptFile(
   
   const salt = crypto.getRandomValues(new Uint8Array(SALT_LENGTH));
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+  const ivBuffer = normalizeArrayBufferView(iv);
   
   try {
     const key = await deriveKey(options.password, salt, iterations);
@@ -176,7 +194,7 @@ export async function encryptFile(
     const encryptedBuffer = await crypto.subtle.encrypt(
       {
         name: 'AES-CBC',
-        iv: iv
+        iv: ivBuffer
       },
       key,
       data
@@ -214,6 +232,7 @@ export async function decryptFile(
   try {
     const salt = new Uint8Array(base64ToArrayBuffer(options.salt));
     const iv = new Uint8Array(base64ToArrayBuffer(options.iv));
+    const ivBuffer = normalizeArrayBufferView(iv);
     const data = base64ToArrayBuffer(encryptedData);
     
     const key = await deriveKey(options.password, salt, iterations);
@@ -221,7 +240,7 @@ export async function decryptFile(
     const decryptedBuffer = await crypto.subtle.decrypt(
       {
         name: 'AES-CBC',
-        iv: iv
+        iv: ivBuffer
       },
       key,
       data
