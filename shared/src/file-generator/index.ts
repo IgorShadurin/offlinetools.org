@@ -121,6 +121,22 @@ export function validateHexString(hexString: string): string {
 const CHUNK_SIZE = 8 * 1024 * 1024;
 
 /**
+ * Ensures a Uint8Array view is backed by a Blob-compatible ArrayBuffer
+ */
+function toBlobPart(view: Uint8Array): ArrayBuffer {
+  if (view.buffer instanceof ArrayBuffer) {
+    if (view.byteOffset === 0 && view.byteLength === view.buffer.byteLength) {
+      return view.buffer;
+    }
+    return view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength);
+  }
+
+  const buffer = new ArrayBuffer(view.byteLength);
+  new Uint8Array(buffer).set(view);
+  return buffer;
+}
+
+/**
  * Creates a pattern generator function based on content type
  * @param contentType - The content type
  * @param customHexValue - Optional custom hex value for CustomHex type
@@ -273,12 +289,12 @@ export async function generateFileContent(options: FileGeneratorOptions): Promis
       for (let i = 0; i < sizeInBytes; i++) {
         buffer[i] = generateByte();
       }
-      return new Blob([buffer], { type: 'application/octet-stream' });
+      return new Blob([toBlobPart(buffer)], { type: 'application/octet-stream' });
     }
     
     // For larger files, use a chunked approach with progress reporting
     return new Promise((resolve, reject) => {
-      const chunks: Uint8Array[] = [];
+      const chunks: ArrayBuffer[] = [];
       const chunkSize = Math.min(CHUNK_SIZE, sizeInBytes);
       let bytesGenerated = 0;
       
@@ -300,7 +316,7 @@ export async function generateFileContent(options: FileGeneratorOptions): Promis
             chunk[i] = generateByte();
           }
           
-          chunks.push(chunk);
+          chunks.push(toBlobPart(chunk));
           bytesGenerated += currentChunkSize;
           
           // Report progress
@@ -336,7 +352,7 @@ async function generateLargeFileContent(options: FileGeneratorOptions, sizeInByt
     options.contentType === FileContentType.CustomHex ? options.customHexValue : undefined
   );
   
-  const chunks: Uint8Array[] = [];
+  const chunks: ArrayBuffer[] = [];
   let bytesGenerated = 0;
   
   while (bytesGenerated < sizeInBytes) {
@@ -344,7 +360,7 @@ async function generateLargeFileContent(options: FileGeneratorOptions, sizeInByt
     const currentChunkSize = Math.min(CHUNK_SIZE, remainingBytes);
     
     const chunk = generateChunk(currentChunkSize);
-    chunks.push(chunk);
+    chunks.push(toBlobPart(chunk));
     bytesGenerated += currentChunkSize;
     
     // Report progress
