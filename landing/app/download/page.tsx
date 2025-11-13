@@ -5,7 +5,7 @@ import { Section } from "@/components/ui/section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Apple, MonitorIcon, Terminal } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { PageLayout } from "@/components/page-layout";
 
@@ -14,18 +14,80 @@ const DOWNLOAD_LINKS = {
   mac_x64: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_x64.dmg",
   linux: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools_x86_64.AppImage",
   windows: "https://github.com/IgorShadurin/offlinetools.org/releases/latest/download/OfflineTools.exe",
-};
+} as const;
+
+type DownloadPlatform = keyof typeof DOWNLOAD_LINKS;
+
+const DOWNLOAD_NOTIFICATIONS_ENABLED = process.env.NEXT_PUBLIC_DOWNLOAD_NOTIFICATIONS_ENABLED !== "false";
 
 /**
  * Platform detection result type
  */
-type PlatformType = "mac_arm64" | "mac_x64" | "linux" | "windows" | null;
+type PlatformType = DownloadPlatform | null;
+
+const PLATFORM_LABELS: Record<DownloadPlatform, string> = {
+  mac_arm64: "macOS (Apple Silicon)",
+  mac_x64: "macOS (Intel)",
+  linux: "Linux",
+  windows: "Windows",
+};
 
 /**
  * Download page component
  */
 export default function DownloadPage() {
   const [detectedPlatform, setDetectedPlatform] = useState<PlatformType>(null);
+
+  const renderRecommendedCard = (platform: DownloadPlatform) => (
+    <Card className="w-full max-w-xl mx-auto mb-12 border-primary/20">
+      <CardHeader>
+        <CardTitle className="text-center">Recommended Download</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center">
+        <div className="mb-4">
+          {platform.includes("mac") && <Apple className="w-16 h-16" />}
+          {platform === "windows" && <MonitorIcon className="w-16 h-16" />}
+          {platform === "linux" && <Terminal className="w-16 h-16" />}
+        </div>
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-medium mb-2">{PLATFORM_LABELS[platform]}</h3>
+          <p className="text-muted-foreground">We detected your platform automatically.</p>
+        </div>
+        <Button size="lg" asChild>
+          <Link href={DOWNLOAD_LINKS[platform]} onClick={() => handleDownloadClick(platform)}>
+            <Download className="mr-2" /> Download for {PLATFORM_LABELS[platform]}
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
+  const handleDownloadClick = useCallback((platform: DownloadPlatform) => {
+    if (!DOWNLOAD_NOTIFICATIONS_ENABLED) {
+      return;
+    }
+
+    const payload = JSON.stringify({ platform });
+    const endpoint = "/api/download-notification";
+
+    try {
+      if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon(endpoint, blob);
+      } else {
+        fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload,
+          keepalive: true,
+        }).catch((error) => {
+          console.error("Failed to notify download", error);
+        });
+      }
+    } catch (error) {
+      console.error("Failed to notify download", error);
+    }
+  }, []);
 
   useEffect(() => {
     // Detect user platform
@@ -70,41 +132,7 @@ export default function DownloadPage() {
             </p>
           </div>
 
-          {detectedPlatform && (
-            <Card className="w-full max-w-xl mx-auto mb-12 border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-center">Recommended Download</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center">
-                <div className="mb-4">
-                  {detectedPlatform.includes("mac") && <Apple className="w-16 h-16" />}
-                  {detectedPlatform === "windows" && <MonitorIcon className="w-16 h-16" />}
-                  {detectedPlatform === "linux" && <Terminal className="w-16 h-16" />}
-                </div>
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-medium mb-2">
-                    {detectedPlatform === "mac_arm64" && "macOS (Apple Silicon)"}
-                    {detectedPlatform === "mac_x64" && "macOS (Intel)"}
-                    {detectedPlatform === "windows" && "Windows"}
-                    {detectedPlatform === "linux" && "Linux"}
-                  </h3>
-                  <p className="text-muted-foreground">We detected your platform automatically.</p>
-                </div>
-                <Button size="lg" asChild>
-                  <Link href={DOWNLOAD_LINKS[detectedPlatform]}>
-                    <Download className="mr-2" /> Download for{" "}
-                    {detectedPlatform === "mac_arm64"
-                      ? "macOS (Apple Silicon)"
-                      : detectedPlatform === "mac_x64"
-                        ? "macOS (Intel)"
-                        : detectedPlatform === "windows"
-                          ? "Windows"
-                          : "Linux"}
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+          {detectedPlatform ? renderRecommendedCard(detectedPlatform) : null}
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <Card>
@@ -116,7 +144,7 @@ export default function DownloadPage() {
               <CardContent className="flex flex-col items-center">
                 <p className="text-center text-muted-foreground mb-4">For Macs with M1, M2, or M3 chips</p>
                 <Button asChild>
-                  <Link href={DOWNLOAD_LINKS.mac_arm64}>
+                  <Link href={DOWNLOAD_LINKS.mac_arm64} onClick={() => handleDownloadClick("mac_arm64")}>
                     <Download className="mr-2" /> Download .dmg
                   </Link>
                 </Button>
@@ -132,7 +160,7 @@ export default function DownloadPage() {
               <CardContent className="flex flex-col items-center">
                 <p className="text-center text-muted-foreground mb-4">For Intel-based Mac computers</p>
                 <Button asChild>
-                  <Link href={DOWNLOAD_LINKS.mac_x64}>
+                  <Link href={DOWNLOAD_LINKS.mac_x64} onClick={() => handleDownloadClick("mac_x64")}>
                     <Download className="mr-2" /> Download .dmg
                   </Link>
                 </Button>
@@ -148,7 +176,7 @@ export default function DownloadPage() {
               <CardContent className="flex flex-col items-center">
                 <p className="text-center text-muted-foreground mb-4">For Windows 10 and above</p>
                 <Button asChild>
-                  <Link href={DOWNLOAD_LINKS.windows}>
+                  <Link href={DOWNLOAD_LINKS.windows} onClick={() => handleDownloadClick("windows")}>
                     <Download className="mr-2" /> Download .exe
                   </Link>
                 </Button>
@@ -164,7 +192,7 @@ export default function DownloadPage() {
               <CardContent className="flex flex-col items-center">
                 <p className="text-center text-muted-foreground mb-4">Portable AppImage for Linux distributions</p>
                 <Button asChild>
-                  <Link href={DOWNLOAD_LINKS.linux}>
+                  <Link href={DOWNLOAD_LINKS.linux} onClick={() => handleDownloadClick("linux")}>
                     <Download className="mr-2" /> Download .AppImage
                   </Link>
                 </Button>
