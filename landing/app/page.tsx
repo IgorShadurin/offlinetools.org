@@ -181,7 +181,13 @@ export default function Home() {
                 >
                   <div className="mt-4">
                     <Button variant="link" asChild className="h-auto p-0">
-                      <Link href={tool.path}>Try online →</Link>
+                      {tool.external ? (
+                        <a href={tool.path} target="_blank" rel="noopener noreferrer">
+                          Try online →
+                        </a>
+                      ) : (
+                        <Link href={tool.path}>Try online →</Link>
+                      )}
                     </Button>
                   </div>
                 </FeatureItem>

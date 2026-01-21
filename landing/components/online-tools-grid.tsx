@@ -124,6 +124,24 @@ export const onlineTools = [
     path: "/tools/online-timer",
     description: "Countdown timer with preset options, sound notifications, and localStorage persistence.",
   },
+  {
+    title: "iOS Fake Text Messages",
+    path: "https://textfaker.com/?utm_source=offlinetools.org",
+    description: "Create realistic iOS-style text message screenshots for demos or mockups.",
+    external: true,
+  },
+  {
+    title: "Text Brush",
+    path: "https://text-brush.com/?utm_source=offlinetools.org",
+    description: "Style, transform, and decorate text for social posts or quick visuals.",
+    external: true,
+  },
+  {
+    title: "YumCut",
+    path: "https://yumcut.com/?utm_source=offlinetools.org",
+    description: "Make viral clips from long videos with fast, share-ready edits.",
+    external: true,
+  },
 ];
 
 /**
@@ -139,13 +157,25 @@ export function OnlineToolsGrid() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {onlineTools.map((tool, index) => (
-            <Link
-              key={index}
-              href={tool.path}
-              className="px-3 py-2 bg-white dark:bg-gray-800 rounded-md hover:shadow-md transition-shadow border text-center"
-            >
-              {tool.title}
-            </Link>
+            tool.external ? (
+              <a
+                key={index}
+                href={tool.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-2 bg-white dark:bg-gray-800 rounded-md hover:shadow-md transition-shadow border text-center"
+              >
+                {tool.title}
+              </a>
+            ) : (
+              <Link
+                key={index}
+                href={tool.path}
+                className="px-3 py-2 bg-white dark:bg-gray-800 rounded-md hover:shadow-md transition-shadow border text-center"
+              >
+                {tool.title}
+              </Link>
+            )
           ))}
         </div>
       </div>

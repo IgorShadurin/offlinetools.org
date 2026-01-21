@@ -107,6 +107,33 @@ export function Footer() {
             >
               View Source Code on GitHub
             </a>
+            <span className="mx-2">•</span>
+            <a
+              href="https://yumcut.com/?utm_source=offlinetools.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground"
+            >
+              Make Viral Clips
+            </a>
+            <span className="mx-2">•</span>
+            <a
+              href="https://textfaker.com/?utm_source=offlinetools.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground"
+            >
+              iOS Fake Text Messages
+            </a>
+            <span className="mx-2">•</span>
+            <a
+              href="https://text-brush.com/?utm_source=offlinetools.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground"
+            >
+              Text Brush
+            </a>
           </p>
         </div>
       </Container>
