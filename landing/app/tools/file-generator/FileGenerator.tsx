@@ -583,7 +583,7 @@ export default function FileGenerator() {
                       <SelectTrigger>
                         <SelectValue placeholder="Select extension" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-72 overflow-y-auto scrollbar-visible">
                         {COMMON_EXTENSIONS.map((ext) => (
                           <SelectItem key={ext} value={ext}>
                             .{ext}

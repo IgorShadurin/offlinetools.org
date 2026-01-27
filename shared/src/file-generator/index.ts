@@ -38,7 +38,40 @@ export const PREDEFINED_SIZES = [
 /**
  * Common file extensions
  */
-export const COMMON_EXTENSIONS = ['txt', 'bin', 'dat', 'iso', 'img'];
+export const COMMON_EXTENSIONS = [
+  'txt',
+  'bin',
+  'dat',
+  'csv',
+  'json',
+  'xml',
+  'html',
+  'pdf',
+  'docx',
+  'xlsx',
+  'pptx',
+  'zip',
+  '7z',
+  'rar',
+  'iso',
+  'img',
+  'mp4',
+  'mov',
+  'mkv',
+  'avi',
+  'webm',
+  'mp3',
+  'wav',
+  'flac',
+  'aac',
+  'm4a',
+  'jpg',
+  'jpeg',
+  'png',
+  'gif',
+  'webp',
+  'svg',
+];
 
 /**
  * Options for generating files
