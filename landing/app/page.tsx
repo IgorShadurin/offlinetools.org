@@ -178,6 +178,8 @@ export default function Home() {
                   title={tool.title}
                   description={tool.description}
                   icon={getToolIcon(tool.title)}
+                  href={tool.path}
+                  external={tool.external}
                 >
                   <div className="mt-4">
                     <Button variant="link" asChild className="h-auto p-0">
