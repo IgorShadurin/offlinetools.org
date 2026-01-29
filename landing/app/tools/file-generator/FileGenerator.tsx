@@ -687,7 +687,7 @@ export default function FileGenerator() {
                 disabled={sizeInBytes === 0 || (!!error && !error.includes("This may take")) || isGenerating}
               >
                 <Download className="mr-2 h-4 w-4" />
-                {isGenerating ? `Generating (${progress}%)` : fsApiSupported ? "Choose Save Location" : "Generate File"}
+                {isGenerating ? `Generating (${progress}%)` : fsApiSupported ? "Download File" : "Generate File"}
               </Button>
 
               {shareUrl && (
