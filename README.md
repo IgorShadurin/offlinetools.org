@@ -58,21 +58,21 @@ OfflineTools currently includes the following utilities:
 ## Technology Stack
 
 ### Landing Page (Web Version)
-- **Framework**: Next.js 15.3.0
-- **UI Library**: React 19.0.0 with Shadcn UI components
-- **Styling**: Tailwind CSS v4
+- **Framework**: Next.js
+- **UI Library**: React with Shadcn UI components
+- **Styling**: Tailwind CSS
 - **Form Handling**: React Hook Form and Zod validation
 - **Analytics**: Vercel Analytics
 
 ### Shared Library
-- **Language**: TypeScript 5
+- **Language**: TypeScript
 - **Testing**: Jest with ts-jest
 - **Crypto Libraries**: js-md5, js-sha1, js-sha256, js-sha3
 
 ### Desktop Application
-- **Framework**: Electron 35
-- **UI**: React 18.3.1 with Tailwind CSS
-- **Build System**: Vite 6.3.1
+- **Framework**: Electron
+- **UI**: React with Tailwind CSS
+- **Build System**: Vite
 - **Testing**: Vitest and Playwright
 - **Auto-update**: electron-updater
 
