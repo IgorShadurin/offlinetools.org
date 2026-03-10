@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getArticlesByTool } from "@/lib/article-catalog";
 
 /**
  * Metadata for articles index page
@@ -10,30 +11,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * List of articles organized by tool
- */
-const articlesByTool = [
-  {
-    tool: "JSON Formatter",
-    slug: "json-formatter",
-    articles: [
-      {
-        title: "Common JSON Syntax Errors and How to Fix Them",
-        slug: "common-json-syntax-errors-and-how-to-fix-them",
-      },
-    ],
-  },
-  {
-    tool: "Binary Base64 Codec",
-    slug: "binary-base64-codec",
-    articles: [],
-  },
-];
-
-/**
  * Articles index page component
  */
 export default function ArticlesPage() {
+  const articlesByTool = getArticlesByTool();
+
   return (
     <>
       <h1 className="text-3xl font-bold mb-6">Articles</h1>

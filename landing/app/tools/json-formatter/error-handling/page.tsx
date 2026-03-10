@@ -36,58 +36,16 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "handling-trailing-commas-in-json-a-formatters-approach",
   },
   {
-    title: "Missing Brackets: The Most Common JSON Error and Its Solutions",
-    description:
-      "Learn how to identify and fix missing brackets in JSON documents, the most common JSON syntax error faced by developers.",
-    slug: "missing-brackets-the-most-common-json-error-and-its-solutions",
-  },
-  {
     title: "Unexpected End of JSON Input: Causes and Fixes",
     description:
       "Learn what causes the 'Unexpected end of JSON input' error and discover practical solutions to fix this common JSON parsing problem.",
     slug: "unexpected-end-of-json-input-causes-and-fixes",
   },
   {
-    title: "Debugging Invalid JSON: Tools and Techniques",
-    description:
-      "Discover essential tools and effective techniques for debugging invalid JSON data and resolving syntax errors efficiently.",
-    slug: "debugging-invalid-json-tools-and-techniques",
-  },
-  {
-    title: "How JSON Formatters Detect and Display Syntax Errors",
-    description:
-      "Learn the technical process behind how JSON formatters identify, analyze, and display syntax errors in your JSON documents.",
-    slug: "how-json-formatters-detect-and-display-syntax-errors",
-  },
-  {
-    title: "The Psychology of JSON Error Messages: Making Them User-Friendly",
-    description:
-      "Learn how well-designed JSON error messages can reduce frustration, speed up debugging, and improve the user experience for developers.",
-    slug: "the-psychology-of-json-error-messages-making-them-user-friendly",
-  },
-  {
     title: "Resolving Unicode Character Issues in JSON Documents",
     description:
       "Learn how to identify, troubleshoot, and fix Unicode character problems in your JSON data for error-free parsing and display.",
     slug: "resolving-unicode-character-issues-in-json-documents",
-  },
-  {
-    title: "JSON Parse Errors in Different Programming Languages",
-    description:
-      "Compare how different programming languages handle JSON parsing errors and learn language-specific techniques for better error handling.",
-    slug: "json-parse-errors-in-different-programming-languages",
-  },
-  {
-    title: "Handling Escaped Characters in JSON Formatters",
-    description:
-      "Learn how to properly handle and troubleshoot escaped characters in JSON documents to avoid syntax errors and ensure correct data formatting.",
-    slug: "handling-escaped-characters-in-json-formatters",
-  },
-  {
-    title: "Best Practices for Validating JSON Before Formatting",
-    description:
-      "Learn how to implement robust JSON validation techniques before formatting to catch errors early and ensure data integrity.",
-    slug: "best-practices-for-validating-json-before-formatting",
   },
   {
     title: "Line Number References in JSON Error Messages: Why They Matter",
@@ -100,24 +58,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     description:
       "Learn effective strategies and techniques for recovering corrupted JSON files and salvaging valuable data from damaged JSON documents.",
     slug: "when-good-json-goes-bad-recovering-corrupted-json-files",
-  },
-  {
-    title: "Nested Object Errors in JSON: Detection and Resolution",
-    description:
-      "Learn how to identify, troubleshoot and fix errors in deeply nested JSON objects for smoother data processing and validation.",
-    slug: "nested-object-errors-in-json-detection-and-resolution",
-  },
-  {
-    title: "Array Syntax Problems in JSON and How Formatters Handle Them",
-    description:
-      "Explore common JSON array syntax problems and understand how formatters identify and correct these issues for valid JSON output.",
-    slug: "array-syntax-problems-in-json-and-how-formatters-handle-them",
-  },
-  {
-    title: "Converting Invalid JSON to Valid: Automated Repair Tools",
-    description:
-      "Discover automated tools and techniques that can help transform invalid JSON into valid, well-formatted JSON with minimal manual intervention.",
-    slug: "converting-invalid-json-to-valid-automated-repair-tools",
   },
   {
     title: "Key-Value Pair Errors in JSON Formatting",
@@ -144,12 +84,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "numerical-value-errors-in-json-decimal-points-and-scientific-notation",
   },
   {
-    title: "String Delimiter Issues in JSON: Single vs. Double Quotes",
-    description:
-      "Understand the importance of using correct string delimiters in JSON and how to fix common quoting errors in your JSON documents.",
-    slug: "string-delimiter-issues-in-json-single-vs-double-quotes",
-  },
-  {
     title: "Reserved Words as Keys in JSON: Why They Cause Problems",
     description:
       "Explore the complications that arise when using reserved words as keys in JSON and learn strategies to avoid these problems.",
@@ -168,28 +102,10 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "duplicate-keys-in-json-detection-and-resolution-strategies",
   },
   {
-    title: "Parsing Large JSON Files: Error Handling and Performance",
-    description:
-      "Learn effective strategies for handling errors and optimizing performance when parsing large JSON files across different programming environments.",
-    slug: "parsing-large-json-files-error-handling-and-performance",
-  },
-  {
-    title: "Error Highlighting Features in Modern JSON Formatters",
-    description:
-      "Explore how modern JSON formatters use advanced error highlighting techniques to help developers quickly identify and fix JSON syntax issues.",
-    slug: "error-highlighting-features-in-modern-json-formatters",
-  },
-  {
     title: "JSON Schema Validation Errors and Their Meaning",
     description:
       "Learn how to interpret JSON Schema validation errors, understand their meaning, and fix common schema validation issues efficiently.",
     slug: "json-schema-validation-errors-and-their-meaning",
-  },
-  {
-    title: "Circular References in JSON: Why They Break Formatters",
-    description:
-      "Learn why circular references cause JSON formatters to fail, how to identify them, and strategies to handle self-referential data structures.",
-    slug: "circular-references-in-json-why-they-break-formatters",
   },
   {
     title: "Error Handling When Converting Between JSON and Other Formats",
@@ -198,40 +114,10 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "error-handling-when-converting-between-json-and-other-formats",
   },
   {
-    title: "Automatic Error Correction in Smart JSON Formatters",
-    description:
-      "Explore how advanced JSON formatters can automatically detect and correct common syntax errors in your JSON documents.",
-    slug: "automatic-error-correction-in-smart-json-formatters",
-  },
-  {
-    title: "Browser Compatibility Issues with JSON Parsing",
-    description:
-      "Understand JSON parsing differences across browsers and how to ensure your JSON documents work correctly in all environments.",
-    slug: "browser-compatibility-issues-with-json-parsing",
-  },
-  {
     title: "Handling Special Characters in JSON Strings",
     description:
       "Learn best practices for correctly escaping and handling special characters in JSON strings to prevent parsing errors.",
     slug: "handling-special-characters-in-json-strings",
-  },
-  {
-    title: "Error Logs from JSON Formatters: How to Interpret Them",
-    description:
-      "Decipher complex error logs from JSON formatters and learn how to quickly resolve the underlying issues in your JSON documents.",
-    slug: "error-logs-from-json-formatters-how-to-interpret-them",
-  },
-  {
-    title: "Troubleshooting JSON.parse() Failures",
-    description:
-      "Learn how to diagnose and fix common causes of JSON.parse() failures across different programming environments.",
-    slug: "troubleshooting-json-parse-failures",
-  },
-  {
-    title: "When JSON Formatters Disagree: Differences in Error Reporting",
-    description:
-      "Understand why different JSON formatters might report different errors for the same document and how to reconcile these differences.",
-    slug: "when-json-formatters-disagree-differences-in-error-reporting",
   },
   {
     title: "Case Sensitivity Issues in JSON Formatting",
@@ -258,12 +144,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "line-break-problems-in-multi-line-json-strings",
   },
   {
-    title: "Common API JSON Response Errors and Their Solutions",
-    description:
-      "Learn about common API JSON response errors and effective solutions to handle them in your applications.",
-    slug: "common-api-json-response-errors-and-their-solutions",
-  },
-  {
     title: "Handling Incomplete JSON Data Streams",
     description:
       "Learn effective strategies to handle incomplete JSON data streams and maintain data integrity in your applications.",
@@ -275,49 +155,6 @@ const jsonFormatterArticles: ToolArticle[] = [
       "Learn strategies to overcome timeout errors when formatting extremely large JSON files and optimize your JSON processing workflow.",
     slug: "timeout-errors-when-formatting-extremely-large-json-files",
   },
-  {
-    title: "Error Patterns in Minified vs. Pretty-Printed JSON",
-    description:
-      "Discover key differences in error patterns between minified and pretty-printed JSON and learn how to effectively troubleshoot each format.",
-    slug: "error-patterns-in-minified-vs-pretty-printed-json",
-  },
-  {
-    title: "Resolving Mixed Data Type Errors in JSON",
-    description:
-      "Learn how to identify, troubleshoot, and fix mixed data type errors in JSON to ensure data consistency and proper validation.",
-    slug: "resolving-mixed-data-type-errors-in-json",
-  },
-  {
-    title: "JSON Error Messages Across Different Languages: A Comparison",
-    description:
-      "Compare JSON parsing error messages across different programming languages and learn how to effectively interpret them for faster debugging.",
-    slug: "json-error-messages-across-different-languages-a-comparison",
-  },
-  {
-    title: "Versioning Problems in JSON Schema Validation",
-    description:
-      "Learn how to identify and resolve versioning problems in JSON Schema validation and maintain backward compatibility in evolving APIs.",
-    slug: "versioning-problems-in-json-schema-validation",
-  },
-  {
-    title: "Using Regular Expressions to Identify JSON Syntax Errors",
-    description:
-      "Learn how to use regular expressions to identify and diagnose common JSON syntax errors in your data structures.",
-    slug: "using-regular-expressions-to-identify-json-syntax-errors",
-  },
-  {
-    title: "Custom Error Templates for JSON Formatter Applications",
-    description:
-      "Learn how to design and implement custom error templates for JSON formatter applications to improve user experience and error handling.",
-    slug: "custom-error-templates-for-json-formatter-applications",
-  },
-  {
-    title: "The Future of JSON Error Handling: AI-Assisted Repair",
-    description:
-      "Explore how artificial intelligence is revolutionizing JSON error handling with intelligent repair suggestions and automated fixes.",
-    slug: "the-future-of-json-error-handling-ai-assisted-repair",
-  },
-  // More articles can be added here
 ];
 
 /**

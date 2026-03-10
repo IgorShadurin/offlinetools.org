@@ -50,17 +50,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "php-json-formatting-functions-and-libraries",
   },
   {
-    title: "Rust's Approach to JSON Formatting and Serialization",
-    description:
-      "How Rust's ecosystem handles JSON with libraries like serde_json, emphasizing safety and performance.",
-    slug: "rusts-approach-to-json-formatting-and-serialization",
-  },
-  {
-    title: "Go Language JSON Formatter Implementations",
-    description: "Go's encoding/json package and alternative libraries for JSON formatting and manipulation.",
-    slug: "go-language-json-formatter-implementations",
-  },
-  {
     title: "Swift JSON Parsing and Formatting for iOS Development",
     description: "JSON handling techniques for iOS developers using Swift's Codable protocol and third-party options.",
     slug: "swift-json-parsing-and-formatting-for-ios-development",
@@ -69,17 +58,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     title: "Kotlin JSON Serialization and Formatting Libraries",
     description: "Modern JSON processing in Kotlin with kotlinx.serialization and other popular libraries.",
     slug: "kotlin-json-serialization-and-formatting-libraries",
-  },
-  {
-    title: "TypeScript Type Safety in JSON Formatting",
-    description: "Leveraging TypeScript's type system for safer and more robust JSON handling in web applications.",
-    slug: "typescript-type-safety-in-json-formatting",
-  },
-  {
-    title: "Node.js JSON Formatter Modules and Packages",
-    description:
-      "Essential Node.js packages for JSON formatting, validation, and transformation in server applications.",
-    slug: "nodejs-json-formatter-modules-and-packages",
   },
   {
     title: "C++ JSON Library Performance Comparison",
@@ -98,26 +76,9 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "scala-json-formatter-libraries-and-approaches",
   },
   {
-    title: "Dart and Flutter JSON Formatting Solutions",
-    description:
-      "JSON processing strategies for Flutter apps, including Dart's convert library and code generation tools.",
-    slug: "dart-and-flutter-json-formatting-solutions",
-  },
-  {
     title: "Elixir/Phoenix JSON Formatter Implementations",
     description: "How Elixir and Phoenix framework handle JSON with libraries like Jason and Poison.",
     slug: "elixir-phoenix-json-formatter-implementations",
-  },
-  {
-    title: "Clojure's Data-Oriented Approach to JSON Formatting",
-    description:
-      "Exploring Clojure's philosophy for JSON handling through data transformation and libraries like data.json.",
-    slug: "clojures-data-oriented-approach-to-json-formatting",
-  },
-  {
-    title: "R Language Tools for JSON Formatting and Analysis",
-    description: "JSON processing in R for data science applications using packages like jsonlite and rjson.",
-    slug: "r-language-tools-for-json-formatting-and-analysis",
   },
   {
     title: "MATLAB JSON Parsing and Formatting Functions",
@@ -140,16 +101,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "vba-json-formatting-solutions-for-office-automation",
   },
   {
-    title: "Lua JSON Libraries for Game Development",
-    description: "JSON processing options for Lua programmers, particularly in game development contexts.",
-    slug: "lua-json-libraries-for-game-development",
-  },
-  {
-    title: "Haskell's Type-Safe Approach to JSON Formatting",
-    description: "How Haskell's strong type system enables safe and elegant JSON handling with libraries like aeson.",
-    slug: "haskells-type-safe-approach-to-json-formatting",
-  },
-  {
     title: "Delphi/Pascal JSON Formatting Components",
     description: "JSON formatting solutions for Delphi and Object Pascal developers building Windows applications.",
     slug: "delphi-pascal-json-formatting-components",
@@ -160,49 +111,9 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "julia-language-json-parsing-and-formatting",
   },
   {
-    title: "COBOL JSON Integration for Legacy Systems",
-    description: "Strategies for implementing JSON handling in COBOL-based legacy enterprise systems.",
-    slug: "cobol-json-integration-for-legacy-systems",
-  },
-  {
-    title: "Assembly Language JSON Parsing: Low-Level Approaches",
-    description: "Exploring ultra-high-performance JSON parsing implementations at the assembly language level.",
-    slug: "assembly-language-json-parsing-low-level-approaches",
-  },
-  {
     title: "Groovy JSON Handling in Gradle Scripts",
     description: "Working with JSON data in Groovy-based build scripts and Gradle configurations.",
     slug: "groovy-json-handling-in-gradle-scripts",
-  },
-  {
-    title: "F# Functional Approach to JSON Formatting",
-    description: "Functional programming techniques for JSON in F# using libraries like Thoth.Json and FSharp.Data.",
-    slug: "f-sharp-functional-approach-to-json-formatting",
-  },
-  {
-    title: "Visual Basic .NET JSON Formatting Tools",
-    description: "JSON formatting options available to Visual Basic .NET developers within the .NET ecosystem.",
-    slug: "visual-basic-net-json-formatting-tools",
-  },
-  {
-    title: "Erlang's Pattern Matching for JSON Processing",
-    description: "How Erlang's pattern matching capabilities create elegant solutions for JSON data handling.",
-    slug: "erlangs-pattern-matching-for-json-processing",
-  },
-  {
-    title: "D Language JSON Library Feature Comparison",
-    description: "Analyzing the different JSON libraries available in the D programming language ecosystem.",
-    slug: "d-language-json-library-feature-comparison",
-  },
-  {
-    title: "Crystal Language JSON Formatting Capabilities",
-    description: "JSON handling in Crystal, a Ruby-inspired language with static typing and high performance.",
-    slug: "crystal-language-json-formatting-capabilities",
-  },
-  {
-    title: "Bash Shell Scripts for JSON Formatting and Processing",
-    description: "Command-line techniques and tools for JSON formatting in Bash shell environments.",
-    slug: "bash-shell-scripts-for-json-formatting-and-processing",
   },
   {
     title: "ABAP JSON Handling in SAP Systems",
@@ -220,11 +131,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "fortran-json-interface-libraries-for-scientific-computing",
   },
   {
-    title: "Prolog JSON Parsing and Formatting Approaches",
-    description: "Logic programming techniques for JSON handling in Prolog-based applications.",
-    slug: "prolog-json-parsing-and-formatting-approaches",
-  },
-  {
     title: "Lisp Dialects and Their JSON Formatting Capabilities",
     description: "JSON handling in various Lisp dialects including Common Lisp, Scheme, and Racket.",
     slug: "lisp-dialects-and-their-json-formatting-capabilities",
@@ -240,11 +146,6 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "smalltalk-json-parsing-and-formatting-solutions",
   },
   {
-    title: "Tcl/Tk JSON Integration for GUI Applications",
-    description: "Implementing JSON handling in Tcl/Tk-based graphical user interface applications.",
-    slug: "tcl-tk-json-integration-for-gui-applications",
-  },
-  {
     title: "Zig Language JSON Formatter Implementations",
     description: "Exploring JSON formatting capabilities in Zig, a modern alternative to C.",
     slug: "zig-language-json-formatter-implementations",
@@ -255,24 +156,9 @@ const jsonFormatterArticles: ToolArticle[] = [
     slug: "pl-sql-json-functions-in-oracle-databases",
   },
   {
-    title: "WebAssembly JSON Formatting Performance",
-    description: "High-performance JSON processing in WebAssembly compared to traditional JavaScript approaches.",
-    slug: "webassembly-json-formatting-performance",
-  },
-  {
     title: "SQL Server JSON Functions and Formatting Options",
     description: "Working with JSON data in Microsoft SQL Server using built-in functions and operators.",
     slug: "sql-server-json-functions-and-formatting-options",
-  },
-  {
-    title: "Nim Language JSON Handling Capabilities",
-    description: "JSON processing in Nim, a statically typed language with Python-like syntax and C-like performance.",
-    slug: "nim-language-json-handling-capabilities",
-  },
-  {
-    title: "Cross-Language JSON Formatter API Design",
-    description: "Designing JSON formatter APIs that work consistently across multiple programming languages.",
-    slug: "cross-language-json-formatter-api-design",
   },
 ];
 
