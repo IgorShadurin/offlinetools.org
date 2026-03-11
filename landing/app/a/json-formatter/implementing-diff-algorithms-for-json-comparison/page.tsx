@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+
 export const metadata: Metadata = {
   title: "Implementing Diff Algorithms for JSON Comparison | Offline Tools",
   description:
-    "Explore the concepts and approaches behind implementing diff algorithms for comparing JSON data structures.",
+    "Learn practical JSON diff implementation strategies, from recursive comparison and array handling to JSON Patch, Merge Patch, and CI-friendly workflows.",
 };
 
 export default function ImplementingJsonDiffAlgorithmsArticle() {
@@ -12,206 +13,306 @@ export default function ImplementingJsonDiffAlgorithmsArticle() {
 
       <div className="space-y-6">
         <p>
-          Comparing two versions of a document to identify changes is a common task, essential for version control,
-          collaboration, and data synchronization. While text diffing is well-understood (like the classic diff
-          utility), comparing structured data formats like JSON presents unique challenges. Implementing a robust diff
-          algorithm specifically for JSON requires more than just line-by-line comparison; it needs to understand the
-          hierarchical nature of the data.
+          A useful JSON diff is not just &ldquo;find every value that changed.&rdquo; In practice, you usually need one
+          of four outputs: a readable review diff, an exact equality check, a machine-applicable patch, or a
+          CI-friendly pass/fail signal. The implementation changes depending on that goal, especially once arrays enter
+          the picture.
+        </p>
+        <p>
+          That is why robust JSON comparison starts with semantics first: should object key order be ignored, should
+          arrays be matched by position or by <code>id</code>, and do you need a custom change list or a standards-based
+          patch format? Once those rules are explicit, the recursive comparison itself becomes much simpler.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why JSON Diff?</h2>
+        <h2 className="text-2xl font-semibold mt-8">Choose the Output Before the Algorithm</h2>
         <p>
-          JSON (JavaScript Object Notation) is widely used for data exchange. When working with evolving data or
-          configurations, comparing two JSON objects is often necessary to:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Track changes between API responses</li>
-          <li>Merge configuration files</li>
-          <li>Visualize differences in debugging or development</li>
-          <li>Generate patches to update data efficiently</li>
-          <li>Implement collaborative editing features</li>
-        </ul>
-        <p>
-          A simple text diff might show that lines have been added or removed, but it won't tell you which specific
-          field in an object changed, or if an element was added to an array. A JSON-aware diff understands keys,
-          values, objects, and arrays.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Basic Approaches</h2>
-        <p>
-          At a high level, comparing two JSON structures involves traversing both the 'original' and 'modified' JSON
-          objects and noting where they differ. The core idea is recursive:
+          Start by deciding what the caller or user actually needs from the diff. Different outputs favor different
+          algorithms and tradeoffs:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Base Case:</strong> If both values are primitive types (string, number, boolean, null), check if
-            they are strictly equal. If not, they differ.
+            <strong>Exact equality check:</strong> Best for regression tests and CI. Canonicalize both documents, then
+            compare the normalized output.
           </li>
           <li>
-            <strong>Recursive Step (Objects):</strong> Iterate through the keys of both objects.
-            <ul className="list-circle pl-6 mt-1 space-y-1">
-              <li>Keys present in one but not the other indicate added or removed properties.</li>
-              <li>Keys present in both require a recursive comparison of their corresponding values.</li>
-            </ul>
+            <strong>Human review diff:</strong> Return a path plus before and after values so developers can inspect the
+            change quickly.
           </li>
           <li>
-            <strong>Recursive Step (Arrays):</strong> Comparing arrays is more complex. A simple element-by-element
-            comparison might incorrectly flag many items as changed if just one item was inserted or removed in the
-            middle. More sophisticated array diffing often uses algorithms like the Longest Common Subsequence (LCS) or
-            Greedy algorithms to identify insertions, deletions, and modifications while minimizing the reported
-            changes.
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              For example, comparing <code>[1, 2, 3]</code> and <code>[1, 3, 4]</code> could be seen as 2 changed,
-              3&gt;3 no change, add 4. Or it could be 2 deleted, 3&gt;3 no change, add 4. Or 2 deleted, 3 changed to 4.
-              The optimal diff identifies 2 deleted and 3 changed to 4 using LCS or similar.
-            </p>
+            <strong>Machine-applicable patch:</strong> Use{" "}
+            <a
+              href="https://datatracker.ietf.org/doc/html/rfc6902"
+              className="underline"
+              rel="noreferrer"
+              target="_blank"
+            >
+              RFC 6902 JSON Patch
+            </a>{" "}
+            if consumers need operations like <code>add</code>, <code>remove</code>, <code>replace</code>,{" "}
+            <code>move</code>, or <code>test</code>.
           </li>
           <li>
-            <strong>Type Mismatch:</strong> If the types of corresponding values differ (e.g., a string becomes an
-            object), the values are considered different.
+            <strong>Object-heavy partial update:</strong> Use{" "}
+            <a
+              href="https://datatracker.ietf.org/doc/html/rfc7396"
+              className="underline"
+              rel="noreferrer"
+              target="_blank"
+            >
+              RFC 7396 JSON Merge Patch
+            </a>{" "}
+            when you want a patch document that looks like the target JSON, with <code>null</code> meaning removal.
+          </li>
+        </ul>
+        <p>
+          A common mistake is trying to force one diff format to solve every problem. JSON Patch is precise and good for
+          arrays, while Merge Patch is simple and excellent for object-shaped API payloads. They are not interchangeable.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Core Rules for Each JSON Type</h2>
+        <p>
+          At a high level, a JSON diff walks both values recursively and emits changes when their structure or content
+          diverges:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Primitives:</strong> Compare strings, numbers, booleans, and <code>null</code> directly. If the
+            values differ, emit a replace-style change.
+          </li>
+          <li>
+            <strong>Objects:</strong> Compare by key set, not by source order. Keys only present on one side are adds
+            or removes; shared keys recurse.
+          </li>
+          <li>
+            <strong>Arrays:</strong> This is where most implementations fail. Index-by-index comparison is only correct
+            for truly ordered lists. If elements have stable identifiers, match them by key first; if order does not
+            matter, compare them as sets after normalization.
+          </li>
+          <li>
+            <strong>Type changes:</strong> If a value changes type, such as object to string or array to number, treat
+            it as a replacement of the whole subtree.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Handling JSON Specifics</h2>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Order of Keys in Objects:</h3>
+          <h3 className="text-lg font-medium">Object Key Order vs. Canonicalization</h3>
           <p className="text-sm">
-            According to the JSON specification, the order of keys within an object is not significant. A robust JSON
-            diff algorithm should treat <code>{'{ "a": 1, "b": 2 }'}</code> and <code>{'{ "b": 2, "a": 1 }'}</code>
-            as identical. This means when comparing objects, you should iterate through the keys of one object and check
-            for their presence in the other, rather than relying on their positional order.
+            Object member order is not a reliable semantic signal in JSON. Diff objects by key presence and value, not
+            by the order properties appeared in the original text. If you need deterministic text output for hashing,
+            signing, or baseline files, canonicalize first.{" "}
+            <a
+              href="https://www.ietf.org/ietf-ftp/rfc/rfc8785.pdf"
+              className="underline"
+              rel="noreferrer"
+              target="_blank"
+            >
+              RFC 8785 JSON Canonicalization Scheme
+            </a>{" "}
+            defines a deterministic representation for exactly that use case.
           </p>
-
-          <h3 className="text-lg font-medium mt-4">Array Comparison Strategies:</h3>
-          <p className="text-sm">
-            As mentioned, simple index-based array comparison is naive. More advanced strategies include:
-          </p>
-          <ul className="list-disc pl-6 mt-2 space-y-1 text-sm">
-            <li>
-              <strong>Sequence Alignment:</strong> Algorithms like Levenshtein distance or LCS can find the minimum
-              number of edits (insertions, deletions, substitutions) to transform one array into another.
-            </li>
-            <li>
-              <strong>Keying Array Elements:</strong> If array elements have unique identifiers (like an <code>id</code>{" "}
-              field), you can compare elements based on their key rather than their position. This helps track items
-              even if the array is reordered.
-            </li>
-          </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Output Formats</h2>
-        <p>The result of a JSON diff can be presented in various ways:</p>
+        <h2 className="text-2xl font-semibold mt-8">Implement for the Data Type, Not Just the JSON Syntax</h2>
+        <p>
+          A search query like &ldquo;implementing diff for a data type&rdquo; points to the real problem: JSON gives you
+          syntax, but your domain decides the correct matching rules. The same JSON array can represent very different
+          logical data types.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Patch Object:</strong> A structured object describing the changes needed to transform the original
-            JSON into the modified JSON. Standards like JSON Patch (<code>RFC 6902</code>) define operations like{" "}
-            <code>add</code>, <code>remove</code>, <code>replace</code>, <code>move</code>, <code>copy</code>, and{" "}
-            <code>test</code>. This format is machine-readable and ideal for applying changes programmatically.
+            <strong>Ordered sequences:</strong> Steps in a workflow, log entries, or playlist items should usually be
+            diffed by position.
           </li>
           <li>
-            <strong>Diff Structure:</strong> A custom object or array indicating the paths and types of changes (e.g.,{" "}
-            <code>{"{ path: '/a/0/b', op: 'replace', value: 'new' }"}</code>).
+            <strong>Entity collections:</strong> Arrays of records with stable keys like <code>id</code> or{" "}
+            <code>slug</code> should usually be indexed by that key before diffing.
           </li>
           <li>
-            <strong>Visual Diff:</strong> A human-readable side-by-side or inline view, often with color coding to
-            highlight additions, deletions, and modifications.
+            <strong>Set-like values:</strong> Tags, feature flags, or permissions should often be normalized and
+            compared as unordered values.
+          </li>
+          <li>
+            <strong>Moves:</strong> Only emit explicit move operations if the consumer understands them. Otherwise,
+            delete-plus-add is simpler and often safer.
           </li>
         </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Conceptual Example: Recursive Object Diff</h2>
         <p>
-          Here's a simplified conceptual look at how a recursive function might start comparing two JSON objects. This
-          doesn't cover arrays or type changes thoroughly but illustrates the recursive object traversal.
+          There is no universally correct array diff. A robust implementation chooses the strategy from the business
+          meaning of the data, not from the fact that the container happens to be JSON.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">A Practical TypeScript Diff Skeleton</h2>
+        <p>
+          The following example is intentionally small, but it fixes a common mistake in simplified tutorials: arrays
+          must be detected with <code>Array.isArray()</code>, not <code>typeof value === &quot;array&quot;</code>. This
+          version emits JSON Patch-like operations and keeps object and array handling separate.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`function simpleDiff(obj1, obj2, path = '') {
-  const diffs = [];
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
-  const allKeys = new Set([...keys1, ...keys2]);
+              {`type DiffOp = {
+  op: "add" | "remove" | "replace";
+  path: string;
+  value?: unknown;
+};
 
-  for (const key of allKeys) {
-    const currentPath = path ? \`\${path}/\${key}\` : key;
-    const val1 = obj1[key];
-    const val2 = obj2[key];
-    const type1 = typeof val1;
-    const type2 = typeof val2;
-
-    if (val1 === undefined) {
-      // Key added
-      diffs.push({ path: currentPath, op: 'add', value: val2 });
-    } else if (val2 === undefined) {
-      // Key removed
-      diffs.push({ path: currentPath, op: 'remove' });
-    } else if (type1 !== type2) {
-      // Type changed
-      diffs.push({ path: currentPath, op: 'replace', value: val2 });
-    } else if (type1 === 'object' && val1 !== null && val2 !== null) {
-      // Nested objects, recurse
-      diffs.push(...simpleDiff(val1, val2, currentPath));
-    } else if (type1 === 'object' && (val1 === null || val2 === null)) {
-       // One is null, the other isn't
-       if (val1 !== val2) {
-          diffs.push({ path: currentPath, op: 'replace', value: val2 });
-       }
-    } else if (type1 === 'array') {
-      // Arrays require a more sophisticated comparison here
-      // This simple example treats arrays as primitives
-      if (JSON.stringify(val1) !== JSON.stringify(val2)) {
-         diffs.push({ path: currentPath, op: 'replace', value: val2 });
-      }
-    }
-    else if (val1 !== val2) {
-      // Primitive value changed
-      diffs.push({ path: currentPath, op: 'replace', value: val2 });
-    }
+function diffJson(before: unknown, after: unknown, path = ""): DiffOp[] {
+  if (Object.is(before, after)) {
+    return [];
   }
 
-  return diffs;
+  if (Array.isArray(before) && Array.isArray(after)) {
+    return diffArray(before, after, path);
+  }
+
+  if (isJsonObject(before) && isJsonObject(after)) {
+    const ops: DiffOp[] = [];
+    const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
+
+    for (const key of keys) {
+      const nextPath = \`\${path}/\${escapePointerToken(key)}\`;
+
+      if (!(key in after)) {
+        ops.push({ op: "remove", path: nextPath });
+        continue;
+      }
+
+      if (!(key in before)) {
+        ops.push({ op: "add", path: nextPath, value: after[key] });
+        continue;
+      }
+
+      ops.push(...diffJson(before[key], after[key], nextPath));
+    }
+
+    return ops;
+  }
+
+  return [{ op: "replace", path, value: after }];
+}
+
+function diffArray(before: unknown[], after: unknown[], path: string): DiffOp[] {
+  const ops: DiffOp[] = [];
+  const maxLength = Math.max(before.length, after.length);
+
+  for (let index = 0; index < maxLength; index += 1) {
+    const nextPath = \`\${path}/\${index}\`;
+
+    if (index >= before.length) {
+      ops.push({ op: "add", path: nextPath, value: after[index] });
+      continue;
+    }
+
+    if (index >= after.length) {
+      ops.push({ op: "remove", path: nextPath });
+      continue;
+    }
+
+    ops.push(...diffJson(before[index], after[index], nextPath));
+  }
+
+  return ops;
+}
+
+function isJsonObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function escapePointerToken(token: string) {
+  return token.replaceAll("~", "~0").replaceAll("/", "~1");
 }`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            <em>Note:</em> This is a highly simplified illustration. A real-world JSON diff library would handle arrays
-            using sequence alignment and might use a more standardized output format.
+            This uses a positional array strategy. For arrays of records, replace <code>diffArray()</code> with keyed
+            matching by a stable field like <code>id</code>. If you need a minimal edit script, add an LCS or Myers
+            step instead of treating each index independently.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Challenges in JSON Diffing</h2>
+        <h2 className="text-2xl font-semibold mt-8">JSON Patch vs. Merge Patch</h2>
+        <p>
+          Standards matter if your diff output leaves your process and gets applied elsewhere. The two most common
+          choices solve different problems:
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Array Item Tracking:</strong> Without unique keys, detecting whether an item was modified, added, or
-            deleted vs. simply moved or reordered is difficult and often relies on heuristic or computationally
-            intensive sequence comparison.
+            <strong>JSON Patch (RFC 6902):</strong> Expresses a sequence of explicit operations. It can target specific
+            array positions and supports precondition checks with <code>test</code>. Use it when you need precise,
+            replayable edits.
           </li>
           <li>
-            <strong>Large Documents:</strong> Traversing and comparing very large JSON structures can be memory and CPU
-            intensive.
+            <strong>JSON Merge Patch (RFC 7396):</strong> Describes the desired shape by example. It is easy to read
+            and ideal for object-centric updates, but arrays are replaced wholesale and <code>null</code> means
+            deletion.
+          </li>
+        </ul>
+        <p>
+          A good rule of thumb is simple: if your consumer cares about individual array edits, choose JSON Patch. If
+          your payload is mostly nested objects and you want concise PATCH requests, Merge Patch is often easier.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">JSON Diff in a CI Runner</h2>
+        <p>
+          For CI, a full custom diff engine is often unnecessary. Normalize object key order first, then diff the
+          normalized files. The current jq documentation supports <code>-S</code> to sort object keys and{" "}
+          <code>-e</code> for exit-status-based checks, and the jq project currently distributes standalone binaries,
+          which makes it a practical fit for ephemeral CI runners.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`jq -S . before.json > before.normalized.json
+jq -S . after.json > after.normalized.json
+
+if diff -u before.normalized.json after.normalized.json; then
+  echo "No semantic JSON changes"
+else
+  echo "JSON changed"
+  exit 1
+fi`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            If your arrays are logically unordered, normalize them too before diffing, for example by sorting objects
+            with a stable key such as <code>id</code>.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Common Failure Modes</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Confusing missing and null:</strong> A missing property and a property explicitly set to{" "}
+            <code>null</code> are different states in many APIs.
           </li>
           <li>
-            <strong>Cycles:</strong> JSON technically cannot have cycles, but if you're diffing objects that might
-            contain circular references before serialization, a naive recursive diff will fail.
+            <strong>Generating invalid paths:</strong> If you emit JSON Patch, path segments must be escaped correctly
+            before you join them.
           </li>
           <li>
-            <strong>Data Type Coercion:</strong> JSON is strictly typed (string, number, boolean, null, object, array),
-            but some comparisons might involve implicit type handling if not careful.
+            <strong>Index-based array diff everywhere:</strong> It creates noisy and misleading output for keyed or
+            reorderable collections.
+          </li>
+          <li>
+            <strong>Loading huge documents into memory:</strong> For very large JSON, use a streaming parser or a{" "}
+            <code>--stream</code>-style path/value pipeline instead of diffing the entire parsed tree at once.
+          </li>
+          <li>
+            <strong>Assuming canonical text equals business equality:</strong> Stable formatting is useful for CI and
+            hashing, but it does not replace domain-specific rules for timestamps, IDs, or unordered collections.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing a comprehensive JSON diff algorithm is a non-trivial task, especially when dealing with complex
-          arrays and desiring an optimal set of changes (like a minimal patch). It requires understanding the structure
-          of JSON and choosing appropriate algorithms for comparing objects (key-based traversal ignoring order) and
-          arrays (sequence alignment or keying).
+          Implementing JSON diffing well is less about one clever recursive function and more about choosing the right
+          semantics for the data you have. Objects should usually ignore key order, arrays need an explicit matching
+          strategy, and the output format should match the consumer.
         </p>
         <p>
-          For most practical purposes, leveraging well-tested libraries is recommended as they handle the complexities
-          of array diffing, different output formats (like JSON Patch), and edge cases. However, understanding the
-          underlying principles of recursive comparison and array alignment is crucial for working effectively with JSON
-          diffing tools and interpreting their output.
+          If you only need CI verification, canonicalize and compare. If you need interoperable patches, target JSON
+          Patch or Merge Patch deliberately. And if your domain data has real identity rules, encode those rules in the
+          diff instead of pretending every JSON array is just a positional list.
         </p>
       </div>
     </>

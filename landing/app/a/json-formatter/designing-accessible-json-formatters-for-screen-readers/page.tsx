@@ -1,400 +1,304 @@
 import type { Metadata } from "next";
-import { Accessibility, CodeXml, Eye, List, Table, Speaker, Info } from "lucide-react"; // Replaced Details with Info
+import { Accessibility, CodeXml, Eye, Info, List, Speaker, Table } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Designing Accessible JSON Formatters for Screen Readers | Offline Tools",
+  title: "Accessible JSON Formatters for Screen Readers | Offline Tools",
   description:
-    "Learn how to format and present JSON data accessibly so screen readers and other assistive technologies can effectively convey the information.",
+    "A practical guide to designing JSON formatters that work with screen readers: semantic HTML, disclosure vs tree patterns, raw JSON fallbacks, status messages, and testing.",
 };
 
 export default function AccessibleJsonFormattersArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 flex items-center">
+      <h1 className="mb-6 flex items-center text-3xl font-bold">
         <Accessibility className="mr-3 text-blue-600" size={36} />
         Designing Accessible JSON Formatters for Screen Readers
       </h1>
 
       <div className="space-y-6 text-lg leading-relaxed">
         <p>
-          Developers often work with JSON data, displaying it for debugging, documentation, or even directly to
-          end-users in specific contexts. However, simply dumping raw JSON text onto a page, even with syntax
-          highlighting, poses significant challenges for users relying on screen readers and other assistive
-          technologies. This article explores why raw JSON is inaccessible and provides strategies for formatting JSON
-          data in a way that is structured, understandable, and navigable for everyone.
+          A JSON formatter becomes hard to use with a screen reader when it only prettifies punctuation. Users hear a
+          long stream of braces, commas, quotes, and indentation instead of the underlying information. The accessible
+          solution is usually not “better syntax highlighting.” It is a better representation of the data, with native
+          HTML, clear labels, predictable keyboard behavior, and a raw JSON view kept as a secondary option.
+        </p>
+        <p>
+          If you are designing a formatter in 2026, aim for two outcomes at once: let developers inspect the original
+          JSON when they need it, and let screen reader users understand the same payload as headings, terms,
+          definitions, lists, and tables. That approach aligns much better with current WCAG guidance on structure,
+          relationships, status messages, and clear interactive controls.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
           <Eye className="mr-2 text-blue-600" />
-          Why is Raw JSON Inaccessible?
+          Design for the task, not the braces
         </h2>
         <p>
-          JSON's structure is designed for machines, not humans (or screen readers). When a screen reader encounters a
-          block of raw JSON text, it typically reads characters, symbols, and words sequentially without understanding
-          the data's hierarchical relationships.
+          Before choosing a UI pattern, decide what the user is trying to do. “Read this payload” and “copy the exact
+          JSON source” are different jobs, and one view rarely serves both perfectly.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <strong>Lack of Semantic Structure:</strong> JSON uses punctuation like <code>&#x7b;</code>,{" "}
-            <code>&#x7d;</code>, <code>[</code>, <code>]</code>, <code>:</code>, and <code>,</code> to define structure.
-            Screen readers read these symbols literally or ignore them, losing the meaning of "object start", "array
-            element", "key-value separator", etc.
+            <strong>Understanding a response:</strong> Default to semantic HTML that exposes the data model instead of
+            the raw syntax.
           </li>
           <li>
-            <strong>Indentation Issues:</strong> While indentation helps sighted users visualize nested structures, it's
-            often ignored by screen readers reading linear text.
+            <strong>Debugging or copy/paste work:</strong> Keep a raw JSON source view available, clearly labeled, with
+            copy or download actions nearby.
           </li>
           <li>
-            <strong>Verbosity:</strong> Reading every character and punctuation mark in a complex JSON structure is
-            overwhelming and disorienting.
+            <strong>Large payloads:</strong> Collapse secondary branches, show counts in toggle labels, and let users
+            jump between major sections.
           </li>
           <li>
-            <strong>Navigation Difficulties:</strong> Users cannot easily jump between keys, values, or nested
-            objects/arrays.
+            <strong>Validation workflows:</strong> Announce parse errors, line references, and “formatted” states in a
+            predictable status region.
           </li>
         </ul>
-        <p>Consider a simple JSON object:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <pre className="overflow-x-auto text-sm">
-            {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York",
-  "isStudent": false,
-  "courses": ["History", "Physics"]
-}`}
-          </pre>
-        </div>
         <p>
-          A screen reader might read this as: "open brace quote name quote colon quote Alice quote comma quote age quote
-          colon thirty comma quote city quote colon quote New York quote comma quote isStudent quote colon false comma
-          quote courses quote colon open bracket quote History quote comma quote Physics quote close bracket close
-          brace". This is incredibly difficult to parse mentally.
+          A good accessible formatter usually offers a structured view first and a raw code view second, rather than
+          forcing every user through the same monospaced block.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <List className="mr-2 text-blue-600" />
-          Semantic HTML to the Rescue
-        </h2>
-        <p>
-          The most effective way to make JSON data accessible is to transform it into standard, semantic HTML structures
-          that screen readers understand naturally. Instead of representing the JSON structure literally, represent the
-          *information* contained within the JSON using elements like lists, tables, and headings.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Basic Objects as Definition Lists or Unordered Lists</h3>
-        <p>
-          A simple JSON object with key-value pairs maps well to HTML definition lists (<code>&lt;dl&gt;</code>,{" "}
-          <code>&lt;dt&gt;</code>, <code>&lt;dd&gt;</code>) or even just key-value pairs within an unordered list (
-          <code>&lt;ul&gt;</code>, <code>&lt;li&gt;</code>).
-        </p>
-        <p>Using a Definition List:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">HTML Structure:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`&lt;dl&gt;
-  &lt;dt&gt;name&lt;/dt&gt;
-  &lt;dd&gt;Alice&lt;/dd&gt;
-
-  &lt;dt&gt;age&lt;/dt&gt;
-  &lt;dd&gt;30&lt;/dd&gt;
-
-  &lt;dt&gt;city&lt;/dt&gt;
-  &lt;dd&gt;New York&lt;/dd&gt;
-
-  &lt;dt&gt;isStudent&lt;/dt&gt;
-  &lt;dd&gt;false&lt;/dd&gt;
-&lt;/dl&gt;`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4 mb-2">Screen Reader Output (Example):</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`"name, term. Alice, definition. age, term. 30, definition. city, term. New York, definition. isStudent, term. false, definition."`}
-            </pre>
-          </div>
-        </div>
-        <p>This is much clearer, explicitly stating the "term" (key) and "definition" (value).</p>
-
-        <h3 className="text-xl font-semibold mt-6">Arrays as Unordered Lists</h3>
-        <p>
-          JSON arrays translate directly to HTML unordered lists (<code>&lt;ul&gt;</code>). Each item in the array
-          becomes a list item (<code>&lt;li&gt;</code>).
-        </p>
-        <p>For the "courses" array from the example:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">HTML Structure:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`&lt;ul&gt;
-  &lt;li&gt;History&lt;/li&gt;
-  &lt;li&gt;Physics&lt;/li&gt;
-&lt;/ul&gt;`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4 mb-2">Screen Reader Output (Example):</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>{`"List with 2 items. History. Physics."`}</pre>
-          </div>
-        </div>
-        <p>The list structure clearly indicates multiple items.</p>
-
-        <h3 className="text-xl font-semibold mt-6">Handling Nested Structures</h3>
-        <p>
-          Nested JSON objects or arrays should become nested HTML lists or definition lists. This mirrors the hierarchy
-          accessibly.
-        </p>
-        <p>Example JSON:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <pre className="overflow-x-auto text-sm">
-            {`{
-  "user": {
-    "id": 101,
-    "address": {
-      "street": "123 Main St",
-      "zip": "90210"
-    },
-    "roles": ["admin", "editor"]
-  }
-}`}
-          </pre>
-        </div>
-        <p>Accessible HTML Structure:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">HTML Structure:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`&lt;dl&gt;
-  &lt;dt&gt;user&lt;/dt&gt;
-  &lt;dd&gt;
-    &lt;dl&gt; {/* Nested DL for the user object */}
-      &lt;dt&gt;id&lt;/dt&gt;
-      &lt;dd&gt;101&lt;/dd&gt;
-
-      &lt;dt&gt;address&lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;dl&gt; {/* Nested DL for the address object */}
-          &lt;dt&gt;street&lt;/dt&gt;
-          &lt;dd&gt;123 Main St&lt;/dd&gt;
-          &lt;dt&gt;zip&lt;/dt&gt;
-          &lt;dd&gt;90210&lt;/dd&gt;
-        &lt;/dl&gt;
-      &lt;/dd&gt;
-
-      &lt;dt&gt;roles&lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;ul&gt; {/* Nested UL for the roles array */}
-          &lt;li&gt;admin&lt;/li&gt;
-          &lt;li&gt;editor&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/dd&gt;
-    &lt;/dl&gt;
-  &lt;/dd&gt;
-&lt;/dl&gt;`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          Screen readers announce the nesting level of lists, allowing users to understand the hierarchy and navigate
-          through it using list item shortcuts.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Info className="mr-2 text-blue-600" /> {/* Replaced Details with Info */}
-          Collapsible Sections with &lt;details&gt; and &lt;summary&gt;
-        </h3>
-        <p>
-          For large or deeply nested JSON, presenting everything at once can be overwhelming. The native HTML{" "}
-          <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements are excellent for creating collapsible
-          sections that are inherently accessible. The <code>&lt;summary&gt;</code> acts as a toggle, and screen readers
-          announce its expanded/collapsed state.
-        </p>
-        <p>
-          You can wrap objects or arrays in <code>&lt;details&gt;</code> tags:
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">HTML Structure:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`&lt;details&gt;
-  &lt;summary&gt;User Information (Click to toggle)&lt;/summary&gt;
-  &lt;dl&gt; {/* Content inside the collapsible section */}
-    &lt;dt&gt;id&lt;/dt&gt;
-    &lt;dd&gt;101&lt;/dd&gt;
-    {/* ... other user details ... */}
-  &lt;/dl&gt;
-&lt;/details&gt;`}
-            </pre>
-          </div>
-        </div>
-        <p>This allows users to focus only on the sections they are interested in, reducing cognitive load.</p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
           <Table className="mr-2 text-blue-600" />
-          Using Tables for Arrays of Objects
-        </h3>
+          Map each JSON shape to native HTML
+        </h2>
         <p>
-          If you have a JSON array where each element is an object with the same structure (e.g., an array of users), a
-          simple HTML <code>&lt;table&gt;</code> can be an appropriate and accessible format. Use table headers (
-          <code>&lt;th&gt;</code>) for the JSON keys and table data cells (<code>&lt;td&gt;</code>) for the values.
+          Native HTML gives screen readers the structure they already know how to announce. That is usually more robust
+          than recreating a custom widget with ARIA.
         </p>
-        <p>Example JSON:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <div className="my-4 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+          <table className="w-full border-collapse text-left text-base md:text-lg">
+            <caption className="bg-gray-50 px-4 py-3 text-left font-medium dark:bg-gray-900">
+              Recommended markup patterns for common JSON shapes
+            </caption>
+            <thead className="bg-gray-100 dark:bg-gray-800">
+              <tr>
+                <th className="px-4 py-3" scope="col">
+                  JSON shape
+                </th>
+                <th className="px-4 py-3" scope="col">
+                  Best default
+                </th>
+                <th className="px-4 py-3" scope="col">
+                  Why it works
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 font-semibold" scope="row">
+                  Flat object
+                </th>
+                <td className="px-4 py-3">
+                  <code>&lt;dl&gt;</code> with <code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code>
+                </td>
+                <td className="px-4 py-3">Keys become terms and values become definitions.</td>
+              </tr>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 font-semibold" scope="row">
+                  Array of primitives
+                </th>
+                <td className="px-4 py-3">
+                  <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code>
+                </td>
+                <td className="px-4 py-3">Screen readers announce item count and list position naturally.</td>
+              </tr>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 font-semibold" scope="row">
+                  Array of similar objects
+                </th>
+                <td className="px-4 py-3">
+                  <code>&lt;table&gt;</code> with a <code>&lt;caption&gt;</code> and proper headers
+                </td>
+                <td className="px-4 py-3">Users can move by row and column and understand repeated fields quickly.</td>
+              </tr>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 font-semibold" scope="row">
+                  Deeply nested object
+                </th>
+                <td className="px-4 py-3">
+                  Nested groups plus <code>&lt;details&gt;</code> or a disclosure button
+                </td>
+                <td className="px-4 py-3">Progressive disclosure reduces noise without losing hierarchy.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          This approach also prevents a common mistake: using tables for arbitrary nested JSON. If the data is not
+          genuinely tabular, a table makes navigation harder instead of easier.
+        </p>
+
+        <h3 className="mt-6 text-xl font-semibold">Example: one object, one nested array, one optional branch</h3>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
           <pre className="overflow-x-auto text-sm">
-            {`[
-  { "name": "Alice", "age": 30 },
-  { "name": "Bob", "age": 25 }
-]`}
+            {`<section aria-labelledby="profile-heading">
+  <h2 id="profile-heading">Profile</h2>
+
+  <dl>
+    <dt>Name</dt>
+    <dd>Alice</dd>
+
+    <dt>Role</dt>
+    <dd>Editor</dd>
+  </dl>
+
+  <details>
+    <summary>Permissions, array, 3 items</summary>
+    <ul>
+      <li>publish</li>
+      <li>archive</li>
+      <li>review</li>
+    </ul>
+  </details>
+</section>`}
           </pre>
         </div>
-        <p>Accessible HTML Structure:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">HTML Structure:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`&lt;table&gt;
-  &lt;caption&gt;List of Users&lt;/caption&gt; {/* Important for table accessibility */}
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th scope="col"&gt;Name&lt;/th&gt;
-      &lt;th scope="col"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Alice&lt;/td&gt;
-      &lt;td&gt;30&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Bob&lt;/td&gt;
-      &lt;td&gt;25&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;`}
-            </pre>
-          </div>
-        </div>
         <p>
-          Ensure you use <code>&lt;caption&gt;</code> and <code>&lt;th scope="col"&gt;</code> or{" "}
-          <code>scope="row"&gt;</code> for proper table accessibility, allowing screen readers to understand the
-          relationship between headers and data cells.
+          The important part is not the exact markup combination. It is that every section has a meaningful name, every
+          expandable region tells users what is inside it, and the data is grouped in a way that matches the actual
+          content model.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Speaker className="mr-2 text-blue-600" />
-          Additional Considerations for Screen Readers
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Info className="mr-2 text-blue-600" />
+          Use disclosure first, tree only when users truly need a tree
         </h2>
-
-        <h3 className="text-xl font-semibold mt-6">ARIA Attributes (Use Sparingly)</h3>
         <p>
-          While semantic HTML should be your primary tool, ARIA attributes can sometimes enhance clarity where native
-          HTML isn't quite sufficient.
+          This is where many formatter UIs go wrong. Designers see nested JSON and immediately build a custom tree view.
+          Current WAI-ARIA Authoring Practices are much more cautious: a disclosure pattern is usually better for
+          simply showing and hiding sections, while a full tree widget is appropriate only when users need structured
+          parent/child navigation with dedicated keyboard commands.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <code>aria-label</code> or <code>aria-describedby</code>: Could be used on container elements if extra
-            context is needed, but often good HTML structure is enough. For instance, you might label a{" "}
-            <code>&lt;dl&gt;</code> for a specific object property if the <code>&lt;dt&gt;</code> alone isn't clear in
-            context.
+            Use <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> or a disclosure button when users mostly
+            expand and collapse branches.
           </li>
           <li>
-            <code>role="group"</code>: Can sometimes be used around logical groupings of data if standard list/DL
-            structures don't apply neatly, but prefer native elements first.
+            Use a tree only if you are prepared to implement the full keyboard model: arrow keys, Home/End, focus
+            management, expanded state, and clear labeling for each node.
+          </li>
+          <li>
+            Do not steal arrow keys for a custom widget unless the widget actually behaves like a tree. Unexpected
+            keyboard capture is a fast way to break screen reader workflows.
           </li>
         </ul>
         <p>
-          **Caution:** Do not try to recreate the raw JSON syntax visually and then add ARIA to describe punctuation.
-          This is usually less effective than transforming the structure into semantic HTML. Prioritize readability and
-          navigability of the *content*, not the original format's syntax.
+          In practice, many JSON formatters do not need a tree at all. A disclosure-based outline is simpler to build,
+          easier to test, and more compatible across browser and assistive technology combinations.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Handling Data Types</h3>
-        <p>Consider how different JSON data types are presented:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>
-              Booleans (<code>true</code>, <code>false</code>)
-            </strong>
-            : Display them as text. Avoid using icons or colors as the *only* indicator without providing equivalent
-            text.
-          </li>
-          <li>
-            <strong>Null</strong>: Display as "null" or an equivalent accessible term like "Not Set" or "Empty".
-          </li>
-          <li>
-            <strong>Numbers</strong>: Display as text. Ensure large numbers are formatted readably if necessary (though
-            less common in pure JSON display).
-          </li>
-          <li>
-            <strong>Strings</strong>: Display as text. Be mindful of potentially long strings or strings containing line
-            breaks.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
           <CodeXml className="mr-2 text-blue-600" />
-          Code Blocks and Syntax Highlighting
-        </h3>
+          Keep raw JSON as a secondary view, not the only view
+        </h2>
         <p>
-          If the goal is specifically to *show* the raw JSON structure (e.g., for developers), presenting it within{" "}
-          <code>&lt;pre&gt;</code> and <code>&lt;code&gt;</code> tags is appropriate. Ensure that:
+          Sometimes the exact source matters. Developers may need to compare whitespace, inspect quotes, or copy a
+          payload verbatim. Keep that capability, but do not assume the raw code block is enough for accessibility.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            The code block is clearly labeled, perhaps with a heading or a preceding paragraph explaining that this is
-            the *raw data format*.
+            Add a heading or label such as <strong>Raw JSON source</strong> so users know they are leaving the
+            structured view.
           </li>
           <li>
-            The content within <code>&lt;code&gt;</code> uses appropriate HTML entities for characters like{" "}
-            <code>&lt;</code>, <code>&gt;</code>, <code>&#x7b;</code>, <code>&#x7d;</code> etc., if you are embedding
-            code *within* the code tag itself (e.g., explaining syntax). For simply displaying JSON text, the raw
-            characters are usually fine within <code>&lt;pre&gt;</code>, but ensure line breaks are preserved.
+            Put copy, wrap, and download actions in native buttons with specific names like “Copy raw JSON” or “Wrap
+            long lines.” Avoid repeated icon-only controls.
           </li>
           <li>
-            If using client-side syntax highlighting, ensure it doesn't create accessibility barriers (e.g., relying
-            solely on color, creating complex nested structures that confuse screen readers). Server-rendered or static
-            highlighting is often safer.
-          </li>
-        </ul>
-        <p>
-          However, if the purpose is for a user to *understand the data*, transforming it into semantic HTML
-          lists/tables is preferred over just showing the raw syntax.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Practical Implementation Tips</h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Build a Recursive Transformer:</strong> Write a function that takes a JSON object or array and
-            recursively generates the corresponding HTML structure (<code>&lt;dl&gt;</code>/<code>&lt;dt&gt;</code>/
-            <code>&lt;dd&gt;</code>, <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code>, or <code>&lt;table&gt;</code>).
+            Treat syntax highlighting as visual enhancement only. Do not rely on color to distinguish keys, strings, or
+            errors, and do not flood the accessibility tree with decorative token wrappers.
           </li>
           <li>
-            <strong>Handle Different Types:</strong> The transformer should check the type of each value (object, array,
-            string, number, boolean, null) and output the appropriate HTML.
+            If you show line numbers, hide decorative numbers from assistive technology unless users can actually
+            navigate by them.
           </li>
           <li>
-            <strong>Consider Large Data Sets:</strong> Implement features like pagination, filtering, or the{" "}
-            <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pattern for large JSON payloads.
-          </li>
-          <li>
-            <strong>Provide Context:</strong> Add introductory text or headings to explain what the displayed JSON data
-            represents.
-          </li>
-          <li>
-            <strong>Test with Screen Readers:</strong> Always test your formatted output with actual screen reader
-            software (like NVDA, JAWS, VoiceOver) to ensure it is interpreted correctly.
+            Offer a fast way back to the structured view when a user realizes the code view is too noisy.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Speaker className="mr-2 text-blue-600" />
+          Announce formatting, validation, and copy results without being chatty
+        </h2>
         <p>
-          Making JSON data accessible is not about preserving the original syntax, but about translating the underlying
-          information structure into a format that assistive technologies can understand and convey meaningfully. By
-          leveraging semantic HTML elements like definition lists, unordered lists, tables, and the{" "}
-          <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pattern, developers can create JSON formatters that
-          are not only visually organized but also fully navigable and comprehensible for screen reader users.
-          Prioritizing semantic structure over visual mimicry is key to inclusive data presentation.
+          Modern formatters are interactive. They prettify input, validate syntax, collapse nodes, copy content, and
+          sometimes fetch remote examples. Those state changes should be announced clearly, but only when users need to
+          know about them.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <pre className="overflow-x-auto text-sm">
+            {`<div role="status" aria-live="polite">
+  JSON formatted successfully. 12 top-level properties.
+</div>`}
+          </pre>
+        </div>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            Use a polite status region for non-blocking messages such as “formatted,” “copied,” or “3 matches found.”
+          </li>
+          <li>
+            Reserve urgent alerts for real problems, such as invalid JSON that prevents formatting.
+          </li>
+          <li>
+            Keep focus behavior consistent. If pressing Format updates the same view, focus usually stays on the button
+            or editor. If the action opens a new panel, move focus to a clear heading inside that panel.
+          </li>
+          <li>
+            Make toggle labels informative: “address, object, 4 properties” is better than “Expand.”
+          </li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <List className="mr-2 text-blue-600" />
+          Keyboard and testing checklist
+        </h2>
+        <p>
+          Accessible JSON formatting is not done when the markup looks correct in DevTools. It is done when the
+          interaction works with real assistive tech.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            Test keyboard-only first: visible focus, logical Tab order, Enter and Space on buttons, and no trapped
+            focus.
+          </li>
+          <li>
+            If you built a real tree widget, test the full APG keyboard model, not just expand and collapse.
+          </li>
+          <li>
+            Test with at least NVDA plus Firefox, JAWS plus Chrome or Edge, and VoiceOver plus Safari. If your
+            formatter is used on phones or tablets, test touch screen readers too.
+          </li>
+          <li>
+            Check zoom, reflow, and forced-colors or high-contrast modes so focus outlines, indentation, and toggle
+            states remain visible.
+          </li>
+          <li>
+            Verify that parse errors, copy confirmations, and collapsed summaries are announced once and not repeated
+            endlessly.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 text-2xl font-semibold">Common failure patterns to avoid</h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Showing only a prettified code block and calling it “accessible” because it has colors.</li>
+          <li>Using identical unlabeled expand buttons for every node.</li>
+          <li>Representing booleans, null values, or validation states with color alone.</li>
+          <li>Building a custom tree but skipping arrow-key behavior and focus management.</li>
+          <li>Firing live-region announcements for every small interaction until the interface becomes noisy.</li>
+        </ul>
+
+        <h2 className="mt-8 text-2xl font-semibold">Conclusion</h2>
+        <p>
+          Designing an accessible JSON formatter for screen readers means translating JSON into usable information, not
+          preserving every visual token. Start with native HTML, use disclosure for most nested branches, reserve tree
+          widgets for truly tree-like interaction, keep raw JSON available as a labeled fallback, and test with real
+          assistive technology. When those pieces are in place, a formatter becomes useful to far more people than the
+          default “pretty print” experience ever will.
         </p>
       </div>
     </>

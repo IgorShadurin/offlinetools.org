@@ -7,15 +7,15 @@ import {
   CheckCheck,
   Columns,
   MessageCircleQuestion,
-  SquareFunction, // Represents evaluation/functions
-  Files, // Represents scratch files
-  Terminal, // Represents evaluation in debug console
-} from "lucide-react"; // Only allowed icons
+  SquareFunction,
+  Files,
+  Terminal,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "IntelliJ IDEA's JSON Debugging Capabilities",
+  title: "IntelliJ IDEA JSON Formatter: Format Files and Debug JSON Strings",
   description:
-    "Explore the powerful features IntelliJ IDEA offers for working with and debugging JSON data within your development workflow.",
+    "Learn how to format a JSON file in IntelliJ IDEA, troubleshoot formatter issues, validate with schemas, and inspect JSON strings while debugging.",
 };
 
 export default function IntellijJsonDebuggingArticle() {
@@ -23,202 +23,205 @@ export default function IntellijJsonDebuggingArticle() {
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center">
         <Bug className="mr-3 h-8 w-8 text-red-500" />
-        IntelliJ IDEA&apos;s JSON Debugging Capabilities
+        IntelliJ IDEA JSON Formatter and Debugging Capabilities
       </h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web and in many
-          applications. As developers, we constantly deal with JSON data, whether it&apos;s API responses, configuration
-          files, or message queues. Debugging issues related to JSON structure, content, or parsing is a common task.
+          If you searched for how to format JSON in IntelliJ IDEA, the short answer is simple: open the{" "}
+          <code>.json</code> file and run <code>Code &gt; Reformat Code</code>. IntelliJ&apos;s built-in formatter
+          handles indentation, spacing, wrapping, folding, schema-aware validation, and large-file navigation well for
+          valid JSON.
         </p>
         <p>
-          IntelliJ IDEA, a popular Integrated Development Environment (IDE) from JetBrains, provides a wealth of
-          features that go beyond basic syntax highlighting to significantly aid in working with and debugging JSON
-          data, even when it&apos;s embedded within variables during a debugging session. This article explores these
-          capabilities.
+          Where IntelliJ becomes more useful than a basic pretty-printer is the rest of the workflow: it flags invalid
+          JSON while you type, can validate files against JSON Schema, supports JSON5, lets you test JSONPath queries,
+          and can show JSON strings in a structured debugger view when you stop at a breakpoint.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <CheckCheck className="mr-2 h-6 w-6 text-green-500" />
+          Quick Answer: How To Format a JSON File in IntelliJ IDEA
+        </h2>
+        <ol className="list-decimal pl-6 space-y-2">
+          <li>Open the JSON file in the editor.</li>
+          <li>
+            Run <code>Code &gt; Reformat Code</code>.
+          </li>
+          <li>
+            If you only want part of the file formatted, select that block first and then run reformat.
+          </li>
+          <li>
+            If you want formatting applied automatically, enable <code>Tools &gt; Actions on Save</code> and turn on
+            reformat for the file types you care about.
+          </li>
+        </ol>
+        <p>
+          IntelliJ formats JSON using the current code style rules, including relevant <code>.editorconfig</code>{" "}
+          settings when present. If the formatter does not change anything, the most common reason is that the file is
+          already compliant with the active style rules.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Code className="mr-2 h-6 w-6 text-blue-500" />
-          Core JSON Editing and Validation Features
+          What IntelliJ&apos;s JSON Formatter Actually Helps With
         </h2>
         <p>
-          Before even hitting the debugger, IntelliJ IDEA offers excellent support for working with JSON files directly.
+          For searchers looking for an IntelliJ JSON formatter, the built-in formatter is usually enough for everyday
+          work: cleaning up API fixtures, normalizing config files, or re-indenting pasted payloads. You do not need a
+          plugin for standard JSON formatting.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Code className="mr-2 h-5 w-5 text-blue-500" />
-          Syntax Highlighting and Formatting
-        </h3>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Pretty-print a minified JSON file so nested objects and arrays become readable.</li>
+          <li>Format only the current selection when you want to leave surrounding text untouched.</li>
+          <li>Reformat on save if you want JSON files normalized automatically during edits.</li>
+          <li>
+            Keep style consistent across a project by combining IntelliJ&apos;s formatter with shared code-style or{" "}
+            <code>.editorconfig</code> rules.
+          </li>
+        </ul>
         <p>
-          IntelliJ provides intelligent syntax highlighting for <code>.json</code> files, making the structure
-          immediately readable. It differentiates keys, strings, numbers, booleans, and null values. The built-in
-          formatter (usually invoked with <code>Ctrl+Alt+L</code> or <code>Cmd+Option+L</code>) ensures consistent
-          indentation and spacing, crucial for readability of complex JSON structures.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <CheckCheck className="mr-2 h-5 w-5 text-green-500" />
-          Real-time Validation and Error Highlighting
-        </h3>
-        <p>
-          The IDE validates your JSON against the standard specification as you type. It immediately highlights syntax
-          errors (like missing commas, incorrect quotes, trailing commas in objects/arrays in strict mode, etc.),
-          helping you catch structural issues before runtime.
-        </p>
-        <p>
-          <Info className="inline-block h-4 w-4 mr-1 align-text-bottom text-yellow-500" />
-          You can also use &quot;Code&quot; &gt; &quot;Analyze Code&quot; &gt; &quot;Inspect Code...&quot; for a broader
-          analysis, although real-time highlighting is usually sufficient for syntax errors.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Columns className="mr-2 h-5 w-5 text-purple-500" />
-          Structure View and Folding
-        </h3>
-        <p>
-          For large JSON files, the Structure tool window (usually <code>Alt+7</code> or <code>Cmd+7</code>) provides a
-          hierarchical view of the JSON document, allowing you to quickly navigate between keys and nested
-          objects/arrays. Code folding allows you to collapse complex objects or arrays, making the file more
-          manageable.
+          The important limitation is that formatting is not repair. If the file has a missing quote, a missing comma,
+          or another syntax error, the formatter will not magically fix the data. IntelliJ will highlight the problem,
+          but you still need to correct the invalid JSON first.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Bug className="mr-2 h-6 w-6 text-red-500" />
-          Debugging JSON Data in Variables
+          <Columns className="mr-2 h-6 w-6 text-purple-500" />
+          Validation, JSON5, and Schema Support
         </h2>
         <p>
-          One of the most powerful aspects of IntelliJ&apos;s JSON support comes into play during a debugging session
-          for code that processes JSON (e.g., Java, Kotlin, JavaScript, Python, etc.).
+          Current IntelliJ IDEA documentation is stronger on validation than many older articles suggest. The editor
+          supports JSON Schema out of the box, including bundled schemas from SchemaStore and custom schema mappings for
+          your own project files.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Terminal className="mr-2 h-5 w-5 text-red-500" />
-          Viewing JSON Strings in the Debugger
-        </h3>
         <p>
-          When a variable holds a string containing JSON (e.g., a raw API response string), IntelliJ often recognizes
-          it. In the &quot;Variables&quot; view, you might see a &quot;View as&quot; option or a similar indicator.
-          Choosing &quot;JSON&quot; will open a dedicated, formatted, and often foldable view of that JSON string,
-          making it much easier to inspect than a single long string.
+          That matters because formatting alone does not tell you whether a file is valid for the tool that will read
+          it. A schema-backed file can show enum errors, missing required keys, invalid value types, and other
+          structural issues before runtime.
         </p>
-        <p>This is invaluable for debugging parsing errors, where the input string might be malformed.</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Use schema mappings when your team has custom config files that are JSON-shaped but have strict rules.
+          </li>
+          <li>Check the status bar if IntelliJ seems to validate against the wrong schema.</li>
+          <li>
+            If your file contains comments or trailing commas, confirm whether you are editing strict JSON or JSON5,
+            because IntelliJ supports both but they are not interchangeable.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Terminal className="mr-2 h-6 w-6 text-red-500" />
+          Debugging JSON Strings at a Breakpoint
+        </h2>
+        <p>
+          This is where the article&apos;s original topic still matters. JetBrains documents a structured viewer for
+          string expressions in the debugger: when a stopped value contains JSON or XML, IntelliJ can display it in a
+          formatted document view instead of forcing you to inspect one long escaped string.
+        </p>
+        <p>
+          In practice, that helps most when you are debugging API clients, serializers, queue consumers, or config
+          loaders and want to inspect the exact payload before parsing. It is far faster than copying the value into a
+          temporary file every time you hit a breakpoint.
+        </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
           <SquareFunction className="mr-2 h-5 w-5 text-orange-500" />
-          Evaluating Expressions with JSON
+          Evaluate Expressions for Parsed Data
         </h3>
         <p>
-          The debugger&apos;s &quot;Evaluate Expression&quot; feature (usually <code>Alt+F8</code> or{" "}
-          <code>Option+F8</code>) is incredibly flexible. If you have parsed JSON data into native language structures
-          (like Java objects from Jackson/Gson, JavaScript objects, Python dictionaries), you can evaluate expressions
-          that access nested fields or array elements using the language&apos;s syntax.
+          If the JSON has already been parsed into native objects, IntelliJ&apos;s Evaluate Expression feature is the
+          better tool. You can inspect nested fields, array items, or transformed values using the language you are
+          debugging rather than working from raw text.
         </p>
         <p>
-          More impressively, if you have a JSON string variable, you can often use evaluation features provided by
-          language plugins (like the JavaScript/TypeScript plugin) to parse and manipulate that JSON string on the fly
-          within the debugger.
+          A useful split is:
         </p>
-        <p>
-          For example, in a JavaScript debugging session, if <code>jsonString</code> contains a JSON string, you can
-          evaluate <code>JSON.parse(jsonString)</code> to see the resulting object structure.
-        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Use the structured string viewer when the payload is still raw JSON text.</li>
+          <li>Use Evaluate Expression when the payload is already mapped into objects, dictionaries, or arrays.</li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Search className="mr-2 h-6 w-6 text-indigo-500" />
-          JSON Path Evaluation
+          JSONPath Is Better Than Manual Scrolling
         </h2>
         <p>
-          IntelliJ IDEA has built-in support for JSON Path, a query language for JSON, similar to XPath for XML. This is
-          extremely useful for extracting specific values from large JSON documents.
-        </p>
-        <p>
-          When viewing a JSON string in the dedicated JSON viewer within the debugger (or even when editing a{" "}
-          <code>.json</code> file), you can often right-click and find an option like &quot;Evaluate JSONPath&quot; or
-          &quot;Run JSONPath query&quot;.
-        </p>
-        <p>
-          This opens a tool window where you can type a JSON Path expression (e.g.,{" "}
-          <code>$.store.book[?(@.price &lt; 10)].title</code>) and see the results highlighted in the JSON document or
-          listed in a separate pane. This is indispensable for verifying that you can correctly access the data you
-          expect from a complex JSON structure.
+          IntelliJ IDEA also supports evaluating JSONPath expressions against open JSON content. For large payloads,
+          this is usually the fastest way to answer practical questions like &quot;which item has this ID?&quot; or
+          &quot;what value did this nested flag resolve to?&quot;
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium flex items-center">
             <Info className="mr-2 h-5 w-5 text-yellow-500" />
-            JSON Path Examples:
+            Useful JSONPath examples
           </h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <code>$.store.book</code>: Selects all books in the store.
+              <code>$.items[0]</code> returns the first item in an array.
             </li>
             <li>
-              <code>$.store.book[0].title</code>: Selects the title of the first book.
+              <code>$..id</code> finds every <code>id</code> key anywhere in the document.
             </li>
             <li>
-              <code>$..author</code>: Selects all authors in the document, regardless of nesting.
+              <code>$.users[?(@.active == true)]</code> filters users down to active entries.
             </li>
             <li>
-              <code>$.store.*</code>: Selects all members of the store object (books and bicycle).
-            </li>
-            <li>
-              <code>$.store.book[?(@.isbn)]</code>: Selects all books with an ISBN number.
+              <code>$.config.features[*].name</code> extracts all feature names from a nested config object.
             </li>
           </ul>
-          <p className="mt-4">IntelliJ&apos;s tool allows you to test these queries interactively.</p>
         </div>
+        <p>
+          If you regularly inspect large REST responses, JSONPath is the part of IntelliJ&apos;s JSON tooling most
+          people underuse.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Files className="mr-2 h-6 w-6 text-teal-500" />
-          Using Scratch Files for JSON
+          Scratch Files Are Still the Fastest Safe Workspace
         </h2>
         <p>
-          IntelliJ&apos;s Scratch Files feature (<code>Ctrl+Alt+Shift+Insert</code> or{" "}
-          <code>Cmd+Option+Shift+Insert</code>) is perfect for quickly pasting, formatting, validating, or manipulating
-          JSON snippets without creating a permanent file in your project.
-        </p>
-        <p>
-          You can create a new Scratch File of type JSON, paste your data, use the built-in formatting and validation,
-          and even use the JSON Path evaluation tool directly on the content of the scratch file. This is ideal for
-          inspecting JSON copied from logs, network requests, or documentation examples.
+          Scratch files remain a good place to paste a payload from logs, reformat it, attach the right schema, and run
+          JSONPath queries without creating noise inside your repository. For quick investigation work, this is usually
+          cleaner than adding temporary files to the project tree.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <MessageCircleQuestion className="mr-2 h-6 w-6 text-blue-500" />
-          Tips and Tricks
+          When Reformat Code Does Not Work
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Copy as JSON:</strong> In the Variables view during debugging, you can often right-click on an
-            object or array variable (if the language plugin supports it) and copy its current state formatted as a JSON
-            string. This is useful for saving complex variable states.
+            The file is invalid JSON, so IntelliJ highlights the error but cannot cleanly reformat the broken
+            structure.
           </li>
           <li>
-            <strong>Paste JSON as Class/Code:</strong> IntelliJ can often generate code (like Java classes, Kotlin data
-            classes, TypeScript interfaces) from a JSON structure pasted from the clipboard. Use &quot;Edit&quot; &gt;
-            &quot;Paste Special&quot; &gt; &quot;Paste JSON as Classes&quot; (the exact wording might vary by language
-            and version).
+            The content is not actually treated as JSON. This happens with the wrong file extension or when JSON is
+            embedded in a plain-text file.
           </li>
           <li>
-            <strong>Schema Validation:</strong> For critical JSON formats, associate a JSON Schema with your file
-            (Settings/Preferences &gt; Languages &amp; Frameworks &gt; JSON Schema Mapping). IntelliJ will validate your
-            JSON against the schema, providing much deeper validation than just syntax checks.
+            You expect Prettier to handle JSON automatically, but its configured file pattern does not include JSON in
+            your project.
           </li>
           <li>
-            <strong>REST Client Integration:</strong> If you use IntelliJ&apos;s built-in REST client, responses are
-            automatically shown with full JSON highlighting, formatting, and JSON Path evaluation capabilities.
+            You are editing JSON5 features such as comments or trailing commas while the file is meant to stay strict
+            JSON.
           </li>
         </ul>
+        <p>
+          If the goal is simply to clean up malformed pasted data before bringing it back into IntelliJ, a standalone
+          JSON formatter can be the faster first step. IntelliJ is strongest once the file is valid and part of a real
+          editing or debugging workflow.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Debugging JSON doesn&apos;t have to be a manual process of copying strings into online validators or squinting
-          at unformatted text in log files. IntelliJ IDEA integrates powerful JSON handling features directly into the
-          development and debugging workflow. From real-time syntax checks and formatting to interactive JSON Path
-          evaluation and seamless viewing of JSON data within variables, these capabilities significantly reduce the
-          time and effort required to identify and fix issues involving JSON, making your development process smoother
-          and more efficient. Leverage these tools to take the frustration out of JSON debugging.
+          For most developers, the answer to &quot;How do I format JSON in IntelliJ IDEA?&quot; is just{" "}
+          <code>Reformat Code</code>. The reason to stay in IntelliJ instead of using a one-off formatter is everything
+          around that action: schema validation, JSON5 awareness, JSONPath queries, scratch files, and structured JSON
+          inspection in the debugger. That combination is what makes IntelliJ IDEA genuinely useful for JSON-heavy
+          debugging work rather than just decent at indentation.
         </p>
       </div>
     </>

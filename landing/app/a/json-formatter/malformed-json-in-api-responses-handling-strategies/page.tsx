@@ -4,9 +4,9 @@ import type { Metadata } from "next";
  * Metadata for JSON formatter article about malformed JSON in API responses
  */
 export const metadata: Metadata = {
-  title: "Malformed JSON in API Responses: Handling Strategies | Offline Tools",
+  title: "Malformed JSON in API Responses: Detect, Retry, and Sanitize Safely | Offline Tools",
   description:
-    "Develop robust strategies for handling malformed JSON in API responses to prevent errors and improve application reliability.",
+    "Practical ways to handle malformed JSON from APIs, including HTML error pages, truncated bodies, and invalid numbers like NaN or Infinity.",
 };
 
 /**
@@ -19,612 +19,320 @@ export default function MalformedJsonInApiResponsesArticle() {
 
       <div className="space-y-6">
         <p>
-          When working with APIs, you&apos;ll inevitably encounter malformed JSON responses. Whether due to server-side
-          bugs, network issues, or third-party integration problems, these invalid responses can crash your application
-          if not handled properly. This article explores robust strategies for detecting, handling, and recovering from
-          malformed JSON in API responses.
+          Malformed JSON is rarely just a parsing problem. In production it usually means one of four things:
+          the upstream API returned HTML instead of JSON, the response body was truncated, the payload contains
+          JavaScript-style values that are not valid JSON, or the data shape drifted from what your client expects.
+          If you call <code>response.json()</code> blindly, any of those cases can turn into a runtime failure.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why API Responses Return Malformed JSON</h2>
         <p>
-          Understanding the root causes of malformed JSON can help you implement more effective handling strategies.
-          Here are some common reasons why APIs might return invalid JSON:
+          A robust strategy is to separate transport checks, parsing, repair decisions, and schema validation.
+          That makes it easier to decide when to retry, when to fail fast, and when a small quarantine-style
+          sanitization step is acceptable for a known bad partner API.
+        </p>
+
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
+          <h2 className="text-lg font-medium text-blue-900 dark:text-blue-200">What strict JSON still requires</h2>
+          <p className="mt-2 text-blue-800 dark:text-blue-100">
+            Interoperable JSON is still defined by RFC 8259: strings use double quotes, trailing commas are not
+            allowed, comments are not part of JSON, and non-finite numbers such as <code>NaN</code>,
+            <code>Infinity</code>, and <code>-Infinity</code> are invalid. Current MDN docs also note that
+            <code>JSON.parse()</code> throws <code>SyntaxError</code> for illegal JSON, and
+            <code>Response.json()</code> rejects if the body cannot be parsed.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">What Malformed API JSON Usually Looks Like</h2>
+        <p>
+          Search traffic for this topic usually comes from a few repeat offenders. These are the cases worth handling
+          explicitly:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc ml-6 space-y-2">
             <li>
-              <strong>Server-side errors:</strong> Bugs in API code that generate syntactically invalid JSON
+              <strong>HTML or plaintext error pages:</strong> A proxy, CDN, or app server returns markup or text while
+              your client still expects JSON.
             </li>
             <li>
-              <strong>Partial responses:</strong> Network interruptions causing incomplete JSON fragments
+              <strong>Truncated bodies:</strong> The response cuts off mid-object or mid-array because of upstream
+              crashes, timeouts, or connection resets.
             </li>
             <li>
-              <strong>Character encoding issues:</strong> Mismatched encoding between server and client
+              <strong>Almost-JSON:</strong> The payload contains trailing commas, comments, single quotes, or other
+              syntax copied from JavaScript instead of strict JSON.
             </li>
             <li>
-              <strong>Serialization problems:</strong> Custom serializers that produce invalid JSON
+              <strong>Invalid numeric values:</strong> Bare <code>NaN</code>, <code>Infinity</code>, or
+              <code>-Infinity</code> show up in the response even though they are not legal JSON numbers.
             </li>
             <li>
-              <strong>Mixing content types:</strong> Servers returning HTML or text error pages with HTTP 200 status
-            </li>
-            <li>
-              <strong>Unescaped characters:</strong> Special characters not properly escaped in strings
+              <strong>Interoperability bugs:</strong> Duplicate object keys or encoding issues make the payload
+              technically parseable in one environment but unreliable across others.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Common Types of Malformed JSON in APIs</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Syntax Errors</h3>
+        <h2 className="text-2xl font-semibold mt-8">A Fast Triage Checklist Before Parsing</h2>
         <p>
-          Basic syntax errors are the most common form of malformed JSON in API responses. These include missing commas,
-          unbalanced brackets, and invalid escape sequences.
+          Do these checks before blaming <code>JSON.parse()</code>. They quickly tell you whether this is a parser
+          problem or an upstream contract problem.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Example of Syntax Error:</h3>
+          <ol className="list-decimal ml-6 space-y-2">
+            <li>Check the HTTP status first. A 502, 503, or 504 with a body is usually not a JSON parser bug.</li>
+            <li>
+              Inspect the <code>Content-Type</code> header, but do not trust it completely. JSON APIs commonly use
+              <code>application/json</code>, <code>application/problem+json</code>, or another
+              <code>application/*+json</code> media type.
+            </li>
+            <li>Read the raw text when the endpoint is flaky so you can log a safe preview of what actually arrived.</li>
+            <li>
+              Distinguish parse failures from validation failures. Invalid syntax and wrong data shape need different
+              fixes.
+            </li>
+            <li>Log request IDs and response previews, but avoid storing full sensitive payloads in production logs.</li>
+          </ol>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Use a Safer Parse Path for Unreliable Endpoints</h2>
+        <p>
+          If an endpoint is known to be inconsistent, prefer <code>response.text()</code> plus an explicit parse step.
+          That gives you better error reporting than jumping straight to <code>response.json()</code>, and it lets you
+          check status codes and media types before parsing.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">JavaScript example:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`{
-  "user": {
-    "id": 123,
-    "name": "John Doe"
-    "email": "john@example.com"
+              {`function isJsonMediaType(contentType = "") {
+  return /\\bapplication\\/([a-z.+-]*\\+)?json\\b/i.test(contentType);
+}
+
+async function fetchJsonSafely(url, init) {
+  const response = await fetch(url, init);
+  const contentType = response.headers.get("content-type") ?? "";
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(\`HTTP \${response.status}: \${text.slice(0, 200)}\`);
   }
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Missing comma after the name field</p>
-        </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Truncated Responses</h3>
-        <p>
-          Network issues or server timeouts can lead to incomplete JSON responses, where the content is cut off before
-          the full structure is delivered.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Example of Truncated Response:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "results": [
-    {"id": 1, "name": "Product A"},
-    {"id": 2, "name": "Product B"},
-    {"id": 3, "na`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Response was truncated in the middle of the third item</p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">3. Mixed Content Types</h3>
-        <p>
-          Sometimes APIs return non-JSON content with a JSON content type, especially during error conditions when HTML
-          error pages might be returned instead of proper JSON error responses.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Example of Mixed Content:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`<!DOCTYPE html>
-<html>
-<head>
-  <title>Internal Server Error</title>
-</head>
-<body>
-  <h1>500 - Internal Server Error</h1>
-  <p>The server encountered an unexpected condition that prevented it from fulfilling the request.</p>
-</body>
-</html>`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">HTML error page returned instead of JSON</p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">4. Character Encoding Issues</h3>
-        <p>
-          Problems with character encoding can lead to invalid characters appearing in JSON strings, breaking the JSON
-          syntax. This is particularly common with multi-byte character sets.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Example with Encoding Issue:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "message": "Hello, this text contains a  character that isn't properly encoded"
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Robust Handling Strategies</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Basic Try-Catch Approach</h3>
-        <p>
-          The simplest approach is to wrap your JSON parsing in a try-catch block to prevent unhandled exceptions from
-          crashing your application.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">JavaScript Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`async function fetchData(url) {
-  try {
-    const response = await fetch(url);
-    const text = await response.text();
-    
-    try {
-      // Attempt to parse the response as JSON
-      const data = JSON.parse(text);
-      return data;
-    } catch (error) {
-      // Handle JSON parsing error
-      console.error("Failed to parse JSON response:", error);
-      // Return a default value or throw a custom error
-      return { error: "Invalid response format", details: text.substring(0, 100) };
-    }
-  } catch (error) {
-    // Handle network or other fetch errors
-    console.error("API request failed:", error);
-    throw error;
-  }
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">2. Content Type Validation</h3>
-        <p>
-          Before attempting to parse a response as JSON, check the Content-Type header to ensure you&apos;re receiving
-          the expected format. This can help identify mixed content issues early.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Content Type Checking Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`async function fetchJson(url) {
-  const response = await fetch(url);
-  
-  // Check content type before parsing
-  const contentType = response.headers.get("content-type");
-  if (!contentType || !contentType.includes("application/json")) {
+  if (!isJsonMediaType(contentType)) {
     throw new Error(
-      \`Expected JSON but received \${contentType || "unknown"} content type\`
+      \`Expected a JSON media type, got \${contentType || "unknown"}: \${text.slice(0, 200)}\`
     );
   }
-  
+
   try {
-    return await response.json();
+    return JSON.parse(text);
   } catch (error) {
-    console.error("Invalid JSON response:", error);
-    throw new Error("Failed to parse JSON response");
+    console.error("Malformed JSON response", {
+      url,
+      contentType,
+      preview: text.slice(0, 500),
+      length: text.length,
+      error: error instanceof Error ? error.message : String(error),
+    });
+
+    throw new Error("API returned malformed JSON", { cause: error });
   }
 }`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Implementing JSON Repair</h3>
         <p>
-          For non-critical applications, you might consider using JSON repair libraries that attempt to fix common
-          syntax errors in malformed JSON.
+          This pattern also avoids a common misconception: <code>response.json()</code> parses the body as JSON, but it
+          does not act as a full contract check for you. If the server sends HTML with a misleading header, you still
+          need your own guardrails.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Handling Invalid Numbers Like NaN or Infinity</h2>
+        <p>
+          This is one of the highest-intent failure modes for this page. Strict JSON does not allow <code>NaN</code>,
+          <code>Infinity</code>, or <code>-Infinity</code>. If an upstream API sends those tokens,
+          a strict parser will reject the payload even if the rest of the document looks fine.
         </p>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Caution:</h3>
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Recommended order of operations</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            JSON repair should be used cautiously, as it can potentially alter the meaning of the data. It&apos;s
-            generally safer for development/debugging than for production systems handling sensitive data.
+            Fix the producer first. If you do not control the upstream API and the bad numeric tokens are a known,
+            documented defect, isolate the cleanup step and make the transformation explicit. Do not silently repair
+            arbitrary untrusted payloads.
           </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">JSON Repair Example:</h3>
+          <h3 className="text-lg font-medium">Sanitizing non-finite numbers in a trusted partner payload:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// Using a hypothetical JSON repair library
-import jsonRepair from 'json-repair-library';
+              {`function replaceNonFiniteNumbers(jsonText) {
+  let result = "";
+  let inString = false;
+  let escaping = false;
 
-async function fetchWithRepair(url) {
-  const response = await fetch(url);
-  const text = await response.text();
-  
-  try {
-    // Try standard parsing first
-    return JSON.parse(text);
-  } catch (error) {
-    console.warn("Attempting to repair malformed JSON");
-    
-    // Attempt to repair the JSON
-    const repaired = jsonRepair(text);
-    
-    try {
-      // Try parsing the repaired JSON
-      return JSON.parse(repaired);
-    } catch (repairError) {
-      // If repair also fails, throw a comprehensive error
-      console.error("JSON repair failed:", repairError);
-      throw new Error("Could not parse or repair JSON response");
-    }
-  }
-}`}
-            </pre>
-          </div>
-        </div>
+  for (let i = 0; i < jsonText.length; ) {
+    const char = jsonText[i];
 
-        <h3 className="text-xl font-medium mt-6">4. Schema Validation</h3>
-        <p>
-          Even if the JSON is syntactically valid, it might not match the expected structure. Implementing schema
-          validation ensures that the parsed data conforms to your application&apos;s requirements.
-        </p>
+    if (inString) {
+      result += char;
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Schema Validation Example (using Zod):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`import { z } from 'zod';
-
-// Define the expected schema
-const UserSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  email: z.string().email(),
-  role: z.enum(['admin', 'user', 'guest']),
-  lastLogin: z.string().datetime().optional()
-});
-
-async function fetchUser(userId) {
-  const response = await fetch(\`/api/users/\${userId}\`);
-  
-  try {
-    const data = await response.json();
-    
-    // Validate the response against the schema
-    const validatedUser = UserSchema.parse(data);
-    return validatedUser;
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      console.error("API response doesn't match expected schema:", error.issues);
-      throw new Error("Invalid user data structure");
-    }
-    
-    console.error("Failed to parse JSON:", error);
-    throw new Error("Invalid JSON response");
-  }
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">5. Fallback Values and Graceful Degradation</h3>
-        <p>
-          Implement a system of fallbacks that allows your application to continue functioning even when API responses
-          are malformed, providing a degraded but still usable experience.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Fallback Strategy Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`async function fetchProductDetails(productId) {
-  try {
-    const response = await fetch(\`/api/products/\${productId}\`);
-    const product = await response.json();
-    return product;
-  } catch (error) {
-    console.error("Failed to fetch product details:", error);
-    
-    // Return cached data if available
-    const cachedProduct = getFromCache(\`product_\${productId}\`);
-    if (cachedProduct) {
-      console.log("Using cached product data as fallback");
-      return { ...cachedProduct, _fromCache: true };
-    }
-    
-    // Or return minimum viable data to prevent UI breaks
-    return {
-      id: productId,
-      name: "Product information unavailable",
-      price: null,
-      _error: true,
-      _errorMessage: "Could not load product details"
-    };
-  }
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">6. Retry Mechanisms</h3>
-        <p>
-          Implement exponential backoff retry strategies for handling transient errors in API responses, particularly
-          for truncated responses that might be caused by network issues.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Retry Implementation Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`async function fetchWithRetry(url, maxRetries = 3) {
-  let lastError;
-  
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const response = await fetch(url);
-      return await response.json();
-    } catch (error) {
-      console.warn(\`Attempt \${attempt + 1} failed: \${error.message}\`);
-      lastError = error;
-      
-      if (attempt < maxRetries - 1) {
-        // Exponential backoff with jitter
-        const delay = Math.min(1000 * 2 ** attempt, 10000) + Math.random() * 1000;
-        console.log(\`Retrying in \${delay}ms...\`);
-        await new Promise(resolve => setTimeout(resolve, delay));
+      if (char === '"' && !escaping) {
+        inString = false;
       }
-    }
-  }
-  
-  throw new Error(\`All \${maxRetries} attempts failed: \${lastError.message}\`);
-}`}
-            </pre>
-          </div>
-        </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Advanced Error Handling Patterns</h2>
+      const isBackslash = char.charCodeAt(0) === 92;
+      escaping = isBackslash && !escaping;
 
-        <h3 className="text-xl font-medium mt-6">1. Error Boundaries (React Example)</h3>
-        <p>
-          In React applications, implement error boundaries to prevent the entire UI from crashing when a component
-          encounters a JSON parsing error.
-        </p>
+      if (!isBackslash) {
+        escaping = false;
+      }
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">React Error Boundary Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// ErrorBoundary component
-class ApiErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("API data rendering failed:", error, errorInfo);
-    // Optionally report to error monitoring service
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="error-container">
-          <h2>Something went wrong with this section.</h2>
-          <p>The data could not be displayed properly.</p>
-          <button onClick={() => this.setState({ hasError: false })}>
-            Try again
-          </button>
-        </div>
-      );
+      i += 1;
+      continue;
     }
 
-    return this.props.children;
+    if (char === '"') {
+      inString = true;
+      result += char;
+      i += 1;
+      continue;
+    }
+
+    if (jsonText.startsWith("-Infinity", i)) {
+      result += "null";
+      i += 9;
+      continue;
+    }
+
+    if (jsonText.startsWith("Infinity", i)) {
+      result += "null";
+      i += 8;
+      continue;
+    }
+
+    if (jsonText.startsWith("NaN", i)) {
+      result += "null";
+      i += 3;
+      continue;
+    }
+
+    result += char;
+    i += 1;
   }
+
+  return result;
 }
 
-// Usage
-function ProductPage({ productId }) {
-  return (
-    <div>
-      <Header />
-      <ApiErrorBoundary>
-        <ProductDetails id={productId} />
-      </ApiErrorBoundary>
-      <RelatedProducts id={productId} />
-      <Footer />
-    </div>
-  );
+function parseKnownBadPartnerJson(jsonText) {
+  const normalized = replaceNonFiniteNumbers(jsonText);
+  return JSON.parse(normalized);
 }`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Circuit Breaker Pattern</h3>
         <p>
-          Implement the circuit breaker pattern to temporarily disable API calls that consistently return malformed
-          responses, preventing cascading failures and allowing systems to recover.
+          Replacing invalid numeric tokens with <code>null</code> is only one possible policy. In some systems you may
+          want to reject the payload instead, map those values to strings, or drop the affected records entirely. The
+          important part is to make that policy visible and test it.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Circuit Breaker Implementation:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`class ApiCircuitBreaker {
-  constructor(failureThreshold = 5, resetTimeout = 30000) {
-    this.failureThreshold = failureThreshold;
-    this.resetTimeout = resetTimeout;
-    this.failureCount = 0;
-    this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
-    this.nextAttempt = Date.now();
-  }
-
-  async executeRequest(requestFn) {
-    if (this.state === 'OPEN') {
-      if (Date.now() > this.nextAttempt) {
-        this.state = 'HALF_OPEN';
-      } else {
-        throw new Error('Circuit breaker is open - request rejected');
-      }
-    }
-
-    try {
-      const result = await requestFn();
-      
-      // Reset on success if in HALF_OPEN state
-      if (this.state === 'HALF_OPEN') {
-        this.reset();
-      }
-      
-      return result;
-    } catch (error) {
-      this.recordFailure();
-      throw error;
-    }
-  }
-
-  recordFailure() {
-    this.failureCount++;
-    
-    if (this.failureCount >= this.failureThreshold || this.state === 'HALF_OPEN') {
-      this.state = 'OPEN';
-      this.nextAttempt = Date.now() + this.resetTimeout;
-    }
-  }
-
-  reset() {
-    this.failureCount = 0;
-    this.state = 'CLOSED';
-  }
-}
-
-// Usage example
-const userApiBreaker = new ApiCircuitBreaker();
-
-async function fetchUserSafely(userId) {
-  return userApiBreaker.executeRequest(async () => {
-    const response = await fetch(\`/api/users/\${userId}\`);
-    if (!response.ok) throw new Error(\`HTTP error: \${response.status}\`);
-    
-    const data = await response.json();
-    return data;
-  });
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Monitoring and Prevention</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Client-Side Logging</h3>
+        <h2 className="text-2xl font-semibold mt-8">Retry, Repair, or Fail Fast?</h2>
         <p>
-          Implement comprehensive logging for JSON parsing errors to help identify patterns and root causes of malformed
-          responses.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Enhanced Error Logging:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`function logJsonError(url, responseText, error) {
-  console.error("JSON parsing error:", {
-    url,
-    error: error.message,
-    stackTrace: error.stack,
-    responsePreview: responseText.substring(0, 500),
-    responseLength: responseText.length,
-    timestamp: new Date().toISOString()
-  });
-  
-  // Send to your error tracking service
-  errorTrackingService.captureException(error, {
-    extra: {
-      url,
-      responsePreview: responseText.substring(0, 500)
-    },
-    tags: {
-      errorType: 'json_parse_error'
-    }
-  });
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">2. Server-Side Solutions</h3>
-        <p>
-          If you control the API, implement server-side preventive measures to ensure valid JSON is always returned.
+          Different malformed responses deserve different handling. A single catch block is not enough if you want a
+          predictable client.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc ml-6 space-y-2">
-            <li>Use dedicated serialization libraries with robust error handling</li>
-            <li>Implement JSON schema validation before sending responses</li>
-            <li>Add middleware to catch exceptions and return proper JSON error responses</li>
-            <li>Ensure consistent character encoding (UTF-8) in all responses</li>
-            <li>Set appropriate Content-Type headers (application/json)</li>
-            <li>Test API responses with malformed input data</li>
+            <li>
+              <strong>Retry:</strong> Good for truncated responses, upstream 502/503/504 errors, or empty bodies from
+              flaky infrastructure. Use exponential backoff and stick to idempotent requests unless you have stronger
+              guarantees.
+            </li>
+            <li>
+              <strong>Fail fast:</strong> Best when you got an HTML login page, an authorization error, or the wrong
+              endpoint entirely. Repairing those responses hides the real problem.
+            </li>
+            <li>
+              <strong>Repair in quarantine:</strong> Acceptable for a known partner bug such as bare
+              <code>NaN</code> values, but keep the fix narrow and heavily logged.
+            </li>
+            <li>
+              <strong>Graceful fallback:</strong> Useful for UI screens that can render cached data or a partial state
+              while the bad response is investigated.
+            </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Real-world Case Studies</h2>
-
-        <h3 className="text-xl font-medium mt-6">Case Study 1: E-commerce Product Catalog</h3>
+        <h2 className="text-2xl font-semibold mt-8">Validate the Shape After Parsing</h2>
         <p>
-          An e-commerce application was experiencing intermittent crashes when displaying product details. Investigation
-          revealed that certain product descriptions contained unescaped special characters that broke JSON syntax. The
-          team implemented the following solution:
+          Parsing success only means the text was valid JSON. It does not mean the payload matches your contract. Add
+          schema validation immediately after parsing so that syntax problems and contract drift stay separate.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ol className="list-decimal ml-6 space-y-2">
-            <li>Added try-catch blocks around JSON parsing in the product details component</li>
-            <li>Implemented schema validation to ensure product data met expected format</li>
-            <li>
-              Created fallback UI components that displayed minimal product information when full data couldn&apos;t be
-              parsed
-            </li>
-            <li>Added server-side validation to catch and escape problematic characters before sending responses</li>
-            <li>Set up monitoring to track and alert on JSON parsing failures</li>
-          </ol>
-          <p className="mt-2">
-            Result: Application crashes were eliminated, and the team could proactively address data quality issues.
-          </p>
+          <h3 className="text-lg font-medium">Shape validation example with Zod:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`import { z } from "zod";
+
+const ProductSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  price: z.number().nullable(),
+  currency: z.string().length(3),
+});
+
+async function fetchProduct(productId) {
+  const json = await fetchJsonSafely(\`/api/products/\${productId}\`);
+  const result = ProductSchema.safeParse(json);
+
+  if (!result.success) {
+    console.error("JSON shape mismatch", result.error.flatten());
+    throw new Error("API response shape is invalid");
+  }
+
+  return result.data;
+}`}
+            </pre>
+          </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">Case Study 2: Third-party API Integration</h3>
+        <h2 className="text-2xl font-semibold mt-8">Log Enough to Debug the Upstream Problem</h2>
         <p>
-          A financial application integrating with a third-party payment gateway occasionally received malformed JSON
-          responses during high-traffic periods. Since they couldn&apos;t modify the third-party API, they implemented:
+          The best malformed-JSON logging gives you enough context to fix the producer without dumping sensitive data
+          into logs.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ol className="list-decimal ml-6 space-y-2">
-            <li>Exponential backoff retry mechanism specifically for JSON parsing errors</li>
-            <li>Circuit breaker pattern to temporarily disable the problematic API endpoint during outages</li>
-            <li>Local caching of payment status information to reduce API calls</li>
-            <li>Dual validation approach: both HTTP status code and response body structure validation</li>
-            <li>Graceful degradation to a secondary payment provider when the primary API consistently failed</li>
-          </ol>
-          <p className="mt-2">
-            Result: The application maintained 99.9% availability despite the occasional API issues.
-          </p>
+          <ul className="list-disc ml-6 space-y-2">
+            <li>Request URL and HTTP method</li>
+            <li>Status code and <code>Content-Type</code></li>
+            <li>Correlation or request ID headers</li>
+            <li>A short response preview, capped to a safe length</li>
+            <li>Body length and parse error message</li>
+            <li>A redaction strategy for tokens, email addresses, or payment data</li>
+          </ul>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Handling malformed JSON in API responses is an essential aspect of building robust applications. By
-          implementing the strategies outlined in this article—from basic try-catch blocks to advanced patterns like
-          circuit breakers—you can significantly improve your application&apos;s resilience against API failures.
+          The practical fix for malformed API JSON is not "just add try/catch." Start by separating transport checks
+          from parsing, then decide explicitly whether a bad response should be retried, rejected, or narrowly
+          sanitized. That keeps temporary outages from looking like data bugs and keeps data bugs from turning into
+          silent corruption.
         </p>
 
         <p>
-          Remember that the best approach often combines multiple strategies tailored to your specific application needs
-          and risk tolerance. Proper error handling not only prevents crashes but also enhances user experience by
-          providing graceful degradation when things go wrong.
-        </p>
-
-        <p>
-          Finally, don&apos;t neglect monitoring and logging—they provide invaluable insights for addressing the root
-          causes of malformed JSON issues, helping you move from reactive handling to proactive prevention.
+          If you only change one thing, make it this: capture the raw body text for bad responses before parsing, then
+          validate the parsed result against a schema. That one shift makes malformed JSON far easier to diagnose and
+          much safer to handle.
         </p>
       </div>
     </>

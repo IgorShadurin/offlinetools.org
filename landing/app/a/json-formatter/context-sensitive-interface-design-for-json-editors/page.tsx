@@ -12,15 +12,14 @@ import {
   MousePointerClick,
   LayoutGrid,
   PenLine,
-  Combine,
   Database,
   Palette,
-} from "lucide-react"; // Only allowed icons from the list
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Context-Sensitive Interface Design for JSON Editors | Offline Tools",
   description:
-    "Explore how context-sensitive design enhances usability and reduces errors in JSON editors by leveraging structural and schema information.",
+    "Practical guide to designing schema-aware JSON editors with smarter validation, navigation, accessibility, and current JSON Schema compatibility notes.",
 };
 
 export default function ContextSensitiveJsonEditorArticle() {
@@ -32,308 +31,273 @@ export default function ContextSensitiveJsonEditorArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the ubiquitous data format for configuration, data interchange,
-          and APIs. While simple text editors can handle JSON, editing complex or large JSON structures manually is
-          often error-prone and cumbersome. This is where <strong>context-sensitive interface design</strong> for JSON
-          editors becomes invaluable.
+          A good JSON editor should do more than color braces and format text. It should understand where the user is
+          in the document, what kind of value belongs there, what the schema allows, and what the user is trying to do
+          right now. That is the core of <strong>context-sensitive interface design</strong> for JSON editors.
         </p>
         <p>
-          A standard text editor treats JSON merely as text. It doesn&apos;t understand the hierarchical structure, data
-          types, or potential relationships defined by a schema. A context-sensitive editor, on the other hand,
-          understands the JSON &quot;context&quot; – the position within the structure, the expected data type, the key
-          names, and potentially validation rules from a schema. This understanding allows the editor to provide
-          intelligent assistance and prevent common mistakes.
+          For direct search visitors, the important question is usually practical: <em>what makes a JSON editor feel
+          helpful instead of fragile?</em> The answer is not more chrome. It is faster recovery from mistakes, clearer
+          navigation through nested data, and controls that appear only when they reduce effort without hiding the raw
+          JSON.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Lightbulb size={24} /> Why Context Matters in JSON Editing
+          <Lightbulb size={24} /> What Context-Sensitive Design Actually Means
         </h2>
-        <p>Consider editing a complex configuration file or a large data payload. Without context:</p>
+        <p>A JSON editor becomes context-sensitive when it reacts to at least four kinds of context at the same time:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Mistyping a key name leads to silent errors or incorrect application behavior.</li>
-          <li>Forgetting a comma or adding an extra one breaks the entire JSON structure.</li>
-          <li>Using the wrong data type for a value goes unnoticed until runtime.</li>
           <li>
-            Navigating deeply nested structures requires tedious scrolling and manual matching of braces/brackets.
+            <strong>Structural context:</strong> whether the cursor is inside an object, array, key, string, number, or
+            incomplete value.
+          </li>
+          <li>
+            <strong>Schema context:</strong> expected types, required keys, enums, descriptions, examples, defaults,
+            and validation rules for the current path.
+          </li>
+          <li>
+            <strong>Task context:</strong> creating new JSON, patching one property, reviewing a large payload, or
+            fixing a validation failure.
+          </li>
+          <li>
+            <strong>Risk context:</strong> whether the action might break syntax, violate a schema, reorder meaningful
+            data, or silently coerce a value.
           </li>
         </ul>
-        <p>
-          Context-sensitive design aims to mitigate these issues by providing real-time feedback and assistance based on
-          the JSON structure and its rules.
-        </p>
+        <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-900 p-4 rounded-lg dark:bg-blue-950 dark:text-blue-100 my-4">
+          <p className="font-semibold">Useful rule of thumb</p>
+          <p className="mt-1">
+            Promote a field to a custom control only when the allowed input is narrow and obvious, such as a boolean,
+            enum, or small bounded number. Keep free-form editing for long strings, pasted payloads, and arbitrary
+            nested objects.
+          </p>
+        </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Sparkles size={24} /> Key Features of Context-Sensitive JSON Editors
+          <Sparkles size={24} /> Design Around Real Editing Tasks
         </h2>
-        <p>Here are several examples of how a JSON editor can leverage context:</p>
+        <p>Search users rarely want abstract principles. They want an editor that helps with real work like this:</p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Creating a new object:</strong> start from schema-backed snippets, defaults, and required-field
+            prompts instead of an empty pair of braces.
+          </li>
+          <li>
+            <strong>Editing one field safely:</strong> show the full path, expected type, and any enum values near the
+            cursor so the user does not have to scan the whole file.
+          </li>
+          <li>
+            <strong>Auditing a large document:</strong> combine outline navigation, filtering, and a synchronized tree
+            view so users can jump by structure instead of line number.
+          </li>
+          <li>
+            <strong>Resolving validation errors:</strong> explain the failure in plain language and offer the smallest
+            safe fix instead of only a parser position.
+          </li>
+          <li>
+            <strong>Comparing versions:</strong> diff by property path and array item meaning where possible, not only
+            by raw line movement.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <MousePointerClick size={24} /> Core Interface Patterns That Usually Help
+        </h2>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <Palette size={20} /> Intelligent Syntax Highlighting
+          <Palette size={20} /> Inline Guidance and Safe Defaults
         </h3>
-        <p>Beyond basic key/value differentiation, highlighting can indicate:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Different colors for different data types (strings, numbers, booleans, null).</li>
-          <li>Highlighting mandatory vs. optional keys (if a schema is present).</li>
-          <li>Visually separating sibling elements (e.g., alternating background colors for array items).</li>
-          <li>Highlighting matched braces/brackets when the cursor is placed next to one.</li>
+          <li>Autocomplete keys from the current object schema or from similar sibling objects when no schema exists.</li>
+          <li>Offer enum pickers, booleans, and date helpers only when they reduce ambiguity instead of adding UI noise.</li>
+          <li>
+            Differentiate <strong>required</strong>, <strong>optional</strong>, and <strong>unknown</strong> fields so
+            the user understands why a suggestion appears.
+          </li>
+          <li>
+            Insert whole key-value snippets when useful, including commas or braces, so the action preserves valid JSON
+            rather than dumping partial text into the document.
+          </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <CircleCheck size={20} /> Real-time Validation and Error Reporting
+          <ListTree size={20} /> Navigation for Deeply Nested Documents
         </h3>
-        <p>This is a crucial feature. As the user types, the editor can:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Identify and flag syntax errors instantly (missing commas, extra braces, unquoted keys).</li>
+          <li>Show breadcrumbs such as <code>root &gt; services[2] &gt; retryPolicy &gt; maxRetries</code>.</li>
+          <li>Support tree-to-text and text-to-tree synchronization without jumping the viewport unexpectedly.</li>
+          <li>Let users search by key name, value, and path so they can find the right node even in repetitive arrays.</li>
+          <li>Provide copy-path actions for JSON Pointer or dot-path formats if your users move between tools.</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <PenLine size={20} /> Keep a Raw Text Escape Hatch
+        </h3>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Always preserve a plain text editing mode for power users, pasted payloads, and bulk operations.</li>
+          <li>Do not force every edit through forms or tree widgets that hide commas, ordering, or duplicate-key issues.</li>
+          <li>When switching modes, avoid rewriting formatting or reordering keys unless the user asked for it.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Database size={24} /> Current Schema Guidance That Matters in Practice
+        </h2>
+        <p>
+          As of March 2026, JSON Schema still lists <strong>Draft 2020-12</strong> as the current version. That matters
+          for editor design because modern schemas can describe tuples, dynamic references, and unevaluated properties
+          more precisely than older drafts.
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
           <li>
-            Report schema validation errors (wrong data type, missing required key, invalid pattern for a string).
+            Use schema metadata like <code>description</code>, <code>default</code>, <code>examples</code>, and{" "}
+            <code>enum</code> as UI hints. They are often more valuable to the interface than the raw type.
           </li>
-          <li>Underline or color-code problematic sections with clear error messages on hover.</li>
+          <li>
+            Support newer keywords when your validator and editor stack can handle them, especially{" "}
+            <code>prefixItems</code> for tuple-like arrays and <code>unevaluatedProperties</code> for stricter object
+            editing.
+          </li>
+          <li>
+            Test exact editor behavior if you build on a Monaco or VS Code JSON stack. Current VS Code documentation
+            notes full support through Draft 7, with only limited support for Draft 2019-09 and 2020-12 features.
+          </li>
+          <li>
+            Prefer external schema association when possible instead of injecting <code>$schema</code> into user data
+            just to drive editor behavior. That key changes the document itself and can be inappropriate for payloads
+            sent to APIs or stored elsewhere.
+          </li>
+        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Schema Hints That Translate Well to UI</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "environment": {
+      "type": "string",
+      "enum": ["dev", "staging", "prod"],
+      "description": "Deployment target"
+    },
+    "retryCount": {
+      "type": "integer",
+      "default": 3,
+      "minimum": 0
+    },
+    "features": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["environment"]
+}`}
+            </pre>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+            This kind of schema can drive path-aware help text, enum suggestions, required-field badges, and safe
+            default insertion without turning the editor into a rigid form builder.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <CircleX size={24} /> Design for Error Recovery, Not Just Error Detection
+        </h2>
+        <p>Users judge a JSON editor by how quickly it gets them back to a valid state after something goes wrong.</p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Keep the editor interactive with partially invalid JSON instead of disabling autocomplete until parse succeeds.</li>
+          <li>Attach errors to a path and explain the expected value, not just the parser offset.</li>
+          <li>Offer one-click fixes when the intent is clear, such as adding quotes, removing a trailing comma, or inserting a missing required key.</li>
+          <li>Never silently coerce a value like <code>"3"</code> into <code>3</code> unless the user explicitly chooses that fix.</li>
+          <li>Preserve selection and scroll position after formatting or auto-fix actions so recovery feels stable.</li>
         </ul>
         <div
           className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg dark:bg-red-900 dark:text-red-200 my-4"
           role="alert"
         >
           <p className="font-bold flex items-center gap-2">
-            <CircleX size={20} /> Syntax Error Detected:
+            <CircleX size={20} /> Better Diagnostic Example
           </p>
           <p>
-            <code>Unexpected token &#x7d; at position 45. Expected , or &#x7d;</code>
+            <code>/services/2/retryCount</code> expects an integer, but the current value is a string:{" "}
+            <code>&quot;3&quot;</code>.
           </p>
+          <p className="mt-2">Suggested fixes: convert to number, or update the schema if strings are intentional.</p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <MousePointerClick size={20} /> Contextual Autocomplete
-        </h3>
-        <p>Based on the current position:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Suggest possible keys when inside an object (especially useful with a schema).</li>
-          <li>Suggest enum values for keys defined in a schema.</li>
-          <li>
-            Suggest <code>true</code>, <code>false</code>, or <code>null</code> when expecting a boolean or null value.
-          </li>
-          <li>Offer closing braces/brackets automatically.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ListTree size={20} /> Structure Visualization and Navigation
-        </h3>
-        <p>Representing the tree structure explicitly:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Tree view panel showing the JSON hierarchy.</li>
-          <li>Code folding/collapsing for objects and arrays, allowing users to hide nested details.</li>
-          <li>
-            Breadcrumbs or status bar indicating the current path in the JSON tree (e.g.,{" "}
-            <code>root &gt; data &gt; users[2] &gt; address</code>).
-          </li>
-          <li>Clicking on a node in the tree view jumps to that location in the text editor.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <LayoutGrid size={20} /> Type-Specific Input Controls
-        </h3>
-        <p>Instead of just text input, offer specialized controls based on the expected type:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            Boolean toggles or checkboxes instead of typing <code>true</code>/<code>false</code>.
-          </li>
-          <li>Number inputs with increment/decrement buttons or sliders.</li>
-          <li>Date/time pickers for string fields known to be dates (via schema or convention).</li>
-          <li>Color pickers for string fields representing colors (e.g., hex codes).</li>
-          <li>Dropdowns or radio buttons for enum values.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <PenLine size={20} /> Contextual Actions (Context Menus)
-        </h3>
-        <p>Right-clicking or using a dedicated UI element can provide relevant actions:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Add property (when inside an object).</li>
-          <li>Add item (when inside an array).</li>
-          <li>Delete selected property/item.</li>
-          <li>Duplicate property/item.</li>
-          <li>Change value type.</li>
-          <li>Sort array items or object keys.</li>
-          <li>Extract selected value to a new document.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <Database size={20} /> Schema Integration
-        </h3>
-        <p>Integrating with a JSON Schema definition elevates the editor significantly:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Providing validation against the schema.</li>
-          <li>
-            Offering context-aware autocomplete for keys and values based on <code>properties</code>, <code>items</code>
-            , <code>enum</code>, etc.
-          </li>
-          <li>
-            Displaying documentation for keys or values from the schema&apos;s <code>description</code> fields.
-          </li>
-          <li>Offering default values or examples from the schema.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <Combine size={20} /> Structured Diffing and Merging
-        </h3>
-        <p>Comparing two JSON documents contextually:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Highlighting changes based on the structure, not just line differences.</li>
-          <li>Showing added, deleted, or modified properties/items clearly.</li>
-          <li>Allowing users to accept or reject changes at the property/item level.</li>
-          <li>
-            For example, comparing <code>[1, 2, 3]</code> and <code>[1, 3, 4]</code>
-            could yield 2 deleted, 3 changed to 4.
-          </li>
-        </ul>
-
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Wrench size={24} /> Implementation Considerations
-        </h2>
-        <p>Building such an editor requires more than a simple text area:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Robust Parsing:</strong> Needs a parser that understands the full JSON grammar and can handle
-            partial or invalid input gracefully to provide feedback while typing.
-          </li>
-          <li>
-            <strong>Abstract Syntax Tree (AST):</strong> Internally representing the JSON as a tree structure is
-            essential for understanding context, navigating, and performing operations.
-          </li>
-          <li>
-            <strong>Schema Parsing and Validation:</strong> If schema integration is desired, a JSON Schema parser and
-            validator are needed.
-          </li>
-          <li>
-            <strong>Editor Component:</strong> A feature-rich code editor component (like CodeMirror or Monaco Editor)
-            is often used as the base, providing features like line numbers, basic highlighting, and cursor management,
-            which is then extended with context-aware logic.
-          </li>
-          <li>
-            <strong>Performance:</strong> For very large JSON files, parsing and validating in real-time can be
-            challenging and may require optimized algorithms or lazy evaluation.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CircleCheck size={24} /> Benefits for Developers
-        </h2>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Reduced Errors:</strong> Real-time validation and type-specific inputs prevent many common syntax
-            and type mistakes.
-          </li>
-          <li>
-            <strong>Increased Speed:</strong> Autocomplete, structure navigation, and contextual actions speed up
-            editing tasks.
-          </li>
-          <li>
-            <strong>Better Understanding:</strong> Structure visualization helps users understand complex data
-            hierarchies.
-          </li>
-          <li>
-            <strong>Schema Compliance:</strong> Editors integrated with schemas make it easier to produce valid data.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CircleX size={24} /> Potential Challenges
-        </h2>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Complexity:</strong> Implementing context-sensitive features requires significant logic beyond basic
-            text editing.
-          </li>
-          <li>
-            <strong>Schema Management:</strong> Handling schema loading, versions, and potential errors adds complexity.
-          </li>
-          <li>
-            <strong>Performance with Large Files:</strong> Real-time processing of multi-megabyte JSON files can be a
-            technical hurdle.
-          </li>
-          <li>
-            <strong>User Interface Complexity:</strong> Presenting all the contextual information and controls without
-            overwhelming the user is an interface design challenge.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Code size={24} /> Conceptual Example: Basic Autocomplete Logic
+          <Wrench size={24} /> Large-File Performance Rules
         </h2>
         <p>
-          While a full implementation is complex, here&apos;s a simplified idea of the logic for key autocomplete within
-          an object, assuming we have parsed the JSON into an AST and potentially have a schema:
+          Context sensitivity is only helpful if the editor stays responsive. Large JSON files expose weak architecture
+          quickly, especially when tree views, validation, and diffing all react to every keystroke.
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Use a tolerant parser that can produce partial structure even while the document is temporarily invalid.</li>
+          <li>Debounce expensive schema validation and move it off the main thread when possible.</li>
+          <li>Virtualize tree and outline views so thousands of nodes do not render at once.</li>
+          <li>Cache path lookups and schema resolution for the active cursor region instead of walking the full tree repeatedly.</li>
+          <li>Introduce graceful degradation thresholds for huge payloads, such as disabling live diff previews before disabling basic editing.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <CircleCheck size={24} /> Accessibility and Input Model
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Expose every contextual action through the keyboard, not only through right-click menus.</li>
+          <li>Announce validation errors and the current path in a way screen readers can reach without scanning the entire editor.</li>
+          <li>Do not rely on color alone to mark required fields, warnings, or schema violations.</li>
+          <li>Keep focus movement predictable when the tree view, breadcrumbs, and text editor are synchronized.</li>
+          <li>On smaller screens, favor compact inline actions and large touch targets over permanently visible side panels.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <LayoutGrid size={24} /> Implementation Checklist
+        </h2>
+        <ol className="list-decimal pl-6 space-y-2">
+          <li>Start with tolerant parsing plus path mapping, because nearly every context-aware feature depends on it.</li>
+          <li>Resolve schema information lazily for the active path instead of treating the full schema as a flat suggestion source.</li>
+          <li>Build autocomplete, diagnostics, and contextual actions from the same path-aware state so they stay consistent.</li>
+          <li>Keep text mode as the source of truth even if you add tree or form-like controls on top.</li>
+          <li>Measure responsiveness with realistic large payloads before adding more assistance features.</li>
+          <li>Test failure cases deliberately: incomplete JSON, wrong types, recursive schemas, and unknown properties.</li>
+        </ol>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Code size={24} /> Conceptual Example: Choosing Assistance by Context
+        </h2>
+        <p>
+          A practical implementation usually routes every cursor move through the same decision layer: inspect the
+          current path, inspect the schema node for that path, then choose the lightest UI that helps without taking
+          control away from the user.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Conceptual Autocomplete Logic:</h3>
+          <h3 className="text-lg font-medium">Conceptual Assistance Pipeline</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// Assume 'jsonAst' is the parsed tree structure
-// Assume 'currentCursorPosition' is known
-// Assume 'schema' is the parsed JSON schema (optional)
+              {`function buildEditorAssistance(editorState) {
+  const astContext = inspectAstNearCursor(editorState.document, editorState.cursor);
+  const schemaContext = resolveSchemaForPath(editorState.schema, astContext.path);
+  const largeFileMode = editorState.document.length > 500_000;
 
-function getAutocompleteSuggestions(jsonAst, currentCursorPosition, schema) {
-  const nodeAtCursor = findNodeAtPosition(jsonAst, currentCursorPosition);
-
-  if (!nodeAtCursor) return []; // Not in a valid JSON structure yet
-
-  // Case 1: Inside an object, after an opening brace or a comma
-  // and cursor is before the next key or closing brace
-  if (nodeAtCursor.type === 'Object' && isWithinObjectBody(nodeAtCursor, currentCursorPosition)) {
-    const existingKeys = nodeAtCursor.properties.map(p => p.key.value);
-    let possibleKeys = [];
-
-    if (schema) {
-      // Get allowed keys from schema for this object path
-      const schemaNode = getSchemaNodeForPath(schema, nodeAtCursor.path);
-      if (schemaNode && schemaNode.properties) {
-        possibleKeys = Object.keys(schemaNode.properties);
-      } else {
-         // Fallback if schema doesn't define properties explicitly
-         possibleKeys = suggestCommonKeys(jsonAst, nodeAtCursor.path); // e.g., keys from sibling objects
-      }
-    } else {
-      // Without schema, suggest keys from siblings or common patterns
-      possibleKeys = suggestCommonKeys(jsonAst, nodeAtCursor.path);
-    }
-
-    // Filter out keys that are already present
-    const suggestions = possibleKeys
-      .filter(key => !existingKeys.includes(key))
-      .map(key => ({ label: \`"\${key}"\`, insertText: \`"\${key}": \` })); // Suggest key with colon
-
-    return suggestions;
-  }
-
-  // Case 2: Inside an array, expecting a value
-   if (nodeAtCursor.type === 'Array' && isWithinArrayBody(nodeAtCursor, currentCursorPosition)) {
-     // If schema exists, suggest values based on schema.items
-     // Otherwise, suggest common value types or values seen in other items
-     // e.g., [{ label: 'true', insertText: 'true' }, { label: 'null', insertText: 'null' }, ...]
-     return suggestArrayItemValues(jsonAst, nodeAtCursor.path, schema);
-   }
-
-
-  // Case 3: After a colon, expecting a value
-  if (nodeAtCursor.type === 'Property' && isAfterColon(nodeAtCursor, currentCursorPosition)) {
-    // If schema exists, suggest values based on schema for this property
-    // Otherwise, suggest common value types (string, number, boolean, null, [], {})
-     return suggestPropertyValues(jsonAst, nodeAtCursor.path, schema);
-  }
-
-  // ... other cases (e.g., completing true/false/null, closing brackets/braces)
-
-  return []; // No suggestions
-}
-
-// Helper functions like findNodeAtPosition, isWithinObjectBody, getSchemaNodeForPath,
-// suggestCommonKeys, suggestArrayItemValues, suggestPropertyValues, isAfterColon
-// would involve traversing the AST and comparing positions.
-`}
+  return {
+    breadcrumbs: astContext.path,
+    completions: getCompletions(astContext, schemaContext),
+    diagnostics: largeFileMode
+      ? getFastSyntaxDiagnostics(editorState.document)
+      : getSyntaxAndSchemaDiagnostics(editorState.document, editorState.schema),
+    actions: getContextActions(astContext, schemaContext),
+    preferredInput:
+      schemaContext?.enum ? "picker" :
+      schemaContext?.type === "boolean" ? "toggle" :
+      "text"
+  };
+}`}
             </pre>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 flex items-center gap-1">
-            <Lightbulb size={16} /> This simplified example shows the need to understand the surrounding JSON structure
-            and potentially integrate schema information.
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+            The important design choice is not the exact code. It is that completion, validation, navigation, and UI
+            controls all read from the same path-aware understanding of the document.
           </p>
         </div>
 
@@ -341,11 +305,11 @@ function getAutocompleteSuggestions(jsonAst, currentCursorPosition, schema) {
           <PencilRuler size={24} /> Conclusion
         </h2>
         <p>
-          Context-sensitive interface design transforms a basic JSON text area into a powerful editing tool. By
-          understanding the structure, types, and rules of the JSON data, the editor can actively guide the user,
-          prevent errors, and significantly improve the editing experience, especially for complex or schema-bound JSON.
-          While more complex to build than simple text editors, the benefits in terms of usability, accuracy, and
-          efficiency make context-aware JSON editors essential for modern development workflows.
+          The best context-sensitive JSON editors do not try to replace text editing. They reduce risk at the current
+          path, expose structure without forcing it, and use schema information carefully enough that the interface stays
+          helpful even when the document is incomplete or the schema is only partially supported. If you design around
+          task context, recovery flow, and large-file performance, the editor will feel substantially smarter to real
+          users than a formatter with autocomplete bolted on top.
         </p>
       </div>
     </>

@@ -1,294 +1,369 @@
 import type { Metadata } from "next";
-import { Code, Command, Library, Braces, FlaskConical, FileText, Terminal, Laptop } from "lucide-react"; // Importing necessary icons, replaced SquareCurly with Braces
+import {
+  AlertTriangle,
+  Braces,
+  CheckCircle2,
+  Code,
+  Command,
+  FileText,
+  FlaskConical,
+  Laptop,
+  Library,
+  Terminal,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Python JSON Formatting Tools and Libraries | Offline Tools",
+  title: "Python JSON Formatting Tools and Libraries: Built-in CLI, json.dumps(), and Faster Options | Offline Tools",
   description:
-    "Explore Python's built-in libraries and command-line tools for formatting and pretty-printing JSON data.",
+    "Choose the right Python JSON formatter for scripts, the terminal, JSON Lines, Unicode output, and high-throughput apps with practical examples and current CLI notes.",
 };
 
 export default function PythonJsonFormattingPage() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 flex items-center">
+      <h1 className="mb-6 flex items-center text-3xl font-bold">
         <Braces className="mr-3" size={32} /> Python JSON Formatting Tools and Libraries
       </h1>
 
       <div className="space-y-6">
         <p>
-          Working with JSON (JavaScript Object Notation) is a common task in software development, especially when
-          dealing with data exchange, APIs, and configuration files. While JSON's simple key-value structure is easy for
-          machines to parse, poorly formatted JSON can be difficult for humans to read and debug.
+          If you need to pretty-print JSON in Python today, start with the built-in <code>json</code> module. It is
+          available everywhere, it handles both scripts and terminal use, and in current Python releases the command
+          line interface is available as <code>python -m json</code> as well as the older
+          <code> python -m json.tool</code> form.
         </p>
         <p>
-          Formatting JSON, often called "pretty-printing", adds indentation, spacing, and sometimes sorts keys to make
-          the structure clear and hierarchical. Python provides excellent built-in tools and libraries to handle JSON
-          formatting efficiently.
+          The real decisions are not about syntax. They are about output quality and workflow: whether you want UTF-8
+          characters instead of escaped Unicode, whether you need strict JSON instead of JavaScript-style
+          <code> NaN</code> values, whether your data is JSON Lines, and whether faster third-party serialization is
+          worth giving up some flexibility.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Library className="mr-2" /> Python's Standard `json` Library
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <CheckCircle2 className="mr-2" /> What Should You Use?
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-gray-300 dark:border-gray-700">
+                <th className="py-3 pr-4 font-semibold">Task</th>
+                <th className="py-3 pr-4 font-semibold">Best option</th>
+                <th className="py-3 font-semibold">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="py-3 pr-4">Format JSON inside Python code</td>
+                <td className="py-3 pr-4">
+                  <code>json.dumps()</code>
+                </td>
+                <td className="py-3">Portable, flexible, and supports custom indent width, key sorting, and strict-output settings.</td>
+              </tr>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="py-3 pr-4">Validate or pretty-print from the terminal</td>
+                <td className="py-3 pr-4">
+                  <code>python -m json</code>
+                </td>
+                <td className="py-3">Fastest zero-dependency option for files, pipes, and quick debugging.</td>
+              </tr>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="py-3 pr-4">Format JSON Lines or NDJSON</td>
+                <td className="py-3 pr-4">
+                  <code>python -m json --json-lines</code>
+                </td>
+                <td className="py-3">Treats each line as its own JSON document instead of failing on multi-record files.</td>
+              </tr>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="py-3 pr-4">High-throughput serialization in app code</td>
+                <td className="py-3 pr-4">
+                  <code>orjson</code>
+                </td>
+                <td className="py-3">Very fast and popular, but it returns bytes and offers fewer formatting choices.</td>
+              </tr>
+              <tr className="align-top">
+                <td className="py-3 pr-4">One-off inspection in a browser</td>
+                <td className="py-3 pr-4">An offline formatter</td>
+                <td className="py-3">Useful when you want readable output without uploading sensitive JSON to a third-party service.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Library className="mr-2" /> The Default Choice: Python&apos;s <code>json</code> Module
         </h2>
         <p>
-          The most common and recommended way to format JSON in Python is by using the built-in `json` module. This
-          module provides functions for encoding Python objects into JSON strings (`dumps`) and decoding JSON strings
-          into Python objects (`loads`).
+          The standard library remains the best starting point for most developers. It works for API responses,
+          configuration files, test fixtures, and debug output, and it gives you more control over formatting than many
+          faster alternatives.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">
-          <Code className="inline-block mr-2" size={20} /> Formatting with <code>json.dumps()</code>
+        <h3 className="mt-6 text-xl font-semibold">
+          <Code className="mr-2 inline-block" size={20} /> Format with <code>json.dumps()</code>
         </h3>
-        <p>
-          The <code>json.dumps()</code> function is used to serialize a Python object into a JSON formatted string. It
-          offers powerful arguments to control the output format:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <p>These options matter most in real projects:</p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <code>indent</code>: Specifies the number of spaces (or a string) to use for indentation. Using a positive
-            integer like <code>4</code> makes the output human-readable.
+            <code>indent</code>: Use an integer such as <code>2</code> or <code>4</code> for normal pretty-printing,
+            or pass a string such as <code>&quot;\t&quot;</code> if your team prefers tabs.
           </li>
           <li>
-            <code>sort_keys</code>: If set to <code>True</code>, the keys in JSON objects will be sorted alphabetically.
-            This is useful for ensuring consistent output order, which can help with version control diffs.
+            <code>ensure_ascii=False</code>: Keeps UTF-8 characters readable instead of escaping everything above ASCII.
+            This is usually the better choice for logs, fixtures, and user-facing output.
           </li>
           <li>
-            <code>separators</code>: A tuple <code>(item_separator, key_separator)</code>. By default, it's{" "}
-            <code>(&apos;, &apos;, &apos;: &apos;)</code> with spaces. For compact JSON, you can use
-            <code>(&apos;,&apos;, &apos;:&apos;)</code>.
+            <code>sort_keys=True</code>: Makes diffs easier to review and helps stabilize snapshots in tests.
+          </li>
+          <li>
+            <code>allow_nan=False</code>: Raises an error for <code>NaN</code>, <code>Infinity</code>, and
+            <code> -Infinity</code> so the output stays strict JSON.
+          </li>
+          <li>
+            <code>separators=(&quot;,&quot;, &quot;:&quot;)</code>: Useful when you want compact JSON instead of human-readable output.
           </li>
         </ul>
 
-        <h4 className="text-lg font-medium mt-4">Example: Basic Pretty-Printing</h4>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <h4 className="mt-4 text-lg font-medium">Example: readable JSON with Unicode preserved</h4>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
           <pre>
             <code className="language-python">
               {`import json
 
-data = {
-    "name": "Alice",
-    "age": 30,
-    "isStudent": False,
-    "courses": ["Math", "Science", "History"],
-    "address": {
-        "street": "123 Main St",
-        "city": "Anytown"
+payload = {
+    "user": "Marina",
+    "city": "Minsk",
+    "message": "Привет",
+    "roles": ["admin", "editor"]
+}
+
+pretty_json = json.dumps(
+    payload,
+    indent=2,
+    ensure_ascii=False,
+    sort_keys=True,
+    allow_nan=False,
+)
+
+print(pretty_json)
+`}
+            </code>
+          </pre>
+        </div>
+        <p>
+          That combination is a strong default for developer-facing output: it stays readable, produces predictable key
+          order, and fails fast if the data is not valid JSON.
+        </p>
+
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
+          <FileText className="mr-2" size={20} /> Write formatted files with <code>json.dump()</code>
+        </h3>
+        <p>
+          Use <code>json.dump()</code> when you want to write directly to disk. For text files, explicitly opening with
+          <code> encoding=&quot;utf-8&quot;</code> avoids platform-default surprises.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <pre>
+            <code className="language-python">
+              {`import json
+
+config = {
+    "api_url": "https://example.com/v1",
+    "timeout_seconds": 30,
+    "features": {
+        "pretty_logging": True,
+        "strict_mode": True
     }
 }
 
-# Pretty-print with 4-space indentation
-pretty_json = json.dumps(data, indent=4)
-print(pretty_json)
-
-# Output will be formatted like:
-# {
-#     "name": "Alice",
-#     "age": 30,
-#     "isStudent": false,
-#     "courses": [
-#         "Math",
-#         "Science",
-#         "History"
-#     ],
-#     "address": {
-#         "street": "123 Main St",
-#         "city": "Anytown"
-#     }
-# }
+with open("config.json", "w", encoding="utf-8") as handle:
+    json.dump(
+        config,
+        handle,
+        indent=2,
+        ensure_ascii=False,
+        sort_keys=True,
+    )
 `}
             </code>
           </pre>
         </div>
+        <p>
+          One easy mistake: JSON is not a framed format, so repeated calls to <code>json.dump()</code> on the same file
+          do not create a valid stream of separate documents. If you need one object per line, use JSON Lines instead.
+        </p>
 
-        <h4 className="text-lg font-medium mt-4">Example: Sorting Keys</h4>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <pre>
-            <code className="language-python">
-              {`import json
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Terminal className="mr-2" /> Command-Line Formatting with <code>python -m json</code>
+        </h2>
+        <p>
+          For shell use, Python&apos;s built-in CLI is still the most practical formatter when you already have Python
+          installed. In Python 3.14, the documentation exposes the command as <code>python -m json</code>; the older
+          <code> python -m json.tool</code> entry point remains useful for compatibility and behaves the same way for
+          most workflows.
+        </p>
 
-data = {
-    "name": "Alice",
-    "age": 30,
-    "isStudent": False
-}
-
-# Pretty-print with 2-space indentation and sorted keys
-pretty_json_sorted = json.dumps(data, indent=2, sort_keys=True)
-print(pretty_json_sorted)
-
-# Output will be:
-# {
-#   "age": 30,
-#   "isStudent": false,
-#   "name": "Alice"
-# }
-`}
-            </code>
-          </pre>
-        </div>
-
-        <h4 className="text-lg font-medium mt-4">Example: Compact Output</h4>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <pre>
-            <code className="language-python">
-              {`import json
-
-data = {
-    "name": "Alice",
-    "age": 30
-}
-
-# Compact JSON output
-compact_json = json.dumps(data, separators=(',', ':'))
-print(compact_json)
-
-# Output will be:
-# {"name":"Alice","age":30}
-`}
-            </code>
-          </pre>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <FileText className="inline-block mr-2" size={20} /> Formatting Files with <code>json.dump()</code>
+        <h3 className="mt-6 text-xl font-semibold">
+          <Command className="mr-2 inline-block" size={20} /> Useful CLI patterns
         </h3>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            Pretty-print a file:
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">python -m json payload.json</code>
+              </pre>
+            </div>
+          </li>
+          <li>
+            Validate and sort keys:
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">python -m json --sort-keys payload.json</code>
+              </pre>
+            </div>
+          </li>
+          <li>
+            Preserve Unicode characters:
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">cat payload.json | python -m json --no-ensure-ascii</code>
+              </pre>
+            </div>
+          </li>
+          <li>
+            Handle JSON Lines or NDJSON correctly:
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">python -m json --json-lines records.jsonl</code>
+              </pre>
+            </div>
+          </li>
+          <li>
+            Switch formatting style:
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">python -m json --indent 2 payload.json</code>
+              </pre>
+            </div>
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">python -m json --tab payload.json</code>
+              </pre>
+            </div>
+            <div className="my-2 overflow-x-auto rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+              <pre>
+                <code className="language-bash">python -m json --compact payload.json</code>
+              </pre>
+            </div>
+          </li>
+        </ul>
         <p>
-          If you want to write a Python object directly to a file as formatted JSON, use the <code>json.dump()</code>{" "}
-          function. It takes a file-like object as its second argument and supports the same formatting arguments as{" "}
-          <code>dumps()</code>.
+          The CLI also validates input. If the JSON is malformed, it exits with an error and points to the problem
+          location, which makes it handy in shell scripts and CI checks.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Laptop className="mr-2" /> Third-Party Libraries Worth Knowing
+        </h2>
+        <p>
+          Most articles list a long catalog of JSON libraries. For formatting work, that usually adds noise. The main
+          alternative worth evaluating is <code>orjson</code>, especially when formatting is part of a larger
+          serialization path that needs to be fast.
+        </p>
+
+        <h3 className="mt-6 text-xl font-semibold">When <code>orjson</code> is a better fit</h3>
+        <p>
+          <code>orjson</code> is designed for speed and produces UTF-8 bytes instead of Python strings. It supports
+          pretty-printing with <code>OPT_INDENT_2</code> and key sorting with <code>OPT_SORT_KEYS</code>, so it can
+          work well in APIs and services where JSON serialization is on the hot path.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
           <pre>
             <code className="language-python">
-              {`import json
+              {`import orjson
 
-data = {
-    "product": "Gadget",
-    "price": 19.99,
-    "inStock": True
+payload = {
+    "message": "Привет",
+    "ok": True,
+    "items": [1, 2, 3]
 }
 
-# Write to a file with pretty-printing
-with open("output.json", "w") as f:
-    json.dump(data, f, indent=4)
+pretty_bytes = orjson.dumps(
+    payload,
+    option=orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS,
+)
 
-# The file "output.json" will contain the formatted JSON.
+print(pretty_bytes.decode("utf-8"))
 `}
             </code>
           </pre>
         </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Terminal className="mr-2" /> Command-line Formatting with <code>python -m json.tool</code>
-        </h2>
-        <p>
-          Python's standard library includes a command-line tool for validating and pretty-printing JSON. You can access
-          it using the <code>python -m json.tool</code> command. This is incredibly useful for formatting JSON data from
-          files or standard input directly in your terminal without writing a separate script.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          <Command className="inline-block mr-2" size={20} /> Using <code>json.tool</code>
-        </h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <strong>From a file:</strong>
-            <div className="bg-gray-100 p-2 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                <code className="language-bash">python -m json.tool your_file.json</code>
-              </pre>
-            </div>
+            Choose <code>orjson</code> when throughput matters and you are already comfortable handling bytes.
           </li>
           <li>
-            <strong>From standard input (piping):</strong> This is very common, e.g., to format JSON output from another
-            command.
-            <div className="bg-gray-100 p-2 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                <code className="language-bash">cat your_file.json | python -m json.tool</code>
-              </pre>
-            </div>
-            or
-            <div className="bg-gray-100 p-2 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                <code className="language-bash">curl -s api.example.com/data | python -m json.tool</code>
-              </pre>
-            </div>
-          </li>
-        </ul>
-        <p>
-          By default, <code>json.tool</code> uses an indentation of 4 spaces. As of Python 3.8, you can specify the
-          indent level using the <code>--indent</code> flag.
-        </p>
-        <div className="bg-gray-100 p-2 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-          <pre>
-            <code className="language-bash">cat your_file.json | python -m json.tool --indent 2</code>
-          </pre>
-        </div>
-        <p>The tool also includes validation. If the input is not valid JSON, it will report an error.</p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Laptop className="mr-2" /> Beyond Standard Libraries
-        </h2>
-        <p>
-          While the built-in <code>json</code> library is sufficient for most formatting needs, there are other tools
-          and libraries:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Third-party Python Libraries:</strong> Libraries like <code>orjson</code>, <code>ujson</code>, or{" "}
-            <code>pydantic</code>
-            offer fast JSON serialization/deserialization, sometimes with additional features or performance
-            optimizations. While they serialize Python objects to JSON, their formatting options might be similar to or
-            different from the standard library.
-          </li>
-          <li>
-            <strong>Specialized Command-line Tools:</strong> Tools like <code>jq</code> are specifically designed for
-            processing, slicing, filtering, mapping, and transforming JSON data from the command line. <code>jq</code>{" "}
-            is extremely powerful for complex operations and includes excellent formatting capabilities.
-          </li>
-          <li>
-            <strong>Online Formatters:</strong> Numerous websites provide online JSON formatting services. Use these
-            with caution, especially for sensitive data, as you're submitting your data to a third-party server. For
-            quick formatting of non-sensitive data, they can be convenient.
-          </li>
-        </ul>
-        <p>
-          For standard formatting tasks within Python scripts or basic command-line pretty-printing, the built-in{" "}
-          <code>json</code>
-          module and <code>python -m json.tool</code> are usually all you need. They are reliable, widely available, and
-          well-documented.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <FlaskConical className="mr-2" /> Practical Tips for Developers
-        </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Debugging:</strong> When dealing with complex or nested JSON from an API or file, piping it through
-            <code>python -m json.tool</code> is one of the quickest ways to understand its structure and identify
-            missing or incorrect data.
-          </li>
-          <li>
-            <strong>Configuration Files:</strong> If you're writing application configuration files in JSON, using
-            `indent=4` and `sort_keys=True` ensures they are easy for users to read and that changes between versions
-            are minimal and clear in version control systems like Git.
-          </li>
-          <li>
-            <strong>Logging and Output:</strong> When logging or printing JSON data, always pretty-print it if it's
-            intended for human consumption. Compact JSON saves space but is unusable for quick manual inspection.
-          </li>
-          <li>
-            <strong>Consistency:</strong> Agree on a standard indentation level (e.g., 2 or 4 spaces) and whether to
-            sort keys within your team or project to maintain consistency across your codebase.
+            Stay with the standard library when you need arbitrary indent widths, direct file writing with
+            <code> json.dump()</code>, or the least surprising behavior for scripts and tooling.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <AlertTriangle className="mr-2" /> Common Formatting Mistakes
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            Treating JSON Lines like one big JSON document. A file with one object per line needs
+            <code> --json-lines</code> or custom line-by-line handling.
+          </li>
+          <li>
+            Forgetting that <code>ensure_ascii=True</code> is the default. If your output suddenly contains
+            <code> \\uXXXX</code> escapes, set <code>ensure_ascii=False</code>.
+          </li>
+          <li>
+            Assuming <code>NaN</code> and <code>Infinity</code> are always valid JSON. They are allowed by Python&apos;s
+            default encoder, but not by strict JSON parsers.
+          </li>
+          <li>
+            Assuming non-string dictionary keys round-trip cleanly. JSON object keys are strings, so
+            <code> loads(dumps(x))</code> can change the shape of your data.
+          </li>
+          <li>
+            Pretty-printing huge payloads in memory during debugging. Indentation increases size, and converting a very
+            large object to a single formatted string can be expensive.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <FlaskConical className="mr-2" /> Practical Recommendations
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            For application code, use <code>json.dumps(..., indent=2, ensure_ascii=False)</code> unless you have a
+            measured reason to do something else.
+          </li>
+          <li>
+            For fixtures, config files, and snapshots, add <code>sort_keys=True</code> so diffs stay readable.
+          </li>
+          <li>
+            For pipelines and quick validation, keep <code>python -m json</code> in your shell toolbox.
+          </li>
+          <li>
+            For strict interoperability with external systems, add <code>allow_nan=False</code> and test with real
+            payloads instead of assuming the defaults are portable.
+          </li>
+          <li>
+            For sensitive one-off inspection, prefer a local or offline formatter over a random web app.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 text-2xl font-semibold">Conclusion</h2>
         <p>
-          Python provides robust and easy-to-use tools for formatting JSON data. The standard `json` library,
-          specifically the `dumps()` and `dump()` functions with the `indent` and `sort_keys` arguments, is the go-to
-          solution for formatting JSON within Python scripts. For quick, command-line formatting and validation, `python
-          -m json.tool` is an indispensable utility. Mastering these tools will significantly improve your ability to
-          work efficiently with JSON data in your Python projects.
+          Python already gives you excellent JSON formatting tools. The standard <code>json</code> module is still the
+          right default, the CLI covers day-to-day validation and terminal formatting, and <code>orjson</code> is worth
+          considering when serialization speed matters more than formatting flexibility. If you understand Unicode,
+          strict JSON, and JSON Lines, you will avoid most of the issues that make JSON formatting feel harder than it
+          should.
         </p>
       </div>
     </>

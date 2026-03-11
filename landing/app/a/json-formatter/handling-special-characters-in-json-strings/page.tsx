@@ -1,17 +1,55 @@
 import type { Metadata } from "next";
 
-/**
- * Metadata for JSON formatter article
- */
 export const metadata: Metadata = {
-  title: "Handling Special Characters in JSON Strings | Offline Tools",
+  title: "JSON Special Characters: What Must Be Escaped and What Is Invalid | Offline Tools",
   description:
-    "Learn best practices for correctly escaping and handling special characters in JSON strings to prevent parsing errors.",
+    "See which characters JSON strings accept, which must be escaped, and the common invalid cases that cause bad control character or bad escape errors.",
 };
 
-/**
- * Article page component for JSON formatter article
- */
+const invalidQuoteExample = String.raw`{
+  "message": "He said "hello" to me"
+}`;
+
+const validQuoteExample = String.raw`{
+  "message": "He said \"hello\" to me"
+}`;
+
+const invalidPathExample = String.raw`{
+  "path": "C:\Users\sam\Documents\report.json"
+}`;
+
+const accidentalEscapeExample = String.raw`{
+  "path": "C:\new\test"
+}`;
+
+const validPathExample = String.raw`{
+  "path": "C:\\Users\\sam\\Documents\\report.json"
+}`;
+
+const invalidMultilineExample = String.raw`{
+  "description": "Line one
+Line two"
+}`;
+
+const validMultilineExample = String.raw`{
+  "description": "Line one\nLine two"
+}`;
+
+const unicodeExample = String.raw`{
+  "greeting": "こんにちは",
+  "heartDirect": "I ❤️ JSON",
+  "heartEscaped": "I \u2764\uFE0F JSON",
+  "rocketEscaped": "\uD83D\uDE80"
+}`;
+
+const serializerExample = String.raw`const payload = {
+  message: 'He said "hello" to me',
+  path: "C:\\Users\\sam\\Documents\\report.json",
+  description: "Line one\nLine two"
+};
+
+const json = JSON.stringify(payload);`;
+
 export default function JsonFormatterArticle() {
   return (
     <>
@@ -19,442 +57,391 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          One of the most common sources of JSON parsing errors involves the incorrect handling of special characters in
-          string values. This article explores the rules for properly escaping characters in JSON strings and provides
-          practical examples for handling different scenarios.
+          If you are asking what special characters JSON does not accept, the practical answer is short: inside a JSON
+          string, raw double quotes, raw backslashes, and ASCII control characters from{" "}
+          <code className="font-mono">U+0000</code> through <code className="font-mono">U+001F</code> are not allowed
+          as-is. They must be escaped. JSON also rejects made-up escape sequences such as{" "}
+          <code className="font-mono">\&apos;</code>, <code className="font-mono">\x41</code>, or{" "}
+          <code className="font-mono">\v</code>.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">JSON String Escaping Rules</h2>
         <p>
-          In JSON, strings must be enclosed in double quotes, and certain characters need to be escaped with a backslash
-          to avoid parsing errors.
+          Everything else is less mysterious than it looks. Most punctuation is fine, single quotes are fine as data,
+          forward slashes do not need escaping, and Unicode text such as accented letters, CJK characters, and emoji
+          can appear directly in a valid JSON string.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Required Escape Sequences in JSON:</h3>
-          <table className="min-w-full text-sm mt-2">
-            <thead>
-              <tr className="bg-gray-50 dark:bg-gray-700">
-                <th className="px-4 py-2 text-left">Character</th>
-                <th className="px-4 py-2 text-left">Escape Sequence</th>
-                <th className="px-4 py-2 text-left">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">&quot;</td>
-                <td className="px-4 py-2 font-mono">\&quot;</td>
-                <td className="px-4 py-2">Double quote</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">\</td>
-                <td className="px-4 py-2 font-mono">\\</td>
-                <td className="px-4 py-2">Backslash</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">/</td>
-                <td className="px-4 py-2 font-mono">\/</td>
-                <td className="px-4 py-2">Forward slash (optional but recommended)</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">\b</td>
-                <td className="px-4 py-2 font-mono">\\b</td>
-                <td className="px-4 py-2">Backspace</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">\f</td>
-                <td className="px-4 py-2 font-mono">\\f</td>
-                <td className="px-4 py-2">Form feed</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">\n</td>
-                <td className="px-4 py-2 font-mono">\\n</td>
-                <td className="px-4 py-2">Line feed/newline</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">\r</td>
-                <td className="px-4 py-2 font-mono">\\r</td>
-                <td className="px-4 py-2">Carriage return</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">\t</td>
-                <td className="px-4 py-2 font-mono">\\t</td>
-                <td className="px-4 py-2">Tab</td>
-              </tr>
-              <tr className="border-t">
-                <td className="px-4 py-2 font-mono">Non-ASCII/Unicode</td>
-                <td className="px-4 py-2 font-mono">\\uXXXX</td>
-                <td className="px-4 py-2">Unicode character (4-digit hex)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Common Special Character Issues</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Quotes Within Strings</h3>
-        <p>Double quotes must be escaped within JSON strings to avoid prematurely terminating the string.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "message": "He said "hello" to me"
-}`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Correct:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "message": "He said \\"hello\\" to me"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            The double quotes around &quot;hello&quot; are escaped with backslashes to prevent them from terminating the
-            JSON string.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">2. Backslashes in File Paths</h3>
-        <p>Backslashes (common in Windows file paths) must be doubled to be properly escaped in JSON.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "filePath": "C:\\Users\\John\\Documents\\file.txt"
-}`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Correct:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "filePath": "C:\\\\Users\\\\John\\\\Documents\\\\file.txt"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            Notice the double backslashes. In JSON, each backslash must be escaped with another backslash.
-          </p>
-        </div>
-
-        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
-          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            When working with file paths in JSON, consider using forward slashes (/) even for Windows paths. Most
-            Windows applications accept forward slashes in file paths, and they don&apos;t require escaping in JSON.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">3. Multi-line Strings</h3>
-        <p>JSON doesn&apos;t directly support multi-line strings. Newline characters must be escaped.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "description": "This is a
-  multi-line
-  description"
-}`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Correct:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "description": "This is a\\nmulti-line\\ndescription"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            The newlines are replaced with \\n escape sequences to create a valid JSON string.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">4. HTML and XML Content</h3>
-        <p>When storing HTML or XML in JSON strings, angle brackets and quotes need special attention.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">HTML in JSON Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "htmlContent": "<div class=\\"container\\">\\n  <span>User's profile</span>\\n  <a href=\\"https://example.com\\">Link</a>\\n</div>"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Notice how the double quotes within the HTML are escaped with backslashes.</p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">5. Unicode Characters</h3>
-        <p>Unicode characters can be included directly in JSON strings or using escape sequences.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Unicode Examples:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "directUnicode": "こんにちは世界", 
-  "escapedUnicode": "\\u3053\\u3093\\u306B\\u3061\\u306F\\u4E16\\u754C"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Both strings represent the same text: &quot;Hello World&quot; in Japanese.</p>
-        </div>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Emoji Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "directEmoji": "I ❤️ JSON!",
-  "escapedEmoji": "I \\u2764\\uFE0F JSON!"
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">6. Control Characters</h3>
-        <p>Control characters (ASCII codes 0-31) must be escaped in JSON.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Control Character Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "formattedText": "First line\\nSecond line\\tIndented",
-  "rawBinaryData": "\\u0000\\u0001\\u0002"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            The first string contains newline (\\n) and tab (\\t) control characters, while the second contains NULL,
-            SOH, and STX characters.
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Special Character Handling Techniques</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Manual Escaping</h3>
-        <p>
-          While you can manually escape characters according to JSON rules, this approach is error-prone for complex
-          strings.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Manual Escaping Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`const rawString = 'He said "Hello" and \\ was used';
-const manuallyEscaped = '{"message": "He said \\\\"Hello\\\\" and \\\\\\\\ was used"}';`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            Notice the multiple levels of escaping required, which makes this approach error-prone.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">2. Using JSON.stringify()</h3>
-        <p>
-          In JavaScript, the <code>JSON.stringify()</code> method properly escapes special characters automatically.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Let JavaScript handle the escaping
-const data = {
-  message: 'He said "Hello" and \\ was used',
-  path: 'C:\\Users\\Documents'
-};
-
-const jsonString = JSON.stringify(data);
-// Results in: {"message":"He said \\"Hello\\" and \\\\ was used","path":"C:\\\\Users\\\\Documents"}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">3. Base64 Encoding</h3>
-        <p>For binary data or strings with many special characters, Base64 encoding can be a practical solution.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// JavaScript example
-const binaryData = new Uint8Array([0, 1, 2, 3, 255]);
-
-// Convert to Base64
-const base64Data = btoa(String.fromCharCode.apply(null, binaryData));
-
-const jsonObject = {
-  binaryContent: base64Data
-};
-
-// Results in something like: {"binaryContent":"AAECAwECAw=="}`}
-            </pre>
-          </div>
-        </div>
-
-        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">When to Use Base64:</h3>
-          <ul className="list-disc pl-6 mt-2 space-y-1 text-yellow-700 dark:text-yellow-200">
-            <li>For binary data that might contain unprintable characters</li>
-            <li>When working with images or files embedded in JSON</li>
-            <li>If the string contains an unpredictable mix of special characters</li>
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
+          <h2 className="text-lg font-medium text-blue-900 dark:text-blue-200">Short Answer</h2>
+          <ul className="list-disc pl-6 mt-2 space-y-1 text-blue-800 dark:text-blue-100">
+            <li>
+              JSON strings must use double quotes. Single quotes are ordinary characters inside the data, not valid
+              string delimiters.
+            </li>
+            <li>
+              The only built-in short escapes are <code className="font-mono">\&quot;</code>,{" "}
+              <code className="font-mono">\\</code>, <code className="font-mono">\/</code>,{" "}
+              <code className="font-mono">\b</code>, <code className="font-mono">\f</code>,{" "}
+              <code className="font-mono">\n</code>, <code className="font-mono">\r</code>, and{" "}
+              <code className="font-mono">\t</code>, plus Unicode escapes in the form{" "}
+              <code className="font-mono">\uXXXX</code>.
+            </li>
+            <li>
+              A raw newline or tab inside a JSON string is invalid, but <code className="font-mono">\n</code> and{" "}
+              <code className="font-mono">\t</code> are valid escaped forms.
+            </li>
+            <li>
+              A forward slash <code className="font-mono">/</code> is valid as-is. Escaping it as{" "}
+              <code className="font-mono">\/</code> is optional.
+            </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Language-Specific Considerations</h2>
+        <h2 className="text-2xl font-semibold mt-8">Which characters are valid in JSON strings?</h2>
+        <p>
+          Per the current JSON specification, a string can contain any Unicode character except an unescaped double
+          quote, an unescaped backslash, or characters in the <code className="font-mono">U+0000</code> to{" "}
+          <code className="font-mono">U+001F</code> range. That means most symbols people worry about, including{" "}
+          <code className="font-mono">@</code>, <code className="font-mono">#</code>,{" "}
+          <code className="font-mono">% </code>, <code className="font-mono">&amp;</code>,{" "}
+          <code className="font-mono">*</code>, <code className="font-mono">&lt;</code>,{" "}
+          <code className="font-mono">&gt;</code>, and <code className="font-mono">&apos;</code>, are fine in string
+          values without extra escaping.
+        </p>
 
-        <h3 className="text-xl font-medium mt-6">1. JavaScript</h3>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// JavaScript has built-in JSON methods
-const obj = {
-  text: 'Special characters: " \\ / \\b \\f \\n \\r \\t',
-  html: '<div class="example">Content</div>'
-};
-
-// Proper escaping happens automatically
-const jsonString = JSON.stringify(obj);
-
-// To parse with reviver function that handles special cases
-const parsed = JSON.parse(jsonString, (key, value) => {
-  // Handle special cases during parsing
-  if (key === 'date' && typeof value === 'string') {
-    return new Date(value);
-  }
-  return value;
-});`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">2. Python</h3>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`# Python example
-import json
-import base64
-
-# String with special characters
-special_text = 'Line 1\\nLine 2\\tTabbed "Quoted"'
-
-# Binary data
-binary_data = bytes([0, 1, 2, 3, 255])
-base64_data = base64.b64encode(binary_data).decode('ascii')
-
-data = {
-    'text': special_text,
-    'binary': base64_data
-}
-
-# Proper escaping with json.dumps()
-json_string = json.dumps(data)
-
-# Result: {"text": "Line 1\\nLine 2\\tTabbed \\"Quoted\\"", "binary": "AAECAf8="}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">3. Java</h3>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Java example using Jackson
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Base64;
-
-// Create a map with special characters
-Map<String, Object> data = new HashMap<>();
-data.put("text", "Special: \" \\ / \\b \\f \\n \\r \\t");
-data.put("binary", Base64.getEncoder().encodeToString(new byte[]{0, 1, 2, 3}));
-
-// Convert to JSON string
-ObjectMapper mapper = new ObjectMapper();
-String jsonString = mapper.writeValueAsString(data);`}
-            </pre>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Best Practices for Special Characters in JSON</h2>
-
-        <ol className="list-decimal pl-6 space-y-3 mt-4">
-          <li>
-            <strong>Use language-specific JSON libraries</strong> - Don&apos;t manually construct JSON strings; let
-            libraries handle the escaping
-          </li>
-          <li>
-            <strong>Validate JSON after generation</strong> - Verify that your JSON is valid before using it
-          </li>
-          <li>
-            <strong>Consider Base64 for binary data</strong> - Especially for files, images, or binary content
-          </li>
-          <li>
-            <strong>Use forward slashes in paths</strong> - Replace backslashes with forward slashes where possible
-          </li>
-          <li>
-            <strong>Be consistent with Unicode</strong> - Either use direct Unicode characters or escape sequences, but
-            be consistent
-          </li>
-          <li>
-            <strong>Document your encoding choices</strong> - Especially if you use Base64 or other encoding schemes
-          </li>
-        </ol>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-          <h3 className="text-lg font-medium mb-2">Quick Reference: Common Special Character Patterns</h3>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-700">
-                <th className="px-4 py-2 text-left">Pattern</th>
-                <th className="px-4 py-2 text-left">JSON Representation</th>
+                <th className="px-4 py-2 text-left">Character or Case</th>
+                <th className="px-4 py-2 text-left">Valid As-Is?</th>
+                <th className="px-4 py-2 text-left">Correct Form</th>
+                <th className="px-4 py-2 text-left">Notes</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-t">
-                <td className="px-4 py-2">Windows path</td>
-                <td className="px-4 py-2 font-mono">&quot;C:\\\\Program Files\\\\App&quot;</td>
+                <td className="px-4 py-2 font-mono">A-Z, a-z, 0-9, most punctuation</td>
+                <td className="px-4 py-2">Yes</td>
+                <td className="px-4 py-2 font-mono">"name@example.com #1"</td>
+                <td className="px-4 py-2">No special escaping needed.</td>
               </tr>
               <tr className="border-t">
-                <td className="px-4 py-2">Multi-line text</td>
-                <td className="px-4 py-2 font-mono">&quot;Line 1\\nLine 2\\nLine 3&quot;</td>
+                <td className="px-4 py-2 font-mono">&quot;</td>
+                <td className="px-4 py-2">No</td>
+                <td className="px-4 py-2 font-mono">\&quot;</td>
+                <td className="px-4 py-2">Must be escaped inside the string.</td>
               </tr>
               <tr className="border-t">
-                <td className="px-4 py-2">HTML/XML</td>
-                <td className="px-4 py-2 font-mono">
-                  &quot;&lt;div id=\\&quot;main\\&quot;&gt;Content&lt;/div&gt;&quot;
-                </td>
+                <td className="px-4 py-2 font-mono">\</td>
+                <td className="px-4 py-2">No</td>
+                <td className="px-4 py-2 font-mono">\\</td>
+                <td className="px-4 py-2">Must be escaped inside the string.</td>
               </tr>
               <tr className="border-t">
-                <td className="px-4 py-2">Quotes within quotes</td>
-                <td className="px-4 py-2 font-mono">&quot;She said, \\&quot;Hello!\\&quot;&quot; </td>
+                <td className="px-4 py-2 font-mono">/</td>
+                <td className="px-4 py-2">Yes</td>
+                <td className="px-4 py-2 font-mono">/ or \/</td>
+                <td className="px-4 py-2">Escaping the slash is optional.</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">Actual newline, tab, carriage return</td>
+                <td className="px-4 py-2">No</td>
+                <td className="px-4 py-2 font-mono">\n, \t, \r</td>
+                <td className="px-4 py-2">Raw control characters are invalid in JSON strings.</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">ASCII control chars U+0000-U+001F</td>
+                <td className="px-4 py-2">No</td>
+                <td className="px-4 py-2 font-mono">\u0000 to \u001F</td>
+                <td className="px-4 py-2">Must be escaped if you need to preserve them.</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">Unicode text and emoji</td>
+                <td className="px-4 py-2">Yes</td>
+                <td className="px-4 py-2 font-mono">"こんにちは" or "\uD83D\uDE80"</td>
+                <td className="px-4 py-2">Direct Unicode is allowed. Escaped Unicode is also valid.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8">Valid escape sequences in JSON</h2>
         <p>
-          Handling special characters in JSON strings correctly is essential for creating valid JSON documents that
-          parse correctly across different platforms and languages. By understanding the escaping rules and using the
-          appropriate tools and techniques, you can avoid common parsing errors related to special characters.
+          JSON has a small, fixed escape set. If you put a backslash before some other character, the parser should
+          reject it as a bad escape. This is one of the biggest differences between JSON and language string literals.
         </p>
-        <p className="mt-4">
-          Remember that most modern programming languages provide built-in JSON libraries that handle the complexities
-          of character escaping automatically. Whenever possible, use these libraries instead of manually constructing
-          JSON strings to minimize the risk of syntax errors.
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-700">
+                <th className="px-4 py-2 text-left">Escape</th>
+                <th className="px-4 py-2 text-left">Meaning</th>
+                <th className="px-4 py-2 text-left">Accepted?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\&quot;</td>
+                <td className="px-4 py-2">Double quote</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\\</td>
+                <td className="px-4 py-2">Backslash</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\/</td>
+                <td className="px-4 py-2">Forward slash</td>
+                <td className="px-4 py-2">Yes, but optional</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\b</td>
+                <td className="px-4 py-2">Backspace</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\f</td>
+                <td className="px-4 py-2">Form feed</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\n</td>
+                <td className="px-4 py-2">Line feed</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\r</td>
+                <td className="px-4 py-2">Carriage return</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\t</td>
+                <td className="px-4 py-2">Tab</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\uXXXX</td>
+                <td className="px-4 py-2">Unicode escape with exactly 4 hex digits</td>
+                <td className="px-4 py-2">Yes</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\&apos;, \x41, \v, \0</td>
+                <td className="px-4 py-2">Non-JSON escape sequences</td>
+                <td className="px-4 py-2">No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Common mistakes and how to fix them</h2>
+
+        <h3 className="text-xl font-medium mt-6">1. Unescaped quotes inside a string</h3>
+        <p>A raw double quote ends the JSON string early, so it must be escaped as <code className="font-mono">\&quot;</code>.</p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Invalid JSON</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{invalidQuoteExample}</pre>
+          </div>
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Valid JSON</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{validQuoteExample}</pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">2. Backslashes in paths and regular expressions</h3>
+        <p>
+          A backslash is always special in JSON. If you want a literal backslash in the resulting value, write it as{" "}
+          <code className="font-mono">\\</code>. This is why Windows paths often break when copied into JSON.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Invalid JSON</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{invalidPathExample}</pre>
+          </div>
+          <h4 className="text-lg font-medium text-yellow-700 dark:text-yellow-300 mt-4">Valid JSON, wrong value</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{accidentalEscapeExample}</pre>
+          </div>
+          <p className="mt-2 text-sm">
+            That second example parses, but <code className="font-mono">\n</code> becomes a newline and{" "}
+            <code className="font-mono">\t</code> becomes a tab, so the path is no longer what you meant.
+          </p>
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Valid JSON</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{validPathExample}</pre>
+          </div>
+        </div>
+
+        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Path Tip</h3>
+          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
+            If your application accepts it, using forward slashes can make paths easier to read in JSON because{" "}
+            <code className="font-mono">/</code> does not need escaping.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">3. Raw line breaks and tabs</h3>
+        <p>
+          JSON does not support multiline strings with literal line breaks inside the quotes. Use escaped control
+          characters instead.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Invalid JSON</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{invalidMultilineExample}</pre>
+          </div>
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Valid JSON</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{validMultilineExample}</pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">4. Escaping characters that JSON never asked you to escape</h3>
+        <p>
+          This is where many developers mix up JSON with JavaScript, Python, or shell escaping. In JSON, an apostrophe
+          does not need escaping because strings are delimited by double quotes. Writing{" "}
+          <code className="font-mono">\&apos;</code> creates a bad escape. The same applies to{" "}
+          <code className="font-mono">\x41</code>, <code className="font-mono">\v</code>, and{" "}
+          <code className="font-mono">\0</code>.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-700">
+                <th className="px-4 py-2 text-left">If You Wrote</th>
+                <th className="px-4 py-2 text-left">Why It Fails</th>
+                <th className="px-4 py-2 text-left">Use Instead</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\&apos;</td>
+                <td className="px-4 py-2">Apostrophe is not a JSON escape sequence.</td>
+                <td className="px-4 py-2 font-mono">&apos; or \u0027</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\x41</td>
+                <td className="px-4 py-2">JSON does not support hex escapes in this form.</td>
+                <td className="px-4 py-2 font-mono">A or \u0041</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\v</td>
+                <td className="px-4 py-2">Vertical tab is not one of JSON&apos;s short escapes.</td>
+                <td className="px-4 py-2 font-mono">\u000B</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">\0</td>
+                <td className="px-4 py-2">Null must use a Unicode escape in JSON.</td>
+                <td className="px-4 py-2 font-mono">\u0000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">5. Single quotes around strings or object keys</h3>
+        <p>
+          JSON is stricter than JavaScript object literal syntax. Both string values and property names must use double
+          quotes. This is invalid JSON:
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`{
+  'message': 'hello'
+}`}</pre>
+          </div>
+          <p className="mt-2 text-sm">
+            Correct JSON would be <code className="font-mono">{`{"message":"hello"}`}</code>.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Does JSON accept Unicode, accented characters, and emoji?</h2>
+        <p>
+          Yes. Direct Unicode characters are valid in JSON strings, and escaped Unicode is also valid. If you escape a
+          character outside the basic multilingual plane, use a surrogate pair such as{" "}
+          <code className="font-mono">\uD83D\uDE80</code> for the rocket emoji.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{unicodeExample}</pre>
+          </div>
+        </div>
+
+        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Unicode Interoperability Note</h3>
+          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
+            JSON exchanged between systems should normally be encoded as UTF-8. Also avoid lone surrogate code units
+            such as <code className="font-mono">\uDEAD</code>; some software will accept them, but behavior can be
+            inconsistent across parsers.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Common parser errors and what they usually mean</h2>
+        <p>
+          Different parsers phrase errors differently, but the same patterns show up again and again. If your formatter
+          or parser reports one of the following, check the matching issue first.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-700">
+                <th className="px-4 py-2 text-left">Typical Error</th>
+                <th className="px-4 py-2 text-left">What to Check</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">bad control character in string literal</td>
+                <td className="px-4 py-2">A raw newline, tab, or another character in the U+0000-U+001F range is inside the string.</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">bad escape character</td>
+                <td className="px-4 py-2">A backslash is followed by a character JSON does not recognize, such as &apos;, x, v, or 0.</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">bad Unicode escape</td>
+                <td className="px-4 py-2">The <code className="font-mono">\u</code> sequence is malformed or not followed by exactly four hex digits.</td>
+              </tr>
+              <tr className="border-t">
+                <td className="px-4 py-2 font-mono">expected property name or &apos;&rbrace;&apos;</td>
+                <td className="px-4 py-2">A key is unquoted or single-quoted instead of wrapped in double quotes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">The safest way to avoid escaping mistakes</h2>
+        <p>
+          The best fix is usually not to hand-edit JSON at all. Build a normal data structure in your language and let
+          a JSON serializer escape the string content for you.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{serializerExample}</pre>
+          </div>
+        </div>
+
+        <ol className="list-decimal pl-6 space-y-3 mt-4">
+          <li>Use a real JSON library or serializer instead of concatenating strings by hand.</li>
+          <li>Validate copied JSON before shipping it, especially when it contains paths, HTML, or multiline content.</li>
+          <li>Remember that a backslash can make JSON invalid or silently change the value you meant to store.</li>
+          <li>Prefer UTF-8 JSON for interchange and keep binary data out of strings unless you intentionally encode it.</li>
+        </ol>
+
+        <p className="mt-6">
+          For search users landing here directly, the main rule to remember is simple: JSON accepts almost all visible
+          characters in strings, but it is very strict about quotes, backslashes, and low-value control characters.
+          Once you know that small rule set, most &quot;special character&quot; bugs become easy to spot.
         </p>
       </div>
     </>

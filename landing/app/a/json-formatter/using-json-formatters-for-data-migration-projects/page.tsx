@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
 import {
-  CheckCircle,
-  // XCircle, // Removed XCircle as it's not used
-  FileJson,
-  Wrench,
-  Search,
-  RefreshCcw,
-  Database,
-  Code,
   BookOpen,
+  CheckCircle,
+  Code,
+  Database,
+  FileJson,
+  RefreshCcw,
+  Search,
+  Wrench,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Using JSON Formatters for Data Migration Projects | Offline Tools",
   description:
-    "Explore how JSON formatters and processors are essential tools for standardizing, validating, and transforming data during migration projects.",
+    "Learn how to use JSON formatters to validate, normalize, flatten, and batch-check data before a migration goes live.",
 };
 
 export default function JsonFormattersDataMigrationArticle() {
@@ -22,332 +21,281 @@ export default function JsonFormattersDataMigrationArticle() {
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center space-x-3">
         <FileJson className="text-blue-500" size={36} />
-        <span>Using JSON Formatters in Data Migration</span>
+        <span>Using JSON Formatters for Data Migration Projects</span>
       </h1>
 
       <div className="space-y-6 text-lg">
         <p>
-          Data migration is a critical, often complex process involving moving data from one system to another. A common
-          challenge is dealing with data in inconsistent formats, especially when the source data comes from various
-          places or has evolved over time. <strong>JSON (JavaScript Object Notation)</strong> is a ubiquitous format,
-          but even JSON data can vary significantly in structure, naming conventions, and data types. This is where{" "}
-          <strong>JSON formatters and processors</strong> become indispensable tools.
+          JSON formatters are useful in data migration projects for a reason that goes far beyond pretty-printing. They
+          help you inspect, validate, normalize, and reshape source payloads before those records hit the target
+          system. In practice, that is what separates a migration that merely loads from one that loads correctly.
         </p>
+        <p>
+          Most migration failures are not caused by invalid JSON syntax. They come from data that is technically valid
+          JSON but semantically wrong for the destination: IDs stored as strings, timestamps in mixed time zones,
+          optional fields that switch between missing and `null`, or nested arrays that do not fit the target model.
+          A formatter makes those problems visible early.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Search size={24} />
+          <span>Where JSON Formatters Help Most</span>
+        </h2>
+        <p>For migration work, a useful JSON formatting step should help you answer four questions quickly:</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <span className="font-medium">Is the payload valid and complete?</span> Confirm the source can actually be
+            parsed and contains the fields the target requires.
+          </li>
+          <li>
+            <span className="font-medium">What needs normalization?</span> Standardize key names, enums, timestamps,
+            empty strings, and placeholder values before loading.
+          </li>
+          <li>
+            <span className="font-medium">What needs reshaping?</span> Flatten nested objects, split arrays, and remove
+            source-only metadata so the data matches the target contract.
+          </li>
+          <li>
+            <span className="font-medium">Which records should be rejected?</span> Quarantine bad records instead of
+            silently forcing them into the destination.
+          </li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <BookOpen size={24} />
-          <span>What are JSON Formatters & Processors?</span>
-        </h2>
-        <p>
-          At its simplest, a "JSON formatter" might refer to a tool that pretty-prints JSON, making it readable by
-          adding indentation and line breaks. However, in the context of data migration, the term extends to tools and
-          processes that can:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Standardize:</span> Ensure consistency in structure and key names.
-          </li>
-          <li>
-            <span className="font-medium">Validate:</span> Check if the data conforms to a specific schema or set of
-            rules.
-          </li>
-          <li>
-            <span className="font-medium">Transform:</span> Modify the data's structure, values, or types to fit the
-            target system's requirements.
-          </li>
-          <li>
-            <span className="font-medium">Clean:</span> Handle missing data, remove duplicates, correct malformed
-            entries.
-          </li>
-        </ul>
-        <p>
-          Essentially, they are data processing steps specifically tailored for JSON data, preparing it for ingestion
-          into the target database or application.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <WhyIcon className="text-green-500" size={24} />
-          <span>Why Use Them for Data Migration?</span>
-        </h2>
-        <p>
-          Data migration projects often involve integrating data from disparate sources. Even if all sources provide
-          JSON, their internal structure might differ. Using formatters and processors helps bridge this gap:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Ensuring Data Quality:</strong> Identify and correct errors, inconsistencies, and missing values
-              before they corrupt the target system.
-            </div>
-          </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Meeting Target Schema Requirements:</strong> Reshape source JSON to precisely match the expected
-              structure of the target database tables or document structures.
-            </div>
-          </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Simplifying Development:</strong> Separate the concerns of data extraction, transformation, and
-              loading. JSON processing focuses solely on the transformation phase for JSON data.
-            </div>
-          </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Improving Performance:</strong> Clean and transform data efficiently in bulk, reducing the load on
-              the target system during ingestion.
-            </div>
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Wrench size={24} />
-          <span>Key Operations in Data Migration</span>
+          <span>A Practical Migration Workflow</span>
         </h2>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Search size={20} />
-          <span>1. Validation</span>
+          <CheckCircle className="text-green-500" size={20} />
+          <span>1. Define the target contract first</span>
         </h3>
         <p>
-          Before transforming or loading, validating the incoming JSON is crucial. This verifies that the data adheres
-          to an expected structure or type definition.
-        </p>
-        <p>
-          <strong>Use Case:</strong> Ensure all user records have a required `email` field and that its value is a
-          string.
+          Start with the destination, not the source. Decide which fields are required, which values are allowed, how
+          dates should be formatted, whether extra properties are permitted, and how `null` should behave. For
+          JSON-native pipelines, JSON Schema Draft 2020-12 is the current general-use metaschema and a solid way to
+          version those expectations.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center space-x-2 mb-2">
             <Code size={18} />
-            <span>Conceptual Validation Example (TypeScript):</span>
+            <span>Schema Example (JSON Schema Draft 2020-12)</span>
           </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre className="text-sm">
-              {`interface UserData {
-  id: number;
-  name: string;
-  email?: string; // Optional in source, but required for target
-  address?: {
-    street: string;
-    city: string;
-  };
-}
-
-function isValidUserForMigration(user: any): user is UserData {
-  // Basic type and required field checks
-  if (typeof user !== 'object' || user === null) return false;
-  if (typeof user.id !== 'number') {
-      console.warn(\`Validation failed for user: Missing or invalid id type: \${user.id}\`);
-      return false; // Example: log and fail
-  }
-  if (typeof user.name !== 'string' || user.name.trim() === '') {
-      console.warn(\`Validation failed for user id \${user.id}: Missing or empty name.\`);
-      return false;
-  }
-  // Check for a field required by the *target* system, even if optional in source
-  if (typeof user.email !== 'string' || !user.email.includes('@')) {
-       console.warn(\`Validation failed for user id \${user.id}: Missing or invalid email.\`);
-      return false;
-  }
-  // Add more checks as per source data and target schema...
-  return true;
-}
-
-// Example Usage:
-// const sourceUsers = [...]; // Array of potential user objects from source
-// const validUsers = sourceUsers.filter(isValidUserForMigration);
-// const invalidUsers = sourceUsers.filter(user => !isValidUserForMigration(user));
-// console.log(\`Found \${validUsers.length} valid users and \${invalidUsers.length} invalid users.\`);
-`}
+              {`{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "fullName", "email", "createdAt"],
+  "properties": {
+    "id": { "type": "integer" },
+    "fullName": { "type": "string", "minLength": 1 },
+    "email": { "type": "string", "format": "email" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["active", "disabled"]
+    },
+    "city": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}`}
             </pre>
           </div>
           <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
-            This example shows basic programmatic validation. In real projects, you'd often use JSON Schema validators
-            for more complex rules.
+            Keep this contract in source control beside the transform code. If you are following older guides, watch
+            for draft mismatches: newer schemas use keywords like `$defs` and `prefixItems` that differ from older
+            examples.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <RefreshCcw size={20} />
-          <span>2. Transformation</span>
+          <CheckCircle className="text-green-500" size={20} />
+          <span>2. Profile real source data, not just sample payloads</span>
         </h3>
         <p>
-          Transforming JSON involves changing its structure, renaming keys, mapping values, combining fields, or
-          splitting complex objects into simpler ones to match the target schema.
+          Inspect a representative slice of production-like records before you write mappings. This is where a JSON
+          formatter earns its keep because you can expand nested objects, compare records side by side, and quickly spot
+          inconsistent structure.
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Measure how often a field is missing versus explicitly set to `null`.</li>
+          <li>Check whether IDs, amounts, or booleans arrive as strings in some records.</li>
+          <li>Find legacy field names that need to map into one canonical key.</li>
+          <li>Identify which nested arrays must become child rows or secondary load files.</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
+          <RefreshCcw size={20} />
+          <span>3. Normalize before you reshape</span>
+        </h3>
         <p>
-          <strong>Use Case:</strong> Rename a key from `user_name` to `fullName`, extract `city` from a nested `address`
-          object, and remove a field like `source_id` that isn't needed in the target system.
+          Simple cleanup should happen before structural transformation. Trim strings, normalize casing, convert
+          timestamps to one standard format, map status codes into destination enums, and be explicit about which values
+          become `null`, empty strings, or hard failures.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center space-x-2 mb-2">
             <Code size={18} />
-            <span>Transformation Example (TypeScript):</span>
+            <span>Transformation Example (TypeScript)</span>
           </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre className="text-sm">
-              {`interface SourceUser {
-  user_id: number;
-  user_name: string; // Needs renaming
-  email: string;
-  source_data?: { // Nested object with data to extract/discard
-    address_details?: {
-      street: string;
-      city: string; // Needs extraction
-    }
-    source_id?: string; // Needs removal
-  };
-}
+              {`type SourceUser = {
+  user_id: string | number;
+  user_name?: string | null;
+  email?: string | null;
+  status?: "A" | "D" | null;
+  created_at?: string | null;
+  address?: {
+    city?: string | null;
+  } | null;
+};
 
-interface TargetUser {
+type TargetUser = {
   id: number;
-  fullName: string; // Renamed
+  fullName: string;
   email: string;
-  city?: string; // Extracted
-}
+  status: "active" | "disabled";
+  createdAt: string;
+  city: string | null;
+};
 
-function transformUserForTarget(sourceUser: SourceUser): TargetUser {
-  const targetUser: TargetUser = {
-    id: sourceUser.user_id, // Map user_id to id
-    fullName: sourceUser.user_name, // Map user_name to fullName
-    email: sourceUser.email,
+function transformUser(source: SourceUser): TargetUser | null {
+  const id = Number(source.user_id);
+  if (!Number.isInteger(id)) return null;
+
+  const fullName = source.user_name?.trim();
+  const email = source.email?.trim().toLowerCase();
+  if (!fullName || !email) return null;
+
+  const createdAtValue = source.created_at ? new Date(source.created_at) : null;
+  if (!createdAtValue || Number.isNaN(createdAtValue.getTime())) return null;
+
+  return {
+    id,
+    fullName,
+    email,
+    status: source.status === "D" ? "disabled" : "active",
+    createdAt: createdAtValue.toISOString(),
+    city: source.address?.city?.trim() || null,
   };
-
-  // Extract city if available
-  if (sourceUser.source_data?.address_details?.city) {
-    targetUser.city = sourceUser.source_data.address_details.city;
-  }
-
-  // No need to explicitly remove source_id or other unwanted fields,
-  // as we are building a new object based on the target schema.
-
-  return targetUser;
-}
-
-// Example Usage:
-// const sourceUserData: SourceUser = {
-//   user_id: 101,
-//   user_name: "Alice Smith",
-//   email: "alice.s@example.com",
-//   source_data: {
-//     address_details: {
-//       street: "123 Main St",
-//       city: "Anytown"
-//     },
-//     source_id: "abc-xyz"
-//   }
-// };
-// const targetUserData = transformUserForTarget(sourceUserData);
-// console.log(JSON.stringify(targetUserData, null, 2));
-/* Expected Output:
-{
-  "id": 101,
-  "fullName": "Alice Smith",
-  "email": "alice.s@example.com",
-  "city": "Anytown"
-}
-*/
-`}
+}`}
             </pre>
           </div>
           <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
-            This function takes a `SourceUser` object and returns a `TargetUser` object, performing the necessary key
-            remapping and data extraction.
+            Returning `null` is deliberate. In a production migration, rejected records should go to a quarantine file
+            or table with the source identifier and the exact failure reason.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <Database size={20} />
-          <span>3. Structuring/Restructuring</span>
+          <span>4. Restructure for the target system</span>
         </h3>
         <p>
-          This is a form of transformation but focuses specifically on changing the hierarchy of the data. This is often
-          needed when migrating from a document database (flexible JSON) to a relational database (fixed table
-          structures), or vice versa.
+          Structural changes are where migration logic becomes easy to underestimate. A formatter helps you preview how
+          a nested document will look after flattening and whether the destination needs one row, multiple child rows,
+          or a raw landing column plus curated downstream models.
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Nested arrays like line items, addresses, or events often need separate child tables.</li>
+          <li>Source-only metadata should be dropped unless you need it for audit or replay.</li>
+          <li>Reference lookups are easier to resolve before the final load than after it.</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
+          <Wrench size={20} />
+          <span>5. Validate, batch, and reconcile</span>
+        </h3>
         <p>
-          <strong>Use Case:</strong> Flatten an array of addresses nested within a user object into separate address
-          records, or embed related data into a single document.
+          Run validation after transformation, process data in batches, and compare counts between source records,
+          transformed output, quarantined rows, and successful loads. Without reconciliation, a migration can appear
+          successful while still losing data silently.
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Keep record-level error logs with the source identifier and failure reason.</li>
+          <li>Dry-run on a representative slice before the final cutover.</li>
+          <li>Diff a sample of transformed records to catch accidental field loss.</li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Wrench size={24} />
-          <span>Approaches & Tools (Conceptual)</span>
+          <Search size={24} />
+          <span>Common Problems a Formatter Can Reveal</span>
         </h2>
-        <p>You can implement JSON formatting and processing using various methods:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Manual Scripting:</strong> Using native language features (like `JSON.parse` and `JSON.stringify` in
-            JavaScript/TypeScript) combined with custom code for validation and transformation logic (as shown in the
-            examples above). This offers maximum flexibility but requires writing and maintaining the code yourself.
+            <strong>Numeric precision issues:</strong> Large IDs and money values can change meaning if tooling silently
+            treats them as floating-point numbers.
           </li>
           <li>
-            <strong>Command- Line Tools:</strong> Tools like `jq` are powerful for filtering, mapping, and transforming
-            JSON data directly from the command line. Useful for batch processing large files.
+            <strong>`null` versus missing fields:</strong> <code>{'{"phone": null}'}</code> is not always equivalent
+            to a missing `phone` key, especially when the target applies defaults.
           </li>
           <li>
-            <strong>Programming Libraries:</strong> Many languages have libraries specifically designed for JSON
-            processing, validation (e.g., implementing JSON Schema), and complex transformations (e.g., JSONata,
-            JMESPath concepts, although we cannot use external libraries here).
+            <strong>Duplicate keys:</strong> Some parsers keep only the last value, which can hide bad exports or
+            broken upstream serializers.
           </li>
           <li>
-            <strong>ETL Tools:</strong> Enterprise-level ETL (Extract, Transform, Load) platforms often have built-in
-            capabilities for parsing and transforming JSON data as part of a larger migration pipeline.
+            <strong>Date drift:</strong> Mixing local timestamps and UTC timestamps creates hard-to-debug cutover issues.
+          </li>
+          <li>
+            <strong>Memory blowups:</strong> Large JSON arrays should usually be streamed or processed in chunks instead
+            of parsed into one in-memory object.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <CheckCircle className="text-green-500" size={24} />
-          <span>Best Practices for JSON Processing in Migration</span>
+          <Database size={24} />
+          <span>Target-Specific Caveats</span>
+        </h2>
+        <p>
+          <strong>PostgreSQL `jsonb`:</strong> PostgreSQL&apos;s `jsonb` type does not preserve whitespace, object key
+          order, or duplicate object keys, and SQL `NULL` is distinct from JSON `null`. If your migration depends on
+          key ordering or repeated keys, fix that before load instead of assuming the database will preserve them.
+        </p>
+        <p>
+          <strong>Relational targets:</strong> Flexible source JSON usually becomes stricter on the way in. Arrays and
+          nested objects often need separate tables, foreign keys, and load-order planning.
+        </p>
+        <p>
+          <strong>Warehouses and analytics layers:</strong> Keeping raw JSON can be useful for landing zones, but
+          reporting still depends on stable field names and consistent types.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Wrench size={24} />
+          <span>Choosing the Right Tooling</span>
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Define Target Schema Clearly:</strong> Understand the exact structure, data types, and constraints
-              of the destination system.
-            </div>
+          <li>
+            <strong>Formatter or CLI tool:</strong> Best for inspection, quick corrections, and lightweight batch
+            transforms.
           </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Profile Source Data:</strong> Analyze the source JSON to understand its variations, potential
-              errors, and common patterns.
-            </div>
+          <li>
+            <strong>Scripted transforms:</strong> Best when mappings must be versioned, reviewed, tested, and rerun.
           </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Implement Robust Validation:</strong> Validate early in the process to catch bad data before
-              complex transformations.
-            </div>
+          <li>
+            <strong>ETL or orchestration layers:</strong> Best when the migration needs retries, lineage, scheduling,
+            joins across systems, or idempotent reruns.
           </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Handle Errors Gracefully:</strong> Log errors, skip invalid records, or quarantine them for manual
-              review instead of stopping the entire migration.
-            </div>
-          </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Test Thoroughly:</strong> Use representative samples of source data to test your processing logic
-              and compare output against expected results.
-            </div>
-          </li>
-          <li className="flex items-start space-x-2">
-            <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-            <div>
-              <strong>Process in Batches:</strong> For large datasets, process the JSON in chunks to manage memory and
-              resources.
-            </div>
-          </li>
+        </ul>
+        <p>
+          The usual answer is a combination: use a formatter to understand and spot-check the data, then move repeatable
+          transformation logic into code or your migration pipeline.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <CheckCircle className="text-green-500" size={24} />
+          <span>Migration Checklist</span>
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Freeze the target contract before writing transformation logic.</li>
+          <li>Profile real records and document every known source variation.</li>
+          <li>Normalize types, timestamps, and enums before structural mapping.</li>
+          <li>Validate transformed output, not just raw source payloads.</li>
+          <li>Batch the load and keep rejected rows with explicit failure reasons.</li>
+          <li>Reconcile counts and sample diffs before sign-off.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
@@ -355,36 +303,11 @@ function transformUserForTarget(sourceUser: SourceUser): TargetUser {
           <span>Conclusion</span>
         </h2>
         <p>
-          JSON formatters and processors are more than just tools for making JSON readable; they are powerful components
-          in the data migration toolkit. By enabling standardization, rigorous validation, and flexible transformation,
-          they help ensure that data arrives at its destination accurately, reliably, and in the correct format,
-          significantly reducing risks and effort in complex migration projects. Whether you use simple scripts or
-          sophisticated tooling, mastering JSON processing is key to successful data migration in a world dominated by
-          JSON data.
+          JSON formatters are most valuable in migration work when they are treated as inspection and normalization
+          tools, not just pretty-printers. Use them to define the contract, expose source irregularities, reshape data
+          deliberately, and reject bad records early. That turns flexible JSON into a dependable migration input.
         </p>
       </div>
     </>
-  );
-}
-
-// A simple helper component just for the icon, avoiding duplication if used multiple times
-function WhyIcon({ size = 24, className = "" }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={`lucide lucide-help-circle ${className}`}
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-      <path d="M12 17h.01" />
-    </svg>
   );
 }

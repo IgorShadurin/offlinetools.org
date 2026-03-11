@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
-import { Code, Rocket, Database, Link, Book, Github, FileText } from "lucide-react";
+import {
+  AlertTriangle,
+  Book,
+  CheckCircle2,
+  Code,
+  Database,
+  FileText,
+  Github,
+  Link,
+  Rocket,
+  Wrench,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Fortran JSON Interface Libraries for Scientific Computing | Offline Tools",
+  title: "Fortran JSON Interface Libraries for Scientific Computing | json-fortran vs FSON | Offline Tools",
   description:
-    "Explore the landscape of Fortran libraries for reading and writing JSON data, crucial for integrating Fortran with modern scientific computing workflows.",
+    "Compare json-fortran and FSON for scientific Fortran projects, with current build notes, compatibility guidance, real API examples, and advice on when JSON fits HPC workflows.",
 };
+
+const externalLinkClassName =
+  "text-blue-600 underline underline-offset-4 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300";
 
 export default function FortranJsonLibrariesPage() {
   return (
@@ -17,292 +31,326 @@ export default function FortranJsonLibrariesPage() {
 
       <div className="space-y-6">
         <p>
-          Fortran remains a cornerstone in high-performance computing and scientific simulations due to its raw speed
-          and long history in numerical computation. However, modern scientific workflows often require seamless data
-          exchange with other languages (like Python, R, Julia), visualization tools, databases, and web services. JSON
-          (JavaScript Object Notation) has become a ubiquitous data interchange format due to its simplicity,
-          human-readability, and widespread support.
+          If you are choosing a Fortran JSON library today, <strong>`json-fortran` is usually the default pick for new
+          work</strong>: it has current releases, modern Fortran APIs, packaging options, and strong documentation.
+          <strong> `FSON` still matters</strong> when you are maintaining older Fortran 95 style code or want a smaller,
+          pointer-based parser for lightweight configuration files.
         </p>
         <p>
-          Integrating Fortran codes with this modern ecosystem often necessitates robust capabilities for reading and
-          writing JSON data. While Fortran was not originally designed with dynamic data structures like JSON in mind,
-          the ecosystem has developed several libraries to bridge this gap, enabling Fortran programs to participate
-          effectively in data-driven pipelines.
+          That distinction matters in scientific computing. Most teams do not need JSON for bulk numeric arrays, but
+          they often do need a reliable way to load run configuration, emit metadata, exchange settings with Python or
+          web tools, and validate small structured payloads without adding fragile ad hoc parsers.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <FileText className="mr-2 w-6 h-6 text-green-500" /> Why JSON in Scientific Computing?
+          <FileText className="mr-2 w-6 h-6 text-green-500" /> Quick Recommendation
+        </h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            <h3 className="text-xl font-semibold mb-2 flex items-center">
+              <CheckCircle2 className="mr-2 w-5 h-5 text-green-500" />
+              Choose `json-fortran` when
+            </h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>You are starting a new scientific application or modernizing an older one.</li>
+              <li>You want read and write support, not just a parser.</li>
+              <li>You need a documented API around `json_file` and `json_core` objects.</li>
+              <li>You care about current packaging options such as CMake, fpm, Conda, or Homebrew.</li>
+            </ul>
+          </div>
+
+          <div className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            <h3 className="text-xl font-semibold mb-2 flex items-center">
+              <CheckCircle2 className="mr-2 w-5 h-5 text-blue-500" />
+              Choose `FSON` when
+            </h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>You are working inside a legacy codebase that is closer to Fortran 95.</li>
+              <li>You want a small DOM-style parser with path-based lookups.</li>
+              <li>You mostly read configuration or metadata rather than generate complex JSON output.</li>
+              <li>You prefer a lighter dependency surface and are comfortable with pointer-based cleanup.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Link className="mr-2 w-6 h-6 text-purple-500" /> What Scientific Users Usually Need
         </h2>
         <p>
-          JSON's lightweight nature and hierarchical structure make it ideal for various tasks in scientific computing:
+          Search visitors landing on this topic are usually not looking for a generic definition of JSON. They need to
+          answer a practical question: <em>which library will fit the build system, compiler level, and data flow of my
+          scientific code?</em>
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Configuration Files:</strong> Managing complex simulation parameters in a structured, human-editable
-            format.
+            <strong>Predictable configuration loading:</strong> simulation inputs, solver settings, and experiment
+            metadata should be easy to validate and easy to diff in version control.
           </li>
           <li>
-            <strong>Data Serialization:</strong> Saving and loading structured output data from simulations (though less
-            common for large datasets compared to binary formats).
+            <strong>Interop with other tools:</strong> JSON is useful when Python, web dashboards, CLI wrappers, or job
+            schedulers need to exchange small structured payloads with Fortran.
           </li>
           <li>
-            <strong>Interfacing with Other Tools:</strong> Exchanging data or parameters with analysis scripts (Python,
-            MATLAB), visualization software, or web-based frontends.
+            <strong>Build compatibility:</strong> compiler support for Fortran 2003/2008 features can determine whether a
+            modern library is painless or frustrating to adopt.
           </li>
           <li>
-            <strong>API Communication:</strong> Interacting with external services or databases that use JSON APIs.
+            <strong>Reasonable failure modes:</strong> clear parse errors and explicit missing-key checks save time when
+            debugging production runs.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Link className="mr-2 w-6 h-6 text-purple-500" /> The Challenge for Fortran
+          <Database className="mr-2 w-6 h-6 text-teal-500" /> Current Fortran JSON Library Landscape
         </h2>
         <p>
-          Fortran is a statically-typed language with strong emphasis on contiguous memory layouts and explicit memory
-          management (or compiler-managed stack/static allocation). JSON, in contrast, is dynamic and schema-flexible.
-          Representing JSON structures like arbitrary nested objects and arrays, which can contain mixed data types,
-          within Fortran's strict type system and memory model requires careful design.
+          In practice, most Fortran users comparing general-purpose JSON libraries still end up choosing between
+          `json-fortran` and `FSON`. They overlap, but they are not aimed at exactly the same codebases.
         </p>
-        <p>Fortran JSON libraries typically tackle this by:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Mapping to Derived Types:</strong> Parsing JSON objects into Fortran derived types where the JSON
-            keys match component names.
-          </li>
-          <li>
-            <strong>Using Dynamic Structures:</strong> Employing allocatable arrays, pointers, or linked lists to handle
-            variable-size arrays and potentially heterogeneous data (though less type-safe).
-          </li>
-          <li>
-            <strong>Providing DOM-like Interfaces:</strong> Allowing navigation of the parsed JSON structure via
-            function calls (e.g., get_value, get_array_element, get_object_member).
-          </li>
-        </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Database className="mr-2 w-6 h-6 text-teal-500" /> Popular Fortran JSON Libraries
-        </h2>
-        <p>
-          Several open-source libraries have emerged to provide JSON capabilities in Fortran. Here are a couple of
-          prominent ones:
-        </p>
+        <div className="overflow-x-auto my-4">
+          <table className="w-full text-sm border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <thead className="bg-gray-100 dark:bg-gray-800">
+              <tr>
+                <th className="text-left p-3 font-semibold">Library</th>
+                <th className="text-left p-3 font-semibold">What it gives you</th>
+                <th className="text-left p-3 font-semibold">Build and compatibility notes</th>
+                <th className="text-left p-3 font-semibold">Best fit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-gray-200 dark:border-gray-700 align-top">
+                <td className="p-3 font-semibold">json-fortran</td>
+                <td className="p-3">
+                  Modern object-oriented API for parsing, querying, modifying, and serializing JSON. Official docs also
+                  call out thread safety and richer control over parser behavior.
+                </td>
+                <td className="p-3">
+                  Current official GitHub release is <strong>9.2.1</strong> from <strong>February 22, 2026</strong>.
+                  The project documents CMake and fpm builds plus Conda and Homebrew packages. It expects a compiler
+                  with key Fortran 2003/2008 support.
+                </td>
+                <td className="p-3">New scientific code, reusable libraries, and projects that need both read and write support.</td>
+              </tr>
+              <tr className="border-t border-gray-200 dark:border-gray-700 align-top">
+                <td className="p-3 font-semibold">FSON</td>
+                <td className="p-3">
+                  A Fortran 95 JSON parser built around `type(fson_value), pointer` trees and `fson_get` path lookups
+                  such as `mesh.cells` or `materials[1].name`.
+                </td>
+                <td className="p-3">
+                  The current README documents Makefile, Meson, and CMake installation flows. Its design is simpler and
+                  closer to older Fortran styles, but that also means less modern ergonomics than `json-fortran`.
+                </td>
+                <td className="p-3">Legacy HPC codebases, smaller config readers, and gradual modernization work.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div className="space-y-6">
           <div className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <h3 className="text-xl font-semibold mb-2">
-              <Github className="inline-block mr-2" /> json-fortran
+              <Github className="inline-block mr-2" /> `json-fortran`
             </h3>
             <p>
-              One of the most comprehensive and widely used libraries. `json-fortran` provides extensive support for
-              reading, writing, and manipulating JSON data using modern Fortran features (F2003/F2008).
+              This is the safest recommendation for most new work. The project exposes a higher-level `json_file` API,
+              supports both parsing and generation, and is actively documented. If your team already uses fpm or CMake,
+              adoption is straightforward.
             </p>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Key Features: Supports nested objects and arrays, various JSON data types, file I/O, string parsing, query
-              functions.
+              Practical takeaway: if you need a library that feels maintained and ready for current tooling, start here.
             </p>
           </div>
 
           <div className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <h3 className="text-xl font-semibold mb-2">
-              <Github className="inline-block mr-2" /> fson
+              <Github className="inline-block mr-2" /> `FSON`
             </h3>
             <p>
-              A simpler, lighter-weight option. `fson` focuses on ease of use and parsing JSON into Fortran derived
-              types.
+              `FSON` is still useful when you want a compact parser with direct path-based extraction and minimal
+              abstraction. It is a better match for older code that is not ready to lean on more modern Fortran
+              features.
             </p>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Key Features: Simple API, good for direct mapping to derived types, supports basic JSON types.
-            </p>
-          </div>
-
-          {/* Add more libraries if relevant and known, or keep it focused */}
-          <div className="p-4 border border-gray-200 rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-            <h3 className="text-xl font-semibold mb-2">Other Libraries</h3>
-            <p>
-              The Fortran ecosystem is active, and other, potentially more specialized or newer, libraries may exist.
-              Exploring repositories like GitHub or GitLab for "Fortran JSON" is recommended.
+              Practical takeaway: strong option for legacy integration, but usually not the first choice for a new codebase.
             </p>
           </div>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Code className="mr-2 w-6 h-6 text-blue-500" /> Basic Usage Patterns (Conceptual)
+          <Code className="mr-2 w-6 h-6 text-blue-500" /> Example: Reading Simulation Config with `json-fortran`
         </h2>
         <p>
-          While the exact API varies between libraries, the general workflow involves parsing JSON into an in-memory
-          representation and then accessing/modifying it, or building an in-memory representation and serializing it to
-          a string or file.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Reading JSON</h3>
-        <p>
-          Typically involves reading a string or file content and passing it to a parser function provided by the
-          library.
+          The modern `json-fortran` workflow is usually: initialize the object, load a file or string, retrieve values
+          by path, then clean up. This is much closer to what most production scientific applications need than a purely
+          conceptual parser example.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Parsing a JSON string</h4>
           <pre className="text-sm leading-relaxed">
-            {`! Using a hypothetical library API
-program read_json_example
-  use json_library, only: json_object, parse_json_string, get_string, get_integer, get_real, get_boolean, &
-    get_object, get_array
+            {`program read_config
+  use json_module, only: json_file, json_RK
   implicit none
 
-  character(len=*), parameter :: json_data = &
-    & '{ "name": "Simulation", "version": 1.5, "active": true, "parameters": { "timesteps": 1000, "dt": 0.01 } }'
+  type(json_file) :: json
+  character(len=:), allocatable :: solver
+  integer :: steps
+  real(json_RK) :: dt
+  logical :: found
 
-  type(json_object) :: parsed_json
-  character(len=100) :: sim_name
-  integer :: timesteps_val
-  real :: dt_val
-  logical :: is_active
-  type(json_object) :: params_obj
-  integer :: status
+  call json%initialize(compact_reals=.true.)
+  call json%load(filename="config.json")
 
-  ! Parse the JSON string
-  status = parse_json_string(json_data, parsed_json)
+  call json%get("simulation.solver", solver, found)
+  if (.not. found) error stop "Missing simulation.solver"
 
-  if (status /= 0) then
-    print *, "Error parsing JSON"
-    call exit(1)
-  end if
+  call json%get("simulation.steps", steps, found)
+  if (.not. found) error stop "Missing simulation.steps"
 
-  ! Access data
-  status = get_string(parsed_json, "name", sim_name)
-  if (status == 0) print *, "Simulation Name:", trim(adjustl(sim_name))
+  call json%get("simulation.dt", dt, found)
+  if (.not. found) error stop "Missing simulation.dt"
 
-  status = get_boolean(parsed_json, "active", is_active)
-  if (status == 0) then
-      if (is_active) then
-          print *, "Status: Active"
-      else
-          print *, "Status: Inactive"
-      end if
-  end if
+  print "(A,1X,A)", "solver:", solver
+  print "(A,1X,I0)", "steps:", steps
+  print "(A,1X,ES12.5)", "dt:", dt
 
-  ! Access nested object members
-  status = get_object(parsed_json, "parameters", params_obj)
-  if (status == 0) then
-    status = get_integer(params_obj, "timesteps", timesteps_val)
-    if (status == 0) print *, "Timesteps:", timesteps_val
-
-    status = get_real(params_obj, "dt", dt_val)
-    if (status == 0) print *, "Delta t:", dt_val
-  end if
-
-  ! Clean up resources (important in Fortran)
-  call parsed_json%destroy() ! Hypothetical cleanup method
-
-end program read_json_example
+  call json%destroy()
+end program read_config
 `}
           </pre>
         </div>
-
-        <h3 className="text-xl font-semibold mt-6">Writing JSON</h3>
-        <p>Involves creating an in-memory JSON structure using library functions and then serializing it.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Creating a JSON object from Fortran data</h4>
-          <pre className="text-sm leading-relaxed">
-            {`! Using a hypothetical library API
-program write_json_example
-  use json_library, only: json_object, new_json_object, &
-    add_member, add_array, add_value_to_array, serialize_json
-  implicit none
-
-  type(json_object) :: root_obj, data_array_obj, element_obj
-  character(len=:), allocatable :: json_string
-  integer :: i, status
-
-  ! Create a new root object
-  status = new_json_object(root_obj)
-
-  ! Add simple members
-  status = root_obj%add_member("calculation_type", "hydrodynamics")
-  status = root_obj%add_member("completed", .true.)
-
-  ! Add an array
-  status = root_obj%add_array("results", data_array_obj)
-
-  ! Add elements to the array
-  do i = 1, 3
-      ! Create an object for each array element
-      status = new_json_object(element_obj)
-      status = element_obj%add_member("step", i)
-      status = element_obj%add_member("value", real(i) * 10.5)
-      ! Add the object to the array
-      status = data_array_obj%add_value_to_array(element_obj)
-      ! element_obj might need destruction depending on library
-  end do
-
-  ! Serialize the object to a string
-  status = serialize_json(root_obj, json_string)
-
-  if (status == 0) then
-    print *, "Generated JSON:"
-    print *, trim(adjustl(json_string))
-  else
-    print *, "Error serializing JSON"
-  end if
-
-  ! Clean up
-  call root_obj%destroy() ! Hypothetical cleanup
-  if (allocated(json_string)) deallocate(json_string)
-
-end program write_json_example
-`}
-          </pre>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Handling Different Data Types</h3>
         <p>
-          JSON supports strings, numbers (integers, floats), booleans, null, arrays, and objects. Fortran libraries
-          provide specific functions to get/set these types and navigate arrays/objects. Handling Fortran&apos;s
-          fixed-length strings versus JSON&apos;s variable-length strings is a common detail libraries manage, often
-          requiring allocatable strings.
+          Two details matter here for real projects: the <strong>`found` flag</strong> lets you fail fast on missing
+          keys, and the <strong>allocatable string</strong> avoids the silent truncation problems that fixed-length
+          strings can introduce in legacy Fortran code.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Rocket className="mr-2 w-6 h-6 text-red-500" /> Considerations for Scientific Computing
+          <Code className="mr-2 w-6 h-6 text-indigo-500" /> Example: Lightweight Config Reads with `FSON`
         </h2>
-        <p>When choosing and using a JSON library in performance-critical scientific applications, consider:</p>
+        <p>
+          `FSON` is attractive when you want direct path-based extraction and a smaller mental model. The path syntax is
+          one of its most useful features for simple configuration files.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre className="text-sm leading-relaxed">
+            {`program read_input
+  use fson
+  implicit none
+
+  type(fson_value), pointer :: cfg
+  integer :: cells
+  character(len=16) :: scheme
+
+  cfg => fson_parse("input.json")
+
+  call fson_get(cfg, "mesh.cells", cells)
+  call fson_get(cfg, "solver.scheme", scheme)
+
+  print *, "cells =", cells
+  print *, "scheme =", trim(scheme)
+
+  call fson_destroy(cfg)
+end program read_input
+`}
+          </pre>
+        </div>
+        <p>
+          That simplicity is useful, but remember that `FSON` is built around pointer-managed values. In long-running
+          scientific applications, cleanup discipline still matters.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Wrench className="mr-2 w-6 h-6 text-orange-500" /> Build and Integration Notes
+        </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Performance:</strong> Parsing and serialization overhead for large JSON datasets. For massive I/O,
-            binary formats like HDF5 or NetCDF are usually preferred, but JSON is great for metadata or configuration.
+            <strong>`json-fortran`:</strong> current docs and README cover CMake and fpm, and the project also publishes
+            Conda and Homebrew installation routes. That makes it easier to standardize across developer machines and CI.
           </li>
           <li>
-            <strong>Memory Management:</strong> How the library handles memory for potentially large or deeply nested
-            structures. Look for libraries that provide explicit cleanup routines or rely on modern Fortran&apos;s
-            automatic allocation where possible.
+            <strong>Compiler expectations:</strong> `json-fortran` depends on major Fortran 2003/2008 language features,
+            so very old compiler stacks can be the deciding factor against it.
           </li>
           <li>
-            <strong>Fortran Standard Compatibility:</strong> Ensure the library is compatible with the Fortran standard
-            (e.g., F90, F2003, F2008, F2018) supported by your compiler and codebase.
+            <strong>`FSON`:</strong> the README documents Makefile, Meson, and CMake flows. It can be a cleaner fit when
+            you want to drop a parser into an older build without adopting a more feature-rich framework.
           </li>
           <li>
-            <strong>Error Handling:</strong> Robust reporting of parsing or serialization errors is crucial for
-            debugging.
-          </li>
-          <li>
-            <strong>Ease of Integration:</strong> How easy is it to build the library and link it with your existing
-            Fortran project, especially in complex build environments.
+            <strong>Interface shape:</strong> prefer `json-fortran` if you need to create and emit JSON, not just read it.
+            Prefer `FSON` if simple extraction is the whole job.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Book className="mr-2 w-6 h-6 text-yellow-500" /> Conclusion
+          <Rocket className="mr-2 w-6 h-6 text-red-500" /> Scientific Computing Caveats
         </h2>
-        <p>
-          Integrating Fortran codes with the broader scientific and data science ecosystem is increasingly important.
-          Fortran JSON libraries provide the necessary tools to facilitate this integration, allowing Fortran programs
-          to easily consume configuration, output structured metadata, and exchange data with tools written in other
-          languages. By leveraging these libraries, Fortran developers can keep their high-performance codes relevant
-          and interconnected in modern computational workflows.
-        </p>
-        <p>
-          Exploring the documentation and examples of libraries like `json-fortran` or `fson` is the best way to
-          understand their specific APIs and capabilities and determine which one best fits your project's needs.
-        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Use JSON for metadata, not heavy numerics:</strong> configuration, provenance, model settings, and
+            service payloads are good fits. Huge dense arrays and checkpoints usually belong in HDF5 or NetCDF instead.
+          </li>
+          <li>
+            <strong>Be explicit about missing keys:</strong> scientific runs should fail early when required parameters
+            are absent or typed incorrectly.
+          </li>
+          <li>
+            <strong>Watch string handling:</strong> allocatable strings are safer than fixed-length buffers when file
+            contents are controlled by external tooling.
+          </li>
+          <li>
+            <strong>Validate input before you debug Fortran:</strong> formatting and checking JSON first often exposes
+            trailing commas, broken quoting, or malformed nesting faster than recompiling parser code.
+          </li>
+        </ul>
+
+        <div className="p-4 border border-amber-200 rounded-lg dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30">
+          <p className="flex items-start">
+            <AlertTriangle className="mr-2 mt-1 w-5 h-5 text-amber-600 flex-shrink-0" />
+            <span>
+              If your real problem is broken input rather than library choice, run the payload through a JSON formatter
+              first. Normalizing indentation and structure makes it much easier to see whether the bug is in the file or
+              in your Fortran-side extraction logic.
+            </span>
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Book className="mr-2 w-6 h-6 text-yellow-500" /> Official References
+        </h2>
+        <p>These primary sources are the most useful starting points when you need current details beyond this guide:</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <a
+              className={externalLinkClassName}
+              href="https://github.com/jacobwilliams/json-fortran"
+              rel="noreferrer"
+              target="_blank"
+            >
+              json-fortran on GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              className={externalLinkClassName}
+              href="https://jacobwilliams.github.io/json-fortran/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              json-fortran documentation
+            </a>
+          </li>
+          <li>
+            <a
+              className={externalLinkClassName}
+              href="https://github.com/josephalevin/fson"
+              rel="noreferrer"
+              target="_blank"
+            >
+              FSON on GitHub
+            </a>
+          </li>
+        </ul>
       </div>
     </>
   );

@@ -2,185 +2,236 @@ import type { Metadata } from "next";
 import { AlertTriangle, Code, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Cross-Site Scripting Vulnerabilities in JSON Web Applications | Security",
+  title: "Cross-Site Scripting Vulnerabilities in JSON Web Applications | Security Guide",
   description:
-    "Understand how Cross-Site Scripting (XSS) can occur in modern web applications using JSON APIs, focusing on output encoding and secure rendering.",
+    "Learn where XSS really appears in JSON-driven web apps: unsafe DOM sinks, embedded JSON in script tags, rich text sanitization, URL handling, and defense-in-depth controls.",
 };
 
-// This component is designed for a Next.js backend context (server rendering implicitly)
-// and does not use 'use client' or useState.
-
 export default function XssJsonVulnerabilitiesArticle() {
-  // Example data structures removed as they were unused and caused ESLint errors.
-  // In a real application, data would be fetched server-side or passed as props
-  // and then used in the JSX below.
-
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center">
         <AlertTriangle className="text-yellow-500 mr-3" size={30} />
-        Cross-Site Scripting (XSS) in JSON Web Applications
+        Cross-Site Scripting Vulnerabilities in JSON Web Applications
       </h1>
 
       <div className="space-y-6">
         <p>
-          Modern web applications heavily rely on JSON (JavaScript Object Notation) for data exchange, particularly via
-          APIs. While JSON itself is a data format and doesn&apos;t inherently contain executable code in the way HTML
-          or JavaScript does, vulnerabilities can still arise when data retrieved from JSON sources is improperly
-          handled on the client side, leading to Cross-Site Scripting (XSS).
+          JSON does not execute by itself, but JSON-driven interfaces can still be highly vulnerable to Cross-Site
+          Scripting (XSS). The bug usually appears when an application takes untrusted values from an API response,
+          server-rendered state blob, search result, comment, or CMS record and inserts those values into an unsafe
+          browser context.
+        </p>
+        <p>
+          For most modern web apps, the dangerous step is not fetching JSON. It is turning JSON values into live HTML,
+          JavaScript, CSS, or navigable URLs. If a field from a JSON payload reaches a sink such as{" "}
+          <code>innerHTML</code>, <code>insertAdjacentHTML()</code>, <code>document.write()</code>, or an unvalidated
+          <code>href</code>, an attacker can often run code in another user&apos;s browser.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Code className="mr-2" size={24} />
-          How JSON is Used (and Where XSS Comes In)
+          Where XSS Actually Happens in JSON Apps
         </h2>
-        <p>Typically, a web application architecture involves:</p>
-        <ol className="list-decimal pl-6 space-y-2 my-4">
-          <li>A backend server providing data via APIs, often in JSON format.</li>
-          <li>A frontend client (browser) that fetches this JSON data.</li>
-          <li>The frontend client processes the JSON and dynamically updates the HTML page based on the data.</li>
-        </ol>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Unsafe DOM rendering:</strong> API fields are inserted with <code>innerHTML</code> or a framework
+            escape hatch instead of being rendered as text.
+          </li>
+          <li>
+            <strong>Embedded bootstrapping data:</strong> Server-rendered pages place raw <code>JSON.stringify()</code>
+            output into a <code>&lt;script&gt;</code> block without escaping <code>&lt;</code>, allowing a payload with
+            <code>&lt;/script&gt;</code> to break out.
+          </li>
+          <li>
+            <strong>Rich text handling:</strong> Comments, bios, CMS blocks, or markdown previews are treated as safe
+            HTML without robust sanitization.
+          </li>
+          <li>
+            <strong>Unsafe parsing:</strong> Developers still occasionally use <code>eval()</code> or{" "}
+            <code>new Function()</code> to parse response text instead of <code>JSON.parse()</code>.
+          </li>
+          <li>
+            <strong>URL injection:</strong> JSON fields like <code>website</code>, <code>redirectUrl</code>, or{" "}
+            <code>avatarUrl</code> are trusted without protocol validation, which can enable <code>javascript:</code>{" "}
+            or unexpected <code>data:</code> payloads.
+          </li>
+        </ul>
         <p>
-          The XSS vulnerability doesn&apos;t lie within the JSON structure itself, but in the third step:
-          <strong>how the data *from* the JSON is inserted into the HTML Document Object Model (DOM)</strong>. If this
-          insertion is done without proper sanitization or encoding, malicious script tags or event handlers present
-          within the data values can be executed by the user&apos;s browser.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Illustrative Example: User Profile Data</h3>
-        <p>Imagine a user profile page that fetches profile details (username, bio, etc.) from a JSON API:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <pre>
-            {`// Example JSON data from API
-{
-  "username": "AttackerUser",
-  "bio": "<script>alert('You are hacked!')</script>"
-}`}
-          </pre>
-        </div>
-        <p>
-          If the frontend takes the <code>bio</code> value directly and inserts it into the HTML without escaping it,
-          the injected <code>&lt;script&gt;</code> tag will be executed when the page loads.
+          In practice, JSON-related XSS often shows up as stored XSS through API-backed content, DOM-based XSS in the
+          frontend, or a server-side rendering mistake that turns serialized state into executable markup.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <AlertTriangle className="text-yellow-500 mr-2" size={24} />
-          Types of XSS Relevant to JSON APIs
-        </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Stored XSS:</strong> This is the most common scenario involving JSON APIs. Malicious data (like the
-            bio example above) is submitted by an attacker, stored on the server (often in a database), and later served
-            via a JSON API to other users. When those users view the page that renders this data without proper
-            handling, the script executes.
-          </li>
-          <li>
-            <strong>Reflected XSS:</strong> Less direct with a pure JSON API, but possible if data sent to the server
-            (e.g., in URL parameters or POST body) is echoed back in a JSON response, and the client-side JavaScript
-            then uses this echoed data insecurely in the page.
-          </li>
-          <li>
-            <strong>DOM-based XSS:</strong> The vulnerability exists purely in client-side JavaScript. The script
-            retrieves data (potentially from a JSON API, URL parameters, or local storage) and writes it to a dangerous
-            sink (like <code>innerHTML</code>) without sanitization.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Shield className="mr-2" size={24} />
-          Key Defense: Output Encoding / Escaping
+          Example 1: Safe JSON Response, Unsafe Rendering
         </h2>
         <p>
-          The primary defense against XSS when rendering data from JSON is **Output Encoding** or **Escaping**. This
-          involves converting characters that have special meaning in HTML (like <code>&lt;</code>,<code>&gt;</code>,{" "}
-          <code>&amp;</code>, <code>&quot;</code>, <code>&apos;</code>, <code>/</code>) into their HTML entity
-          equivalents (e.g., <code>&amp;lt;</code>, <code>&amp;gt;</code>).
-        </p>
-        <p>
-          When the browser encounters <code>&amp;lt;script&amp;gt;</code>, it renders it as the literal text
-          <code>&lt;script&gt;</code> instead of interpreting it as an HTML tag.
+          A perfectly valid JSON API can still feed an XSS bug if the frontend renders its values into HTML instead of
+          text.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Example: Vulnerable vs. Safe Rendering</h3>
-
-        <p className="font-semibold">Vulnerable Rendering (Avoid this!):</p>
+        <p className="font-semibold">Vulnerable pattern:</p>
         <div className="bg-red-100 text-red-800 p-4 rounded-lg dark:bg-red-900 dark:text-red-200 my-4 overflow-x-auto">
-          <h4 className="font-mono mb-2">Conceptual Client-side JS:</h4>
           <pre className="text-sm">
-            {`// DANGEROUS! Directly inserting unsanitized data
-const userData = { bio: "<script>alert('XSS!')</script>" };
-document.getElementById('bio-area').innerHTML = userData.bio;
+            {`const profile = await fetch("/api/profile").then((r) => r.json());
 
-// In React/JSX, this is conceptually similar to dangerouslySetInnerHTML
-// <div dangerouslySetInnerHTML={{ __html: userData.bio }} />
-// Only use dangerouslySetInnerHTML when you trust the source *completely* or have applied robust server-side AND client-side sanitization.`}
+bio.innerHTML = profile.bio;
+websiteLink.href = profile.website;`}
           </pre>
-          <p className="mt-2 flex items-center font-semibold">
-            <AlertTriangle className="mr-2" size={18} />
-            This allows any HTML or script tags in <code>userData.bio</code> to execute.
+          <p className="mt-2">
+            If <code>profile.bio</code> contains HTML, script gadgets, or event handlers, the page may execute them. If
+            <code>profile.website</code> is <code>javascript:alert(1)</code>, clicking the link can execute code.
           </p>
         </div>
 
-        <p className="font-semibold">Safe Rendering (Use this):</p>
+        <p className="font-semibold">Safer pattern:</p>
         <div className="bg-green-100 text-green-800 p-4 rounded-lg dark:bg-green-900 dark:text-green-200 my-4 overflow-x-auto">
-          <h4 className="font-mono mb-2">Conceptual Client-side JS:</h4>
           <pre className="text-sm">
-            {`// SAFE! Using textContent or framework defaults
-const userData = { bio: "<script>alert('XSS!')</script>" };
-document.getElementById('bio-area').textContent = userData.bio;
+            {`const profile = await fetch("/api/profile").then((r) => r.json());
 
-// In React/JSX, standard rendering automatically escapes:
-// <div>{userData.bio}</div>
-// This renders "<script>alert('XSS!')</script>" as plain text.
-`}
+bio.textContent = profile.bio;
+
+try {
+  const website = new URL(profile.website, window.location.origin);
+  if (website.protocol === "http:" || website.protocol === "https:") {
+    websiteLink.href = website.toString();
+  }
+} catch {
+  websiteLink.removeAttribute("href");
+}`}
           </pre>
           <p className="mt-2 flex items-center font-semibold">
             <Shield className="mr-2" size={18} />
-            This automatically escapes special characters, rendering the malicious code harmlessly as text.
+            Render text as text, and validate URLs before turning them into clickable navigation.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Modern Frameworks Help</h3>
+        <h3 className="text-xl font-semibold mt-6">Framework default escaping helps, until you bypass it</h3>
         <p>
-          Frontend frameworks like React, Vue, and Angular provide significant protection out-of-the-box. When you
-          render data within their templating syntax (like using <code>{`{variable}`}</code> in JSX or Vue templates, or{" "}
-          <code>{`{{ variable }}`}</code> in Angular templates), they automatically HTML-escape the content by default.
-          This is a major reason why XSS is less common in applications built with these frameworks compared to older
-          techniques involving manual DOM manipulation with
-          <code>innerHTML</code>.
+          React, Vue, Angular, and similar frameworks escape normal text interpolation by default. In React,{" "}
+          <code>{`<div>{profile.bio}</div>`}</code> is normally safe because the value is rendered as text, not parsed as
+          markup.
         </p>
         <p>
-          However, you can bypass this default safety (e.g., using <code>dangerouslySetInnerHTML</code> in React or the
-          equivalent in other frameworks), which should only be done when rendering trusted or carefully sanitized HTML
-          content (like rich text from a WYSIWYG editor).
+          Problems start when you opt into raw HTML rendering, such as <code>dangerouslySetInnerHTML</code> in React,
+          <code>v-html</code> in Vue, or other bypass APIs. Those escape hatches are only appropriate when the HTML is
+          trusted or has been sanitized with a well-maintained sanitizer.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Other Layers of Defense</h3>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Code className="mr-2" size={24} />
+          Example 2: XSS in Embedded JSON State
+        </h2>
+        <p>
+          A common server-rendering pattern is to place initial page state into{" "}
+          <code>&lt;script type=&quot;application/json&quot;&gt;</code> so the client can read it during hydration. The
+          browser does not execute that script block, but HTML parsing still ends the element when it sees{" "}
+          <code>&lt;/script&gt;</code>.
+        </p>
+
+        <p className="font-semibold">Vulnerable pattern:</p>
+        <div className="bg-red-100 text-red-800 p-4 rounded-lg dark:bg-red-900 dark:text-red-200 my-4 overflow-x-auto">
+          <pre className="text-sm">
+            {`const state = {
+  bio: "</script><script>alert('xss')</script>",
+};
+
+const html = \`<script id="boot" type="application/json">\${JSON.stringify(state)}</script>\`;`}
+          </pre>
+          <p className="mt-2">
+            If a value contains <code>&lt;/script&gt;</code>, the attacker can terminate the JSON container and inject a
+            new executable script tag into the page.
+          </p>
+        </div>
+
+        <p className="font-semibold">Safer pattern:</p>
+        <div className="bg-green-100 text-green-800 p-4 rounded-lg dark:bg-green-900 dark:text-green-200 my-4 overflow-x-auto">
+          <pre className="text-sm">
+            {`const safeState = JSON.stringify(state).replace(/</g, "\\u003c");
+
+const html = \`<script id="boot" type="application/json">\${safeState}</script>\`;`}
+          </pre>
+          <p className="mt-2">
+            Escaping <code>&lt;</code> prevents <code>&lt;/script&gt;</code> from being interpreted as a closing HTML
+            tag. When possible, use your framework&apos;s built-in serializer or a battle-tested helper instead of rolling
+            your own HTML serialization.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">Serve APIs as JSON, not HTML</h3>
+        <p>
+          JSON API responses should be returned with a JSON content type such as <code>application/json</code>. That
+          does not eliminate XSS on its own, but it reduces browser confusion and keeps API payloads out of HTML
+          parsing paths where they do not belong.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <AlertTriangle className="text-yellow-500 mr-2" size={24} />
+          Example 3: Parsing JSON with Code Execution APIs
+        </h2>
+        <p>
+          Parsing response text with executable JavaScript APIs is both outdated and dangerous. JSON should be treated as
+          data, not as code.
+        </p>
+        <div className="bg-red-100 text-red-800 p-4 rounded-lg dark:bg-red-900 dark:text-red-200 my-4 overflow-x-auto">
+          <pre className="text-sm">
+            {`// Avoid this
+const data = eval("(" + responseText + ")");
+
+// Use this
+const data = JSON.parse(responseText);`}
+          </pre>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Shield className="mr-2" size={24} />
+          Defenses That Still Matter
+        </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Content Security Policy (CSP):</strong> A browser security feature that helps prevent XSS by
-            restricting which resources (scripts, styles, etc.) the browser is allowed to load and execute for a given
-            page. A strong CSP can block injected scripts even if they are successfully inserted into the DOM.
+            <strong>Prefer safe sinks:</strong> Use <code>textContent</code>, DOM text nodes, and framework text
+            interpolation for untrusted values.
           </li>
           <li>
-            <strong>Input Validation &amp; Sanitization:</strong> While encoding is the primary defense at the *output*
-            stage, validating and sanitizing input on the server-side before storing it is also important. This can
-            involve removing potentially dangerous characters or structures. However, relying *only* on input
-            sanitization is risky, as filtering is hard to get perfectly right. Output encoding is the failsafe.
+            <strong>Sanitize only when HTML is required:</strong> If you must render user-controlled HTML, use a
+            maintained sanitizer such as DOMPurify and keep it patched. Do not sanitize once and then later append more
+            unsanitized fragments into the same container.
           </li>
           <li>
-            <strong>Using Safe APIs:</strong> Prefer DOM manipulation methods like <code>textContent</code> over
-            <code>innerHTML</code> when you intend to insert plain text.
+            <strong>Validate URLs and protocols:</strong> Treat <code>href</code>, <code>src</code>, redirect targets,
+            and custom deep links as untrusted input too.
           </li>
+          <li>
+            <strong>Escape embedded JSON in HTML:</strong> When placing serialized state into a page, escape HTML-significant
+            characters before writing it into a <code>&lt;script&gt;</code> element.
+          </li>
+          <li>
+            <strong>Use CSP as defense in depth:</strong> A strong Content Security Policy can limit the blast radius,
+            but it is not a substitute for correct output handling.
+          </li>
+          <li>
+            <strong>Consider Trusted Types where supported:</strong> Trusted Types can help enforce safer handling around
+            dangerous DOM sinks and reduce accidental <code>innerHTML</code> usage in large frontends.
+          </li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6">Quick review checklist</h3>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Search the codebase for raw HTML sinks such as <code>innerHTML</code> and framework-specific bypass APIs.</li>
+          <li>Trace every field from API response to DOM sink, not just the ones obviously named <code>html</code>.</li>
+          <li>Check server-rendered pages for inline JSON blobs created from <code>JSON.stringify()</code>.</li>
+          <li>Verify that rich text, markdown, and CMS content are sanitized before rendering and not mutated afterward.</li>
+          <li>Validate outbound URLs from JSON before assigning them to <code>href</code>, <code>src</code>, or redirects.</li>
+          <li>Confirm API responses use <code>application/json</code> and are not accidentally rendered as HTML pages.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON is a safe data format, but its consumption on the client-side is a common vector for XSS. The key
-          takeaway is that data from *any* untrusted source, including values fetched from a JSON API, must be properly
-          HTML-encoded or rendered using safe framework defaults before being inserted into the HTML DOM. Combined with
-          a strong Content Security Policy and careful use of APIs, developers can effectively mitigate XSS risks in
-          modern web applications relying on JSON data.
+          Cross-site scripting in JSON web applications is rarely about JSON syntax. It is about what the application
+          does with untrusted data after parsing it. If you render untrusted values as text by default, sanitize the rare
+          cases that need HTML, safely embed server state, and treat CSP as backup rather than the main fix, you remove
+          the most common XSS paths in modern JSON-heavy frontends.
         </p>
       </div>
     </>

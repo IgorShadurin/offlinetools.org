@@ -4,7 +4,7 @@ import { FileJson, Code, ArrowRight, CheckCircle, AlertTriangle } from "lucide-r
 export const metadata: Metadata = {
   title: "Objective-C JSON Formatting for Legacy iOS Applications",
   description:
-    "A guide to handling JSON serialization and deserialization using NSJSONSerialization in legacy Objective-C iOS projects.",
+    "Format, validate, and parse JSON safely in legacy Objective-C iOS apps with NSJSONSerialization, version-aware options, and practical debugging tips.",
 };
 
 export default function ObjectiveCJsonFormattingArticle() {
@@ -17,296 +17,292 @@ export default function ObjectiveCJsonFormattingArticle() {
 
       <div className="space-y-6">
         <p>
-          Maintaining legacy iOS applications written in Objective-C often requires working with JSON data. While modern
-          Swift applications leverage powerful, Swifty APIs like <code>Codable</code>, older codebases typically rely on
-          the foundational{" "}
+          If you maintain an older iOS app that still ships Objective-C, JSON work usually comes down to one Foundation
+          class:{" "}
           <a
-            href="https://developer.apple.com/documentation/foundation/nsjsonserialization"
+            href="https://developer.apple.com/documentation/foundation/jsonserialization"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline dark:text-blue-400"
           >
             <code>NSJSONSerialization</code>
-          </a>{" "}
-          class from the Foundation framework. Understanding how to effectively use <code>NSJSONSerialization</code> for
-          both formatting (serializing) and parsing (deserializing) JSON is crucial for adding features, fixing bugs, or
-          integrating with new APIs in these projects.
+          </a>
+          . It is still Apple&apos;s built-in way to turn Foundation objects into JSON and parse JSON back into{" "}
+          <code>NSDictionary</code>, <code>NSArray</code>, <code>NSString</code>, <code>NSNumber</code>, and{" "}
+          <code>NSNull</code>.
+        </p>
+
+        <p>
+          For a real legacy codebase, the hard part is rarely &quot;how do I call the API?&quot; It is avoiding invalid
+          payloads, handling <code>null</code> safely, understanding which formatting options exist on the OS versions
+          you still support, and quickly checking whether a broken response is malformed JSON or just unexpected data.
+          That is where a JSON formatter is useful before you even touch application code.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Code size={28} />
-          <span>
-            Why <code>NSJSONSerialization</code>?
-          </span>
+          <span>What Still Matters in Legacy Objective-C</span>
         </h2>
         <p>
-          <code>NSJSONSerialization</code> is the built-in, native Objective-C class provided by Apple for handling
-          JSON. It's available in iOS, macOS, tvOS, and watchOS, and is the standard way to interact with JSON using
-          Foundation objects (<code>NSDictionary</code>, <code>NSArray</code>, <code>NSString</code>,{" "}
-          <code>NSNumber</code>, <code>NSNull</code>) in Objective-C. For legacy projects, it's already there, stable,
-          and doesn't require adding external dependencies.
+          <code>NSJSONSerialization</code> is still the right default for formatting and parsing JSON in Objective-C.
+          Apple&apos;s current documentation also notes that the class is thread-safe on iOS 7 and later, so modernized
+          legacy apps do not need a third-party formatter just to serialize normal API payloads.
         </p>
-        <p>It acts as a bridge between standard Objective-C collection types and JSON data.</p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <ArrowRight size={28} />
-          <span>JSON Serialization (Objective-C Object to JSON Data)</span>
-        </h2>
-        <p>
-          When you need to send data from your Objective-C application to a server or save it as a JSON file, you'll
-          serialize an Objective-C object (typically an <code>NSDictionary</code> or <code>NSArray</code>) into an{" "}
-          <code>NSData</code> object containing the JSON bytes.
-        </p>
-        <p>
-          The primary method for this is <code>+dataWithJSONObject:options:error:</code>.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium mb-3">Basic Serialization Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`// Assume 'userData' is an NSDictionary or NSArray you want to serialize
-NSDictionary *userData = @{
-    @"name": @"Alice",
-    @"age": @(30), // Use NSNumber for numbers
-    @"isStudent": @(NO), // Use NSNumber for booleans
-    @"courses": @[@"Math", @"Science", @"History"],
-    @"address": @{
-        @"street": @"123 Main St",
-        @"city": @"Anytown"
-    },
-    @"metadata": [NSNull null] // Use [NSNull null] for JSON null
-};
-
-NSError *error = nil;
-NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userData
-                                             options:NSJSONWritingPrettyPrinted // Options for formatting (optional)
-                                               error:&error];
-
-if (!jsonData) {
-    NSLog(@"Error serializing JSON: %@", error);
-} else {
-    // jsonData now contains the JSON data bytes
-    // You can convert it to a NSString for logging or display if needed
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData
-                                                encoding:NSUTF8StringEncoding];
-    NSLog(@"Serialized JSON:\n%@", jsonString);
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h4 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <CheckCircle size={20} />
-          <span>Key Points for Serialization:</span>
-        </h4>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            The root object passed to <code>dataWithJSONObject:</code> must be an <code>NSDictionary</code> or{" "}
-            <code>NSArray</code>.
+            Use <code>+isValidJSONObject:</code> before serializing anything that may contain custom model objects,
+            dates, sets, or computed numeric values.
           </li>
           <li>
-            All objects within the dictionary/array must be instances of <code>NSString</code>, <code>NSNumber</code>,{" "}
-            <code>NSArray</code>, <code>NSDictionary</code>, or <code>[NSNull null]</code>. Custom objects must be
-            converted to these types first.
+            Remember that JSON <code>null</code> becomes <code>[NSNull null]</code>, not <code>nil</code>.
           </li>
           <li>
-            <code>NSNumber</code> should be used for all numbers (integers, floats, booleans).
+            JSON numbers map to <code>NSNumber</code>, including booleans.
           </li>
           <li>
-            <code>[NSNull null]</code> is the Objective-C representation of the JSON <code>null</code> value. Do not use
-            standard C <code>NULL</code> or Swift <code>nil</code>.
-          </li>
-          <li>
-            The <code>options</code> parameter allows control over the output format.{" "}
-            <code>NSJSONWritingPrettyPrinted</code> makes the output human-readable with indentation and line breaks.
-            For sending over a network, you typically use <code>0</code> for the most compact format.
-          </li>
-          <li>
-            The <code>error</code> parameter will be populated if serialization fails (e.g., due to unsupported object
-            types). Always check the error!
+            By default, Apple expects a top-level array or dictionary when writing JSON. Scalar values are a special
+            case and should be handled deliberately with fragment options.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <ArrowRight size={28} />
-          <span>JSON Deserialization (JSON Data to Objective-C Object)</span>
+          <span>Serialize Objective-C Objects Into Readable JSON</span>
         </h2>
         <p>
-          When you receive JSON data (e.g., from an API response) and need to access its content in your Objective-C
-          code, you'll deserialize the <code>NSData</code> into an Objective-C object (an <code>NSDictionary</code> or{" "}
-          <code>NSArray</code>).
-        </p>
-        <p>
-          The primary method for this is <code>+JSONObjectWithData:options:error:</code>.
+          When you are logging a request body, creating a fixture, or saving local state, a good serializer path does
+          three things: validates the object first, enables readable formatting only when it helps, and keeps newer
+          options behind availability checks.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium mb-3">Basic Deserialization Example:</h3>
+          <h3 className="text-lg font-medium mb-3">Safer Serialization Example</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-              {`// Assume 'jsonData' is an NSData object containing JSON bytes
-NSString *jsonString = @"{\"name\":\"Bob\",\"age\":25,\"isStudent\":true,\"grades\":[95,88,92]}";
-NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+              {`NSDictionary *payload = @{
+    @"name": @"Alice",
+    @"age": @(30),
+    @"active": @(YES),
+    @"roles": @[@"admin", @"editor"],
+    @"manager": [NSNull null]
+};
+
+if (![NSJSONSerialization isValidJSONObject:payload]) {
+    NSLog(@"Payload contains a non-JSON type.");
+    return;
+}
+
+NSJSONWritingOptions options = 0;
+options |= NSJSONWritingPrettyPrinted;
+
+if (@available(iOS 11.0, *)) {
+    options |= NSJSONWritingSortedKeys;
+}
+
+if (@available(iOS 13.0, *)) {
+    options |= NSJSONWritingWithoutEscapingSlashes;
+}
 
 NSError *error = nil;
-id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                options:NSJSONReadingAllowFragments // Options (optional)
-                                                  error:&error];
+NSData *jsonData = [NSJSONSerialization dataWithJSONObject:payload
+                                                   options:options
+                                                     error:&error];
 
-if (!jsonObject) {
-    NSLog(@"Error deserializing JSON: %@", error);
-} else {
-    // jsonObject is either an NSDictionary or NSArray
-    if ([jsonObject isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *userDict = (NSDictionary *)jsonObject;
-        NSLog(@"Deserialized Dictionary: %@", userDict);
+if (jsonData == nil) {
+    NSLog(@"Serialization failed: %@", error.localizedDescription);
+    return;
+}
 
-        // Accessing values
-        NSString *name = userDict[@"name"];
-        NSNumber *age = userDict[@"age"];
-        NSArray *grades = userDict[@"grades"];
-
-        NSLog(@"Name: %@, Age: %@, Grades: %@", name, age, grades);
-
-    } else if ([jsonObject isKindOfClass:[NSArray class]]) {
-        NSArray *userArray = (NSArray *)jsonObject;
-        NSLog(@"Deserialized Array: %@", userArray);
-    } else {
-         // Should not happen for valid JSON, but good practice
-         NSLog(@"Deserialized object is not a dictionary or array.");
-    }
-}`}
+NSString *jsonString = [[NSString alloc] initWithData:jsonData
+                                             encoding:NSUTF8StringEncoding];
+NSLog(@"%@", jsonString);`}
             </pre>
           </div>
         </div>
 
         <h4 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <CheckCircle size={20} />
-          <span>Key Points for Deserialization:</span>
+          <span>Why This Pattern Holds Up</span>
         </h4>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            The method returns an <code>id</code>, which will be either an <code>NSDictionary</code> or{" "}
-            <code>NSArray</code> depending on the top-level JSON structure. You must check its type using{" "}
-            <code>isKindOfClass:</code> before casting and accessing its contents.
+            <code>isValidJSONObject:</code> catches unsupported types before you get a runtime failure.
           </li>
           <li>
-            JSON strings become <code>NSString</code>.
+            <code>NSJSONWritingPrettyPrinted</code> is best for logs, fixtures, and local debugging. For network
+            traffic, use <code>0</code> unless humans need to read the payload.
           </li>
           <li>
-            JSON numbers (integers, floats, booleans) become <code>NSNumber</code>.
+            <code>NSJSONWritingSortedKeys</code> is available on iOS 11 and later and is useful when you want stable,
+            diff-friendly output in tests or support logs.
           </li>
           <li>
-            JSON arrays become <code>NSArray</code>.
+            <code>NSJSONWritingWithoutEscapingSlashes</code> is available on iOS 13 and later. It improves readability
+            for URLs, but it is cosmetic rather than semantic.
           </li>
           <li>
-            JSON objects become <code>NSDictionary</code>.
+            JSON does not allow <code>NaN</code> or infinity values. If floating-point calculations can produce them,
+            sanitize those numbers before serializing.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <ArrowRight size={28} />
+          <span>Parse API Responses Without Common Legacy Bugs</span>
+        </h2>
+        <p>
+          Deserialization looks simple until you hit responses with nullable fields, unexpected top-level values, or
+          code that assumes every response is a dictionary. The safe approach is to parse into <code>id</code>, confirm
+          the root type, then unwrap any <code>NSNull</code> values before using them.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium mb-3">Defensive Parsing Example</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>
+              {`NSData *responseData = /* data from NSURLSession */;
+
+NSJSONReadingOptions options = 0;
+BOOL expectsScalarJSON = NO;
+
+if (expectsScalarJSON) {
+    options |= NSJSONReadingFragmentsAllowed;
+}
+
+NSError *error = nil;
+id jsonObject = [NSJSONSerialization JSONObjectWithData:responseData
+                                                options:options
+                                                  error:&error];
+
+if (jsonObject == nil) {
+    NSLog(@"Parse failed: %@", error.localizedDescription);
+    return;
+}
+
+if (![jsonObject isKindOfClass:[NSDictionary class]]) {
+    NSLog(@"Expected a dictionary but got: %@", [jsonObject class]);
+    return;
+}
+
+NSDictionary *response = (NSDictionary *)jsonObject;
+id emailValue = response[@"email"];
+NSString *email = (emailValue == [NSNull null]) ? nil : emailValue;
+
+NSLog(@"Parsed email: %@", email);`}
+            </pre>
+          </div>
+        </div>
+
+        <h4 className="text-xl font-semibold mt-6 flex items-center space-x-2">
+          <CheckCircle size={20} />
+          <span>Current Parsing Notes Worth Knowing</span>
+        </h4>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Prefer <code>NSJSONReadingFragmentsAllowed</code> for top-level scalar JSON. Older code often uses{" "}
+            <code>NSJSONReadingAllowFragments</code>, which Apple now marks as deprecated.
           </li>
           <li>
-            JSON <code>null</code> becomes <code>[NSNull null]</code>.
+            <code>NSJSONReadingMutableContainers</code> is only useful if you truly need mutable arrays or dictionaries
+            immediately after parsing. In most maintenance work, immutable results plus targeted copies are cleaner.
           </li>
           <li>
-            The <code>options</code> parameter influences how the data is read. <code>NSJSONReadingAllowFragments</code>{" "}
-            is useful if the top-level JSON structure is not a dictionary or array (though technically not standard
-            JSON). <code>NSJSONReadingMutableContainers</code> or <code>NSJSONReadingMutableLeaves</code> can be used if
-            you need mutable dictionaries/arrays/strings directly from the parsing step, but it's often simpler to parse
-            into immutable objects and create mutable copies if needed.
+            <code>NSJSONReadingMutableLeaves</code> is rarely worth using in practice.
           </li>
           <li>
-            Again, always check the <code>error</code> parameter for parsing issues.
+            <code>NSJSONReadingJSON5Allowed</code> exists on iOS 15 and later, but it is a niche tool for human-edited
+            local content. Do not quietly enable it for normal API traffic if you expect strict JSON from a backend.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <AlertTriangle size={28} />
-          <span>Common Issues and Considerations</span>
+          <span>Compatibility and Interoperability Caveats</span>
         </h2>
+        <p>
+          Apple&apos;s API behavior and the JSON standard are close, but not identical in defaults.{" "}
+          <a
+            href="https://www.rfc-editor.org/rfc/rfc8259"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline dark:text-blue-400"
+          >
+            RFC 8259
+          </a>{" "}
+          says a JSON text can be any serialized value, while <code>NSJSONSerialization</code> still treats top-level
+          fragments as opt-in behavior. That difference matters when an API returns a bare string, number, or boolean.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Unsupported Types:</span> Trying to serialize custom objects, dates (
-            <code>NSDate</code>), sets (<code>NSSet</code>), or other non-standard Foundation types directly will cause
-            an error. These must be converted to JSON-compatible types (like <code>NSString</code>,{" "}
-            <code>NSNumber</code>, <code>NSArray</code>, <code>NSDictionary</code>) before serialization.
+            If your app still supports iOS 10 or earlier, guard <code>NSJSONWritingSortedKeys</code> with{" "}
+            <code>@available</code>.
           </li>
           <li>
-            <span className="font-medium">
-              <code>NSNull</code> vs. <code>nil</code>:
-            </span>{" "}
-            This is a frequent source of bugs. JSON <code>null</code> is represented by the singleton instance{" "}
-            <code>[NSNull null]</code> in Objective-C. It is NOT <code>nil</code>. When deserializing, check for{" "}
-            <code>[NSNull null]</code> if a key might be null; checking for <code>nil</code> will not work for keys that
-            exist but have a null value.
+            If your app still supports iOS 12 or earlier, do the same for{" "}
+            <code>NSJSONWritingWithoutEscapingSlashes</code>.
           </li>
           <li>
-            <span className="font-medium">Error Handling:</span> Always pass an <code>NSError**</code> pointer and check
-            its value after calling the serialization or deserialization method. Don't assume the operation will
-            succeed.
+            If you maintain a mixed fleet of old app versions, keep your JSON generator conservative so responses remain
+            easy to compare across builds and devices.
           </li>
           <li>
-            <span className="font-medium">Mutable vs. Immutable:</span> By default, <code>NSJSONSerialization</code>{" "}
-            produces immutable objects (<code>NSDictionary</code>, <code>NSArray</code>, <code>NSString</code>,{" "}
-            <code>NSNumber</code>). If you need to modify the results directly after parsing, use the{" "}
-            <code>NSJSONReadingMutableContainers</code> or <code>NSJSONReadingMutableLeaves</code> options, or create
-            mutable copies explicitly (e.g., <code>[mutableDict mutableCopy]</code>).
-          </li>
-          <li>
-            <span className="font-medium">Memory Management:</span> Although most modern legacy projects use ARC
-            (Automatic Reference Counting), be mindful of memory if working with very old code or manual memory
-            management. Ensure objects are properly retained and released if ARC is not enabled.
-          </li>
-          <li>
-            <span className="font-medium">Root Object Requirement:</span> Standard JSON requires the top level to be
-            either an object (<code>{}</code>) or an array (<code>[]</code>). Using{" "}
-            <code>NSJSONReadingAllowFragments</code> allows parsing JSON that might just be a string, number, boolean,
-            or null at the root, but this is non-standard JSON.
+            Output key sorting helps humans and test diffs, but JSON object key order should not be treated as business
+            logic.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <CheckCircle size={28} />
-          <span>Tips for Working in Legacy Codebases</span>
+          <AlertTriangle size={28} />
+          <span>Common Breakages in Legacy Apps</span>
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Use Categories:</span> If you find yourself repeatedly writing
-            serialization/deserialization logic for specific custom data models, consider creating Objective-C
-            Categories on <code>NSDictionary</code> or your model classes to encapsulate this logic. This keeps your
-            code cleaner and more organized.
+            <span className="font-medium">Custom model objects in payloads:</span> Convert them to dictionaries before
+            calling <code>dataWithJSONObject:options:error:</code>.
           </li>
           <li>
-            <span className="font-medium">Clear Naming:</span> Use descriptive variable names (e.g.,{" "}
-            <code>jsonData</code>, <code>jsonDictionary</code>, <code>serializationError</code>) to make the code's
-            intent clear.
+            <span className="font-medium">Dates and URLs:</span> Serialize them explicitly as ISO 8601 strings or other
+            agreed wire formats instead of passing <code>NSDate</code> or <code>NSURL</code> directly.
           </li>
           <li>
-            <span className="font-medium">Centralize JSON Handling:</span> For network communication, create helper
-            methods or a dedicated class to handle the common pattern of receiving <code>NSData</code>, deserializing
-            it, checking for errors, and processing the resulting Objective-C object. This reduces code duplication.
+            <span className="font-medium">Blind dictionary casts:</span> Some APIs return arrays at the root. Check the
+            type before subscripting.
           </li>
           <li>
-            <span className="font-medium">Stick to Native Types:</span> Avoid introducing external JSON libraries into
-            an old Objective-C project unless absolutely necessary and the benefits (e.g., performance, advanced
-            features) significantly outweigh the cost and potential conflicts. <code>NSJSONSerialization</code> is
-            usually sufficient.
+            <span className="font-medium">UI freezes on large payloads:</span> Pretty-printing or parsing big JSON on
+            the main thread is still expensive. Move heavy JSON work off the UI path.
           </li>
           <li>
-            <span className="font-medium">Migration Strategy:</span> If the project is undergoing modernization, plan a
-            gradual migration. You might introduce Swift files alongside Objective-C and use bridging headers,
-            eventually migrating data models and JSON handling to <code>Codable</code> in Swift for new features.
+            <span className="font-medium">Assuming malformed data is valid JSON:</span> Before changing parsing code,
+            drop the payload into an offline formatter to verify whether the issue is syntax, structure, or unexpected
+            nulls.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <FileJson size={28} />
-          <span>Conclusion</span>
+          <span>When a JSON Formatter Helps More Than More Code</span>
         </h2>
         <p>
-          Working with JSON in legacy Objective-C applications primarily revolves around{" "}
-          <code>NSJSONSerialization</code>. While it requires more manual handling compared to modern Swift{" "}
-          <code>Codable</code>, its straightforward API for converting between standard Foundation objects and JSON data
-          makes it a reliable tool. By understanding its core methods, options, and common pitfalls like handling{" "}
-          <code>NSNull</code> and errors, developers can effectively manage JSON communication and data persistence in
-          Objective-C codebases, ensuring continued maintenance and functionality for these valuable legacy systems.
+          For legacy iOS maintenance, a formatter is often the fastest first step. Paste the raw response from
+          <code>NSURLSession</code>, a proxy capture, or an app log and confirm three things before editing Objective-C:
+          whether the payload is valid JSON, what the real root type is, and which fields are actually{" "}
+          <code>null</code>.
+        </p>
+        <p>
+          That workflow is especially useful when you are debugging production-like data, building test fixtures, or
+          comparing server responses without sending potentially sensitive payloads through another web service.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <CheckCircle size={28} />
+          <span>Bottom Line</span>
+        </h2>
+        <p>
+          Objective-C JSON formatting in 2026 is still mostly about using <code>NSJSONSerialization</code> carefully,
+          not replacing it. Validate objects before writing, guard newer formatting options by OS version, treat{" "}
+          <code>NSNull</code> as a first-class case, and use an offline formatter to inspect real payloads before you
+          change legacy parsing code.
         </p>
       </div>
     </>

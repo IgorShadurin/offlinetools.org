@@ -11,12 +11,14 @@ import {
   Bug,
   Eye,
   KeyRound,
+  Keyboard,
+  Search,
 } from "lucide-react"; // Using allowed lucide-react icons
 
 export const metadata: Metadata = {
-  title: "Situational Limitations and JSON Formatter Design | Offline Tools",
+  title: "Expandable and Collapsible JSON UX: Formatter Design Limits | Offline Tools",
   description:
-    "Explore the challenges and design considerations when building JSON formatters, covering input size, complexity, performance, security, and error handling.",
+    "Learn how to design a JSON formatter with useful expand and collapse behavior, accessible tree navigation, safe handling for large payloads, and accurate JSON edge-case warnings.",
 };
 
 export default function JsonFormatterLimitationsArticle() {
@@ -28,244 +30,271 @@ export default function JsonFormatterLimitationsArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the ubiquitous standard for data interchange. While its
-          simplicity is a key strength, formatting and displaying JSON data in a user-friendly manner, especially within
-          developer tools, applications, or logs, introduces a range of practical challenges and limitations that
-          influence how a JSON formatter should be designed.
+          If a JSON formatter feels slow or confusing, the problem is usually not indentation. It is the expand and
+          collapse model: what opens by default, what stays hidden, how search reveals matches, and whether the viewer
+          can handle a 5 KB API response and a 50 MB log export without freezing the interface.
         </p>
         <p>
-          Simply applying default browser or library formatting might not be sufficient when dealing with real-world
-          scenarios. Understanding these situational constraints is crucial for building a robust, performant, and
-          usable JSON formatter.
+          For people comparing expandable or collapsible JSON designs, the real goal is simple: make nested data
+          scannable without hiding errors, losing precision, or overwhelming keyboard and screen reader users. That
+          means combining solid UX rules with JSON constraints that still matter today.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <AlertCircle className="mr-2 h-6 w-6 text-yellow-500" /> Key Situational Limitations
+          <Eye className="mr-2 h-6 w-6" /> What Users Need From Expandable JSON
         </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Fast scanning:</strong> People want the top-level shape immediately, not a wall of nested braces.
+          </li>
+          <li>
+            <strong>Controlled disclosure:</strong> They need to open only the branches that matter and keep the rest
+            compact.
+          </li>
+          <li>
+            <strong>Trustworthy output:</strong> The formatter should not hide duplicate keys, precision loss, or parse
+            failures behind a pretty view.
+          </li>
+          <li>
+            <strong>Accessible interaction:</strong> Expand and collapse controls must work with keyboard navigation and
+            assistive technology, not just mouse clicks.
+          </li>
+        </ul>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <HardDrive className="mr-2 h-5 w-5" /> 1. Input Size
+          <AlertCircle className="mr-2 h-5 w-5 text-yellow-500" /> Where Collapsible JSON UX Breaks Down
+        </h3>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center">
+          <HardDrive className="mr-2 h-5 w-5" /> 1. Large payloads change the interaction model
         </h3>
         <p>
-          This is perhaps the most common and significant limitation. JSON payloads can range from a few bytes to
-          hundreds of megabytes or even gigabytes.
+          Large JSON is where many viewers fail. Parsing the full text, pretty-printing it, and mounting thousands of
+          DOM nodes can block the browser main thread long before the data itself is unusual.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Memory Usage:</strong> Parsing a very large JSON string into a single in-memory JavaScript object
-            using <code>JSON.parse</code> can consume substantial RAM, potentially leading to crashes or slow
-            performance, especially in memory-constrained environments like browsers or servers with limited resources.
+            <strong>Common failure:</strong> An <code>Expand all</code> action locks the tab or causes seconds of input
+            lag.
           </li>
           <li>
-            <strong>Performance:</strong> Formatting a large string involves reading and processing every character.
-            Simple string concatenation loops can be inefficient. Rendering large, formatted output to the DOM in a
-            browser can also freeze the UI.
+            <strong>Better default:</strong> Expand only the root and the first one or two levels, then lazy-render
+            deeper children on demand.
+          </li>
+          <li>
+            <strong>Useful summary:</strong> Show collapsed labels such as <code>{`{12 keys}`}</code> or{" "}
+            <code>[248 items]</code> so users can judge whether a branch is worth opening.
           </li>
         </ul>
-        <p>A formatter designed without considering large inputs might simply fail or become unusable.</p>
+        <p>
+          Safe bulk actions are depth-based, not absolute. <code>Expand to depth 2</code> or{" "}
+          <code>Expand matches</code> is usually more usable than a global unbounded expand.
+        </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Sigma className="mr-2 h-5 w-5" /> 2. Data Complexity and Nesting Depth
+          <Sigma className="mr-2 h-5 w-5" /> 2. Deep nesting needs navigation, not just pretty-printing
         </h3>
-        <p>JSON structure can vary wildly – from flat key-value pairs to deeply nested objects and arrays.</p>
+        <p>Indentation helps, but it is not enough once objects become deeply nested or arrays contain similar items.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Readability:</strong> Deeply nested JSON becomes difficult to read even when formatted. Users need
-            ways to collapse or expand sections.
+            <strong>Context loss:</strong> Users open a branch and immediately lose track of which parent object they
+            are inside.
           </li>
           <li>
-            <strong>Parsing/Formatting Logic:</strong> Recursive algorithms for parsing or formatting can hit stack
-            limits with extremely deep nesting. While less common for typical data, malicious or malformed JSON could
-            exploit this.
+            <strong>Better design:</strong> Keep clear indentation guides, stable node paths, and copy-path actions for
+            the current key.
           </li>
           <li>
-            <strong>Rendering:</strong> Rendering complex tree structures in a UI requires efficient techniques (like
-            virtualization) to avoid rendering thousands of nested elements at once.
+            <strong>Search behavior matters:</strong> Searching should open only the ancestors of matching nodes instead
+            of expanding the entire document.
           </li>
         </ul>
+        <p>
+          A formatter that expands the correct branch but hides the path to it still creates unnecessary work for the
+          user.
+        </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Code className="mr-2 h-5 w-5" /> 3. Data Types and Edge Cases
-        </h3>
-        <p>JSON has specific primitive types and rules that need careful handling.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Numbers:</strong> JavaScript numbers have limitations on precision for large integers (
-            <code>Number.MAX_SAFE_INTEGER</code>). While JSON allows arbitrary precision numbers as strings, standard
-            JSON numbers are limited to IEEE 754 double-precision float. Formatting libraries typically handle standard
-            numbers, but might struggle with very large or precise numbers if not treated as strings during parsing.
-          </li>
-          <li>
-            <strong>Strings:</strong> JSON strings must be valid Unicode, but can contain escape sequences (like{" "}
-            <code>\n</code>, <code>\"</code>, <code>\\</code>, <code>\uXXXX</code>). Formatters must correctly interpret
-            and display these. Also, control characters or very long single-line strings can affect formatting and
-            display.
-          </li>
-          <li>
-            <strong>Special Values:</strong> Handling <code>null</code>, <code>true</code>, and
-            <code>false</code> consistently.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Wrench className="mr-2 h-5 w-5" /> 4. Performance Requirements and Environment
-        </h3>
-        <p>The context in which the formatter runs dictates performance needs.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Browser vs. Server:</strong> Browser formatters run on the client, potentially blocking the main
-            thread if the process is long. Server-side formatters (like for logs) might process data in bulk but have
-            different memory constraints.
-          </li>
-          <li>
-            <strong>Real-time vs. Offline:</strong> Is the formatting for a user waiting for a response (needs to be
-            fast) or for a background process (can take longer)?
-          </li>
-          <li>
-            <strong>Frequency of Use:</strong> A formatter used once in a while has different requirements than one used
-            in a high-throughput logging pipeline.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="mr-2 h-5 w-5" /> 5. Invalid JSON
-        </h3>
-        <p>Real-world data isn&apos;t always perfect. What happens if the input is not valid JSON?</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Error Handling:</strong> A robust formatter should not just crash. It should detect syntax errors
-            and provide clear, helpful error messages, ideally indicating the location of the error.
-          </li>
-          <li>
-            <strong>Partial Formatting:</strong> Some advanced formatters might attempt to format the valid parts of the
-            JSON before the error location, which can be complex.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <ShieldAlert className="mr-2 h-5 w-5 text-red-500" /> 6. Security Concerns (when displaying)
+          <Code className="mr-2 h-5 w-5" /> 3. Long values need their own folding rules
         </h3>
         <p>
-          If the JSON contains user-provided strings and the formatted output is rendered directly into HTML,
-          there&apos;s a risk of Cross-Site Scripting (XSS) if string values contain HTML tags or script injection
-          attempts.
+          Not every readability problem is structural. Long strings, JWTs, base64 blobs, stack traces, SQL queries,
+          and giant URLs can make a single valid property dominate the screen.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Output Escaping:</strong> String values within the JSON must be properly HTML-escaped before being
-            placed into the DOM to prevent browser interpretation of malicious code.
+            <strong>Separate concerns:</strong> Do not force users to collapse an entire object just to hide one noisy
+            value.
+          </li>
+          <li>
+            <strong>Better behavior:</strong> Allow wrap, truncate, and expand controls at the individual value level.
+          </li>
+          <li>
+            <strong>Clarity:</strong> If you truncate a value, show the exact character count or byte size so the user
+            knows what is hidden.
           </li>
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Settings className="mr-2 h-5 w-5" /> 7. Output Customization Needs
+          <Keyboard className="mr-2 h-5 w-5" /> 4. Accessibility is part of the design, not a later patch
         </h3>
-        <p>Different users or contexts require different formatting styles.</p>
+        <p>
+          If a viewer behaves like a tree, users expect tree behavior. The current WAI-ARIA tree view guidance expects
+          expandable parents to expose <code>aria-expanded</code> and keyboard users to open or close nodes with arrow
+          keys while moving through visible items predictably.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Indentation:</strong> Spaces vs. Tabs, number of spaces.
+            <strong>Important rule:</strong> If you only provide independent click toggles, use ordinary buttons or
+            disclosure controls instead of claiming <code>role=&quot;tree&quot;</code>.
           </li>
           <li>
-            <strong>Key Ordering:</strong> Alphabetical sorting of keys vs. preserving original order.
+            <strong>Focus management:</strong> Keep focus stable when a branch opens or closes so keyboard users do not
+            lose their place.
           </li>
           <li>
-            <strong>Line Wrapping:</strong> Handling long lines.
+            <strong>Screen reader value:</strong> Collapsed summaries should announce meaningful counts, not only
+            punctuation.
+          </li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center">
+          <Bug className="mr-2 h-5 w-5" /> 5. Invalid JSON should not destroy orientation
+        </h3>
+        <p>
+          Native <code>JSON.parse</code> still throws <code>SyntaxError</code> for invalid JSON, including trailing
+          commas and single-quoted property names. A formatter should preserve the raw text and point to the failing
+          region instead of clearing the whole interface.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Clear recovery:</strong> Keep the editor scroll position and highlight the area around the error.
           </li>
           <li>
-            <strong>Collapsing/Expanding:</strong> Providing interactive toggles for objects and arrays.
+            <strong>Consistent messaging:</strong> Normalize browser-specific error text if you surface parse errors
+            directly in a web app.
           </li>
           <li>
-            <strong>Data Filtering/Transformation:</strong> Sometimes users only want to see specific keys or need
-            values transformed (e.g., epoch timestamps to dates).
+            <strong>Raw mode:</strong> Let users fix syntax before you try to rebuild the tree view.
+          </li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center">
+          <ShieldAlert className="mr-2 h-5 w-5 text-red-500" /> 6. Display security still matters
+        </h3>
+        <p>
+          Browser-based formatters often display untrusted text from logs, API responses, or pasted payloads. If you
+          render string values into HTML without escaping them, a formatter can become an XSS sink.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Non-negotiable:</strong> Escape rendered string content before placing it in the DOM.
+          </li>
+          <li>
+            <strong>Do not trust syntax highlighting alone:</strong> Styled output can still be unsafe if text is
+            inserted as HTML instead of text nodes.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <KeyRound className="mr-2 h-6 w-6" /> Designing for Limitations
+          <KeyRound className="mr-2 h-6 w-6" /> Current JSON Constraints That Still Shape Formatter Design
         </h2>
-        <p>Addressing these limitations requires thoughtful design choices:</p>
 
-        <h3 className="text-xl font-semibold mt-6">Parsing Strategy</h3>
+        <h3 className="text-xl font-semibold mt-6">1. Duplicate keys are a trust problem</h3>
+        <p>
+          RFC 8259 says object member names should be unique. When they are not, behavior is unpredictable across
+          implementations, and many parsers effectively keep only the last value. That means parse-first, display-second
+          formatting can hide a real data problem.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            For small to medium inputs and basic validation: Use native <code>JSON.parse</code>
-            (handle errors with try/catch).
+            <strong>Best practice:</strong> Warn about duplicate keys before any round-trip parse and reformat cycle.
           </li>
           <li>
-            For large inputs, streaming, or advanced error recovery: Consider a custom streaming parser or a parser that
-            doesn&apos;t build the full object tree in memory at once (e.g., SAX-like parsers).
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Formatting Algorithm</h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Avoid naive string concatenation in loops for large data. Use techniques like joining arrays of strings or
-            building intermediate representations.
-          </li>
-          <li>Implement indentation logic carefully, tracking the current depth.</li>
-          <li>Provide configuration options for indentation characters and size.</li>
-          <li>Consider iterative formatting for very deep structures if recursion depth is a concern.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Handling Large Data & Complexity</h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Implement lazy rendering or UI virtualization if displaying large outputs in a browser.</li>
-          <li>Offer explicit &quot;collapse all&quot; or depth-based collapsing features.</li>
-          <li>For server-side processing of huge files, consider streaming formats or processing in chunks.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Error Reporting</h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Catch parsing errors and display user-friendly messages.</li>
-          <li>If using a custom parser, provide line and column numbers for errors.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Security in Display</h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Always HTML-escape string values before rendering them in the browser DOM using functions like{" "}
-            <code>escapeHTML(str)</code> or libraries designed for safe rendering.
+            <strong>Debugging fallback:</strong> Keep a raw or tokenized inspection mode for malformed or ambiguous
+            input.
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6">User Experience and Customization</h3>
+        <h3 className="text-xl font-semibold mt-6">2. Number precision still matters</h3>
+        <p>
+          RFC 8259 notes that integers are interoperable when they remain within <code>{`[-(2**53)+1, (2**53)-1]`}</code>.
+          Values outside that range may be rounded in JavaScript environments, which is a real issue for IDs, ledger
+          values, and event counters.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Offer options for indentation, sorting, etc.</li>
-          <li>Implement interactive collapsing/expanding features for nested nodes.</li>
-          <li>Consider features like syntax highlighting for different data types.</li>
+          <li>
+            <strong>Safer display:</strong> Flag suspiciously large integers before pretty-printing or transforming them.
+          </li>
+          <li>
+            <strong>Do not silently coerce:</strong> Copy-as-text or preserve-source actions are better than pretending
+            rounded output is exact.
+          </li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6">3. Parsers are allowed to have limits</h3>
+        <p>
+          The JSON specification allows implementations to set limits on text size, nesting depth, number range, and
+          string length. That is why a payload can work in one formatter but fail in another without being invalid JSON.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Be explicit:</strong> Document your practical limits instead of failing mysteriously on large input.
+          </li>
+          <li>
+            <strong>For browser tools:</strong> Prefer worker-based parsing or a raw-text fallback for heavy payloads.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Eye className="mr-2 h-6 w-6" /> Angles of View / Use Cases
+          <Settings className="mr-2 h-6 w-6" /> Design Choices That Work Well in Practice
+        </h2>
+
+        <h3 className="text-xl font-semibold mt-6">Default collapse rules</h3>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Expand the root and the first few levels, not the full document.</li>
+          <li>Collapse arrays aggressively when item counts are high.</li>
+          <li>Remember local expansion state while the user is inspecting the same payload.</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center">
+          <Search className="mr-2 h-5 w-5" /> Search and filtering
+        </h3>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Support search by key, value, and JSON path when possible.</li>
+          <li>Open only the ancestors of matched nodes, not every sibling branch.</li>
+          <li>Show match counts inside collapsed sections so users know where remaining hits are hidden.</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6">Trust-preserving presentation</h3>
+        <p>
+          Preserve source order by default and make key sorting optional. JSON objects are conceptually unordered, but
+          people often rely on producer order while debugging APIs and configuration files.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Mark truncation and collapse states explicitly so hidden content is never ambiguous.</li>
+          <li>Provide copy-value and copy-path actions close to the node being inspected.</li>
+          <li>Escape all rendered strings before display in browser-based tools.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Wrench className="mr-2 h-6 w-6" /> A Practical Default Spec
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Developer Tools (Browser Extensions, Web Apps):</strong> Focus on UI performance, interactive
-            collapsing, syntax highlighting, and handling user-provided, potentially large/invalid data securely.
-          </li>
-          <li>
-            <strong>API Debuggers/Testing Tools:</strong> Need to handle potentially very large response bodies, often
-            with complex structures. Performance and memory efficiency are key.
-          </li>
-          <li>
-            <strong>Logging Systems:</strong> May process massive volumes of structured logs. Needs extreme performance,
-            low memory footprint, often streaming capabilities, and potentially filtering/projection before formatting.
-          </li>
-          <li>
-            <strong>Data Migration/Transformation Scripts:</strong> Often deal with large files. Performance is
-            critical, potentially streaming or batch processing. Less need for interactive UI features.
-          </li>
+          <li>Pretty-print with two spaces and preserve original key order unless the user asks for sorting.</li>
+          <li>Render an expandable tree view with initial expansion limited to shallow depth.</li>
+          <li>Show counts and short previews on collapsed objects and arrays.</li>
+          <li>Use real buttons or a fully implemented ARIA tree pattern, not an in-between widget.</li>
+          <li>Make search reveal only matching branches and keep the current scroll position stable.</li>
+          <li>Warn on invalid JSON, duplicate keys, and integers that may exceed safe JavaScript precision.</li>
+          <li>For very large inputs, fall back to worker-based parsing, lazy rendering, or raw-text inspection.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Designing a robust JSON formatter is more than just pretty-printing. It requires careful consideration of the
-          situational limitations dictated by the expected input size, structural complexity, environment, performance
-          requirements, and potential for invalid or malicious data. By anticipating these challenges and incorporating
-          appropriate parsing strategies, formatting algorithms, and handling mechanisms for errors and security,
-          developers can build formatters that are not only user-friendly but also stable and performant in real-world
-          scenarios.
+          Good JSON formatter design is mostly about controlled disclosure. The best tools do not simply beautify text;
+          they help people understand structure quickly, expand the right branches safely, and avoid false confidence
+          when the input is invalid, ambiguous, or too large for naive rendering.
         </p>
       </div>
     </>

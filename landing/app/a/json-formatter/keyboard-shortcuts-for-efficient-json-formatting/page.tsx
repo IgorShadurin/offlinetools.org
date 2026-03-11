@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Keyboard Shortcuts for Efficient JSON Formatting | Offline Tools",
+  title: "Keyboard Shortcuts for Efficient JSON Formatting in VS Code and Browser Tools | Offline Tools",
   description:
-    "Learn how keyboard shortcuts can dramatically improve efficiency when working with JSON formatting tools",
+    "Use the right keyboard shortcuts to format JSON faster in VS Code, JetBrains IDEs, and browser-based JSON formatters. Includes current defaults, conflicts, and customization tips.",
 };
 
 export default function KeyboardShortcutsArticle() {
@@ -13,425 +13,331 @@ export default function KeyboardShortcutsArticle() {
 
       <div className="space-y-6">
         <p>
-          Keyboard shortcuts are essential for maximizing productivity in JSON formatters. By learning key combinations
-          for common tasks, developers can work faster, maintain focus, and reduce strain from excessive mouse usage.
+          If you are looking for a single universal shortcut to format JSON, the first thing to know is that there
+          isn&apos;t one. The fastest key combination depends on where you are working: VS Code, a JetBrains IDE, or a
+          browser-based formatter all behave differently.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Common Keyboard Shortcuts</h2>
+        <p>
+          That distinction matters because a lot of shortcut lists on the web are wrong. They mix editor commands,
+          browser commands, and made-up formatter hotkeys. For real productivity, learn one reliable formatting
+          shortcut for your main editor, then add a small set of search and navigation shortcuts around it.
+        </p>
+
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 border-l-4 border-blue-400">
+          <h2 className="text-lg font-semibold text-blue-900 dark:text-blue-200">Quick answer</h2>
+          <p className="mt-2 text-blue-800 dark:text-blue-100">
+            In current official docs, VS Code formats JSON with <strong>Shift+Alt+F</strong> on Windows,{" "}
+            <strong>Shift+Option+F</strong> on macOS, and <strong>Ctrl+Shift+I</strong> on Linux. JetBrains IDEs use{" "}
+            <strong>Ctrl+Alt+L</strong> on Windows and Linux, and <strong>Command+Option+L</strong> on macOS. In
+            browser-based JSON formatters, there is usually <strong>no universal default format shortcut</strong>, so
+            the fastest keyboard workflow is tabbing to the Format button and triggering it with Enter or Space.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Quick Reference</h2>
+
+        <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left py-2 px-3">Where You Work With JSON</th>
+                <th className="text-left py-2 px-3">Formatting Shortcut</th>
+                <th className="text-left py-2 px-3">Also Worth Memorizing</th>
+                <th className="text-left py-2 px-3">Important Caveat</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr>
+                <td className="py-2 px-3">VS Code</td>
+                <td className="py-2 px-3">Shift+Alt+F / Shift+Option+F / Ctrl+Shift+I</td>
+                <td className="py-2 px-3">Ctrl/Cmd+Shift+O, Ctrl/Cmd+F</td>
+                <td className="py-2 px-3">Shown according to your keyboard layout and keymap</td>
+              </tr>
+              <tr>
+                <td className="py-2 px-3">JetBrains IDEs</td>
+                <td className="py-2 px-3">Ctrl+Alt+L / Command+Option+L</td>
+                <td className="py-2 px-3">Ctrl/Cmd+Shift+A, Shift twice</td>
+                <td className="py-2 px-3">OS or window-manager conflicts are common on Linux and macOS</td>
+              </tr>
+              <tr>
+                <td className="py-2 px-3">Browser-based JSON formatters</td>
+                <td className="py-2 px-3">No standard default</td>
+                <td className="py-2 px-3">Tab, Enter, Space, Ctrl/Cmd+F</td>
+                <td className="py-2 px-3">The site has to expose keyboard-focusable controls</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">A Fast Keyboard Workflow for Browser-Based JSON Formatters</h2>
+
+        <p>
+          On the web, keyboard efficiency usually comes from standard editing and navigation shortcuts, not from a
+          built-in JSON-specific hotkey. That is especially true when you are using an online formatter for quick,
+          one-off cleanup.
+        </p>
+
+        <ol className="list-decimal pl-6 space-y-3 mt-4">
+          <li>
+            Paste the payload with <strong>Ctrl+V</strong> or <strong>Command+V</strong>.
+          </li>
+          <li>
+            Use <strong>Tab</strong> or <strong>Shift+Tab</strong> to move focus to the <em>Format</em>,{" "}
+            <em>Validate</em>, or <em>Minify</em> controls.
+          </li>
+          <li>
+            Activate the focused button with <strong>Enter</strong> or <strong>Space</strong>.
+          </li>
+          <li>
+            Search the formatted output with <strong>Ctrl+F</strong> or <strong>Command+F</strong>.
+          </li>
+          <li>
+            Select everything with <strong>Ctrl+A</strong> or <strong>Command+A</strong>, then copy with{" "}
+            <strong>Ctrl+C</strong> or <strong>Command+C</strong>.
+          </li>
+        </ol>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Practical takeaway</h3>
+          <p className="mt-2">
+            If your browser-based formatter does not advertise a dedicated format hotkey, do not assume that{" "}
+            <code className="font-mono text-sm">Ctrl/Cmd+Shift+F</code> will work. In web apps, that kind of shortcut
+            is often intercepted by the browser or reserved for a completely different action.
+          </p>
+          <p className="mt-2">
+            For fast one-off cleanup, use{" "}
+            <a className="underline font-medium" href="/tools/json-formatter">
+              the Offline Tools JSON Formatter
+            </a>{" "}
+            with the keyboard-first flow above instead of hunting through menus.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Current VS Code JSON Shortcuts</h2>
+
+        <p>
+          VS Code is one of the most common places people format JSON, so it is worth memorizing the defaults that are
+          actually documented today. These are especially useful when you jump between API responses, config files, and
+          large sample payloads.
+        </p>
 
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
               <tr className="border-b">
                 <th className="text-left py-2 px-3">Action</th>
-                <th className="text-left py-2 px-3">Windows/Linux</th>
+                <th className="text-left py-2 px-3">Windows</th>
                 <th className="text-left py-2 px-3">macOS</th>
+                <th className="text-left py-2 px-3">Linux</th>
+                <th className="text-left py-2 px-3">Why It Helps With JSON</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               <tr>
-                <td className="py-2 px-3">Format/Beautify JSON</td>
-                <td className="py-2 px-3">Ctrl+Shift+F</td>
-                <td className="py-2 px-3">⌘+Shift+F</td>
+                <td className="py-2 px-3">Format Document</td>
+                <td className="py-2 px-3">Shift+Alt+F</td>
+                <td className="py-2 px-3">Shift+Option+F</td>
+                <td className="py-2 px-3">Ctrl+Shift+I</td>
+                <td className="py-2 px-3">Beautifies minified JSON instantly</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Minify JSON</td>
-                <td className="py-2 px-3">Ctrl+Shift+M</td>
-                <td className="py-2 px-3">⌘+Shift+M</td>
+                <td className="py-2 px-3">Go to Symbol in Editor</td>
+                <td className="py-2 px-3">Ctrl+Shift+O</td>
+                <td className="py-2 px-3">Command+Shift+O</td>
+                <td className="py-2 px-3">Ctrl+Shift+O</td>
+                <td className="py-2 px-3">Jump to top-level keys in large objects</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Expand all nodes</td>
-                <td className="py-2 px-3">Ctrl+E</td>
-                <td className="py-2 px-3">⌘+E</td>
+                <td className="py-2 px-3">Trigger Suggestions</td>
+                <td className="py-2 px-3">Ctrl+Space</td>
+                <td className="py-2 px-3">Control+Space</td>
+                <td className="py-2 px-3">Ctrl+Space</td>
+                <td className="py-2 px-3">Useful when schema-backed completion is available</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Collapse all nodes</td>
-                <td className="py-2 px-3">Ctrl+Shift+E</td>
-                <td className="py-2 px-3">⌘+Shift+E</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Find</td>
-                <td className="py-2 px-3">Ctrl+F</td>
-                <td className="py-2 px-3">⌘+F</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Copy</td>
-                <td className="py-2 px-3">Ctrl+C</td>
-                <td className="py-2 px-3">⌘+C</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Copy path</td>
-                <td className="py-2 px-3">Ctrl+Shift+C</td>
-                <td className="py-2 px-3">⌘+Shift+C</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Toggle line wrapping</td>
-                <td className="py-2 px-3">Ctrl+W</td>
-                <td className="py-2 px-3">⌘+W</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Validate JSON</td>
-                <td className="py-2 px-3">Ctrl+V</td>
-                <td className="py-2 px-3">⌘+V</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Save/Export</td>
-                <td className="py-2 px-3">Ctrl+S</td>
-                <td className="py-2 px-3">⌘+S</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Undo</td>
-                <td className="py-2 px-3">Ctrl+Z</td>
-                <td className="py-2 px-3">⌘+Z</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Redo</td>
-                <td className="py-2 px-3">Ctrl+Y or Ctrl+Shift+Z</td>
-                <td className="py-2 px-3">⌘+Shift+Z</td>
+                <td className="py-2 px-3">Open Keyboard Shortcuts</td>
+                <td className="py-2 px-3">Ctrl+K Ctrl+S</td>
+                <td className="py-2 px-3">Command+K Command+S</td>
+                <td className="py-2 px-3">Ctrl+K Ctrl+S</td>
+                <td className="py-2 px-3">Lets you bind a shortcut that matches your workflow</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Learning Tip:</h3>
-          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Start by learning 3-5 frequently used shortcuts rather than trying to memorize all at once. Add more to your
-            workflow gradually as each set becomes second nature.
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Benefits of Using Keyboard Shortcuts</h2>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Speed:</strong> Execute operations instantly without hunting through menus
-          </li>
-          <li>
-            <strong>Focus:</strong> Maintain concentration on the data rather than UI navigation
-          </li>
-          <li>
-            <strong>Efficiency:</strong> Chain operations together for complex workflows
-          </li>
-          <li>
-            <strong>Ergonomics:</strong> Reduce repetitive mouse movements that can cause strain
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Advanced Shortcut Techniques</h2>
-
         <p>
-          Beyond basic shortcuts, advanced users can leverage more sophisticated techniques to further enhance
-          productivity.
+          If you format JSON constantly, a custom binding is often better than memorizing a generic list from the web.
+          In VS Code, you can target JSON files only and avoid changing shortcuts for every language.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Shortcut Combinations</h3>
-
-        <p>Chaining multiple shortcuts together can create powerful workflows. For example:</p>
-
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Combined Workflow Example:</h4>
-          <ol className="list-decimal pl-6 mt-2 space-y-1">
-            <li>Format JSON (Ctrl+Shift+F / ⌘+Shift+F)</li>
-            <li>Collapse all nodes (Ctrl+Shift+E / ⌘+Shift+E)</li>
-            <li>Find specific property (Ctrl+F / ⌘+F)</li>
-            <li>Expand only that node (Navigate + Enter)</li>
-            <li>Copy that property path (Ctrl+Shift+C / ⌘+Shift+C)</li>
-          </ol>
+          <h3 className="text-lg font-medium">Example VS Code binding for JSON only</h3>
+          <p className="mt-2">
+            Add a custom keybinding for <code className="font-mono text-sm">editor.action.formatDocument</code> if you
+            want a single shortcut that only fires when a JSON editor is focused:
+          </p>
+          <pre className="mt-3 p-3 rounded bg-gray-900 text-gray-100 overflow-x-auto text-sm">
+            <code>{`{
+  "key": "ctrl+alt+j",
+  "command": "editor.action.formatDocument",
+  "when": "editorTextFocus && editorLangId == 'json'"
+}`}</code>
+          </pre>
           <p className="mt-2 text-sm">
-            This sequence takes seconds with shortcuts but much longer with mouse-only navigation.
+            If you frequently edit VS Code settings or other JSON-with-comments files, use{" "}
+            <code className="font-mono text-sm">jsonc</code> instead of <code className="font-mono text-sm">json</code>
+            .
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Customizing Shortcuts</h3>
+        <h2 className="text-2xl font-semibold mt-8">JetBrains IDE Shortcuts for JSON</h2>
 
         <p>
-          Many advanced JSON formatters allow users to customize keyboard shortcuts to match personal preferences or
-          align with shortcuts used in other development tools.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Common Customization Options:</h4>
-          <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>Rebinding existing shortcuts to different key combinations</li>
-            <li>Creating new shortcuts for frequently used actions</li>
-            <li>Importing/exporting shortcut configurations</li>
-            <li>Creating shortcut profiles (e.g., for different projects)</li>
-          </ul>
-        </div>
-
-        <p>
-          When customizing shortcuts, try to maintain consistency with other tools in your workflow to reduce cognitive
-          load when switching between applications.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Keyboard Navigation Within JSON</h2>
-
-        <p>
-          Navigating large JSON structures efficiently is just as important as executing commands quickly. Well-designed
-          JSON formatters offer keyboard-based navigation options:
+          WebStorm, IntelliJ IDEA, and other JetBrains IDEs use a consistent formatting flow. The core shortcut is easy
+          to remember, and the action search tools make it faster to recover when you forget a binding.
         </p>
 
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2 px-3">Navigation Action</th>
-                <th className="text-left py-2 px-3">Shortcut</th>
+                <th className="text-left py-2 px-3">Action</th>
+                <th className="text-left py-2 px-3">Windows and Linux</th>
+                <th className="text-left py-2 px-3">macOS</th>
+                <th className="text-left py-2 px-3">Why It Helps With JSON</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               <tr>
-                <td className="py-2 px-3">Move up/down between properties</td>
-                <td className="py-2 px-3">Up/Down arrows</td>
+                <td className="py-2 px-3">Reformat Code</td>
+                <td className="py-2 px-3">Ctrl+Alt+L</td>
+                <td className="py-2 px-3">Command+Option+L</td>
+                <td className="py-2 px-3">Formats the current JSON file or selection</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Expand/collapse current node</td>
-                <td className="py-2 px-3">Right/Left arrows</td>
+                <td className="py-2 px-3">Find Action</td>
+                <td className="py-2 px-3">Ctrl+Shift+A</td>
+                <td className="py-2 px-3">Command+Shift+A</td>
+                <td className="py-2 px-3">Search for formatting and validation commands by name</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Jump to parent node</td>
-                <td className="py-2 px-3">Backspace or Alt+Up</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Jump to first/last property</td>
-                <td className="py-2 px-3">Home/End</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Jump to next/previous sibling</td>
-                <td className="py-2 px-3">Tab/Shift+Tab</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Follow reference (for tools with reference support)</td>
-                <td className="py-2 px-3">Ctrl+Click / ⌘+Click</td>
+                <td className="py-2 px-3">Search Everywhere</td>
+                <td className="py-2 px-3">Shift twice</td>
+                <td className="py-2 px-3">Shift twice</td>
+                <td className="py-2 px-3">Fast way to jump to files, actions, and settings</td>
               </tr>
             </tbody>
           </table>
         </div>
-
-        <h3 className="text-xl font-semibold mt-6">Tree Navigation Techniques</h3>
-
-        <p>For deeply nested JSON, effective tree navigation techniques can save significant time:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Depth Navigation Tips:</h4>
-          <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>
-              Use <strong>Ctrl+G / ⌘+G</strong> to jump to a specific line number in JSON
-            </li>
-            <li>
-              Use <strong>Alt+Right / Option+Right</strong> to expand a node and all its children
-            </li>
-            <li>
-              Use <strong>/ (slash)</strong> in some formatters to start a quick search
-            </li>
-            <li>
-              Use <strong>Ctrl+[ and Ctrl+] / ⌘+[ and ⌘+]</strong> to jump between matching brackets
-            </li>
-          </ul>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Shortcut Patterns Across Different JSON Formatters</h2>
 
         <p>
-          While exact shortcuts vary between tools, many JSON formatters follow similar patterns. Understanding these
-          patterns makes it easier to adapt to new tools:
+          JetBrains also supports formatting on save through <strong>Actions on Save</strong>. If you touch JSON files
+          all day, that can be more efficient than pressing the reformat shortcut manually every time.
         </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Common Shortcut Patterns:</h4>
-          <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>
-              <strong>Ctrl/⌘ + F</strong> - Almost universally used for find/search
-            </li>
-            <li>
-              <strong>Ctrl/⌘ + directional keys</strong> - Often used for structural navigation
-            </li>
-            <li>
-              <strong>Ctrl/⌘ + Shift</strong> - Typically indicates an operation on the entire document
-            </li>
-            <li>
-              <strong>Alt/Option + key</strong> - Often used for secondary or alternate operations
-            </li>
-          </ul>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Tool-Specific Shortcut Examples</h3>
-
-        <p>Let&apos;s examine shortcut variations across popular JSON formatting tools:</p>
-
-        <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-2 px-3">Tool</th>
-                <th className="text-left py-2 px-3">Format JSON</th>
-                <th className="text-left py-2 px-3">Minify JSON</th>
-                <th className="text-left py-2 px-3">Notable Unique Shortcuts</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr>
-                <td className="py-2 px-3">VSCode + JSON Extension</td>
-                <td className="py-2 px-3">Alt+Shift+F</td>
-                <td className="py-2 px-3">Custom command</td>
-                <td className="py-2 px-3">Ctrl+Space for schema suggestions</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Online JSON Formatter</td>
-                <td className="py-2 px-3">Ctrl+Shift+F / ⌘+Shift+F</td>
-                <td className="py-2 px-3">Ctrl+Shift+M / ⌘+Shift+M</td>
-                <td className="py-2 px-3">Ctrl+D / ⌘+D for JSON diff view</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">IntelliJ/WebStorm</td>
-                <td className="py-2 px-3">Ctrl+Alt+L / ⌘+Option+L</td>
-                <td className="py-2 px-3">Custom command</td>
-                <td className="py-2 px-3">Ctrl+Alt+T / ⌘+Option+T for code surround</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-3">Offline JSON Tools</td>
-                <td className="py-2 px-3">Ctrl+Shift+F / ⌘+Shift+F</td>
-                <td className="py-2 px-3">Ctrl+Shift+M / ⌘+Shift+M</td>
-                <td className="py-2 px-3">Ctrl+J / ⌘+J for JSONPath query</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Mobile Considerations</h2>
-
-        <p>While traditional keyboard shortcuts work best on desktop, mobile alternatives include:</p>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Touch gestures (swipes, double-taps, long-press)</li>
-          <li>External keyboard support for tablets</li>
-          <li>Customizable quick action buttons</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Mobile-Specific Gesture Patterns</h3>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Common Mobile Gestures:</h4>
-          <ul className="list-disc pl-6 mt-2">
-            <li>
-              <strong>Pinch to zoom</strong> - Adjust text size or zoom level
-            </li>
-            <li>
-              <strong>Double-tap on node</strong> - Expand/collapse node
-            </li>
-            <li>
-              <strong>Swipe left/right</strong> - Navigate between tabs or views
-            </li>
-            <li>
-              <strong>Two-finger swipe</strong> - Scroll horizontally in wide JSON
-            </li>
-            <li>
-              <strong>Long-press</strong> - Show context menu for additional options
-            </li>
-            <li>
-              <strong>Three-finger swipe</strong> - Some apps use this for undo/redo operations
-            </li>
-          </ul>
-        </div>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Accessibility Tip:</h3>
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Conflict warning</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Many mobile JSON formatters now offer voice command support as an alternative input method. This can be
-            particularly useful for hands-free operation or users with motor disabilities.
+            On some Linux desktops and macOS setups, default JetBrains shortcuts can conflict with system or
+            input-method shortcuts. If <code className="font-mono text-sm">Ctrl+Alt+L</code> or{" "}
+            <code className="font-mono text-sm">Ctrl/Control+Space</code> does nothing, open the keymap settings and
+            rebind it instead of fighting the OS.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Best Practices for Shortcut Efficiency</h2>
-
-        <p>To maximize your productivity with JSON formatting shortcuts, consider these best practices:</p>
-
-        <ol className="list-decimal pl-6 space-y-3 mt-4">
-          <li>
-            <strong>Start with the essentials</strong>: Begin by mastering the most frequently used shortcuts (format,
-            find, expand/collapse, copy)
-          </li>
-          <li>
-            <strong>Practice deliberately</strong>: Set aside time to practice using shortcuts without falling back to
-            mouse operations
-          </li>
-          <li>
-            <strong>Use cheat sheets</strong>: Create or download a keyboard shortcut cheat sheet and keep it visible
-            until shortcuts become muscle memory
-          </li>
-          <li>
-            <strong>Customize for ergonomics</strong>: Remap shortcuts that cause hand strain or are difficult to reach
-          </li>
-          <li>
-            <strong>Create shortcut consistency</strong>: Try to use similar shortcuts across different tools in your
-            workflow
-          </li>
-        </ol>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Practice Exercise:</h4>
-          <p className="mt-2">Try this 5-minute daily exercise to build muscle memory for JSON formatting shortcuts:</p>
-          <ol className="list-decimal pl-6 mt-2">
-            <li>Open a complex JSON file</li>
-            <li>Format it using keyboard shortcuts</li>
-            <li>Find a specific property using search</li>
-            <li>Navigate to 3 different nested objects using only keyboard</li>
-            <li>Copy specific values and their paths</li>
-            <li>Collapse and expand sections</li>
-          </ol>
-          <p className="mt-2 text-sm">With daily practice, these actions will become automatic within 1-2 weeks.</p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Troubleshooting Shortcut Issues</h2>
-
-        <p>Sometimes keyboard shortcuts may not work as expected. Here are common issues and solutions:</p>
+        <h2 className="text-2xl font-semibold mt-8">What Usually Breaks JSON Formatting Shortcuts</h2>
 
         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-900 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2 px-3">Issue</th>
-                <th className="text-left py-2 px-3">Potential Solution</th>
+                <th className="text-left py-2 px-3">Problem</th>
+                <th className="text-left py-2 px-3">What Is Usually Happening</th>
+                <th className="text-left py-2 px-3">Best Fix</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               <tr>
-                <td className="py-2 px-3">Shortcuts not responding</td>
-                <td className="py-2 px-3">Check for operating system or browser shortcut conflicts</td>
+                <td className="py-2 px-3">Nothing happens when you press the shortcut</td>
+                <td className="py-2 px-3">The editor is not focused, or the browser/OS captured the keys first</td>
+                <td className="py-2 px-3">Click into the editor, then test again or rebind the command</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Unexpected behavior when using shortcuts</td>
-                <td className="py-2 px-3">Verify that the JSON document is properly focused</td>
+                <td className="py-2 px-3">The file does not format cleanly</td>
+                <td className="py-2 px-3">The payload is invalid JSON, or you are working with JSONC rather than strict JSON</td>
+                <td className="py-2 px-3">Validate first, then remove comments or trailing commas if strict JSON is required</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Shortcuts work inconsistently</td>
-                <td className="py-2 px-3">Check if the formatting tool has different modes that affect shortcuts</td>
+                <td className="py-2 px-3">The displayed shortcut does not match what you expected</td>
+                <td className="py-2 px-3">Modern editors render shortcuts according to keyboard layout and active keymap</td>
+                <td className="py-2 px-3">Check the in-app keyboard shortcut editor instead of relying on a cheat sheet</td>
               </tr>
               <tr>
-                <td className="py-2 px-3">Browser extensions interfering</td>
-                <td className="py-2 px-3">Try in incognito/private mode or temporarily disable extensions</td>
+                <td className="py-2 px-3">A browser-based formatter has no hotkey for Format</td>
+                <td className="py-2 px-3">Many web tools expose the command only as a button</td>
+                <td className="py-2 px-3">Use Tab plus Enter, or create a custom browser shortcut with an extension or userscript</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8">The Small Shortcut Set That Delivers the Biggest Gain</h2>
 
-        <p className="mt-6">
-          By investing time to learn keyboard shortcuts, developers can transform their JSON formatting experience from
-          tedious to fluid, focusing on the data itself rather than the mechanics of the tool.
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            Memorize one <strong>format</strong> shortcut for your main editor.
+          </li>
+          <li>
+            Memorize one <strong>find</strong> shortcut so you can inspect large payloads quickly.
+          </li>
+          <li>
+            Memorize one <strong>action search</strong> shortcut such as VS Code&apos;s shortcut editor or JetBrains
+            Find Action for everything else.
+          </li>
+          <li>
+            In browser tools, rely on <strong>Tab</strong>, <strong>Enter</strong>, and <strong>Ctrl/Cmd+F</strong>{" "}
+            before you rely on any site-specific hotkey list.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Bottom Line</h2>
+
+        <p>
+          Efficient JSON formatting is less about memorizing a giant table and more about using the right shortcut in
+          the right environment. VS Code and JetBrains both give you dependable formatting defaults today, while
+          browser-based formatters reward a simpler keyboard workflow built around focus, search, and copy.
         </p>
 
         <p>
-          Whether you&apos;re a casual JSON user or someone who works with complex data structures daily, mastering
-          keyboard shortcuts will significantly boost your productivity. Start with a few essential shortcuts, practice
-          regularly, and gradually expand your repertoire as each set becomes second nature.
-        </p>
-
-        <p>
-          Remember that the goal of shortcuts is not just speed, but also to minimize the cognitive load of tool
-          interaction, allowing you to focus more deeply on the actual JSON data and the problems you&apos;re solving.
+          Shortcut examples in this guide were checked against the current official{" "}
+          <a
+            className="underline"
+            href="https://code.visualstudio.com/docs/languages/json"
+            rel="noreferrer"
+            target="_blank"
+          >
+            VS Code JSON documentation
+          </a>
+          , the{" "}
+          <a
+            className="underline"
+            href="https://code.visualstudio.com/docs/getstarted/keybindings"
+            rel="noreferrer"
+            target="_blank"
+          >
+            VS Code keybindings documentation
+          </a>
+          , and current{" "}
+          <a
+            className="underline"
+            href="https://www.jetbrains.com/help/idea/reformat-and-rearrange-code.html"
+            rel="noreferrer"
+            target="_blank"
+          >
+            JetBrains reformatting guidance
+          </a>
+          .
         </p>
       </div>
     </>

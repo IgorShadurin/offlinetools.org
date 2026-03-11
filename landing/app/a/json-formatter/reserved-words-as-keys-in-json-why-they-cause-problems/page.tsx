@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 
-/**
- * Metadata for JSON formatter article about reserved words as keys in JSON
- */
 export const metadata: Metadata = {
-  title: "Reserved Words as Keys in JSON: Why They Cause Problems | Offline Tools",
+  title: 'Reserved Words in JSON: Are Keys Like "class" and "default" Safe? | Offline Tools',
   description:
-    "Learn why using reserved words as keys in JSON can cause problems during parsing and how to avoid these issues in your applications.",
+    "Reserved words in JSON are valid keys, but they can still cause trouble in typed models, code generators, and framework mappings. Learn what is safe and when to rename fields.",
 };
 
-/**
- * Article page component for reserved words as keys in JSON
- */
 export default function ReservedWordsAsKeysInJsonArticle() {
   return (
     <>
@@ -19,342 +13,227 @@ export default function ReservedWordsAsKeysInJsonArticle() {
 
       <div className="space-y-6">
         <p>
-          While JSON itself is relatively forgiving about what names you can use for keys, the programming languages and
-          environments that process JSON often have limitations. Using reserved words as keys in JSON can lead to
-          unexpected errors and complications when this data is parsed and used in different programming languages. This
-          article explains what reserved words are, why they cause problems, and how to avoid these issues in your JSON
-          data.
+          If you searched for <em>reserved words in JSON</em>, the short answer is this: JSON itself does not reserve
+          object-key words. A payload with keys like <code>&quot;class&quot;</code>, <code>&quot;default&quot;</code>,
+          or <code>&quot;return&quot;</code> is valid JSON. The real trouble starts later, when that data is mapped
+          into language identifiers, generated classes, templates, ORMs, or API frameworks that do have reserved
+          words.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">What Are Reserved Words?</h2>
-        <p>
-          Reserved words (also called keywords) are identifiers that have special meaning in a programming language.
-          They cannot be used as variable names, function names, or in other contexts where identifiers are expected,
-          because they are part of the language&apos;s syntax.
-        </p>
+        <div className="bg-green-50 p-4 rounded-lg dark:bg-green-900/20 my-4 border-l-4 border-green-500">
+          <h2 className="text-xl font-semibold text-green-800 dark:text-green-300">Quick Answer</h2>
+          <ul className="list-disc ml-6 mt-2 space-y-2 text-green-900 dark:text-green-100">
+            <li>
+              JSON object member names are strings, so <code>&quot;class&quot;</code> and similar keys are valid.
+            </li>
+            <li>
+              Problems usually appear in the consumer, not in <code>JSON.parse</code> or the JSON syntax itself.
+            </li>
+            <li>
+              Modern JavaScript can access <code>data.class</code> and <code>data.default</code>.
+            </li>
+            <li>
+              The risky cases are code generation, typed DTOs, object mappers, and framework-specific reserved names.
+            </li>
+          </ul>
+        </div>
 
+        <h2 className="text-2xl font-semibold mt-8">Are Reserved Words Valid in JSON?</h2>
         <p>
-          For example, words like <code>if</code>, <code>else</code>, <code>for</code>, <code>function</code>,
-          <code>return</code>, <code>class</code>, and <code>this</code> are reserved in many programming languages.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">JSON and Reserved Words</h2>
-
-        <p>
-          According to the JSON specification (RFC 8259), there are no restrictions on what strings can be used as
-          object keys. Technically, this means that in pure JSON, you can use any string as a key, including reserved
-          words from programming languages:
+          Yes. The JSON specification treats object member names as strings. That means a JSON parser does not care
+          whether a key looks like a programming-language keyword. This is valid JSON:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">
-            Valid JSON with potentially problematic keys:
-          </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
   "class": "admin",
-  "if": true,
-  "function": "calculateTotal",
+  "default": true,
   "return": 42,
-  "this": "refers to the current object"
+  "package": "starter"
 }`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This JSON is perfectly valid according to the specification, but it may cause problems when used in specific
-            programming environments.
+            A standards-compliant JSON parser should accept this without complaint.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Reserved Words Cause Problems</h2>
-
-        <p>The complications arise not in the JSON format itself but when the JSON data is:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>Parsed into native objects</strong>: When JSON is converted to objects in programming languages
-            </li>
-            <li>
-              <strong>Accessed using dot notation</strong>: Languages that use dot notation to access object properties
-              can have conflicts
-            </li>
-            <li>
-              <strong>Used in generated code</strong>: Auto-generated code might fail to compile if it includes reserved
-              words
-            </li>
-            <li>
-              <strong>Processed by certain frameworks</strong>: Some frameworks and libraries apply additional
-              restrictions
-            </li>
-          </ul>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">1. Problems with Dot Notation</h3>
-        <p>One of the most common issues occurs when using dot notation to access properties:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">JavaScript example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Parse valid JSON with reserved words as keys
-const data = JSON.parse('{"class": "admin", "if": true, "function": "calculateTotal"}');
-
-// This will cause a syntax error!
-console.log(data.class);     // Error: unexpected token: class
-console.log(data.if);        // Error: unexpected token: if
-console.log(data.function);  // Error: unexpected token: function`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">2. Framework and Library Restrictions</h3>
-        <p>Many frameworks and libraries that work with JSON impose additional restrictions:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>GraphQL</strong>: Field names cannot start with double underscores (__) as these are reserved for
-              internal use
-            </li>
-            <li>
-              <strong>MongoDB</strong>: Field names cannot contain dollar signs ($) or dots (.)
-            </li>
-            <li>
-              <strong>Database ORMs</strong>: Many ORMs have restrictions on field names that map to database columns
-            </li>
-            <li>
-              <strong>Template engines</strong>: Various template engines may have reserved words for their own syntax
-            </li>
-          </ul>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">3. Language-Specific Issues</h3>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="mb-4">
-            <h4 className="font-medium">JavaScript:</h4>
-            <ul className="list-disc ml-6">
-              <li>
-                Cannot use dot notation with reserved words like <code>class</code>, <code>for</code>, <code>if</code>
-              </li>
-              <li>
-                Must use bracket notation: <code>data[&quot;class&quot;]</code> instead of <code>data.class</code>
-              </li>
-            </ul>
-          </div>
-
-          <div className="mb-4">
-            <h4 className="font-medium">Python:</h4>
-            <ul className="list-disc ml-6">
-              <li>
-                Reserved words like <code>class</code>, <code>if</code>, <code>else</code> as keys require dictionary
-                access (<code>data[&quot;class&quot;]</code>)
-              </li>
-              <li>
-                When creating objects with these keys, attribute access (<code>data.class</code>) won&apos;t work
-              </li>
-            </ul>
-          </div>
-
-          <div className="mb-4">
-            <h4 className="font-medium">Java:</h4>
-            <ul className="list-disc ml-6">
-              <li>When deserializing JSON to Java objects, reserved words can&apos;t be used as field names</li>
-              <li>Requires special annotations or naming strategies to handle such fields</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-medium">TypeScript:</h4>
-            <ul className="list-disc ml-6">
-              <li>When defining interfaces for JSON objects, reserved words require special syntax</li>
-              <li>
-                Must use string literals in interface definitions: <code>{'{ "class": string }'}</code>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Best Practices to Avoid Problems</h2>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>Avoid using reserved words as keys</strong>: The simplest solution is to not use reserved words
-              from major programming languages
-            </li>
-            <li>
-              <strong>Use alternative naming conventions</strong>: Instead of <code>&quot;class&quot;</code>, use{" "}
-              <code>&quot;className&quot;</code> or <code>&quot;classType&quot;</code>
-            </li>
-            <li>
-              <strong>Follow camelCase or snake_case consistently</strong>: This helps avoid many reserved words
-            </li>
-            <li>
-              <strong>Use prefixes</strong>: Add descriptive prefixes like <code>&quot;user_class&quot;</code> instead
-              of just <code>&quot;class&quot;</code>
-            </li>
-            <li>
-              <strong>Know your target languages</strong>: Be aware of reserved words in the languages that will process
-              your JSON
-            </li>
-          </ul>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Common Reserved Words to Avoid</h2>
-
+        <h2 className="text-2xl font-semibold mt-8">Why They Still Cause Problems in Real Projects</h2>
         <p>
-          Here&apos;s a list of common reserved words across multiple programming languages that are best avoided as
-          JSON keys:
+          The key question is not whether the JSON is valid. It is whether the next tool in your pipeline treats the
+          key as a plain string or tries to turn it into an identifier with naming rules of its own.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 grid grid-cols-3 gap-4">
-          <div>
-            <ul className="list-disc ml-6">
-              <li>
-                <code>abstract</code>
-              </li>
-              <li>
-                <code>await</code>
-              </li>
-              <li>
-                <code>break</code>
-              </li>
-              <li>
-                <code>case</code>
-              </li>
-              <li>
-                <code>catch</code>
-              </li>
-              <li>
-                <code>class</code>
-              </li>
-              <li>
-                <code>const</code>
-              </li>
-              <li>
-                <code>continue</code>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <ul className="list-disc ml-6">
-              <li>
-                <code>debugger</code>
-              </li>
-              <li>
-                <code>default</code>
-              </li>
-              <li>
-                <code>delete</code>
-              </li>
-              <li>
-                <code>do</code>
-              </li>
-              <li>
-                <code>else</code>
-              </li>
-              <li>
-                <code>enum</code>
-              </li>
-              <li>
-                <code>export</code>
-              </li>
-              <li>
-                <code>extends</code>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <ul className="list-disc ml-6">
-              <li>
-                <code>false</code>
-              </li>
-              <li>
-                <code>finally</code>
-              </li>
-              <li>
-                <code>for</code>
-              </li>
-              <li>
-                <code>function</code>
-              </li>
-              <li>
-                <code>if</code>
-              </li>
-              <li>
-                <code>implements</code>
-              </li>
-              <li>
-                <code>import</code>
-              </li>
-              <li>
-                <code>in</code>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Working with Reserved Words When Necessary</h2>
-
+        <h3 className="text-xl font-semibold mt-6">1. Code Generation and Typed Models</h3>
         <p>
-          Sometimes you might need to work with JSON that already contains reserved words as keys. Here are techniques
-          to handle this:
+          This is the most common failure point. If JSON is converted into Java, Kotlin, C#, Swift, Go, or Python
+          model types, some keys cannot be used directly as field or property names. A generator may fail, escape the
+          name awkwardly, or require an alias.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">1. Use Bracket Notation</h3>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium">Typical fix: keep the wire format, rename internally</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre>
+              {`public class UserDto {
+  @JsonProperty("class")
+  public String className;
+
+  @JsonProperty("default")
+  public boolean defaultValue;
+}`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            The JSON stays the same, but your application code uses safe member names.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">2. Access Syntax Is Not the Same Across Languages</h3>
+        <p>
+          Older articles often claim that JavaScript cannot read reserved-word properties with dot notation. That is
+          outdated. In modern JavaScript, keyword-like property names such as <code>class</code> and{" "}
+          <code>default</code> work. Bracket notation is still required when the key is not a valid identifier, such as{" "}
+          <code>&quot;user-name&quot;</code> or <code>&quot;first name&quot;</code>.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+          <h4 className="text-lg font-medium text-blue-700 dark:text-blue-300">Modern JavaScript reality check</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
             <pre>
-              {`// JavaScript example
-const data = JSON.parse('{"class": "admin", "if": true}');
+              {`const data = JSON.parse('{"class":"admin","default":true,"user-name":"sam"}');
 
-// Use bracket notation instead of dot notation
-console.log(data["class"]); // Works: "admin"
-console.log(data["if"]);    // Works: true`}
+console.log(data.class);         // "admin"
+console.log(data.default);       // true
+console.log(data["user-name"]);  // "sam"`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">2. Property Mapping</h3>
+        <h3 className="text-xl font-semibold mt-6">3. Framework and Schema Boundaries Can Reserve Names</h3>
+        <p>
+          Even when JSON is valid, downstream systems may reserve certain names or prefixes for their own metadata.
+          This shows up in API layers, template engines, database mappers, and serialization frameworks. The JSON key
+          is not wrong; it is just inconvenient in that specific environment.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Map problematic property names to safe names
-function safeObject(jsonObject) {
-  const mappings = {
-    "class": "className",
-    "if": "condition",
-    "function": "functionName"
-  };
-  
-  const result = {};
-  for (const key in jsonObject) {
-    const safeKey = mappings[key] || key;
-    result[safeKey] = jsonObject[key];
-  }
-  
-  return result;
-}
+          <ul className="list-disc ml-6 space-y-2">
+            <li>
+              API and schema tools may reserve special prefixes or internal metadata fields.
+            </li>
+            <li>
+              ORMs and SQL layers can stumble over names that match SQL keywords such as <code>order</code>,{" "}
+              <code>group</code>, or <code>default</code>.
+            </li>
+            <li>
+              Code generators often need explicit aliases when JSON keys overlap with language keywords.
+            </li>
+          </ul>
+        </div>
 
-// Usage
-const safeData = safeObject(data);
-console.log(safeData.className);  // "admin"
-console.log(safeData.condition);  // true`}
-            </pre>
+        <h2 className="text-2xl font-semibold mt-8">Language-Specific Notes</h2>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 space-y-4">
+          <div>
+            <h3 className="text-lg font-medium">JavaScript and TypeScript</h3>
+            <p className="mt-1">
+              Parsing is fine. Keyword-like property names are usually fine too. The bigger issue is consistency when
+              you generate types or want ergonomic property access across many keys. For keys that are not valid
+              identifiers, use quoted property names in types and bracket notation at runtime.
+            </p>
           </div>
+
+          <div>
+            <h3 className="text-lg font-medium">Python</h3>
+            <p className="mt-1">
+              Plain dictionaries handle any string key. Problems start when you convert JSON into objects, dataclasses,
+              or model classes where <code>class</code> or <code>from</code> would be invalid attribute names.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium">Java, Kotlin, C#, Swift</h3>
+            <p className="mt-1">
+              These ecosystems commonly map JSON into DTOs or structs. Reserved words often need annotation-based
+              aliases so the external JSON name stays stable while the internal field name stays legal.
+            </p>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Safer Naming Patterns</h2>
+        <p>
+          If you control the schema, the best fix is usually to choose names that communicate meaning without colliding
+          with language syntax.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <h3 className="text-lg font-medium">Awkward Key</h3>
+              <ul className="list-disc ml-6 mt-2 space-y-1">
+                <li>
+                  <code>class</code>
+                </li>
+                <li>
+                  <code>default</code>
+                </li>
+                <li>
+                  <code>return</code>
+                </li>
+                <li>
+                  <code>new</code>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-medium">Safer Alternative</h3>
+              <ul className="list-disc ml-6 mt-2 space-y-1">
+                <li>
+                  <code>className</code>, <code>userRole</code>
+                </li>
+                <li>
+                  <code>defaultValue</code>, <code>isDefault</code>
+                </li>
+                <li>
+                  <code>returnValue</code>, <code>result</code>
+                </li>
+                <li>
+                  <code>isNew</code>, <code>createdRecently</code>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">If You Cannot Rename the Incoming JSON</h2>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc ml-6 space-y-2">
+            <li>
+              Parse the JSON normally and keep the raw key names at the API boundary.
+            </li>
+            <li>
+              Map external names to safe internal names once, close to your deserializer or validation layer.
+            </li>
+            <li>
+              Document the aliasing clearly so serialization back to JSON remains predictable.
+            </li>
+            <li>
+              Add a test that round-trips the payload, especially if code generation is involved.
+            </li>
+          </ul>
         </div>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
+          <h2 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Bottom Line</h2>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            While JSON itself allows any string as a key, it&apos;s best to design your JSON with the destination
-            language and framework in mind. This preventative approach saves troubleshooting time and makes your JSON
-            more universally usable across different programming environments.
+            Reserved words are not a JSON validity problem. They are a portability and tooling problem. If a payload
+            only needs to be valid JSON, keys like <code>&quot;class&quot;</code> are fine. If that payload will be
+            turned into typed code, templates, database fields, or framework models, aliasing or safer naming will save
+            time later.
           </p>
         </div>
       </div>

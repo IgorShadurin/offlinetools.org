@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Service Worker Implementation for Offline JSON Processing | Offline Tools",
   description:
-    "Learn how to use Service Workers to cache and serve JSON data offline, enabling robust web applications with offline capabilities.",
+    "Build a service worker that caches JSON API responses for offline use, handles updates safely, and avoids common stale-data bugs.",
 };
 
 export default function ServiceWorkerOfflineJsonArticle() {
@@ -13,271 +13,261 @@ export default function ServiceWorkerOfflineJsonArticle() {
 
       <div className="space-y-6">
         <p>
-          Building web applications that work reliably even without a stable internet connection is a key goal for
-          modern development. Service Workers are a powerful browser technology that makes this possible, particularly
-          for handling data like JSON. By implementing Service Workers, you can cache JSON responses, ensuring your
-          application can still display or process data when the user is offline.
+          If your app depends on JSON responses, a service worker can keep read operations working when the network
+          drops. The practical pattern in 2026 is still the same: cache JSON `GET` responses, return cached data when
+          fetches fail, and keep user-created offline changes in IndexedDB instead of trying to treat the Cache API as a
+          database.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Understanding Service Workers</h2>
         <p>
-          Service Workers are programmable proxy servers that sit between the browser and the network. They can
-          intercept network requests, manage a cache of responses, and even handle push notifications. Unlike
-          traditional JavaScript, they run on a separate thread, meaning they don&apos;t block the main browser process
-          and can even work when the application&apos;s page is closed.
+          The important constraint is architectural, not syntactic. Service workers run in a secure context, have no
+          access to the DOM or `localStorage`, and may be stopped and restarted between events. That means your offline
+          JSON workflow should be stateless, explicit about which requests are cacheable, and deliberate about cache
+          invalidation.
         </p>
 
+        <h2 className="text-2xl font-semibold mt-8">What A Service Worker Should Handle</h2>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Key Service Worker Characteristics:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Run in the background, independent of the web page</li>
-            <li>Can intercept network requests and responses</li>
-            <li>Manage a cache via the Cache Storage API</li>
-            <li>Enable offline functionality</li>
-            <li>Must be served over HTTPS (for security)</li>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Cache `GET` requests for JSON endpoints that users need when offline.</li>
+            <li>Serve cached JSON immediately when the network is unavailable.</li>
+            <li>Refresh cached responses when the network succeeds.</li>
+            <li>Version caches so schema changes do not leave stale payloads behind.</li>
+            <li>Leave `POST`, `PUT`, and `DELETE` flows to IndexedDB-backed queues or explicit retry UI.</li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Use Service Workers for Offline JSON?</h2>
+        <h2 className="text-2xl font-semibold mt-8">Pick The Right Caching Strategy</h2>
         <p>
-          For applications that heavily rely on fetching JSON data from APIs (e.g., displaying product lists, user
-          profiles, configuration data), losing the network connection can render the application unusable. Service
-          Workers provide a mechanism to cache previously fetched JSON responses. When the user is offline, the Service
-          Worker can intercept the fetch request and return the cached JSON instead of failing.
+          For JSON APIs, the best default is usually <span className="font-medium">network first, cache fallback</span>.
+          Users get fresh data when online, but previously seen responses still work offline. Use other strategies only
+          when the data shape and freshness requirements justify them.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Benefits for Offline JSON:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Enables access to previously viewed data offline</li>
-            <li>Improves performance by serving cached data instantly</li>
-            <li>Reduces reliance on network availability</li>
-            <li>Provides a better user experience in flaky network conditions</li>
+          <ul className="list-disc pl-6 space-y-3">
+            <li>
+              <span className="font-medium">Network first:</span> best for profiles, dashboards, recent activity, or
+              anything that should be current when a connection exists.
+            </li>
+            <li>
+              <span className="font-medium">Cache first:</span> best for versioned reference data such as schemas,
+              locale bundles, or static configuration JSON.
+            </li>
+            <li>
+              <span className="font-medium">Stale while revalidate:</span> useful when instant rendering matters more
+              than absolute freshness, such as read-heavy lists or search suggestions.
+            </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Implementation Steps</h2>
-
-        <h3 className="text-xl font-semibold mt-6">1. Register the Service Worker</h3>
+        <h2 className="text-2xl font-semibold mt-8">Minimal Production-Safe Implementation</h2>
         <p>
-          The first step is to register your Service Worker file (commonly named `sw.js`) from your main web page
-          script. This is typically done after the page loads, checking for browser support.
+          The example below keeps the scope tight. It only intercepts `GET` requests, only caches responses that are
+          actually JSON, and returns a predictable offline payload when there is no cached copy yet.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6">1. Register The Worker</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('Service Worker registered:', registration);
-      })
-      .catch(error => {
-        console.error('Service Worker registration failed:', error);
+              {`if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const registration = await navigator.serviceWorker.register("/sw.js", {
+        scope: "/",
       });
+
+      console.log("Service worker registered", registration.scope);
+    } catch (error) {
+      console.error("Service worker registration failed", error);
+    }
   });
 }`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This code snippet registers the service worker file located at the root of your application.
+            Registration must happen on HTTPS in production. `localhost` is allowed for local development.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">2. Install and Cache Initial Assets</h3>
-        <p>
-          Inside your `sw.js` file, the `install` event is the perfect place to open a cache and add static assets (like
-          your core HTML, CSS, JS, and maybe some initial JSON data) to it.
-        </p>
+        <h3 className="text-xl font-semibold mt-6">2. Cache JSON With Network-First Logic</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`const CACHE_NAME = 'json-cache-v1';
-const URLS_TO_CACHE = [
-  '/',
-  '/index.html', // Or your app's entry point
-  '/styles.css',
-  '/script.js',
-  // Add URLs of JSON data you want to pre-cache, e.g., '/api/initial-data'
-];
+              {`const APP_CACHE = "app-shell-v3";
+const JSON_CACHE = "json-data-v3";
+const APP_SHELL = ["/", "/offline.html"];
 
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(URLS_TO_CACHE);
-      })
+    (async () => {
+      const cache = await caches.open(APP_CACHE);
+      await cache.addAll(APP_SHELL);
+      await self.skipWaiting();
+    })()
   );
-});`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            The `install` event caches essential files when the service worker is first installed.
-          </p>
-        </div>
+});
 
-        <h3 className="text-xl font-semibold mt-6">3. Activate and Clean Up Old Caches</h3>
-        <p>
-          The `activate` event is where you handle tasks like cleaning up older versions of caches, ensuring that only
-          the current version&apos;s cache is used.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    (async () => {
+      const keep = new Set([APP_CACHE, JSON_CACHE]);
+      const cacheNames = await caches.keys();
+
+      await Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
+          if (!keep.has(cacheName)) {
             return caches.delete(cacheName);
           }
+
+          return Promise.resolve(false);
         })
       );
-    })
+
+      await self.clients.claim();
+    })()
   );
-});`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">This code removes any caches that don&apos;t match the current `CACHE_NAME`.</p>
-        </div>
+});
 
-        <h3 className="text-xl font-semibold mt-6">4. Intercept and Cache JSON Requests</h3>
-        <p>
-          The core logic for offline JSON handling lives in the `fetch` event listener. Here, you intercept requests,
-          check the cache, and decide how to respond based on network availability and caching strategy.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`self.addEventListener('fetch', (event) => {
-  // Intercept only specific JSON API requests
-  const jsonUrlPattern = /\\/api\\/.*\\.json$/; // Example: matches /api/data.json
+function isOfflineJsonRequest(request) {
+  if (request.method !== "GET") {
+    return false;
+  }
 
-  if (jsonUrlPattern.test(event.request.url)) {
-    event.respondWith(
-      caches.match(event.request)
-        .then((response) => {
-          // Cache hit - return response
-          if (response) {
-            console.log('Serving from cache:', event.request.url);
-            return response;
-          }
+  const url = new URL(request.url);
 
-          // No cache hit - fetch from network
-          console.log('Fetching from network:', event.request.url);
-          return fetch(event.request)
-            .then((networkResponse) => {
-              // Check if we received a valid response
-              if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-                return networkResponse;
-              }
+  return url.origin === self.location.origin && url.pathname.startsWith("/api/");
+}
 
-              // IMPORTANT: Clone the response. A response is a stream
-              // and can only be consumed once. We consume the clone to cache it.
-              const responseToCache = networkResponse.clone();
+async function networkFirstJson(request) {
+  const cache = await caches.open(JSON_CACHE);
 
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, responseToCache);
-                });
+  try {
+    const response = await fetch(request);
+    const contentType = response.headers.get("content-type") || "";
 
-              return networkResponse;
-            })
-            .catch(() => {
-              // Network request failed (offline)
-              // You could return a fallback response here if needed, e.g., a default JSON structure
-              console.log('Network fetch failed for:', event.request.url, ' - trying cache again');
-              // Fallback to cache (already done by initial caches.match, but good practice to handle explicitly if no initial match)
-              return caches.match(event.request); // Retry cache match in catch block
-            });
-        })
+    if (response.ok && contentType.includes("application/json")) {
+      await cache.put(request, response.clone());
+    }
+
+    return response;
+  } catch {
+    const cached = await cache.match(request);
+
+    if (cached) {
+      return cached;
+    }
+
+    return new Response(
+      JSON.stringify({
+        offline: true,
+        message: "No cached JSON is available for this request yet.",
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "X-Offline-Fallback": "true",
+        },
+      }
     );
-  } else {
-    // For other requests (HTML, CSS, etc.), just fetch from network
-    event.respondWith(fetch(event.request));
+  }
+}
+
+self.addEventListener("fetch", (event) => {
+  if (isOfflineJsonRequest(event.request)) {
+    event.respondWith(networkFirstJson(event.request));
+    return;
+  }
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(async () => {
+        const cache = await caches.open(APP_CACHE);
+        return cache.match("/offline.html");
+      })
+    );
   }
 });`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This Service Worker attempts to serve specific JSON requests from the cache first. If not found, it fetches
-            from the network, caches the successful response, and then returns it. If the network fails, it falls back
-            to the cache (though the initial `caches.match` handles this for already cached items). You might refine the
-            `catch` block to return a custom offline JSON response for URLs that weren&apos;t cached.
+            This avoids a common mistake in older snippets: rejecting valid JSON responses just because they are CORS
+            responses instead of `basic` same-origin responses.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Caching Strategies for JSON</h2>
-        <p>The `fetch` handler logic defines your caching strategy. Common strategies suitable for JSON include:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc pl-6 space-y-3">
-            <li>
-              <span className="font-medium">Cache Only:</span> Always serve from cache. Only works for pre-cached data
-              or data that is never updated.
-            </li>
-            <li>
-              <span className="font-medium">Network Only:</span> Always fetch from the network. No offline support.
-            </li>
-            <li>
-              <span className="font-medium">Cache Falling Back to Network:</span> Try cache first. If not found, fetch
-              from network. (Implemented in the example above for JSON). Good for data that doesn&apos;t change
-              frequently.
-            </li>
-            <li>
-              <span className="font-medium">Network Falling Back to Cache:</span> Try network first. If network fails,
-              try cache. Good for data that needs to be up-to-date when online, but needs offline access.
-            </li>
-            <li>
-              <span className="font-medium">Cache then Network:</span> Serve from cache immediately, then fetch from the
-              network and update the page or cache with the fresh data. Useful for displaying content quickly while
-              updating it in the background. Requires client-side logic to handle two responses.
-            </li>
-          </ul>
-          <p className="mt-2 text-sm">
-            Choose the strategy that best fits the update frequency and criticality of your JSON data.
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Challenges and Considerations</h2>
+        <h2 className="text-2xl font-semibold mt-8">Why This Pattern Holds Up Better</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Cache Invalidation:</span> Knowing when and how to update cached JSON data is
-            crucial. Strategies include versioning caches (`json-cache-v1`, `json-cache-v2`), using
-            stale-while-revalidate (cache first, then update cache from network), or sending push notifications to
-            trigger updates.
+            <span className="font-medium">It only caches `GET` requests.</span> Cache Storage is a good fit for
+            response reuse, not for mutating request workflows.
           </li>
           <li>
-            <span className="font-medium">Offline Data Persistence:</span> Service Worker caching is suitable for JSON
-            responses. For persistent, structured offline data (like user-generated content), consider IndexedDB
-            alongside Service Workers.
+            <span className="font-medium">It verifies content type.</span> A path like `/api/` is not enough if the
+            backend can also return HTML error pages or redirects.
           </li>
           <li>
-            <span className="font-medium">Request Payloads:</span> Caching `POST`, `PUT`, or `DELETE` requests (which
-            often contain JSON in the body) is more complex than caching `GET` requests. Caching `GET` responses is the
-            most common and straightforward use case for offline JSON.
+            <span className="font-medium">It versions caches explicitly.</span> When your JSON schema changes, bump the
+            cache name and remove the old entries in `activate`.
           </li>
           <li>
-            <span className="font-medium">Debugging:</span> Debugging Service Workers can be tricky. Use browser
-            developer tools (Application tab &gt; Service Workers and Cache Storage) extensively.
-          </li>
-          <li>
-            <span className="font-medium">Scope:</span> The Service Worker&apos;s scope determines what parts of your
-            origin it controls. By default, it&apos;s the directory where `sw.js` is located and its subdirectories.
+            <span className="font-medium">It gives clients a predictable fallback.</span> Returning a defined offline
+            JSON object is easier to handle than throwing an opaque network error.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8">Offline Writes Need A Different Design</h2>
         <p>
-          Implementing Service Workers for offline JSON processing significantly enhances the resilience and performance
-          of your web application. By strategically caching JSON data and handling fetch requests, you can provide a
-          smoother experience for users, regardless of their network connectivity. While there are challenges like cache
-          management, the benefits of offline capabilities make Service Workers an essential tool for modern web
-          development. Start by implementing a basic cache-first strategy for critical read-only JSON data and expand as
-          needed.
+          Service workers are excellent for cached reads, but they are not enough for durable offline writes. If users
+          can edit JSON, create records, or submit forms while offline, store those pending actions in IndexedDB and
+          replay them when connectivity returns. Background Sync can help in some browsers, but it is not universal
+          enough to be your only retry path, so a visible retry state in the app is still the safer choice.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Common Failure Modes</h2>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <span className="font-medium">The worker registers, but fetches are not intercepted:</span> the first page
+              load is often not controlled yet. Reload once, or use `skipWaiting()` and `clients.claim()` carefully.
+            </li>
+            <li>
+              <span className="font-medium">The worker never controls the target route:</span> scope is path-based. A
+              worker at `/app/sw.js` will not control `/`.
+            </li>
+            <li>
+              <span className="font-medium">Offline responses never match:</span> cache keys are exact. Query strings,
+              auth tokens in URLs, and locale parameters create different entries.
+            </li>
+            <li>
+              <span className="font-medium">Data stays stale after deploy:</span> browsers update service workers on
+              navigation and other lifecycle checks, but old clients can keep the previous worker alive. Bump cache
+              names when response formats change.
+            </li>
+            <li>
+              <span className="font-medium">Critical data disappears:</span> cached responses are storage-managed by the
+              browser and can be evicted under pressure. Keep essential offline state in IndexedDB as well.
+            </li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Debugging Checklist</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Check the browser&apos;s Application panel for the active worker, scope, and cache contents.</li>
+          <li>Test with offline mode enabled in DevTools instead of only disconnecting Wi-Fi.</li>
+          <li>Log cache hits, network hits, and fallback responses so stale-data bugs are obvious.</li>
+          <li>Verify that your API returns proper CORS headers if the JSON comes from a different origin.</li>
+          <li>Keep offline responses structurally close to live responses so UI code does not fork unnecessarily.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Bottom Line</h2>
+        <p>
+          A good service worker implementation for offline JSON processing is intentionally narrow: cache the read
+          requests that matter, choose a freshness strategy per endpoint, and treat offline writes as a separate storage
+          problem. If you do that, users can keep reading and processing JSON even when the connection disappears,
+          without turning your cache layer into an unpredictable source of stale data.
         </p>
       </div>
     </>

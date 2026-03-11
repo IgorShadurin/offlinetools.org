@@ -7,7 +7,7 @@ import {
   Code,
   Layers,
   Workflow,
-  Hammer, // Using Hammer instead of Tool
+  Hammer,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
@@ -15,8 +15,79 @@ import {
 export const metadata: Metadata = {
   title: "Continuous Validation of JSON Configuration Files | Offline Tools",
   description:
-    "Learn why and how to implement continuous validation for your JSON configuration files, covering syntax, schema, and semantic checks.",
+    "Set up continuous validation for JSON configuration files with JSON Schema, Ajv, editor feedback, CI checks, and runtime safeguards.",
 };
+
+const exampleConfig = `{
+  "serviceName": "auth-api",
+  "port": 8080,
+  "logLevel": "info",
+  "featureFlags": {
+    "selfServiceSignup": true
+  },
+  "auth": {
+    "enabled": true,
+    "issuer": "https://login.example.com/",
+    "audience": "auth-api"
+  }
+}`;
+
+const schemaExample = `{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "serviceName": { "type": "string", "minLength": 1 },
+    "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+    "logLevel": { "enum": ["debug", "info", "warn", "error"] },
+    "featureFlags": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "issuer": { "type": "string", "format": "uri" },
+        "audience": { "type": "string", "minLength": 1 }
+      },
+      "required": ["enabled", "issuer"]
+    }
+  },
+  "required": ["serviceName", "port", "logLevel", "auth"]
+}`;
+
+const validateScriptExample = `{
+  "scripts": {
+    "validate:config": "ajv validate -s config/schema.json -d \\"config/*.json\\" --spec=draft2020 && node scripts/validate-config-semantics.mjs"
+  }
+}`;
+
+const runtimeValidationExample = `import fs from "node:fs";
+import Ajv2020 from "ajv/dist/2020";
+import addFormats from "ajv-formats";
+import schema from "./config.schema.json";
+
+const ajv = new Ajv2020({ allErrors: true, strict: true });
+addFormats(ajv);
+
+const validate = ajv.compile(schema);
+
+export function loadConfig(configPath: string) {
+  const text = fs.readFileSync(configPath, "utf8");
+  const config = JSON.parse(text);
+
+  if (!validate(config)) {
+    throw new Error(ajv.errorsText(validate.errors, { separator: "\\n" }));
+  }
+
+  if (config.auth.enabled && !config.auth.audience) {
+    throw new Error("auth.audience is required when auth.enabled is true");
+  }
+
+  return config;
+}`;
 
 export default function JsonConfigValidationArticle() {
   return (
@@ -28,410 +99,208 @@ export default function JsonConfigValidationArticle() {
 
       <div className="space-y-6">
         <p>
-          Configuration files are the unsung heroes of modern applications. They dictate behavior, connect to services,
-          and customize environments. JSON, being a lightweight and human-readable format, is a popular choice for these
-          configurations. However, even a single misplaced comma or an incorrectly typed value in a complex JSON file
-          can lead to application crashes, unexpected behavior, or subtle bugs that are hard to trace. This is where
-          continuous validation comes in.
+          Continuous validation means your JSON configuration files are checked automatically in the editor, before
+          commit, in CI, and again when the app starts. The goal is simple: a broken config should fail fast long
+          before it becomes a production incident.
+        </p>
+        <p>
+          The most effective setup is layered. Parse the file to catch invalid JSON, validate it against a schema to
+          catch missing or mistyped fields, then run a small set of semantic checks for rules your schema cannot express
+          cleanly, such as cross-field dependencies or environment-specific constraints.
         </p>
         <p>
           <AlertCircle className="w-5 h-5 inline-block mr-1 text-yellow-600" />
-          <strong>Continuous validation</strong> means checking your configuration files automatically and frequently
-          throughout the development lifecycle, not just when the application starts or when a problem arises. This
-          proactive approach significantly reduces the risk of configuration-related issues.
+          If humans edit these files directly, the biggest reliability gains usually come from two rules: make the
+          schema strict and run the exact same validation command locally and in CI.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <FileJson className="w-7 h-7 mr-2 text-gray-600" /> Why Validate JSON Configurations?
+          <Layers className="w-7 h-7 mr-2 text-gray-600" /> What to Validate Continuously
         </h2>
-        <p>
-          While JSON&#x27;s structure is simple, its flexibility allows for complex nesting and varied data types. A
-          configuration file often adheres to an implicit (or explicit) structure expected by the application that
-          consumes it.
-        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Reduces Deployment Risks:</strong> Catching config errors before deployment prevents production
-            outages.
+            <strong>Syntax:</strong> Catch malformed JSON immediately. A missing comma, trailing comma, or unescaped
+            quote should never make it into a branch.
           </li>
           <li>
-            <strong>Improves Developer Productivity:</strong> Developers get faster feedback on incorrect
-            configurations, spending less time debugging runtime errors caused by bad data.
+            <strong>Schema:</strong> Enforce required fields, correct types, enum values, and disallow stray keys that
+            often come from typos.
           </li>
           <li>
-            <strong>Enhances Collaboration:</strong> A clear validation process and schema act as documentation, helping
-            team members understand the expected structure.
+            <strong>Semantic rules:</strong> Check things like allowed hostnames, file-path existence, mutually
+            exclusive options, or feature-flag dependencies.
           </li>
           <li>
-            <strong>Increases Reliability:</strong> Ensures your application starts and runs consistently across
-            different environments.
+            <strong>Runtime loading:</strong> Validate on startup so environment-specific overrides and deployment-time
+            mistakes still fail safely.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Layers className="w-7 h-7 mr-2 text-gray-600" /> Types of Validation
+          <ShieldCheck className="w-7 h-7 mr-2 text-gray-600" /> Choose Your JSON Schema Dialect Deliberately
         </h2>
-        <p>Validation isn&#x27;t a single step; it involves checking different aspects of the configuration file.</p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Code className="w-6 h-6 mr-2 text-gray-600" /> 1. Syntax Validation
-        </h3>
         <p>
-          This is the most basic check: Is the file well-formed JSON? Does it follow the fundamental rules like proper
-          nesting, correct use of commas, quotes, colons, brackets, and braces?
+          JSON Schema draft <code>2020-12</code> is the current specification release, so it is the right choice when
+          you need modern keywords such as <code>prefixItems</code>, <code>unevaluatedProperties</code>, or{" "}
+          <code>$dynamicRef</code>.
+        </p>
+        <p>
+          But tooling compatibility still matters. VS Code&apos;s built-in JSON support fully covers older drafts more
+          consistently and only has limited support for <code>2019-09</code> and <code>2020-12</code>. Ajv also
+          treats <code>draft-07</code> as its default and requires a separate <code>2020</code> entry point if you
+          adopt the newer draft. In practice, teams often choose:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Draft 2020-12:</strong> Best when you need newer schema features and your validators are already
+            standardized in CI.
+          </li>
+          <li>
+            <strong>Draft-07:</strong> Best when broad editor compatibility and simpler validator setup matter more
+            than the newest keywords.
+          </li>
+        </ul>
+        <p>
+          The important part is consistency. Do not mix schema drafts casually across the same validation path or you
+          will end up debugging the tooling instead of the config.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <FileJson className="w-7 h-7 mr-2 text-gray-600" /> Start with a Strict Contract
+        </h2>
+        <p>
+          Treat the configuration file as an API contract. Most weak validation setups fail because the schema is too
+          permissive. A good baseline is to require the keys you actually need and set{" "}
+          <code>additionalProperties: false</code> at every object boundary where stray keys should be rejected.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Valid JSON Syntax:</h4>
+          <h3 className="text-lg font-medium mb-2">Example config:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                &#x7b;
-                <br />
-                &nbsp;&nbsp;&quot;serviceName&quot;: &quot;auth-api&quot;,
-                <br />
-                &nbsp;&nbsp;&quot;port&quot;: 3000,
-                <br />
-                &nbsp;&nbsp;&quot;enabled&quot;: true,
-                <br />
-                &nbsp;&nbsp;&quot;features&quot;: [&quot;user-management&quot;, &quot;authentication&quot;]
-                <br />
-                &#x7d;
-              </code>
+            <pre className="whitespace-pre-wrap">
+              <code>{exampleConfig}</code>
             </pre>
           </div>
-          <h4 className="text-lg font-medium mb-2 mt-4">Invalid JSON Syntax (Missing comma):</h4>
+          <h3 className="text-lg font-medium mb-2 mt-4">Matching schema:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                &#x7b;
-                <br />
-                &nbsp;&nbsp;&quot;serviceName&quot;: &quot;auth-api&quot;{" "}
-                <span className="text-red-500">{/* // Missing comma here */}</span>
-                <br />
-                &nbsp;&nbsp;&quot;port&quot;: 3000
-                <br />
-                &#x7d;
-              </code>
+            <pre className="whitespace-pre-wrap">
+              <code>{schemaExample}</code>
             </pre>
           </div>
         </div>
         <p>
-          Syntax validation is usually performed by built-in JSON parsers (<code>JSON.parse()</code> in
-          JavaScript/TypeScript) or dedicated linters. It&#x27;s the first line of defense.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <FileJson className="w-6 h-6 mr-2 text-gray-600" /> 2. Schema Validation (Structural/Type Validation)
-        </h3>
-        <p>Does the JSON data conform to a predefined structure? This involves checking:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Are the expected keys present? (Required fields)</li>
-          <li>Are the values of the correct data types (string, number, boolean, array, object)?</li>
-          <li>Are nested objects and arrays structured correctly?</li>
-          <li>Are there unexpected, extraneous fields?</li>
-        </ul>
-        <p>
-          JSON Schema is a powerful standard for describing the structure of JSON data. You define a schema that
-          specifies what your configuration should look like.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example JSON Schema for the config above:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                &#x7b;
-                <br />
-                &nbsp;&nbsp;&quot;type&quot;: &quot;object&quot;,
-                <br />
-                &nbsp;&nbsp;&quot;properties&quot;: &#x7b;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;serviceName&quot;: &#x7b; &quot;type&quot;: &quot;string&quot; &#x7d;,
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;port&quot;: &#x7b; &quot;type&quot;: &quot;number&quot;,
-                &quot;minimum&quot;: 1024, &quot;maximum&quot;: 65535 &#x7d;,
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;enabled&quot;: &#x7b; &quot;type&quot;: &quot;boolean&quot; &#x7d;,
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;features&quot;: &#x7b;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;array&quot;,
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;items&quot;: &#x7b; &quot;type&quot;: &quot;string&quot;
-                &#x7d;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&#x7d;
-                <br />
-                &nbsp;&nbsp;&#x7d;,
-                <br />
-                &nbsp;&nbsp;&quot;required&quot;: [&quot;serviceName&quot;, &quot;port&quot;]
-                <br />
-                &#x7d;
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          Tools like{" "}
-          <a href="https://ajv.js.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-            AJV (Another JSON Schema Validator)
-          </a>
-          (for JavaScript/TypeScript), <code>jsonschema</code> (for Python), and others exist in various languages to
-          perform this type of validation programmatically.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <ShieldCheck className="w-6 h-6 mr-2 text-gray-600" /> 3. Semantic/Logical Validation
-        </h3>
-        <p>
-          This goes beyond structure and types to check if the values make sense in the application&#x27;s context. This
-          type of validation often requires custom code.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Is a port number within a valid, acceptable range? (Though JSON Schema can do basic range checks, more
-            complex logic might be needed).
-          </li>
-          <li>If a feature flag is enabled, are its dependent configurations present and valid?</li>
-          <li>
-            Are resource identifiers (like file paths, URLs) syntactically correct or even pointing to existing
-            resources?
-          </li>
-        </ul>
-        <p>
-          Semantic validation is application-specific and is typically implemented within your application code or in
-          custom validation scripts that run after schema validation passes.
+          This already catches several common mistakes: unknown top-level keys, a string where a port number should be,
+          a bad log level, or an invalid authentication issuer URL. If your team uses commented JSON or trailing commas,
+          remember that plain <code>JSON.parse()</code> rejects them; use a JSONC-aware parser only if that format is
+          intentional.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Workflow className="w-7 h-7 mr-2 text-gray-600" /> Where and When to Validate (Continuous Aspect)
+          <Workflow className="w-7 h-7 mr-2 text-gray-600" /> Run One Validation Command Everywhere
         </h2>
-        <p>To make validation &#x201C;continuous,&#x201D; integrate it into your workflow at multiple stages:</p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Hammer className="w-6 h-6 mr-2 text-gray-600" /> During Development
-        </h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>IDE Extensions:</strong> Many IDEs have extensions that provide real-time JSON syntax and schema
-            validation as you type. This offers immediate feedback.
-          </li>
-          <li>
-            <strong>Pre-commit Hooks:</strong> Use tools like Husky (for Git hooks) to run validation scripts
-            automatically before a commit is allowed. This prevents invalid configurations from even entering your
-            version control.
-          </li>
-          <li>
-            <strong>Local Scripts:</strong> Provide simple command-line scripts (<code>npm run validate-config</code>)
-            that developers can run manually.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Hammer className="w-6 h-6 mr-2 text-gray-600" /> In CI/CD Pipelines {/* Using Hammer as a tool icon */}
-        </h3>
         <p>
-          This is a critical stage. Validate config files automatically on every pull request or push to your
-          repository.
+          The cleanest continuous validation setup is a single command that developers can run locally and CI can run
+          unchanged. Keep syntax, schema, and semantic checks behind one script so the result is reproducible.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Linter Checks:</strong> Run JSON linters to catch basic syntax issues.
-          </li>
-          <li>
-            <strong>Schema Validation Steps:</strong> Integrate command-line tools for JSON Schema validation. Fail the
-            build if validation fails.
-          </li>
-          <li>
-            <strong>Custom Validation Scripts:</strong> Run scripts for semantic checks.
-          </li>
-        </ul>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">
-            Conceptual CI Pipeline Step (e.g., using GitHub Actions or GitLab CI):
-          </h4>
+          <h3 className="text-lg font-medium mb-2">Example package script:</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                name: Validate Configs
-                <br />
-                on: [push, pull_request]
-                <br />
-                jobs:
-                <br />
-                &nbsp;&nbsp;validate:
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;runs-on: ubuntu-latest
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;steps:
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- uses: actions/checkout@v3
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: Set up Node.js
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uses: actions/setup-node@v3
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with:
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node-version: &#x27;18&#x27;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: Install Dependencies
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;run: npm ci
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: Run Config Validation
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-green-500">
-                  {/* # Assuming you have a script 'npm test:configs' that runs validator tools */}
-                </span>
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;run: npm run test:configs
-              </code>
+            <pre className="whitespace-pre-wrap">
+              <code>{validateScriptExample}</code>
             </pre>
           </div>
         </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Code className="w-6 h-6 mr-2 text-gray-600" /> At Runtime
-        </h3>
-        <p>
-          Even with checks earlier in the pipeline, it&#x27;s often wise to perform validation when your application
-          loads the configuration. This catches issues that might arise from environment-specific overrides or
-          deployment errors.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Conceptual Runtime Validation (TypeScript with AJV):</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                <span className="text-gray-500">{/* // Assuming 'ajv' and your schema are installed/imported */}</span>
-                <br />
-                import Ajv from &#x27;ajv&#x27;;
-                <br />
-                import configSchema from &#x27;./config.schema.json&#x27;;{" "}
-                <span className="text-gray-500">{/* // Your JSON Schema file */}</span>
-                <br />
-                <br />
-                const ajv = new Ajv();{" "}
-                <span className="text-gray-500">
-                  {/* // Options might be needed, e.g., &#x7b; allErrors: true &#x7d; */}
-                </span>
-                <br />
-                const validate = ajv.compile(configSchema);
-                <br />
-                <br />
-                function loadConfig(configPath: string): any &#x7b;
-                <br />
-                &nbsp;&nbsp;try &#x7b;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-gray-500">
-                  {/* // 1. Basic Syntax Check (JSON.parse throws on invalid syntax) */}
-                </span>
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;const rawConfig = require(configPath);{" "}
-                <span className="text-gray-500">{/* // Or use fs.readFileSync and JSON.parse */}</span>
-                <br />
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500">{/* // 2. Schema Validation */}</span>
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;const isValid = validate(rawConfig);
-                <br />
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;if (!isValid) &#x7b;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error(&#x27;Configuration schema validation failed:&#x27;,
-                validate.errors);
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw new Error(&#x27;Invalid configuration structure&#x27;);
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&#x7d;
-                <br />
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-gray-500">
-                  {/* // 3. Optional: Semantic/Logical Validation (Custom checks) */}
-                </span>
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;if (rawConfig.port &lt; 1024 || rawConfig.port &gt; 65535) &#x7b;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw new Error(\`Port &#x24;&#x7b;rawConfig.port&#x7d; is outside
-                the valid range.\`);
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&#x7d;
-                <br />
-                <br />
-                &nbsp;&nbsp;&#x7d; catch (error) &#x7b;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;console.error(&#x27;Failed to load or validate configuration:&#x27;, error);
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;process.exit(1);{" "}
-                <span className="text-gray-500">{/* // Exit if config is invalid */}</span>
-                <br />
-                &nbsp;&nbsp;&#x7d;
-                <br />
-                &#x7d;
-                <br />
-                <br />
-                <span className="text-gray-500">{/* // Usage: */}</span>
-                <br />
-                <span className="text-gray-500">{/* // const appConfig = loadConfig('./app.config.json'); */}</span>
-                <br />
-                <span className="text-gray-500">{/* // console.log('App started with config:', appConfig); */}</span>
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          Runtime validation ensures that the application never starts with a faulty configuration, providing a robust
-          failure mechanism early in the startup process.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <CheckCircle className="w-7 h-7 mr-2 text-green-600" /> Benefits of Continuous Validation
-        </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Early Error Detection:</strong> Catch mistakes moments after they are made, reducing the cost of
-            fixing them.
+            <strong>Editor:</strong> Associate your config files with the schema so developers see errors while typing.
           </li>
           <li>
-            <strong>Increased Confidence:</strong> Developers and operations teams can be more confident that
-            configuration changes won&#x27;t break things.
+            <strong>Pre-commit hook:</strong> Run the validation script before invalid config changes are committed.
           </li>
           <li>
-            <strong>Living Documentation:</strong> A well-maintained JSON Schema serves as accurate, executable
-            documentation for the configuration structure.
+            <strong>CI:</strong> Run the same command on every pull request and fail the build on any validation error.
           </li>
           <li>
-            <strong>Automated Enforcement:</strong> Policies about configuration structure are enforced automatically,
-            consistently.
+            <strong>Release pipeline:</strong> Re-run validation for the environment-specific config bundle that will
+            actually be deployed.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <XCircle className="w-7 h-7 mr-2 text-red-600" /> Potential Challenges
+          <Hammer className="w-7 h-7 mr-2 text-gray-600" /> Keep a Runtime Guard
+        </h2>
+        <p>
+          CI reduces risk, but it does not eliminate it. Runtime validation still matters when configs are assembled
+          from secrets managers, environment overrides, mounted files, or generated deployment artifacts.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium mb-2">Runtime validation with Ajv:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre className="whitespace-pre-wrap">
+              <code>{runtimeValidationExample}</code>
+            </pre>
+          </div>
+        </div>
+        <p>
+          This pattern gives you four separate protections: JSON syntax parsing, schema validation, readable error
+          output, and a final semantic check for business rules that do not belong in the schema.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Code className="w-7 h-7 mr-2 text-gray-600" /> Practical Rules That Prevent Most Failures
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Schema Maintenance:</strong> Keeping the JSON Schema in sync with the application&#x27;s code that
-            consumes the config requires discipline. If the schema isn&#x27;t updated when the code changes, validation
-            becomes useless or misleading.
+            Reject unknown keys with <code>additionalProperties: false</code> unless the object is intentionally
+            extensible.
           </li>
           <li>
-            <strong>Complexity:</strong> Very complex or highly conditional configuration structures can lead to complex
-            schemas or validation logic.
+            Keep the schema next to the config or loader code so changes happen together in the same review.
+          </li>
+          <li>
+            Validate example config files in the repository, not just production overrides.
+          </li>
+          <li>
+            Fail on startup with a clear message instead of continuing with a partially valid configuration.
+          </li>
+          <li>
+            Use semantic checks for rules involving the filesystem, network destinations, secret names, or cross-field
+            dependencies.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <XCircle className="w-7 h-7 mr-2 text-red-600" /> Common Mistakes
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Only validating syntax:</strong> A file can be valid JSON and still be unusable by the
+            application.
+          </li>
+          <li>
+            <strong>Only validating in CI:</strong> Developers get slower feedback and runtime-only overrides can still
+            break production.
+          </li>
+          <li>
+            <strong>Using a loose schema:</strong> Optional-everything schemas create false confidence.
+          </li>
+          <li>
+            <strong>Ignoring draft compatibility:</strong> Newer schema keywords are useful, but only when your editor
+            and validator stack support them consistently.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <CheckCircle className="w-7 h-7 mr-2 text-green-600" /> Recommended Baseline
+        </h2>
         <p>
-          Implementing continuous validation for your JSON configuration files is a relatively low-effort, high-reward
-          practice. By integrating syntax, schema, and optionally semantic validation checks into your development
-          workflow, pre-commit hooks, CI/CD pipelines, and application runtime, you build robust systems that are less
-          prone to configuration-related failures. This proactive approach saves time, reduces stress, and leads to more
-          reliable deployments. Start with basic syntax and schema validation and gradually add more checks as needed to
-          build confidence in your application&#x27;s configuration layer.
+          For most teams, the baseline that delivers the best return is straightforward: define a strict schema, wire
+          it into editor feedback, run one validation command in pre-commit and CI, and validate again on application
+          startup. That is the practical meaning of continuous validation for JSON configuration files.
+        </p>
+        <p>
+          If you need the newest JSON Schema features, adopt <code>2020-12</code> intentionally and standardize the
+          validator path. If you mainly want broad tooling support and low friction, <code>draft-07</code> is still a
+          reasonable operational choice. Either way, consistent enforcement matters more than theoretical schema power.
         </p>
       </div>
     </>

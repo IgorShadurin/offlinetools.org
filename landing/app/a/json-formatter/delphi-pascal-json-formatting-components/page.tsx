@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import {
   Code,
-  AlignLeft, // Replaced TextInsert with AlignLeft
+  AlignLeft,
   Indent,
   Eye,
   FileText,
   FastForward,
   Settings,
-} from "lucide-react"; // Using lucide-react for icons
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Delphi/Pascal JSON Formatting Components | Developer Resources",
+  title:
+    "Delphi/Pascal JSON Formatting Components | Pretty-Print JSON in Delphi and Free Pascal",
   description:
-    "Explore how Delphi and Pascal components and libraries can be used to format and pretty-print JSON data for improved readability and debugging.",
+    "Current guide to formatting JSON in Delphi, RAD Studio, Free Pascal, and Lazarus using System.JSON Format(), ToJSON, and fpjson FormatJSON().",
 };
 
 export default function DelphiPascalJsonFormattingPage() {
@@ -24,242 +25,145 @@ export default function DelphiPascalJsonFormattingPage() {
 
       <div className="space-y-8">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <FileText className="mr-2" size={24} /> Understanding JSON Formatting
-          </h2>
           <p className="mb-4">
-            JSON (JavaScript Object Notation) is a ubiquitous data interchange format. While its structure is simple and
-            easy for machines to parse and generate, the raw string output can often be hard for humans to read,
-            especially when dealing with large or deeply nested data.
+            If you are looking for a Delphi/Pascal JSON formatting component, the short answer is that modern tools
+            already include one. In current Delphi, the built-in <code>System.JSON</code> classes can pretty-print a
+            parsed JSON value with <code>Format()</code> and serialize compact JSON with <code>ToJSON</code>. In Free
+            Pascal and Lazarus, the equivalent built-in path is <code>fpjson</code>, where <code>TJSONData</code>{" "}
+            exposes <code>FormatJSON()</code> for readable output and <code>AsJSON</code> for compact output.
           </p>
           <p>
-            <strong>JSON Formatting</strong>, also known as Pretty-Printing, involves adding whitespace (spaces, tabs,
-            newlines) to the raw JSON string to make its hierarchical structure visually clear. This is invaluable for
-            debugging, logging, and manual inspection of data.
+            That matters because many searchers do not actually need a third-party visual component. They need the
+            fastest reliable way to inspect API payloads, prettify logs, or emit readable config files from Pascal
+            code. This page focuses on that practical use case.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Indent className="mr-2" size={24} /> JSON in the Delphi/Pascal Ecosystem
+            <AlignLeft className="mr-2" size={24} /> Quick Answer
           </h2>
-          <p className="mb-4">
-            Delphi and other Pascal dialects have robust capabilities for handling JSON. Modern Delphi versions (since
-            XE) include the <code>System.JSON</code> unit within the RTL (Runtime Library), providing classes for
-            parsing, generating, and manipulating JSON values (objects, arrays, strings, numbers, booleans, null).
-          </p>
-          <p>
-            While parsing raw JSON into objects and generating JSON strings from objects are primary functions, the
-            ability to *format* the resulting JSON string is a key aspect of developer productivity. JSON components and
-            libraries in this ecosystem typically offer specific features or methods for this purpose.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <AlignLeft className="mr-2" size={24} /> Core Formatting Features
-          </h2>
-          <p>
-            JSON formatting components or features within libraries provide control over how the output string looks.
-            The most common features include:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mt-4">
+          <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong className="font-medium">Pretty-Printing / Indentation:</strong> Adds newlines after commas and
-              colons, and uses indentation (spaces or tabs) to represent nesting levels. This is the most common form of
-              formatting for readability.
+              <strong className="font-medium">Delphi / RAD Studio:</strong> Parse JSON into a{" "}
+              <code>TJSONValue</code> and call <code>Format(2)</code> or <code>Format(4)</code> for pretty output.
             </li>
             <li>
-              <strong className="font-medium">Compact Formatting:</strong> Removes all non-essential whitespace to
-              produce the smallest possible JSON string. Useful for transmission where bandwidth is a concern.
+              <strong className="font-medium">Compact Delphi output:</strong> Use <code>ToJSON</code> when you want a
+              transport-friendly string without pretty-print whitespace.
             </li>
             <li>
-              <strong className="font-medium">Key Sorting:</strong> Optionally sorts the keys within JSON objects
-              alphabetically. This can make comparing different versions of the same object easier.
+              <strong className="font-medium">Free Pascal / Lazarus:</strong> Use <code>TJSONData.FormatJSON()</code>{" "}
+              for readable output and <code>AsJSON</code> for compact output.
             </li>
             <li>
-              <strong className="font-medium">Custom Indentation:</strong>
-              Allows specifying the character (space or tab) and the number of characters used for each indentation
-              level.
+              <strong className="font-medium">Third-party libraries:</strong> Usually only needed when formatting is
+              part of a larger requirement such as streaming very large payloads, custom serialization, or framework
+              integration.
             </li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Code className="mr-2" size={24} /> Conceptual Usage in Delphi/Pascal
+            <Indent className="mr-2" size={24} /> Delphi / RAD Studio: Built-In JSON Formatting
           </h2>
           <p className="mb-4">
-            While the exact class names and methods vary slightly depending on the specific library (e.g., built-in RTL
-            vs. third-party), the general pattern for formatting JSON involves parsing the input string into an
-            in-memory JSON structure and then serializing that structure back into a string with formatting options
-            applied.
+            Embarcadero&apos;s current RTL docs expose JSON pretty-printing directly on <code>TJSONAncestor</code> via{" "}
+            <code>Format(Indentation: Integer = 4)</code>. That means you normally do not need a writer class just to
+            format JSON for humans.
           </p>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Basic Pretty-Printing (Conceptual RTL approach)</h3>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
             <p className="text-sm mb-2 italic">
-              Assuming you have a <code>TJSONValue</code> variable <code>MyJsonData</code> representing your parsed
-              JSON.
+              Current Delphi example using <code>System.JSON</code>
             </p>
             <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
               <pre>
-                {`uses System.JSON;
+                {`uses
+  System.JSON,
+  System.SysUtils;
 
 var
-  MyJsonString: string;
-  MyJsonData: TJSONValue;
-  FormattedJsonString: string;
+  JsonText: string;
+  JsonValue: TJSONValue;
 begin
-  MyJsonString := '{"name":"Alice","age":30,"isStudent":false,"courses":["Math","Science"]}';
+  JsonText := '{"name":"Alice","roles":["admin","editor"],"active":true}';
+  JsonValue := TJSONObject.ParseJSONValue(JsonText, False, True);
+  try
+    Writeln('Pretty JSON:');
+    Writeln(JsonValue.Format(2));
 
-  // Parse the string into a JSON object/value structure
-  MyJsonData := TJSONObject.ParseJSONValue(MyJsonString);
-
-  if Assigned(MyJsonData) then
-  begin
-    // Format the JSON data with indentation
-    // Many components provide a method like ToString or ToFormattedString
-    // In RTL, you might use a TJsonWriter with specific options
-    var Writer := TJsonTextWriter.Create;
-    Writer.Formatting := TJsonFormatting.Indented; // This is the key option
-
-    MyJsonData.WriteTo(Writer); // Write the JSON structure to the writer
-    FormattedJsonString := Writer.ToString; // Get the formatted string
-
-    Writeln('Original JSON: ' + MyJsonString);
-    Writeln('Formatted JSON:');
-    Writeln(FormattedJsonString); // Output the formatted string
-
-    MyJsonData.Free; // Clean up the parsed object
-    Writer.Free; // Clean up the writer
-  end
-  else
-    Writeln('Failed to parse JSON.');
+    Writeln('');
+    Writeln('Compact JSON:');
+    Writeln(JsonValue.ToJSON);
+  finally
+    JsonValue.Free;
+  end;
 end;
 `}
               </pre>
             </div>
-            <p className="text-sm mt-2 italic">
-              (Note: The exact implementation details, especially using <code>TJsonTextWriter</code>, might vary
-              slightly or be wrapped in helper functions depending on the specific Delphi version or third-party
-              library, but the concept of setting a formatting option before writing the JSON structure is common.)
-            </p>
           </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Compact Formatting (Conceptual RTL approach)</h3>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <p className="text-sm mb-2 italic">
-              Starting with the same <code>MyJsonData</code>.
-            </p>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// ... (assuming MyJsonData is parsed as in the previous example)
-
-var
-  Writer := TJsonTextWriter.Create;
-  // Default Formatting is TJsonFormatting.None, which is compact
-  Writer.Formatting := TJsonFormatting.None; // Explicitly set for clarity
-
-  MyJsonData.WriteTo(Writer);
-  CompactJsonString := Writer.ToString;
-
-  Writeln('Compact JSON:');
-  Writeln(CompactJsonString);
-
-  Writer.Free; // Clean up the writer
-// MyJsonData should be freed when done, as in the previous example
-`}
-              </pre>
-            </div>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Custom Indentation (Conceptual)</h3>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <p className="text-sm mb-2 italic">
-              Some libraries allow specifying the indentation string (e.g., 2 spaces, 4 spaces, or a tab).
-            </p>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// ... (assuming MyJsonData is parsed)
-
-var
-  Writer := TJsonTextWriter.Create;
-  Writer.Formatting := TJsonFormatting.Indented;
-  // Some libraries or writers might have a property like IndentString
-  // This is conceptual, check your specific library's documentation
-  if Writer is IJsonTextWriterEx then // Example of checking for extended features
-    (Writer as IJsonTextWriterEx).IndentString := '  '; // Use 2 spaces for indentation
-
-  MyJsonData.WriteTo(Writer);
-  FormattedJsonStringWith2Spaces := Writer.ToString;
-
-  Writeln('Formatted JSON (2-space indent):');
-  Writeln(FormattedJsonStringWith2Spaces);
-
-  Writer.Free;
-`}
-              </pre>
-            </div>
-            <p className="text-sm mt-2 italic">
-              (Again, the exact mechanism for setting custom indentation varies significantly between libraries).
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Eye className="mr-2" size={24} /> Benefits for Developers
-          </h2>
-          <ul className="list-disc pl-6 space-y-2 mt-4">
+          <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong className="font-medium">Improved Readability:</strong> The most obvious benefit. Well-formatted
-              JSON is easy to scan and understand the data structure at a glance.
+              <strong className="font-medium">Use exceptions when validating input:</strong> Passing{" "}
+              <code>RaiseExc = True</code> helps you fail fast on malformed JSON instead of silently getting{" "}
+              <code>nil</code>.
             </li>
             <li>
-              <strong className="font-medium">Easier Debugging:</strong> When inspecting JSON logs or responses during
-              debugging, formatting makes it simple to pinpoint specific values or structural issues.
+              <strong className="font-medium">Indentation is simple and predictable:</strong> <code>Format(2)</code>,{" "}
+              <code>Format(4)</code>, and similar calls control the number of spaces per nesting level.
             </li>
             <li>
-              <strong className="font-medium">Consistent Output:</strong>
-              Formatting features ensure that the JSON generated by your application has a consistent style, which is
-              helpful when comparing outputs or adhering to standards.
-            </li>
-            <li>
-              <strong className="font-medium">Learning and Exploration:</strong>
-              Viewing complex JSON in a pretty-printed format helps developers understand unfamiliar data structures
-              returned by APIs or used in configurations.
+              <strong className="font-medium">Compact output uses JSON escaping rules:</strong> <code>ToJSON</code> is
+              the better fit when the string is leaving your app rather than being read by a person in a debugger.
             </li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <FastForward className="mr-2" size={24} /> Performance Considerations
+            <Code className="mr-2" size={24} /> Free Pascal / Lazarus: fpjson
           </h2>
-          <p>
-            While formatting is useful, especially during development or for human consumption, it's important to
-            consider performance implications when dealing with very large JSON data or high-throughput scenarios.
+          <p className="mb-4">
+            For Free Pascal projects, the <code>fcl-json</code> package provides the equivalent feature set. The
+            current docs describe <code>TJSONData.FormatJSON(Options, IndentSize)</code> for formatted output and{" "}
+            <code>AsJSON</code> for the compact representation.
           </p>
-          <ul className="list-disc pl-6 space-y-2 mt-4">
-            <li>
-              <strong className="font-medium">Processing Time:</strong> Parsing, holding the structure in memory, and
-              then formatting can add overhead compared to simply processing a data stream.
-            </li>
-            <li>
-              <strong className="font-medium">Memory Usage:</strong> For extremely large JSON, loading the entire
-              structure into memory before formatting might be inefficient or impossible on systems with limited
-              resources.
-            </li>
-            <li>
-              <strong className="font-medium">Output Size:</strong> Formatted JSON strings are significantly larger than
-              their compact counterparts due to the added whitespace.
-            </li>
-          </ul>
-          <p className="mt-4">
-            For production scenarios where JSON is exchanged between systems (e.g., microservices, APIs), compact
-            formatting is usually preferred to minimize bandwidth and processing time. Pretty-printing is best suited
-            for developer tooling, logs, configuration files, and manual analysis.
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+            <p className="text-sm mb-2 italic">
+              Current Free Pascal / Lazarus example using <code>fpjson</code>
+            </p>
+            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+              <pre>
+                {`uses
+  fpjson,
+  jsonparser,
+  SysUtils;
+
+var
+  Data: TJSONData;
+begin
+  Data := GetJSON('{"name":"Alice","roles":["admin","editor"],"active":true}');
+  try
+    Writeln('Pretty JSON:');
+    Writeln(Data.FormatJSON([], 2));
+
+    Writeln('');
+    Writeln('Compact JSON:');
+    Writeln(Data.AsJSON);
+  finally
+    Data.Free;
+  end;
+end;
+`}
+              </pre>
+            </div>
+          </div>
+          <p>
+            One useful detail from the Free Pascal docs: <code>FormatJSON</code> is convenient, but it is not
+            optimized for speed. That is fine for tooling, debugging, admin screens, and occasional exports, but it is
+            a poor choice for tight loops or very large payloads on hot paths.
           </p>
         </section>
 
@@ -267,39 +171,114 @@ var
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Settings className="mr-2" size={24} /> Choosing the Right Approach
           </h2>
-          <p>
-            For most common tasks in modern Delphi, the built-in <code>System.JSON</code> unit provides sufficient
-            functionality for both parsing and formatting. Its <code>TJsonTextWriter</code> class with the{" "}
-            <code>Formatting</code> option handles standard pretty-printing and compact output.
-          </p>
-          <p className="mt-4">
-            However, several excellent third-party libraries exist (e.g., SynCommons/mORMot, DklJson, etc.) that might
-            offer additional features like:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mt-4">
-            <li>Higher performance parsing/writing.</li>
-            <li>More advanced formatting options (e.g., comment handling, specific order).</li>
-            <li>Streaming support for very large files.</li>
-            <li>Tighter integration with object serialization/deserialization.</li>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong className="font-medium">Use the built-in RTL first in Delphi:</strong> If your only goal is
+              pretty-printing or compacting JSON, <code>System.JSON</code> already covers it cleanly.
+            </li>
+            <li>
+              <strong className="font-medium">Use fpjson first in Free Pascal:</strong> It solves the same problem
+              without adding another dependency to a Lazarus or CLI project.
+            </li>
+            <li>
+              <strong className="font-medium">Add third-party JSON libraries only for broader needs:</strong> Think
+              object mapping, custom serializers, framework conventions, or specialized performance requirements.
+            </li>
+            <li>
+              <strong className="font-medium">Use an external formatter tool for inspection workflows:</strong> When
+              you are comparing API responses, checking malformed payloads, or formatting ad-hoc JSON from logs, a
+              dedicated formatter is usually faster than writing a helper app.
+            </li>
           </ul>
-          <p className="mt-4">
-            When choosing, consider your project's specific needs: Are you dealing with extremely large JSON? Do you
-            need custom formatting rules? Is maximum parsing/writing speed critical? For standard use cases, the RTL is
-            usually a solid starting point.
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-4 flex items-center">
+            <Eye className="mr-2" size={24} /> Common Pitfalls
+          </h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong className="font-medium">Using outdated conceptual examples:</strong> In current Delphi docs,
+              <code> Format()</code> is the direct pretty-print method. You do not need to invent a formatter pipeline
+              just to indent JSON.
+            </li>
+            <li>
+              <strong className="font-medium">Expecting key sorting from the built-in formatter:</strong> Pretty
+              printing changes whitespace, not object semantics. If you need stable alphabetical key ordering for
+              diffs, you must reorder properties before serialization.
+            </li>
+            <li>
+              <strong className="font-medium">Formatting invalid JSON:</strong> Formatters are not repair tools. Parse
+              first, handle errors, then serialize the parsed structure.
+            </li>
+            <li>
+              <strong className="font-medium">Pretty-printing in production hot paths:</strong> Readable JSON is larger
+              and slower to produce. Use it for logs, diagnostics, and human-facing exports, not every network hop.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-4 flex items-center">
+            <FastForward className="mr-2" size={24} /> When This Matters Most
+          </h2>
+          <p className="mb-4">
+            JSON formatting pays off most when you are debugging REST responses, storing readable fixture files,
+            troubleshooting webhook payloads, or logging intermediate data during Pascal development. In those cases,
+            readable structure is worth the extra bytes.
+          </p>
+          <p>
+            For machine-to-machine transport, prefer compact JSON from <code>ToJSON</code> or <code>AsJSON</code>, and
+            only pretty-print the payload when a human actually needs to read it.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <FileText className="mr-2" size={24} /> Conclusion
+            <FileText className="mr-2" size={24} /> Official References
           </h2>
-          <p>
-            JSON formatting components are essential tools in the Delphi/Pascal developer's toolkit. They transform
-            machine-optimized JSON strings into human-readable formats, significantly improving the development
-            experience, especially during debugging and data inspection. Whether using the built-in{" "}
-            <code>System.JSON</code> unit or a specialized third-party library, understanding how to effectively
-            pretty-print and compact JSON is a valuable skill for working with modern data formats.
-          </p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <a
+                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                href="https://docwiki.embarcadero.com/Libraries/Athens/en/System.JSON.TJSONAncestor.Format"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Embarcadero: System.JSON.TJSONAncestor.Format
+              </a>
+            </li>
+            <li>
+              <a
+                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                href="https://docwiki.embarcadero.com/Libraries/Athens/en/System.JSON.TJSONAncestor.ToJSON"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Embarcadero: System.JSON.TJSONAncestor.ToJSON
+              </a>
+            </li>
+            <li>
+              <a
+                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                href="https://www.freepascal.org/docs-html/fcl/fpjson/tjsondata.formatjson.html"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Free Pascal: TJSONData.FormatJSON
+              </a>
+            </li>
+            <li>
+              <a
+                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                href="https://docs.freepascal.org/docs-html/current/fcl/fpjson/index.html"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Free Pascal: fpjson unit overview
+              </a>
+            </li>
+          </ul>
         </section>
       </div>
     </>

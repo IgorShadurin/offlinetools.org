@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Bug, FileJson, ScanEye, CircleCheck, Info, AlertTriangle, Zap, Database, Timer, Key } from "lucide-react";
+import { AlertTriangle, CircleCheck, Database, FileJson, Key, ScanEye, Timer, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Logging Patterns for JSON Processing Diagnostics | Offline Tools",
+  title: "Logging Patterns for JSON Processing Diagnostics Guide | Offline Tools",
   description:
-    "Learn effective logging patterns to diagnose and troubleshoot issues when processing JSON data in your applications.",
+    "Practical JSON logging patterns for parse failures, validation errors, redaction, payload fingerprints, and trace correlation in production.",
 };
 
 export default function LoggingPatternsForJsonDiagnosticsArticle() {
@@ -17,389 +17,385 @@ export default function LoggingPatternsForJsonDiagnosticsArticle() {
 
       <div className="space-y-6">
         <p>
-          Processing JSON data is a ubiquitous task in modern software development, from consuming APIs to reading
-          configuration files. However, dealing with external, dynamic, or complex JSON inputs can often lead to
-          unexpected issues like parsing errors, validation failures, or data transformation bugs. Effective logging is
-          paramount for quickly identifying, diagnosing, and resolving these problems. This article explores various
-          logging patterns specifically tailored for JSON processing diagnostics.
+          If a JSON pipeline is failing in production, the fastest path to an answer is usually not "log more". It is
+          logging the right fields at the right stage: payload size and source on receipt, parser position on syntax
+          failure, schema path on validation failure, and a stable correlation ID across every related event. Good JSON
+          diagnostics make failures searchable without dumping entire payloads into your logs.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Bug size={24} className="text-red-500" />
-          Why Log JSON Processing?
-        </h2>
         <p>
-          Logging provides visibility into the runtime behavior of your application. When processing JSON, logs can
-          answer critical questions:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Was the input JSON received correctly?</li>
-          <li>Did the parsing step succeed or fail? Why?</li>
-          <li>Does the parsed data conform to the expected structure or schema?</li>
-          <li>Were there issues during data extraction or transformation?</li>
-          <li>What was the exact input that caused an error?</li>
-        </ul>
-        <p>
-          Without appropriate logging, debugging JSON processing issues can be a frustrating exercise of guesswork and
-          manual inspection, especially in production environments.
+          A practical baseline is to emit structured JSON logs, capture a small amount of payload metadata early, log
+          field paths instead of whole objects, and aggressively redact secrets and personal data. That gives you logs
+          that are useful for direct debugging, safe enough for production, and easy to query in systems such as
+          Datadog, Elasticsearch, Loki, or OpenTelemetry-based pipelines.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ScanEye size={24} className="text-green-500" />
-          Key Stages for Logging
-        </h2>
-        <p>Consider logging at these critical points in your JSON processing pipeline:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Input Reception:</strong> Log when JSON data is received, potentially logging metadata like source,
-            size, or an identifier.
-          </li>
-          <li>
-            <strong>Parsing Attempt:</strong> Log the start of the parsing process.
-          </li>
-          <li>
-            <strong>Parsing Success/Failure:</strong> Crucially log the outcome.
-          </li>
-          <li>
-            <strong>Validation (Schema/Type Checking):</strong> Log results of validation steps, listing specific
-            failures.
-          </li>
-          <li>
-            <strong>Data Extraction/Transformation:</strong> Log intermediate or final results, or errors encountered
-            during mapping.
-          </li>
-          <li>
-            <strong>Output/Usage:</strong> Log when the processed data is used or sent elsewhere.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Info size={24} className="text-yellow-500" />
-          Logging Levels and What to Log
+          The Minimum Useful Log Record
         </h2>
         <p>
-          Use standard logging levels (e.g., &#x60;INFO&#x60;, &#x60;WARN&#x60;, &#x60;ERROR&#x60;, &#x60;DEBUG&#x60;)
-          to categorize the severity and verbosity of your logs.
+          For JSON processing, the most useful logs share a small common envelope. Even if the message text changes,
+          keep the machine-readable fields consistent.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>DEBUG:</strong> Highly verbose logs, useful during development or deep troubleshooting. Can include
-            the full raw JSON input (be cautious with size and sensitivity!) or the fully parsed object.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                {`// Example DEBUG log (concept)
-logger.debug('Received raw JSON for processing', {
-  source: req.headers['user-agent'],
-  contentLength: req.headers['content-length'],
-  rawJson: jsonString // Use with caution!
-});
+            <strong>What happened:</strong> an event name such as <code>json_parse_failed</code> or{" "}
+            <code>json_validation_failed</code>.
+          </li>
+          <li>
+            <strong>Where it happened:</strong> a stage such as <code>receive</code>, <code>parse</code>,{" "}
+            <code>validate</code>, or <code>transform</code>.
+          </li>
+          <li>
+            <strong>Which input:</strong> source system, content type, payload byte size, and a payload fingerprint or
+            request ID.
+          </li>
+          <li>
+            <strong>How severe:</strong> a level such as <code>INFO</code>, <code>WARN</code>, or <code>ERROR</code>.
+          </li>
+          <li>
+            <strong>How to correlate:</strong> request ID, job ID, and if you use distributed tracing,{" "}
+            <code>trace_id</code> and <code>span_id</code>.
+          </li>
+        </ul>
+        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre>
+            {`{
+  "level": "error",
+  "event": "json_validation_failed",
+  "stage": "validate",
+  "timestamp": "2026-03-11T09:18:42.511Z",
+  "source": "partner-import-api",
+  "schema": "customer-import@2026-03",
+  "payload_bytes": 18214,
+  "payload_sha256": "0e7a...9d2f",
+  "path": "/customers/3/email",
+  "expected": "email string",
+  "received_type": "number",
+  "message": "invalid type at schema path",
+  "request_id": "req_7f4b4d7c",
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
+  "span_id": "00f067aa0ba902b7"
+}`}
+          </pre>
+        </div>
+        <p>
+          The fingerprint is important when you cannot safely store the full payload. A hash lets you correlate
+          repeated failures without exposing the raw document.
+        </p>
 
-logger.debug('Parsed JSON object', {
-  parsedData: parsedObject // Use with caution!
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <AlertTriangle size={24} className="text-orange-500" />
+          What to Log at Each Stage
+        </h2>
+
+        <h3 className="text-xl font-semibold mt-6">1. Input received</h3>
+        <p>
+          Log enough to prove that the right JSON arrived before parsing starts. This is where source, content type,
+          byte size, schema version, and correlation IDs matter most.
+        </p>
+        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre>
+            {`logger.info("json_processing_started", {
+  event: "json_processing_started",
+  stage: "receive",
+  source: "webhook",
+  content_type: req.headers["content-type"],
+  payload_bytes: Buffer.byteLength(jsonString, "utf8"),
+  payload_sha256: sha256(jsonString),
+  schema: "invoice@v4",
+  request_id,
+  trace_id,
+  span_id
 });`}
-              </pre>
-            </div>
+          </pre>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">2. Parse failures</h3>
+        <p>
+          A syntax error log should answer three questions immediately: what parser failed, where it failed, and what
+          the nearby input looked like after sanitization. If your runtime exposes a character offset, log it. If it
+          does not, log the parser message verbatim and a short safe sample.
+        </p>
+        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre>
+            {`try {
+  const parsed = JSON.parse(jsonString);
+  logger.info("json_parse_succeeded", {
+    event: "json_parse_succeeded",
+    stage: "parse",
+    payload_bytes: Buffer.byteLength(jsonString, "utf8"),
+    request_id,
+    trace_id
+  });
+} catch (error: any) {
+  const offset = /position (\\d+)/i.exec(String(error?.message ?? ""))?.[1];
+
+  logger.error("json_parse_failed", {
+    event: "json_parse_failed",
+    stage: "parse",
+    parser: "JSON.parse",
+    error_message: error?.message,
+    error_offset: offset ? Number(offset) : undefined,
+    input_sample: safeSnippet(jsonString, offset ? Number(offset) : undefined, 80),
+    payload_bytes: Buffer.byteLength(jsonString, "utf8"),
+    payload_sha256: sha256(jsonString),
+    request_id,
+    trace_id
+  });
+}`}
+          </pre>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">3. Validation failures</h3>
+        <p>
+          Validation logs are most useful when they point to a field path rather than saying only that validation
+          failed. For JSON Schema validators that often means a JSON Pointer such as <code>/items/2/id</code>. For
+          type-safe validators it might be a dot path such as <code>items.2.id</code>. Log the failing path, the rule,
+          the expected value or type, and the schema version.
+        </p>
+        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre>
+            {`for (const issue of validationIssues) {
+  logger.warn("json_validation_failed", {
+    event: "json_validation_failed",
+    stage: "validate",
+    schema: "invoice@v4",
+    path: issue.path,
+    rule: issue.rule,
+    expected: issue.expected,
+    received_type: issue.receivedType,
+    message: issue.message,
+    request_id,
+    trace_id
+  });
+}`}
+          </pre>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">4. Transformation and business-rule failures</h3>
+        <p>
+          These failures happen after the JSON is valid but still not usable. Examples include unsupported enum values,
+          missing upstream reference data, or conflicting timestamps. At this stage, log the transformation step and a
+          narrow subset of the data that drove the decision.
+        </p>
+        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre>
+            {`logger.error("json_transform_failed", {
+  event: "json_transform_failed",
+  stage: "transform",
+  transform: "invoice_to_ledger_entry",
+  message: "currency code is not supported",
+  source_fields: {
+    invoice_id: parsed.invoiceId,
+    currency: parsed.currency,
+    issued_at: parsed.issuedAt
+  },
+  request_id,
+  trace_id
+});`}
+          </pre>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">5. Successful completion</h3>
+        <p>
+          Success logs should be compact. In high-volume paths, do not emit a full success record for every document
+          unless you need a complete audit trail. Prefer summary fields such as counts, duration, and destination.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Use <code>INFO</code> for start and finish events with a small, stable field set.
           </li>
           <li>
-            <strong>INFO:</strong> Standard operational logs. Indicate successful processing steps or general progress.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                {`// Example INFO log
-logger.info('Successfully parsed JSON data', {
-  processId: 'xyz123',
-  dataType: 'user_profile',
-  keysCount: Object.keys(parsedObject).length
-});`}
-              </pre>
-            </div>
+            Use <code>WARN</code> for recoverable issues, partial acceptance, or non-blocking schema drift.
           </li>
           <li>
-            <strong>WARN:</strong> Indicate potential issues or non-critical failures that the application might recover
-            from, such as optional fields missing, or data types not exactly matching but still usable.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                {`// Example WARN log
-logger.warn('Optional field "address" missing in JSON data', {
-  processId: 'abc456',
-  userId: parsedObject.id // Log relevant context
-});`}
-              </pre>
-            </div>
+            Use <code>ERROR</code> when the record or batch cannot proceed.
           </li>
           <li>
-            <strong>ERROR:</strong> Critical failures that prevent successful processing, such as parsing errors, schema
-            validation failures, or errors during essential data transformation.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
-              <pre>
-                {`// Example ERROR log
-logger.error('Failed to parse JSON input', {
-  processId: 'def789',
-  error: err.message,
-  // Potentially log the start of the problematic input slice
-  // inputSample: jsonString.substring(Math.max(0, err.position - 50), err.position + 50)
-});`}
-              </pre>
-            </div>
+            Keep <code>DEBUG</code> for short-lived investigations, not permanent payload dumping.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Database size={24} className="text-purple-500" />
-          Structured Logging for JSON Diagnostics
+          Prefer Field Paths Over Full Payloads
         </h2>
         <p>
-          Structured logging is particularly effective for JSON processing. Instead of plain text messages, logs are
-          output as JSON objects (or similar structured formats). This allows for easier parsing, searching, and
-          analysis by log management systems.
+          The fastest way to drown a logging system is to serialize full request bodies on every failure. The better
+          pattern is to log identifiers, schema information, and the precise failing location. That keeps log volume
+          predictable and makes searches more accurate.
         </p>
-        <p>
-          When processing JSON, you can include relevant pieces of the JSON data itself within your structured logs.
-        </p>
-        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Plain Text Log Example:</h3>
-          <pre>
-            {`ERROR: [Process abc456] JSON validation failed: Field 'age' has wrong type. Expected number, got string.`}
-          </pre>
-          <h3 className="text-lg font-medium mb-2 mt-4">Structured Log Example (JSON):</h3>
-          <pre>
-            {`{
-  "level": "ERROR",
-  "timestamp": "...",
-  "message": "JSON validation failed",
-  "processId": "abc456",
-  "errorDetails": {
-    "type": "ValidationError",
-    "field": "age",
-    "issue": "WrongType",
-    "expected": "number",
-    "received": "string"
-  },
-  "inputSample": "... (if appropriate)"
-}`}
-          </pre>
-        </div>
-        <p>
-          Structured logs make it simple to query, for example, all validation errors for a specific field across many
-          log entries.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <AlertTriangle size={24} className="text-orange-500" />
-          Logging Specific Errors and Details
-        </h2>
-        <h3 className="text-xl font-semibold mt-6">Parsing Errors (Syntax)</h3>
-        <p>
-          When a JSON string is malformed, the parser will typically throw an error. Log the error message and, if
-          available, the position in the string where the error occurred. Logging a snippet of the input around the
-          error position is highly diagnostic.
-        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Log a path such as <code>/orders/12/items/3/sku</code> instead of the entire object.
+          </li>
+          <li>
+            Log <code>payload_bytes</code>, <code>item_count</code>, or <code>top_level_keys</code> instead of raw
+            arrays.
+          </li>
+          <li>
+            Log a fingerprint such as <code>payload_sha256</code> when you need repeat-failure correlation.
+          </li>
+          <li>
+            If a sample is necessary, cap it aggressively and sanitize it before writing it anywhere.
+          </li>
+        </ul>
         <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
-            {`// Example parsing error log
-try {
-  const parsed = JSON.parse(jsonString);
-  // ... process parsed
-} catch (err: any) {
-  logger.error('Failed to parse JSON string', {
-    processId: 'xyz123',
-    errorType: 'JsonParseError',
-    errorMessage: err.message,
-    errorPosition: err.message.match(/at position (\\d+)/)?.[1], // Extract position if available
-    inputSample: jsonString.substring(Math.max(0, err.message.match(/at position (\\d+)/)?.[1] - 50), parseInt(err.message.match(/at position (\\d+)/)?.[1] || '0', 10) + 50) // Log snippet
-  });
-}`}
-          </pre>
-        </div>
+            {`function sha256(input: string) {
+  return createHash("sha256").update(input).digest("hex");
+}
 
-        <h3 className="text-xl font-semibold mt-6">Validation Errors (Schema/Content)</h3>
-        <p>
-          After successful parsing, you often need to validate the structure and data types against an expected schema
-          (e.g., using libraries like Zod, Joi, Yup). Log *each* validation failure found.
-        </p>
-        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <pre>
-            {`// Example validation error log (using a hypothetical validator)
-const validationResult = mySchema.validate(parsedObject);
-if (!validationResult.isValid) {
-  validationResult.errors.forEach((validationErr: any) => {
-    logger.error('JSON schema validation failed', {
-      processId: 'abc456',
-      errorType: 'JsonValidationError',
-      errorMessage: validationErr.message,
-      field: validationErr.path.join('.'), // Path to the field (e.g., 'user.profile.age')
-      details: validationErr.details // Specific validation rule failure
-    });
-  });
-} else {
-  logger.info('JSON schema validation successful', { processId: 'abc456' });
-}`}
-          </pre>
-        </div>
+function safeSnippet(source: string, offset?: number, radius = 80) {
+  const start = Math.max(0, (offset ?? 0) - radius);
+  const end = Math.min(source.length, (offset ?? 0) + radius);
 
-        <h3 className="text-xl font-semibold mt-6">Data Transformation Errors</h3>
-        <p>
-          Mapping parsed JSON data to your internal data structures can fail if expected fields are missing (even if
-          schema validation passed loosely) or have unexpected values.
-        </p>
-        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <pre>
-            {`// Example transformation error log
-try {
-  const internalUser = {
-    id: parsedObject.user_id,
-    name: \`\${parsedObject.first_name} \${parsedObject.last_name}\`,
-    isActive: parsedObject.status === 'active' // Potential issue if status is unexpected
-  };
-  if (typeof internalUser.id !== 'string') { // Add checks during mapping
-     throw new Error("User ID is not a string");
-  }
-  // ... use internalUser
-} catch (err: any) {
-  logger.error('Error during JSON data transformation', {
-    processId: 'def789',
-    errorType: 'DataTransformationError',
-    errorMessage: err.message,
-    // Log relevant data from the parsed object that caused the issue
-    sourceDataSample: {
-       user_id: parsedObject?.user_id,
-       status: parsedObject?.status
-    }
-  });
-}`}
-          </pre>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Timer size={24} className="text-teal-500" />
-          Performance Logging
-        </h2>
-        <p>
-          For high-volume JSON processing, logging the time taken for parsing and validation can help identify
-          bottlenecks.
-        </p>
-        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <pre>
-            {`// Example performance log
-const startTime = Date.now();
-try {
-  const parsed = JSON.parse(jsonString);
-  const parseDuration = Date.now() - startTime;
-  logger.debug('JSON parsing duration', {
-    processId: 'perf101',
-    durationMs: parseDuration,
-    inputSizeKb: Buffer.byteLength(jsonString, 'utf8') / 1024
-  });
-
-  const validationStartTime = Date.now();
-  mySchema.validate(parsed); // Assuming sync validate
-  const validationDuration = Date.now() - validationStartTime;
-   logger.debug('JSON validation duration', {
-    processId: 'perf101',
-    durationMs: validationDuration
-  });
-
-  logger.info('JSON processing completed', {
-     processId: 'perf101',
-     totalDurationMs: Date.now() - startTime
-  });
-
-} catch (err) {
-   // Log error as shown previously
+  return source
+    .slice(start, end)
+    .replace(/[\\r\\n\\t]/g, " ")
+    .slice(0, 200);
 }`}
           </pre>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Key size={24} className="text-zinc-500" />
-          Handling Sensitive Data
+          Redaction, Truncation, and Log Safety
         </h2>
         <p>
-          Be extremely cautious when logging raw JSON input or parsed objects, especially in production. JSON data often
-          contains sensitive information like personal details, financial data, or authentication tokens.
+          Current production guidance is consistent on one point: logs are a data handling surface, not a safe dumping
+          ground. Secrets, tokens, session identifiers, payment data, and personal data should be removed, masked, or
+          transformed before they are written. If you must preserve joinability, log a hash or surrogate ID instead of
+          the raw value.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Avoid Logging Full Payloads:</strong> Only log full payloads at DEBUG level and ensure DEBUG logs
-            are disabled or restricted in production environments.
-          </li>
-          <li>
-            <strong>Sanitize/Redact:</strong> Implement logic to remove or mask sensitive fields before logging parsed
-            objects or input snippets (e.g., replace values of fields like &#x60;password&#x60;, &#x60;token&#x60;,
-            &#x60;ssn&#x60;, &#x60;creditCardNumber&#x60;, &#x60;email&#x60; with &#x60;***REDACTED***&#x60;).
-          </li>
-          <li>
-            <strong>Log Relevant Metadata:</strong> Instead of the full data, log metadata like field names that were
-            present, the count of items in an array, or a hash of the input (if logging the input itself is necessary
-            for correlation but not for inspection).
-          </li>
-        </ul>
+        <p>
+          Treat user-controlled values as untrusted input even when they are heading into your logs. Newlines,
+          delimiters, and terminal control characters can make plain-text logs misleading or harder to parse
+          downstream, so sanitize them before emitting snippets or message fragments.
+        </p>
         <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
-            {`// Example sanitization before logging (concept)
-function sanitizeLogData(data: any): any {
-  if (typeof data !== 'object' || data === null) {
-    return data;
-  }
-  const sensitiveKeys = ['password', 'token', 'ssn', 'creditCardNumber', 'email']; // Define sensitive fields
-  const sanitized: any = Array.isArray(data) ? [] : {};
-  for (const key in data) {
-    if (Object.hasOwnProperty.call(data, key)) {
-      if (sensitiveKeys.includes(key.toLowerCase())) {
-        sanitized[key] = '***REDACTED***';
-      } else if (typeof data[key] === 'object') {
-        sanitized[key] = sanitizeLogData(data[key]); // Recurse for nested objects/arrays
-      } else {
-        sanitized[key] = data[key];
-      }
-    }
-  }
-  return sanitized;
-}
+            {`const SENSITIVE_KEY = /pass(word)?|token|secret|authorization|cookie|session|ssn|email|card/i;
 
-// Use it:
-// logger.debug('Parsed data (sanitized)', { sanitizedData: sanitizeLogData(parsedObject) });`}
+function sanitizeForLogs(value: unknown): unknown {
+  if (typeof value === "string") {
+    return value.replace(/[\\r\\n\\t]/g, " ").slice(0, 200);
+  }
+
+  if (Array.isArray(value)) {
+    return value.slice(0, 20).map(sanitizeForLogs);
+  }
+
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, inner]) => [
+      key,
+      SENSITIVE_KEY.test(key) ? "[REDACTED]" : sanitizeForLogs(inner)
+    ])
+  );
+}`}
           </pre>
         </div>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Redact by key name and by location in the payload, not just by exact field spelling.</li>
+          <li>Truncate long strings and cap array sizes before serializing to logs.</li>
+          <li>Keep logging failures non-fatal so a broken sink does not break JSON processing itself.</li>
+          <li>Emit timestamps in UTC and also log durations such as <code>parse_ms</code> or <code>total_ms</code>.</li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Zap size={24} className="text-blue-500" />
-          Adding Context and Correlation IDs
+          Correlate Logs With Traces
         </h2>
         <p>
-          When processing JSON, especially as part of a larger request or job, include a unique identifier in all
-          related log messages. This "correlation ID" allows you to trace the entire flow of a single operation through
-          your logs, which is invaluable for debugging distributed systems or understanding the context of an error.
+          If your app already uses distributed tracing, connect the JSON diagnostics to that trace instead of inventing
+          a separate debugging story. Current OpenTelemetry guidance uses top-level trace context fields such as{" "}
+          <code>trace_id</code>, <code>span_id</code>, and <code>trace_flags</code>. Putting those fields directly in
+          your structured logs makes it easy to jump from a parser failure to the exact request or background job that
+          produced it.
         </p>
         <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <pre>
-            {`// Example with correlation ID
-const correlationId = generateUniqueId(); // Or get from request header
-logger.info('Starting JSON processing', { correlationId, source: 'api-request' });
+            {`logger.error("json_parse_failed", {
+  event: "json_parse_failed",
+  stage: "parse",
+  trace_id,
+  span_id,
+  trace_flags,
+  request_id,
+  job_id,
+  parser: "JSON.parse",
+  error_message: error.message
+});`}
+          </pre>
+        </div>
+        <p>
+          If tracing is not available, a request ID or batch ID is still mandatory. Use the same ID in every event from
+          receipt through completion.
+        </p>
 
-try {
-   const parsed = JSON.parse(jsonString);
-   logger.debug('JSON parsed successfully', { correlationId, keysCount: Object.keys(parsed).length });
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Timer size={24} className="text-teal-500" />
+          Performance and Noise Control
+        </h2>
+        <p>
+          Diagnostic logging should help explain latency spikes, not cause them. Measure parse, validate, and transform
+          timings separately so you know which step is slow. At the same time, control volume so hot paths do not flood
+          your logging system.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Always log failures. Sample high-volume success events if full auditing is not required.</li>
+          <li>Record <code>payload_bytes</code> next to <code>parse_ms</code> and <code>validate_ms</code>.</li>
+          <li>Aggregate batch-level counts such as accepted, rejected, and retried items.</li>
+          <li>Prefer stable field names so dashboards and alerts do not break during refactors.</li>
+        </ul>
+        <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <pre>
+            {`const startedAt = performance.now();
 
-   // ... validation and transformation ...
+const parsed = JSON.parse(jsonString);
+const parseMs = performance.now() - startedAt;
 
-   logger.info('JSON processing finished', { correlationId, status: 'success' });
+const validateStartedAt = performance.now();
+validate(parsed);
+const validateMs = performance.now() - validateStartedAt;
 
-} catch (err: any) {
-  logger.error('JSON processing failed', { correlationId, error: err.message });
-}`}
+logger.info("json_processing_finished", {
+  event: "json_processing_finished",
+  stage: "complete",
+  payload_bytes: Buffer.byteLength(jsonString, "utf8"),
+  parse_ms: Number(parseMs.toFixed(2)),
+  validate_ms: Number(validateMs.toFixed(2)),
+  total_ms: Number((performance.now() - startedAt).toFixed(2)),
+  request_id,
+  trace_id
+});`}
           </pre>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <CircleCheck size={24} className="text-green-500" />
-          Conclusion
+          Production Checklist
         </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Use structured logs with stable fields, not ad-hoc string messages.</li>
+          <li>Emit a common envelope for every JSON event: stage, source, severity, correlation ID, and timestamp.</li>
+          <li>On parse failure, log the parser, error message, offset if available, and a sanitized short snippet.</li>
+          <li>On validation failure, log the schema version, field path, failing rule, and expected versus received.</li>
+          <li>Prefer payload fingerprints, counts, and key lists over raw bodies.</li>
+          <li>Redact secrets and personal data before serialization and sanitize user-controlled strings.</li>
+          <li>Include <code>trace_id</code> and <code>span_id</code> when traces exist.</li>
+          <li>Measure parse, validation, and transform durations separately.</li>
+          <li>Keep log sink failures from breaking the main processing path.</li>
+        </ul>
         <p>
-          Effective logging is not just about writing messages to a file; it's a deliberate diagnostic strategy. By
-          implementing structured logging, using appropriate levels, capturing specific error details (like position and
-          field paths), sanitizing sensitive data, and including correlation IDs, you can significantly improve your
-          ability to understand, troubleshoot, and resolve issues related to JSON processing in your applications.
-          Invest time in refining your logging patterns – it will pay off immensely when things go wrong.
+          The best logging pattern for JSON processing diagnostics is the one that answers "what failed, where, and for
+          which payload?" in a single search. If your logs can do that without exposing sensitive data or producing
+          unbounded noise, they are doing their job.
         </p>
       </div>
     </>

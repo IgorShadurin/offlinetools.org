@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { FileJson, CodeXml, ListTree, Check, Lightbulb, BookOpen } from "lucide-react"; // Importing allowed icons
+import { AlertTriangle, BookOpen, Check, CodeXml, FileJson, Lightbulb, ListTree } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Integrating JSON Formatters with Swagger/OpenAPI Documentation | Offline Tools",
   description:
-    "Learn how to effectively integrate JSON formatting into your Swagger/OpenAPI documentation for improved clarity and usability.",
+    "Learn where JSON examples belong in Swagger/OpenAPI docs, how Swagger UI renders them, and how to use example, examples, and externalValue correctly.",
 };
 
 export default function JsonFormattersSwaggerArticle() {
@@ -14,391 +14,363 @@ export default function JsonFormattersSwaggerArticle() {
 
       <div className="space-y-6">
         <p>
-          Clear and precise API documentation is crucial for developer adoption and ease of use. When documenting APIs
-          that exchange data in JSON format, presenting the JSON payloads in a readable, structured way is paramount.
-          Swagger (or OpenAPI Specification, OAS) is the de facto standard for describing RESTful APIs, and it provides
-          powerful features for defining data structures and examples. This article explores how to leverage these
-          features to integrate effective JSON formatting directly within your Swagger/OpenAPI documentation.
+          If you want clean, readable JSON in Swagger or OpenAPI docs, the important step is not pasting pretty JSON
+          into markdown. It is attaching valid examples to the correct OpenAPI object so tools like Swagger UI can
+          render and pretty-print them automatically. In most cases, that means putting your sample payload under{" "}
+          <code>content.application/json</code> for the request or response you are documenting.
         </p>
 
+        <p>
+          For searchers looking for the practical "swagger json" answer: use <code>example</code> for one payload, use{" "}
+          <code>examples</code> for several named payloads, keep schema-level examples for reusable model hints, and run
+          every sample through a JSON formatter before it goes into the spec.
+        </p>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 dark:bg-blue-950/30 dark:border-blue-900">
+          <p className="font-medium">Short version</p>
+          <p className="mt-2">
+            The most reliable place for formatted JSON in Swagger docs is the media type object:
+            <code> requestBody.content.application/json </code>
+            or
+            <code> responses.[status].content.application/json</code>.
+            Swagger UI renders those examples as formatted JSON and uses them in the interactive docs.
+          </p>
+        </div>
+
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-blue-500" /> Why is JSON Formatting Important in Documentation?
+          <BookOpen className="w-6 h-6 text-blue-500" /> Where Formatted JSON Actually Goes
         </h2>
         <p>
-          Raw, unformatted JSON strings can be incredibly difficult to read, especially for complex or deeply nested
-          structures. Proper formatting, which includes indentation, line breaks, and consistent spacing, offers several
-          benefits:
+          OpenAPI separates structure from examples. Your schema describes what the JSON should look like. Your request
+          or response content describes concrete payloads that documentation tools can display. That distinction matters
+          because the most visible examples in Swagger UI usually come from the media type level, not just the schema.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Improved Readability:</strong> Developers can quickly scan and understand the structure of request
-            and response bodies.
+            Use <code>schema</code> to define the shape, required fields, enums, formats, and constraints.
           </li>
           <li>
-            <strong>Easier Debugging:</strong> Identifying missing commas, incorrect nesting, or other syntax errors
-            becomes much simpler.
+            Use <code>content.application/json.example</code> when you want one sample body.
           </li>
           <li>
-            <strong>Enhanced Collaboration:</strong> Clearly formatted examples help teams communicate API contracts
-            effectively.
+            Use <code>content.application/json.examples</code> when you want multiple named request or response bodies.
           </li>
           <li>
-            <strong>Tool Compatibility:</strong> Many API tools (like Swagger UI, Postman, Insomnia) automatically
-            format JSON examples, but providing pre-formatted or well-structured examples in the spec ensures
-            consistency and handles cases where automatic formatting might be limited.
+            Use schema examples for reusable model-level guidance, not as your only documentation strategy.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CodeXml className="w-6 h-6 text-blue-500" /> How Swagger/OpenAPI Defines Data Structures
+          <FileJson className="w-6 h-6 text-blue-500" /> A Working Swagger/OpenAPI Pattern
         </h2>
         <p>
-          Swagger/OpenAPI uses the concept of "Schemas" to describe the data structures of request bodies, response
-          bodies, and parameters. These schemas are based on{" "}
-          <a
-            href="https://json-schema.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            JSON Schema
-          </a>{" "}
-          and are typically defined in the <code>components/schemas</code> section of your OpenAPI specification file.
+          This is the pattern that stays readable in the spec and renders well in Swagger UI: define the model in{" "}
+          <code>components/schemas</code>, then attach realistic JSON bodies to the specific operation.
         </p>
-        <p>
-          A schema defines the expected data types, properties, required fields, and constraints of a JSON object or
-          array. While the schema itself defines the structure, examples are needed to show concrete instances of the
-          data.
-        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium mb-2">OpenAPI YAML example</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`openapi: 3.1.1
+info:
+  title: Orders API
+  version: 1.0.0
+paths:
+  /orders:
+    post:
+      summary: Create an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+            examples:
+              standard:
+                summary: Standard delivery order
+                value:
+                  customerId: "cus_123"
+                  currency: "USD"
+                  items:
+                    - sku: "notebook-a5"
+                      quantity: 2
+              express:
+                summary: Express order
+                value:
+                  customerId: "cus_456"
+                  currency: "USD"
+                  shippingMethod: "express"
+                  items:
+                    - sku: "pen-black"
+                      quantity: 10
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+              example:
+                id: "ord_789"
+                status: "created"
+                total: 42.5
+                currency: "USD"
+
+components:
+  schemas:
+    OrderCreate:
+      type: object
+      required: [customerId, currency, items]
+      properties:
+        customerId:
+          type: string
+        currency:
+          type: string
+        shippingMethod:
+          type: string
+          enum: [standard, express]
+        items:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [sku, quantity]
+            properties:
+              sku:
+                type: string
+              quantity:
+                type: integer
+                minimum: 1
+    Order:
+      type: object
+      required: [id, status, total, currency]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        total:
+          type: number
+        currency:
+          type: string`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            This keeps JSON as structured data. Swagger UI can then render it as formatted JSON without guessing.
+          </p>
+        </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <FileJson className="w-6 h-6 text-blue-500" /> Integrating JSON Examples
+          <CodeXml className="w-6 h-6 text-blue-500" /> Choosing Between <code>example</code>, <code>examples</code>,
+          and Schema Examples
         </h2>
+        <p>These fields look similar, but they solve different problems.</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Media type <code>example</code>:</strong> best when one request or response body is enough.
+          </li>
+          <li>
+            <strong>Media type <code>examples</code>:</strong> best when you want named cases such as success, partial
+            data, validation error, or different business scenarios.
+          </li>
+          <li>
+            <strong>Schema <code>examples</code>:</strong> in OpenAPI 3.1, this is the preferred schema-level way to
+            attach sample values to the model itself.
+          </li>
+          <li>
+            <strong>Schema <code>example</code>:</strong> common in OpenAPI 3.0 documents and still useful when you
+            need compatibility with older tooling.
+          </li>
+        </ul>
         <p>
-          The primary way to show formatted JSON in Swagger/OpenAPI documentation is by providing examples. OpenAPI
-          provides several ways to include examples:
+          There is one important rule from the specification: <code>example</code> and <code>examples</code> are
+          mutually exclusive at the same location, and an example defined on the media type overrides an example defined
+          on the referenced schema for that request or response.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">
-          1. Using the <code>example</code> Field (Simple)
-        </h3>
-        <p>
-          The <code>example</code> field can be used directly within a schema, parameter, or response body definition to
-          provide a single example value. For JSON objects or arrays, you embed the JSON structure directly. Writing it
-          with proper indentation in your YAML or JSON spec file is the simplest way to format it for readability within
-          the source documentation. Swagger UI will typically format this further.
-        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">YAML Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`responses:
-  '200':
-    description: A list of users.
-    content:
-      application/json:
-        schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        example: |- # Using |- for multi-line string preservation
-          [
-            {
-              "id": 1,
-              "name": "Alice Smith",
-              "email": "alice@example.com",
-              "isActive": true
-            },
-            {
-              "id": 2,
-              "name": "Bob Johnson",
-              "email": "bob@example.com",
-              "isActive": false
-            }
-          ]`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Using YAML&apos;s <code>|-</code> syntax helps preserve explicit line breaks and indentation.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">
-          2. Using the <code>examples</code> Field (Multiple Examples)
-        </h3>
-        <p>
-          When you need to show multiple examples for a single location (e.g., different response scenarios), use the{" "}
-          <code>examples</code> field. This field holds a map of named examples. Each example can either have an{" "}
-          <code>value</code> field (embedding the JSON) or an <code>externalValue</code> field (linking to an external
-          file). Using <code>value</code> is similar to the single <code>example</code> field but allows naming and
-          describing each case.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">YAML Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`responses:
-  '200':
-    description: User details.
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/User'
-        examples:
-          userActive:
-            summary: An example of an active user
-            value:
-              id: 1 # YAML allows omitting quotes for simple strings
-              name: Alice Smith
-              email: alice@example.com
-              isActive: true
-          userInactive:
-            summary: An example of an inactive user
-            value:
-              id: 2
-              name: Bob Johnson
-              email: bob@example.com
-              isActive: false`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            YAML&apos;s structure inherently provides indentation, which translates well into formatted JSON when
-            rendered by tools like Swagger UI.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">
-          3. Using <code>externalValue</code> (Linking External Files)
-        </h3>
-        <p>
-          For very large or numerous examples, you can store the JSON in separate files (e.g.,{" "}
-          <code>examples/user.json</code>) and reference them using <code>externalValue</code> within the{" "}
-          <code>examples</code> field. This keeps your main OpenAPI spec clean and allows you to use standard JSON
-          formatting tools on the external files.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">YAML Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`responses:
-  '200':
-    description: User details loaded from an external file.
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/User'
-        examples:
-          singleUserExample:
-            summary: Example User Object from external file
-            externalValue: https://example.com/api-docs/examples/user.json # Can be a URL or relative path`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            The content of <code>user.json</code> should be the raw or pre-formatted JSON payload. Swagger UI will fetch
-            and display it.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">
-          4. Defining Schemas in <code>components/schemas</code>
-        </h3>
-        <p>
-          While not directly providing *examples*, defining clear schemas in <code>components/schemas</code> is
-          fundamental. These schemas provide the necessary structure that tools like Swagger UI use to understand the
-          expected JSON format. You can optionally include an <code>example</code> field within a schema definition
-          itself, which serves as a default example for any part of the spec that references that schema.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">YAML Example (Schema Definition):</h4>
+          <h3 className="text-lg font-medium mb-2">Schema-level example in OpenAPI 3.1</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`components:
   schemas:
-    User:
+    Address:
       type: object
+      required: [street, city, postalCode]
       properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier for the user.
-        name:
+        street:
           type: string
-          description: The user's full name.
-        email:
+        city:
           type: string
-          format: email
-          description: The user's email address.
-        isActive:
-          type: boolean
-          description: Whether the user is currently active.
-      required:
-        - id
-        - name
-        - email
-        - isActive
-      example: # Example within the schema definition
-        id: 101
-        name: Charlie Brown
-        email: charlie@example.com
-        isActive: true`}
+        postalCode:
+          type: string
+      examples:
+        - street: "100 Market St"
+          city: "San Francisco"
+          postalCode: "94105"`}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            This schema provides structure and a default example. Specific response/request definitions can override or
-            add to this example using their own <code>example</code> or <code>examples</code> fields.
+            If you still publish OpenAPI 3.0 specs, use singular <code>example</code> on the schema instead.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <ListTree className="w-6 h-6 text-blue-500" /> How Documentation Tools Render Formatted JSON
+          <ListTree className="w-6 h-6 text-blue-500" /> Reusing JSON Examples Across Endpoints
         </h2>
         <p>
-          Tools like Swagger UI are designed to parse the OpenAPI specification and render it into interactive
-          documentation. When they encounter JSON examples defined using <code>example</code> or <code>examples</code>{" "}
-          (with the <code>value</code> field) or fetched via <code>externalValue</code>, they typically:
+          If the same JSON response appears in several places, move it into <code>components/examples</code> and refer
+          to it with <code>$ref</code>. This keeps large specs easier to maintain and avoids drift between endpoints.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Automatically detect that the content type is JSON (based on the <code>application/json</code> MIME type).
-          </li>
-          <li>Apply syntax highlighting appropriate for JSON.</li>
-          <li>
-            Render the JSON with proper indentation, line breaks, and potentially collapsible sections for nested
-            objects/arrays, even if the source YAML/JSON is less perfectly formatted.
-          </li>
-          <li>Display schema information alongside the examples.</li>
-        </ul>
-        <p>
-          This automatic formatting by the rendering tool is the final step in presenting readable JSON to the developer
-          using the documentation. Your role as the API documenter is to provide the correct JSON content within the
-          appropriate fields (<code>example</code>, <code>examples</code>, or external files) and define the structure
-          using schemas.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Lightbulb className="w-6 h-6 text-blue-500" /> Best Practices for JSON Formatting in Swagger
-        </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <Check className="inline-block mr-2 w-4 h-4 text-green-500" />
-            <strong>Always Use Schemas:</strong> Define your data structures in <code>components/schemas</code> and
-            reference them. This provides the canonical structure and helps validation.
-          </li>
-          <li>
-            <Check className="inline-block mr-2 w-4 h-4 text-green-500" />
-            <strong>Provide Examples:</strong> Include realistic examples for both request and response bodies. Use{" "}
-            <code>examples</code> for multiple scenarios (success, error, different data states).
-          </li>
-          <li>
-            <Check className="inline-block mr-2 w-4 h-4 text-green-500" />
-            <strong>Format Source YAML/JSON:</strong> Even though tools auto-format, keeping your source specification
-            file clean with consistent indentation for embedded JSON improves the readability of the documentation
-            source code itself. Use YAML&apos;s multi-line string indicators (<code>|</code> or <code>|-</code>) where
-            helpful.
-          </li>
-          <li>
-            <Check className="inline-block mr-2 w-4 h-4 text-green-500" />
-            <strong>Keep Examples Realistic:</strong> Examples should reflect actual data structures and typical values
-            returned by the API. Avoid placeholders like <code>"string"</code> or <code>0</code> where specific value
-            formats (like dates, UUIDs) are expected.
-          </li>
-          <li>
-            <Check className="inline-block mr-2 w-4 h-4 text-green-500" />
-            <strong>
-              Use <code>externalValue</code> for Large Examples:
-            </strong>{" "}
-            Don&apos;t clutter your main spec file with massive JSON payloads.
-          </li>
-          <li>
-            <Check className="inline-block mr-2 w-4 h-4 text-green-500" />
-            <strong>Document Errors:</strong> Provide examples for common error responses (e.g., 400, 401, 404, 500) to
-            show the expected error JSON format.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <ListTree className="w-6 h-6 text-blue-500" /> Example Structure in OpenAPI YAML
-        </h2>
-        <p>Here&apos;s a simplified snippet showing how schemas and examples connect in a typical OpenAPI YAML file:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium mb-2">Reusable example object</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`openapi: 3.0.0
-info:
-  title: Example API
-  version: 1.0.0
+              {`components:
+  examples:
+    OrderCreated:
+      summary: Minimal order response
+      value:
+        id: "ord_789"
+        status: "created"
+        total: 42.5
+        currency: "USD"
+
 paths:
-  /users:
+  /orders/{id}:
     get:
-      summary: Get a list of users
       responses:
         '200':
-          description: Successfully retrieved list
+          description: Order details
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-              examples: # Using examples for multiple scenarios if needed
-                success:
-                  summary: Array of users
-                  value: # Embedded JSON example
-                    - id: 1
-                      name: Alice
-                    - id: 2
-                      name: Bob
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example: # Embedded JSON example for error
-                code: 500
-                message: Internal Server Error
-
-components:
-  schemas:
-    User: # User Schema definition
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-      required:
-        - id
-        - name
-      example: # Default example for User schema
-        id: 99
-        name: Default User
-
-    ErrorResponse: # Error Schema definition
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-      required:
-        - code
-        - message
-`}
+                $ref: '#/components/schemas/Order'
+              examples:
+                default:
+                  $ref: '#/components/examples/OrderCreated'`}
             </pre>
           </div>
         </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Lightbulb className="w-6 h-6 text-blue-500" /> When <code>externalValue</code> Is the Better Option
+        </h2>
+        <p>
+          For huge payloads, event samples, or examples shared across documentation systems, storing raw JSON in a
+          standalone file can be cleaner than embedding it in YAML. In that case, use an Example Object with{" "}
+          <code>externalValue</code>.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium mb-2">External JSON example</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`responses:
+  '200':
+    description: Full order export
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Order'
+        examples:
+          export:
+            summary: Large order export example
+            externalValue: https://docs.example.com/examples/order-export.json`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            In practice, browser-rendered docs only show external examples when that URL is reachable from the docs page.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <AlertTriangle className="w-6 h-6 text-blue-500" /> Common Mistakes That Make Swagger JSON Look Wrong
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Using YAML block strings for object payloads.</strong> A pattern like <code>example: |</code> or{" "}
+            <code>example: |-</code> turns the example into a string. That is only correct if your actual payload is a
+            string, not a JSON object or array.
+          </li>
+          <li>
+            <strong>Declaring both <code>example</code> and <code>examples</code> in the same place.</strong> Pick one.
+          </li>
+          <li>
+            <strong>Copying invalid JSON into the spec.</strong> Trailing commas, comments, single-quoted keys, and
+            mismatched braces break examples fast.
+          </li>
+          <li>
+            <strong>Letting examples drift away from the schema.</strong> If the example does not match the model, docs
+            become misleading and validators may flag the spec.
+          </li>
+          <li>
+            <strong>Using fake placeholder data everywhere.</strong> Samples like <code>"string"</code> or{" "}
+            <code>0</code> do not help developers understand the real contract.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Check className="w-6 h-6 text-blue-500" /> A Practical JSON Formatter Workflow
+        </h2>
+        <p>
+          A JSON formatter is most useful before the example reaches your OpenAPI file. Take the real payload from a
+          response log, contract test, or SDK fixture, then clean it up before you paste it into the spec.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Format and validate the JSON first so you catch syntax issues immediately.</li>
+          <li>Remove unstable values that create noise, such as timestamps or generated IDs, unless they matter.</li>
+          <li>Keep values realistic so the sample teaches format, casing, and nesting conventions.</li>
+          <li>
+            If your OpenAPI file is YAML, translate the formatted JSON into native YAML objects instead of storing the
+            whole object as a quoted string.
+          </li>
+          <li>
+            Add separate named examples for success, validation errors, and edge cases rather than forcing one payload
+            to do everything.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <BookOpen className="w-6 h-6 text-blue-500" /> Current Swagger/OpenAPI Notes
+        </h2>
+        <p>
+          Current Swagger guidance still documents the familiar OpenAPI 3.0 example patterns, while the OpenAPI 3.1
+          specification aligns schema behavior more closely with JSON Schema and prefers schema-level{" "}
+          <code>examples</code> over the older singular schema <code>example</code>. The practical takeaway is simple:
+          for the broadest compatibility in generated docs, keep your main request and response payloads on the media
+          type object, and treat schema examples as supporting context.
+        </p>
+        <p>
+          If you want to confirm exact behavior, check the{" "}
+          <a
+            href="https://swagger.io/docs/specification/v3_0/adding-examples/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            Swagger documentation on adding examples
+          </a>{" "}
+          and the{" "}
+          <a
+            href="https://spec.openapis.org/oas/v3.1.1.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            OpenAPI 3.1.1 specification
+          </a>
+          .
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Check className="w-6 h-6 text-blue-500" /> Conclusion
         </h2>
         <p>
-          Integrating well-formatted JSON examples and robust schemas into your Swagger/OpenAPI documentation
-          significantly enhances its value. By clearly defining data structures and providing realistic, readable
-          examples, you empower developers consuming your API, reduce potential misunderstandings, and streamline the
-          integration process. Leverage the <code>schema</code>, <code>example</code>, and <code>examples</code> fields
-          effectively, and remember that the rendering tools will do the final formatting magic to present your JSON
-          beautifully.
+          The cleanest way to integrate JSON formatting with Swagger/OpenAPI documentation is to pair solid schemas with
+          explicit, validated examples at <code>content.application/json</code>. Format the payload first, keep it as
+          structured data, use named examples when the operation has multiple valid outcomes, and reserve schema
+          examples and <code>externalValue</code> for reuse and scale. That approach produces better Swagger docs and
+          makes the underlying API contract easier to trust.
         </p>
       </div>
     </>

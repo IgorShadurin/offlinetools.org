@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Binary, Code, Wrench, Info, AlertCircle, CheckCircle, Database, FileJson } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Using Typed Arrays for JSON Buffer Manipulation | Offline Tools",
+  title: "Using Typed Arrays for JSON Buffer Manipulation: UTF-8, Uint8Array, and Safe Buffer Workflows | Offline Tools",
   description:
-    "Learn how to work with JSON data as byte buffers using JavaScript Typed Arrays (Uint8Array) for performance and specific I/O scenarios.",
+    "Learn when to use Uint8Array for JSON buffer manipulation, how UTF-8 affects byte handling, and how to encode, decode, stream, and frame JSON safely in browsers and Node.js.",
 };
 
 export default function TypedArraysJsonBufferArticle() {
@@ -16,207 +16,260 @@ export default function TypedArraysJsonBufferArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON is the ubiquitous data interchange format on the web and beyond. Typically, we interact with JSON as
-          strings using <code>JSON.parse()</code> and <code>JSON.stringify()</code>. However, when dealing with data
-          transmission, file I/O, or performance-critical applications, JSON data often exists as raw bytes in a buffer.
-          This is where JavaScript&apos;s{" "}
-          <a
-            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline dark:text-blue-400"
-          >
-            Typed Arrays
-          </a>{" "}
-          become incredibly useful for direct manipulation of these binary JSON representations.
+          Typed arrays help when JSON is already moving through your app as bytes rather than plain strings, such as a{" "}
+          <code>fetch()</code> response, a file read, a WebSocket frame, a worker message, or a Node.js stream. In
+          those cases, a <code>Uint8Array</code> is the right container for the UTF-8 bytes that represent the JSON
+          text.
+        </p>
+        <p>
+          The important boundary is this: typed arrays are excellent for <em>transport, framing, slicing, reusing
+          buffers, and interop with binary APIs</em>. They do not replace JSON parsing. In almost every real workflow,
+          you still move between <code>object -&gt; JSON string -&gt; UTF-8 bytes</code> on the way out and{" "}
+          <code>UTF-8 bytes -&gt; JSON string -&gt; object</code> on the way back in.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Info className="w-6 h-6" /> What are Typed Arrays?
-        </h2>
-        <p>
-          Unlike standard JavaScript arrays, Typed Arrays are designed to hold binary data of a specific numerical type,
-          providing efficient access to raw binary data. They are built on top of{" "}
-          <a
-            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline dark:text-blue-400"
-          >
-            <code>ArrayBuffer</code>
-          </a>
-          s, which are raw fixed-length binary data buffers.
-        </p>
-        <p>
-          A Typed Array is essentially a &quot;view&quot; into an <code>ArrayBuffer</code>, allowing you to read and
-          write data to it in specified formats (like 8-bit unsigned integers, 32-bit signed integers, etc.). For
-          text-based data like JSON strings represented as bytes, the{" "}
-          <a
-            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline dark:text-blue-400"
-          >
-            <code>Uint8Array</code>
-          </a>{" "}
-          is the most relevant, as it treats the buffer as a sequence of 8-bit unsigned integers (bytes).
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <FileJson className="w-6 h-6" /> JSON as a Sequence of Bytes
-        </h2>
-        <p>
-          Although we think of JSON as text, when it&apos;s stored in memory, sent over a network, or read from a file,
-          it exists as a sequence of bytes. The mapping from characters to bytes depends on the character encoding, with{" "}
-          <a
-            href="https://en.wikipedia.org/wiki/UTF-8"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline dark:text-blue-400"
-          >
-            UTF-8
-          </a>{" "}
-          being the standard and most common encoding for JSON.
-        </p>
-        <p>
-          A JSON string like <code>&#x7b;&quot;name&quot;: &quot;Alice&quot;&#x7d;</code>, when encoded in UTF-8,
-          becomes a specific sequence of byte values. A <code>Uint8Array</code> is the perfect Typed Array to represent
-          this sequence of bytes directly in JavaScript.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          {/* Removed Speedometer as it's not in lucide-react */}Why Manipulate JSON Buffers Directly with Typed Arrays?
+          <Info className="w-6 h-6" /> When Typed Arrays Are Actually Useful for JSON
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> <strong>Performance:</strong> Direct access
-            to raw bytes can be faster for certain operations compared to working with JavaScript strings, especially in
-            contexts like WebAssembly or Node.js streams.
+            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> JSON arrives from an API or socket as raw
+            bytes and you need to decode it yourself.
           </li>
           <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" />{" "}
-            <strong>Integration with Binary Data:</strong> Many I/O APIs (like
-            <code>fetch</code> with `response.arrayBuffer()`, Node.js `fs` read/write, WebSockets, WebGL, WebAudio) work
-            directly with <code>ArrayBuffer</code> or Typed Arrays. Representing JSON as a<code>Uint8Array</code> fits
-            seamlessly into these workflows.
+            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> You are packaging JSON next to binary data,
+            such as a length prefix, checksum, or custom protocol header.
           </li>
           <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> <strong>Memory Efficiency:</strong> Typed
-            Arrays can be more memory efficient for large datasets compared to standard JavaScript arrays.
+            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> You want to reuse buffers and reduce extra
+            allocations in tight loops.
           </li>
           <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> <strong>Specific Protocols:</strong> Some
-            network protocols might interleave JSON metadata with other binary data in a single buffer. Typed Arrays
-            allow you to work with the entire buffer efficiently.
+            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> You need the same payload to work across
+            browser APIs, Web Workers, WebAssembly boundaries, and Node.js.
           </li>
         </ul>
+        <p>
+          If you only need to inspect, format, or parse JSON already held in a JavaScript string, typed arrays are
+          usually unnecessary overhead. In that case, <code>JSON.parse()</code>, <code>JSON.stringify()</code>, and a
+          formatter are the simpler tools.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Code className="w-6 h-6" /> Core Operations: Encoding and Decoding
+          <FileJson className="w-6 h-6" /> JSON on the Wire Is UTF-8 Bytes
         </h2>
         <p>
-          The most common task when dealing with JSON buffers is converting between JavaScript strings (what{" "}
-          <code>JSON.stringify()</code> produces) and the byte representation (a <code>Uint8Array</code>). The standard
-          web APIs for this are{" "}
+          JSON is text, but network and file APIs move it around as bytes. The current JSON standard,{" "}
           <a
-            href="https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder"
+            href="https://www.rfc-editor.org/rfc/rfc8259"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline dark:text-blue-400"
           >
-            <code>TextEncoder</code>
-          </a>{" "}
-          and{" "}
-          <a
-            href="https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline dark:text-blue-400"
-          >
-            <code>TextDecoder</code>
+            RFC 8259
           </a>
-          . They primarily support UTF-8 encoding.
+          , says that JSON exchanged between systems outside a closed ecosystem <em>must</em> be encoded as UTF-8. It
+          also says senders must not prepend a byte order mark (BOM) to network JSON.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          <Wrench className="inline w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" /> Converting JSON String to
-          Uint8Array (Encoding)
-        </h3>
+        <p>
+          That matters because JavaScript string length is <em>not</em> the same thing as UTF-8 byte length. For JSON
+          containing non-ASCII characters, the byte count can be larger than <code>json.length</code>.
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// A simple JSON string
-const jsonString = '&#x7b;&quot;id&quot;: 123, &quot;name&quot;: &quot;Test Item&quot;&#x7d;';
-
-// Create a TextEncoder instance (defaults to UTF-8)
+              {`const json = JSON.stringify({ city: "Minsk", currency: "€" });
 const encoder = new TextEncoder();
+const bytes = encoder.encode(json);
 
-// Encode the string into a Uint8Array
-const jsonBuffer: Uint8Array = encoder.encode(jsonString);
-
-console.log(jsonBuffer);
-// Output will be a Uint8Array showing the byte values,
-// e.g., Uint8Array [ 123, 34, 105, 100, ..., 125 ]`}
+console.log(json.length);  // UTF-16 code units, not UTF-8 bytes
+console.log(bytes.length); // Actual byte size on the wire`}
             </pre>
           </div>
         </div>
         <p>
-          This <code>jsonBuffer</code> is now a Typed Array containing the UTF-8 byte representation of your JSON
-          string. This buffer can be sent over a network connection that expects binary data, saved to a file, or passed
-          to APIs that operate on buffers.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          <Wrench className="inline w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" /> Converting Uint8Array to JSON
-          String (Decoding)
-        </h3>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Assume jsonBuffer is a Uint8Array containing JSON bytes
-// (e.g., the one created in the previous example)
-
-// Create a TextDecoder instance (defaults to UTF-8)
-const decoder = new TextDecoder();
-
-// Decode the Uint8Array back into a string
-const decodedString: string = decoder.decode(jsonBuffer);
-
-console.log(decodedString);
-// Output: '{"id": 123, "name": "Test Item"}'
-
-// Now you can parse the string back into a JavaScript object
-const jsonObject = JSON.parse(decodedString);
-
-console.log(jsonObject);
-// Output: { id: 123, name: 'Test Item' }`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          This sequence (buffer to string via <code>TextDecoder</code>, then string to object via{" "}
-          <code>JSON.parse</code>) is the standard way to process received JSON data that arrives as a byte buffer.
+          The WHATWG{" "}
+          <a
+            href="https://encoding.spec.whatwg.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline dark:text-blue-400"
+          >
+            Encoding Standard
+          </a>{" "}
+          defines <code>TextEncoder</code> as UTF-8 only, which matches how JSON should be transmitted.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <AlertCircle className="w-6 h-6" /> Advanced Considerations and Limitations
+          <Code className="w-6 h-6" /> Encode JSON into a <code>Uint8Array</code>
+        </h2>
+        <p>
+          The default outbound path is straightforward: stringify first, then encode the string into a byte buffer.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`const payload = {
+  id: 123,
+  name: "Test Item",
+  tags: ["json", "typed-array"]
+};
+
+const jsonString = JSON.stringify(payload);
+const encoder = new TextEncoder();
+const jsonBytes = encoder.encode(jsonString);
+
+console.log(jsonBytes instanceof Uint8Array); // true
+console.log(jsonBytes.byteLength);            // number of UTF-8 bytes`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          Use this when an API expects bytes, for example <code>WebSocket.send()</code>, <code>postMessage()</code>, a
+          file API, or a Node.js socket or stream.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6">
+          <Wrench className="inline w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" /> Reuse a Destination Buffer with{" "}
+          <code>encodeInto()</code>
+        </h3>
+        <p>
+          When you already have a reusable output buffer, <code>TextEncoder.encodeInto()</code> can avoid an extra
+          allocation. The Encoding Standard defines it to return how many source code units were read and how many bytes
+          were written.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`const payload = { ok: true, message: "Hello €" };
+const jsonString = JSON.stringify(payload);
+const target = new Uint8Array(1024);
+
+const encoder = new TextEncoder();
+const { read, written } = encoder.encodeInto(jsonString, target);
+
+if (read !== jsonString.length) {
+  throw new Error("Target buffer is too small");
+}
+
+const exactBytes = target.subarray(0, written);
+console.log(exactBytes.byteLength);`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          This is most useful in high-throughput or allocation-sensitive code. The detail to remember is that{" "}
+          <code>written</code> is measured in bytes, while <code>read</code> is measured against the source string.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Code className="w-6 h-6" /> Decode Bytes Back into JSON Safely
+        </h2>
+        <p>
+          The reverse path is decode first, parse second. If the bytes are supposed to be valid UTF-8 JSON, it is often
+          better to fail loudly on bad input instead of silently replacing broken byte sequences.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`const decoder = new TextDecoder("utf-8", { fatal: true });
+
+const jsonString = decoder.decode(jsonBytes);
+const payload = JSON.parse(jsonString);
+
+console.log(payload);`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          With <code>fatal: true</code>, invalid UTF-8 throws a <code>TypeError</code> during decoding. Without it,
+          bad input is typically replaced with the Unicode replacement character, which can hide corruption until later.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Database className="w-6 h-6" /> Buffer Manipulation That Actually Makes Sense
+        </h2>
+        <p>
+          The strongest use case for typed arrays is usually not &quot;editing JSON bytes directly&quot;. It is
+          manipulating the surrounding buffer layout: prepending a header, extracting a payload, concatenating chunks, or
+          copying the JSON bytes into a larger binary message.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`const payload = { type: "event", ok: true };
+const jsonBytes = new TextEncoder().encode(JSON.stringify(payload));
+
+// 4-byte big-endian length prefix + JSON payload
+const packet = new Uint8Array(4 + jsonBytes.length);
+const header = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+
+header.setUint32(0, jsonBytes.length, false);
+packet.set(jsonBytes, 4);
+
+// Read it back
+const length = header.getUint32(0, false);
+const body = packet.subarray(4, 4 + length);
+const decoded = JSON.parse(new TextDecoder().decode(body));`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          This kind of framing is exactly where <code>Uint8Array</code> shines: the JSON stays standard, while the
+          surrounding protocol remains binary and efficient.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Wrench className="w-6 h-6" /> Handling Chunked Input Without Corrupting Characters
+        </h2>
+        <p>
+          If JSON arrives in multiple chunks, decode incrementally so multi-byte UTF-8 characters are preserved across
+          chunk boundaries. Only call <code>JSON.parse()</code> once you have the complete JSON text.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`const decoder = new TextDecoder("utf-8", { fatal: true });
+let jsonText = "";
+
+for (const chunk of incomingChunks) {
+  jsonText += decoder.decode(chunk, { stream: true });
+}
+
+jsonText += decoder.decode(); // flush the final partial code point
+const payload = JSON.parse(jsonText);`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          This streaming decode pattern is useful for chunked fetch bodies, sockets, and custom transports. If your
+          stream is newline-delimited JSON rather than one complete JSON document, split on newlines and parse record by
+          record instead.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <AlertCircle className="w-6 h-6" /> Common Mistakes and Caveats
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>Character Encoding:</strong>{" "}
-            <code>TextEncoder</code> and <code>TextDecoder</code> default to UTF-8, which is correct for standard JSON.
-            Be mindful of encoding if dealing with legacy systems or different standards (though rare for JSON).
+            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>In-place edits are fragile:</strong>{" "}
+            changing a value from <code>1</code> to <code>1000</code> or from <code>&quot;a&quot;</code> to{" "}
+            <code>&quot;longer text&quot;</code> changes the byte length and shifts the rest of the document. In most
+            cases, it is safer to parse, modify the object, and re-serialize.
           </li>
           <li>
             <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" />{" "}
-            <strong>Direct Byte-Level JSON Parsing:</strong> Typed Arrays give you access to bytes, but they do{" "}
-            <em>not</em> replace a JSON parser. Parsing JSON involves understanding its grammar (handling nested
-            structures, string escapes, number formats, etc.), which is complex to do manually at the byte level. You
-            will almost always decode the buffer to a string first and then use <code>JSON.parse()</code>.
+            <strong>Byte length and string length are different:</strong> if buffer size matters, measure the encoded
+            bytes, not <code>string.length</code>.
           </li>
           <li>
-            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>Node.js Buffer:</strong> In Node.js,
-            the{" "}
+            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>Typed arrays do not parse JSON:</strong>{" "}
+            access to bytes does not remove the need for <code>JSON.parse()</code>. Byte-level parsing of full JSON
+            grammar is complex and rarely worth doing by hand.
+          </li>
+          <li>
+            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>Node.js has one sharp edge:</strong>{" "}
+            in Node.js, the{" "}
             <a
               href="https://nodejs.org/api/buffer.html"
               target="_blank"
@@ -225,47 +278,41 @@ console.log(jsonObject);
             >
               <code>Buffer</code>
             </a>{" "}
-            class is similar to <code>Uint8Array</code> but with more Node.js-specific methods for handling binary data,
-            including built-in string conversion with encoding support. Buffers are instances of <code>Uint8Array</code>
-            , so they are interoperable.
+            class extends <code>Uint8Array</code>, but <code>Buffer.slice()</code> returns a view while ordinary typed
+            array <code>slice()</code> returns a copy. Prefer <code>subarray()</code> when you want consistent
+            cross-runtime behavior.
           </li>
           <li>
-            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>Performance Nuances:</strong> While
-            direct byte access can be fast, the encoding/decoding steps themselves have costs. The performance benefit
-            of using buffers vs. strings depends heavily on the use case, data size, and specific operations.
+            <AlertCircle className="inline w-5 h-5 mr-2 text-yellow-500" /> <strong>Manual decoding is optional:</strong>{" "}
+            if you simply want parsed JSON from a normal HTTP response, <code>response.json()</code> is usually clearer
+            than <code>response.arrayBuffer()</code> plus manual decoding.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Database className="w-6 h-6" /> Typical Use Cases
+          <Info className="w-6 h-6" /> Browser and Node.js Interoperability Notes
         </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> <strong>Network Communication:</strong>{" "}
-            Sending or receiving JSON data via WebSockets or Fetch API where data is handled as <code>ArrayBuffer</code>
-            s.
-          </li>
-          <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" /> <strong>File Processing:</strong> Reading or
-            writing JSON data from/to files using APIs that deal with binary data (e.g., in Electron or Node.js).
-          </li>
-          <li>
-            <CheckCircle className="inline w-5 h-5 mr-2 text-green-500" />{" "}
-            <strong>Working with IndexedDB or Cache API:</strong> Storing or retrieving data that might be more
-            efficiently handled as binary.
-          </li>
-        </ul>
+        <p>
+          The browser-friendly type for JSON bytes is <code>Uint8Array</code>. In Node.js, <code>Buffer</code> is a
+          subclass of <code>Uint8Array</code>, and the current Node.js docs explicitly note that many APIs accept plain{" "}
+          <code>Uint8Array</code> instances wherever <code>Buffer</code> is supported. That means you can often keep one
+          byte-oriented code path across environments.
+        </p>
+        <p>
+          When you need Node-specific helpers, you can still convert freely between the two. The main reason to stay
+          with <code>Uint8Array</code> in shared code is predictability: it matches the standard web APIs and avoids
+          accidental reliance on Buffer-only methods.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Info className="w-6 h-6" /> Conclusion
         </h2>
         <p>
-          Typed Arrays, particularly <code>Uint8Array</code>, provide a powerful way to interact with the raw byte
-          representation of JSON data. While you won&apos;t typically build a JSON parser directly on bytes yourself,
-          understanding how to encode JSON strings into buffers and decode buffers back into strings using{" "}
-          <code>TextEncoder</code> and <code>TextDecoder</code> is essential when working with binary I/O APIs. This
-          approach allows your application to handle data efficiently at a lower level, integrating JSON seamlessly into
-          binary data pipelines.
+          Using typed arrays for JSON buffer manipulation makes sense when you are solving a byte-level problem, not a
+          formatting problem. Treat JSON as UTF-8, use <code>TextEncoder</code> and <code>TextDecoder</code> for the
+          boundary between text and bytes, reserve direct buffer work for framing and transport, and prefer parsing,
+          editing, and re-serializing over risky in-place mutations. That gives you the performance and interoperability
+          benefits of buffers without turning simple JSON handling into brittle low-level code.
         </p>
       </div>
     </>

@@ -1,11 +1,238 @@
 import type { Metadata } from "next";
-import { AlertTriangle, Code, Inspect, Bug, ListChecks, Lightbulb, Sparkles } from "lucide-react";
+import { AlertTriangle, Bug, Code, Inspect, Lightbulb, ListChecks, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "JSON Parser Error Messages Explained | Offline Tools",
+  title: "JSON Parser Error Messages Explained: Fix Common Parse Failures | Offline Tools",
   description:
-    "Understand common JSON parsing errors like syntax errors, unexpected tokens, and structure issues, with clear explanations and debugging tips.",
+    "Understand what JSON parser errors really mean, including Unexpected token, Extra data, Unterminated string, invalid numbers, empty responses, and HTML-instead-of-JSON failures.",
 };
+
+const quickLookup = [
+  {
+    message: "Unexpected token '<' in JSON at position 0",
+    meaning: "You usually received HTML or plain text instead of JSON.",
+    firstCheck: "Inspect the raw response body, HTTP status, and Content-Type header.",
+  },
+  {
+    message: "Expected property name / property name enclosed in double quotes",
+    meaning: "Object keys are malformed, or a trailing comma/comment confused the parser.",
+    firstCheck: "Use double quotes for keys and remove comments or trailing commas.",
+  },
+  {
+    message: "Unexpected non-whitespace character after JSON / Extra data",
+    meaning: "The parser finished one valid JSON value and then found more content.",
+    firstCheck: "Look for concatenated objects, JSONL/NDJSON input, or stray text after the closing } or ].",
+  },
+  {
+    message: "Unterminated string / bad control character / Invalid control character",
+    meaning: "A string is missing a closing quote or contains an unescaped newline, tab, quote, or backslash.",
+    firstCheck: "Check the nearest string literal and escape special characters.",
+  },
+  {
+    message: "Unexpected end of JSON input / unexpected end of data",
+    meaning: "The payload is truncated, incomplete, or empty.",
+    firstCheck: "Verify the full payload arrived and that you are not parsing an empty response.",
+  },
+  {
+    message: "Unexpected number / missing digits after decimal point",
+    meaning: "A number format is invalid for JSON.",
+    firstCheck: "Remove leading zeros and reject NaN, Infinity, and unfinished decimals like 1.",
+  },
+];
+
+const errorFamilies = [
+  {
+    heading: "1. Property names, quotes, and object syntax",
+    messages: [
+      "Expected property name or '}'",
+      "Expected double-quoted property name in JSON",
+      "Expecting property name enclosed in double quotes",
+    ],
+    why: "This family usually means the parser reached an object member where strict JSON syntax was broken.",
+    likelyCauses: [
+      "Single quotes around keys or string values",
+      "Unquoted keys such as name: \"Alice\"",
+      "Trailing commas inside objects",
+      "Comments copied from JavaScript, JSONC, or JSON5",
+    ],
+    fixSteps: [
+      "Wrap every key and every string value in double quotes.",
+      "Remove comments and trailing commas.",
+      "If the source is a config format that allows comments, convert it to strict JSON before parsing.",
+    ],
+    badJson: `{
+  'name': "Alice",
+  age: 30,
+}`,
+    goodJson: `{
+  "name": "Alice",
+  "age": 30
+}`,
+    note: "The exact wording varies by parser. Firefox often reports a more specific property-name error, while V8-based runtimes may report a broader unexpected-token style message for the same root cause.",
+  },
+  {
+    heading: "2. Missing commas, trailing commas, and array separators",
+    messages: [
+      "Expected ',' or ']' after array element",
+      "Expected ',' or '}' after property value in object",
+      "Unexpected token ] / } in JSON",
+    ],
+    why: "JSON separators are minimal and strict: commas go between elements or members, never after the last one.",
+    likelyCauses: [
+      "Missing a comma between array elements",
+      "Missing a comma between object members",
+      "Trailing commas copied from JavaScript object literals",
+    ],
+    fixSteps: [
+      "Insert commas only between items, not after the last item.",
+      "Check one character before the reported location. The parser often notices the problem only when it reaches the next token.",
+    ],
+    badJson: `[
+  1
+  2,
+  3,
+]`,
+    goodJson: `[
+  1,
+  2,
+  3
+]`,
+    note: "RFC 8259 defines comma as a value separator, but JSON has no grammar rule for a trailing comma.",
+  },
+  {
+    heading: "3. Strings, escapes, and control characters",
+    messages: [
+      "Unterminated string",
+      "bad control character in string literal",
+      "Invalid control character",
+      "bad escape character",
+      "bad Unicode escape",
+    ],
+    why: "A JSON string started correctly but contains characters that must be escaped, or it never closed.",
+    likelyCauses: [
+      "A missing closing double quote",
+      "A raw newline or tab inside a string",
+      "An unescaped quote or backslash",
+      "A malformed Unicode escape such as \\u12G4",
+    ],
+    fixSteps: [
+      "Escape quotes as \\\" and backslashes as \\\\.",
+      "Replace raw newlines with \\n and tabs with \\t.",
+      "Validate every \\u escape uses exactly four hexadecimal digits.",
+    ],
+    badJson: `{
+  "message": "Line 1
+Line 2"
+}`,
+    goodJson: `{
+  "message": "Line 1\\nLine 2"
+}`,
+    note: "Many parsers report the position where they finally give up, not necessarily the first character that was wrong.",
+  },
+  {
+    heading: "4. Extra data after a complete JSON value",
+    messages: [
+      "Unexpected non-whitespace character after JSON",
+      "Extra data",
+    ],
+    why: "A valid JSON text is one serialized value with optional surrounding whitespace. After that, the parser expects nothing else.",
+    likelyCauses: [
+      "Two objects or arrays concatenated together",
+      "Debug text or a stack trace appended after valid JSON",
+      "Trying to parse JSON Lines or NDJSON as one normal JSON document",
+    ],
+    fixSteps: [
+      "Wrap multiple values in an array if you need one JSON document.",
+      "If the source is NDJSON or JSONL, parse it line by line with the right tool.",
+      "Trim any accidental banner text or logging output after the closing brace or bracket.",
+    ],
+    badJson: `{"a": 1}{"b": 2}`,
+    goodJson: `[
+  { "a": 1 },
+  { "b": 2 }
+]`,
+    note: "RFC 8259 defines a JSON text as ws value ws, so extra non-whitespace content after the first value is invalid.",
+  },
+  {
+    heading: "5. Unexpected end of input or truncated payloads",
+    messages: [
+      "Unexpected end of JSON input",
+      "unexpected end of data",
+      "Unterminated string starting at",
+    ],
+    why: "The parser reached the end of the string before the JSON structure was complete.",
+    likelyCauses: [
+      "A missing closing brace, bracket, or quote",
+      "A network response that was cut off or partially written",
+      "Trying to parse an empty response body",
+      "Calling response.json() on a 204 No Content response",
+    ],
+    fixSteps: [
+      "Confirm the source payload is complete before parsing.",
+      "If this came from HTTP, check for 204 responses, proxy errors, or truncated downloads.",
+      "If the body may be empty, guard for that before calling the parser.",
+    ],
+    badJson: `{
+  "user": {
+    "id": 1,
+    "name": "Ana"
+  }`,
+    goodJson: `{
+  "user": {
+    "id": 1,
+    "name": "Ana"
+  }
+}`,
+    note: "An empty string is not valid JSON. If you expect \"no data\", represent it as null, [] or {} depending on your contract.",
+  },
+  {
+    heading: "6. Invalid numbers and non-standard literals",
+    messages: [
+      "Unexpected number in JSON",
+      "missing digits after decimal point",
+      "no number after minus sign",
+      "unexpected keyword",
+    ],
+    why: "JSON numbers are stricter than JavaScript literals and many hand-written formats.",
+    likelyCauses: [
+      "Leading zeros such as 01",
+      "Unfinished decimals such as 1.",
+      "Broken exponents such as 1e or 1e+",
+      "Using NaN, Infinity, or -Infinity in strict JSON",
+    ],
+    fixSteps: [
+      "Use plain decimal numbers like 0, 1, or 1.0.",
+      "Replace NaN and Infinity with a real value, null, or a string based on your schema.",
+      "Generate numbers with a serializer instead of string concatenation.",
+    ],
+    badJson: `{
+  "count": 01,
+  "ratio": 1.,
+  "value": NaN
+}`,
+    goodJson: `{
+  "count": 1,
+  "ratio": 1.0,
+  "value": null
+}`,
+    note: "RFC 8259 does not permit NaN or Infinity. Python's standard library can accept those values by default, so cross-language behavior may differ unless you tighten the decoder.",
+  },
+];
+
+const fetchChecklist = [
+  "If the first character is <, you probably got an HTML error page, login page, or CDN/proxy response instead of JSON.",
+  "If the body is empty, the parse failure may be correct: an empty string is not JSON.",
+  "MDN notes that Response.json() throws SyntaxError when the body cannot be parsed as JSON, but it can also throw TypeError when body decoding fails, for example because Content-Encoding is wrong.",
+  "If the payload came from a human-edited config file, confirm whether it is strict JSON or a looser format such as JSONC or JSON5.",
+];
+
+const preventionTips = [
+  "Serialize native data structures with JSON.stringify, json.dumps, or equivalent instead of hand-building strings.",
+  "Log the raw payload in development before parsing, but redact secrets and tokens.",
+  "Validate Content-Type and HTTP status before assuming a response body is JSON.",
+  "Use a JSON-aware formatter or validator to pinpoint the first syntax break quickly.",
+  "Use the right parser for the format you actually have: JSON, NDJSON/JSONL, JSON5, or JSONC are not interchangeable.",
+];
 
 export default function JsonParserErrorsArticle() {
   return (
@@ -16,417 +243,218 @@ export default function JsonParserErrorsArticle() {
 
       <div className="space-y-6">
         <p>
-          Working with data interchange formats like JSON is common practice in web development and beyond. However,
-          just like any language, JSON has strict rules about its syntax and structure. When these rules are broken,
-          your application&apos;s JSON parser will throw an error. Understanding these error messages is crucial for
-          quickly identifying and fixing issues. This guide breaks down common JSON parser errors and how to tackle
-          them.
+          Most JSON parser errors boil down to a short list of problems: broken punctuation, broken strings, broken
+          numbers, extra content after a valid JSON value, or content that was never JSON in the first place. The hard
+          part is that different runtimes phrase those failures differently.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Code className="w-6 h-6 mr-2 text-blue-500" /> Why Do JSON Parsing Errors Happen?
-        </h2>
         <p>
-          A JSON parser is a program that reads a string of text and attempts to translate it into a structured data
-          format (like a JavaScript object or array) based on the JSON specification (
-          <a href="https://www.json.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-            json.org
+          This guide translates the message you see into the fastest likely fix, with examples from JavaScript and
+          Python and a few current parser notes from{" "}
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/JSON_bad_parse"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            MDN&apos;s JSON.parse error reference
           </a>
-          ). Errors occur when the input string does not conform to this specification.
+          , the{" "}
+          <a
+            href="https://docs.python.org/3/library/json.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            Python json docs
+          </a>
+          , and{" "}
+          <a
+            href="https://www.rfc-editor.org/rfc/rfc8259"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            RFC 8259
+          </a>
+          .
         </p>
-        <p>Common reasons for errors include:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Syntax Errors:</strong> Incorrect use of commas, colons, brackets, braces, quotes, etc.
-          </li>
-          <li>
-            <strong>Invalid Characters:</strong> Using characters that are not allowed or not properly escaped within
-            strings.
-          </li>
-          <li>
-            <strong>Incorrect Data Types:</strong> Using non-standard representations for numbers, booleans, or null.
-          </li>
-          <li>
-            <strong>Structural Issues:</strong> Unclosed objects or arrays, misplaced commas, incorrect nesting.
-          </li>
-        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Inspect className="w-6 h-6 mr-2 text-blue-500" /> Common JSON Error Messages Explained
+          <Inspect className="w-6 h-6 mr-2 text-blue-500" /> Quick Lookup
         </h2>
         <p>
-          Error messages can vary slightly depending on the programming language or library you are using (e.g.,
-          JavaScript&apos;s &#x60;JSON.parse&#x60;, Python&apos;s &#x60;json.loads&#x60;, Java libraries, etc.).
-          However, the underlying cause is usually one of a few common issues. Here are some typical messages and their
-          meanings:
+          If you landed here with a specific error message, start with the category below and then jump to the matching
+          section.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 1. &#x60;SyntaxError: Unexpected token ... in JSON at position
-          ...&#x60; (JavaScript &#x60;JSON.parse&#x60;)
-        </h3>
-        <p>
-          This is perhaps the most common error when using &#x60;JSON.parse&#x60; in JavaScript. It means the parser
-          encountered a character or sequence of characters that it did not expect at a specific position in the string.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> The parser found something invalid. The &quot;unexpected token&quot; might be the
-            character itself, and &quot;position&quot; indicates where in the string the problem occurred (0-indexed).
-          </li>
-          <li>
-            <strong>Common Causes:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>
-                Trailing commas in objects or arrays (e.g., &#x60;&#x7b;&quot;a&quot;: 1,&#x7d;&#x60; or &#x60;[1,
-                2,]&#x60;).
-              </li>
-              <li>Missing commas between items in objects or arrays.</li>
-              <li>Missing quotes around keys or string values.</li>
-              <li>
-                Using single quotes (&#x60;&apos;&#x60;) instead of double quotes (&#x60;&quot;&#x60;) for strings.
-              </li>
-              <li>
-                Extra characters after the main JSON structure (e.g., &#x60;&#x7b;&quot;a&quot;: 1&#x7d;extra&#x60;).
-              </li>
-              <li>Incorrectly escaped characters within strings (e.g., using unescaped backslashes).</li>
-              <li>Comments (JSON does not allow comments).</li>
-            </ul>
-          </li>
-          <li>
-            <strong>How to Fix:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Examine the JSON string at or near the indicated position.</li>
-              <li>Look for misplaced punctuation (commas, colons, braces, brackets).</li>
-              <li>Ensure all keys and string values are enclosed in double quotes.</li>
-              <li>Check for trailing commas.</li>
-              <li>
-                Verify special characters within strings (like backslashes or double quotes) are correctly escaped
-                (e.g., &#x60;\\&#x60; for a backslash, &#x60;\&quot;&#x60; for a double quote).
-              </li>
-              <li>Remove any comments.</li>
-              <li>Ensure only valid JSON exists in the string.</li>
-            </ul>
-          </li>
-        </ul>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {'{\n  "name": "Alice",\n  "age": 30,\n  "city": "New York", // This comment is invalid\n}'}
-          </pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> The comment &#x60;// This comment is invalid&#x60; will
-            cause a SyntaxError. JSON does not support comments.
-          </p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{"[\n  1,\n  2,\n  3,\n]"}</pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> The trailing comma after &#x60;3&#x60; in the array is
-            invalid JSON syntax and will cause an error.
-          </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <thead className="bg-gray-100 dark:bg-gray-800">
+              <tr>
+                <th className="p-3 font-semibold">Message</th>
+                <th className="p-3 font-semibold">Usually means</th>
+                <th className="p-3 font-semibold">Check first</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quickLookup.map((item) => (
+                <tr key={item.message} className="border-t border-gray-200 dark:border-gray-700 align-top">
+                  <td className="p-3 font-mono text-sm">{item.message}</td>
+                  <td className="p-3">{item.meaning}</td>
+                  <td className="p-3">{item.firstCheck}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 2. &#x60;JSONDecodeError: Expecting property name enclosed in
-          double quotes&#x60; (Python &#x60;json.loads&#x60;)
-        </h3>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Code className="w-6 h-6 mr-2 text-blue-500" /> How to Read the Location Info
+        </h2>
         <p>
-          This error is specific to parsing JSON objects and indicates that a key was not properly enclosed in double
-          quotes.
+          The reported location is your best clue. In JavaScript you often get a character position. In Python,
+          <code className="mx-1">JSONDecodeError</code> exposes the message plus <code className="mx-1">pos</code>,
+          <code className="mx-1">lineno</code>, and <code className="mx-1">colno</code>. The parser usually detects the
+          problem when it reaches the next impossible character, so the real mistake is often one character before the
+          reported position.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> Keys in a JSON object must be strings, and strings must be enclosed in double
-            quotes.
-          </li>
-          <li>
-            <strong>Common Causes:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Using single quotes (&#x60;&apos;key&apos;&#x60;).</li>
-              <li>Not quoting the key at all (&#x60;key: &quot;value&quot;&#x60;).</li>
-            </ul>
-          </li>
-          <li>
-            <strong>How to Fix:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Ensure all keys in your JSON objects are enclosed in double quotes (&#x60;&quot;key&quot;&#x60;).</li>
-            </ul>
-          </li>
-        </ul>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {"{\n  'name': \"Bob\",\n  age: 25\n}"}
-          </pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> Both &#x60;&apos;name&apos;&#x60; (single quotes) and
-            &#x60;age&#x60; (no quotes) are invalid keys in JSON. They must be &#x60;&quot;name&quot;&#x60; and
-            &#x60;&quot;age&quot;&#x60;.
-          </p>
-        </div>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 3. &#x60;JSONDecodeError: Unterminated string starting at
-          position ...&#x60;
-        </h3>
-        <p>
-          This error indicates that a string value started with a double quote but never had a corresponding closing
-          double quote, or it contained unescaped special characters that terminated the string prematurely.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> A string literal in the JSON is not properly closed.
-          </li>
-          <li>
-            <strong>Common Causes:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Missing a closing double quote.</li>
-              <li>
-                Including a literal double quote (&#x60;&quot;&#x60;) within a string without escaping it
-                (&#x60;\&quot;&#x60;).
-              </li>
-              <li>
-                Including a literal backslash (&#x60;\&#x60;) within a string without escaping it (&#x60;\\&#x60;).
-              </li>
-              <li>
-                Including newline characters directly in a string (JSON strings must be on a single line or use
-                &#x60;\n&#x60;).
-              </li>
-            </ul>
-          </li>
-          <li>
-            <strong>How to Fix:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Find the string starting near the specified position.</li>
-              <li>Ensure it has a matching closing double quote.</li>
-              <li>
-                Escape any literal double quotes (&#x60;\&quot;&#x60;) or backslashes (&#x60;\\&#x60;) within the
-                string.
-              </li>
-              <li>Replace literal newlines with &#x60;\n&#x60;.</li>
-            </ul>
-          </li>
-        </ul>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {'{\n  "message": "Hello, world!\nThis is line 2."\n}'}
-          </pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> The newline character directly within the
-            &quot;message&quot; string is invalid. It should be escaped as &#x60;\\n&#x60;.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 4. &#x60;JSONDecodeError: Extra data: line ... column ... (char
-          ...)"&#x60;
-        </h3>
-        <p>
-          This error means the parser successfully parsed a valid JSON value (like an object or array) but found more
-          non-whitespace characters afterwards.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> There&apos;s content in the string after the main JSON document has finished. A
-            valid JSON string must contain exactly one JSON value (object, array, string, number, boolean, or null)
-            optionally surrounded by whitespace.
-          </li>
-          <li>
-            <strong>Common Causes:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Concatenating multiple JSON objects/arrays without putting them in a surrounding array.</li>
-              <li>Having random text or characters after the closing brace/bracket of the root element.</li>
-            </ul>
-          </li>
-          <li>
-            <strong>How to Fix:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>
-                Identify the end of the valid JSON structure (usually the last &#x60;&#x7d;&#x60; or &#x60;]&#x60;).
-              </li>
-              <li>Remove any characters that appear after it, except for whitespace.</li>
-              <li>
-                If you intend to send multiple JSON items, enclose them within a root JSON array (e.g.,
-                &#x60;[&#x7b;&#x7d;, &#x7b;&#x7d;]&#x60;).
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{'{\n  "a": 1\n}{\n  "b": 2\n}'}</pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> Two separate JSON objects concatenated. This is invalid
-            JSON. To fix, put them in an array: &#x60;[&#x7b;\n &quot;a&quot;: 1\n&#x7d;,&#x7b;\n &quot;b&quot;:
-            2\n&#x7d;]&#x60;.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 5. &#x60;SyntaxError: Unexpected non-whitespace character after
-          JSON at position ...&#x60;
-        </h3>
-        <p>Very similar to the &quot;Extra data&quot; error, indicating content after the primary JSON value.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> The parser found text or symbols after successfully completing the parse of the
-            root JSON structure.
-          </li>
-          <li>
-            <strong>Common Causes:</strong> Same as &quot;Extra data&quot; error.
-          </li>
-          <li>
-            <strong>How to Fix:</strong> Same as &quot;Extra data&quot; error.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 6. &#x60;SyntaxError: Expected property name or &rbrace; in JSON
-          at position ...&#x60;
-        </h3>
-        <p>
-          Occurs when parsing an object (&#x60;&#x7b;&#x7d;&#x60;) and the parser expects either a key (which must be a
-          string) or the closing brace &#x60;&#x7d;&#x60; but finds something else.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> Inside an object, after an opening &#x60;&#x7b;&#x60; or after a comma, the parser
-            needs a key (a double-quoted string) or the closing &#x60;&#x7d;&#x60;. It found neither.
-          </li>
-          <li>
-            <strong>Common Causes:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Missing a key after a comma in an object (e.g., &#x60;&#x7b;&quot;a&quot;: 1,&#x7d;&#x60;).</li>
-              <li>Putting a comma before the first key in an object (e.g., &#x60;,&quot;a&quot;: 1&#x7d;&#x60;).</li>
-              <li>Placing a value where a key should be.</li>
-            </ul>
-          </li>
-          <li>
-            <strong>How to Fix:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Check the content inside objects. Ensure keys are double-quoted strings.</li>
-              <li>Remove leading or trailing commas within objects.</li>
-              <li>Ensure there are key-value pairs separated by colons, and pairs separated by commas.</li>
-            </ul>
-          </li>
-        </ul>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{'{\n  "a": 1,\n}'}</pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> Trailing comma after the last key-value pair is invalid in
-            standard JSON.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="w-5 h-5 mr-2 text-red-500" /> 7. &#x60;SyntaxError: Expected &apos;,&apos; or &apos;]&apos;
-          after array element in JSON at position ...&#x60;
-        </h3>
-        <p>
-          Occurs when parsing an array (&#x60;[]&#x60;) and the parser expects either a comma &#x60;,&#x60; to separate
-          elements or the closing bracket &#x60;]&#x60; but finds something else.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Meaning:</strong> Inside an array, after an element, the parser needs a comma or the closing
-            &#x60;]&#x60;. It found neither.
-          </li>
-          <li>
-            <strong>Common Causes:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Missing a comma between array elements.</li>
-              <li>Trailing comma after the last element (e.g., &#x60;[1, 2,]&#x60;).</li>
-            </ul>
-          </li>
-          <li>
-            <strong>How to Fix:</strong>
-            <ul className="list-circle pl-4 space-y-1">
-              <li>Check the content inside arrays. Ensure elements are separated by commas.</li>
-              <li>Remove trailing commas within arrays.</li>
-            </ul>
-          </li>
-        </ul>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium mb-2">Example of problematic JSON:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{"[\n  1\n  2\n]"}</pre>
-          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
-            <AlertTriangle className="inline w-4 h-4 mr-1" /> Missing comma between &#x60;1&#x60; and &#x60;2&#x60;.
-            Must be &#x60;[\n 1,\n 2\n]&#x60;.
+          <h3 className="text-md font-medium mb-2">Fast debugging rule</h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            Look at the reported character, then inspect 10 to 20 characters before it. Most JSON bugs are either
+            missing punctuation, a broken string escape, or extra text after a valid closing brace or bracket.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <ListChecks className="w-6 h-6 mr-2 text-blue-500" /> General Debugging Tips
-        </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Use a JSON Validator:</strong> Copy the problematic JSON string into an online JSON validator (like
-            JSONLint or services built into many IDEs). These tools provide more detailed error messages and highlight
-            the exact line and column where the syntax breaks.
-          </li>
-          <li>
-            <strong>Check the Source:</strong> If the JSON is coming from an API, a file, or another part of your
-            system, inspect the raw output *before* your parser receives it. Make sure the source is generating valid
-            JSON.
-          </li>
-          <li>
-            <strong>Inspect the Error Position:</strong> Pay close attention to the position or line/column number
-            provided in the error message. The error is usually *at* that location or just before it.
-          </li>
-          <li>
-            <strong>Start Small:</strong> If debugging a large JSON structure, try parsing smaller, simpler parts of it
-            to isolate the problematic section.
-          </li>
-          <li>
-            <strong>Look for Encoding Issues:</strong> Ensure the JSON string is correctly encoded, usually as UTF-8.
-            Incorrect encoding can lead to unexpected characters that break parsing.
-          </li>
-          <li>
-            <strong>Check for Non-Printable Characters:</strong> Sometimes, invisible or non-printable characters can
-            sneak into a string and cause parsing errors.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Lightbulb className="w-6 h-6 mr-2 text-blue-500" /> Preventing JSON Parsing Errors
-        </h2>
-        <p>The best way to handle JSON parsing errors is to prevent them from happening in the first place.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Use Built-in Serializers:</strong> Always use standard library functions (&#x60;JSON.stringify&#x60;
-            in JavaScript, &#x60;json.dumps&#x60; in Python, etc.) to generate JSON strings from native data structures.
-            These functions handle quoting, escaping, and formatting correctly. Avoid manually building JSON strings
-            using string concatenation if possible.
-          </li>
-          <li>
-            <strong>Validate Input:</strong> If receiving JSON from an external source (user input, API calls), consider
-            validating its structure and types *after* parsing, but ensure the raw string passes a basic syntax check
-            first.
-          </li>
-          <li>
-            <strong>Handle Empty/Null Responses:</strong> Anticipate that an API might return an empty string,
-            &#x60;null&#x60;, or non-JSON content, especially in error cases. Handle these possibilities before
-            attempting to parse.
-          </li>
-          <li>
-            <strong>Set Proper &#x60;Content-Type&#x60;:</strong> If serving JSON from an API you control, set the
-            &#x60;Content-Type&#x60; header to &#x60;application/json&#x60;. This helps clients correctly interpret the
-            response.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Sparkles className="w-6 h-6 mr-2 text-blue-500" /> Conclusion
+          <Bug className="w-6 h-6 mr-2 text-blue-500" /> Common JSON Error Families
         </h2>
         <p>
-          While JSON parsing errors can be frustrating, they are usually straightforward to diagnose once you understand
-          the common error messages and the strict rules of the JSON format. By paying attention to syntax, using
-          reliable generation methods, and employing validation tools, you can minimize parsing issues and build more
-          robust applications. Remember that the error message&apos;s position indicator is your primary clue!
+          Exact wording changes across engines. The category is what matters: once you know whether the failure is about
+          object syntax, separators, strings, extra data, incomplete input, or numbers, the fix gets much faster.
+        </p>
+
+        {errorFamilies.map((item) => (
+          <section key={item.heading} className="space-y-4">
+            <h3 className="text-xl font-semibold mt-6">{item.heading}</h3>
+            <p>{item.why}</p>
+
+            <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
+              <h4 className="text-md font-medium mb-2">Message variants you may see</h4>
+              <ul className="list-disc pl-6 space-y-1">
+                {item.messages.map((message) => (
+                  <li key={message}>
+                    <code>{message}</code>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-medium mb-2">Likely causes</h4>
+              <ul className="list-disc pl-6 space-y-2">
+                {item.likelyCauses.map((cause) => (
+                  <li key={cause}>{cause}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-medium mb-2">How to fix it</h4>
+              <ul className="list-disc pl-6 space-y-2">
+                {item.fixSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
+                <h4 className="text-md font-medium mb-2">Problematic JSON</h4>
+                <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{item.badJson}</pre>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
+                <h4 className="text-md font-medium mb-2">Valid JSON</h4>
+                <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{item.goodJson}</pre>
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <AlertTriangle className="inline w-4 h-4 mr-1" />
+              {item.note}
+            </p>
+          </section>
+        ))}
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <ListChecks className="w-6 h-6 mr-2 text-blue-500" /> When the Payload Is Not Actually JSON
+        </h2>
+        <p>
+          Many real-world parse failures are upstream response problems, not syntax mistakes inside a valid JSON
+          document.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          {fetchChecklist.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-md font-medium mb-2">Useful fetch debugging pattern</h3>
+          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">{`const response = await fetch(url);
+const text = await response.text();
+
+console.log(response.status, response.headers.get("content-type"));
+console.log(text.slice(0, 200));
+
+const data = JSON.parse(text);`}</pre>
+          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
+            This is often the fastest way to confirm whether the server returned JSON, HTML, an empty body, or a
+            truncated payload.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2 text-blue-500" /> Compatibility Notes That Matter
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Message text is not standardized. The same invalid input can produce different wording in Firefox, Chrome,
+            Node.js, Python, and backend libraries.
+          </li>
+          <li>
+            JSON itself is standardized. RFC 8259 allows one JSON value at the top level, not just objects or arrays.
+          </li>
+          <li>
+            Python&apos;s standard library documents some intentionally non-strict behavior, such as accepting
+            <code className="mx-1">NaN</code> and <code className="mx-1">Infinity</code> unless you override the
+            decoder. That can hide invalid JSON that a stricter parser will reject later.
+          </li>
+          <li>
+            A byte order mark at the start of a payload can also create interoperability problems. RFC 8259 says it
+            must not be added to transmitted JSON, and parser behavior varies when it appears anyway.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Sparkles className="w-6 h-6 mr-2 text-blue-500" /> Preventing Parse Errors
+        </h2>
+        <p>
+          The fastest fix is usually upstream: generate valid JSON automatically and verify the raw payload before it
+          reaches your parser.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          {preventionTips.map((tip) => (
+            <li key={tip}>{tip}</li>
+          ))}
+        </ul>
+
+        <p>
+          If you treat the error message as a category plus a location hint, most JSON failures become routine to fix.
+          Start with the character position, inspect the raw payload, and verify that the content is strict JSON rather
+          than a nearby format or an upstream error page.
         </p>
       </div>
     </>

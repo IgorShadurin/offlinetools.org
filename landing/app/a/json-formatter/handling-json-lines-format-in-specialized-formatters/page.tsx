@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Handling JSON Lines Format in Specialized Formatters | Offline Tools",
+  title: "Handling JSON Lines (JSONL and NDJSON) in Specialized Formatters | Offline Tools",
   description:
-    "Learn about the JSON Lines (NDJSON) format, how it differs from standard JSON, and how specialized formatters are designed to handle it efficiently.",
+    "Learn how specialized formatters handle JSON Lines, JSONL, and NDJSON files, including line-by-line parsing, validation, blank lines, UTF-8 rules, and when to convert to standard JSON.",
 };
 
 export default function JsonLinesFormatArticle() {
@@ -13,178 +13,246 @@ export default function JsonLinesFormatArticle() {
 
       <div className="space-y-6">
         <p>
-          When working with data streams or logs, you might encounter a format known as JSON Lines, also referred to as
-          NDJSON (Newline Delimited JSON). While similar to standard JSON, its structure presents unique challenges for
-          typical JSON formatters. Specialized tools are required to properly handle and validate this format.
-          Let&apos;s delve into what JSON Lines is and how dedicated formatters manage it.
+          JSON Lines is not a single pretty-printed JSON document. It is a sequence of separate JSON values written one
+          per line, usually for logs, exports, and streaming pipelines. That is why a normal JSON formatter often fails
+          on line 2, while a formatter with JSONL or NDJSON support can validate and normalize the file correctly.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">What is JSON Lines (NDJSON)?</h2>
         <p>
-          JSON Lines is a convenient format for storing structured data where each line is a separate, valid JSON
-          object. It&apos;s commonly used for logging, data streams, and transmitting lists or sequences of objects
-          where processing one object at a time is beneficial or necessary.
+          For search users landing here directly, the key idea is simple: a specialized formatter should treat each
+          physical line as its own JSON payload, report errors by line number, and avoid reformatting records into
+          multi-line blocks unless it is explicitly converting the file into standard JSON first.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">JSON Lines, JSONL, and NDJSON</h2>
+        <p>
+          In practice, people often use <code>JSON Lines</code>, <code>JSONL</code>, and <code>NDJSON</code>{" "}
+          interchangeably. They all describe line-delimited JSON data, but the naming conventions you see in tools and
+          APIs can differ.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Key Characteristics:</h3>
+          <h3 className="text-lg font-medium">Current conventions worth knowing</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Each line contains a single JSON object.</li>
+            <li>JSON Lines documentation uses the <code>.jsonl</code> extension and requires UTF-8 with no BOM.</li>
+            <li>JSON Lines allows any valid JSON value on a line, not only objects.</li>
             <li>
-              Lines are separated by newline characters (<code>\n</code>).
+              The NDJSON spec recommends the <code>.ndjson</code> extension and the media type{" "}
+              <code>application/x-ndjson</code>.
             </li>
-            <li>No root array or object wrapping the entire content.</li>
-            <li>Allows processing of data one line at a time without loading the entire file into memory.</li>
+            <li>
+              You may also encounter <code>application/jsonl</code>, but it is not broadly standardized.
+            </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Standard JSON vs. JSON Lines</h2>
-        <p>Understanding the difference is crucial for knowing why standard formatters fail.</p>
+        <p>
+          That means a capable formatter should not care whether the file is called <code>events.jsonl</code> or{" "}
+          <code>events.ndjson</code>. It should care about whether the content actually follows the one-value-per-line
+          rule.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">What Makes a JSON Lines File Valid</h2>
+        <p>
+          The rules are stricter than many articles suggest. A valid JSON Lines or NDJSON file is not just “lots of
+          JSON objects separated by Enter.”
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Standard JSON Example:</h3>
+          <h3 className="text-lg font-medium">Core rules</h3>
+          <ul className="list-disc pl-6 space-y-2 mt-2">
+            <li>Use UTF-8 encoding.</li>
+            <li>Do not include a byte order mark (BOM).</li>
+            <li>Each line must be one complete JSON value.</li>
+            <li>
+              A line can hold an object, array, string, number, boolean, or <code>null</code>.
+            </li>
+            <li>Blank lines are not valid JSON values unless a parser explicitly chooses to ignore them.</li>
+            <li>
+              The delimiter is a newline. Parsers commonly accept both <code>\n</code> and <code>\r\n</code>.
+            </li>
+          </ul>
+        </div>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Valid JSON Lines example</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{"id":1,"name":"Apple"}
+{"id":2,"name":"Banana"}
+null
+[1,2,3]`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            Objects are the most common case, but they are not the only allowed values.
+          </p>
+        </div>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Invalid JSON Lines example</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "id": 1,
+  "name": "Apple"
+}
+{"id":2,"name":"Banana"}`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            The first record is valid JSON, but it spans multiple physical lines. That makes the file invalid as JSON
+            Lines or NDJSON.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Why Standard JSON Formatters Fail</h2>
+        <p>
+          A standard formatter expects one JSON document from the first byte to the last. JSON Lines gives it multiple
+          top-level JSON values back to back, so the parser usually accepts the first line and then throws an “extra
+          data” or “unexpected token” style error when it encounters the second line.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Standard JSON</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`[
-  {
-    "id": 1,
-    "name": "Apple"
-  },
-  {
-    "id": 2,
-    "name": "Banana"
-  }
+  {"id":1,"name":"Apple"},
+  {"id":2,"name":"Banana"}
 ]`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">A single JSON array containing multiple objects.</p>
+          <p className="mt-2 text-sm">One root array. A normal formatter can parse and indent it.</p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">JSON Lines (NDJSON) Example:</h3>
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">JSON Lines</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`{"id": 1, "name": "Apple"}
-{"id": 2, "name": "Banana"}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Two distinct JSON objects, each on its own line.</p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Why Standard Formatters Struggle</h2>
-        <p>
-          A standard JSON formatter expects the input to be a single, valid JSON value – typically a root object or
-          array. When presented with JSON Lines, it sees multiple root values separated by newlines. This violates the
-          fundamental JSON syntax, causing the formatter to report a parsing error, often indicating "unexpected token"
-          or "extra data" after the first JSON object.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Error in standard formatter:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{"id": 1, "name": "Apple"} <-- Valid JSON object
-{"id": 2, "name": "Banana"} <-- Standard formatter sees this as invalid data after the first object`}
+              {`{"id":1,"name":"Apple"}
+{"id":2,"name":"Banana"}`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            The formatter successfully parses the first line but fails on the second, as it expects the input to be
-            finished or structured differently.
+            Two valid JSON values, but not one valid JSON document. A JSONL-aware formatter must switch to line mode.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">How Specialized Formatters Handle JSON Lines</h2>
+        <h2 className="text-2xl font-semibold mt-8">What a Specialized Formatter Should Actually Do</h2>
         <p>
-          Specialized JSON Lines formatters are built to process the input line by line. They don&apos;t attempt to
-          parse the entire content as a single JSON document. Instead, they:
+          The useful behavior is not “pretend this is normal JSON.” It is to parse, validate, and rewrite records
+          safely without destroying the line-delimited structure.
         </p>
 
         <ul className="list-disc pl-6 space-y-3 my-4">
-          <li>Read the input line by line.</li>
-          <li>Treat each line as an independent JSON document.</li>
-          <li>Attempt to parse and validate the JSON content of each line separately.</li>
-          <li>Apply formatting rules to each line&apos;s JSON object.</li>
-          <li>Output the formatted JSON objects, typically one per line, separated by newlines.</li>
-          <li>Report errors on a per-line basis, indicating which specific line contains invalid JSON.</li>
+          <li>Split the input on newlines and inspect each non-empty line independently.</li>
+          <li>Parse each line as a complete JSON value.</li>
+          <li>Report exact line numbers for failures instead of stopping with a generic document-level error.</li>
+          <li>Normalize whitespace inside each record and usually write it back as one compact line.</li>
+          <li>Preserve record order so log streams and exports remain meaningful.</li>
+          <li>Offer a separate “convert to array” view when a human wants classic multi-line pretty-printing.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Features of JSON Lines Formatters</h2>
-        <p>Beyond basic line-by-line parsing, specialized formatters often offer features tailored to JSON Lines:</p>
+        <p>
+          That last point matters. If a formatter expands one record into several physical lines and saves it as-is, the
+          result is no longer valid JSON Lines. Pretty display mode is fine in an interface, but the exported file
+          still needs one complete JSON value per line.
+        </p>
 
+        <h2 className="text-2xl font-semibold mt-8">Best Formatting Modes for JSONL and NDJSON</h2>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
-              <span className="font-medium">Line-by-Line Validation:</span>
+              <span className="font-medium">Validate in place:</span>
               <p className="text-sm">
-                Identifies and reports errors for each individual line without stopping the processing of subsequent
-                lines (unless configured to).
+                Keep the file as JSON Lines, flag bad records, and rewrite each valid line in compact canonical form.
               </p>
             </li>
             <li>
-              <span className="font-medium">Individual Object Formatting:</span>
+              <span className="font-medium">Inspect as an array:</span>
               <p className="text-sm">
-                Formats each JSON object on its line for readability, often compacting it back to a single line if
-                desired, or pretty-printing it with indentation while preserving the newline delimiter.
+                Wrap the records in a temporary array for reading, searching, or visual diffing, then export back to
+                JSONL when finished.
               </p>
             </li>
             <li>
-              <span className="font-medium">Streaming Capability:</span>
+              <span className="font-medium">Stream large files:</span>
               <p className="text-sm">
-                Efficiently handles large files by processing data in chunks or line by line, requiring less memory than
-                parsing a huge standard JSON array.
-              </p>
-            </li>
-            <li>
-              <span className="font-medium">Error Reporting:</span>
-              <p className="text-sm">
-                Pinpoints errors by line number, making it easy to locate problematic records in large datasets.
+                Process record by record instead of loading a huge array into memory. This is one of the main reasons
+                JSON Lines exists in the first place.
               </p>
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Example Use Case</h2>
-        <p>Imagine you have a log file where each line is a JSON object representing a log entry.</p>
-
+        <h2 className="text-2xl font-semibold mt-8">Common Problems and How to Fix Them</h2>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Log File (JSON Lines):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`{"level": "INFO", "timestamp": "...", "message": "User logged in", "userId": 123}
-{"level": "ERROR", "timestamp": "...", "message": "Database connection failed"}
-{"level": "INFO", "timestamp": "...", "message": "Page viewed", "page": "/dashboard"}
-{"level": "WARN", "timestamp": "...", "message": "High latency observed"} `}
-            </pre>
-          </div>
-          <h3 className="text-lg font-medium mt-4">How a Specialized Formatter Processes It:</h3>
-          <p className="text-sm">
-            It reads each line, validates it as JSON, and might format it. For instance, it could pretty-print each
-            object while keeping them on separate lines, or validate them and report if any line is malformed JSON.
-          </p>
+          <ul className="list-disc pl-6 space-y-3">
+            <li>
+              <span className="font-medium">Error after the first line:</span>
+              <p className="text-sm">
+                You are probably using a normal JSON parser instead of a line-aware formatter.
+              </p>
+            </li>
+            <li>
+              <span className="font-medium">Blank line in the middle of the file:</span>
+              <p className="text-sm">
+                Some tools reject it, while others ignore it only when configured to do so. Remove blank lines if you
+                need predictable cross-tool behavior.
+              </p>
+            </li>
+            <li>
+              <span className="font-medium">Pretty-printed object pasted into a JSONL file:</span>
+              <p className="text-sm">
+                Collapse it back to one line before saving. Multi-line records break the delimiter model.
+              </p>
+            </li>
+            <li>
+              <span className="font-medium">Encoding issues or strange first-character errors:</span>
+              <p className="text-sm">
+                Check for UTF-8 encoding and remove any BOM at the start of the file.
+              </p>
+            </li>
+            <li>
+              <span className="font-medium">Confusion around newline characters inside strings:</span>
+              <p className="text-sm">
+                Escaped sequences like <code>{"\\n"}</code> inside a JSON string are fine. Literal line breaks inside a
+                record are not.
+              </p>
+            </li>
+          </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Finding the Right Tool</h2>
+        <h2 className="text-2xl font-semibold mt-8">When to Keep JSON Lines vs Convert to Standard JSON</h2>
         <p>
-          When dealing with JSON Lines, ensure the formatter or parser you use explicitly states support for "JSON
-          Lines" or "Newline Delimited JSON" (NDJSON). Standard JSON tools will likely not work correctly. Look for
-          tools designed for streaming data or log analysis, as they often incorporate NDJSON handling. Many modern text
-          editors with JSON plugins also include specific modes or features for handling JSON Lines files.
+          Keep the data as JSON Lines when you are handling logs, event streams, append-only datasets, or very large
+          exports that benefit from record-by-record processing. Convert it to a standard JSON array when you need
+          human-friendly pretty-printing, schema inspection, or a downstream tool that only accepts one root document.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-          <h3 className="text-lg font-medium">Important Note:</h3>
+          <h3 className="text-lg font-medium">Practical rule of thumb</h3>
           <p className="mt-2 text-sm">
-            If your JSON Lines file contains empty lines, some parsers might treat them as errors or simply ignore them.
-            Ensure your data generation process doesn&apos;t produce invalid lines if strict validation is required.
+            If the file needs to stay streamable, preserve one value per line. If the file needs to be easy for humans
+            to browse and edit, convert it to a standard JSON array first, then convert it back when exporting.
           </p>
         </div>
 
+        <h2 className="text-2xl font-semibold mt-8">What to Look for in a Formatter</h2>
+        <p>
+          A good JSONL formatter should explicitly mention <code>JSON Lines</code>, <code>JSONL</code>, or{" "}
+          <code>NDJSON</code> support. It should validate each line independently, tell you which line failed, accept{" "}
+          <code>.jsonl</code> and <code>.ndjson</code> inputs, and avoid saving multi-line records unless it is
+          deliberately converting the data into standard JSON.
+        </p>
+
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON Lines is a simple yet powerful format for streaming and processing sequences of JSON objects. While
-          standard JSON formatters see it as invalid syntax due to its line-delimited nature, specialized formatters
-          understand and correctly process each line as an independent JSON entity. By using the right tools, you can
-          easily validate, format, and work with JSON Lines data streams effectively.
+          Handling JSON Lines correctly is mostly about respecting the delimiter model. Each line is its own JSON value,
+          the file is usually UTF-8, blank lines are risky, and classic whole-document pretty-printing is the wrong
+          output mode unless you first convert to ordinary JSON. Specialized formatters succeed because they understand
+          those rules instead of forcing line-delimited data through a normal JSON parser.
         </p>
       </div>
     </>

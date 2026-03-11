@@ -1,439 +1,407 @@
 import type { Metadata } from "next";
 import {
   AlertCircle,
-  Code,
-  FileJson,
-  Import,
-  Download, // Corrected: Changed Export to Download
   Bug,
   CheckCircle,
-  XCircle,
-  Settings,
   CloudDrizzle,
-  Anchor,
+  Code,
+  Download,
+  FileJson,
+  Import,
+  Settings,
+  XCircle,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Troubleshooting JSON Import/Export Issues | Developer Guide",
+  title: "Troubleshooting JSON Import/Export Issues | Fix Parse and Export Errors",
   description:
-    "A comprehensive guide to identifying and resolving common issues when importing or exporting JSON data in various development contexts.",
+    "Fix JSON import and export problems fast. Learn how to diagnose parse errors, HTML responses, UTF-8 and BOM issues, duplicate keys, circular references, BigInt failures, and double-encoded payloads.",
 };
 
 export default function JsonTroubleshootingPage() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
+      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold">
         <FileJson size={36} /> Troubleshooting JSON Import/Export Issues
       </h1>
 
       <div className="space-y-8 text-lg">
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and
-          write and easy for machines to parse and generate. It&apos;s ubiquitous in web development, used extensively
-          for API communication, configuration files, data storage, and more. However, working with JSON, especially
-          when importing or exporting data, can sometimes lead to frustrating issues. This guide covers common problems
-          and provides actionable troubleshooting steps for developers of all levels.
+          Most JSON import and export failures come down to one of a few causes: the input is not valid JSON, the
+          server returned something other than JSON, the file encoding is wrong, or the data being exported contains
+          JavaScript values that JSON cannot represent. This guide is designed to help you diagnose the exact failure
+          quickly instead of guessing.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Import size={28} /> Common Import Issues
+        <p>
+          If you are debugging a file or API response, start by validating the raw text first. Do not assume the
+          problem is in your app code until you confirm the payload is real JSON.
+        </p>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <AlertCircle size={28} /> Start With the Exact Symptom
         </h2>
 
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <Bug size={24} /> 1. Syntax Errors
-          </h3>
-          <p>
-            This is perhaps the most common issue. JSON has a strict syntax. A missing comma, an extra quote, incorrect
-            bracing, or a trailing comma in an object or array can break the entire parsing process.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">Example of common syntax errors:</h4>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-              <pre>
-                {`// Incorrect: Missing comma after "name"
-{
-  "name": "Alice"
-  "age": 30 // Syntax Error: Comma required before this line
-}`}
-              </pre>
-              <pre className="mt-3">
-                {`// Incorrect: Trailing comma (not allowed in strict JSON)
-[
-  1,
-  2,
-  3, // Syntax Error: Trailing comma not allowed here
-]`}
-              </pre>
-              <pre className="mt-3">
-                {`// Incorrect: Unquoted key
-{
-  status: "active" // Syntax Error: Key "status" must be quoted
-}`}
-              </pre>
-            </div>
-          </div>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Use a JSON validator (online tools or IDE extensions) to pinpoint the exact location of the error.</li>
-            <li>Check commas between key-value pairs in objects and elements in arrays.</li>
-            <li>Ensure all keys (property names) are enclosed in double quotes.</li>
-            <li>
-              Verify that strings are enclosed in double quotes and that special characters like `"` are properly
-              escaped (`\"`).
-            </li>
-            <li>Check for correct matching of `&#x7b;`, `&#x7d;`, `[`, and `]`.</li>
-            <li>Look for trailing commas - they are not allowed in standard JSON.</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <AlertCircle size={24} /> 2. Encoding Issues (BOM, non-UTF-8)
-          </h3>
-          <p>
-            JSON files should ideally be encoded in UTF-8 without a Byte Order Mark (BOM). Files saved with a BOM or a
-            different encoding might cause parsing errors.
-          </p>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Ensure your text editor or script saves the JSON file with UTF-8 encoding.</li>
-            <li>
-              Check if a BOM is present (some editors add it by default) and configure the editor or use a script to
-              remove it.
-            </li>
-            <li>
-              If receiving data from an external source, ensure the Content-Type header specifies `application/json;
-              charset=utf-8`.
-            </li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <Settings size={24} /> 3. Data Type Mismatches or Unexpected Values
-          </h3>
-          <p>
-            JSON supports specific data types: String, Number, Boolean (`true`/`false`), Null, Object, and Array. Issues
-            arise when data doesn&apos;t conform to the expected type, or contains values like `undefined`, `NaN`, or
-            `Infinity` which are valid in JavaScript but not in standard JSON.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">Example of invalid JSON values:</h4>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-              <pre>
-                {`// Incorrect: Invalid JSON values
-{
-  "status": undefined, // undefined is not valid JSON
-  "value": NaN,       // NaN is not valid JSON
-  "inf": Infinity     // Infinity is not valid JSON
-}`}
-              </pre>
-            </div>
-          </div>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              Before serializing (exporting) data to JSON, ensure all values are of valid JSON types. Convert
-              `undefined`, `NaN`, and `Infinity` to `null` or handle them appropriately.
-            </li>
-            <li>
-              When parsing (importing), validate the structure and types of the parsed data against your expectations
-              (e.g., using schema validation libraries).
-            </li>
-            <li>If consuming an API, check the API documentation for expected data types and formats.</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <Code size={24} /> 4. Extra Characters or Malformed Response
-          </h3>
-          <p>
-            Sometimes, extra characters (like whitespace, newline characters, or even HTML) can appear before or after
-            the main JSON structure, especially when fetching from an endpoint that might accidentally output debug
-            information or is not strictly returning JSON.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">Example of malformed response:</h4>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-              <pre>
-                {`// Malformed: Extra newline and HTML before JSON
-\\n
-<br/>
-{ "data": "..." }`}
-              </pre>
-            </div>
-          </div>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              If receiving data from a server, inspect the raw response body to see if anything unexpected is included.
-            </li>
-            <li>Ensure the server correctly sets the `Content-Type` header to `application/json`.</li>
-            <li>
-              In server-side code, ensure that only the JSON output is being sent in the response, without any preceding
-              or trailing characters or debugging output.
-            </li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <Anchor size={24} /> 5. Large File Size / Performance
-          </h3>
-          <p>
-            Importing very large JSON files (hundreds of MBs or Gigabytes) can consume excessive memory and cause
-            applications to freeze or crash, especially in browsers or environments with limited resources.
-          </p>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Consider streaming the JSON data rather than loading it all into memory at once.</li>
-            <li>If possible, process the file in chunks.</li>
-            <li>
-              For web applications, consider using browser APIs like `FileReader` with chunking or specialized libraries
-              for large file processing.
-            </li>
-            <li>
-              If the data is coming from an API, implement pagination to retrieve data in smaller, manageable batches.
-            </li>
-            <li>Compress the JSON data during transfer (e.g., using Gzip).</li>
-          </ul>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Download size={28} /> Common Export Issues
-        </h2>
-
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <XCircle size={24} /> 1. Non-JSON Data Types
-          </h3>
-          <p>
-            As mentioned above, JavaScript objects can contain values like `undefined`, functions, `BigInt` (depending
-            on JS engine and JSON.stringify implementation), circular references, etc., that are not valid in standard
-            JSON. Serializing these can lead to errors or unexpected output (e.g., `JSON.stringify` skips `undefined`
-            and function properties).
-          </p>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              Cleanse your data object before calling `JSON.stringify`. Remove or convert unsupported types. For
-              instance, convert `undefined` to `null`.
-            </li>
-            <li>
-              Be mindful of circular references in objects, which will cause `JSON.stringify` to throw an error.
-              Implement a replacer function for `JSON.stringify` or restructure your data to break circular references.
-            </li>
-            <li>
-              Handle `BigInt` explicitly if targeting environments that don&apos;t support it in `JSON.stringify` or if
-              specific numerical precision is required (they might be converted to strings or cause errors).
-            </li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <Code size={24} /> 2. Improper String Escaping
-          </h3>
-          <p>
-            JSON string values must properly escape certain characters, including double quotes (`"`), backslashes
-            (`\`), and control characters (like newline `\n`, carriage return `\r`, tab `\t`). Most built-in JSON
-            serialization functions handle this automatically, but custom implementations or manual string manipulation
-            can introduce errors.
-          </p>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              Always use the built-in `JSON.stringify()` function or a robust library for serializing JavaScript objects
-              to JSON strings. Avoid manually constructing JSON strings through concatenation.
-            </li>
-            <li>
-              If receiving strings that will be embedded within JSON values, ensure they are properly escaped *before*
-              serialization if they might contain problematic characters.
-            </li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <FileJson size={24} /> 3. Incorrect File Handling / Output
-          </h3>
-          <p>
-            When exporting to a file, issues can arise from incorrect file paths, insufficient permissions, writing
-            invalid content, or not properly closing the file handle.
-          </p>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              Verify the file path is correct and accessible by the process running your code. Check file system
-              permissions.
-            </li>
-            <li>Ensure the serialized JSON string is correctly written to the file without modification.</li>
-            <li>Make sure the file stream or handle is properly closed after writing is complete.</li>
-            <li>Specify the correct MIME type (`application/json`) if serving the file via HTTP.</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <CloudDrizzle size={24} /> 4. Network or Permission Issues
-          </h3>
-          <p>
-            If exporting by sending JSON data over a network (e.g., an API request), network connectivity problems,
-            server-side processing errors, or incorrect request headers/body can cause the export to fail.
-          </p>
-          <p>
-            <strong>Troubleshooting:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Check network connectivity between the client and server.</li>
-            <li>
-              Inspect the HTTP request and response using browser developer tools or network monitoring tools. Look at
-              status codes and response bodies for errors.
-            </li>
-            <li>
-              Ensure correct HTTP method (e.g., POST, PUT) and headers (especially `Content-Type: application/json`).
-            </li>
-            <li>Verify that the server endpoint is correctly configured to receive and process JSON data.</li>
-          </ul>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CheckCircle size={28} /> General Best Practices
-        </h2>
-
-        <ul className="list-disc pl-6 space-y-3 text-lg">
+        <ul className="list-disc space-y-3 pl-6">
           <li>
-            <strong>Validate:</strong> Always validate incoming JSON data, especially from external or untrusted
-            sources. Use schema validation (like JSON Schema) when possible.
+            <strong>`Unexpected token &lt;` near the start:</strong> you probably received HTML, often a login page,
+            CDN error page, proxy error, or framework error document instead of JSON.
           </li>
           <li>
-            <strong>Use Built-in Functions:</strong> Rely on `JSON.parse()` and `JSON.stringify()` or well-established
-            libraries (like `lodash.clonedeep` for deep cloning before stringifying, or specific JSON streaming parsers
-            for large data).
+            <strong>`Unexpected token` around a comma, quote, or key name:</strong> the input looks like a JavaScript
+            object literal, not strict JSON. Common causes are trailing commas, single quotes, comments, or unquoted
+            keys.
           </li>
           <li>
-            <strong>Check Encoding:</strong> Ensure consistent UTF-8 encoding without BOM for all JSON files and data
-            transfers.
+            <strong>The data parses but values look wrong:</strong> check for duplicate keys, stringified numbers and
+            booleans, unexpected nesting, or a JSON string stored inside JSON.
           </li>
           <li>
-            <strong>Error Handling:</strong> Wrap parsing and serialization calls in try...catch blocks to gracefully
-            handle errors. Provide informative error messages.
+            <strong>`Converting circular structure to JSON`:</strong> your export contains self-references or repeated
+            references that `JSON.stringify()` cannot serialize by default.
           </li>
           <li>
-            <strong>Logging:</strong> Log the JSON data or relevant parts of it during debugging to inspect its exact
-            structure and content when issues occur.
-          </li>
-          <li>
-            <strong>Use Linting & Formatting:</strong> Use linters (like ESLint with JSON plugins) and formatters (like
-            Prettier) to catch common syntax errors automatically during development.
+            <strong>`Do not know how to serialize a BigInt`:</strong> you must convert `BigInt` values before export,
+            usually to strings.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Code size={28} /> Example Code Snippets
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Import size={28} /> Common JSON Import Problems
         </h2>
 
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mt-6">Handling invalid JavaScript values before `JSON.stringify`:</h3>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <Bug size={24} /> 1. The input is not actually valid JSON
+          </h3>
+          <p>
+            JSON is stricter than JavaScript object syntax. It does not allow comments, trailing commas, single-quoted
+            strings, or bare property names. If you copied data from source code, documentation, or a config format
+            like JSON5, that is often the real problem.
+          </p>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h4 className="mb-2 text-lg font-medium">Common examples that look close to JSON but fail:</h4>
+            <div className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
               <pre>
-                {`const data = {
-  id: 1,
-  name: "Test Item",
-  description: undefined, // Invalid in JSON
-  value: NaN,           // Invalid in JSON
-  config: {
-    settingA: true,
-    settingB: Infinity  // Invalid in JSON
-  },
-  list: [1, 2, undefined, 4] // Invalid in JSON
-};
-
-// Clean data before stringifying
-function cleanForJson(obj: any): any {
-  if (obj === undefined || obj === null || typeof obj === 'function' || Number.isNaN(obj) || obj === Infinity || obj === -Infinity) {
-    return null; // Convert invalid JSON values to null
-  }
-  if (typeof obj !== 'object') {
-    return obj;
-  }
-  if (Array.isArray(obj)) {
-    return obj.map(cleanForJson);
-  }
-  const cleanedObj: { [key: string]: any } = {};
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      const cleanedValue = cleanForJson(obj[key]);
-      // Optionally skip properties that become null after cleaning
-      // if (cleanedValue !== null) {
-         cleanedObj[key] = cleanedValue;
-      // }
-    }
-  }
-  return cleanedObj;
-}
-
-const cleanedData = cleanForJson(data);
-const jsonString = JSON.stringify(cleanedData, null, 2); // Use null, 2 for pretty printing
-
-console.log(jsonString);
-// Output:
-/*
+                {`// Invalid: single quotes, trailing comma, and a comment
 {
-  "id": 1,
-  "name": "Test Item",
-  "description": null,
-  "value": null,
-  "config": {
-    "settingA": true,
-    "settingB": null
-  },
-  "list": [
-    1,
-    2,
-    null,
-    4
-  ]
+  'name': 'Alice',
+  "age": 30,
 }
-*/
-`}
+
+// Invalid: unquoted key
+{
+  status: "active"
+}`}
               </pre>
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold mt-6">Basic `try...catch` for `JSON.parse`:</h3>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-              <pre>
-                {`const potentiallyInvalidJson = '{ "name": "Bob", "age": 25, }'; // Trailing comma
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Make sure every property name uses double quotes.</li>
+            <li>Remove trailing commas from objects and arrays.</li>
+            <li>Remove comments. JSON has no comment syntax.</li>
+            <li>Escape embedded quotes and control characters inside strings.</li>
+            <li>Validate the raw text before you start debugging the parser call.</li>
+          </ul>
 
-try {
-  const parsedData = JSON.parse(potentiallyInvalidJson);
-  console.log("Successfully parsed:", parsedData);
-} catch (error) {
-  console.error("Failed to parse JSON:", error instanceof Error ? error.message : error);
-  // Handle the error - maybe log the invalid string, show a user message, etc.
-}
-`}
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <CloudDrizzle size={24} /> 2. The server returned HTML, not JSON
+          </h3>
+          <p>
+            The most common real-world import issue is not malformed JSON. It is hitting the wrong URL or receiving an
+            HTML response from a redirect, auth wall, proxy, rate limit, or server error page. This usually surfaces as
+            `Unexpected token &lt;` because the response starts with `&lt;!doctype html&gt;` or another HTML tag.
+          </p>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Inspect the raw response body, not just the exception message.</li>
+            <li>Check the HTTP status first. A `200` is not enough if the body is still an HTML page.</li>
+            <li>Verify the response `Content-Type` is compatible with JSON, typically `application/json`.</li>
+            <li>Confirm you are not being redirected to a login page or anti-bot challenge.</li>
+            <li>When using `fetch`, read `response.text()` once while debugging so you can see the real payload.</li>
+          </ul>
+
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <Settings size={24} /> 3. UTF-8 and BOM problems
+          </h3>
+          <p>
+            Current JSON guidance is clear: interoperable JSON exchanged across systems should use UTF-8. The JSON spec
+            also says generators must not add a byte order mark (BOM), although parsers may choose to ignore one. In
+            practice, BOM-prefixed files still break some tools and pipelines, especially when the file came from an
+            editor or export process on Windows.
+          </p>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Save JSON files as UTF-8.</li>
+            <li>Strip a leading BOM if the first character is `\uFEFF`.</li>
+            <li>Avoid manual transcoding between UTF-8, UTF-16, and legacy code pages unless required.</li>
+            <li>
+              If imported text starts with strange invisible characters or parsing fails at position `0`, inspect the
+              file bytes or reopen the file in a hex-capable editor.
+            </li>
+          </ul>
+
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <Code size={24} /> 4. Duplicate keys or unexpected structure
+          </h3>
+          <p>
+            A document can be syntactically valid JSON and still behave badly. One example is duplicate object keys.
+            The JSON spec warns that duplicate names make behavior unpredictable because different parsers may keep the
+            last value, reject the payload, or expose the duplicates differently.
+          </p>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <div className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              <pre>
+                {`{
+  "mode": "safe",
+  "mode": "fast"
+}`}
+              </pre>
+            </div>
+          </div>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Reject duplicate keys during validation if your parser can detect them.</li>
+            <li>Verify whether numbers, booleans, and nulls arrived as strings instead of their real types.</li>
+            <li>Check whether the API changed from returning an object to returning an array, or vice versa.</li>
+            <li>
+              Watch for nested JSON strings like <code>{'{"payload":"{\\"id\\":1}"}'}</code> that require an extra
+              parse step.
+            </li>
+          </ul>
+
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <FileJson size={24} /> 5. The file format is JSON Lines, not one JSON document
+          </h3>
+          <p>
+            Many exports from data tools are newline-delimited JSON, also called JSON Lines or NDJSON. That format is
+            valid as a sequence of JSON objects, but it is not a single JSON document, so `JSON.parse()` on the entire
+            file will fail.
+          </p>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <div className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              <pre>
+                {`{"id":1}
+{"id":2}
+{"id":3}`}
+              </pre>
+            </div>
+          </div>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Parse JSON Lines one line at a time.</li>
+            <li>Do not wrap line-delimited records in `JSON.parse()` as one string unless you first convert them.</li>
+            <li>If the file is huge, stream it instead of reading the whole thing into memory.</li>
+          </ul>
+        </div>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Download size={28} /> Common JSON Export Problems
+        </h2>
+
+        <div className="space-y-6">
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <XCircle size={24} /> 1. JavaScript values do not map cleanly to JSON
+          </h3>
+          <p>
+            Export failures often happen because the source data is a JavaScript object, not pure JSON data. The
+            differences matter:
+          </p>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse text-left text-base">
+              <thead>
+                <tr className="border-b border-gray-300 dark:border-gray-700">
+                  <th className="px-3 py-2 font-semibold">Value</th>
+                  <th className="px-3 py-2 font-semibold">What `JSON.stringify()` does</th>
+                  <th className="px-3 py-2 font-semibold">Why it causes trouble</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-gray-200 dark:border-gray-800">
+                  <td className="px-3 py-2">`undefined`, functions, symbols</td>
+                  <td className="px-3 py-2">Dropped from objects; become `null` in arrays</td>
+                  <td className="px-3 py-2">Fields silently disappear or change shape</td>
+                </tr>
+                <tr className="border-b border-gray-200 dark:border-gray-800">
+                  <td className="px-3 py-2">`NaN`, `Infinity`, `-Infinity`</td>
+                  <td className="px-3 py-2">Serialized as `null`</td>
+                  <td className="px-3 py-2">Numeric meaning is lost without an error</td>
+                </tr>
+                <tr className="border-b border-gray-200 dark:border-gray-800">
+                  <td className="px-3 py-2">`BigInt`</td>
+                  <td className="px-3 py-2">Throws</td>
+                  <td className="px-3 py-2">Export fails unless you convert the value first</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2">`Date`</td>
+                  <td className="px-3 py-2">Serialized to an ISO string</td>
+                  <td className="px-3 py-2">Consumers may expect a timestamp or timezone-free value instead</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Normalize the data shape before export instead of trusting raw app state.</li>
+            <li>Convert `BigInt` intentionally, usually to strings, so precision is preserved.</li>
+            <li>Decide whether non-finite numbers should become `null`, strings, or trigger a validation error.</li>
+            <li>Do not assume dates round-trip exactly unless the consumer expects ISO 8601 strings.</li>
+          </ul>
+
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <Bug size={24} /> 2. Circular references break serialization
+          </h3>
+          <p>
+            Objects that reference themselves, directly or indirectly, cause `JSON.stringify()` to throw. This is
+            common with ORM entities, DOM-related objects, caches, graph structures, and application state trees.
+          </p>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Export only the fields you actually need instead of serializing rich runtime objects.</li>
+            <li>Use a replacer if you need to prune cycles or replace them with a marker.</li>
+            <li>For debugging, serialize a projected copy rather than mutating the original object.</li>
+          </ul>
+
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <Code size={24} /> 3. Double-encoded payloads
+          </h3>
+          <p>
+            A frequent export bug is serializing an already serialized string. That creates JSON that contains a JSON
+            string instead of the original object.
+          </p>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <div className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              <pre>
+                {`// Wrong: payload becomes a quoted JSON string
+const body = JSON.stringify(JSON.stringify(payload));
+
+// Right: payload becomes one JSON document
+const body = JSON.stringify(payload);`}
+              </pre>
+            </div>
+          </div>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>If an API receives strings where it expects objects, check for accidental double stringification.</li>
+            <li>
+              If imported data looks like <code>{'"{\\"id\\":1}"'}</code>, you probably need one parse step before
+              normal use.
+            </li>
+            <li>When storing JSON in a database, be clear whether the column contains structured JSON or plain text.</li>
+          </ul>
+
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-semibold">
+            <CloudDrizzle size={24} /> 4. File download or API transport issues
+          </h3>
+          <p>
+            Sometimes the JSON string itself is fine, but the handoff is wrong. The file may be saved with the wrong
+            extension, served with the wrong MIME type, truncated mid-write, or sent to an API without the expected
+            request headers.
+          </p>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>For HTTP requests, send `Content-Type: application/json` when the body is JSON.</li>
+            <li>For downloads, use a `.json` filename and a JSON-compatible MIME type.</li>
+            <li>Check for partial writes when files are generated on the server or in background jobs.</li>
+            <li>Inspect the exact bytes if the file opens incorrectly after download.</li>
+          </ul>
+        </div>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Code size={28} /> Practical Code Snippets
+        </h2>
+
+        <div className="space-y-6">
+          <h3 className="mt-6 text-xl font-semibold">Parse imported text more defensively</h3>
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <div className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              <pre>
+                {`function parseJsonSafely(raw: string) {
+  const withoutBom = raw.replace(/^\\uFEFF/, "");
+  const trimmed = withoutBom.trimStart();
+
+  if (trimmed.startsWith("<")) {
+    throw new Error("Expected JSON but received HTML or another non-JSON response.");
+  }
+
+  try {
+    return JSON.parse(withoutBom);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(\`Invalid JSON: \${message}\`);
+  }
+}`}
+              </pre>
+            </div>
+          </div>
+
+          <h3 className="mt-6 text-xl font-semibold">Stringify data without crashing on common export issues</h3>
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <div className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              <pre>
+                {`function safeStringify(value: unknown) {
+  const seen = new WeakSet<object>();
+
+  return JSON.stringify(
+    value,
+    (_key, current) => {
+      if (typeof current === "bigint") {
+        return current.toString();
+      }
+
+      if (typeof current === "number" && !Number.isFinite(current)) {
+        return null;
+      }
+
+      if (
+        current === undefined ||
+        typeof current === "function" ||
+        typeof current === "symbol"
+      ) {
+        return null;
+      }
+
+      if (current && typeof current === "object") {
+        if (seen.has(current)) {
+          return "[Circular]";
+        }
+
+        seen.add(current);
+      }
+
+      return current;
+    },
+    2,
+  );
+}`}
               </pre>
             </div>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CheckCircle size={28} /> Conclusion
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <CheckCircle size={28} /> Recommended Troubleshooting Order
         </h2>
+
+        <ol className="list-decimal space-y-3 pl-6">
+          <li>Look at the raw input or raw HTTP response before parsing.</li>
+          <li>Validate that the text is strict JSON, not a JavaScript literal or HTML page.</li>
+          <li>Check encoding, especially BOM and non-UTF-8 source files.</li>
+          <li>Confirm the data shape matches what your code expects.</li>
+          <li>Before export, normalize unsupported JavaScript values and remove circular references.</li>
+          <li>Verify the final transport step: headers, MIME type, filename, and whether you accidentally stringified twice.</li>
+        </ol>
+
         <p>
-          Troubleshooting JSON import and export issues primarily involves understanding JSON&apos;s strict syntax and
-          limited data types compared to JavaScript. By carefully checking for syntax errors, handling data types
-          correctly, ensuring proper encoding, and using robust built-in methods or libraries, you can resolve most
-          common problems. Effective validation and error handling are key to building applications that reliably
-          process JSON data.
+          If you are using an offline JSON formatter or validator, paste the raw payload into it before changing
+          application code. A validator will usually tell you faster whether the problem is syntax, structure, or a
+          non-JSON response masquerading as JSON.
         </p>
       </div>
     </>

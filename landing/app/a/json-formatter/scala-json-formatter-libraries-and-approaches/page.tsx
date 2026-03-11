@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Code, Feather, BookOpen, CheckCircle, Zap, Package, Wrench } from "lucide-react"; // Added Wrench here
+import { AlertTriangle, BookOpen, CheckCircle, Code, Package, Wrench, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Scala JSON Formatter Libraries and Approaches | Offline Tools",
   description:
-    "Explore popular libraries and techniques for formatting JSON data in Scala, including pretty-printing and customization.",
+    "Compare current Scala JSON formatting options in Circe, Play JSON, uPickle/ujson, and Jackson Scala Module, with pretty-print examples, Scala 3 notes, and customization tips.",
 };
 
 export default function ScalaJsonFormatterArticle() {
@@ -14,367 +14,321 @@ export default function ScalaJsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Working with JSON is ubiquitous in modern software development, especially in backend services and APIs. While
-          parsing JSON strings into Scala data structures and serializing Scala data structures back into JSON strings
-          are common tasks, controlling the <strong>formatting</strong> of the output JSON is equally important.
-          Formatting affects readability, debugging, and the ability to easily compare different JSON payloads
-          (diffing).
+          If you searched for a Scala JSON formatter, the practical question is usually not just{" "}
+          <em>&quot;how do I pretty-print JSON?&quot;</em> but <em>&quot;which Scala library should I use, and what does its
+          formatting API look like today?&quot;</em> The good news is that the mainstream options all handle compact vs.
+          human-readable output well. The better answer depends on whether you are already committed to a JSON stack,
+          whether you need deterministic output for tests and diffs, and whether you are formatting raw JSON strings or
+          Scala values during serialization.
+        </p>
+        <p>
+          For most teams, the right choice is the JSON library they already use elsewhere in the application. Pretty
+          printing is only one feature. Circe is strong when you want a functional AST plus configurable printers, Play
+          JSON stays simple and familiar inside Play or standalone projects, uPickle/ujson is excellent when you want a
+          lightweight formatter that can reformat raw strings directly, and Jackson fits best when your stack already
+          revolves around Java tooling and <code>ObjectMapper</code>.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <BookOpen className="mr-2" size={24} /> Why Format JSON?
+          <Zap className="mr-2" size={24} /> Quick Answer
         </h2>
-        <p>
-          Formatted JSON, often referred to as "pretty-printed" JSON, includes whitespace (spaces, tabs, newlines) to
-          make the structure clear and easy for humans to read. Compact JSON, on the other hand, removes all unnecessary
-          whitespace to minimize size, which is ideal for transmission over a network.
-        </p>
-        <p>Key reasons for formatting:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <Feather className="inline-block mr-2 text-blue-500" size={20} /> <strong>Readability:</strong> Makes
-            complex JSON structures understandable at a glance.
+            <CheckCircle className="inline-block mr-2 text-green-500" size={20} />
+            Choose <strong>Circe</strong> if you already use Cats / Typelevel libraries and want the cleanest built-in
+            pretty printer options, including sorted keys and custom printers.
           </li>
           <li>
-            <Code className="inline-block mr-2 text-green-500" size={20} /> <strong>Debugging:</strong> Easier to
-            pinpoint issues in JSON payloads when the structure is clear.
+            <CheckCircle className="inline-block mr-2 text-green-500" size={20} />
+            Choose <strong>Play JSON</strong> if you are in the Play ecosystem or want the most straightforward{" "}
+            <code>Json.prettyPrint(Json.parse(raw))</code> workflow.
           </li>
           <li>
-            <Zap className="inline-block mr-2 text-yellow-500" size={20} /> <strong>Diffing:</strong> Comparing two
-            versions of a JSON object is significantly easier with consistent indentation and line breaks.
+            <CheckCircle className="inline-block mr-2 text-green-500" size={20} />
+            Choose <strong>uPickle / ujson</strong> if you want a lightweight, current option for reformatting raw JSON
+            strings with <code>indent</code> and <code>sortKeys</code> controls.
           </li>
           <li>
-            <Package className="inline-block mr-2 text-purple-500" size={20} /> <strong>Interoperability:</strong> While
-            whitespace is ignored by parsers, some tools or manual processes might benefit from consistent formatting.
+            <CheckCircle className="inline-block mr-2 text-green-500" size={20} />
+            Choose <strong>Jackson Scala Module</strong> if your codebase is already Jackson-based or you need mapper and
+            writer-level control beyond a simple pretty-print call.
           </li>
         </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Package className="mr-2" size={24} /> Comparison at a Glance
+        </h2>
+        <div className="overflow-x-auto my-4">
+          <table className="min-w-full border border-gray-200 dark:border-gray-700 text-sm">
+            <thead className="bg-gray-100 dark:bg-gray-800">
+              <tr>
+                <th className="text-left p-3 border-b border-gray-200 dark:border-gray-700">Library</th>
+                <th className="text-left p-3 border-b border-gray-200 dark:border-gray-700">Best Fit</th>
+                <th className="text-left p-3 border-b border-gray-200 dark:border-gray-700">Simple Pretty Print</th>
+                <th className="text-left p-3 border-b border-gray-200 dark:border-gray-700">What Stands Out</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="align-top">
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">Circe</td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  Functional Scala projects that already use Cats or Typelevel libraries.
+                </td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  <code>parse(raw).map(_.spaces2)</code>
+                </td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  Built-in <code>spaces2</code>, <code>spaces2SortKeys</code>, and configurable{" "}
+                  <code>Printer</code>.
+                </td>
+              </tr>
+              <tr className="align-top">
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">Play JSON</td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  Play apps or standalone projects that want simple AST-based JSON handling.
+                </td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  <code>Json.prettyPrint(Json.parse(raw))</code>
+                </td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  Clean API and good ecosystem fit, but less printer customization than Circe or Jackson.
+                </td>
+              </tr>
+              <tr className="align-top">
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">uPickle / ujson</td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  Lightweight projects, scripts, CLIs, or tools that mostly need to reformat JSON quickly.
+                </td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  <code>ujson.reformat(raw, indent = 2, sortKeys = true)</code>
+                </td>
+                <td className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  Direct raw-string reformatting, plus <code>indent</code> and <code>sortKeys</code> without much setup.
+                </td>
+              </tr>
+              <tr className="align-top">
+                <td className="p-3 font-medium">Jackson Scala Module</td>
+                <td className="p-3">
+                  Java-heavy stacks, Spring mixed environments, or codebases centered on <code>ObjectMapper</code>.
+                </td>
+                <td className="p-3">
+                  <code>mapper.writerWithDefaultPrettyPrinter()</code>
+                </td>
+                <td className="p-3">
+                  Strong mapper configuration story and highly customizable writer / pretty-printer behavior.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <p>
-          Scala offers several powerful libraries for handling JSON, and most of them provide robust capabilities for
-          controlling the output format. Let's look at some of the most popular ones and how they approach formatting.
+          As of early 2026, official docs for Circe, Play JSON, uPickle, and Jackson Scala Module all show active Scala
+          3 support. That matters because some older blog posts still frame Scala JSON formatting as mostly a Scala 2
+          story, which is outdated.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Package className="mr-2" size={24} /> Popular Scala JSON Libraries and Formatting
+          <Code className="mr-2" size={24} /> Formatting a Raw JSON String
         </h2>
+        <p>
+          This is the most useful formatter workflow for logging, debugging, developer tools, and one-off payload
+          inspection. You start with a JSON string, parse it, and then write it back in a pretty-printed form.
+        </p>
 
         <h3 className="text-xl font-semibold mt-6">Circe</h3>
-        <p>
-          Circe is a popular, purely functional JSON library for Scala, built on top of Cats and Cats-Effect. It
-          provides excellent encoding, decoding, and manipulation capabilities. Formatting is straightforward.
-        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Circe Formatting Example (pretty printing with 2 spaces):</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`import io.circe._
-import io.circe.syntax._ // Provides .asJson
+              {`import io.circe.parser.parse
 
-// Sample data structure
-case class User(name: String, age: Int, tags: List[String])
+val raw =
+  """{"z":1,"a":{"nested":true},"tags":["scala","json"]}"""
 
-val user = User("Alice", 30, List("scala", "json", "circe"))
-
-// Encode to Json value
-val userJson: Json = user.asJson
-
-// Pretty print with 2-space indentation
-val prettyJsonString: String = userJson.spaces2
-
-// Pretty print with 4-space indentation
-// val prettyJsonString: String = userJson.spaces4
-
-// Compact printing (no extra whitespace)
-val compactJsonString: String = userJson.noSpaces
-
-println("Pretty (2 spaces):")
-println(prettyJsonString)
-
-println("\\nCompact:")
-println(compactJsonString)`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Output Example:</h4>
-          <div className="bg-white p-3 rounded font-mono text-sm dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`Pretty (2 spaces):
-{
-  "name" : "Alice",
-  "age" : 30,
-  "tags" : [
-    "scala",
-    "json",
-    "circe"
-  ]
-}
-
-Compact:
-{"name":"Alice","age":30,"tags":["scala","json","circe"]}`}
+val formatted: Either[io.circe.ParsingFailure, String] =
+  parse(raw).map(_.spaces2SortKeys)
+`}
             </pre>
           </div>
         </div>
         <p>
-          Circe provides simple methods like <code>.spaces2</code>, <code>.spaces4</code>, and <code>.noSpaces</code>{" "}
-          directly on the <code>Json</code> value. You can also create a custom printer using <code>Printer</code>.
+          Circe is especially nice when you want explicit error handling. Parsing returns an <code>Either</code>, so you
+          do not have to rely on exceptions for invalid JSON. If you want compact output instead, use{" "}
+          <code>.noSpaces</code>.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Play JSON</h3>
-        <p>
-          Part of the Play Framework ecosystem, Play JSON is another widely used library. It provides an immutable tree
-          representation of JSON and convenient macros for mapping between JSON and Scala case classes. It also offers
-          built-in formatting options.
-        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Play JSON Formatting Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`import play.api.libs.json._
+              {`import play.api.libs.json.Json
 
-// Sample data structure (needs implicit Writes/Reads)
-case class Product(id: Long, name: String, price: BigDecimal)
+val raw =
+  """{"z":1,"a":{"nested":true},"tags":["scala","json"]}"""
 
-// Define implicit Writes to convert Product to Json
-implicit val productWrites: Writes[Product] = Json.writes[Product]
-
-val product = Product(101, "Laptop", BigDecimal(1200.50))
-
-// Convert to Json value
-val productJson: JsValue = Json.toJson(product)
-
-// Pretty print
-val prettyJsonString: String = Json.prettyPrint(productJson)
-
-// Compact print
-val compactJsonString: String = Json.stringify(productJson)
-
-println("Pretty:")
-println(prettyJsonString)
-
-println("\\nCompact:")
-println(compactJsonString)`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Output Example:</h4>
-          <div className="bg-white p-3 rounded font-mono text-sm dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`Pretty:
-{
-  "id" : 101,
-  "name" : "Laptop",
-  "price" : 1200.50
-}
-
-Compact:
-{"id":101,"name":"Laptop","price":1200.50}`}
+val formatted: String =
+  Json.prettyPrint(Json.parse(raw))
+`}
             </pre>
           </div>
         </div>
         <p>
-          Play JSON uses <code>Json.prettyPrint(jsValue)</code> for formatted output and{" "}
-          <code>Json.stringify(jsValue)</code> for compact output.
+          This is the simplest mental model in the Play ecosystem: parse into a <code>JsValue</code>, then pretty print
+          it. If all you want is readable output and you are already using Play JSON elsewhere, this is often enough.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">uPickle</h3>
-        <p>
-          uPickle is a lightweight, fast, and popular pickling library for Scala, primarily focused on
-          serialization/deserialization between Scala objects and common data formats like JSON. Its formatting
-          capabilities are controlled during the writing process.
-        </p>
+        <h3 className="text-xl font-semibold mt-6">uPickle / ujson</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">uPickle Formatting Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`import upickle.default._
+              {`val raw =
+  """{"z":1,"a":{"nested":true},"tags":["scala","json"]}"""
 
-// Sample data structure (uPickle can often derive ReadWriter implicitly)
-case class Config(theme: String, retries: Int, enabled: Boolean)
-implicit val configRW: ReadWriter[Config] = macroRW // Derive ReadWriter
-
-val config = Config("dark", 3, true)
-
-// Pretty print with 2-space indentation
-val prettyJsonString: String = write(config, indent = 2)
-
-// Pretty print with 4-space indentation
-// val prettyJsonString: String = write(config, indent = 4)
-
-// Compact print (default)
-val compactJsonString: String = write(config)
-
-println("Pretty (indent=2):")
-println(prettyJsonString)
-
-println("\\nCompact:")
-println(compactJsonString)`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Output Example:</h4>
-          <div className="bg-white p-3 rounded font-mono text-sm dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`Pretty (indent=2):
-{
-  "theme": "dark",
-  "retries": 3,
-  "enabled": true
-}
-
-Compact:
-{"theme":"dark","retries":3,"enabled":true}`}
+val formatted: String =
+  ujson.reformat(raw, indent = 2, sortKeys = true)
+`}
             </pre>
           </div>
         </div>
         <p>
-          With uPickle, you control formatting using the <code>indent</code> parameter in the <code>write</code>{" "}
-          function. An indentation level of 0 or negative results in compact output (which is also the default).
+          This is one of the most practical current approaches when your task is literally <em>reformat this JSON
+          string</em>. You do not need to map to case classes first, and current docs show <code>indent</code>,{" "}
+          <code>escapeUnicode</code>, and <code>sortKeys</code> controls directly on <code>reformat</code>.
         </p>
 
         <h3 className="text-xl font-semibold mt-6">Jackson Scala Module</h3>
-        <p>
-          For projects integrating with Java ecosystems or relying on the vast features of the Jackson library, the
-          Jackson Scala Module provides Scala-friendly serialization/deserialization. Formatting is typically handled
-          via Jackson's <code>ObjectMapper</code> configuration.
-        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Jackson Scala Module Formatting Example:</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+              {`import com.fasterxml.jackson.databind.json.JsonMapper
 
-// Sample data structure
-case class Item(name: String, quantity: Int)
+val raw =
+  """{"z":1,"a":{"nested":true},"tags":["scala","json"]}"""
 
-val mapper = new ObjectMapper()
-mapper.registerModule(DefaultScalaModule)
-
-val item = Item("Widget", 5)
-
-// Convert to JSON Node (optional intermediate step)
-// val itemNode = mapper.valueToTree[JsonNode](item)
-
-// Pretty print using enable(SerializationFeature.INDENT_OUTPUT)
-mapper.enable(SerializationFeature.INDENT_OUTPUT)
-val prettyJsonString: String = mapper.writeValueAsString(item)
-
-// You can also configure the printer directly
-// mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter()) // Use default
-// val prettyJsonString: String = mapper.writer(new DefaultPrettyPrinter()).writeValueAsString(item)
-
-// Compact print (default)
-mapper.disable(SerializationFeature.INDENT_OUTPUT) // Ensure indentation is off
-val compactJsonString: String = mapper.writeValueAsString(item)
-
-
-println("Pretty:")
-println(prettyJsonString)
-
-println("\\nCompact:")
-println(compactJsonString)`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Output Example:</h4>
-          <div className="bg-white p-3 rounded font-mono text-sm dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`Pretty:
-{
-  "name" : "Widget",
-  "quantity" : 5
-}
-
-Compact:
-{"name":"Widget","quantity":5}`}
+val mapper = JsonMapper.builder().build()
+val node = mapper.readTree(raw)
+val formatted = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node)
+`}
             </pre>
           </div>
         </div>
         <p>
-          Jackson's approach is more configuration-driven via the <code>ObjectMapper</code>. Enabling{" "}
-          <code>SerializationFeature.INDENT_OUTPUT</code> provides default pretty-printing, and you can configure or
-          provide a custom <code>PrettyPrinter</code> for more control.
+          For raw string reformatting, Jackson does not need Scala-specific support yet because you are only working
+          with a JSON tree. Add the Scala module when you serialize Scala collections or case classes through the same
+          mapper.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Wrench className="mr-2" size={24} /> Custom Formatting and Advanced Options
+          <BookOpen className="mr-2" size={24} /> Formatting Scala Values During Serialization
         </h2>
         <p>
-          While the standard pretty-printers provided by libraries are sufficient for most cases, you might encounter
-          scenarios requiring more control, such as:
+          If your application already has Scala values in memory, pretty printing typically happens after encoding to a
+          JSON AST or during the write call itself.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// Circe
+user.asJson.spaces2
+
+// Play JSON
+Json.prettyPrint(Json.toJson(user))
+
+// uPickle
+write(user, indent = 2, sortKeys = true)
+
+// Jackson
+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user)
+`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          In other words, pretty printing is usually a final rendering concern. Your codec or macro derivation choice
+          matters more for application design; the formatting call is usually just one line on top of that.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Wrench className="mr-2" size={24} /> Deterministic Output and Custom Rules
+        </h2>
+        <p>
+          The moment formatting becomes part of tests, snapshots, cache keys, or human code review, deterministic output
+          matters more than simple readability. Sorted keys and consistent null handling are the first things teams
+          usually care about.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Sorting keys alphabetically for deterministic output (great for diffing).</li>
-          <li>Customizing indentation characters (spaces vs. tabs) or count.</li>
-          <li>Controlling spacing around colons and commas.</li>
-          <li>Excluding null fields.</li>
+          <li>
+            <strong>Circe:</strong> You can use <code>.spaces2SortKeys</code> for a quick stable representation or build
+            a custom <code>Printer</code> when you need sorted keys, a specific indent string, or dropped null fields.
+          </li>
+          <li>
+            <strong>uPickle / ujson:</strong> Current docs expose <code>sortKeys = true</code> directly, which makes it
+            unusually convenient for test fixtures and JSON diffing.
+          </li>
+          <li>
+            <strong>Play JSON:</strong> The built-in pretty printer is intentionally straightforward. It is good for
+            readable output, but it is not the first choice when you need lots of printer customization.
+          </li>
+          <li>
+            <strong>Jackson:</strong> If formatting is part of a broader serialization policy, Jackson gives you the most
+            room to centralize behavior through mapper features and custom pretty printers.
+          </li>
         </ul>
-        <p>Most libraries offer ways to customize the printer behavior.</p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Circe custom printer example</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`import io.circe.Printer
+
+val printer = Printer(
+  indent = "  ",
+  dropNullValues = true,
+  sortKeys = true
+)
+
+val stableJson: String = printer.print(json)
+`}
+            </pre>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <AlertTriangle className="mr-2" size={24} /> Current Gotchas
+        </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> <strong>Circe:</strong> The{" "}
-            <code>io.circe.Printer</code> class allows fine-grained control over whitespace, key sorting, and more. You
-            create a <code>Printer</code> instance and call its <code>print(jsonValue)</code> method.
+            <strong>Do not optimize for pretty printing alone.</strong> If your application already depends on Circe,
+            Play JSON, uPickle, or Jackson for codecs and parsing, adding a second JSON library just for formatting is
+            usually wasted complexity.
           </li>
           <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> <strong>Play JSON:</strong> While{" "}
-            <code>prettyPrint</code> is fixed, you could potentially traverse the <code>JsValue</code> tree and build a
-            string manually or use a helper library if extensive customization is needed, though its built-in options
-            are less flexible than Circe's Printer.
+            <strong>Invalid JSON still has to parse first.</strong> A formatter cannot rescue malformed input; it can
+            only re-render valid JSON into a different layout.
           </li>
           <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> <strong>uPickle:</strong> The{" "}
-            <code>write</code> method offers the <code>indent</code> parameter, but more advanced customization like key
-            sorting might require manual processing or different serialization logic before writing.
+            <strong>Older advice about Scala 3 can be stale.</strong> Current official docs for these libraries now show
+            solid Scala 3 support, so check the project docs instead of relying on older comparison posts.
           </li>
           <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> <strong>Jackson:</strong> Jackson's{" "}
-            <code>PrettyPrinter</code> interface (like <code>DefaultPrettyPrinter</code>) is highly configurable. You
-            can extend it or configure aspects like indentation, separators, and object/array formatting. Key sorting
-            can be enabled via <code>SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS</code>.
+            <strong>Jackson 3 changed some Scala guidance.</strong> The current Scala module README notes Java 17 as the
+            minimum and points Scala 3 users toward newer APIs such as <code>ClassTagExtensions</code> instead of the old{" "}
+            <code>ScalaObjectMapper</code> pattern.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <BookOpen className="mr-2" size={24} /> Choosing the Right Approach
+          <BookOpen className="mr-2" size={24} /> Which Approach Should You Use?
         </h2>
         <p>
-          The best library or approach depends largely on your project's existing dependencies, performance
-          requirements, and whether you prefer a more functional or imperative style.
+          If your main need is <strong>format this JSON string for a log, test fixture, or debugging session</strong>,{" "}
+          <strong>ujson</strong> and <strong>Circe</strong> are the most pleasant choices because they make formatting
+          and deterministic key ordering obvious. If you are already inside a <strong>Play</strong> app, keep things
+          simple and use <code>Json.prettyPrint</code>. If your environment is <strong>Jackson-first</strong>, use
+          Jackson and centralize formatting policies in the mapper instead of bolting on a second Scala library.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> If you're already using Play
-            Framework or prefer its ecosystem, <strong>Play JSON</strong> is a natural fit.
-          </li>
-          <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> For purely functional programming,
-            excellent type safety, and fine-grained control over encoding/decoding/formatting, <strong>Circe</strong> is
-            a top choice. Its <code>Printer</code> is very powerful for custom formatting.
-          </li>
-          <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> If speed and simplicity are
-            paramount, and you don't need extensive custom formatting beyond indentation, <strong>uPickle</strong> is a
-            strong contender.
-          </li>
-          <li>
-            <CheckCircle className="inline-block mr-2 text-green-500" size={20} /> In a Java-heavy environment or if you
-            need advanced features and control offered by Jackson, the <strong>Jackson Scala Module</strong> is a solid
-            option, bringing Jackson's powerful features (including highly customizable pretty-printing) to Scala.
-          </li>
-        </ul>
         <p>
-          For most pretty-printing needs, the built-in methods (<code>.spaces2</code>, <code>Json.prettyPrint</code>,{" "}
-          <code>write(..., indent=...)</code>, <code>SerializationFeature.INDENT_OUTPUT</code>) are more than adequate.
-          Dive into custom <code>Printer</code> configurations only when specific formatting rules are required (like
-          key sorting or unique indentation styles).
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <BookOpen className="mr-2" size={24} /> Conclusion
-        </h2>
-        <p>
-          Scala offers excellent choices for working with and formatting JSON data. Libraries like Circe, Play JSON,
-          uPickle, and the Jackson Scala Module each provide straightforward ways to generate both compact and
-          human-readable "pretty-printed" JSON output. Understanding the formatting options available in your chosen
-          library allows you to produce JSON that is not only valid but also easy to read, debug, and manage, greatly
-          improving the developer experience when dealing with JSON payloads in your Scala applications.
+          The overall rule is straightforward: choose the library that fits the rest of your JSON pipeline, then use its
+          built-in compact and pretty-print APIs deliberately. Pretty output is a developer-experience feature, not a
+          reason to fragment your serialization stack.
         </p>
       </div>
     </>

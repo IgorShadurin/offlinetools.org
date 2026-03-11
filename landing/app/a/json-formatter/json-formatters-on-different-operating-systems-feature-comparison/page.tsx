@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { Terminal, Settings, Code, CheckCircle, ListOrdered, Minimize2, Maximize2, FileText } from "lucide-react";
+import {
+  Terminal,
+  Settings,
+  Code,
+  CheckCircle,
+  ListOrdered,
+  Minimize2,
+  Maximize2,
+  FileText,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "JSON Formatters Across Operating Systems: A Feature Comparison",
   description:
-    "Compare features and usage of JSON formatting tools available on Windows, macOS, and Linux, including command-line utilities and built-in options.",
+    "Compare current JSON formatting options on Windows, macOS, and Linux, including jq, PowerShell, and Python for pretty-printing, compact output, sorting, and validation.",
 };
 
 export default function JsonFormatterComparisonPage() {
@@ -14,378 +23,23 @@ export default function JsonFormatterComparisonPage() {
 
       <div className="space-y-6">
         <p>
-          Working with JSON data is commonplace for developers. Whether you&apos;re debugging API responses, configuring
-          applications, or processing data, dealing with unformatted, minified, or inconsistent JSON can be challenging.
-          JSON formatters (also known as beautifiers or pretty-printers) are essential tools that transform messy JSON
-          strings into a human-readable, indented structure.
+          If you search for a JSON formatter by operating system, the real question is usually not whether Windows,
+          macOS, or Linux can format JSON. All three can. The important difference is which tool is already available
+          on the machine, how much syntax you have to remember, and whether you need more than simple pretty-printing.
         </p>
         <p>
-          While the core task is simple – adding whitespace and line breaks – the tools available and their specific
-          features can vary significantly depending on the operating system you are using. This guide compares some
-          popular methods and tools for formatting JSON on Windows, macOS, and Linux, highlighting their features and
-          how to use them.
+          The short answer is straightforward. Install <code>jq</code> if you want one workflow that behaves almost
+          the same everywhere. Use PowerShell when you want the fastest no-install path on Windows. Use Python&apos;s
+          JSON CLI when Python 3 is already available and you mainly need validation, sorting, or quick file cleanup.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Settings className="mr-3" /> Common Formatting Features
+          <ListOrdered className="mr-3" /> Quick Comparison
         </h2>
         <p>
-          Most JSON formatters offer a range of features beyond simple indentation. Here are some key capabilities to
-          look for:
+          This table focuses on the tools most people will realistically use rather than every possible JSON utility
+          that might exist on one system image or another.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li className="flex items-start">
-            <Maximize2 className="mr-2 mt-1 w-5 h-5 text-blue-500 flex-shrink-0" />
-            <span>
-              <strong>Pretty-Printing / Indentation:</strong> The primary function. Adds spaces or tabs to make the
-              structure clear. Tools often allow customizing the indentation width (e.g., 2 spaces, 4 spaces, tabs).
-            </span>
-          </li>
-          <li className="flex items-start">
-            <Minimize2 className="mr-2 mt-1 w-5 h-5 text-orange-500 flex-shrink-0" />
-            <span>
-              <strong>Minifying / Compacting:</strong> The opposite of pretty-printing. Removes all unnecessary
-              whitespace to produce the smallest possible JSON string, useful for reducing file size or network payload.
-            </span>
-          </li>
-          <li className="flex items-start">
-            <ListOrdered className="mr-2 mt-1 w-5 h-5 text-green-500 flex-shrink-0" />
-            <span>
-              <strong>Key Sorting:</strong> Sorts the keys within JSON objects alphabetically. This makes comparing
-              different JSON objects easier and ensures consistent formatting.
-            </span>
-          </li>
-          <li className="flex items-start">
-            <CheckCircle className="mr-2 mt-1 w-5 h-5 text-purple-500 flex-shrink-0" />
-            <span>
-              <strong>Validation:</strong> Checks if the input string is valid JSON before attempting to format it.
-              Invalid JSON cannot be reliably formatted and will often cause errors.
-            </span>
-          </li>
-          <li className="flex items-start">
-            <FileText className="mr-2 mt-1 w-5 h-5 text-red-500 flex-shrink-0" />
-            <span>
-              <strong>Colorization:</strong> Some tools, especially command-line ones, can output formatted JSON with
-              syntax highlighting for better readability in the terminal.
-            </span>
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Terminal className="mr-3" /> Cross-Platform Command Line Tools
-        </h2>
-        <p>
-          For developers comfortable with the command line, these tools offer powerful and scriptable ways to format
-          JSON across different operating systems.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">jq (Linux, macOS, Windows)</h3>
-        <p>
-          <code>jq</code> is often called the &quot;sed, awk, grep for JSON&quot;. While it&apos;s a powerful JSON
-          processor for filtering, transforming, and selecting data, its simplest use case is formatting. It needs to be
-          installed separately but is available via package managers (like <code>apt</code>, <code>brew</code>,{" "}
-          <code>choco</code>) on all major platforms.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Basic Pretty-Printing
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Pipe JSON into jq with the <code>.</code> identity filter.
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`echo '{"name":"Alice","age":30,"city":"New York"}' | jq '.'`}</pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}`}
-            </pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Compacting JSON
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Use the <code>-c</code> flag for compact output.
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`echo '{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}' | jq -c '.'`}
-            </pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`{"name":"Alice","age":30,"city":"New York"}`}</pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Sorting Keys
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Use the <code>| sort_keys</code> filter.
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`echo '{"city":"New York","name":"Alice","age":30}' | jq '. | sort_keys'`}</pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "age": 30,
-  "city": "New York",
-  "name": "Alice"
-}`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          <code>jq</code> is highly flexible, supporting various indentation levels (e.g., <code>jq --indent 4</code>)
-          and complex transformations. It&apos;s an excellent choice if you frequently work with JSON from the command
-          line or need scripting capabilities.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Settings className="mr-3" /> OS-Specific Tools
-        </h2>
-        <p>
-          Many operating systems come with scripting languages or utilities that can be leveraged to format JSON without
-          installing external tools like <code>jq</code>.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Windows (PowerShell)</h3>
-        <p>
-          PowerShell includes cmdlets for working with JSON. <code>ConvertFrom-Json</code> parses a JSON string into a
-          PowerShell object, and <code>ConvertTo-Json</code> converts a PowerShell object back into a JSON string.
-          <code>ConvertTo-Json</code> automatically pretty-prints by default and supports depth control.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Formatting with ConvertTo-Json
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">Use here-string or pipe input.</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`@'
-{"name":"Alice","age":30,"city":"New York"}
-'@ | ConvertFrom-Json | ConvertTo-Json`}
-            </pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-    "name": "Alice",
-    "age": 30,
-    "city": "New York"
-}`}
-            </pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Limiting Depth
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            The <code>-Depth</code> parameter controls how nested objects/arrays are expanded.
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`@'
-{"person":{"name":"Alice","details":{"age":30,"city":"New York"}}}
-'@ | ConvertFrom-Json | ConvertTo-Json -Depth 2`}
-            </pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">
-            Result (note default depth is often low):
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-    "person":  {...}
-}`}
-            </pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Use a higher depth for full expansion:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`@'
-{"person":{"name":"Alice","details":{"age":30,"city":"New York"}}}
-'@ | ConvertFrom-Json | ConvertTo-Json -Depth 5`}
-            </pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-    "person":  {
-                   "name": "Alice",
-                   "details":  {
-                                   "age": 30,
-                                   "city": "New York"
-                               }
-               }
-}`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          PowerShell&apos;s JSON cmdlets are built-in and convenient for simple formatting, especially within PowerShell
-          scripts. However, they lack the advanced features of <code>jq</code> like key sorting or complex data
-          manipulation.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">macOS & Linux (Python, Perl)</h3>
-        <p>
-          Both macOS and most Linux distributions come with Python and Perl pre-installed, both of which have modules
-          for working with JSON that can be easily accessed from the command line.
-        </p>
-
-        <h4 className="text-base font-semibold mt-4">Using Python&apos;s json.tool</h4>
-        <p>
-          Python&apos;s standard library includes a simple JSON encoder/decoder with a command-line interface for
-          validation and pretty-printing.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Formatting with python -m json.tool
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">Pipe JSON into the module.</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`echo '{"name":"Alice","age":30,"city":"New York"}' | python -m json.tool`}</pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-    "name": "Alice",
-    "age": 30,
-    "city": "New York"
-}`}
-            </pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Indentation Control
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Use the <code>--indent</code> flag (e.g., 2 spaces).
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`echo '{"name":"Alice","age":30,"city":"New York"}' | python -m json.tool --indent 2`}</pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}`}
-            </pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Sorting Keys
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Use the <code>--sort-keys</code> flag.
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`echo '{"city":"New York","name":"Alice","age":30}' | python -m json.tool --sort-keys`}</pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-    "age": 30,
-    "city": "New York",
-    "name": "Alice"
-}`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          Python&apos;s <code>json.tool</code> is a great built-in option that handles basic pretty-printing,
-          indentation customization, and key sorting. It&apos;s often sufficient for quick command-line formatting
-          tasks.
-        </p>
-
-        <h4 className="text-base font-semibold mt-4">Using Perl&apos;s json_pp or jshon</h4>
-        <p>
-          Perl&apos;s <code>JSON::PP</code> module provides the <code>json_pp</code> command-line utility (or sometimes
-          available via the <code>cpanminus</code> installed <code>jshon</code>, depending on the system/installation).
-          It&apos;s another simple, built-in option on systems with Perl.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Formatting with json_pp
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">Pipe JSON into the command.</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`echo '{"name":"Alice","age":30,"city":"New York"}' | json_pp`}</pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-   "age" : 30,
-   "city" : "New York",
-   "name" : "Alice"
-}`}
-            </pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Compacting JSON with json_pp
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Use the <code>-json_opt UTF8,canonical</code> flags.
-          </p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`echo '{
-   "age" : 30,
-   "city" : "New York",
-   "name" : "Alice"
-}' | json_pp -json_opt UTF8,canonical`}
-            </pre>
-          </div>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 mt-4">Result:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`{"age":30,"city":"New York","name":"Alice"}`}</pre>
-          </div>
-        </div>
-        <p>
-          <code>json_pp</code> is simple and available but might have fewer options for indentation styles compared to
-          Python&apos;s tool or <code>jq</code>. The <code>canonical</code> option also sorts keys.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">GUI Tools & Editors</h3>
-        <p>
-          Many graphical text editors (like VS Code, Sublime Text, Atom, Notepad++) and dedicated GUI JSON
-          viewers/editors include built-in or plugin-based JSON formatting capabilities. These are often very
-          user-friendly, offering a one-click format option. Online JSON formatters are also widely available. While not
-          OS-specific command-line tools, they are a common way developers format JSON interactively.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <ListOrdered className="mr-3" /> Feature Comparison Summary
-        </h2>
-        <p>Here&apos;s a quick comparison of the command-line tools discussed:</p>
         <div className="overflow-x-auto my-4">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead>
@@ -400,7 +54,7 @@ export default function JsonFormatterComparisonPage() {
                   scope="col"
                   className="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                 >
-                  Availability
+                  Typical Availability
                 </th>
                 <th
                   scope="col"
@@ -418,135 +72,295 @@ export default function JsonFormatterComparisonPage() {
                   scope="col"
                   className="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                 >
-                  Key Sorting
+                  Sort Keys
                 </th>
                 <th
                   scope="col"
                   className="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                 >
-                  Validation
+                  Validate
                 </th>
                 <th
                   scope="col"
                   className="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                 >
-                  Advanced Features
+                  Best Fit
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
                   <code>jq</code>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Install (All OS)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Custom Indent)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Yes</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Yes</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Yes</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Filtering, Transformation, Colorization
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">All OS, separate install</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes, with indent control</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes, with <code>-S</code></td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  The most consistent cross-platform CLI workflow
                 </td>
               </tr>
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                  <code>ConvertTo-Json</code> (PowerShell)
+                <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                  PowerShell JSON cmdlets
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Built-in (Windows)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Built into Windows PowerShell; PowerShell 7 works on all OS after install
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Depth Control)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Yes, with <code>-Compress</code>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  No (Primarily pretty-print)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">No direct sort flag</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Yes, plus <code>Test-Json</code> in PowerShell 6.1+
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">No</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Implicit via parsing)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Part of scripting environment
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Windows-first admin and scripting work
                 </td>
               </tr>
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                  <code>python -m json.tool</code>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                  Python JSON CLI
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Built-in (macOS, Linux, if Python installed)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Any OS where Python 3 is installed
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Custom Indent)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Yes, with <code>--compact</code>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">No</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Yes</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Implicit via parsing)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Yes, with <code>--sort-keys</code>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Basic CLI</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                  <code>json_pp</code> (Perl)
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">Yes</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                  Quick cleanup when Python is already present
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Built-in (macOS, Linux, if Perl installed)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Yes</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Canonical option)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Canonical option)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                  Yes (Implicit via parsing)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">Basic CLI</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <CheckCircle className="mr-3" /> Choosing the Right Tool
+          <Settings className="mr-3" /> What Actually Changes by Operating System
         </h2>
-        <p>The best JSON formatter depends on your needs and environment:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>For quick, interactive formatting within a text editor, use its built-in features or plugins.</li>
           <li>
-            If you need a powerful, flexible tool for scripting, filtering, and transforming JSON on any platform,
-            install and learn <code>jq</code>. It&apos;s the de facto standard for command-line JSON processing.
+            <strong>Windows:</strong> You usually already have PowerShell, which makes JSON formatting possible without
+            installing anything. Inline shell examples copied from Linux articles often break because quoting rules are
+            different, so file-based examples are usually safer.
           </li>
           <li>
-            If you are on Windows and primarily work within PowerShell, <code>ConvertTo-Json</code> is a convenient
-            built-in option for basic pretty-printing.
+            <strong>macOS:</strong> Terminal examples generally assume <code>zsh</code> or another POSIX shell. If you
+            rely on Python, the executable is often <code>python3</code> rather than <code>python</code>.
           </li>
           <li>
-            On macOS or Linux, the built-in Python or Perl tools (<code>python -m json.tool</code>, <code>json_pp</code>
-            ) are excellent for basic formatting and validation without any installation.{" "}
-            <code>python -m json.tool</code> offers good control over indentation and key sorting.
+            <strong>Linux:</strong> Command-line JSON workflows are usually easiest here, but availability still varies
+            by distro and container image. Python 3 is common, while <code>jq</code> is often the first extra package
+            people add for reliable scripting.
           </li>
           <li>
-            For validating JSON files, piping the content through any of these tools will typically throw an error if
-            the JSON is invalid, making them simple validators.
+            <strong>Cross-platform reality:</strong> PowerShell is no longer Windows-only. PowerShell 7 runs on
+            Windows, macOS, and Linux, so the JSON cmdlets can be a cross-platform option if your team already uses
+            PowerShell.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Terminal className="mr-3" /> Best Cross-Platform Choice: jq
+        </h2>
+        <p>
+          <code>jq</code> is still the cleanest answer if you want one formatter that behaves predictably across
+          operating systems. It is not usually preinstalled, but once it is available you get the same flags on
+          Windows, macOS, and Linux for pretty-printing, compact output, key sorting, color control, and much more.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Maximize2 className="mr-2" /> Pretty-print a file
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            The identity filter <code>.</code> formats valid JSON with the default indentation.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`jq . input.json`}</pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Minimize2 className="mr-2" /> Compact and sort keys
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            Use <code>-c</code> for one-line output and <code>-S</code> to alphabetize object keys.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`jq -c -S . input.json`}</pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Code className="mr-2" /> Customize indent or force color
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            <code>jq</code> supports custom indentation and explicit color control.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`jq --indent 4 -C . input.json`}</pre>
+          </div>
+        </div>
+        <p>
+          Choose <code>jq</code> when you need deterministic output, key sorting, reusable scripts, or you work with
+          large files often enough that a more capable JSON processor is worth installing. It also doubles as a quick
+          validator: <code>jq empty input.json</code> exits cleanly for valid JSON and fails on malformed input.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Settings className="mr-3" /> Best No-Install Windows Option: PowerShell
+        </h2>
+        <p>
+          If you are on Windows, PowerShell is usually the fastest way to format JSON without adding another tool.
+          <code>ConvertFrom-Json</code> parses the text, and <code>ConvertTo-Json</code> writes it back in a readable
+          format. In PowerShell 7 and newer, the same approach also works on macOS and Linux.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Maximize2 className="mr-2" /> Pretty-print from a file
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            <code>-Raw</code> reads the whole file as one string, which avoids line-by-line parsing issues.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`Get-Content -Raw .\\input.json | ConvertFrom-Json | ConvertTo-Json -Depth 100`}</pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Minimize2 className="mr-2" /> Compact output
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            Use <code>-Compress</code> when you want one-line JSON instead of readable indentation.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`Get-Content -Raw .\\input.json | ConvertFrom-Json | ConvertTo-Json -Compress -Depth 100`}</pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <CheckCircle className="mr-2" /> Validate JSON
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            <code>Test-Json</code> is the cleanest validation command in newer PowerShell versions.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`Get-Content -Raw .\\input.json | Test-Json`}</pre>
+          </div>
+        </div>
+        <p>
+          The main caveat is depth. <code>ConvertTo-Json</code> has a default depth of 2, which is too shallow for many
+          real API payloads, so it is safer to set a larger value explicitly. PowerShell is also not the best choice if
+          you need alphabetical key sorting because there is no simple built-in equivalent to <code>jq -S</code> or
+          Python&apos;s <code>--sort-keys</code>.
+        </p>
+        <p>
+          If you are still on Windows PowerShell 5.1, JSON formatting works, but <code>Test-Json</code> is not part of
+          that older runtime. Installing PowerShell 7 closes that gap and gives you the same command set on every OS.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Code className="mr-3" /> Lowest-Friction CLI When Python Is Already There
+        </h2>
+        <p>
+          Python&apos;s JSON CLI is ideal when you do not need <code>jq</code>-style transformations and you already
+          have Python 3 available. The most compatible command is still <code>python3 -m json.tool</code>. Newer
+          Python versions also support <code>python -m json</code>, but the <code>json.tool</code> form remains the
+          safest choice across mixed environments.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Maximize2 className="mr-2" /> Pretty-print a file
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`python3 -m json.tool input.json`}</pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <ListOrdered className="mr-2" /> Sort keys with a smaller indent
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`python3 -m json.tool --sort-keys --indent 2 input.json`}</pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Minimize2 className="mr-2" /> Compact or parse JSON Lines
+          </h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            The current CLI also supports one-line output and JSON Lines input.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`python3 -m json.tool --compact input.json
+python3 -m json.tool --json-lines events.ndjson`}</pre>
+          </div>
+        </div>
+        <p>
+          Python is a strong middle ground when you need validation and clean output but not a full query language. It
+          also has helpful flags such as <code>--no-ensure-ascii</code> if you want non-ASCII characters written
+          directly instead of escaped.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <FileText className="mr-3" /> Common Failure Points
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Invalid JSON is not the same as JavaScript object syntax.</strong> Trailing commas, comments, and
+            single-quoted keys will fail in all three tools.
+          </li>
+          <li>
+            <strong>PowerShell depth truncation surprises people.</strong> If the output suddenly shows shortened nested
+            objects, increase <code>-Depth</code>.
+          </li>
+          <li>
+            <strong>Large files favor jq.</strong> Python and PowerShell usually parse the full document into memory,
+            while <code>jq</code> gives you better options for heavy CLI work.
+          </li>
+          <li>
+            <strong>Shell quoting differs across OS.</strong> When examples copied from blog posts fail, switch to
+            formatting a file instead of echoing inline JSON.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <CheckCircle className="mr-3" /> Which Formatter Should You Choose?
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Use <code>jq</code> if you want the best cross-platform formatter and expect to reuse the workflow in
+            scripts, CI jobs, or debugging sessions.
+          </li>
+          <li>
+            Use PowerShell if you are on Windows and want a built-in formatter immediately, especially for admin or
+            automation tasks that already live in PowerShell.
+          </li>
+          <li>
+            Use Python&apos;s JSON CLI if Python 3 is already on the machine and you only need formatting, sorting, or
+            validation.
+          </li>
+          <li>
+            Use an editor or offline browser formatter if the task is one-off and you do not want shell-specific
+            quoting or installation overhead at all.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          While the goal of JSON formatting is consistent, the tools and their capabilities vary across operating
-          systems. Understanding the strengths of built-in utilities like PowerShell&apos;s <code>ConvertTo-Json</code>,
-          Python&apos;s <code>json.tool</code>, and Perl&apos;s <code>json_pp</code>, as well as the power of dedicated
-          cross-platform tools like <code>jq</code>, allows developers to choose the most efficient method for their
-          specific task and environment. For serious command-line JSON manipulation, investing time in learning{" "}
-          <code>jq</code> is highly recommended due to its versatility. For simple, everyday formatting, the built-in
-          options are often more than sufficient.
+          The most useful operating system comparison is not just Windows versus macOS versus Linux. It is built-in
+          convenience versus install-once consistency. Windows gives you PowerShell out of the box, Python is a common
+          low-friction option wherever it is installed, and <code>jq</code> remains the best all-around choice when you
+          want predictable behavior across every platform.
         </p>
       </div>
     </>

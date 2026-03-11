@@ -1,25 +1,20 @@
 import type { Metadata } from "next";
 import {
-  Code,
-  FileJson2,
-  Settings,
-  Layers,
-  Container,
-  Terminal,
-  Database,
-  Wrench,
   BookText,
-  Workflow,
-  Component,
-  HardDrive,
-  Network,
-  Lock, // Replaced ShieldLock with Lock
+  Code,
+  Container,
+  Database,
+  FileJson2,
+  Lock,
+  Settings,
+  Terminal,
+  Wrench,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Docker Container Configuration with JSON | Developer Guide",
+  title: "Docker Container Configuration with JSON: config.json, API Payloads, and Mounted Files",
   description:
-    "Explore how JSON is used for dynamic and programmatic Docker container configuration, covering API payloads, command generation, and internal container configurations.",
+    "Learn what Docker config.json is, how to create containers with JSON through the Docker Engine API, and when to mount a JSON file inside a container.",
 };
 
 export default function DockerJsonConfigArticle() {
@@ -32,389 +27,335 @@ export default function DockerJsonConfigArticle() {
 
       <div className="space-y-6">
         <p>
-          Docker containers are configured primarily through <Code className="inline-block w-4 h-4" />{" "}
-          <code>Dockerfile</code>s and <Code className="inline-block w-4 h-4" /> <code>docker-compose.yml</code> files
-          (YAML format). However, JSON plays a significant role in programmatic and API-driven Docker workflows. This
-          article explores how JSON is used to define, manage, and interact with Docker containers beyond the basic
-          static configuration files.
+          If you searched for <Code className="inline-block w-4 h-4" /> <code>docker config json</code>, you are
+          probably looking for one of three different things: Docker&apos;s CLI config file, a JSON payload for the
+          Docker Engine API, or a JSON file that your application reads inside the container. Those are related, but
+          they are not interchangeable, and Docker does <strong>not</strong> have a built-in{" "}
+          <Code className="inline-block w-4 h-4" /> <code>docker run --config container.json</code> feature for general
+          container settings.
+        </p>
+        <p>
+          The practical rule is simple: use <Code className="inline-block w-4 h-4" /> <code>~/.docker/config.json</code>{" "}
+          to configure the Docker <em>client</em>, use the Docker Engine API when you want to create a container from a
+          JSON body, and mount a JSON file when the <em>application inside the container</em> needs structured config at
+          runtime.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <BookText className="w-6 h-6" />
-          <span>Why JSON in the Docker Ecosystem?</span>
+          <span>Quick answer: which JSON file do you actually need?</span>
         </h2>
-        <p>
-          While YAML is prevalent for human-readable configuration like Docker Compose, JSON is the standard format for
-          data interchange in web APIs. The Docker Remote API, used by the Docker CLI, orchestration tools, and custom
-          scripts, communicates almost exclusively via JSON payloads. Understanding this is crucial for:
-        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <Workflow className="inline-block w-4 h-4 mr-1" />
-            Automating container deployments and management.
+            <strong>Docker CLI settings:</strong> edit <Code className="inline-block w-4 h-4" />{" "}
+            <code>~/.docker/config.json</code>.
           </li>
           <li>
-            <Component className="inline-block w-4 h-4 mr-1" />
-            Integrating Docker into custom applications or platforms.
+            <strong>Create a container from JSON:</strong> send a JSON body to the Docker Engine{" "}
+            <Code className="inline-block w-4 h-4" /> <code>POST /containers/create</code> endpoint.
           </li>
           <li>
-            <HardDrive className="inline-block w-4 h-4 mr-1" />
-            Inspecting the runtime configuration and state of containers.
+            <strong>Pass app settings into a container:</strong> mount a JSON file and let your app read it.
           </li>
           <li>
-            <Network className="inline-block w-4 h-4 mr-1" />
-            Working with orchestration systems (like Kubernetes, although it uses YAML, their APIs often interact with
-            underlying container runtimes via JSON).
+            <strong>Inspect an existing container:</strong> use <Code className="inline-block w-4 h-4" />{" "}
+            <code>docker inspect</code>, which returns JSON.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Terminal className="w-6 h-6" />
-          <span>Scenario 1: Generating Docker CLI Commands</span>
-        </h2>
-        <p>
-          Sometimes you need to build <Code className="inline-block w-4 h-4" /> <code>docker run</code> commands
-          dynamically based on external data or application logic. JSON can be used as an intermediate data structure to
-          hold the desired configuration before constructing the command string.
-        </p>
-        <p>Consider a simple configuration for a web server container:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center space-x-2">
-            <FileJson2 className="w-5 h-5" />
-            <span>Example: JSON representing docker run options</span>
-          </h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`&#x7b;
-  "image": "nginx:latest",
-  "name": "my-web-server",
-  "ports": [
-    "8080:80"
-  ],
-  "volumes": [
-    "./html:/usr/share/nginx/html"
-  ],
-  "environment": &#x7b;
-    "NGINX_HOST": "localhost",
-    "NGINX_PORT": 80
-  &#x7d;,
-  "restart": "always"
-&#x7d;`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          This JSON structure is not directly consumed by the <Code className="inline-block w-4 h-4" />{" "}
-          <code>docker run</code> command itself, but a script or program could read this JSON and build the
-          corresponding command:
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center space-x-2">
-            <Code className="w-5 h-5" />
-            <span>Conceptual Command Generation (e.g., Node.js script)</span>
-          </h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`const config = &#x7b;
-  "image": "nginx:latest",
-  "name": "my-web-server",
-  "ports": [
-    "8080:80"
-  ],
-  "volumes": [
-    "./html:/usr/share/nginx/html"
-  ],
-  "environment": &#x7b;
-    "NGINX_HOST": "localhost",
-    "NGINX_PORT": 80
-  &#x7d;,
-  "restart": "always"
-&#x7d;;
-
-let command = "docker run -d"; // -d for detached mode
-
-if (config.name) &#x7b;
-  command += \` --name \${config.name}\`;
-&#x7d;
-
-if (config.ports) &#x7b;
-  config.ports.forEach(port => &#x7b;
-    command += \` -p \${port}\`;
-  &#x7d;);
-&#x7d;
-
-if (config.volumes) &#x7b;
-  config.volumes.forEach(volume => &#x7b;
-    command += \` -v \${volume}\`;
-  &#x7d;);
-&#x7d;
-
-if (config.environment) &#x7b;
-  for (const key in config.environment) &#x7b;
-    command += \` -e \${key}=\${config.environment[key]}\`;
-  &#x7d;
-&#x7d;
-
-if (config.restart) &#x7b;
-  command += \` --restart \${config.restart}\`;
-&#x7d;
-
-command += \` \${config.image}\`;
-
-console.log(command);
-// Expected output:
-// docker run -d --name my-web-server -p 8080:80 -v ./html:/usr/share/nginx/html -e NGINX_HOST=localhost -e NGINX_PORT=80 --restart always nginx:latest
-`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          This demonstrates using JSON as a structured way to define parameters for command-line execution, making it
-          easier to manage complex configurations programmatically.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Settings className="w-6 h-6" />
-          <span>Scenario 2: Docker Remote API Payloads</span>
+          <span>1. The Docker CLI config file: ~/.docker/config.json</span>
         </h2>
         <p>
-          The core of programmatic Docker interaction is the Docker Remote API. When you use the Docker CLI, it&apos;s
-          effectively making API calls under the hood. Creating a container using the API involves sending a POST
-          request to the <Code className="inline-block w-4 h-4" /> <code>/containers/create</code> endpoint with a JSON
-          body that defines the container&apos;s configuration.
+          Docker&apos;s official CLI reference still uses <Code className="inline-block w-4 h-4" />{" "}
+          <code>~/.docker/config.json</code> as the default client configuration file. This file controls how the{" "}
+          <Code className="inline-block w-4 h-4" /> <code>docker</code> command behaves on your machine. It is not a
+          container definition file, and it does not tell Docker how to run an individual container.
         </p>
         <p>
-          The structure of this JSON is quite detailed, mirroring the extensive options available when running a
-          container. It includes sections for:
-          <Code className="inline-block w-4 h-4" /> <code>HostConfig</code> (ports, volumes, restart policy, resources,
-          etc.),
-          <Code className="inline-block w-4 h-4" /> <code>NetworkingConfig</code>, and core container settings like
-          Image, Cmd, Entrypoint, Env, etc.
+          Typical uses include credential helpers, default output formatting, custom HTTP headers, and registry auth.
+          Docker also supports switching to another config directory with <Code className="inline-block w-4 h-4" />{" "}
+          <code>DOCKER_CONFIG</code> or the <Code className="inline-block w-4 h-4" /> <code>docker --config</code>{" "}
+          flag.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium flex items-center space-x-2">
             <FileJson2 className="w-5 h-5" />
-            <span>Example: Simplified Docker API Create Container JSON Body</span>
+            <span>Example: a minimal Docker CLI config.json file</span>
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            (Full API schema is extensive, this is a basic illustration)
-          </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`&#x7b;
-  "Image": "ubuntu:latest",
-  "Cmd": ["echo", "Hello from container!"],
-  "Env": [
-    "MY_VARIABLE=some_value"
-  ],
-  "ExposedPorts": &#x7b;
-    "80/tcp": &#x7b;&#x7d; // Exposing port 80
-  &#x7d;,
-  "HostConfig": &#x7b;
-    "PortBindings": &#x7b;
-      "80/tcp": [
-        &#x7b;
-          "HostPort": "8080" // Mapping container port 80 to host port 8080
-        &#x7d;
-      ]
-    &#x7d;,
-    "Binds": [
-      "/host/path:/container/path" // Volume mount
-    ],
-    "RestartPolicy": &#x7b;
-      "Name": "on-failure",
-      "MaximumRetryCount": 5
-    &#x7d;
-    // ... many other HostConfig options ...
-  &#x7d;,
-  "NetworkingConfig": &#x7b;
-    "EndpointsConfig": &#x7b;
-      "my_network": &#x7b;&#x7d; // Connecting to a network named 'my_network'
-    &#x7d;
-  &#x7d;
-  // ... other container configuration options ...
-&#x7d;`}
+              {`{
+  "credsStore": "osxkeychain",
+  "psFormat": "table {{.ID}}\\t{{.Image}}\\t{{.Status}}\\t{{.Names}}",
+  "imagesFormat": "table {{.Repository}}\\t{{.Tag}}\\t{{.Size}}",
+  "HttpHeaders": {
+    "X-Environment": "dev"
+  }
+}`}
             </pre>
           </div>
         </div>
         <p>
-          Interacting directly with this API is how tools like Portainer, Kubernetes container runtimes (like
-          containerd), or custom provisioning systems manage containers. Libraries in various programming languages
-          exist to simplify building these JSON payloads and making the HTTP requests to the Docker daemon.
+          If your question is &quot;where is the Docker config JSON file?&quot;, this is usually the file people mean.
+          If your question is &quot;how do I create a container from JSON?&quot;, this is <strong>not</strong> the file
+          you want.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Layers className="w-6 h-6" />
-          <span>Scenario 3: Mounting JSON Configuration Files INSIDE Containers</span>
+          <Container className="w-6 h-6" />
+          <span>2. Creating a Docker container from JSON</span>
         </h2>
         <p>
-          While the previous scenarios used JSON to configure the *Docker engine* or *CLI* to *run* a container, JSON is
-          also commonly used for application configuration *inside* the container. You can mount a JSON file from the
-          host machine or a volume into the container filesystem, and the application running inside reads it.
+          For actual container creation, JSON belongs to the Docker Engine API. The current Docker Engine API reference
+          documents <Code className="inline-block w-4 h-4" /> <code>POST /containers/create</code> with a JSON body
+          that combines core container fields such as <Code className="inline-block w-4 h-4" /> <code>Image</code> and{" "}
+          <Code className="inline-block w-4 h-4" /> <code>Env</code> with nested sections such as{" "}
+          <Code className="inline-block w-4 h-4" /> <code>HostConfig</code> and{" "}
+          <Code className="inline-block w-4 h-4" /> <code>NetworkingConfig</code>.
         </p>
         <p>
-          This is particularly useful for providing environment-specific settings or complex configuration that
-          doesn&apos;t fit well into simple environment variables.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center space-x-2">
-            <FileJson2 className="w-5 h-5" />
-            <span>Example: Application Configuration File (app-config.json)</span>
-          </h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`&#x7b;
-  "database": &#x7b;
-    "host": "db.example.com",
-    "port": 5432,
-    "username": "app_user",
-    "password_secret": "/run/secrets/db_password" // Using secrets!
-  &#x7d;,
-  "apiKeys": [
-    "abc123xyz789",
-    "def456uvw012"
-  ],
-  "featureFlags": &#x7b;
-    "newDashboardEnabled": true,
-    "betaTests": false
-  &#x7d;
-&#x7d;`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          You would then mount this file into your container using the <Code className="inline-block w-4 h-4" />{" "}
-          <code>-v</code> flag in <Code className="inline-block w-4 h-4" /> <code>docker run</code> or the{" "}
-          <Code className="inline-block w-4 h-4" /> <code>volumes</code> section in{" "}
-          <Code className="inline-block w-4 h-4" /> <code>docker-compose.yml</code>.
+          This is the JSON equivalent of many <Code className="inline-block w-4 h-4" /> <code>docker run</code> flags.
+          If you are building a platform, wrapper script, control plane, or admin tool, this is the canonical approach.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium flex items-center space-x-2">
             <Terminal className="w-5 h-5" />
-            <span>Example: Mounting the JSON Config via Docker CLI</span>
+            <span>Example: create a container with a JSON API payload</span>
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            This example uses a versioned API path. When calling the Engine API directly, use the version supported by
+            your Docker installation.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`curl --unix-socket /var/run/docker.sock \\
+  -H "Content-Type: application/json" \\
+  -X POST "http://localhost/v1.53/containers/create?name=my-nginx" \\
+  -d '{
+    "Image": "nginx:1.27-alpine",
+    "Env": [
+      "NGINX_ENTRYPOINT_QUIET_LOGS=1"
+    ],
+    "ExposedPorts": {
+      "80/tcp": {}
+    },
+    "HostConfig": {
+      "PortBindings": {
+        "80/tcp": [
+          {
+            "HostPort": "8080"
+          }
+        ]
+      },
+      "Binds": [
+        "./site:/usr/share/nginx/html:ro"
+      ],
+      "RestartPolicy": {
+        "Name": "unless-stopped"
+      }
+    }
+  }'
+
+docker start my-nginx`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          A few common mappings are worth memorizing:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <Code className="inline-block w-4 h-4" /> <code>-e KEY=value</code> becomes{" "}
+            <Code className="inline-block w-4 h-4" /> <code>Env</code>.
+          </li>
+          <li>
+            <Code className="inline-block w-4 h-4" /> <code>-p 8080:80</code> becomes both{" "}
+            <Code className="inline-block w-4 h-4" /> <code>ExposedPorts</code> and{" "}
+            <Code className="inline-block w-4 h-4" /> <code>HostConfig.PortBindings</code>.
+          </li>
+          <li>
+            <Code className="inline-block w-4 h-4" /> <code>-v host:container:ro</code> becomes{" "}
+            <Code className="inline-block w-4 h-4" /> <code>HostConfig.Binds</code>.
+          </li>
+          <li>
+            <Code className="inline-block w-4 h-4" /> <code>--restart unless-stopped</code> becomes{" "}
+            <Code className="inline-block w-4 h-4" /> <code>HostConfig.RestartPolicy.Name</code>.
+          </li>
+          <li>
+            The container name is commonly passed in the request URL as the <Code className="inline-block w-4 h-4" />{" "}
+            <code>name</code> query parameter.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Code className="w-6 h-6" />
+          <span>3. Can docker run read a generic config.json file?</span>
+        </h2>
+        <p>
+          Not directly. The Docker CLI does not have a general feature where you hand it a JSON document and it turns
+          that into a container definition. If you need that workflow, choose one of these patterns:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Generate a <code>docker run</code> command from your own JSON schema in a script.</li>
+          <li>Translate your JSON into a Compose file such as <code>compose.yaml</code>.</li>
+          <li>Skip the CLI and call the Engine API with a JSON body.</li>
+        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center space-x-2">
+            <FileJson2 className="w-5 h-5" />
+            <span>Example: JSON that your own wrapper script could turn into docker run</span>
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "image": "nginx:1.27-alpine",
+  "name": "site",
+  "ports": ["8080:80"],
+  "mounts": ["./site:/usr/share/nginx/html:ro"],
+  "env": {
+    "NGINX_ENTRYPOINT_QUIET_LOGS": "1"
+  }
+}`}
+            </pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center space-x-2">
+            <Code className="w-5 h-5" />
+            <span>Example: tiny Node.js generator</span>
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`import fs from "node:fs";
+
+const cfg = JSON.parse(fs.readFileSync("container.json", "utf8"));
+const args = ["run", "-d"];
+
+if (cfg.name) args.push("--name", cfg.name);
+for (const port of cfg.ports ?? []) args.push("-p", port);
+for (const mount of cfg.mounts ?? []) args.push("-v", mount);
+for (const [key, value] of Object.entries(cfg.env ?? {})) {
+  args.push("-e", \`\${key}=\${value}\`);
+}
+
+args.push(cfg.image);
+console.log(\`docker \${args.join(" ")}\`);`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          This pattern is useful when a control panel or deployment tool stores container settings as JSON internally
+          but still executes the Docker CLI underneath.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Database className="w-6 h-6" />
+          <span>4. Mounting a JSON config file inside the container</span>
+        </h2>
+        <p>
+          Sometimes the JSON file is not for Docker at all. It is for the application running inside the container. In
+          that case, keep the container configuration separate and mount the JSON file at runtime.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center space-x-2">
+            <FileJson2 className="w-5 h-5" />
+            <span>Example: app-config.json</span>
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "database": {
+    "host": "db.internal",
+    "port": 5432
+  },
+  "featureFlags": {
+    "newDashboard": true
+  },
+  "logging": {
+    "level": "info"
+  }
+}`}
+            </pre>
+          </div>
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center space-x-2">
+            <Terminal className="w-5 h-5" />
+            <span>Example: mount the JSON file read-only</span>
           </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`docker run -d \\
-  --name my-app-container \\
-  -v ./app-config.json:/app/config/app-config.json:ro \\ # Mount read-only
+  --name my-app \\
+  --mount type=bind,src="$PWD/app-config.json",dst=/app/config/app-config.json,readonly \\
   my-application-image`}
             </pre>
           </div>
         </div>
         <p>
-          Inside the <Code className="inline-block w-4 h-4" /> <code>my-application-image</code> container, the
-          application would be configured to read and parse the JSON file at <Code className="inline-block w-4 h-4" />{" "}
-          <code>/app/config/app-config.json</code>. This separates configuration from the image itself, allowing you to
-          use the same image in different environments with different configurations.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Database className="w-6 h-6" />
-          <span>Scenario 4: Docker Inspect Output</span>
-        </h2>
-        <p>
-          When you need to programmatically check the state or detailed configuration of a running or stopped container,
-          image, volume, or network, the <Code className="inline-block w-4 h-4" /> <code>docker inspect</code> command
-          is invaluable. By default, it outputs a large JSON array (even for a single object) containing a wealth of
-          information.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center space-x-2">
-            <Terminal className="w-5 h-5" />
-            <span>Example: docker inspect command</span>
-          </h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`docker inspect my-web-server`}</pre>
-          </div>
-        </div>
-        <p>
-          The output is a deeply nested JSON structure. You can parse this output using command-line tools like{" "}
-          <Code className="inline-block w-4 h-4" /> <code>jq</code> or within programming languages to extract specific
-          pieces of information, such as the container&apos;s IP address, mounted volumes, or effective environment
-          variables.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center space-x-2">
-            <Code className="w-5 h-5" />
-            <span>Example: Using jq to extract IP Address</span>
-          </h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`docker inspect my-web-server | jq '.[0].NetworkSettings.Networks.bridge.IPAddress'`}</pre>
-          </div>
-        </div>
-        <p>
-          Understanding the structure of the <Code className="inline-block w-4 h-4" /> <code>docker inspect</code> JSON
-          output is key to building automation scripts that react to container states or configurations.
+          Use this approach when the app expects a JSON settings file. Do not confuse it with Docker&apos;s own client
+          config file or the Engine API payload used to create the container.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Wrench className="w-6 h-6" />
-          <span>Working with JSON Configuration Programmatically</span>
+          <span>5. Use docker inspect when you need real container JSON</span>
         </h2>
         <p>
-          Most programming languages have excellent built-in support for parsing and generating JSON. When automating
-          Docker workflows or building tools that interact with the Docker API, you&apos;ll typically:
+          If you already have a container and want to see the effective configuration in JSON form,{" "}
+          <Code className="inline-block w-4 h-4" /> <code>docker inspect</code> is the fastest path. It returns a JSON
+          array containing image details, environment variables, mounts, networks, restart policy, and much more.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Load configuration from a JSON file or object.</li>
-          <li>Construct JSON payloads for API calls based on your desired container configuration.</li>
-          <li>Send these JSON payloads via HTTP requests to the Docker daemon API endpoint.</li>
-          <li>
-            Parse JSON responses from the API (like the result of creating a container or inspecting one) to get
-            information or confirm actions.
-          </li>
-          <li>Parse JSON configuration files mounted into your application container.</li>
-        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center space-x-2">
+            <Terminal className="w-5 h-5" />
+            <span>Example: inspect a running container</span>
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>{`docker inspect my-nginx | jq '.[0].HostConfig.PortBindings'`}</pre>
+          </div>
+        </div>
         <p>
-          Libraries like <Code className="inline-block w-4 h-4" /> <code>node-docker-api</code> (Node.js),{" "}
-          <Code className="inline-block w-4 h-4" /> <code>docker-py</code> (Python), or the official Docker SDKs for
-          various languages handle the complexities of interacting with the API and managing the JSON structure for you.
+          This is especially helpful when you want to verify what Docker actually applied or when you are reverse
+          engineering a known-good container into an API payload or Compose definition.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Lock className="w-6 h-6" />
-          <span>Security Considerations</span>
+          <span>Common mistakes and security notes</span>
         </h2>
-        <p>
-          When using JSON for configuration, especially when interacting with the Docker API or mounting files into
-          containers, consider security:
-        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>API Access:</strong> Secure the Docker API endpoint. Exposing it without proper authentication (like
-            TLS certificates or SSH tunnels) is a major security risk. Tools interacting with the API need appropriate
-            permissions.
+            <strong>Do not commit</strong> <Code className="inline-block w-4 h-4" /> <code>~/.docker/config.json</code>{" "}
+            to version control. It may contain registry auth or proxy information.
           </li>
           <li>
-            <strong>Sensitive Data in JSON:</strong> Avoid hardcoding secrets (passwords, API keys) directly into JSON
-            files used for programmatic configuration or mounted inside containers. Use Docker Secrets or other secure
-            mechanisms to inject sensitive data at runtime.
+            <strong>Do not store secrets in plain JSON</strong> unless you control access tightly. Prefer secret
+            managers or Docker secret mechanisms where they fit your deployment model.
           </li>
           <li>
-            <strong>Configuration Injection:</strong> If generating Docker configurations from user input or external
-            sources, validate and sanitize the data to prevent injection attacks that could compromise the container or
-            host.
+            <strong>Do not expose the Docker socket casually.</strong> If you can post JSON to the Engine API, you can
+            usually create privileged containers and control the host.
           </li>
           <li>
-            <strong>Mounted Files:</strong> Ensure sensitive configuration files mounted into containers have correct
-            permissions and are mounted read-only (<Code className="inline-block w-4 h-4" /> <code>:ro</code>) if the
-            container doesn&apos;t need to write to them.
+            <strong>Do not mix up similarly named features.</strong> Docker CLI <code>config.json</code>, Swarm{" "}
+            <Code className="inline-block w-4 h-4" /> <code>docker config</code>, and app-level JSON config files solve
+            different problems.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Container className="w-6 h-6" />
-          <span>Conclusion</span>
+          <span>Bottom line</span>
         </h2>
         <p>
-          While <Code className="inline-block w-4 h-4" /> <code>Dockerfile</code> and{" "}
-          <Code className="inline-block w-4 h-4" /> <code>docker-compose.yml</code> provide the foundation for
-          declarative container configuration, JSON is the language of programmatic interaction in the Docker ecosystem.
-          Whether generating CLI arguments, communicating with the Docker Remote API, mounting application settings, or
-          inspecting container details, understanding how JSON is structured and used is essential for building
-          sophisticated and automated Docker workflows and integrating containers into broader systems. Mastering these
-          JSON interfaces unlocks powerful capabilities for managing your containerized applications at scale.
+          When people say &quot;Docker JSON config&quot;, the missing step is deciding <em>what</em> is being
+          configured. Use <Code className="inline-block w-4 h-4" /> <code>~/.docker/config.json</code> for the Docker
+          client, the Engine API for container creation from JSON, and mounted JSON files for application settings
+          inside the container. Once you separate those cases, the Docker docs and JSON structure become much easier to
+          work with.
         </p>
       </div>
     </>

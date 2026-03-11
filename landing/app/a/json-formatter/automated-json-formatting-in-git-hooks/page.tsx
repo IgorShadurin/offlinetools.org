@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { FileJson, GitBranch, Hammer, Code, Package, AlertTriangle, Check } from "lucide-react";
+import { AlertTriangle, Check, Code, FileJson, GitBranch, Hammer, Package } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Automated JSON Formatting in Git Hooks | Your Site Name",
+  title: "Automated JSON Formatting in Git Hooks | Offline Tools",
   description:
-    "Learn how to automatically format JSON files using Git pre-commit hooks to maintain code consistency and improve diff readability.",
+    "Set up automated JSON formatting in Git hooks with Husky, lint-staged, Prettier, or pre-commit. Includes current examples, partial-staging caveats, and troubleshooting tips.",
 };
 
 export default function AutomatedJsonFormattingArticle() {
@@ -17,247 +17,218 @@ export default function AutomatedJsonFormattingArticle() {
 
       <div className="space-y-6">
         <p>
-          Maintaining consistent code style across a project is crucial for readability, collaboration, and reducing
-          merge conflicts. While code formatters are common for languages like JavaScript, Python, or CSS, configuration
-          files and data formats like JSON often get overlooked. Inconsistent JSON formatting can lead to noisy Git
-          diffs and debates during code reviews. This article explores how to use Git hooks, specifically the pre-commit
-          hook, to automatically format your JSON files before they are committed.
+          If JSON files keep showing up in pull requests with mixed indentation, inconsistent spacing, or accidental
+          reordering, a Git pre-commit hook is the right place to fix it. The hook can format staged JSON files before
+          the commit is created, which keeps diffs smaller and avoids style debates in code review.
         </p>
+
+        <p>
+          For most JavaScript and TypeScript repositories today, the best default is{" "}
+          <code>Prettier + lint-staged + Husky</code>. That setup formats only staged files, works well with{" "}
+          <code>git add --patch</code>, and shares the hook configuration with the rest of the team. If you want fewer
+          Node-specific dependencies, a raw Git hook or Python&apos;s <code>pre-commit</code> framework can do the same
+          job.
+        </p>
+
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Use <code>Husky + lint-staged + Prettier</code> if your repo already has a Node toolchain.
+          </li>
+          <li>
+            Use <code>pre-commit</code> if you want language-agnostic hooks that are easy to pin and update.
+          </li>
+          <li>
+            Use a raw shell hook only if you want the simplest possible setup and understand the staging caveats.
+          </li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <GitBranch className="mr-2 text-green-500" />
-          What are Git Hooks?
+          How Git Hooks Fit In
         </h2>
         <p>
-          Git hooks are scripts that Git executes automatically at certain points in your workflow. They allow you to
-          customize Git&apos;s internal behavior and trigger customizable actions. Hooks are typically stored in the{" "}
-          <code>.git/hooks</code> directory of your repository. Examples include:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <code>pre-commit</code>: Runs before a commit is finalized. This is where you might check code style or run
-            tests.
-          </li>
-          <li>
-            <code>prepare-commit-msg</code>: Runs before the commit message editor is launched.
-          </li>
-          <li>
-            <code>post-commit</code>: Runs after a commit is successfully created. Useful for notifications or triggers.
-          </li>
-          <li>
-            <code>pre-rebase</code>: Runs before a rebase starts.
-          </li>
-          <li>And many more...</li>
-        </ul>
-        <p>
-          For automated formatting, the <code>pre-commit</code> hook is the ideal place. It ensures that any files you
-          add to the staging area meet your formatting standards *before* they become part of the commit history. If the
-          hook script exits with a non-zero status, the commit is aborted, giving you a chance to fix issues.
+          Git runs hook programs from <code>.git/hooks</code> by default, or from another directory if you configure{" "}
+          <code>core.hooksPath</code>. The <code>pre-commit</code> hook runs before the commit object is created. If
+          the hook exits with a non-zero status, Git aborts the commit. Developers can still bypass it with{" "}
+          <code>git commit --no-verify</code>, so hooks should be treated as fast local guardrails, not your only
+          enforcement layer.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Hammer className="mr-2 text-yellow-500" />
-          Setting up a Basic Manual Hook
-        </h2>
         <p>
-          You can set up a Git hook manually by navigating to the <code>.git/hooks</code> directory in your repository.
-          You&apos;ll find example scripts with a <code>.sample</code> extension. To create your own hook, copy one of
-          these or create a new file with the desired hook name (e.g., <code>pre-commit</code>) and make it executable.
-        </p>
-        <p>
-          Here&apos;s a basic example of a <code>.git/hooks/pre-commit</code> script using <code>bash</code> that finds
-          staged JSON files and formats them. This requires a JSON formatting tool to be installed (we&apos;ll discuss
-          tools next).
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-3">
-            <code>.git/hooks/pre-commit</code> (Bash Example)
-          </h3>
-          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">
-            #!/bin/sh # Get list of staged files STAGED_FILES=$(git diff --cached --name-only --diff-filter=d) # Filter
-            for JSON files JSON_FILES=$(echo "$STAGED_FILES" | grep '\.json') # If no JSON files are staged, exit
-            successfully if [ -z "$JSON_FILES" ]; then echo "No JSON files staged. Skipping formatting." exit 0 fi echo
-            "Formatting staged JSON files..." # Loop through JSON files and format them using a tool (e.g., jq) #
-            Replace 'jq -S '.' "$file" &gt; "$file.tmp" && mv "$file.tmp" "$file"' with your chosen formatting command
-            for file in $JSON_FILES do if [ -f "$file" ]; then # Ensure file still exists # Use 'jq -S '.' "$file" &gt;
-            "$file.tmp" && mv "$file.tmp" "$file"' # or 'prettier --write "$file"' or similar echo "Formatting $file..."
-            # Example using jq for pretty printing with sorted keys jq -S '.' "$file" &gt; "$file.tmp" && mv "$file.tmp"
-            "$file" if [ $? -ne 0 ]; then echo "Error formatting $file. Aborting commit." exit 1 fi # Add the formatted
-            file back to the staging area git add "$file" fi done echo "JSON formatting complete." exit 0
-          </pre>
-        </div>
-        <p>
-          <strong>Important:</strong> Make the script executable using <code>chmod +x .git/hooks/pre-commit</code>.
-        </p>
-        <p>This manual approach works but has a few drawbacks:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Hooks are local to your machine and not cloned with the repository by default.</li>
-          <li>Managing multiple hooks and ensuring consistency across developers is hard.</li>
-          <li>Requires manually installing formatting tools on each developer&apos;s machine.</li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Code className="mr-2 text-purple-500" />
-          Choosing a JSON Formatting Tool
-        </h2>
-        <p>
-          You&apos;ll need a command-line tool that can read a JSON file and output a consistently formatted version.
-          Some popular options include:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>
-              <code>jq</code>:
-            </strong>{" "}
-            A lightweight and flexible command-line JSON processor. It&apos;s excellent for querying, transforming, and
-            also formatting JSON.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-3 overflow-x-auto">
-              <h4 className="text-md font-medium mb-2">
-                Example using <code>jq</code>:
-              </h4>
-              <pre className="bg-white p-2 rounded text-sm dark:bg-gray-900">
-                echo &apos;&#x7b;"b": 2, "a": 1&#x7d;&apos; | jq &apos;.&apos;
-              </pre>
-              <pre className="bg-white p-2 rounded text-sm dark:bg-gray-900 mt-2">&#x7b; "b": 2, "a": 1 &#x7d;</pre>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                <code>jq &apos;.&apos;</code> pretty-prints. <code>jq -S &apos;.&apos;</code> also sorts keys.
-              </p>
-            </div>
-          </li>
-          <li>
-            <strong>
-              <code>prettier</code>:
-            </strong>{" "}
-            A widely-used opinionated code formatter that supports many languages, including JSON. If you&apos;re
-            already using Prettier, adding JSON support is straightforward.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-3 overflow-x-auto">
-              <h4 className="text-md font-medium mb-2">
-                Example using <code>prettier</code>:
-              </h4>
-              <pre className="bg-white p-2 rounded text-sm dark:bg-gray-900">prettier --write path/to/your.json</pre>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                The <code>--write</code> flag formats the file in place.
-              </p>
-            </div>
-          </li>
-          <li>
-            <strong>Built-in Language Tools:</strong> Many languages have built-in JSON libraries that can be used for
-            formatting from the command line. E.g., Python&apos;s <code>json.tool</code>, Node.js&apos;s{" "}
-            <code>JSON.stringify</code>.
-            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-3 overflow-x-auto">
-              <h4 className="text-md font-medium mb-2">Example using Python:</h4>
-              <pre className="bg-white p-2 rounded text-sm dark:bg-gray-900">
-                cat path/to/your.json | python -m json.tool
-              </pre>
-            </div>
-          </li>
-        </ul>
-        <p>
-          Choose the tool that best fits your project&apos;s existing toolchain and your specific formatting needs
-          (e.g., sorting keys, indentation style).
+          That matters for JSON because formatting is deterministic and cheap. A hook can pretty-print files, reject
+          invalid JSON, and re-stage the corrected version before the commit lands in history.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Package className="mr-2 text-teal-500" />
-          Using a Pre-commit Framework (Recommended)
+          Recommended Setup: Husky + lint-staged + Prettier
         </h2>
         <p>
-          To overcome the limitations of manual hooks, consider using a pre-commit framework. These tools manage hooks
-          for you, making them easy to install, update, and share across a team. Popular options include:
+          This is the most practical setup for modern web repos. Prettier&apos;s own documentation recommends a
+          pre-commit tool, and specifically calls out <code>lint-staged</code> when you need support for partially
+          staged files.
         </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h3 className="text-lg font-medium mb-3">1. Install the formatter and hook tools</h3>
+          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">{`pnpm add -D prettier husky lint-staged
+pnpm exec husky init`}</pre>
+        </div>
+
+        <p>
+          If you use <code>npm</code>, <code>yarn</code>, or <code>bun</code>, use the equivalent install and exec
+          commands. <code>husky init</code> creates a <code>.husky/pre-commit</code> hook and wires Husky into your
+          project setup.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h3 className="text-lg font-medium mb-3">2. Add a lint-staged rule for JSON files</h3>
+          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">{`{
+  "lint-staged": {
+    "*.json": "prettier --write --ignore-unknown"
+  }
+}`}</pre>
+        </div>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h3 className="text-lg font-medium mb-3">3. Run lint-staged from the pre-commit hook</h3>
+          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">{`# .husky/pre-commit
+pnpm exec lint-staged`}</pre>
+        </div>
+
+        <p>
+          This gives you the behavior most teams want: only staged JSON files are formatted, the updated files are
+          staged again automatically, and partially staged files are handled much more safely than a hand-rolled{" "}
+          <code>git add</code> loop.
+        </p>
+
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>
-              <code>pre-commit</code> (Python package):
-            </strong>{" "}
-            A powerful and widely adopted framework configured via a <code>.pre-commit-config.yaml</code> file. It
-            automatically installs tools (like <code>jq</code> or <code>prettier</code>) in isolated environments.
+            <strong>Why Prettier is a good default:</strong> it formats JSON consistently without sorting keys.
           </li>
           <li>
-            <strong>
-              <code>husky</code> (Node.js package):
-            </strong>{" "}
-            If your project is Node.js-based, Husky allows you to easily configure Git hooks in your{" "}
-            <code>package.json</code>.
+            <strong>Why lint-staged matters:</strong> it targets staged files instead of running on the whole
+            repository.
+          </li>
+          <li>
+            <strong>Why Husky is useful:</strong> the hook lives in the repository, so the setup is easy to share.
           </li>
         </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Hammer className="mr-2 text-yellow-500" />
+          Minimal Shell Hook for Small Repos
+        </h2>
         <p>
-          Using <code>pre-commit</code> (the Python package) as an example:
+          If you do not want extra tooling, a plain shell hook still works well for simple repositories. A good pattern
+          is to keep the hook in a committed directory such as <code>.githooks/</code> and point Git at it with{" "}
+          <code>git config core.hooksPath .githooks</code>.
         </p>
-        <ol className="list-decimal pl-6 space-y-2 my-4">
-          <li>
-            Install the framework (e.g., <code>pip install pre-commit</code>).
-          </li>
-          <li>
-            Create a <code>.pre-commit-config.yaml</code> file in your repository root.
-          </li>
-          <li>Configure the hook for JSON formatting.</li>
-          <li>
-            Run <code>pre-commit install</code> in your repo to set up the Git hook.
-          </li>
-        </ol>
-        <p>
-          A <code>.pre-commit-config.yaml</code> entry using <code>prettier</code> might look like this:
-        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
           <h3 className="text-lg font-medium mb-3">
-            <code>.pre-commit-config.yaml</code> (Example)
+            <code>.githooks/pre-commit</code>
           </h3>
-          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">
-            repos: - repo: https://github.com/pre-commit/pre-commit-hooks rev: v4.5.0 # Use the latest version hooks: -
-            id: end-of-file-fixer # Example: ensures files end with a newline - id: trailing-whitespace # Example:
-            removes trailing whitespace - repo: https://github.com/prettier/prettier # Prettier hook rev: 3.2.5 # Use
-            the latest version hooks: - id: prettier files: \.json$ # Target only .json files # Add any additional
-            Prettier arguments here, e.g. --print-width=100
-          </pre>
+          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">{`#!/bin/sh
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.json')
+[ -z "$files" ] && exit 0
+
+old_ifs=$IFS
+IFS='
+'
+for file in $files; do
+  prettier --write --ignore-unknown "$file" || exit 1
+  git add "$file" || exit 1
+done
+IFS=$old_ifs
+
+exit 0`}</pre>
         </div>
+
         <p>
-          This configuration tells <code>pre-commit</code> to use the official Prettier hook and apply it only to files
-          ending in <code>.json</code>. Frameworks like this handle installing Prettier (or other tools) in an isolated
-          environment, ensuring all developers use the same version and configuration.
+          Swap <code>prettier</code> for <code>jq</code> or another formatter if your project is not Node-based. Just
+          be careful with tools that sort keys automatically. For example, <code>jq -S</code> and the default behavior
+          of some hook formatters can reorder object keys, which may create noisy diffs if your team prefers the
+          original logical order.
+        </p>
+
+        <p>
+          The tradeoff is staging behavior: a manual hook usually reformats the entire file and re-adds it. That is
+          acceptable for simple workflows, but it is not the safest choice if contributors frequently use{" "}
+          <code>git add --patch</code>.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Code className="mr-2 text-purple-500" />
+          Python pre-commit Alternative
+        </h2>
+        <p>
+          If your team already uses the <code>pre-commit</code> framework, the built-in JSON hooks are a solid option.
+          This keeps formatter versions pinned in one file and works well across polyglot repositories.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h3 className="text-lg font-medium mb-3">
+            <code>.pre-commit-config.yaml</code>
+          </h3>
+          <pre className="bg-white p-3 rounded text-sm dark:bg-gray-900">{`repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-json
+      - id: pretty-format-json
+        args: [--autofix, --no-sort-keys]`}</pre>
+        </div>
+
+        <p>
+          In this setup, <code>check-json</code> rejects invalid files and <code>pretty-format-json</code> rewrites
+          them in place. The explicit <code>--no-sort-keys</code> flag avoids surprise key reordering. After adding the
+          file, run <code>pre-commit install</code>, and use <code>pre-commit autoupdate</code> occasionally to refresh
+          pinned hook versions.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <AlertTriangle className="mr-2 text-red-500" />
-          Cautions and Best Practices
+          Common Pitfalls and Current Best Practices
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Performance:</strong> For very large JSON files, running a formatter on every commit might become
-            slow. Consider if the formatting is strictly necessary for extremely large, machine-generated files.
+            <strong>Partially staged files:</strong> this is the main reason to prefer <code>lint-staged</code> or, in
+            more advanced cases, <code>git-format-staged</code>. Raw hooks that run a formatter and then{" "}
+            <code>git add</code> can stage changes the developer did not mean to include.
           </li>
           <li>
-            <strong>Format Staged Files Only:</strong> Ensure your hook only formats files that have been explicitly
-            added to the staging area (`git add`). This prevents unexpected modifications to files you weren&apos;t
-            intending to commit. Most frameworks handle this correctly, and the manual script example above filters
-            staged files.
+            <strong>Invalid JSON:</strong> the formatter should fail the commit cleanly. That is useful signal, not
+            friction. Fix the syntax, re-stage the file, and commit again.
           </li>
           <li>
-            <strong>Provide Feedback:</strong> Your hook script should output messages indicating which files are being
-            formatted or if errors occur, so the developer understands what&apos;s happening during the commit.
+            <strong>Generated or huge JSON files:</strong> skip files that are machine-generated, vendored, or so large
+            that formatting them on every commit becomes slow and noisy.
           </li>
           <li>
-            <strong>Error Handling:</strong> If the formatting tool fails (e.g., due to invalid JSON syntax), the hook
-            should exit with a non-zero status to abort the commit and alert the user.
+            <strong>Shared config:</strong> keep your formatting rules in one committed place such as{" "}
+            <code>.prettierrc</code>, <code>package.json</code>, or <code>.pre-commit-config.yaml</code>.
           </li>
           <li>
-            <strong>Configuration:</strong> Use a shared configuration file for your formatter (e.g.,{" "}
-            <code>.prettierrc</code>) to ensure consistency when using tools like Prettier. Frameworks help enforce this
-            configuration.
+            <strong>CI still matters:</strong> because hooks can be bypassed with <code>--no-verify</code>, add a
+            formatter or validation check in CI if JSON consistency is important for the repository.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Check className="mr-2 text-green-500" />
-          Conclusion
+          Bottom Line
         </h2>
         <p>
-          Automating JSON formatting with Git pre-commit hooks is an effective way to enforce consistency and improve
-          the maintainability of your codebase. While a basic manual script provides a starting point, using a dedicated
-          pre-commit framework is highly recommended for ease of installation, shared configuration, and managing
-          multiple hooks. By integrating JSON formatting into your Git workflow, you ensure cleaner commits and reduce
-          friction during development and code reviews.
+          If you want the least surprising setup, use <code>Prettier + lint-staged + Husky</code>. If you want a
+          language-agnostic workflow, use <code>pre-commit</code> with <code>check-json</code> and{" "}
+          <code>pretty-format-json</code>. Reserve raw shell hooks for smaller repos where you control the workflow and
+          understand the tradeoffs.
+        </p>
+
+        <p>
+          The important part is not the specific tool. It is making JSON formatting automatic, predictable, and fast
+          enough that contributors stop thinking about it.
         </p>
       </div>
     </>

@@ -15,12 +15,12 @@ import {
   Bug,
   Folder,
   BookOpen,
-} from "lucide-react"; // Only using allowed icons
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Chunking Strategies for Large JSON Processing | Offline Tools",
   description:
-    "Explore different strategies like streaming and line-by-line processing to handle large JSON files efficiently and avoid excessive memory consumption.",
+    "Choose the right JSON chunking strategy for large files: streaming parsers for huge arrays, NDJSON for line-by-line processing, and browser or Node stream patterns that avoid loading everything into memory.",
 };
 
 export default function LargeJsonChunkingArticle() {
@@ -30,279 +30,374 @@ export default function LargeJsonChunkingArticle() {
 
       <div className="space-y-6">
         <p>
-          Processing large JSON files or streams can quickly exhaust available memory, leading to application crashes or
-          poor performance. The default method, <code>JSON.parse()</code>, is designed to load the entire JSON structure
-          into memory before you can access any part of it. This works perfectly for small to medium-sized data, but
-          becomes a significant bottleneck with files that are gigabytes in size.
+          Need a practical JSON chunking strategy for large files? The safe answer is: chunk by <em>complete JSON
+          values</em>, not by arbitrary byte counts. If you have one huge JSON array or object, use a streaming parser.
+          If you control the format, prefer NDJSON so each line can be parsed independently. What you should not do is
+          read 1 MB at a time and call <code>JSON.parse()</code> on every raw chunk.
         </p>
         <p>
-          <MemoryStick className="inline-block mr-2" /> The problem arises because the in-memory representation of a
-          large JSON object or array can be many times larger than the file size itself. To handle this efficiently, we
-          need strategies that process the data in smaller, manageable pieces or "chunks," without loading the whole
-          structure at once.
+          <MemoryStick className="inline-block mr-2" /> Large JSON usually fails for memory reasons long before it
+          fails for disk size. <code>JSON.parse()</code> needs the entire JSON text as one complete string, and the
+          resulting in-memory object can be much larger than the source file. That is why multi-GB exports, logs, and
+          API responses need an incremental strategy.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h2 className="text-xl font-semibold flex items-center">
+            <Zap className="mr-2" /> Quick Decision Guide
+          </h2>
+          <div className="grid gap-4 md:grid-cols-3 mt-4">
+            <div className="bg-white p-4 rounded dark:bg-gray-900">
+              <h3 className="font-medium">One huge array or object</h3>
+              <p className="mt-2 text-sm">
+                Use a streaming parser that emits tokens or complete items from the structure without materializing the
+                whole document.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded dark:bg-gray-900">
+              <h3 className="font-medium">You control the format</h3>
+              <p className="mt-2 text-sm">
+                Emit NDJSON or JSON Lines so you can read one line, parse one record, and move on.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded dark:bg-gray-900">
+              <h3 className="font-medium">Streaming over HTTP</h3>
+              <p className="mt-2 text-sm">
+                Read the response body as a stream, decode incrementally, and only parse complete records that you have
+                fully assembled.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Layers className="mr-2" /> What Counts as a Safe JSON Chunk?
+        </h2>
+        <p>
+          This is the part many “large data JSON chunking” guides skip. A chunk is only safe to parse when it is a
+          complete JSON value.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <FileText className="inline-block mr-2 w-4 h-4" /> One full line in an NDJSON file is a safe chunk because
+            that line is already a complete JSON object or value.
+          </li>
+          <li>
+            <Workflow className="inline-block mr-2 w-4 h-4" /> One object emitted by a streaming parser from a root
+            array is a safe chunk because the parser already tracked braces, strings, escapes, and nesting for you.
+          </li>
+          <li>
+            <Code className="inline-block mr-2 w-4 h-4" /> A random byte slice like “the next 1 MB of text” is not a
+            safe chunk because it may end in the middle of a string, escape sequence, or nested object.
+          </li>
+        </ul>
+        <p>
+          If you searched for a JSON chunking method, that is the core rule: split on record boundaries, not storage
+          boundaries.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Zap className="mr-2" /> Why Standard JSON.parse() Fails
+          <MemoryStick className="mr-2" /> Why Standard JSON.parse() Breaks Down
         </h2>
         <p>
-          When you call <code>JSON.parse(largeJsonString)</code>, the JavaScript engine reads the entire string, parses
-          its syntax, and builds the corresponding JavaScript object or array in RAM.
+          <code>JSON.parse()</code> is all-or-nothing. It expects one complete JSON document and only returns after it
+          has built the result in memory.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Typical (Problematic) Approach:
+            <Code className="mr-2" /> Problematic Pattern
           </h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// Imagine 'largeJsonString' is a giant string from a file or network
-try {
-  const data = JSON.parse(largeJsonString);
-  // Process 'data' here
-  console.log(\`Successfully parsed data with \${data.length} items.\`);
-} catch (error) {
-  console.error("Failed to parse JSON:", error);
-  // Likely an out-of-memory error for large files
+              {`const raw = await readEntireFile("huge-export.json");
+const data = JSON.parse(raw); // Requires the whole document in memory
+
+for (const item of data) {
+  await processItem(item);
 }`}
             </pre>
           </div>
-          <p className="mt-2">For large inputs, this approach is doomed to fail due to memory limits.</p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Layers className="mr-2" /> Chunking Strategies
-        </h2>
-        <p>
-          Chunking involves processing the input data incrementally. Instead of waiting for the entire JSON string, we
-          process it as it arrives or as we read it from disk, often focusing on identifying and processing individual
-          elements (like objects in an array, or key-value pairs in an object) one at a time.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Workflow className="mr-2" /> 1. Streaming Parsers
-        </h3>
-        <p>
-          Streaming parsers don't build the entire JSON structure in memory. Instead, they read the input character by
-          character or byte by byte, emitting events as specific JSON elements (like the start of an object, the end of
-          an array, a key, a value, etc.) are identified. You subscribe to these events and process the data as it's
-          parsed.
-        </p>
-        <p>
-          This is the most robust approach for arbitrarily structured large JSON. Libraries like{" "}
-          <code>streamparser/json</code> (Node.js) or
-          <code>jsonstream</code> (Python) implement this.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium flex items-center">
-            <FileCode className="mr-2" /> Conceptual Streaming Example (Node.js)
-          </h3>
-          <p className="text-sm italic mb-3">(Illustrates the event-driven concept; requires a streaming library)</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`import { createReadStream } from 'fs';
-// import { parser } from '@streamparser/json'; // Conceptual import
-
-// Assume large_data.json is a large file like:
-// [ { "id": 1, "value": "A" }, { "id": 2, "value": "B" }, ... ]
-
-async function processLargeJsonFile(filePath: string) {
-  const stream = createReadStream(filePath);
-  // const jsonParser = parser(); // Instantiate a streaming parser
-
-  let itemCount = 0;
-
-  // Conceptual Event Handlers:
-  // jsonParser.on('data', (value: any) => {
-  //   // This event fires for each *complete* value found at a specified path,
-  //   // e.g., each object within the root array.
-  //   console.log('Processing item:', value);
-  //   itemCount++;
-  //   // Process the 'value' object here - save to DB, aggregate, etc.
-  //   // The 'value' itself should be small enough to hold in memory.
-  // });
-
-  // jsonParser.on('end', () => {
-  //   console.log(\`Finished processing. Total items: \${itemCount}\`);
-  // });
-
-  // jsonParser.on('error', (err: Error) => {
-  //   console.error('Streaming parser error:', err);
-  // });
-
-  // Pipe the file stream into the JSON parser stream
-  // stream.pipe(jsonParser);
-
-  // In a real implementation, you would await the stream completion or handle events
-  // await new Promise((resolve, reject) => {
-  //   stream.on('end', resolve);
-  //   stream.on('error', reject);
-  // });
-}
-
-// Example usage (requires a large file and streaming library):
-// processLargeJsonFile('large_data.json').catch(console.error);
-`}
-            </pre>
-          </div>
           <p className="mt-2">
-            This approach is highly memory efficient because only the current small chunk (the individual item being
-            processed) is in memory at any given time.
+            This is fine for small or moderate payloads. It is a bad fit for giant arrays, long-running exports, and
+            vendor dumps that exceed comfortable memory limits.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <FileText className="mr-2" /> 2. Line-by-Line Processing (for JSON Lines / NDJSON)
+          <Workflow className="mr-2" /> 1. Use a Streaming Parser for Monolithic JSON
         </h3>
         <p>
-          A common format for large datasets is{" "}
-          <a
-            href="http://jsonlines.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline dark:text-blue-400"
-          >
-            JSON Lines (or Newline Delimited JSON - NDJSON)
-          </a>
-          . In this format, each line is a complete, valid JSON value (typically an object).
+          If the input is a single large array or object and you cannot change that format, a streaming parser is the
+          right strategy. It reads incrementally and emits tokens or matched values as soon as they are complete.
+        </p>
+        <p>
+          In practice, this is the right choice for files shaped like <code>[&#123;...&#125;, &#123;...&#125;, ...]</code>{" "}
+          where each array item can be processed independently. Good streaming parsers can also ignore branches you do
+          not care about, which is valuable when only one nested path matters.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example NDJSON structure:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{"name": "Alice", "age": 30}
-{"name": "Bob", "age": 25}
-{"name": "Charlie", "age": 35}`}
-            </pre>
-          </div>
-          <p className="mt-2">
-            This format is incredibly easy to process chunk by chunk. You can read the file line by line, and simply
-            call
-            <code>JSON.parse()</code> on each individual line. Since each line is a small, complete JSON object,{" "}
-            <code>JSON.parse()</code> is fast and doesn't consume excessive memory per line.
-          </p>
-        </div>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h3 className="text-lg font-medium flex items-center">
-            <Code className="mr-2" /> Conceptual NDJSON Processing Example (Node.js)
+            <FileCode className="mr-2" /> Conceptual Streaming Example
           </h3>
           <p className="text-sm italic mb-3">
-            (Illustrates line-by-line processing; requires Node.js streams and a readline utility)
+            This is intentionally library-agnostic. Parser APIs differ, but the processing pattern stays the same.
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`import { createReadStream } from 'fs';
-import { createInterface } from 'readline';
+              {`import { createReadStream } from "node:fs";
+// import { createArrayItemStream } from "your-streaming-parser";
+
+async function processHugeArray(filePath: string) {
+  const input = createReadStream(filePath);
+  const items = createArrayItemStream(input); // Emits one root-array item at a time
+
+  let processed = 0;
+
+  for await (const item of items) {
+    await processItem(item);
+    processed++;
+  }
+
+  console.log(\`Processed \${processed} items\`);
+}`}
+            </pre>
+          </div>
+          <p className="mt-2">
+            The important part is not the exact library. It is that the parser, not your code, keeps track of nesting,
+            quotes, escapes, and chunk boundaries.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center">
+          <FileText className="mr-2" /> 2. Prefer NDJSON When You Can Control the Format
+        </h3>
+        <p>
+          If you own the producer, NDJSON is usually the simplest and most reliable chunking strategy. Each line is a
+          complete JSON value, so line-by-line processing becomes trivial.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Example NDJSON</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{"id":1,"name":"Alice"}
+{"id":2,"name":"Bob"}
+{"id":3,"name":"Charlie"}`}
+            </pre>
+          </div>
+          <p className="mt-2">
+            This is why NDJSON is common for logs, exports, queue payloads, and large ingestion pipelines: one bad line
+            can be isolated without invalidating an entire multi-GB document.
+          </p>
+        </div>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <Code className="mr-2" /> Node.js Example: Read and Parse One Line at a Time
+          </h3>
+          <p className="text-sm italic mb-3">
+            This matches the current line-by-line stream pattern documented by Node.js.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`import { createReadStream } from "node:fs";
+import { createInterface } from "node:readline";
 
 async function processNdjsonFile(filePath: string) {
-  const fileStream = createReadStream(filePath);
-
   const rl = createInterface({
-    input: fileStream,
-    crlfDelay: Infinity // Handle all line endings
+    input: createReadStream(filePath),
+    crlfDelay: Infinity,
   });
 
   let itemCount = 0;
 
-  // Read the file line by line
   for await (const line of rl) {
-    if (line.trim() === '') {
-      continue; // Skip empty lines
-    }
-    try {
-      const item = JSON.parse(line);
-      // Process the parsed item (which is one JSON object)
-      console.log('Processing item:', item);
-      itemCount++;
-      // The 'item' object is small and fits in memory.
-    } catch (error) {
-      console.error(\`Error parsing line \${itemCount + 1}: \${line}\`, error);
-      // Decide whether to continue or stop on error
-    }
+    if (!line.trim()) continue;
+
+    const item = JSON.parse(line);
+    await processItem(item);
+    itemCount++;
   }
 
-  console.log(\`Finished processing. Total items: \${itemCount}\`);
-}
-
-// Example usage (requires a large NDJSON file):
-// processNdjsonFile('large_data.ndjson').catch(console.error);
-`}
+  console.log(\`Finished \${itemCount} items\`);
+}`}
             </pre>
           </div>
           <p className="mt-2">
-            This is often the simplest and most efficient method if you have control over the data format or can convert
-            the large JSON array into NDJSON beforehand.
+            Here <code>JSON.parse()</code> is still useful. The trick is that you only call it on one complete record
+            at a time, not on the entire dataset.
           </p>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Bug className="mr-2" /> 3. Manual Byte/Character Chunking (Generally Discouraged)
+          <CloudDownload className="mr-2" /> 3. Stream HTTP Responses Instead of Buffering Them
         </h3>
         <p>
-          Attempting to manually read a large JSON file in arbitrary byte or character chunks (e.g., reading 1MB at a
-          time) and trying to find JSON delimiters (like <code>,</code>, <code>&#x7d;</code>,<code>]</code>) to split
-          the data is extremely complex and error-prone.
+          For browser-based processing, current MDN guidance is to work directly with <code>response.body</code> when
+          you need incremental handling. If you call <code>response.json()</code> or <code>response.text()</code>, you
+          give up the chance to process the data as it arrives.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium flex items-center">
+            <FileCode className="mr-2" /> Browser Example: Assemble and Parse NDJSON Records
+          </h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`async function processNdjsonResponse(url: string) {
+  const response = await fetch(url);
+  if (!response.body) throw new Error("ReadableStream not available");
+
+  const reader = response.body
+    .pipeThrough(new TextDecoderStream())
+    .getReader();
+
+  let buffer = "";
+  let itemCount = 0;
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+
+    buffer += value;
+
+    let newlineIndex = buffer.indexOf("\\n");
+    while (newlineIndex !== -1) {
+      const line = buffer.slice(0, newlineIndex).trim();
+      buffer = buffer.slice(newlineIndex + 1);
+
+      if (line) {
+        const item = JSON.parse(line);
+        await processItem(item);
+        itemCount++;
+      }
+
+      newlineIndex = buffer.indexOf("\\n");
+    }
+  }
+
+  if (buffer.trim()) {
+    const item = JSON.parse(buffer);
+    await processItem(item);
+    itemCount++;
+  }
+
+  return itemCount;
+}`}
+            </pre>
+          </div>
+          <p className="mt-2">
+            Notice that the code buffers text until it has a full line. It never tries to parse the raw stream chunk
+            itself, because stream chunks are transport boundaries, not JSON record boundaries.
+          </p>
+        </div>
+        <p>
+          One more operational detail: once you start reading <code>response.body</code>, that body is considered
+          consumed. Do not plan to read it once as a stream and then call <code>response.json()</code> afterward.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center">
+          <Bug className="mr-2" /> 4. Why Manual Byte Chunking Is Usually the Wrong Method
+        </h3>
+        <p>
+          Manual “read 1 MB, split, repeat” chunking sounds easy, but it breaks on real-world JSON almost immediately.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <Code className="inline-block mr-2 w-4 h-4" /> A simple comma <code>,</code> might be inside a string value
-            (<code>&quot;address&quot;: &quot;123 Main St, Apt 4B&quot;</code>) and not a delimiter between objects.
+            <Code className="inline-block mr-2 w-4 h-4" /> Commas are not reliable separators because they can appear
+            inside strings.
           </li>
           <li>
-            <ListTree className="inline-block mr-2 w-4 h-4" /> Nested structures (objects within objects, arrays within
-            arrays) make it impossible to simply split on delimiters without tracking the parsing state.
+            <ListTree className="inline-block mr-2 w-4 h-4" /> Nested arrays and objects mean you must track parser
+            state, not just delimiters.
           </li>
           <li>
-            <BookOpen className="inline-block mr-2 w-4 h-4" /> Multi-byte characters (like emojis or characters from
-            non-Latin alphabets) can be split across byte chunks, corrupting the data.
+            <BookOpen className="inline-block mr-2 w-4 h-4" /> UTF-8 characters can span multiple bytes, so raw byte
+            splitting can corrupt text unless decoding is done as a stream.
           </li>
         </ul>
-        <p className="mt-2">
-          Unless you are writing a low-level parser library yourself, avoid this method. Streaming parsers (Strategy 1)
-          handle these complexities for you.
+        <p>
+          Unless you are building a parser yourself, manual byte chunking is just re-implementing a parser badly. Use a
+          real streaming parser or switch the format to NDJSON.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <HandCoins className="mr-2" /> Considerations When Choosing a Strategy
+          <HandCoins className="mr-2" /> Choosing the Right Strategy
         </h2>
-
         <ul className="list-disc pl-6 space-y-3 my-4">
           <li>
-            <HardDrive className="inline-block mr-2 w-4 h-4" /> <strong>Input Format:</strong> Is the data a single
-            large JSON object/array, or is it in a line-delimited format like NDJSON? If it's NDJSON, line-by-line
-            processing is easiest. If it's a single large structure, a streaming parser is necessary.
+            <HardDrive className="inline-block mr-2 w-4 h-4" /> <strong>You receive a giant vendor dump as one JSON
+            array:</strong> Use a streaming parser and process each item as it is emitted.
           </li>
           <li>
-            <Cpu className="inline-block mr-2 w-4 h-4" /> <strong>Source of Data:</strong> Are you reading from a file
-            on disk or receiving data over a network stream? Streaming parsers work naturally with streams.
+            <Folder className="inline-block mr-2 w-4 h-4" /> <strong>You own the export format:</strong> Prefer NDJSON
+            so downstream consumers can read, parse, retry, and recover record by record.
           </li>
           <li>
-            <Folder className="inline-block mr-2 w-4 h-4" /> <strong>JSON Structure:</strong> Are you processing a large
-            array of objects (common for streaming)? Or a deeply nested structure? Streaming parsers can often target
-            specific paths within the JSON to extract only the data you need, ignoring irrelevant parts.
+            <Cpu className="inline-block mr-2 w-4 h-4" /> <strong>You still run out of memory while
+            streaming:</strong> Check whether you are accumulating processed results in arrays, caching too much, or
+            using large concurrency limits that defeat the benefit of chunking.
           </li>
           <li>
-            <Bug className="inline-block mr-2 w-4 h-4" /> <strong>Error Handling:</strong> How should errors (like
-            malformed JSON) be handled? Streaming parsers provide error events. Line-by-line processing allows you to
-            handle errors per line.
+            <CloudDownload className="inline-block mr-2 w-4 h-4" /> <strong>You are consuming compressed network
+            payloads:</strong> Decompress as a stream first, then parse the decompressed text incrementally.
           </li>
           <li>
-            <CloudDownload className="inline-block mr-2 w-4 h-4" /> <strong>Partial Processing:</strong> Do you need to
-            reconstruct parts of the JSON structure, or can you process individual values and discard them immediately?
-            Streaming parsers allow processing and discarding chunks as they are encountered.
+            <Bug className="inline-block mr-2 w-4 h-4" /> <strong>You need selective extraction from deeply nested
+            JSON:</strong> Pick a streaming parser that can filter by path instead of materializing the entire document.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Bug className="mr-2" /> Troubleshooting Large JSON Chunking
+        </h2>
+        <ul className="list-disc pl-6 space-y-3 my-4">
+          <li>
+            <Code className="inline-block mr-2 w-4 h-4" /> <strong>&quot;Unexpected end of JSON input&quot;:</strong>{" "}
+            You are parsing an incomplete chunk. Buffer until you have a full record, or let a streaming parser manage
+            boundaries.
+          </li>
+          <li>
+            <MemoryStick className="inline-block mr-2 w-4 h-4" /> <strong>Memory is still spiking:</strong> Streaming
+            input is not enough if you also keep every parsed item in memory after processing it.
+          </li>
+          <li>
+            <BookOpen className="inline-block mr-2 w-4 h-4" /> <strong>Text becomes garbled:</strong> Use streaming
+            decode tools such as <code>TextDecoderStream</code> so multibyte characters are reconstructed correctly
+            across chunk boundaries.
+          </li>
+          <li>
+            <FileText className="inline-block mr-2 w-4 h-4" /> <strong>Bad record handling matters:</strong> NDJSON lets
+            you quarantine a single broken line. One syntax error inside a monolithic JSON document usually invalidates
+            the whole file.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Processing large JSON data requires moving beyond the simple
-          <code>JSON.parse()</code> approach. Streaming parsers are the most flexible and memory-efficient solution for
-          standard large JSON structures, processing data piece by piece as it becomes available. If your data is or can
-          be converted to the JSON Lines (NDJSON) format, a simple line-by-line approach using standard stream/file
-          reading utilities is often the easiest and very efficient. Avoid manual byte/character chunking unless you are
-          building a parser yourself, as it's prone to errors. By choosing the right strategy, you can handle datasets
-          far larger than your available memory.
+          The best JSON chunking strategy depends on the shape of the data, but the rule stays the same: process
+          complete records, not arbitrary slices. Use a streaming parser for large monolithic JSON, use NDJSON when you
+          can control the format, and use browser or Node streams to avoid buffering entire payloads. That approach is
+          simpler, safer, and much more scalable than trying to split raw JSON by hand.
+        </p>
+        <p>
+          For current runtime guidance, see the{" "}
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline dark:text-blue-400"
+          >
+            MDN Fetch streaming documentation
+          </a>{" "}
+          and the{" "}
+          <a
+            href="https://nodejs.org/api/readline.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline dark:text-blue-400"
+          >
+            Node.js readline documentation
+          </a>
+          .
         </p>
       </div>
     </>

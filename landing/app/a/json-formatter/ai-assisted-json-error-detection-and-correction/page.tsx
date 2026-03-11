@@ -1,310 +1,363 @@
 import type { Metadata } from "next";
 import {
-  Bot,
-  Sparkles,
-  Wrench,
-  CheckCircle,
-  XCircle,
   AlertTriangle,
+  Bot,
+  CheckCircle,
   Code,
   FileJson,
   Search,
   ShieldAlert,
-} from "lucide-react"; // Only using icons from the allowed list
+  Sparkles,
+  Wrench,
+  XCircle,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AI-Assisted JSON Error Detection and Correction | Article",
+  title: "AI-Assisted JSON Error Detection and Correction Guide | Offline Tools",
   description:
-    "Learn how Artificial Intelligence can assist developers in detecting and correcting errors in JSON data structures.",
+    "A practical guide to using AI for malformed JSON repair, schema-aware fixes, safer prompts, and validation-first workflows.",
 };
 
 export default function AiJsonErrorCorrectionArticle() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
+    <article className="container mx-auto max-w-3xl px-4 py-8">
+      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold">
         AI-Assisted JSON Error Detection and Correction
-        <Bot className="w-8 h-8 text-blue-600" />
+        <Bot className="h-8 w-8 text-blue-600" />
       </h1>
 
       <div className="space-y-6 text-lg leading-relaxed">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data interchange across the web and in
-          many applications. Its simplicity and human-readability contribute to its popularity. However, even simple
-          structures can become prone to errors, especially when manually written, edited, or generated incorrectly.
-          Missing commas, misplaced brackets, unescaped characters, or structural inconsistencies are common pitfalls
-          that can break a parser and halt development workflows.
+          AI can help repair malformed JSON, but it works best as a fallback layer instead of your first parser. For
+          most real-world problems, the reliable order is: strict parsing, schema validation, deterministic cleanup,
+          then AI suggestions for ambiguous cases that need human-style reasoning.
         </p>
 
         <p>
-          Traditionally, debugging JSON errors involved manually scanning the data, often relying on error messages from
-          parsers that might be vague (e.g., "Unexpected token") or point to a line number but not the exact issue. This
-          can be time-consuming, especially with large or deeply nested JSON structures.
+          That matters even more now. As of March 2026, major model APIs increasingly support schema-constrained
+          outputs, so the best fix for AI-generated bad JSON is often preventing invalid output upstream and using AI
+          repair only for dirty payloads you already have.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-          The Role of AI Assistance
-          <Sparkles className="w-6 h-6 text-yellow-500" />
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 dark:border-blue-900 dark:bg-blue-950/40">
+          <h2 className="mb-3 flex items-center gap-2 text-2xl font-semibold">
+            Quick Answer
+            <Sparkles className="h-6 w-6 text-yellow-500" />
+          </h2>
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Use a normal JSON parser first for syntax errors such as missing commas, braces, or quotes.</li>
+            <li>Use schema validation next for required fields, wrong types, and unexpected keys.</li>
+            <li>Use AI when the input is messy, mixed with prose, partially broken, or semantically ambiguous.</li>
+            <li>Always re-parse and re-validate AI output before saving, executing, or sending it downstream.</li>
+          </ul>
+        </div>
+
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          What AI Actually Does Well
+          <Search className="h-6 w-6 text-green-600" />
         </h2>
 
         <p>
-          This is where AI-assisted tools come into play. By leveraging advanced parsing, pattern recognition, and
-          sometimes even large language models (LLMs), AI can significantly speed up and simplify the process of
-          identifying and fixing JSON errors.
+          Plain validators usually stop at the first syntax failure. AI-assisted JSON error detection is useful when
+          you need a fuller explanation, a best-effort repair plan, or help matching malformed data to the structure
+          you expected.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-          How AI Helps Detect Errors
-          <Search className="w-5 h-5 text-green-600" />
-        </h3>
-        <p>AI tools can go beyond simple syntax checking:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-3">
+        <ul className="list-disc space-y-2 pl-6">
           <li>
-            <strong>Advanced Syntax Analysis:</strong> While basic parsers stop at the first error, AI can sometimes
-            parse partial structures, identify multiple errors in a single pass, and pinpoint the exact character or
-            token causing the problem.
+            <strong>Translating parser failures into plain English:</strong> Instead of only reporting an unexpected
+            token, AI can explain what probably broke and where the structure drifted.
           </li>
           <li>
-            <strong>Structural Validation:</strong> Beyond just valid JSON syntax, AI can learn or be prompted with
-            expected structures (like a JSON schema implicitly or explicitly) and identify when data deviates from that
-            structure (e.g., expecting an array but finding an object).
+            <strong>Finding multiple likely issues in one pass:</strong> Missing commas, bad booleans, trailing commas,
+            and broken nesting often appear together.
           </li>
           <li>
-            <strong>Contextual Understanding:</strong> LLMs can understand the likely intent of the JSON based on
-            surrounding comments, variable names (if provided), or context, helping identify logical errors or misplaced
-            data points that are syntactically valid but contextually wrong.
+            <strong>Comparing data against expected shape:</strong> AI can notice that a field looks like an email, ID,
+            timestamp, or array item even when the syntax is damaged.
           </li>
           <li>
-            <strong>Identifying Hard-to-Spot Issues:</strong> Errors like invisible characters, incorrect Unicode
-            escapes, or subtle type mismatches that are hard for a human eye to catch can be flagged by AI.
+            <strong>Repairing JSON-like input:</strong> Copied JavaScript object literals, logs, or LLM output often
+            contain comments, single quotes, or prose mixed into the payload.
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-          How AI Helps Correct Errors
-          <Wrench className="w-5 h-5 text-blue-600" />
-        </h3>
-        <p>Once detected, correction can range from simple suggestions to automated fixes:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-3">
-          <li>
-            <strong>Suggesting Fixes:</strong> For common errors like missing commas or closing braces, AI can suggest
-            the exact insertion needed.
-          </li>
-          <li>
-            <strong>Automated Correction:</strong> Many tools offer one-click fixes for unambiguous errors.
-          </li>
-          <li>
-            <strong>Formatting and Beautification:</strong> While not strictly "correction," AI tools often include
-            intelligent formatting that can help reveal structural errors more clearly.
-          </li>
-          <li>
-            <strong>Schema-Aware Correction:</strong> If a schema is involved, AI could potentially rephrase or
-            restructure data to better fit the expected schema, suggesting transformations rather than just syntax
-            fixes.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-          Examples of AI Assistance
-          <Code className="w-6 h-6 text-gray-600" />
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          What Changed In Current Workflows
+          <FileJson className="h-6 w-6 text-purple-600" />
         </h2>
 
-        <p>Consider this intentionally invalid JSON snippet:</p>
-        <div className="bg-gray-100 p-4 rounded-lg font-mono text-sm dark:bg-gray-800 my-4 overflow-x-auto">
+        <p>
+          Current model APIs are better at prevention than older “please return JSON” prompting. OpenAI’s{" "}
+          <a
+            href="https://platform.openai.com/docs/guides/structured-outputs"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600 underline underline-offset-4"
+          >
+            Structured Outputs
+          </a>{" "}
+          documentation distinguishes schema-matching structured output from older JSON mode, and Anthropic’s{" "}
+          <a
+            href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600 underline underline-offset-4"
+          >
+            tool-use documentation
+          </a>{" "}
+          explicitly positions tools as a way to make the model return JSON that follows a provided schema. The
+          practical takeaway is simple: if you control generation, constrain it at generation time. If you do not
+          control the input, repair it conservatively and validate again.
+        </p>
+
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          Recommended Repair Pipeline
+          <Wrench className="h-6 w-6 text-blue-600" />
+        </h2>
+
+        <ol className="list-decimal space-y-3 pl-6">
+          <li>
+            <strong>Parse strictly first.</strong> Let a real JSON parser fail fast so you know whether you have a
+            syntax problem or a data-quality problem.
+          </li>
+          <li>
+            <strong>Validate against a schema.</strong> A JSON Schema or equivalent contract catches wrong types,
+            missing required fields, and unexpected properties.
+          </li>
+          <li>
+            <strong>Apply deterministic normalization only when it is explicitly allowed.</strong> If your pipeline
+            accepts JSON5-like input, convert it intentionally. Do not silently guess around comments or single quotes
+            in systems that require strict JSON.
+          </li>
+          <li>
+            <strong>Ask AI for minimal edits, not free-form rewrites.</strong> Require a repair report, explicit
+            assumptions, and a flag for human review when the payload looks truncated or ambiguous.
+          </li>
+          <li>
+            <strong>Re-parse, re-validate, and diff.</strong> Treat AI output as untrusted until it passes the same
+            checks as hand-written data.
+          </li>
+        </ol>
+
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          Example: Error Detection And Minimal Repair
+          <Code className="h-6 w-6 text-gray-600" />
+        </h2>
+
+        <p>Here is a small malformed payload that contains several common mistakes:</p>
+
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 font-mono text-sm dark:bg-gray-800">
           <pre>
             <code>
               {`{
-  "name": "Alice",
-  "age": 30,
-  "isStudent": false
-  "courses": ["Math", "Science",] // Trailing comma here
-  "address": {
-    "city": "Wonderland"
-    "zip": "12345" // Missing comma here
+  "userId": 42,
+  "active": tru,
+  "tags": ["alpha", "beta",],
+  "profile": {
+    "email": "ana@example.com"
+    "plan": "pro"
   }
-  "notes": "Likes tea and rabbits." // Missing comma here
+  "lastSeen": "2026-03-10T18:22:11Z"
 }`}
             </code>
           </pre>
         </div>
 
-        <p>A traditional parser might simply say "Unexpected string at line 5" or "Unexpected '&#x7d;' at line 9".</p>
-        <p>An AI-assisted tool could provide feedback like:</p>
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 my-4 dark:bg-yellow-950 dark:border-yellow-700 dark:text-yellow-300">
-          <p className="font-bold flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5" /> Potential JSON Errors Found:
+        <p>
+          A basic parser will stop early on <code>tru</code>. A stronger AI-assisted workflow can still summarize the
+          whole error cluster before proposing a repair:
+        </p>
+
+        <div className="my-4 border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-900 dark:border-yellow-700 dark:bg-yellow-950 dark:text-yellow-200">
+          <p className="flex items-center gap-2 font-bold">
+            <AlertTriangle className="h-5 w-5" />
+            Likely Issues
           </p>
-          <ul className="mt-2 space-y-1">
+          <ul className="mt-3 space-y-2">
             <li>
-              <XCircle className="inline w-4 h-4 mr-2 text-red-600" />
-              <span className="font-semibold">Error:</span> Missing comma after value on line 4 (after `false`).{" "}
-              <span className="font-semibold">Suggestion:</span> Add a comma `,`.
+              <XCircle className="mr-2 inline h-4 w-4 text-red-600" />
+              Invalid boolean token <code>tru</code>; likely intended value is <code>true</code>.
             </li>
             <li>
-              <XCircle className="inline w-4 h-4 mr-2 text-red-600" />
-              <span className="font-semibold">Warning:</span> Trailing comma in array on line 5 (after `"Science"`).
-              While sometimes accepted, it's not standard JSON. <span className="font-semibold">Suggestion:</span>{" "}
-              Remove the comma.
+              <XCircle className="mr-2 inline h-4 w-4 text-red-600" />
+              Trailing comma after <code>"beta"</code>; strict JSON does not allow it.
             </li>
             <li>
-              <XCircle className="inline w-4 h-4 mr-2 text-red-600" />
-              <span className="font-semibold">Error:</span> Missing comma after value on line 8 (after `"Wonderland"`).{" "}
-              <span className="font-semibold">Suggestion:</span> Add a comma `,`.
+              <XCircle className="mr-2 inline h-4 w-4 text-red-600" />
+              Missing comma after <code>"email"</code> field inside <code>profile</code>.
             </li>
             <li>
-              <XCircle className="inline w-4 h-4 mr-2 text-red-600" />
-              <span className="font-semibold">Error:</span> Missing comma after object on line 9 (after the closing
-              &#x7d; for "address"). <span className="font-semibold">Suggestion:</span> Add a comma `,`.
+              <XCircle className="mr-2 inline h-4 w-4 text-red-600" />
+              Missing comma after the closing <code>profile</code> object.
             </li>
           </ul>
           <p className="mt-4">
-            <CheckCircle className="inline w-4 h-4 mr-2 text-green-600" /> Click to auto-fix these issues.
+            <CheckCircle className="mr-2 inline h-4 w-4 text-green-600" />
+            Minimal repair should change punctuation and the invalid boolean token, but should not rename fields or
+            invent new values.
           </p>
         </div>
 
-        <p>
-          This detailed, human-readable feedback, combined with suggested or automatic fixes, drastically reduces the
-          time spent debugging.
-        </p>
+        <p>After review, the corrected JSON should look like this:</p>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-          Integration Approaches
-          <FileJson className="w-6 h-6 text-purple-600" />
-        </h2>
-
-        <p>AI-assisted JSON handling can be integrated in various ways:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-3">
-          <li>
-            <strong>IDE Extensions:</strong> Many code editors now have extensions that use built-in or cloud-based AI
-            to validate and suggest fixes directly within the code editing environment.
-          </li>
-          <li>
-            <strong>Web-Based Tools:</strong> Dedicated online JSON validators and formatters are increasingly
-            incorporating AI capabilities for more intelligent error handling.
-          </li>
-          <li>
-            <strong>APIs and Libraries:</strong> Developers can integrate AI parsing and correction into their own
-            applications programmatically using APIs offered by AI providers or specialized libraries.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-          Conceptual API Usage Example
-          <Code className="w-5 h-5 text-gray-600" />
-        </h3>
-
-        <p>While this page is static, conceptually, programmatic correction might look like this (pseudo-code):</p>
-        <div className="bg-gray-100 p-4 rounded-lg font-mono text-sm dark:bg-gray-800 my-4 overflow-x-auto">
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 font-mono text-sm dark:bg-gray-800">
           <pre>
             <code>
-              {`// Example using a hypothetical AI JSON Correction API
-// (This is not functional code)
-
-async function correctJson(invalidJsonString: string): Promise<string | null> {
-  try {
-    const response = await fetch('/api/ai/correct-json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ json: invalidJsonString })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('API Error:', errorData.message);
-      return null;
-    }
-
-    const result = await response.json();
-
-    if (result.isCorrect) {
-      console.log('JSON was already correct.');
-      return invalidJsonString;
-    } else {
-      console.log('JSON corrected successfully.');
-      console.log('Corrections:', result.corrections); // Array of suggested/applied changes
-      return result.correctedJson;
-    }
-
-  } catch (error) {
-    console.error('Failed to call correction API:', error);
-    return null;
-  }
-}
-
-// // How you might use it:
-// const brokenJson = '{ "a": 1, "b": 2 // missing brace }';
-// correctJson(brokenJson).then(fixedJson => {
-//   if (fixedJson) {
-//     console.log('Fixed JSON:', fixedJson);
-//   } else {
-//     console.log('Could not fix JSON.');
-//   }
-// });
-`}
+              {`{
+  "userId": 42,
+  "active": true,
+  "tags": ["alpha", "beta"],
+  "profile": {
+    "email": "ana@example.com",
+    "plan": "pro"
+  },
+  "lastSeen": "2026-03-10T18:22:11Z"
+}`}
             </code>
           </pre>
         </div>
+
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          A Better Prompt Than “Fix This JSON”
+          <Bot className="h-6 w-6 text-blue-600" />
+        </h2>
+
         <p>
-          Such an API would likely take the invalid JSON string as input and return either the corrected string along
-          with details about the changes made, or a report of unfixable errors.
+          If you do use AI, ask for a constrained repair report. That makes the output easier to validate and much
+          easier to review.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-          Benefits and Considerations
-          <ShieldAlert className="w-6 h-6 text-orange-600" />
-        </h2>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 font-mono text-sm dark:bg-gray-800">
+          <pre>
+            <code>
+              {`Repair the following malformed JSON with the smallest possible changes.
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Benefits:</h3>
-        <ul className="list-disc pl-6 space-y-2 mt-3">
-          <li>
-            <strong>Increased Productivity:</strong> Developers spend less time manually debugging JSON.
-          </li>
-          <li>
-            <strong>Reduced Errors:</strong> Automated checks catch errors that might be missed manually.
-          </li>
-          <li>
-            <strong>Improved Learning:</strong> Detailed error explanations can help developers understand common JSON
-            pitfalls.
-          </li>
-          <li>
-            <strong>Handling Scale:</strong> AI is better equipped to deal with very large or complex JSON documents
-            than manual review.
-          </li>
-        </ul>
+Return strict JSON with this shape:
+{
+  "correctedJson": "string",
+  "issues": [
+    { "path": "string", "problem": "string", "fix": "string" }
+  ],
+  "assumptions": ["string"],
+  "needsHumanReview": true
+}
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Considerations:</h3>
-        <ul className="list-disc pl-6 space-y-2 mt-3">
-          <li>
-            <strong>Accuracy:</strong> AI is not infallible; it might suggest incorrect fixes or fail to understand
-            complex logical errors. Reviewing suggested changes is crucial.
-          </li>
-          <li>
-            <strong>Privacy:</strong> Sending sensitive JSON data to third-party AI services raises privacy concerns.
-            Local or on-premise solutions can mitigate this.
-          </li>
-          <li>
-            <strong>Cost:</strong> Using powerful AI models, especially via APIs, can incur costs.
-          </li>
-          <li>
-            <strong>Over-reliance:</strong> Developers shouldn't become solely reliant on AI and should still strive to
-            understand correct JSON syntax and structure.
-          </li>
-        </ul>
+Rules:
+- Output strict JSON, not JSON5.
+- Preserve field names and values unless a token is clearly invalid.
+- Do not invent missing values.
+- If the payload looks truncated or multiple repairs are plausible, set needsHumanReview to true.
+- Keep fixes minimal and explain each one.`}
+            </code>
+          </pre>
+        </div>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-          Conclusion
-          <CheckCircle className="w-6 h-6 text-green-600" />
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          Conceptual Programmatic Flow
+          <Code className="h-6 w-6 text-gray-600" />
         </h2>
 
         <p>
-          AI-assisted tools for JSON error detection and correction represent a significant step forward in developer
-          productivity. By offering more intelligent, detailed, and often automated solutions to common (and uncommon)
-          JSON issues, they free up developers to focus on the core logic of their applications rather than wrestling
-          with syntax errors. As AI technology continues to evolve, we can expect these tools to become even more
-          sophisticated, handling increasingly complex scenarios and integrating more seamlessly into development
-          workflows. While always important to exercise caution and verify AI suggestions, the potential for
-          streamlining development is undeniable.
+          In an application, the AI step should be surrounded by ordinary validation code rather than replacing it.
+        </p>
+
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 font-mono text-sm dark:bg-gray-800">
+          <pre>
+            <code>
+              {`async function parseOrRepairJson(input, validate, repairWithAi) {
+  try {
+    const parsed = JSON.parse(input);
+    return validate(parsed)
+      ? { ok: true, source: "parser", data: parsed }
+      : { ok: false, stage: "schema", message: "Valid JSON, invalid shape" };
+  } catch (parseError) {
+    const repair = await repairWithAi(input);
+
+    if (repair.needsHumanReview) {
+      return { ok: false, stage: "review", issues: repair.issues };
+    }
+
+    const corrected = JSON.parse(repair.correctedJson);
+
+    if (!validate(corrected)) {
+      return { ok: false, stage: "schema", issues: repair.issues };
+    }
+
+    return { ok: true, source: "ai-repair", data: corrected, issues: repair.issues };
+  }
+}`}
+            </code>
+          </pre>
+        </div>
+
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          When AI Makes Things Worse
+          <ShieldAlert className="h-6 w-6 text-orange-600" />
+        </h2>
+
+        <ul className="list-disc space-y-2 pl-6">
+          <li>
+            <strong>Duplicate keys:</strong> AI may quietly keep one value and discard another, even though the real
+            issue is business ambiguity.
+          </li>
+          <li>
+            <strong>Truncated payloads:</strong> If the document is cut off, the model may invent a plausible ending.
+            That is repair theater, not reliable recovery.
+          </li>
+          <li>
+            <strong>Type guessing:</strong> Converting <code>"42"</code> to <code>42</code> or <code>"false"</code> to{" "}
+            <code>false</code> can be wrong if the original system treats those as strings.
+          </li>
+          <li>
+            <strong>Sensitive data:</strong> Logs, tokens, personal data, or customer records should stay local unless
+            you have an approved processing path.
+          </li>
+          <li>
+            <strong>Upstream generation bugs:</strong> If an LLM keeps producing malformed JSON, fix the schema or tool
+            contract upstream instead of normalizing bad output forever.
+          </li>
+        </ul>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-green-200 bg-green-50 p-5 dark:border-green-900 dark:bg-green-950/40">
+            <h3 className="mb-3 flex items-center gap-2 text-xl font-semibold">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              Use A Formatter Or Validator First
+            </h3>
+            <ul className="list-disc space-y-2 pl-6 text-base">
+              <li>The problem is a straightforward syntax error.</li>
+              <li>You need deterministic behavior in CI or production pipelines.</li>
+              <li>The data is sensitive and should not leave the device or network boundary.</li>
+              <li>You already know the exact schema and just need confirmation.</li>
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-5 dark:border-yellow-900 dark:bg-yellow-950/40">
+            <h3 className="mb-3 flex items-center gap-2 text-xl font-semibold">
+              <Sparkles className="h-5 w-5 text-yellow-600" />
+              Use AI When It Adds Real Value
+            </h3>
+            <ul className="list-disc space-y-2 pl-6 text-base">
+              <li>The payload is messy, mixed with prose, or copied from logs or chat output.</li>
+              <li>You want a human-readable explanation of what likely broke.</li>
+              <li>The parser error is too shallow to explain the full damage.</li>
+              <li>You need candidate fixes mapped to an expected schema, followed by review.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 className="mt-8 mb-4 flex items-center gap-2 text-2xl font-semibold">
+          Conclusion
+          <CheckCircle className="h-6 w-6 text-green-600" />
+        </h2>
+
+        <p>
+          AI-assisted JSON error detection and correction is most useful when it sits inside a strict validation
+          pipeline. Let parsers and schemas handle the deterministic work, use AI for explanation and conservative
+          repair, and treat every AI fix as untrusted until it parses cleanly and passes your schema checks.
         </p>
       </div>
-    </div>
+    </article>
   );
 }

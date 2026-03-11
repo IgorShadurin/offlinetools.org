@@ -1,285 +1,363 @@
 import type { Metadata } from "next";
-// useState not used after our changes
-// import { useState } from "react";
 
 export const metadata: Metadata = {
-  title: "Implementing Tabs for Multiple JSON Documents | Offline Tools",
-  description: "Learn how to implement a tabbed interface to manage and view multiple JSON documents simultaneously.",
+  title: "Implementing Tabs for Multiple JSON Documents in React | Offline Tools",
+  description:
+    "Build an accessible tab interface for multiple JSON documents with React, including keyboard support, validation, persistence, and performance guidance.",
 };
 
-// This data is for illustrative purposes only and not actually used in the rendered article
-/*
-interface JsonTab {
-  id: string;
-  title: string;
-  content: string; // The JSON string
-}
-
-const initialTabs: JsonTab[] = [
-  {
-    id: "tab-1",
-    title: "User Data",
-    content: `{
-  "id": 101,
-  "name": "Alice",
-  "isActive": true,
-  "roles": ["user", "editor"]
-}`,
-  },
-  {
-    id: "tab-2",
-    title: "Product List",
-    content: `{
-  "products": [
-    {
-      "sku": "ABC-123",
-      "name": "Widget",
-      "price": 19.99
-    },
-    {
-      "sku": "XYZ-456",
-      "name": "Gadget",
-      "price": 99.50
-    }
-  ],
-  "total": 2
-}`,
-  },
-  {
-    id: "tab-3",
-    title: "Configuration",
-    content: `{
-  "appSettings": {
-    "version": "1.5",
-    "theme": "dark",
-    "notificationsEnabled": false
-  }
-}`,
-  },
-];
-*/
-
 export default function ImplementingJsonTabsArticle() {
-  // Example representation only, not used in the actual article content
-  // const [activeTab, setActiveTab] = useState(initialTabs[0].id);
-
   return (
     <>
       <h1 className="text-3xl font-bold mb-6">Implementing Tabs for Multiple JSON Documents</h1>
 
       <div className="space-y-6">
         <p>
-          Working with multiple JSON documents simultaneously can quickly become cumbersome, especially when comparing
-          data, referencing configurations, or managing different API responses. Implementing a tabbed interface
-          provides an intuitive way to organize and switch between various JSON inputs, significantly improving workflow
-          and clarity.
+          Opening several JSON payloads in one tool sounds simple until users start comparing API responses, editing
+          drafts, or checking one config file against another. A useful tab system has to preserve document state,
+          expose validation errors per tab, and let people move between documents without losing context.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Use Tabs for JSON Documents?</h2>
         <p>
-          Tabs are a familiar UI pattern that helps users manage multiple contexts within a single window. For JSON
-          editing and viewing tools, tabs offer several key benefits:
+          The safest approach is to treat tabs as two problems: accessible navigation and JSON-specific workflow. Build
+          the tab pattern correctly first, then add features such as dirty-state badges, draft persistence, and
+          large-file safeguards so the interface still feels solid after the second or third document opens.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">When Tabs Are the Right Pattern</h2>
+        <p>
+          Tabs work well when one JSON document is the main focus at a time and the user mostly needs quick switching,
+          not simultaneous visibility. They are a strong fit for:
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Comparing successive API responses while keeping the workspace in a single view.</li>
+            <li>Editing a request body, sample response, and schema without opening multiple browser windows.</li>
+            <li>Keeping environment-specific config files nearby during debugging.</li>
+            <li>Reviewing imported JSON files one by one before formatting, validating, or transforming them.</li>
+          </ul>
+        </div>
+
+        <p>
+          If users need to see two documents at the same time, add a split view or diff mode. Tabs are for fast
+          context switching, not side-by-side analysis.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Accessibility Rules to Get Right First</h2>
+        <p>
+          If only one panel is shown at a time, follow the WAI-ARIA tabs pattern instead of styling a row of generic
+          buttons and hoping screen readers infer the structure. A solid baseline includes:
+        </p>
+
+        <ol className="list-decimal pl-6 space-y-3 my-4">
+          <li className="font-medium">
+            A tab container with <code>role=&quot;tablist&quot;</code> and a clear accessible label.
+          </li>
+          <li className="font-medium">
+            One interactive element per tab with <code>role=&quot;tab&quot;</code>,{" "}
+            <code>aria-selected</code>, and a programmatic link to its panel.
+          </li>
+          <li className="font-medium">
+            A visible panel with <code>role=&quot;tabpanel&quot;</code> linked back to the active tab via{" "}
+            <code>aria-labelledby</code>.
+          </li>
+          <li className="font-medium">
+            Keyboard support for Left and Right Arrow, Home, End, and activation by Enter or Space.
+          </li>
+          <li className="font-medium">
+            Roving focus so the selected tab stays in the normal tab order while inactive tabs use{" "}
+            <code>tabIndex=&#123;-1&#125;</code>.
+          </li>
+        </ol>
+
+        <p>
+          Manual activation is often the best default for JSON tools: arrow keys move focus across the tab strip, and
+          Enter or Space opens the focused document. That avoids expensive re-renders when each panel contains a large
+          editor, formatter, or tree viewer. Automatic activation is fine when switching panels is effectively
+          instant.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Use a Tab Model That Can Carry Document State</h2>
+        <p>
+          A simple <code>activeTabId</code> is not enough once users can edit data. Each tab should store the document
+          state that needs to survive switching:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Organization:</span> Keep related or unrelated JSON snippets separate but
-              easily accessible.
+              <span className="font-medium">Stable ID:</span> Use a real document ID, file hash, or generated draft ID.
+              Do not rely on the array index for keys or ARIA relationships.
             </li>
             <li>
-              <span className="font-medium">Comparison:</span> Quickly switch between documents to compare values or
-              structures.
+              <span className="font-medium">Title:</span> File name, endpoint name, or a user-editable label.
             </li>
             <li>
-              <span className="font-medium">Reduced Clutter:</span> Avoid having multiple windows or browser tabs open
-              for different JSON data.
+              <span className="font-medium">Raw value:</span> The current JSON string, even when it is temporarily
+              invalid.
             </li>
             <li>
-              <span className="font-medium">Improved User Experience:</span> Provides a clean, navigable interface for
-              handling multiple inputs.
+              <span className="font-medium">Validation state:</span> Store parse errors per tab so one broken document
+              does not block the rest of the workspace.
+            </li>
+            <li>
+              <span className="font-medium">Dirty status:</span> Track whether the document changed since the last save,
+              import, or formatting step.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Core Implementation Concept</h2>
         <p>
-          Implementing a basic tab system involves managing the state of which tab is currently active and rendering the
-          content corresponding to that active tab. In a React/Next.js application, this typically means:
+          In React, keep those stable IDs in your data. The current React guidance is to use <code>useId</code> for
+          accessibility relationships when needed, not as a replacement for list keys that should come from the data
+          itself.
         </p>
 
-        <ol className="list-decimal pl-6 space-y-3 my-4">
-          <li className="font-medium">
-            Maintaining an array or list of your JSON documents, each with an identifier, a title, and the JSON content.
-          </li>
-          <li className="font-medium">Storing the ID of the currently active tab in your component&apos;s state.</li>
-          <li className="font-medium">
-            Rendering a list of tab headers (buttons or links), with the active tab header styled differently.
-          </li>
-          <li className="font-medium">Attaching click handlers to the tab headers to update the active tab state.</li>
-          <li className="font-medium">
-            Rendering the content area, displaying the JSON content of the tab whose ID matches the active tab state.
-          </li>
-        </ol>
-
-        <h2 className="text-2xl font-semibold mt-8">Basic Code Example</h2>
+        <h2 className="text-2xl font-semibold mt-8">React Example: Accessible Tabs for Multiple JSON Documents</h2>
         <p>
-          Here&apos;s a simplified example demonstrating the core logic using React state. This example focuses on the
-          tab switching mechanism and content rendering, assuming the JSON content itself would be displayed within the
-          content area (perhaps using a syntax highlighter or formatter component, not shown here for simplicity).
+          This example uses manual activation, validates each document independently, and keeps the active editor bound
+          to the selected tab. It is intentionally small, but the structure scales to add close buttons, duplication,
+          import actions, or persisted drafts.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Simple Tab Component Structure:</h3>
+          <h3 className="text-lg font-medium">Client Component Example</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-              {`import { useState } from 'react';
+              {`'use client';
 
-interface JsonTab {
+import { type KeyboardEvent, useRef, useState } from 'react';
+
+type JsonTab = {
   id: string;
   title: string;
-  content: string; // JSON string
-}
+  value: string;
+  dirty: boolean;
+  error: string | null;
+};
 
 const initialTabs: JsonTab[] = [
-  { id: 'tab-1', title: 'File 1', content: '{ "key": "value1" }' },
-  { id: 'tab-2', title: 'File 2', content: '{ "data": [1, 2, 3] }' },
+  {
+    id: 'request-body',
+    title: 'Request Body',
+    value: '{\\n  "userId": 42,\\n  "includePosts": true\\n}',
+    dirty: false,
+    error: null,
+  },
+  {
+    id: 'response-preview',
+    title: 'Response Preview',
+    value: '{\\n  "ok": true,\\n  "count": 3\\n}',
+    dirty: false,
+    error: null,
+  },
 ];
 
-export default function JsonTabbedInterface() {
-  const [activeTabId, setActiveTabId] = useState(initialTabs[0].id);
+function validateJson(value: string) {
+  try {
+    JSON.parse(value);
+    return null;
+  } catch (error) {
+    return error instanceof Error ? error.message : 'Invalid JSON';
+  }
+}
 
-  const handleTabClick = (tabId: string) => {
-    setActiveTabId(tabId);
-  };
+export default function JsonTabs() {
+  const [tabs, setTabs] = useState(initialTabs);
+  const [activeId, setActiveId] = useState(initialTabs[0].id);
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
-  const activeTab = initialTabs.find(tab => tab.id === activeTabId);
+  const activeIndex = tabs.findIndex((tab) => tab.id === activeId);
+  const activeTab = tabs[activeIndex];
+
+  function focusTab(index: number) {
+    tabRefs.current[index]?.focus();
+  }
+
+  function activateTab(tabId: string) {
+    setActiveId(tabId);
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      focusTab((index + 1) % tabs.length);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      focusTab((index - 1 + tabs.length) % tabs.length);
+      return;
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault();
+      focusTab(0);
+      return;
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault();
+      focusTab(tabs.length - 1);
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      activateTab(tabs[index].id);
+    }
+  }
+
+  function updateTab(tabId: string, nextValue: string) {
+    setTabs((currentTabs) =>
+      currentTabs.map((tab) =>
+        tab.id === tabId
+          ? {
+              ...tab,
+              value: nextValue,
+              dirty: true,
+              error: validateJson(nextValue),
+            }
+          : tab
+      )
+    );
+  }
 
   return (
-    <div>
-      {/* Tab Headers */}
-      <div className="flex border-b">
-        {initialTabs.map((tab) => (
-          <button
-            key={tab.id}
-            className={\`py-2 px-4 text-sm font-medium \${
-              activeTabId === tab.id
-                ? 'border-b-2 border-blue-500 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }\`}
-            onClick={() => handleTabClick(tab.id)}
-          >
-            {tab.title}
-          </button>
-        ))}
+    <section>
+      <div role="tablist" aria-label="Open JSON documents" className="flex gap-2 border-b pb-2">
+        {tabs.map((tab, index) => {
+          const isSelected = tab.id === activeId;
+
+          return (
+            <button
+              key={tab.id}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+              }}
+              id={tab.id + '-tab'}
+              role="tab"
+              type="button"
+              tabIndex={isSelected ? 0 : -1}
+              aria-selected={isSelected}
+              aria-controls={tab.id + '-panel'}
+              onClick={() => activateTab(tab.id)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+              className={isSelected ? 'rounded-t border px-3 py-2 font-medium' : 'px-3 py-2 text-slate-600'}
+            >
+              {tab.title}
+              {tab.dirty ? ' *' : ''}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Tab Content */}
-      <div className="mt-4 p-4 bg-white rounded shadow dark:bg-gray-900">
-        {activeTab ? (
-          <pre className="whitespace-pre-wrap break-words text-xs">
-            {/* In a real app, you'd parse and format activeTab.content */}
-            {activeTab.content}
-          </pre>
-        ) : (
-          <p>Select a tab</p>
-        )}
+      <div
+        id={activeTab.id + '-panel'}
+        role="tabpanel"
+        aria-labelledby={activeTab.id + '-tab'}
+        className="mt-4 space-y-3"
+      >
+        <textarea
+          value={activeTab.value}
+          spellCheck={false}
+          onChange={(event) => updateTab(activeTab.id, event.target.value)}
+          className="min-h-72 w-full rounded border p-3 font-mono text-sm"
+        />
+
+        <p role="status" className={activeTab.error ? 'text-red-600' : 'text-emerald-700'}>
+          {activeTab.error ? 'Invalid JSON: ' + activeTab.error : 'Valid JSON'}
+        </p>
       </div>
-    </div>
+    </section>
   );
 }`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This code defines the state for the active tab, renders buttons for each tab, and displays the content of
-            the selected tab. Basic styling is applied to highlight the active tab.
+            The important pieces are the per-tab state, the keyboard handler for roving focus, and the explicit ARIA
+            links between each tab and its panel.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Handling JSON Content</h2>
-        <p>The example above just displays the raw JSON string. In a real application, you would typically want to:</p>
-
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Parse the JSON string (e.g., using `JSON.parse()`).</li>
-          <li>Format or pretty-print the parsed JSON object for readability.</li>
-          <li>Implement syntax highlighting for better code readability.</li>
-          <li>Add features like validation, collapsing sections, searching, etc.</li>
-        </ul>
-
+        <h2 className="text-2xl font-semibold mt-8">JSON-Specific Features Worth Adding Early</h2>
         <p>
-          You would likely have a dedicated component that takes the JSON string as a prop, performs parsing and
-          formatting, and renders it appropriately within the tab content area.
+          Once the tab pattern works, the biggest usability gains come from features specific to JSON editing rather
+          than from visual polish:
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Enhancing the Tabbed Interface</h2>
-        <p>A production-ready tabbed interface for JSON documents can include several advanced features:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
-              <span className="font-medium">Adding/Removing Tabs:</span> Allow users to open new JSON files or close
-              existing tabs.
+              <span className="font-medium">Validation per tab:</span> Show parse errors next to the tab title or in a
+              status line so users can find the broken document immediately.
             </li>
             <li>
-              <span className="font-medium">Editable Content:</span> Enable editing within the active tab&apos;s content
-              area.
+              <span className="font-medium">Format on demand:</span> Pretty-print only when the JSON parses
+              successfully, and avoid rewriting the text area on every keystroke.
             </li>
             <li>
-              <span className="font-medium">Saving/Loading State:</span> Persist the list of open tabs and their content
-              (e.g., using browser localStorage).
+              <span className="font-medium">Unsaved-change indicators:</span> Mark dirty tabs before allowing close,
+              replace, or reset actions.
             </li>
             <li>
-              <span className="font-medium">Error Handling:</span> Gracefully handle invalid JSON input in a tab.
+              <span className="font-medium">Restore drafts locally:</span> Use <code>sessionStorage</code> for
+              short-lived sessions or <code>localStorage</code> if users expect drafts to survive a restart.
             </li>
             <li>
-              <span className="font-medium">Drag and Drop:</span> Allow users to drag and drop JSON files onto the
-              interface to open them in new tabs.
+              <span className="font-medium">Safe import behavior:</span> When a user drops or uploads a new file, open
+              it in a new tab instead of overwriting the current document unexpectedly.
             </li>
             <li>
-              <span className="font-medium">Context Menus:</span> Add options like &quot;Close Other Tabs&quot; or
-              &quot;Duplicate Tab&quot;.
+              <span className="font-medium">Private by default:</span> JSON often contains tokens, emails, or internal
+              IDs, so keep drafts on-device unless the user explicitly chooses to sync or upload them.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Alternative Approaches</h2>
+        <h2 className="text-2xl font-semibold mt-8">Performance Tips for Large Documents</h2>
         <p>
-          While managing tab state with `useState` is straightforward for simple cases, more complex scenarios might
-          benefit from:
+          Tabs usually fail under load for avoidable reasons. The common problem is doing too much work every time the
+          active editor changes or every time a user types a character.
         </p>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Using a State Management Library:</span> For large applications with many tabs
-            or complex interactions, libraries like Redux, Zustand, or useContext/useReducer can help manage tab state
-            globally.
-          </li>
-          <li>
-            <span className="font-medium">UI Component Libraries:</span> Libraries like Material UI, Ant Design, Chakra
-            UI, etc., provide pre-built Tab components that handle much of the state and accessibility out of the box,
-            allowing you to focus on rendering the content within each tab pane.
-          </li>
+          <li>Debounce expensive parsing, formatting, or schema validation once documents reach hundreds of KB.</li>
+          <li>Keep only the active editor mounted if each tab hosts a heavy code editor or tree viewer.</li>
+          <li>Cache derived views such as parsed objects or tree nodes by tab ID instead of recomputing everything.</li>
+          <li>Move very large formatting or diff work to a Web Worker so the tab strip stays responsive.</li>
+          <li>Preserve cursor and scroll position per tab so switching documents does not feel destructive.</li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-          <h3 className="text-lg font-medium">Pro Tip:</h3>
+          <h3 className="text-lg font-medium">Common Failure Case</h3>
           <p className="mt-2">
-            When implementing editable JSON content within tabs, debounce or throttle the saving/parsing logic to avoid
-            performance issues as the user types. Provide clear visual feedback (e.g., a &quot;saving...&quot;
-            indicator) if content isn&apos;t saved instantly.
+            Reformatting JSON on every keystroke looks impressive in a demo, but it often breaks cursor position,
+            increases input latency, and makes partially typed JSON impossible to edit comfortably. Validate
+            continuously if you want, but reserve full formatting for an explicit action or a short debounce.
           </p>
         </div>
 
+        <h2 className="text-2xl font-semibold mt-8">Troubleshooting Checklist</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>If arrow keys do nothing, confirm the tab elements really have focus and handle keyboard events.</li>
+          <li>If screen readers do not announce the relationship, verify the tab and panel IDs match exactly.</li>
+          <li>If the wrong panel opens after closing a tab, store the active tab by stable ID, not by array index.</li>
+          <li>If users lose work after refresh, persist only the raw tab data and recreate derived parse state later.</li>
+          <li>If many tabs share the same file name, add a source label or path hint so the strip remains readable.</li>
+        </ul>
+
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing a tabbed interface for managing multiple JSON documents significantly enhances the usability of
-          any tool dealing with JSON data. By effectively managing the active tab state and rendering corresponding
-          content, you can create a clean, organized, and efficient environment for users to work with their data.
+          Implementing tabs for multiple JSON documents is less about the visual tab strip and more about preserving a
+          trustworthy editing workflow. Start with the ARIA tab pattern, keep document state per tab, and design for
+          invalid JSON and unsaved edits from the beginning.
         </p>
         <p>
-          Start with a basic state management approach and gradually add features like content formatting, editing, and
-          tab management based on your application&apos;s needs. Whether you build from scratch or leverage UI
-          libraries, the core concept of linking tab headers to content panels remains the same.
+          Once that foundation is in place, you can add niceties such as drag-and-drop import, duplicate tab actions,
+          and compare mode without rewriting the core interaction model.
         </p>
       </div>
     </>

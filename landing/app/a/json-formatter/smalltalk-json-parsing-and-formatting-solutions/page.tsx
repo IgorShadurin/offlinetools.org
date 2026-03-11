@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
   BookOpen,
-  FileJson, // Changed Parse to FileJson
+  FileJson,
   CodeXml,
   Zap,
   Share2,
@@ -10,7 +10,7 @@ import {
 export const metadata: Metadata = {
   title: "Smalltalk JSON Parsing and Formatting Solutions | Offline Tools",
   description:
-    "Explore how to parse and format JSON data within the Smalltalk programming environment, covering common libraries and techniques.",
+    "Use NeoJSON or STONJSON to parse, validate, and pretty-print JSON in Smalltalk, with current Pharo and Squeak install steps, mapping examples, and troubleshooting.",
 };
 
 export default function SmalltalkJsonPage() {
@@ -22,101 +22,116 @@ export default function SmalltalkJsonPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <BookOpen className="mr-2 text-blue-500" />
-            Introduction: JSON and Smalltalk
+            Start with the Right Library
           </h2>
           <p className="mb-4">
-            JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web and
-            beyond. Its simplicity and readability make it ideal for configurations, APIs, and data storage. For
-            Smalltalk developers, interacting with the external world often requires the ability to both consume (parse)
-            JSON data received from other systems and produce (format) JSON data to send out.
+            If you need JSON support in modern Smalltalk, <code>NeoJSON</code> is usually the best default for Pharo
+            and Squeak. It gives you straightforward parsing and writing for plain collections, plus object mapping when
+            you want to deserialize JSON into real Smalltalk domain objects instead of raw <code>Dictionary</code> and{" "}
+            <code>Array</code> instances.
           </p>
+          <p className="mb-4">
+            <code>STON</code> is still relevant, but it is a Smalltalk object notation first and a JSON tool second. If
+            your image already depends on STON and you only need basic JSON parsing or pretty-printing, use{" "}
+            <code>STONJSON</code> rather than plain <code>STON</code> so your input and output stay JSON-compatible.
+          </p>
+          <ul className="list-disc pl-6 space-y-2 mb-4">
+            <li>
+              <strong>Choose NeoJSON</strong> for REST APIs, file interchange, typed object mapping, and most new
+              Smalltalk JSON work.
+            </li>
+            <li>
+              <strong>Choose STONJSON</strong> when STON is already present and you want a lighter JSON-only facade.
+            </li>
+            <li>
+              <strong>Treat older Zinc or vendor-specific parsers as legacy choices</strong> unless the application is
+              already built around them.
+            </li>
+          </ul>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">Install NeoJSON in Pharo or Squeak</h3>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+            <pre>
+              <code className="language-smalltalk text-sm">
+                {`Metacello new
+  repository: 'github://svenvc/NeoJSON/repository';
+  baseline: 'NeoJSON';
+  load.`}
+              </code>
+            </pre>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">Install STON When You Need STONJSON</h3>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+            <pre>
+              <code className="language-smalltalk text-sm">
+                {`Metacello new
+  baseline: 'Ston';
+  repository: 'github://svenvc/ston/repository';
+  load.`}
+              </code>
+            </pre>
+          </div>
           <p>
-            While Smalltalk environments like Pharo, Squeak, or VisualWorks have different approaches and available
-            libraries, the core concepts of converting JSON text into Smalltalk objects (like Dictionaries, Arrays,
-            Strings, Numbers, Booleans, and <code>nil</code>) and vice-versa remain consistent.
+            If you are on VisualWorks, VA Smalltalk, or another vendor dialect, the concepts are the same but package
+            names and exact APIs can differ. In those images, use the patterns below as a guide instead of assuming the
+            Pharo code is drop-in compatible.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <FileJson className="mr-2 text-green-500" /> {/* Changed Parse to FileJson */}
+            <FileJson className="mr-2 text-green-500" />
             Parsing JSON in Smalltalk
           </h2>
           <p className="mb-4">
-            Parsing JSON involves taking a JSON string and converting it into a Smalltalk object structure that mirrors
-            the JSON data. A JSON object <code>&#x7b; ... &#x7d;</code> typically becomes a Smalltalk{" "}
-            <code>Dictionary</code>, a JSON array <code>[ ... ]</code> becomes a Smalltalk <code>Array</code>, strings
-            become <code>String</code>s, numbers become <code>Number</code>s, booleans become <code>Boolean</code>s (
-            <code>true</code> or <code>false</code>), and JSON <code>null</code> becomes Smalltalk <code>nil</code>.
-          </p>
-          <p className="mb-4">
-            Most Smalltalk environments provide or recommend using specific libraries for robust JSON parsing. Popular
-            options include:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mb-4">
-            <li>
-              <strong>NeoJSON:</strong> A popular, modern library available in Pharo and Squeak, known for its speed and
-              flexibility, including support for mapping JSON to specific Smalltalk classes
-              (serialization/deserialization).
-            </li>
-            <li>
-              <strong>Zinc JSON:</strong> Part of the Zinc HTTP client/server stack, often available in Pharo and
-              Squeak, providing basic JSON parsing and formatting.
-            </li>
-            <li>
-              <strong>Built-in/Older Libraries:</strong> Some older or specific distributions might have built-in or
-              less common JSON parsers.
-            </li>
-          </ul>
-          <p className="mb-4">
-            Regardless of the library, the basic interaction often involves sending a message to a JSON parser object or
-            class, providing the JSON string or a read stream containing the JSON data.
+            The basic conversion rules are simple and stable across dialects: JSON objects become Smalltalk maps,
+            arrays become <code>Array</code>, strings become <code>String</code>, numbers become numeric objects,
+            booleans become <code>true</code> or <code>false</code>, and JSON <code>null</code> becomes{" "}
+            <code>nil</code>. In NeoJSON, property names are strings by default, which is usually what you want when
+            the payload came from an external API.
           </p>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Parsing with NeoJSON (Pharo/Squeak)</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3">Parse Into Dictionaries and Arrays with NeoJSON</h3>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-smalltalk text-sm">
                 {`| jsonString jsonObject |
 jsonString := '{ "name": "Alice", "age": 30, "isStudent": false, "courses": ["Math", "Science"], "address": null }'.
 
-"Use NeoJSONReader to parse the string"
 jsonObject := NeoJSONReader fromString: jsonString.
 
-"Now jsonObject is a Smalltalk Dictionary"
-"You can access its elements"
-jsonObject at: 'name'.      "Returns: 'Alice'"
-jsonObject at: 'age'.       "Returns: 30"
-jsonObject at: 'isStudent'. "Returns: false"
-jsonObject at: 'courses'.   "Returns: #('Math' 'Science')"
-jsonObject at: 'address'.   "Returns: nil"
-
-"You can inspect the resulting object structure"
-"jsonObject inspect.`}
+jsonObject at: 'name'.      "Alice"
+jsonObject at: 'age'.       "30"
+jsonObject at: 'isStudent'. "false"
+jsonObject at: 'courses'.   "#('Math' 'Science')"
+jsonObject at: 'address'.   "nil"`}
               </code>
             </pre>
           </div>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Parsing with Zinc JSON (Pharo/Squeak)</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3">Map JSON Directly to Smalltalk Objects</h3>
+          <p className="mb-4">
+            Raw dictionaries are fine when you are exploring a new payload. Once the schema is stable, NeoJSON can map
+            directly into your classes. That keeps the rest of the codebase cleaner because you stop passing string-key
+            dictionaries around.
+          </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-smalltalk text-sm">
-                {`| jsonString jsonObject |
-jsonString := '{ "name": "Alice", "age": 30 }'.
+                {`| reader points |
+reader := NeoJSONReader on: '[{"x":1,"y":2},{"x":3,"y":4}]' readStream.
+reader mapInstVarsFor: Point.
+points := reader nextListAs: Point.
 
-"Use ZnJsonParser to parse the string"
-jsonObject := ZnJsonParser parse: jsonString.
-
-"jsonObject is typically a Dictionary"
-jsonObject at: 'name'. "Returns: 'Alice'"`}
+points first. "1@2"`}
               </code>
             </pre>
           </div>
-
           <p className="mt-4">
-            These examples show the basic pattern: take a string, pass it to the parser, and get back a Smalltalk object
-            (usually a <code>Dictionary</code> or <code>Array</code>) representing the JSON structure. The parser
-            handles the complexity of tokenizing and structuring the data according to the JSON specification.
+            If your codebase prefers symbol keys for exploratory work, NeoJSON can also be configured with{" "}
+            <code>propertyNamesAsSymbols: true</code> on a reader instance. Keep in mind that this only changes the
+            in-image representation; JSON on the wire still uses quoted string property names.
           </p>
         </section>
 
@@ -126,19 +141,17 @@ jsonObject at: 'name'. "Returns: 'Alice'"`}
             Formatting JSON in Smalltalk
           </h2>
           <p className="mb-4">
-            Formatting JSON involves converting a Smalltalk object structure (typically a <code>Dictionary</code> or{" "}
-            <code>Array</code> containing valid JSON-serializable types) into a JSON string. This is essential when your
-            Smalltalk application needs to send data to an external API, a web browser, or save it to a file in JSON
-            format.
+            Formatting is the reverse operation: take a Smalltalk object graph that only contains JSON-safe values and
+            serialize it to a JSON string. For external APIs, keep the payload boring and predictable: strings, numbers,
+            booleans, arrays, dictionaries, and <code>nil</code>.
           </p>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Formatting with NeoJSON (Pharo/Squeak)</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3">Write Compact or Pretty JSON with NeoJSON</h3>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-smalltalk text-sm">
-                {`| smalltalkObject jsonString |
-"Create a Smalltalk object structure"
-smalltalkObject := Dictionary new
+                {`| payload compact pretty |
+payload := Dictionary new
   at: 'product' put: 'Laptop';
   at: 'price' put: 1200.50;
   at: 'inStock' put: true;
@@ -146,132 +159,99 @@ smalltalkObject := Dictionary new
   at: 'details' put: nil;
   yourself.
 
-"Use NeoJSONWriter to format the object into a string"
-jsonString := NeoJSONWriter toString: smalltalkObject.
-
-"jsonString will be something like: {\"product\":\"Laptop\",\"price\":1200.5,\"inStock\":true,\"tags\":[\"electronics\",\"computer\"],\"details\":null}"
-"This is the compact format by default."
-
-"For pretty-printing (with indentation)"
-"jsonString := NeoJSONWriter prettyPrint: smalltalkObject."
-
-"prettyPrint output example:
-{
-  \"product\": \"Laptop\",
-  \"price\": 1200.5,
-  \"inStock\": true,
-  \"tags\": [
-    \"electronics\",
-    \"computer\"
-  ],
-  \"details\": null
-}"`}
+compact := NeoJSONWriter toString: payload.
+pretty := NeoJSONWriter toStringPretty: payload.`}
               </code>
             </pre>
           </div>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">Example: Formatting with Zinc JSON (Pharo/Squeak)</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3">Use STONJSON for Lightweight JSON-Only Work</h3>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-smalltalk text-sm">
-                {`| smalltalkObject jsonString |
-smalltalkObject := Dictionary new
+                {`| payload jsonString parsedBack |
+payload := Dictionary new
   at: 'status' put: 'ok';
   at: 'code' put: 200;
   yourself.
 
-"Use ZnJsonWriter to format"
-jsonString := ZnJsonWriter write: smalltalkObject.
-
-"jsonString will be something like: {\"status\":\"ok\",\"code\":200}"`}
+jsonString := STONJSON toStringPretty: payload.
+parsedBack := STONJSON fromString: '{"status":"ok","code":200}'.`}
               </code>
             </pre>
           </div>
+          <p className="mb-4">
+            Use <code>STONJSON</code> when you want strict JSON input and output from a STON-based image. Use plain{" "}
+            <code>STON</code> when you intentionally want Smalltalk-specific features like richer object serialization,
+            not when a third-party HTTP API expects ordinary JSON.
+          </p>
           <p className="mt-4">
-            Formatting typically offers options for producing a compact string (minimal whitespace) or a pretty-printed
-            string (with indentation and newlines) for readability. The choice depends on whether the output is for
-            machine consumption (compact) or human inspection (pretty-printed).
+            For large payloads, switch from convenience methods to streams. Both NeoJSON and STON support reading from a
+            read stream and writing to a write stream, which is more memory-friendly than building huge intermediate
+            strings.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Zap className="mr-2 text-orange-500" />
-            Performance Considerations
+            Common Smalltalk JSON Pitfalls
           </h2>
-          <p className="mb-4">
-            For large JSON payloads or high-throughput applications, parser and formatter performance can be critical.
-            Factors affecting performance include:
-          </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Library Implementation:</strong> Different Smalltalk JSON libraries have varying levels of
-              optimization. Libraries like NeoJSON are often benchmarked and optimized for speed.
+              <strong>Use string keys when writing maps.</strong> JSON object property names are strings. In NeoJSON,
+              the safe habit is <code>'name'</code>, not <code>#name</code>, when you build a <code>Dictionary</code>{" "}
+              for an API payload.
             </li>
             <li>
-              <strong>Stream vs. String:</strong> Reading directly from a stream (e.g., a network connection or file)
-              can sometimes be more memory efficient than loading the entire JSON content into a single String object
-              before parsing, especially for very large inputs. Similarly, writing to a stream can be more efficient for
-              formatting large outputs.
+              <strong>Remember that nil maps to null.</strong> If a missing value should not be sent at all, do not
+              assume every writer will automatically remove it. Decide whether you want omission or an explicit{" "}
+              <code>null</code>.
             </li>
             <li>
-              <strong>Object Structure Complexity:</strong> Deeply nested or very large dictionaries/arrays can impact
-              both parsing and formatting times.
+              <strong>Invalid JSON is often the real bug.</strong> JSON does not allow single-quoted strings,
+              JavaScript-style comments, or trailing commas. When parsing fails, validate the payload first instead of
+              immediately blaming the Smalltalk library.
             </li>
             <li>
-              <strong>Memory Usage:</strong> Parsing large JSON can create a significant number of Smalltalk objects in
-              memory. Be mindful of memory usage in long-running processes.
+              <strong>Start untyped, then add mapping.</strong> Parse into dictionaries and arrays while you learn the
+              payload. Once the structure stabilizes, move to <code>mapInstVarsFor:</code>, <code>nextAs:</code>, or{" "}
+              <code>nextListAs:</code>.
+            </li>
+            <li>
+              <strong>Prefer streams for big files and HTTP responses.</strong> Reading directly from a stream reduces
+              memory pressure and fits better with web clients, file imports, and batch jobs.
+            </li>
+            <li>
+              <strong>Validate before you debug.</strong> If a response or config file looks suspicious, paste it into
+              the formatter on this site first. Pretty-printing and validation outside the image often reveals bad
+              quoting, stray commas, or broken escapes immediately.
             </li>
           </ul>
-          <p className="mt-4">
-            When performance is paramount, it&apos;s advisable to profile different libraries with your specific
-            workload and choose the most efficient one.
-          </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center">
             <Share2 className="mr-2 text-teal-500" />
-            Integration and Interoperability
+            Which Solution Fits Which Job
           </h2>
-          <p className="mb-4">
-            JSON support in Smalltalk is crucial for integrating with a wide range of technologies:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
+          <ul className="list-disc pl-6 space-y-2 mb-4">
             <li>
-              <strong>Web Services (APIs):</strong> Consuming REST APIs that return JSON, or building Smalltalk-based
-              web services that return JSON responses. Libraries like Zinc (which includes JSON support) are often used
-              for the HTTP communication layer.
+              <strong>NeoJSON is the best general-purpose choice</strong> for Pharo and Squeak when you need current,
+              maintainable JSON parsing and formatting.
             </li>
             <li>
-              <strong>Configuration Files:</strong> Reading application configuration from JSON files.
+              <strong>STONJSON is a practical second option</strong> when you already use STON and only need clean JSON
+              parsing or output, not advanced mapping.
             </li>
             <li>
-              <strong>Data Storage:</strong> Serializing Smalltalk objects into JSON for storage or transfer. More
-              advanced libraries like NeoJSON provide object mapping features for this.
-            </li>
-            <li>
-              <strong>Messaging Queues:</strong> Exchanging data in JSON format via messaging systems.
+              <strong>Plain STON is for Smalltalk object notation</strong>, not for generic web API payloads.
             </li>
           </ul>
-          <p className="mt-4">
-            By mapping JSON types directly to standard Smalltalk collection and primitive types, JSON libraries provide
-            a convenient bridge between the Smalltalk object world and the string-based data format of JSON.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <BookOpen className="mr-2 text-blue-500" />
-            Conclusion
-          </h2>
           <p>
-            Smalltalk environments are well-equipped to handle JSON data thanks to robust and efficient libraries like
-            NeoJSON and Zinc JSON. Understanding how to parse JSON strings into Smalltalk objects and format Smalltalk
-            objects into JSON strings is a fundamental skill for interoperability. While the specific messages might
-            vary slightly between libraries and Smalltalk dialects, the core principle of converting between a standard
-            text format and the rich Smalltalk object model remains consistent, enabling seamless data exchange with the
-            broader technical landscape.
+            A practical workflow is to validate the raw JSON first, parse into collections while you explore the
+            schema, and then add typed mappings only after the payload has settled. That keeps integration code simple
+            without giving up the object-oriented benefits that make Smalltalk pleasant to work in.
           </p>
         </section>
       </div>

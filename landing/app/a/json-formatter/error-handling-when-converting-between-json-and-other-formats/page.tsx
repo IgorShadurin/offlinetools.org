@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 
-/**
- * Metadata for JSON formatter article
- */
 export const metadata: Metadata = {
   title: "Error Handling When Converting Between JSON and Other Formats | Offline Tools",
   description:
-    "Learn effective strategies for handling errors when converting between JSON and other data formats, including XML, CSV, and YAML.",
+    "Prevent data loss when converting JSON to CSV, YAML, TOML, XML, or CBOR. Learn which format fits the job, where conversions fail, and how to recover cleanly.",
 };
 
-/**
- * Article page component for JSON formatter article
- */
 export default function JsonFormatterArticle() {
   return (
     <>
@@ -19,301 +13,341 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Converting between JSON and other data formats like XML, CSV, YAML, or proprietary formats is a common
-          requirement in many applications. However, these conversions can introduce various errors due to
-          format-specific limitations and differences in data representation. This article explores common conversion
-          errors and effective strategies for handling them.
+          Most JSON conversion bugs are not parser bugs. They happen because the target format cannot represent
+          something JSON can represent, or it represents the same data with different rules for types, nesting,
+          quoting, duplicate keys, or character encoding.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Common Conversion Challenges</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Data Type Mismatches</h3>
         <p>
-          Different formats handle data types differently. For example, JSON has clear distinctions between numbers,
-          strings, booleans, and null values, while CSV treats everything as strings.
+          That means the first error-handling decision is often not how to recover after a failed conversion. It is
+          whether JSON is even the right format to leave behind. If a search visitor lands here wondering whether they
+          should use CSV, YAML, TOML, XML, or a binary format instead, that is the right question to ask before
+          writing more conversion code.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">JSON to CSV Type Issues:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// JSON Input
-{
-  "id": 123,
-  "active": true,
-  "score": 98.6,
-  "metadata": {"created": "2023-01-15"}
-}
-
-// CSV Output - Note how all types become strings
-// id,active,score,metadata
-// "123","true","98.6","{\"created\":\"2023-01-15\"}"
-`}
-            </pre>
-          </div>
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
+          <h2 className="text-lg font-medium text-blue-800 dark:text-blue-300">Short Answer</h2>
+          <ul className="mt-2 list-disc pl-6 space-y-2 text-blue-900 dark:text-blue-100">
+            <li>Use CSV only for flat, row-based exports where type loss is acceptable.</li>
+            <li>Use YAML when humans need to edit the file, but pin parser behavior and quote ambiguous values.</li>
+            <li>Use TOML for configuration data where strict structure and duplicate-key errors are helpful.</li>
+            <li>Use XML when namespaces, attributes, or mixed document structure matter.</li>
+            <li>Use CBOR or another binary format when machines exchange the data and compact transport matters.</li>
+          </ul>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Structural Differences</h3>
+        <h2 className="text-2xl font-semibold mt-8">Choose the Target Format Before You Debug the Converter</h2>
+
+        <h3 className="text-xl font-medium mt-6">CSV: best for tables, worst for nested data</h3>
         <p>
-          JSON supports nested objects and arrays, while formats like CSV are inherently flat. XML is hierarchical but
-          with different nesting rules than JSON.
+          CSV is a transport format for rows and columns. It does not preserve JSON object nesting, arrays, booleans,
+          nulls, or numbers on its own. If each JSON object maps cleanly to one row, CSV is fine. If not, conversion
+          errors usually show up later during import because the structure was already flattened or serialized into one
+          cell.
+        </p>
+
+        <h3 className="text-xl font-medium mt-6">YAML: more editable, but parser behavior matters</h3>
+        <p>
+          YAML is often easier for humans to read and supports comments and multi-line text. The tradeoff is that YAML
+          loaders are not as uniform as JSON parsers. Ambiguous scalars, duplicate keys, and older YAML 1.1-style
+          boolean handling can all change how the same file is interpreted unless you keep the emitting and parsing
+          rules consistent.
+        </p>
+
+        <h3 className="text-xl font-medium mt-6">TOML: strong choice for config files</h3>
+        <p>
+          TOML is intentionally strict. That is useful for configuration because duplicate keys fail fast and date/time
+          values have first-class syntax. It is less suitable as a drop-in replacement for arbitrary JSON documents,
+          especially when you are trying to round-trip data from APIs without adding format-specific rules.
+        </p>
+
+        <h3 className="text-xl font-medium mt-6">XML: good when document semantics matter</h3>
+        <p>
+          XML can represent hierarchies, but it models them differently. Attributes, repeated elements, namespaces, and
+          mixed content all need explicit mapping rules when you convert from JSON. Without that mapping, the hard part
+          is not producing valid XML. It is producing XML that can later be converted back without surprise losses.
+        </p>
+
+        <h3 className="text-xl font-medium mt-6">CBOR: safer than text when machines talk to machines</h3>
+        <p>
+          If both ends are software and you want something more compact than JSON, CBOR is often a better target than a
+          human-readable text format. It preserves richer types than JSON, but that also means converting back to JSON
+          can still lose information unless you decide how to encode byte strings, non-string map keys, and very large
+          integers.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Where Conversions Fail in Practice</h2>
+
+        <h3 className="text-xl font-medium mt-6">1. Duplicate keys get lost before you notice</h3>
+        <p>
+          JSON object member names are supposed to be unique for interoperable behavior. If a source object repeats the
+          same key, some parsers keep the last value, others fail, and some preserve order in custom ways. By the time
+          you run your JSON-to-anything converter, the earlier value may already be gone.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-amber-600 dark:text-amber-400">JSON to XML Conversion Example:</h4>
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Problem Example</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// JSON Input
-{
-  "person": {
-    "name": "Alice",
-    "hobbies": ["reading", "hiking"]
-  }
-}
-
-// XML Output
-<root>
-  <person>
-    <name>Alice</name>
-    <hobbies>reading</hobbies>
-    <hobbies>hiking</hobbies>
-  </person>
-</root>
-`}
+              {`{
+  "role": "user",
+  "role": "admin"
+}`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            Note how arrays are represented differently in XML, potentially causing issues when converting back to JSON.
+            If your parser keeps only the last entry, the converter never gets a chance to warn about the data loss.
           </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Special Character Handling</h3>
+        <h3 className="text-xl font-medium mt-6">2. Numbers, dates, and times drift across formats</h3>
         <p>
-          Each format has its own rules for escaping and handling special characters, which can lead to corruption or
-          parsing errors.
+          JSON has one number type. CSV effectively has none. TOML has explicit date/time values. CBOR can preserve
+          richer numeric types than a JavaScript-based JSON pipeline can safely round-trip. Large identifiers,
+          timestamps without timezone context, and decimals used for money are common sources of silent corruption.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Special Character Problems:</h4>
+          <h4 className="text-lg font-medium text-amber-600 dark:text-amber-400">Precision Drift Example</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// JSON with special characters
+              {`{
+  "invoiceId": 9007199254740993,
+  "createdAt": "2026-03-11T09:00:00",
+  "total": 19.99
+}`}
+            </pre>
+          </div>
+          <ul className="mt-3 list-disc pl-6 space-y-2 text-sm">
+            <li>`invoiceId` is not a safe integer in many JavaScript stacks.</li>
+            <li>`createdAt` is a string until you assign timezone and type semantics.</li>
+            <li>`total` may not survive float conversions cleanly in every target pipeline.</li>
+          </ul>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">3. Flat exports hide structural loss</h3>
+        <p>
+          JSON arrays and nested objects do not map naturally to CSV. Teams often flatten some fields, join arrays with
+          a separator, and JSON-stringify the rest. That can be a valid strategy, but it is a lossy contract unless the
+          importer knows exactly how each column was encoded.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">JSON to CSV Loss Point</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// JSON input
 {
-  "description": "Product costs $19.99 & comes with \"free\" shipping",
-  "markup": "<div class='product'>Special offer!</div>"
+  "user": {
+    "name": "Alicia",
+    "roles": ["admin", "billing"]
+  },
+  "notes": ["paid", "priority"]
 }
 
-// When converting to XML, these characters need special handling
-`}
+// One possible CSV row
+// user.name,user.roles,notes
+// Alicia,"admin|billing","paid|priority"`}
             </pre>
           </div>
+          <p className="mt-2 text-sm">That row is only reversible if the importer also knows that `|` is the array separator.</p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Error Handling Strategies</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. Validate Before Converting</h3>
+        <h3 className="text-xl font-medium mt-6">4. Escaping and encoding rules differ</h3>
         <p>
-          Always validate your source data before attempting conversion. For JSON, this means ensuring it&apos;s
-          well-formed and matches your expected schema.
+          CSV fields containing commas, quotes, or line breaks need quoting rules. XML requires entity escaping for
+          markup-sensitive characters. YAML block strings can preserve line breaks differently than JSON strings. Errors
+          in this layer often look random because the content is valid in the source format but invalid only after
+          conversion.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">JavaScript Validation Example:</h4>
+          <h4 className="text-lg font-medium text-red-600 dark:text-red-400">Escaping Example</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`try {
-  // First validate the JSON
-  const data = JSON.parse(jsonString);
-  
-  // Then validate against expected schema
-  if (!data.hasOwnProperty('required_field')) {
-    throw new Error('Missing required field');
-  }
-  
-  // Only then convert to another format
-  const csvOutput = convertJsonToCsv(data);
-} catch (error) {
-  console.error('Validation failed:', error.message);
-}
-`}
+              {`{
+  "title": "Senior \"Platform\" Engineer",
+  "summary": "Line 1\nLine 2, with a comma",
+  "html": "<p>ready & waiting</p>"
+}`}
             </pre>
           </div>
+          <p className="mt-2 text-sm">
+            That one object needs different escaping decisions for CSV, XML, YAML, and any HTML-aware downstream
+            system.
+          </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Use Type Mapping</h3>
-        <p>Create explicit type mapping rules when converting between formats with different type systems.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Type Mapping Example:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// When converting from CSV to JSON
-function convertCsvToJson(csvRow, typeMap) {
-  const jsonObject = {};
-  
-  Object.keys(csvRow).forEach(key => {
-    const value = csvRow[key];
-    
-    // Apply type conversion based on mapping
-    switch(typeMap[key]) {
-      case 'number':
-        jsonObject[key] = Number(value);
-        break;
-      case 'boolean':
-        jsonObject[key] = value.toLowerCase() === 'true';
-        break;
-      case 'json': // For nested objects stored as strings
-        try {
-          jsonObject[key] = JSON.parse(value);
-        } catch (e) {
-          jsonObject[key] = null; // Handle parsing failure
-        }
-        break;
-      default:
-        jsonObject[key] = value; // Keep as string
-    }
-  });
-  
-  return jsonObject;
-}
-`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">3. Handle Structural Transformations</h3>
+        <h3 className="text-xl font-medium mt-6">5. YAML and TOML can fail for opposite reasons</h3>
         <p>
-          When converting between hierarchical and flat structures, use explicit mapping rules and handle nested data
-          carefully.
+          YAML is permissive enough that unquoted values can be interpreted differently by different loaders. TOML is
+          strict enough that an invalid key layout or repeated key stops parsing immediately. Both are useful behaviors,
+          but your error handling needs to reflect which side of that tradeoff you are choosing.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Flattening Nested JSON for CSV:</h4>
+          <h4 className="text-lg font-medium text-amber-600 dark:text-amber-400">Ambiguous Scalar Example</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`function flattenJson(obj, prefix = '') {
-  const result = {};
-  
-  for (const key in obj) {
-    const value = obj[key];
-    const newKey = prefix ? \`\${prefix}.\${key}\` : key;
-    
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      // Recursively flatten nested objects
-      const flattened = flattenJson(value, newKey);
-      Object.assign(result, flattened);
-    } else if (Array.isArray(value)) {
-      // Handle arrays by joining values or other strategy
-      result[newKey] = value.join(',');
-    } else {
-      result[newKey] = value;
-    }
-  }
-  
-  return result;
-}
-`}
+              {`featureFlag: on
+buildNumber: 010
+releaseDate: 2026-03-11`}
             </pre>
           </div>
+          <p className="mt-2 text-sm">
+            Keep values like these quoted when their meaning must stay string-only across different YAML parsers or when
+            moving them into TOML or JSON later.
+          </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">4. Implement Graceful Error Recovery</h3>
-        <p>When conversions fail, provide useful error messages and potential recovery options.</p>
+        <h2 className="text-2xl font-semibold mt-8">A Practical Error-Handling Workflow</h2>
+
+        <h3 className="text-xl font-medium mt-6">1. Validate the source before choosing a target</h3>
+        <p>
+          Start with syntax validation, then check conversion-specific rules such as safe integers, required keys,
+          timestamp format, and whether nested objects are allowed. If duplicate-key rejection matters, detect it at the
+          parser level instead of after `JSON.parse`.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Error Recovery Example:</h4>
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Validation Example</h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`function safelyConvertJsonToXml(jsonString) {
+              {`function validateForExport(rawJson) {
+  const issues = [];
+  let data;
+
   try {
-    const data = JSON.parse(jsonString);
-    return convertToXml(data);
+    data = JSON.parse(rawJson);
   } catch (error) {
-    if (error instanceof SyntaxError) {
-      // JSON parsing error
-      console.error('Invalid JSON:', error.message);
-      
-      // Try to clean common issues
-      const cleaned = attemptJsonRepair(jsonString);
-      
-      if (cleaned) {
-        try {
-          const data = JSON.parse(cleaned);
-          console.warn('Conversion proceeding with repaired JSON');
-          return convertToXml(data);
-        } catch (e) {
-          // Still failed
-        }
-      }
-    } else {
-      // XML conversion error
-      console.error('Error during XML conversion:', error.message);
-    }
-    
-    // Fallback to a minimal valid output
-    return '<root><error>Conversion failed</error></root>';
+    return { ok: false, data: null, issues: [\`Invalid JSON: \${error.message}\`] };
   }
-}
-`}
+
+  if (typeof data.invoiceId === "number" && !Number.isSafeInteger(data.invoiceId)) {
+    issues.push("invoiceId exceeds Number.MAX_SAFE_INTEGER; export it as a string");
+  }
+
+  if (Array.isArray(data.notes) && data.notes.some((value) => value.includes("|"))) {
+    issues.push("notes already contains the chosen CSV separator '|'");
+  }
+
+  return { ok: issues.length === 0, data, issues };
+}`}
             </pre>
           </div>
         </div>
+
+        <h3 className="text-xl font-medium mt-6">2. Make your conversion contract explicit</h3>
+        <p>
+          Do not hide mapping rules inside the converter. Decide up front how arrays, nested objects, nulls, dates, and
+          special numeric values should be emitted. If a round-trip is required, document how the importer reverses each
+          rule.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">Explicit Mapping Contract</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`const exportContract = {
+  csv: {
+    arrays: "join-with-pipe",
+    nestedObjects: "json-stringify",
+    nulls: "empty-string",
+    dates: "iso-8601-string"
+  },
+  toml: {
+    duplicateKeys: "error",
+    timestamps: "emit-as-datetime-when-semantic-type-is-known"
+  },
+  xml: {
+    rootElement: "record",
+    arrays: "repeat-sibling-elements",
+    attributes: "never-infer-without-a-schema"
+  }
+};`}
+            </pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">3. Return data and warnings together</h3>
+        <p>
+          A converter that only returns success or failure is too coarse for real data. Collect warnings for lossy but
+          acceptable transforms so callers can decide whether to continue, show a banner, or reject the export.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-lg font-medium text-green-600 dark:text-green-400">JSON to CSV with Warnings</h4>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`function jsonRecordToCsvRow(record) {
+  const issues = [];
+
+  const row = {
+    id: String(record.id ?? ""),
+    active: String(record.active ?? ""),
+    tags: Array.isArray(record.tags) ? record.tags.join("|") : "",
+    metadata_json: ""
+  };
+
+  if (record.metadata && typeof record.metadata === "object") {
+    row.metadata_json = JSON.stringify(record.metadata);
+    issues.push("metadata was packed into metadata_json and must be parsed during import");
+  }
+
+  if (Array.isArray(record.tags) && record.tags.some((tag) => tag.includes("|"))) {
+    issues.push("tag values include '|'; pick a different separator or escape strategy");
+  }
+
+  return { row, issues };
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">4. Re-parse the output whenever possible</h3>
+        <p>
+          The fastest way to catch conversion bugs is to parse the generated output with the same class of parser your
+          downstream system uses. If you emit YAML, load it with the exact YAML library used in production. If you emit
+          CSV, import it with the same delimiter, quote, and newline settings your consumer expects.
+        </p>
+
+        <h3 className="text-xl font-medium mt-6">5. Preserve the original when the mapping is lossy</h3>
+        <p>
+          If fidelity matters, store the original JSON alongside the converted representation or keep a checksum and
+          warning log with the export. This is especially useful for CSV downloads, spreadsheet integrations, and legacy
+          XML feeds where the target format cannot represent the full source structure.
+        </p>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Practical Rule</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            When handling errors during format conversion, always log detailed information about what caused the
-            failure. Simply knowing that a conversion failed is rarely enough to fix the underlying issue.
+            If you need exact round-trip fidelity, JSON to YAML or JSON to CBOR is usually safer than JSON to CSV or
+            JSON to XML. If you need human editing, YAML or TOML may be worth the tradeoff. If you need spreadsheet
+            compatibility, accept that CSV is an export view, not a faithful storage format.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Best Practices for Different Format Conversions</h2>
-
-        <h3 className="text-xl font-medium mt-6">JSON to XML</h3>
+        <h2 className="text-2xl font-semibold mt-8">Troubleshooting by Symptom</h2>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Define consistent rules for handling arrays</li>
-          <li>Escape special XML characters (&lt;, &gt;, &amp;, &quot;, &apos;)</li>
-          <li>Consider adding a root element if none exists</li>
-          <li>Handle attributes vs. elements conversion explicitly</li>
-        </ul>
-
-        <h3 className="text-xl font-medium mt-6">JSON to CSV</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Define a strategy for handling nested objects (flatten or serialize)</li>
-          <li>Handle arrays consistently (join, multiple columns, or serialize)</li>
-          <li>Escape CSV delimiters in text fields</li>
-          <li>Consider header naming for nested properties</li>
-        </ul>
-
-        <h3 className="text-xl font-medium mt-6">JSON to YAML</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Preserve data types where possible</li>
-          <li>Handle multi-line strings correctly</li>
-          <li>Be careful with YAML-specific characters (: {} [ ] , & * ? | - &lt; &gt; = ! % @ \)</li>
-          <li>Consider YAML anchors for repeated structures</li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Testing Your Conversions</h2>
-        <p>Always test your conversions with a variety of inputs, especially edge cases:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Empty objects and arrays</li>
-          <li>Deeply nested structures</li>
-          <li>Special characters and emoji</li>
-          <li>Very large values</li>
-          <li>Different data types</li>
-          <li>Try round-trip conversions (e.g., JSON → XML → JSON) to verify data preservation</li>
+          <li>All values came back as strings: your pipeline likely passed through CSV or a schema-free import step.</li>
+          <li>One field vanished without an error: check for duplicate keys before JSON parsing.</li>
+          <li>Boolean values changed unexpectedly: check YAML parser version and quote ambiguous scalars.</li>
+          <li>Large IDs changed value: stop treating identifiers as generic JSON numbers.</li>
+          <li>Date or time shifted: distinguish plain strings from timezone-aware timestamps before conversion.</li>
+          <li>Round-trip import fails only on some records: inspect escaping, delimiter, and newline handling first.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Converting between JSON and other formats requires careful handling of type differences, structural
-          variations, and special characters. By implementing proper validation, explicit type mapping, structural
-          transformation strategies, and graceful error handling, you can minimize conversion errors and create more
-          robust data processing pipelines.
+          Good error handling for JSON conversion starts with format selection, not just exception handling. Once you
+          know whether the target is CSV, YAML, TOML, XML, or CBOR, define the loss points up front, return warnings
+          with the converted output, and test with the same parser behavior your downstream system actually uses.
         </p>
+
         <p className="mt-4">
-          Remember that no conversion is perfect, especially between formats with fundamentally different capabilities.
-          Always document your conversion rules and limitations, and provide clear error messages when issues occur.
+          If a conversion rule cannot be explained in one sentence, it probably needs to be written down as part of the
+          contract. That is usually the difference between a converter that merely produces output and one that produces
+          reliable data.
         </p>
       </div>
     </>

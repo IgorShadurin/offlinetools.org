@@ -1,319 +1,332 @@
 import type { Metadata } from "next";
-import { TextSearch, Eye, Settings, ALargeSmall, MessageSquareCode, Code, Check, X, LayoutList } from "lucide-react"; // Using allowed icons
+import {
+  TextSearch,
+  Eye,
+  Settings,
+  ALargeSmall,
+  MessageSquareCode,
+  Code,
+  Check,
+  X,
+  LayoutList,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Font Considerations for JSON Readability | Offline Tools",
-  description: "Explore how font choices impact the readability and understandability of JSON data for developers.",
+  title: "Font Considerations for JSON Readability: Best Fonts and Settings | Offline Tools",
+  description:
+    "Choose better fonts and editor settings for reading JSON. Learn what matters most for braces, quotes, numbers, ligatures, slashed zero, and line spacing.",
 };
 
 export default function FontConsiderationsForJsonReadabilityPage() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <TextSearch className="w-8 h-8 text-blue-500" /> Font Considerations for JSON Readability
+      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold">
+        <TextSearch className="h-8 w-8 text-blue-500" /> Font Considerations for JSON Readability
       </h1>
 
       <div className="space-y-6 text-lg">
         <p>
-          Reading and understanding JSON data is a fundamental skill for developers across various domains. While JSON's
-          structure is simple and standard, its readability on screen can be significantly impacted by the font used to
-          display it. This isn't just about aesthetics; a good font can reduce eye strain, minimize errors, and speed up
-          the process of parsing complex data structures in your mind.
+          If JSON feels tiring to scan, the problem is usually not JSON itself. It is the combination of font, size,
+          line spacing, and punctuation clarity. A good JSON-reading setup makes braces, brackets, quotes, commas, and
+          similar-looking characters easy to separate at a glance.
         </p>
         <p>
-          This article explores the key aspects of font design that contribute to better JSON readability and offers
-          tips for choosing fonts in your code editors, terminals, or data viewers.
+          For most people, the best choice is a monospaced programming font with strong character distinction, a
+          comfortable x-height, and enough weight that punctuation does not disappear on bright screens. Ligatures are
+          optional. Clear braces and unambiguous <code>0/O</code> and <code>1/l/I</code> matter much more.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <Eye className="w-6 h-6 text-green-500" /> Why Fonts Matter for JSON
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <Eye className="h-6 w-6 text-green-500" /> Quick Answer
         </h2>
-        <p>JSON relies on a combination of characters, symbols, and whitespace to define its structure:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Use a monospaced font, not a proportional UI font.</li>
+          <li>Prioritize distinct glyphs for <code>0/O</code>, <code>1/l/I</code>, quotes, braces, and brackets.</li>
+          <li>Keep font size and line height comfortable before you worry about ligatures.</li>
+          <li>Prefer regular or slightly heavier weights over very thin cuts.</li>
           <li>
-            <strong>Symbols:</strong> &#x7b;, &#x7d;, [, ], :, ,
+            If your font supports them, features like <code>slashed-zero</code> and <code>tabular-nums</code> can make
+            numeric JSON easier to read.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <Check className="h-6 w-6 text-green-500" /> What Actually Helps With JSON
+        </h2>
+
+        <h3 className="mt-6 text-xl font-semibold">1. Distinct characters beat everything else</h3>
+        <p>
+          JSON is dense with punctuation and string data, so character ambiguity causes real mistakes. You want a font
+          where these are immediately different:
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            <code>0</code>, <code>O</code>, and <code>o</code>
           </li>
           <li>
-            <strong>Delimiters:</strong> &quot; (for strings)
+            <code>1</code>, <code>l</code>, and <code>I</code>
           </li>
           <li>
-            <strong>Keywords:</strong> true, false, null
+            <code>{"{"}</code>, <code>{"}"}</code>, <code>[</code>, and <code>]</code>
           </li>
           <li>
-            <strong>Primitives:</strong> Numbers, strings
-          </li>
-          <li>
-            <strong>Whitespace:</strong> Spaces, tabs, newlines (often for formatting)
+            <code>&quot;</code>, <code>'</code>, <code>`</code>, <code>:</code>, <code>,</code>, and <code>.</code>
           </li>
         </ul>
         <p>
-          A font designed for code (a monospaced font) is essential, but even among monospaced fonts, key differences
-          can drastically affect how easily you can distinguish these elements, especially in deeply nested or lengthy
-          JSON objects/arrays.
+          This matters more in JSON than in many languages because the structure is almost entirely carried by
+          punctuation, indentation, and quoted keys.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <Check className="w-6 h-6 text-green-500" /> Key Font Characteristics for JSON Readability
-        </h2>
-
-        <h3 className="text-xl font-semibold mt-6">Distinct Characters</h3>
+        <h3 className="mt-6 text-xl font-semibold">2. Strong punctuation makes nesting easier to follow</h3>
         <p>
-          This is perhaps the most crucial factor. In programming, and especially with data formats like JSON, certain
-          characters can look very similar depending on the typeface. A good font ensures clear differentiation between:
+          Fonts that render braces, brackets, commas, and colons too lightly make nested objects harder to trace. When
+          you are debugging long payloads, you spend more time following structure than reading words. A slightly darker
+          or sturdier punctuation shape usually wins over a stylish but delicate design.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+
+        <h3 className="mt-6 text-xl font-semibold">3. X-height and spacing matter at least as much as the font name</h3>
+        <p>
+          A readable code font typically has a generous x-height and does not feel cramped. For JSON, that reduces the
+          visual blur created by repeated quoted keys and repeated indentation. In practice, a good setup is often:
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            Zero (<code>0</code>) and the capital letter O (<code>O</code>)
+            <strong>Font size:</strong> around 14 to 16px for desktop editor use
           </li>
           <li>
-            One (<code>1</code>), lowercase L (<code>l</code>), and capital I (<code>I</code>)
+            <strong>Line height:</strong> roughly 1.45 to 1.65x the font size
           </li>
           <li>
-            Curly braces (<code>&#x7b;&#x7d;</code>), square brackets (<code>[]</code>), and parentheses (
-            <code>()</code>) - especially important for nested structures
-          </li>
-          <li>
-            Colons (<code>:</code>), semicolons (<code>;</code>), and commas (<code>,</code>)
-          </li>
-          <li>
-            Backticks (<code>`</code>), single quotes (<code>'</code>), and double quotes (<code>&quot;</code>)
+            <strong>Indentation:</strong> 2 spaces for most API payloads, because it preserves horizontal space
           </li>
         </ul>
-        <p>Fonts like Fira Code, Hack, and JetBrains Mono are specifically designed with these distinctions in mind.</p>
-
-        <h3 className="text-xl font-semibold mt-6">Legible Symbols and Punctuation</h3>
         <p>
-          The symbols &#x7b;, &#x7d;, [, ], :, and , are the structural backbone of JSON. If these characters are too
-          small, too light, or blend into the background, tracing the structure becomes difficult. Look for fonts where
-          these symbols have good visual weight and are easily recognizable.
+          Those settings usually improve readability faster than switching between five similar fonts at the same small
+          size.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Ligatures (Optional but Helpful)</h3>
+        <h3 className="mt-6 text-xl font-semibold">4. Numbers deserve special attention</h3>
         <p>
-          While not strictly necessary, programming ligatures can enhance code readability by combining sequences of
-          characters (like <code>-&gt;</code> or <code>===</code>) into single, more visually distinct glyphs. For JSON,
-          ligatures are less impactful as it uses fewer multi-character operators, but in the context of a code editor
-          displaying both code and JSON, a ligature-rich font can provide a consistent, pleasant experience.
+          JSON often contains IDs, timestamps, prices, counts, and version numbers. If your font supports OpenType
+          numeric features, tabular numerals keep digits visually consistent, and a slashed zero makes <code>0</code>
+          harder to confuse with <code>O</code>.
         </p>
         <p>
-          <LayoutList className="inline w-5 h-5 mb-1 mr-2 text-gray-600" /> Example ligatures (font dependent):{" "}
-          <code>=&gt;</code>, <code>!=</code>, <code>&gt;=</code>
+          MDN documents current CSS support for numeric and glyph-selection features such as{" "}
+          <code>font-variant-numeric</code> and <code>font-feature-settings</code>, which are useful when JSON is shown
+          in a browser-based formatter or internal tool.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Consistent Spacing (Monospace)</h3>
+        <h3 className="mt-6 text-xl font-semibold">5. Ligatures are optional for JSON</h3>
         <p>
-          This is a fundamental requirement for code fonts, and thus for reading structured data like JSON. Monospaced
-          fonts ensure that every character occupies the same horizontal width. This vertical alignment makes it easier
-          to scan down columns, understand indentation levels (if the JSON is formatted), and differentiate between keys
-          and values.
+          Ligatures help most in languages with multi-character operators. JSON barely uses those. If you like
+          ligatures for your main editor, keep them. If a font without ligatures gives you cleaner braces, quotes, and
+          digits, it is usually the better JSON font.
         </p>
+
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <LayoutList className="h-6 w-6 text-purple-500" /> Recommended Font Types for JSON Work
+        </h2>
         <p>
-          <Code className="inline w-5 h-5 mb-1 mr-2 text-gray-600" /> Example of monospaced alignment:
+          You do not need a perfect font. You need a font that stays readable across long payloads, deep nesting, and
+          repeated keys.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 font-mono text-sm overflow-x-auto">
-          <pre>
-            {`{
-  &quot;name&quot;:    &quot;Alice&quot;,
-  &quot;age&quot;:     30,
-  &quot;isCoder&quot;: true
-}`}
-          </pre>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            <strong>JetBrains Mono:</strong> A strong default if you want tall lowercase forms, clear punctuation, and
+            a developer-focused design. The official project also offers a variable font.
+          </li>
+          <li>
+            <strong>Hack:</strong> Good if you want straightforward shapes and clear symbols without a flashy feel.
+          </li>
+          <li>
+            <strong>IBM Plex Mono or Source Code Pro:</strong> Good options when you want neutral, text-friendly shapes
+            for long reading sessions.
+          </li>
+          <li>
+            <strong>Fira Code:</strong> Still a good choice if you spend most of the day in code and want one font for
+            both code and JSON, but its ligatures are not the main reason to choose it for JSON.
+          </li>
+          <li>
+            <strong>Consolas, Menlo, or your platform default coding font:</strong> Often perfectly fine if the glyphs
+            are clear on your display and you do not want extra setup.
+          </li>
+        </ul>
+        <p>
+          The most reliable test is still your own screen. A font that looks excellent in a screenshot can feel too
+          thin, too narrow, or too bright after an hour of inspecting payloads.
+        </p>
+
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <ALargeSmall className="h-6 w-6 text-purple-500" /> Browser and Editor Settings That Help Today
+        </h2>
+        <p>
+          Current tools expose more font control than they used to. That matters if you are reading JSON in a browser,
+          a code editor, or your own web-based formatter.
+        </p>
+
+        <h3 className="mt-6 text-xl font-semibold">For browser-based JSON viewers</h3>
+        <p>
+          If you render JSON in a web app, you can improve readability without changing the payload itself. When the
+          chosen font supports the features, this CSS is useful:
+        </p>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 text-sm dark:bg-gray-800">
+          <pre>{`.json-view {
+  font-family: "JetBrains Mono", "IBM Plex Mono", "Consolas", monospace;
+  font-size: 15px;
+  line-height: 1.55;
+  font-variant-numeric: slashed-zero tabular-nums;
+  font-feature-settings: "zero" 1, "tnum" 1;
+}`}</pre>
         </div>
         <p>
-          Even though JSON structure is hierarchical rather than purely columnar, the consistent baseline and character
-          width aid visual scanning.
+          If the font does not support those features, browsers simply fall back to the standard glyphs. That makes the
+          rule low risk.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Balanced Character Widths and Height</h3>
+        <h3 className="mt-6 text-xl font-semibold">For VS Code and similar editors</h3>
         <p>
-          Characters shouldn't feel too cramped or too stretched. A balanced design reduces visual fatigue. The x-height
-          (height of lowercase letters like 'x') being relatively large can also improve readability at smaller sizes.
+          VS Code currently supports <code>editor.fontLigatures</code> and <code>editor.fontVariations</code>. That
+          means you can keep ligatures off for JSON if you prefer a plainer view, or use variable-font support when a
+          font looks slightly too thin at your normal size.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <ALargeSmall className="w-6 h-6 text-purple-500" /> Beyond the Font: Size, Line Height, and Spacing
-        </h2>
-        <p>While the font face itself is crucial, other display settings play a vital role in JSON readability:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Font Size:</strong> Choose a size that is comfortable for your eyes on your display. Too small
-            requires squinting; too large reduces the amount of data visible at once.
-          </li>
-          <li>
-            <strong>Line Height (Leading):</strong> Adequate spacing between lines prevents text from feeling dense and
-            makes it easier to follow lines across the screen, especially with wrapping text.
-          </li>
-          <li>
-            <strong>Whitespace/Indentation:</strong> Properly formatted JSON using consistent indentation (tabs or
-            spaces) is infinitely easier to read than minified JSON, regardless of the font. Your editor's formatting
-            settings are key here.
-          </li>
-          <li>
-            <strong>Syntax Highlighting:</strong> Color-coding different JSON elements (keys, values, strings, numbers,
-            booleans, null) is a powerful tool that works in conjunction with a good font to dramatically improve
-            readability.
-          </li>
-        </ul>
-        <p>
-          <Settings className="inline w-5 h-5 mb-1 mr-2 text-gray-600" /> Configuring your editor's display settings is
-          just as important as selecting the right font.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <MessageSquareCode className="w-6 h-6 text-red-500" /> Simulating Font Effects on JSON Readability
-        </h2>
-        <p>
-          Below are examples showing how different (simulated) font characteristics might affect the look of JSON. Note
-          that these are just visual representations using CSS classes, not actual font changes within the same block.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Example 1: Clear vs. Ambiguous Characters</h3>
-        <p>Focus on the &quot;1&quot;, &quot;l&quot;, &quot;I&quot; and &quot;0&quot;, &quot;O&quot;.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm overflow-x-auto">
-          <div>
-            <h4 className="font-semibold mb-2 border-b pb-1">Clear Characters (Simulated)</h4>
-            <pre className="font-mono">
-              {`{
-  &quot;Id&quot;: 101,
-  &quot;ListOffset&quot;: 0,
-  &quot;label&quot;: &quot;Item O1&quot;
-}`}
-            </pre>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2 border-b pb-1">Ambiguous Characters (Simulated)</h4>
-            <pre className="font-mono /* Add classes like font-sans for visual diff, but stick to mono for accuracy */ opacity-80 italic">
-              {`{
-  &quot;ld&quot;: lOl,
-  &quot;ListOffset&quot;: O,
-  &quot;label&quot;: &quot;ltem 0l&quot;
-}`}
-            </pre>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-              <em>
-                (Visual simulation, characters might not render ambiguously depending on your browser's default
-                monospaced font)
-              </em>
-            </p>
-          </div>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 text-sm dark:bg-gray-800">
+          <pre>{`{
+  "editor.fontFamily": "JetBrains Mono, IBM Plex Mono, Consolas, monospace",
+  "editor.fontSize": 15,
+  "editor.lineHeight": 24,
+  "editor.fontLigatures": false,
+  "editor.fontVariations": true,
+  "editor.guides.indentation": true,
+  "editor.bracketPairColorization.enabled": true
+}`}</pre>
         </div>
-
-        <h3 className="text-xl font-semibold mt-6">Example 2: Punctuation Clarity</h3>
-        <p>Look at the &#x7b;, &#x7d;, [, ], :, and , characters.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm overflow-x-auto">
-          <div>
-            <h4 className="font-semibold mb-2 border-b pb-1">Clear Punctuation (Simulated)</h4>
-            <pre className="font-mono">
-              {`{
-  &quot;data&quot;: [
-    { &quot;key&quot;: 1, &quot;value&quot;: &quot;A&quot; },
-    { &quot;key&quot;: 2, &quot;value&quot;: &quot;B&quot; }
-  ]
-}`}
-            </pre>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2 border-b pb-1">Less Clear Punctuation (Simulated)</h4>
-            <pre className="font-mono /* Add classes for visual diff */ opacity-70">
-              {`{
-  &quot;data&quot;: [
-    { &quot;key&quot;: 1, &quot;value&quot;: &quot;A&quot; },
-    { &quot;key&quot;: 2, &quot;value&quot;: &quot;B&quot; }
-  ]
-}`}
-            </pre>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-              <em>(Visual simulation - in reality, this depends heavily on font design)</em>
-            </p>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <Check className="w-6 h-6 text-green-500" /> Recommended Fonts
-        </h2>
-        <p>Many fonts are designed with code readability in mind. Popular choices include:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Fira Code:</strong> Known for its excellent ligatures and clear character distinctions.
-          </li>
-          <li>
-            <strong>JetBrains Mono:</strong> Designed specifically for developers, focusing on readability at small
-            sizes and clear distinctions.
-          </li>
-          <li>
-            <strong>Hack:</strong> A solid, open-source font with a focus on source code.
-          </li>
-          <li>
-            <strong>Consolas:</strong> A classic choice, often default in Windows environments, with good clarity.
-          </li>
-          <li>
-            <strong>Operator Mono:</strong> A paid font known for its italic styles (often used for comments/keywords)
-            and overall legibility.
-          </li>
-          <li>
-            <strong>Source Code Pro:</strong> Adobe's contribution, highly readable and clear.
-          </li>
-          <li>
-            <strong>IBM Plex Mono:</strong> An open-source alternative with careful design.
-          </li>
-        </ul>
         <p>
-          The best font is ultimately a matter of personal preference and what feels most comfortable for you after
-          extended periods of reading code and data. Try a few options in your editor settings.
+          The exact sweet spot depends on your display. If punctuation looks faint, try a slightly larger size or a
+          slightly heavier rendering before abandoning the font.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <X className="w-6 h-6 text-red-500" /> What to Avoid
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <MessageSquareCode className="h-6 w-6 text-red-500" /> A Fast 2-Minute JSON Font Test
         </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <p>Paste a payload like this into your editor or formatter and judge the font on structure first, style second.</p>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 text-sm dark:bg-gray-800">
+          <pre>{`{
+  "orderId": "O0I1-l1",
+  "items": [
+    { "sku": "A-101", "qty": 10, "price": 19.99 },
+    { "sku": "B-010", "qty": 1, "price": 109.0 }
+  ],
+  "totals": {
+    "subtotal": 308.9,
+    "tax": 24.71,
+    "grandTotal": 333.61
+  }
+}`}</pre>
+        </div>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Can you separate <code>O</code>, <code>0</code>, <code>I</code>, and <code>l</code> instantly?</li>
+          <li>Do braces and brackets stay obvious when you scan the nested block quickly?</li>
+          <li>Do commas, decimal points, and quotes remain visible at your normal zoom level?</li>
+          <li>After 30 seconds of scanning, does the font still feel relaxed rather than cramped?</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <X className="h-6 w-6 text-red-500" /> What to Avoid
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <strong>Proportional Fonts:</strong> Fonts where characters have different widths (like Arial or Times New
-            Roman) make code alignment impossible and drastically reduce readability. Always use a monospaced font for
-            code and JSON.
+            <strong>Proportional fonts:</strong> They break indentation and make structure harder to scan.
           </li>
           <li>
-            <strong>Fonts with Poor Character Distinction:</strong> If you find yourself regularly mistaking 0 for O, or
-            1 for l or I, switch fonts.
+            <strong>Very light weights:</strong> Punctuation fades first, which is exactly what JSON depends on.
           </li>
           <li>
-            <strong>Fonts that are Too Thin or Too Bold:</strong> Unless you compensate with background/foreground
-            colors, extremely thin or bold fonts can be harder to read.
+            <strong>Condensed monospace fonts:</strong> They fit more text on screen but often feel crowded in nested
+            payloads.
+          </li>
+          <li>
+            <strong>Unformatted or minified JSON:</strong> No font can fully rescue a wall of minified text.
+          </li>
+          <li>
+            <strong>Choosing a font for ligatures alone:</strong> JSON readability comes from glyph clarity and spacing,
+            not operator prettification.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <Settings className="w-6 h-6 text-blue-500" /> How to Change Your Font
-        </h2>
-        <p>Changing the display font for JSON usually means changing the font in your primary development tools:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Code Editor (VS Code, Sublime Text, Atom, etc.):</strong> Look for settings related to &quot;Font
-            Family&quot; or &quot;Text Editor Font&quot;. You can usually set a list of preferred fonts.
-          </li>
-          <li>
-            <strong>Terminal Emulator (iTerm2, Windows Terminal, GNOME Terminal, etc.):</strong> Terminal settings
-            typically have a dedicated &quot;Appearance&quot; or &quot;Profile&quot; section where you can select the
-            font.
-          </li>
-          <li>
-            <strong>Browser Developer Tools:</strong> Most browser dev tools have settings to customize the font used in
-            the &quot;Sources&quot; or &quot;Network&quot; tabs, which often display JSON responses.
-          </li>
-          <li>
-            <strong>Dedicated JSON Viewers:</strong> Some dedicated tools may offer font customization options.
-          </li>
-        </ul>
-        <p>After changing the font, restart the application for the changes to take effect.</p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-3">
-          <Eye className="w-6 h-6 text-green-500" /> Conclusion
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <Settings className="h-6 w-6 text-blue-500" /> Practical Bottom Line
         </h2>
         <p>
-          The font you use to view JSON might seem like a minor detail, but it has a real impact on your daily workflow
-          and visual comfort. Choosing a monospaced font with clear character distinctions, legible symbols, and
-          comfortable line spacing can significantly enhance your ability to quickly and accurately read and debug JSON
-          data. Take the time to experiment with different fonts in your development environment – your eyes will thank
-          you!
+          For readable JSON, pick a solid monospace font, increase size until punctuation is effortless to see, use
+          comfortable line height, and format the JSON properly. If your tools support it, enable helpful font features
+          such as tabular numerals, slashed zero, indentation guides, and bracket pair highlighting.
+        </p>
+        <p>
+          If you want one safe starting point, try JetBrains Mono or IBM Plex Mono at 15px with a line height around
+          1.5, keep ligatures off, and compare it against your current setup using the test block above.
+        </p>
+
+        <h2 className="mt-8 flex items-center gap-3 text-2xl font-semibold">
+          <Code className="h-6 w-6 text-green-500" /> Current References
+        </h2>
+        <p>
+          For current implementation details, see{" "}
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric"
+            className="text-blue-600 underline underline-offset-4 dark:text-blue-400"
+            target="_blank"
+            rel="noreferrer"
+          >
+            MDN on <code>font-variant-numeric</code>
+          </a>
+          ,{" "}
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-feature-settings"
+            className="text-blue-600 underline underline-offset-4 dark:text-blue-400"
+            target="_blank"
+            rel="noreferrer"
+          >
+            MDN on <code>font-feature-settings</code>
+          </a>
+          ,{" "}
+          <a
+            href="https://code.visualstudio.com/updates/v1_74#_font-variations"
+            className="text-blue-600 underline underline-offset-4 dark:text-blue-400"
+            target="_blank"
+            rel="noreferrer"
+          >
+            VS Code font variations
+          </a>
+          ,{" "}
+          <a
+            href="https://code.visualstudio.com/updates/v1_75#_font-feature-settings-control"
+            className="text-blue-600 underline underline-offset-4 dark:text-blue-400"
+            target="_blank"
+            rel="noreferrer"
+          >
+            VS Code font feature settings
+          </a>
+          ,{" "}
+          <a
+            href="https://github.com/JetBrains/JetBrainsMono"
+            className="text-blue-600 underline underline-offset-4 dark:text-blue-400"
+            target="_blank"
+            rel="noreferrer"
+          >
+            JetBrains Mono
+          </a>
+          , and{" "}
+          <a
+            href="https://github.com/tonsky/FiraCode"
+            className="text-blue-600 underline underline-offset-4 dark:text-blue-400"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Fira Code
+          </a>
+          .
         </p>
       </div>
     </>

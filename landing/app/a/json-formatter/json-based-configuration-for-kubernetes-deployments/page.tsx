@@ -1,308 +1,177 @@
 import type { Metadata } from "next";
-import { Code, FileJson, Settings, Box, Cloud, Terminal, CheckCircle, XCircle, Info, Lightbulb } from "lucide-react";
+import {
+  AlertTriangle,
+  Box,
+  CheckCircle,
+  Cloud,
+  FileJson,
+  Info,
+  Settings,
+  Terminal,
+  XCircle,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "JSON-based Configuration for Kubernetes Deployments",
+  title: "JSON-based Configuration for Kubernetes Deployments: Practical Guide",
   description:
-    "Understand how to define and manage Kubernetes Deployment configurations using the JSON format, including structure, examples, and practical considerations.",
+    "Learn when JSON is the right format for Kubernetes Deployments, how to structure a production-ready apps/v1 manifest, validate it with kubectl, and avoid selector and config mistakes.",
 };
 
 export default function JsonKubernetesDeploymentArticle() {
   return (
-    <main className="container mx-auto py-8 px-4 max-w-3xl">
+    <main className="container mx-auto max-w-3xl px-4 py-8">
       <article>
-        <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-          <FileJson className="w-8 h-8" /> JSON-based Configuration for Kubernetes Deployments
+        <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold">
+          <FileJson className="h-8 w-8" /> JSON-based Configuration for Kubernetes Deployments
         </h1>
 
-        <section className="space-y-6 mb-8">
+        <section className="mb-8 space-y-6">
           <p>
-            Kubernetes configurations, known as manifests, are most commonly authored in YAML. This is the de facto
-            standard for human-readable configuration files within the Kubernetes ecosystem. However, the Kubernetes API
-            fundamentally communicates using <strong>JSON (JavaScript Object Notation)</strong>.
+            Yes, you can deploy Kubernetes workloads from JSON files directly. <code>kubectl apply</code> accepts JSON
+            and YAML, and the Kubernetes API ultimately works with JSON over HTTP. The practical rule is simple:
+            JSON is excellent when manifests are generated, transformed, or validated by tooling; YAML is usually
+            easier when humans are hand-editing files every day.
           </p>
           <p>
-            Every YAML manifest you apply to a Kubernetes cluster is parsed and converted into its JSON equivalent
-            before being sent to the API server. Conversely, when you retrieve the state of resources from the API
-            server using tools like <code>kubectl</code>, you are receiving JSON data (though <code>kubectl</code> often
-            formats it nicely for display).
-          </p>
-          <p>Understanding the JSON structure of Kubernetes objects is crucial for several reasons:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li className="flex items-start gap-2">
-              <Code className="w-5 h-5 text-muted-foreground mt-1" />
-              <strong>API Interaction:</strong> Direct interaction with the K8s API often involves sending and receiving
-              JSON.
-            </li>
-            <li className="flex items-start gap-2">
-              <Settings className="w-5 h-5 text-muted-foreground mt-1" />
-              <strong>Tooling and Automation:</strong> Many tools, scripts, and client libraries that work with
-              Kubernetes process or generate configurations in JSON.
-            </li>
-            <li className="flex items-start gap-2">
-              <Terminal className="w-5 h-5 text-muted-foreground mt-1" />
-              <strong>Debugging:</strong> Examining the JSON output of <code>kubectl get ... -o json</code> can provide
-              a precise view of how Kubernetes interprets your configuration.
-            </li>
-          </ul>
-          <p>
-            This article explores how to define Kubernetes Deployments using JSON, providing examples and discussing
-            practical aspects.
-          </p>
-        </section>
-
-        <section className="space-y-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Box className="w-6 h-6" /> Kubernetes Manifest Structure in JSON
-          </h2>
-          <p>
-            A Kubernetes manifest, whether in YAML or JSON, describes a desired state for a resource (like a Deployment,
-            Service, Pod, etc.). All K8s objects share a common top-level structure:
+            For most searchers, the real question is not whether JSON works, but how to use it without creating brittle
+            Deployments. That means choosing the right labels, keeping runtime configuration out of the Deployment
+            itself, validating against the API server before rollout, and avoiding stale guidance such as treating
+            <code>kubectl convert</code> like a built-in command on every machine.
           </p>
 
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <h3 className="text-lg font-medium mb-2">Core Fields:</h3>
-            <ul className="list-disc pl-6 space-y-1">
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h2 className="mb-3 flex items-center gap-2 text-xl font-semibold">
+              <Info className="h-5 w-5" /> Quick Takeaways
+            </h2>
+            <ul className="list-disc space-y-2 pl-6">
               <li>
-                <code>apiVersion</code>: Specifies the Kubernetes API version (e.g., <code>apps/v1</code> for
-                Deployments, <code>v1</code> for Pods/Services).
+                Use <code>apps/v1</code> for Deployments and set <code>.spec.selector</code> explicitly.
               </li>
               <li>
-                <code>kind</code>: The type of Kubernetes resource being created or modified (e.g.,{" "}
-                <code>Deployment</code>, <code>Service</code>, <code>Pod</code>, <code>ReplicaSet</code>).
+                Make sure <code>.spec.selector.matchLabels</code> matches <code>.spec.template.metadata.labels</code>,
+                because Kubernetes rejects mismatches and the selector is immutable after creation in <code>apps/v1</code>.
               </li>
               <li>
-                <code>metadata</code>: An object containing data to uniquely identify the object, including{" "}
-                <code>name</code>, <code>namespace</code>, <code>labels</code>, and <code>annotations</code>.
+                Put environment-specific values in ConfigMaps and Secrets, then reference them from the Deployment.
               </li>
               <li>
-                <code>spec</code>: An object describing the desired state of the resource. The structure of the{" "}
-                <code>spec</code> field is specific to each <code>kind</code> of object.
+                Validate with <code>kubectl apply --dry-run=server --validate=strict</code> before a real apply.
               </li>
               <li>
-                <code>status</code>: (Optional, managed by K8s) An object describing the current state of the resource.
-                This is usually present in retrieved objects but not in the configuration you apply.
+                Keep JSON for automation and APIs; keep YAML for manual authoring unless your team has a strong reason
+                to standardize on JSON.
               </li>
             </ul>
           </div>
+        </section>
 
-          <h3 className="text-xl font-semibold mt-6">YAML vs. JSON: A Simple Deployment</h3>
+        <section className="mb-8 space-y-6">
+          <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
+            <Box className="h-6 w-6" /> A Practical Deployment JSON Example
+          </h2>
           <p>
-            Let&apos;s look at a minimal Nginx Deployment in both YAML and JSON formats to see the structural
-            differences.
+            The example below is closer to what a real application Deployment looks like today. It uses stable labels,
+            explicit selector matching, resource requests and limits, health probes, and references to external
+            configuration instead of hard-coding everything into the manifest.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-              <h4 className="text-lg font-medium mb-2">YAML</h4>
-              <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-                {`apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80`}
-              </pre>
-            </div>
-
-            <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-              <h4 className="text-lg font-medium mb-2">JSON Equivalent</h4>
-              <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-                {`{
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              {`{
   "apiVersion": "apps/v1",
   "kind": "Deployment",
   "metadata": {
-    "name": "nginx-deployment",
+    "name": "payments-api",
+    "namespace": "production",
     "labels": {
-      "app": "nginx"
+      "app.kubernetes.io/name": "payments-api",
+      "app.kubernetes.io/instance": "payments-api-prod",
+      "app.kubernetes.io/component": "api",
+      "app.kubernetes.io/managed-by": "kubectl"
     }
-  },
-  "spec": {
-    "replicas": 2,
-    "selector": {
-      "matchLabels": {
-        "app": "nginx"
-      }
-    },
-    "template": {
-      "metadata": {
-        "labels": {
-          "app": "nginx"
-        }
-      },
-      "spec": {
-        "containers": [
-          {
-            "name": "nginx",
-            "image": "nginx:latest",
-            "ports": [
-              {
-                "containerPort": 80
-              }
-            ]
-          }
-        ]
-      }
-    }
-  }
-}`}
-              </pre>
-            </div>
-          </div>
-          <p>
-            As you can see, the hierarchical structure maps directly: YAML&apos;s indentation and key-value pairs become
-            JSON&apos;s curly braces <code className="font-mono text-sm">&#x7b;</code>
-            <code className="font-mono text-sm">&#x7d;</code> for objects and square brackets{" "}
-            <code className="font-mono text-sm">[</code>
-            <code className="font-mono text-sm">]</code> for arrays. YAML lists become JSON arrays of objects or
-            primitive types.
-          </p>
-        </section>
-
-        <section className="space-y-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <FileJson className="w-6 h-6" /> JSON Data Types in K8s Manifests
-          </h2>
-          <p>Kubernetes resources use standard JSON data types:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <code className="font-mono text-sm">&quot;string&quot;</code>: Used for names, image tags, paths,
-              configuration values, etc.
-            </li>
-            <li>
-              <code className="font-mono text-sm">123</code> or <code className="font-mono text-sm">12.3</code>:
-              Numbers, used for counts (replicas), ports, resource values (CPU/memory sometimes strings, sometimes
-              numbers depending on field).
-            </li>
-            <li>
-              <code className="font-mono text-sm">true</code> / <code className="font-mono text-sm">false</code>:
-              Booleans, used for flags or toggles.
-            </li>
-            <li>
-              <code className="font-mono text-sm">null</code>: Explicitly representing a missing or null value (less
-              common in typical manifests you write, more in API responses).
-            </li>
-            <li>
-              <code className="font-mono text-sm">&#x7b; &quot;key&quot;: &quot;value&quot; &#x7d;</code>: Objects, used
-              for structured data like <code>metadata</code>, <code>labels</code>, <code>spec</code>, container resource
-              limits/requests, etc.
-            </li>
-            <li>
-              <code className="font-mono text-sm">[ &quot;value1&quot;, &quot;value2&quot; ]</code> or{" "}
-              <code className="font-mono text-sm">[ &#x7b;...&#x7d;, &#x7b;...&#x7d; ]</code>: Arrays, used for lists of
-              items, such as <code>containers</code>, <code>ports</code>, <code>env</code> variables,{" "}
-              <code>volumeMounts</code>, etc.
-            </li>
-          </ul>
-        </section>
-
-        <section className="space-y-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Code className="w-6 h-6" /> Examples of JSON Deployments
-          </h2>
-
-          <h3 className="text-xl font-semibold mt-6">Deployment with Environment Variables</h3>
-          <p>Environment variables are defined as an array of objects within the container specification.</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-              {`{
-  "apiVersion": "apps/v1",
-  "kind": "Deployment",
-  "metadata": {
-    "name": "app-with-env"
-  },
-  "spec": {
-    "replicas": 1,
-    "selector": {
-      "matchLabels": {
-        "app": "my-app"
-      }
-    },
-    "template": {
-      "metadata": {
-        "labels": {
-          "app": "my-app"
-        }
-      },
-      "spec": {
-        "containers": [
-          {
-            "name": "main-container",
-            "image": "my-image:v1.0",
-            "env": [
-              {
-                "name": "NODE_ENV",
-                "value": "production"
-              },
-              {
-                "name": "LOG_LEVEL",
-                "value": "info"
-              }
-            ]
-          }
-        ]
-      }
-    }
-  }
-}`}
-            </pre>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6">Deployment with Resource Limits and Requests</h3>
-          <p>
-            CPU and memory requests/limits are defined in a nested object within the container specification. Resource
-            values are typically strings in Kubernetes.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-              {`{
-  "apiVersion": "apps/v1",
-  "kind": "Deployment",
-  "metadata": {
-    "name": "app-with-resources"
   },
   "spec": {
     "replicas": 3,
+    "revisionHistoryLimit": 10,
     "selector": {
       "matchLabels": {
-        "app": "resource-hungry-app"
+        "app.kubernetes.io/name": "payments-api"
+      }
+    },
+    "strategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxUnavailable": "25%",
+        "maxSurge": "25%"
       }
     },
     "template": {
       "metadata": {
         "labels": {
-          "app": "resource-hungry-app"
+          "app.kubernetes.io/name": "payments-api",
+          "app.kubernetes.io/instance": "payments-api-prod",
+          "app.kubernetes.io/component": "api"
         }
       },
       "spec": {
+        "securityContext": {
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
         "containers": [
           {
-            "name": "main-container",
-            "image": "another-image:latest",
+            "name": "api",
+            "image": "ghcr.io/example/payments-api:v2.3.1",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "envFrom": [
+              {
+                "configMapRef": {
+                  "name": "payments-api-config"
+                }
+              },
+              {
+                "secretRef": {
+                  "name": "payments-api-secrets"
+                }
+              }
+            ],
             "resources": {
+              "requests": {
+                "cpu": "100m",
+                "memory": "128Mi"
+              },
               "limits": {
                 "cpu": "500m",
                 "memory": "512Mi"
-              },
-              "requests": {
-                "cpu": "250m",
-                "memory": "256Mi"
               }
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/ready",
+                "port": 8080
+              },
+              "initialDelaySeconds": 5,
+              "periodSeconds": 10
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health",
+                "port": 8080
+              },
+              "initialDelaySeconds": 15,
+              "periodSeconds": 20
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "readOnlyRootFilesystem": true
             }
           }
         ]
@@ -313,199 +182,222 @@ spec:
             </pre>
           </div>
 
-          <h3 className="text-xl font-semibold mt-6">Adding Labels and Annotations</h3>
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h3 className="mb-2 text-lg font-medium">Why these fields matter</h3>
+            <ul className="list-disc space-y-2 pl-6">
+              <li>
+                <code>apiVersion: apps/v1</code> is the current stable Deployment API you should author directly.
+              </li>
+              <li>
+                <code>.spec.selector.matchLabels</code> and the Pod template labels must line up exactly. If they do
+                not, the API rejects the Deployment.
+              </li>
+              <li>
+                The selector should be treated as permanent. In <code>apps/v1</code>, changing it later is not a safe
+                refactor path.
+              </li>
+              <li>
+                Shared labels under <code>app.kubernetes.io/*</code> improve discoverability in dashboards, CLIs, and
+                automation without changing how the Deployment works.
+              </li>
+              <li>
+                Resource requests and limits make scheduling and capacity behavior predictable instead of leaving it to
+                cluster defaults.
+              </li>
+              <li>
+                Readiness and liveness probes help Kubernetes distinguish between a Pod that is starting up and a Pod
+                that is unhealthy.
+              </li>
+              <li>
+                The image is pinned to a version tag instead of <code>:latest</code>, which makes rollouts and
+                rollbacks auditable.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section className="mb-8 space-y-6">
+          <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
+            <Settings className="h-6 w-6" /> Put App Configuration in ConfigMaps and Secrets
+          </h2>
           <p>
-            Labels and annotations are key-value pairs defined within the <code>metadata</code> object. Labels are used
-            for selecting groups of objects (e.g., by Deployments to find Pods). Annotations are for non-identifying
-            metadata.
+            A Deployment should describe how Pods run, not carry every environment-specific value inline. In practice,
+            JSON-based configuration for Kubernetes deployments works best when the Deployment references separate
+            ConfigMaps for non-secret settings and Secrets for credentials or tokens.
           </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-              {`{
-  "apiVersion": "apps/v1",
-  "kind": "Deployment",
-  "metadata": {
-    "name": "app-with-meta",
-    "namespace": "default",
-    "labels": {
-      "app": "my-web-app",
-      "tier": "frontend"
-    },
-    "annotations": {
-      "description": "Frontend web server deployment",
-      "owner": "team-a@example.com"
-    }
-  },
-  "spec": {
-    "replicas": 1,
-    "selector": {
-      "matchLabels": {
-        "app": "my-web-app"
-      }
-    },
-    "template": {
-      "metadata": {
-        "labels": {
-          "app": "my-web-app",
-          "tier": "frontend"
-        }
-      },
-      "spec": {
-        "containers": [
-          {
-            "name": "web",
-            "image": "my-webapp:latest"
-          }
-        ]
-      }
-    }
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+              <h3 className="mb-2 text-lg font-medium">ConfigMap Reference</h3>
+              <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+                {`{
+  "configMapRef": {
+    "name": "payments-api-config"
   }
 }`}
-            </pre>
+              </pre>
+            </div>
+
+            <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+              <h3 className="mb-2 text-lg font-medium">Secret Reference</h3>
+              <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+                {`{
+  "secretRef": {
+    "name": "payments-api-secrets"
+  }
+}`}
+              </pre>
+            </div>
           </div>
-        </section>
 
-        <section className="space-y-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Terminal className="w-6 h-6" /> Working with JSON and kubectl
-          </h2>
-          <p>
-            You can use <code>kubectl</code> directly with JSON files.
-          </p>
-
-          <h3 className="text-xl font-semibold mt-6">Applying JSON Manifests</h3>
-          <p>
-            Save your JSON configuration to a file (e.g., <code>deployment.json</code>) and apply it using:
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-              <code className="language-bash">kubectl apply -f deployment.json</code>
-            </pre>
-          </div>
-          <p>This command works exactly like applying a YAML file.</p>
-
-          <h3 className="text-xl font-semibold mt-6">Getting Resource Output as JSON</h3>
-          <p>
-            To see the full JSON representation of a running resource, use the <code>-o json</code> (or{" "}
-            <code>--output=json</code>) flag:
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-              <code className="language-bash">kubectl get deployment nginx-deployment -o json</code>
-            </pre>
-          </div>
-          <p>
-            This will output the complete state of the Deployment object, including status fields managed by Kubernetes,
-            in JSON format. This output can be significantly larger than your input YAML/JSON because it includes
-            runtime information.
-          </p>
-
-          <h3 className="text-xl font-semibold mt-6">Converting Between YAML and JSON</h3>
-          <p>
-            <code>kubectl</code> can convert configurations between formats locally without sending them to the cluster.
-            Use the <code>kubectl convert</code> command (requires the appropriate API version installed, though this
-            command is becoming less common and features might be moving). A more robust method is using{" "}
-            <code>kubectl create --dry-run=client -o json</code> or pipeline tools like <code>yq</code> or{" "}
-            <code>jq</code>.
-          </p>
-          <p>
-            Example using <code>kubectl</code> dry-run:
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
-            <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm overflow-x-auto">
-              <code className="language-bash">
-                kubectl create deployment my-app --image=my-image --dry-run=client -o json
-              </code>
-            </pre>
-          </div>
-          <p>
-            This command generates a basic Deployment object and outputs its JSON representation locally. You can pipe
-            this output to a file or other tools.
-          </p>
-        </section>
-
-        <section className="space-y-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Lightbulb className="w-6 h-6" /> Pros and Cons of JSON for K8s Configs
-          </h2>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-green-500" /> Advantages
-          </h3>
-          <ul className="list-disc pl-6 space-y-2">
+          <ul className="list-disc space-y-2 pl-6">
             <li>
-              <strong>API Native:</strong> JSON is the format the Kubernetes API understands directly.
+              Use ConfigMaps for ports, feature flags, log levels, and other non-sensitive runtime settings.
             </li>
             <li>
-              <strong>Machine Readability/Writability:</strong> Ideal for programmatic generation, parsing, and
-              modification of manifests using standard JSON libraries in any programming language. Excellent for
-              building custom operators or automation tools.
+              Use Secrets for database passwords, API keys, and tokens. Do not hard-code them inside the Deployment
+              JSON.
             </li>
             <li>
-              <strong>Strict Format:</strong> JSON is less forgiving than YAML regarding syntax (e.g., requiring commas
-              between list items, strict quoting), which can sometimes help catch simple errors early in automated
-              processes.
-            </li>
-          </ul>
-
-          <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-            <XCircle className="w-5 h-5 text-red-500" /> Disadvantages
-          </h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <strong>Verbosity:</strong> JSON syntax with its repetitive braces
-              <code className="font-mono text-sm">&#x7b;</code>
-              <code className="font-mono text-sm">&#x7d;</code>, brackets
-              <code className="font-mono text-sm">[</code>
-              <code className="font-mono text-sm">]</code>, and quotes makes it significantly more verbose and harder
-              for humans to read and write compared to YAML&apos;s cleaner, indentation-based structure.
-            </li>
-            <li>
-              <strong>Syntax Sensitivity:</strong> A single missing comma or misplaced brace can invalidate the entire
-              document, which can be frustrating for manual editing.
-            </li>
-            <li>
-              <strong>Comments:</strong> JSON does not natively support comments, making it difficult to add explanatory
-              notes within the configuration file itself (YAML supports comments).
+              If your deployment pipeline generates JSON, generate these references too, rather than flattening all
+              configuration into a single giant Deployment object.
             </li>
           </ul>
         </section>
 
-        <section className="space-y-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Info className="w-6 h-6" /> Practical Considerations
+        <section className="mb-8 space-y-6">
+          <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
+            <Terminal className="h-6 w-6" /> Validate and Apply JSON Safely
           </h2>
-          <ul className="list-disc pl-6 space-y-2">
+          <p>
+            The most useful <code>kubectl</code> workflow is to validate first, then apply, then inspect the live
+            object in JSON if you need to debug exactly what the API accepted.
+          </p>
+
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              <code className="language-bash">{`kubectl apply --dry-run=server --validate=strict -f deployment.json
+kubectl apply --server-side -f deployment.json
+kubectl get deployment payments-api -n production -o json`}</code>
+            </pre>
+          </div>
+
+          <ul className="list-disc space-y-2 pl-6">
             <li>
-              <strong>YAML is King for Manual Editing:</strong> For configuration files that humans write and maintain,
-              YAML is overwhelmingly preferred in the K8s community due to its readability.
+              <code>kubectl apply -f deployment.json</code> works natively because <code>kubectl apply</code> accepts
+              JSON and YAML.
             </li>
             <li>
-              <strong>JSON for Automation:</strong> If you are building a tool, script, or application that dynamically
-              generates or modifies Kubernetes manifests, working with JSON programmatically is often more
-              straightforward using standard libraries than manipulating YAML strings.
+              <code>--dry-run=server</code> sends the request to the API server without persisting it, which catches
+              schema and admission problems that client-only checks can miss.
             </li>
             <li>
-              <strong>Conversion Tools:</strong> Be familiar with tools like <code>jq</code> (for processing JSON) and
-              YAML-to-JSON converters (like the one built into <code>kubectl</code> or dedicated tools) to switch
-              between formats as needed.
+              <code>--validate=strict</code> helps catch unknown or duplicate fields before they quietly turn into
+              confusing rollout bugs.
+            </li>
+            <li>
+              <code>--server-side</code> is worth considering when multiple tools or controllers may touch the same
+              object, because field ownership is tracked on the server.
+            </li>
+            <li>
+              <code>-o json</code> is the easiest way to compare your intended manifest with the live object that
+              Kubernetes is actually running.
             </li>
           </ul>
+
+          <div className="rounded-lg bg-amber-50 p-4 dark:bg-amber-950/30">
+            <h3 className="mb-2 flex items-center gap-2 text-lg font-medium">
+              <AlertTriangle className="h-5 w-5" /> About <code>kubectl convert</code>
+            </h3>
+            <p>
+              Older guides often mention <code>kubectl convert</code> as if it ships with every <code>kubectl</code>
+              install. Current Kubernetes documentation explicitly notes that the tool is not installed by default.
+              For most teams, the better path is to author new Deployment manifests directly in <code>apps/v1</code>
+              instead of building a workflow around conversion.
+            </p>
+          </div>
+        </section>
+
+        <section className="mb-8 space-y-6">
+          <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
+            <XCircle className="h-6 w-6 text-red-500" /> Common JSON Deployment Mistakes
+          </h2>
+          <ul className="list-disc space-y-3 pl-6">
+            <li>
+              <strong>Selector mismatch:</strong> if <code>.spec.selector.matchLabels</code> does not match the Pod
+              template labels, the API rejects the object.
+            </li>
+            <li>
+              <strong>Trying to rename the selector later:</strong> in <code>apps/v1</code>, the Deployment selector is
+              immutable after creation, so treat it as part of the object&apos;s identity.
+            </li>
+            <li>
+              <strong>Using live output as source without cleanup:</strong> JSON from <code>kubectl get -o json</code>
+              includes fields such as <code>status</code>, <code>resourceVersion</code>, and <code>managedFields</code>
+              that do not belong in clean desired-state manifests.
+            </li>
+            <li>
+              <strong>Embedding secrets directly in the Deployment:</strong> it makes rotation harder and increases the
+              blast radius of every manifest consumer.
+            </li>
+            <li>
+              <strong>Relying on JSON by hand without formatting:</strong> missing commas, unquoted keys, or trailing
+              characters break the entire document. Format and validate JSON before the apply step.
+            </li>
+            <li>
+              <strong>Using floating image tags:</strong> <code>:latest</code> makes rollbacks and incident analysis
+              harder than pinned versions or digests.
+            </li>
+          </ul>
+        </section>
+
+        <section className="mb-8 space-y-6">
+          <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
+            <CheckCircle className="h-6 w-6 text-green-500" /> When JSON Is the Right Choice
+          </h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+              <h3 className="mb-2 text-lg font-medium">Good fit for JSON</h3>
+              <ul className="list-disc space-y-2 pl-6">
+                <li>Code-generated manifests in CI/CD pipelines</li>
+                <li>Direct Kubernetes API integrations and client libraries</li>
+                <li>Systems that already store configuration as JSON</li>
+                <li>Debugging with exact live object output from the cluster</li>
+              </ul>
+            </div>
+
+            <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+              <h3 className="mb-2 text-lg font-medium">Usually better in YAML</h3>
+              <ul className="list-disc space-y-2 pl-6">
+                <li>Hand-maintained app manifests in Git</li>
+                <li>Reviews where humans need to scan nested objects quickly</li>
+                <li>Files that benefit from inline comments and lighter syntax</li>
+                <li>Teams without a strong tooling reason to standardize on JSON</li>
+              </ul>
+            </div>
+          </div>
+
+          <p>
+            If you do keep Deployment manifests in JSON, a formatter becomes part of the workflow, not an optional
+            cleanup step. Consistent indentation and ordering make code review easier and reduce trivial syntax mistakes
+            before <code>kubectl</code> ever sees the file.
+          </p>
         </section>
 
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Cloud className="w-6 h-6" /> Conclusion
+          <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
+            <Cloud className="h-6 w-6" /> Conclusion
           </h2>
           <p>
-            While YAML is the standard for writing Kubernetes manifests, JSON is the underlying format used by the API.
-            Understanding the JSON structure of Kubernetes objects, particularly Deployments, provides valuable insight
-            into how the API works and is essential for building automation, integrating with other tools, or debugging
-            configurations by inspecting the live state of resources.
+            JSON-based configuration for Kubernetes Deployments is fully supported and genuinely useful when manifests
+            come from software instead of a human text editor. The safe pattern is to author Deployments in
+            <code>apps/v1</code>, keep selectors stable, reference ConfigMaps and Secrets for runtime data, and validate
+            against the API server before rollout.
           </p>
           <p>
-            You are unlikely to write all your Deployments in JSON manually, but being able to read, understand, and
-            generate JSON manifests will make you a more effective Kubernetes developer and operator.
+            If you only remember one thing, remember this: JSON is the machine-friendly format Kubernetes already
+            speaks, but the quality of the Deployment still depends on structure, validation, and operational habits,
+            not on the braces alone.
           </p>
         </section>
       </article>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Custom Indentation Options in JSON Formatting Tools | Offline Tools",
+  title: "Custom JSON Indentation Options: Tabs, Spaces, Width, and Tool Limits | Offline Tools",
   description:
-    "Discover how custom indentation options enhance JSON readability and meet diverse formatting standards and preferences",
+    "Learn how JSON indentation really works, choose between tabs and spaces, avoid compatibility traps, and pick practical defaults for editors, scripts, and teams.",
 };
 
 export default function CustomIndentationOptionsArticle() {
@@ -13,73 +13,65 @@ export default function CustomIndentationOptionsArticle() {
 
       <div className="space-y-6">
         <p>
-          Proper indentation is fundamental to making JSON data readable and maintainable. Advanced JSON formatting
-          tools go beyond basic prettifying by offering customizable indentation options that cater to different
-          developer preferences, organizational standards, and specific use cases. This article explores how these
-          customization features enhance the JSON formatting experience.
+          Custom indentation does not change what JSON means, but it has a major effect on how quickly people can read,
+          review, and debug it. For most real-world workflows, the useful questions are straightforward: tabs or
+          spaces, how wide each level should be, whether short arrays stay on one line, and whether the tool still
+          outputs strict JSON that every parser accepts.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Why Indentation Matters in JSON</h2>
 
         <p>
-          Before diving into customization options, it helps to understand why indentation is crucial for JSON
-          documents:
+          If you want a safe default, use spaces with 2-space indentation, keep a final newline, and format in strict
+          JSON mode. That combination is compact, readable, and broadly compatible across editors, APIs, and version
+          control.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">1. Cognitive Benefits</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Hierarchical clarity:</strong> Proper indentation visually communicates the hierarchical structure
-            of JSON
-          </li>
-          <li>
-            <strong>Reduced cognitive load:</strong> Consistent indentation enables faster comprehension of complex data
-          </li>
-          <li>
-            <strong>Error identification:</strong> Well-indented JSON makes structural errors easier to spot
-          </li>
-          <li>
-            <strong>Navigation efficiency:</strong> Developers can scan and navigate large documents more quickly
-          </li>
-        </ul>
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
+          <h2 className="text-lg font-medium text-blue-900 dark:text-blue-200">Quick answer</h2>
+          <p className="mt-2 text-blue-800 dark:text-blue-100">
+            The best custom indentation options in a JSON formatting tool are usually: choose tabs or spaces, set the
+            indent width, control whether short arrays stay compact, and keep strict JSON output. For shared files,
+            spaces plus 2-space indentation is the safest default.
+          </p>
+        </div>
 
-        <h3 className="text-xl font-semibold mt-6">2. Practical Benefits</h3>
+        <h2 className="text-2xl font-semibold mt-8">What the JSON Standard Actually Says</h2>
+
+        <p>
+          Standard JSON does not require 2 spaces, 4 spaces, tabs, or any other specific formatting style. The JSON
+          specification only treats whitespace as insignificant around structural characters such as commas, colons,
+          braces, and brackets.
+        </p>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Collaboration:</strong> Standardized formatting facilitates team collaboration
+            <strong>Indentation is presentation, not data:</strong> A minified document and a pretty-printed document
+            represent the same JSON values.
           </li>
           <li>
-            <strong>Version control:</strong> Consistent indentation reduces meaningless differences in version control
+            <strong>Only a few whitespace characters are valid in JSON:</strong> space, horizontal tab, line feed, and
+            carriage return.
           </li>
           <li>
-            <strong>Documentation quality:</strong> Well-formatted JSON enhances API documentation readability
-          </li>
-          <li>
-            <strong>Troubleshooting speed:</strong> Standardized indentation accelerates issue identification
+            <strong>Comments and trailing commas are not part of standard JSON:</strong> if a tool accepts them, it is
+            using a relaxed mode such as JSONC or JSON5-style behavior, not strict JSON.
           </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: The Impact of Indentation</h3>
+          <h3 className="text-lg font-medium">Example: Same data, different formatting</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
             <div>
-              <p className="text-sm font-medium mb-2">Poorly indented JSON:</p>
+              <p className="text-sm font-medium mb-2">Minified JSON:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-                  {`{
-"user":{"name":"John","profile":{"age":30,
-"roles":["admin","editor"]
-},
-"settings":{
-"notifications":true,"theme":"dark"}}
-}`}
+                  {`{"user":{"name":"John","profile":{"age":30,"roles":["admin","editor"]},"settings":{"notifications":true,"theme":"dark"}}}`}
                 </pre>
               </div>
             </div>
 
             <div>
-              <p className="text-sm font-medium mb-2">Well-indented JSON:</p>
+              <p className="text-sm font-medium mb-2">Pretty-printed JSON:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
                   {`{
@@ -104,81 +96,77 @@ export default function CustomIndentationOptionsArticle() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Common Indentation Customization Options</h2>
+        <h2 className="text-2xl font-semibold mt-8">Indentation Options That Actually Matter</h2>
 
-        <p>Modern JSON formatters offer several indentation customization features:</p>
-
-        <h3 className="text-xl font-semibold mt-6">1. Indentation Character</h3>
-        <p>The choice between tabs and spaces is one of the most fundamental formatting decisions:</p>
+        <h3 className="text-xl font-semibold mt-6">1. Tabs or spaces</h3>
+        <p>This is the first setting most JSON formatting tools expose, and it affects more than visual style.</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Spaces (default in most tools):</strong> Consistent display across editors, but uses more storage
+            <strong>Spaces:</strong> Predictable in browsers, review tools, pasted snippets, documentation, and issue
+            trackers.
           </li>
           <li>
-            <strong>Tabs:</strong> More storage-efficient, allows custom display width, but may appear inconsistent
-            across editors
+            <strong>Tabs:</strong> Smaller file size and adjustable visual width, but the rendered width depends on the
+            viewer&apos;s editor settings.
           </li>
         </ul>
 
         <p className="mt-4">
-          Quality formatters allow users to choose their preferred character, supporting team standards or personal
-          preference.
+          For shared JSON files, spaces are usually safer. Tabs are valid JSON whitespace, but they often create uneven
+          alignment in Git diffs, web previews, or editors with different tab-width settings.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">2. Indentation Size</h3>
-        <p>The number of spaces or the visual width of tabs used for each indentation level:</p>
+        <h3 className="text-xl font-semibold mt-6">2. Indent width</h3>
+        <p>The next decision is how much visual separation you want at each nesting level.</p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>2 spaces:</strong> Common in web development, more compact display
+            <strong>2 spaces:</strong> Usually the best default for API payloads, config files, and mobile-sized
+            screens.
           </li>
           <li>
-            <strong>4 spaces:</strong> Clearer hierarchical distinction, often used in application development
+            <strong>4 spaces:</strong> Easier to scan in deeply nested data, but it wraps earlier and creates longer
+            diffs.
           </li>
           <li>
-            <strong>3 spaces:</strong> A compromise offering moderate space efficiency with good readability
-          </li>
-          <li>
-            <strong>8 spaces:</strong> Maximum distinction between levels, but consumes vertical space quickly
+            <strong>Tabs:</strong> Useful when each developer wants a different visual width, as long as the team also
+            agrees on a display convention.
           </li>
         </ul>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Consistency Tip:</h3>
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Consistency tip</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            While personal preferences vary, the most important practice is consistency within a project or team. Many
-            development teams establish formatting standards in their style guides or through configuration files like{" "}
-            <code>.editorconfig</code> .
+            Choose one indentation style per project and enforce it everywhere. The biggest readability problem is not
+            whether a file uses 2 or 4 spaces. It is when the formatter, editor, CLI script, and teammate preferences
+            all disagree.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">3. Array and Object Formatting</h3>
-        <p>Advanced formatters offer granular control over how arrays and objects are formatted:</p>
+        <h3 className="text-xl font-semibold mt-6">3. Compact versus multiline containers</h3>
+        <p>
+          Better formatters also decide when arrays and objects should stay on one line and when they should expand.
+        </p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Compact arrays:</strong> Option to keep small arrays on a single line
+            <strong>Compact small arrays:</strong> Good for short lists like feature flags or enum-like values.
           </li>
           <li>
-            <strong>Multiline threshold:</strong> Automatically switching to multiline formatting based on array/object
-            size
+            <strong>Multiline expansion:</strong> Better for nested objects, long strings, and reviewability.
           </li>
           <li>
-            <strong>Bracket position:</strong> Control whether opening brackets appear on the same or new lines
-          </li>
-          <li>
-            <strong>Empty container handling:</strong> Special formatting for empty arrays <code>[]</code> and objects{" "}
-            <code>{}</code>
+            <strong>Threshold-based wrapping:</strong> Some tools switch layout based on item count or line length.
           </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: Array Formatting Options</h3>
+          <h3 className="text-lg font-medium">Example: Array formatting choices</h3>
 
           <div className="space-y-4 mt-3">
             <div>
-              <p className="text-sm font-medium mb-2">Standard multiline arrays:</p>
+              <p className="text-sm font-medium mb-2">Multiline arrays:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
                   {`{
@@ -193,7 +181,7 @@ export default function CustomIndentationOptionsArticle() {
             </div>
 
             <div>
-              <p className="text-sm font-medium mb-2">Compact small arrays:</p>
+              <p className="text-sm font-medium mb-2">Compact arrays:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
                   {`{
@@ -205,254 +193,188 @@ export default function CustomIndentationOptionsArticle() {
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">4. Trailing Commas</h3>
-        <p>Some formatters allow configuration of trailing comma behavior:</p>
+        <h3 className="text-xl font-semibold mt-6">4. End-of-line details</h3>
+        <p>
+          Indentation settings are often bundled with line-ending and newline rules because they affect diffs just as
+          much as spaces and tabs do.
+        </p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Never add trailing commas:</strong> Standard JSON compliance
+            <strong>Final newline:</strong> Keeping one at the end of the file makes diffs cleaner in many tools.
           </li>
           <li>
-            <strong>Always add trailing commas:</strong> Facilitates easier additions and version control diff reviews
+            <strong>Line endings:</strong> Normalize to LF unless your environment requires otherwise.
           </li>
           <li>
-            <strong>Preserve existing behavior:</strong> Maintain the document&apos;s original style
+            <strong>Whitespace around separators:</strong> Most formatters standardize a single space after colons and
+            commas in pretty output.
           </li>
         </ul>
 
         <p className="mt-4">
-          Note that while trailing commas are not valid in standard JSON, some parsers (like JavaScript&apos;s) accept
-          them. Quality formatters will warn users if enabling this option could cause compatibility issues.
+          These settings do not change the parsed data, but they do reduce noisy version-control churn when multiple
+          people edit the same JSON files.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Advanced Indentation Features</h2>
+        <h2 className="text-2xl font-semibold mt-8">How Real Tools Behave Today</h2>
 
-        <h3 className="text-xl font-semibold mt-6">1. Contextual Indentation</h3>
-        <p>Sophisticated formatters may offer different indentation rules based on context:</p>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Property-specific rules:</strong> Custom formatting for specific properties (e.g., keeping URL
-            strings unbroken)
-          </li>
-          <li>
-            <strong>Depth-based indentation:</strong> Different rules for different nesting levels
-          </li>
-          <li>
-            <strong>Value-based formatting:</strong> Special handling for long strings or numeric arrays
-          </li>
-          <li>
-            <strong>Comment-aware formatting:</strong> Proper indentation that respects comments (in JSON5 or similar
-            formats)
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">2. Whitespace Controls</h3>
-        <p>Fine-grained whitespace customization options often include:</p>
+        <h3 className="text-xl font-semibold mt-6">JavaScript-based formatters and scripts</h3>
+        <p>
+          A lot of JSON formatting on the web still follows JavaScript behavior similar to{" "}
+          <code>JSON.stringify(value, replacer, space)</code>.
+        </p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Space after colon:</strong> Control the number of spaces after property colons
+            <strong>Numeric indent values are capped:</strong> JavaScript limits them to 10 spaces per nesting level.
           </li>
           <li>
-            <strong>Space after comma:</strong> Adjust spacing after commas in arrays and objects
+            <strong>Custom indent strings are also capped:</strong> only the first 10 characters are used.
           </li>
           <li>
-            <strong>Line breaks:</strong> Configure when line breaks should be inserted
-          </li>
-          <li>
-            <strong>End of file behavior:</strong> Whether to add a newline at the end of files
+            <strong>Tabs are allowed:</strong> passing <code>&quot;\t&quot;</code> produces tab-indented output.
           </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: Whitespace Variations</h3>
+          <h3 className="text-lg font-medium">Example: common JavaScript indentation settings</h3>
 
           <div className="space-y-4 mt-3">
             <div>
-              <p className="text-sm font-medium mb-2">Standard spacing:</p>
+              <p className="text-sm font-medium mb-2">Typical API calls:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-                  {`{
-  "user": {
-    "name": "John",
-    "age": 30
-  }
-}`}
+                  {`JSON.stringify(data, null, 2);    // 2 spaces
+JSON.stringify(data, null, 4);    // 4 spaces
+JSON.stringify(data, null, "\\t"); // tabs`}
                 </pre>
               </div>
             </div>
 
             <div>
-              <p className="text-sm font-medium mb-2">Compact spacing:</p>
+              <p className="text-sm font-medium mb-2">Practical limitation:</p>
               <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
                 <pre>
-                  {`{
-  "user":{
-    "name":"John",
-    "age":30
-  }
-}`}
+                  {`JSON.stringify(data, null, 12);      // behaves like 10 spaces
+JSON.stringify(data, null, "............"); // first 10 characters only`}
                 </pre>
               </div>
             </div>
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">3. Formatting Profiles and Presets</h3>
-        <p>Many advanced formatters allow saving and switching between formatting profiles:</p>
+        <p>
+          If a browser-based formatter refuses a very wide indent or shortens a custom indent token, it may be
+          inheriting this JavaScript limit rather than ignoring your setting.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6">Editors and IDEs</h3>
+        <p>
+          Editors can make JSON formatting feel inconsistent because they may support both strict JSON and relaxed
+          variants.
+        </p>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Named presets:</strong> Predefined configurations like &quot;Compact&quot;, &quot;Readable&quot;, or
-            &quot;Standard&quot;
+            <strong>Strict JSON mode:</strong> Best for files that will be parsed by APIs, CLIs, CI jobs, or other
+            machines.
           </li>
           <li>
-            <strong>Custom profiles:</strong> User-defined configuration sets for different projects or tasks
+            <strong>Relaxed modes such as JSONC:</strong> Useful for editor settings files, but comments and trailing
+            commas can break strict parsers elsewhere.
           </li>
           <li>
-            <strong>Project-specific settings:</strong> Loading formatting rules from project configuration files
-          </li>
-          <li>
-            <strong>Sharing configurations:</strong> Exporting and importing settings to ensure team consistency
+            <strong>Editor defaults still matter:</strong> tab width and indentation detection can change how the same
+            file looks from one environment to another.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Implementation Considerations for JSON Formatters</h2>
-
-        <h3 className="text-xl font-semibold mt-6">1. Performance Implications</h3>
-        <p>Different indentation settings can affect formatter performance:</p>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Memory usage:</strong> Larger indentation increases document size in memory
-          </li>
-          <li>
-            <strong>Processing overhead:</strong> Complex conditional formatting rules may slow down processing
-          </li>
-          <li>
-            <strong>Rendering performance:</strong> Very large indented documents might cause display performance issues
-          </li>
-          <li>
-            <strong>Optimization techniques:</strong> Virtual rendering and pagination for better handling of large
-            documents
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">2. User Interface Design</h3>
-        <p>Effective JSON formatters present indentation options in an intuitive way:</p>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Visual previews:</strong> Showing how different settings will affect the document
-          </li>
-          <li>
-            <strong>Real-time feedback:</strong> Immediately applying format changes as options are modified
-          </li>
-          <li>
-            <strong>Common preset buttons:</strong> Quick access to frequently used configurations
-          </li>
-          <li>
-            <strong>Configuration search:</strong> Finding specific formatting options in complex tools
-          </li>
-        </ul>
-
-        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">UX Tip:</h3>
-          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            For maximum usability, JSON formatters should offer simple controls for common scenarios, with an
-            &quot;Advanced Options&quot; section for more detailed customization. This approach accommodates both casual
-            users and power users with specific formatting requirements.
+        <div className="bg-red-50 p-4 rounded-lg dark:bg-red-900/30 my-6 border-l-4 border-red-400">
+          <h3 className="text-lg font-medium text-red-900 dark:text-red-200">Compatibility warning</h3>
+          <p className="mt-2 text-red-800 dark:text-red-100">
+            If a formatter adds comments or trailing commas, the result is no longer standard JSON. That can be fine
+            for editor config files in JSONC mode, but it is not safe for API requests or strict parsers.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Mobile Considerations</h2>
+        <h3 className="text-xl font-semibold mt-6">Team-wide settings with .editorconfig</h3>
+        <p>
+          When several people or tools touch the same JSON files, encode the rule once instead of relying on personal
+          editor defaults.
+        </p>
 
-        <p>JSON formatters on mobile devices present unique challenges for indentation features:</p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Example: project-level indentation rules</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre>
+              {`[*.json]
+indent_style = space
+indent_size = 2
+insert_final_newline = true`}
+            </pre>
+          </div>
+        </div>
 
-        <h3 className="text-xl font-semibold mt-6">1. Screen Size Adaptations</h3>
+        <p>
+          If your team prefers tabs, switch to <code>indent_style = tab</code> and agree separately on display width
+          with <code>tab_width</code> or editor settings. The important part is that everyone is reading from the same
+          source of truth.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Choosing the Right Indentation for Your Use Case</h2>
+
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Horizontal scrolling:</strong> Well-indented JSON often exceeds mobile screen widths
+            <strong>API examples and documentation:</strong> Use spaces, usually 2 spaces, because the output will look
+            consistent anywhere it is pasted.
           </li>
           <li>
-            <strong>Reduced indentation defaults:</strong> Using 2-space indentation to maximize visible content
+            <strong>Human-edited config files:</strong> Use 2 spaces for compactness unless the structure is deeply
+            nested and your team strongly prefers 4.
           </li>
           <li>
-            <strong>Dynamic adjustment:</strong> Automatically reducing indentation based on screen size
+            <strong>Large files under active review:</strong> Favor the style that produces the smallest clean diffs,
+            which is usually spaces plus a stable formatter.
           </li>
           <li>
-            <strong>Landscape optimization:</strong> Different formatting presets for portrait vs. landscape orientation
+            <strong>Personal local inspection:</strong> Tabs can work well if you control the editor and want adjustable
+            visual width.
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6">2. Touch Interface Adjustments</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Simplified options:</strong> Focusing on essential indentation controls for touch interfaces
-          </li>
-          <li>
-            <strong>Gesture support:</strong> Pinch-to-zoom for examining indentation details
-          </li>
-          <li>
-            <strong>Format presets:</strong> Offering quick-access preset buttons instead of detailed controls
-          </li>
-          <li>
-            <strong>Collapsible sections:</strong> Using tree views with collapsing to mitigate indentation space
-            requirements
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Use Cases for Custom Indentation</h2>
-
-        <h3 className="text-xl font-semibold mt-6">1. Development Workflows</h3>
-        <p>Different development activities benefit from specific indentation settings:</p>
+        <h2 className="text-2xl font-semibold mt-8">Troubleshooting Unexpected Formatter Output</h2>
 
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Debugging:</strong> Maximum readability with clear indentation and spacing
+            <strong>Your 12-space indent keeps shrinking:</strong> The formatter may be using JavaScript&apos;s
+            indentation limit of 10 characters.
           </li>
           <li>
-            <strong>Code reviews:</strong> Consistent team formatting to focus on content rather than style
+            <strong>Tabs look different on another machine:</strong> That is usually an editor tab-width issue, not a
+            JSON parsing issue.
           </li>
           <li>
-            <strong>Schema development:</strong> Clear indentation to understand complex nested structures
+            <strong>The tool keeps some arrays on one line:</strong> Look for a wrap threshold, print width, or compact
+            array setting. Not every formatter exposes that separately.
           </li>
           <li>
-            <strong>Production preparation:</strong> Switching to minified output while preserving source formatting
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">2. Documentation and Sharing</h3>
-        <p>When JSON is used in documentation or shared with others:</p>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>API documentation:</strong> Clear, consistent formatting for example requests and responses
-          </li>
-          <li>
-            <strong>Learning materials:</strong> Enhanced indentation for educational examples
-          </li>
-          <li>
-            <strong>Team standards:</strong> Organization-specific formatting guidelines
-          </li>
-          <li>
-            <strong>Client presentation:</strong> Professional, readable formatting for client-facing JSON
+            <strong>An API rejects the formatted file:</strong> Revalidate it in strict JSON mode and remove comments,
+            trailing commas, and non-JSON syntax such as single-quoted keys.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Custom indentation options might seem like a minor feature, but they significantly impact how developers
-          interact with JSON data. By providing flexible indentation controls, JSON formatters enhance readability,
-          support team standards, and accommodate diverse workflows.
+          Custom indentation options are useful when they solve concrete workflow problems, not when they add endless
+          style knobs. The most valuable controls are still the simplest ones: tabs versus spaces, indent width,
+          compact versus multiline layout, and strict output that stays valid JSON.
         </p>
 
         <p>
-          The best JSON formatting tools strike a balance between offering comprehensive customization options and
-          maintaining a straightforward user experience. As JSON continues to be the backbone of modern data exchange,
-          these formatting capabilities will remain essential for developers working with increasingly complex data
-          structures.
+          If you are choosing defaults for a formatter today, spaces with 2-space indentation remains the safest option
+          for compatibility and readability. If you choose something else, document it and enforce it consistently so
+          your tooling stops fighting your team.
         </p>
       </div>
     </>

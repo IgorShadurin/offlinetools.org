@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "State Management Patterns in Complex JSON Editors | Offline Tools",
-  description: "Explore effective state management patterns for building robust and scalable complex JSON editors.",
+  description:
+    "A practical guide to document state, UI state, validation, undo/redo, patches, and performance in complex JSON editors.",
 };
 
 export default function StateManagementJsonEditorsArticle() {
@@ -12,305 +13,283 @@ export default function StateManagementJsonEditorsArticle() {
 
       <div className="space-y-6">
         <p>
-          Building a complex JSON editor, one that handles deep nesting, large datasets, real-time updates, and
-          potentially collaborative features, presents significant challenges. At the heart of these challenges lies
-          state management. How do you efficiently track, update, and propagate changes across a dynamic, tree-like data
-          structure? This article explores various state management patterns suitable for such applications.
+          Most complex JSON editors become fragile for the same reason: they mix the document itself, tree UI state,
+          validation results, draft input buffers, and undo history into one giant nested object. That works at first,
+          then collapses once you add large files, array reordering, schema validation, or collaborative editing.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">The Challenge of JSON Editor State</h2>
-        <p>A JSON editor's state isn't just the data itself; it includes the UI state tied to the data:</p>
+        <p>
+          The best default pattern is simpler than it sounds: keep one canonical document model, keep UI state separate,
+          and record edits as operations or patches. That lines up with current React guidance to avoid redundant and
+          deeply nested state when possible. In practice, JSON editors stay maintainable when selection is stored by
+          path or stable node ID, derived facts like error counts are computed instead of duplicated, and hot update
+          paths are flattened before performance becomes a problem.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h2 className="text-xl font-semibold">Short Answer</h2>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>Keep the JSON document as the single source of truth.</li>
+            <li>Keep expansion, selection, focus, and draft input state in a separate UI layer.</li>
+            <li>Track undo/redo with inverse operations or patches, not full snapshots on every keystroke.</li>
+            <li>Use stable node IDs when paths will change because of inserts, deletes, or drag-and-drop.</li>
+            <li>Use selector-based subscriptions and tree virtualization when the file is large.</li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">What State a JSON Editor Actually Owns</h2>
+        <p>
+          Search visitors often expect state management to mean only the JSON value. In a real editor, that is only one
+          slice. You usually have at least five different kinds of state:
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>The JSON data structure</li>
-          <li>Which nodes are expanded/collapsed</li>
-          <li>Which nodes are currently selected or being edited</li>
-          <li>Validation errors</li>
-          <li>Undo/redo history</li>
-          <li>User permissions (in collaborative editors)</li>
+          <li>
+            <span className="font-medium">Document state:</span> the canonical JSON tree or a normalized node graph.
+          </li>
+          <li>
+            <span className="font-medium">View state:</span> expanded nodes, active selection, cursor target, search
+            matches, and scroll position.
+          </li>
+          <li>
+            <span className="font-medium">Draft state:</span> temporary text the user is typing before it becomes valid
+            JSON.
+          </li>
+          <li>
+            <span className="font-medium">Derived state:</span> validation errors, dirty flags, counts, breadcrumbs,
+            and filtered tree indexes.
+          </li>
+          <li>
+            <span className="font-medium">History and sync state:</span> undo/redo stacks, pending remote operations,
+            and collaboration metadata.
+          </li>
         </ul>
         <p>
-          Managing these interconnected pieces of state in a predictable and performant way is crucial for a good user
-          experience.
+          Problems start when the same fact appears in multiple places. A common bug is storing both a selected node
+          object and a selected node ID. Another is storing validation flags inside each node while also keeping a
+          global error map. Pick one canonical representation, then derive the rest.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Choosing the Right Pattern</h2>
+        <h2 className="text-2xl font-semibold mt-8">Recommended Default Architecture</h2>
         <p>
-          Several architectural patterns can be adapted for state management in complex applications like JSON editors.
-          The best choice often depends on the application's size, complexity, team size, and specific requirements
-          (like collaboration or performance under large data loads).
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">1. Centralized Store Pattern (e.g., Redux-like)</h2>
-        <p>
-          This pattern involves keeping all application state in a single store. Components read state from this store
-          and dispatch actions to request state changes. A central reducer (or a set of reducers) handles these actions
-          immutably, producing a new state tree.
+          For a feature-rich editor, the most resilient shape is a layered model: canonical document state, separate UI
+          state, derived validation/search indexes, and a history layer that records operations. That gives you clearer
+          ownership and much cheaper updates.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">How it applies to a JSON editor:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>The entire JSON data tree is part of the store state.</li>
-            <li>UI state (expanded nodes, selection) is also in the store.</li>
-            <li>Actions like `ADD_NODE`, `UPDATE_VALUE`, `TOGGLE_EXPAND` are dispatched.</li>
-            <li>Reducers handle these actions, creating new state objects.</li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Conceptual Example (Action &amp; Reducer):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+          <h3 className="text-lg font-medium">Conceptual State Shape</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-3">
             <pre>
-              {`// Action
-{
-  type: 'UPDATE_VALUE',
-  payload: {
-    path: ['data', 'users', 0, 'name'], // Path to the value
-    value: 'Jane Doe'
-  }
-}
+              {`type NodeId = string;
 
-// Reducer snippet
-function jsonReducer(state, action) {
-  switch (action.type) {
-    case 'UPDATE_VALUE':
-      const { path, value } = action.payload;
-      // Logic to immutably update the nested value at 'path'
-      // Requires helper functions for deep immutable updates
-      return updateIn(state, path, value);
-    default:
-      return state;
-  }
-}`}
+type EditorState = {
+  document: {
+    rootId: NodeId;
+    nodesById: Record<NodeId, JsonNode>;
+  };
+  ui: {
+    expandedById: Record<NodeId, true>;
+    selectedId: NodeId | null;
+    editingId: NodeId | null;
+    draftTextById: Record<NodeId, string>;
+  };
+  validation: {
+    errorsById: Record<NodeId, string[]>;
+    lastValidatedRevision: number;
+  };
+  history: {
+    undo: Operation[][];
+    redo: Operation[][];
+  };
+};`}
             </pre>
           </div>
-          <h3 className="text-lg font-medium mt-4">Pros:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Predictable state changes</li>
-            <li>Easier debugging with time-travel capabilities</li>
-            <li>Good for complex interactions and shared state</li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Cons:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Can be boilerplate-heavy</li>
-            <li>Performance challenges with very large, deeply nested state updates</li>
-            <li>Requires immutable updates, which can be complex</li>
-          </ul>
+          <p className="mt-4">
+            This does not mean every editor must normalize the tree. It means each concern gets its own home. For
+            smaller editors, the document can stay as a plain nested object while the other layers remain separate.
+          </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">2. Hierarchical State Management (Component-based)</h2>
+        <h2 className="text-2xl font-semibold mt-8">Pattern 1: Normalize the Document When Paths Are Unstable</h2>
         <p>
-          In this approach, state is managed locally within components or passed down via props. For deeply nested
-          structures like JSON, this might involve a root component holding the main state and passing down chunks of
-          the data and callbacks for updates to child components.
+          If your editor supports array insertion, deletion, drag-and-drop reordering, or node moves, pure path-based
+          state becomes harder to manage. Every change to an array shifts later paths, which can break selection,
+          expansion state, cached validation results, and pending edits.
+        </p>
+        <p>
+          That is where a normalized document store helps. Store nodes by stable ID, track parent-child relationships
+          separately, and let paths be a derived view instead of the primary identity. Stable IDs survive reordering and
+          make node-level subscriptions much cheaper.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Use stable node IDs if nodes can move.</li>
+          <li>Use paths when the structure is mostly static and you want simpler code.</li>
+          <li>Do not key expansion or selection by raw array index if the user can reorder items.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Pattern 2: Keep Ephemeral UI State Out of the Core Store</h2>
+        <p>
+          Not every keystroke or hover state belongs in global state. Inline rename buffers, open context menus, hover
+          affordances, and temporary text that has not parsed yet are often better kept local to the active component.
+          That reduces store churn and prevents unrelated parts of the tree from re-rendering.
+        </p>
+        <p>
+          Promote UI state only when other parts of the app need it: keyboard shortcuts, breadcrumbs, inspector panels,
+          persistence across navigation, or collaboration cursors are good reasons. Everything else can stay close to
+          the component using it.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Pattern 3: Use Operations or Patches for Undo/Redo</h2>
+        <p>
+          Snapshot-based history is easy to build and expensive to keep. Once files get large, pushing the whole
+          document into history on every edit becomes a memory and performance problem. Operations and inverse
+          operations are the usual upgrade path.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">How it applies to a JSON editor:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Root component holds the main JSON object.</li>
-            <li>Recursive components render objects and arrays.</li>
-            <li>Callbacks like `onValueChange(path, newValue)` are passed down.</li>
-            <li>Child components call these callbacks, and the root component updates its state.</li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Conceptual Example (Component Structure):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+          <h3 className="text-lg font-medium">Conceptual Edit Flow</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-3">
             <pre>
-              {`function JsonEditor({ data, onChange }) {
-  // ... render based on data ...
-  if (typeof data === 'object' && data !== null) {
-    // Render object/array nodes
-    return (
-      <div>
-        {Object.entries(data).map(([key, value]) => (
-          <JsonNode
-            key={key}
-            name={key}
-            value={value}
-            path={[key]} // Path relative to this level
-            onValueChange={(relativePath, newValue) => {
-              const fullPath = [key, ...relativePath];
-              // Need to clone and update immutably
-              const newData = updateIn(data, fullPath, newValue);
-              onChange(newData); // Propagate change up
-            }}
-          />
-        ))}
-      </div>
-    );
-  } else {
-     // Render primitive value
-     return (
-       <JsonValueEditor value={data} onChange={(newValue) => onChange(newValue)} />
-     );
-  }
-}
+              {`const operation = {
+  type: "setValue",
+  nodeId: "node_42",
+  nextValue: "Jane Doe",
+};
 
-function JsonNode({ name, value, path, onValueChange }) {
-   // ... render node key/value, handle expand/collapse ...
-   return (
-     <div>
-        <span>{name}:</span>
-        {typeof value === 'object' && value !== null ? (
-          <JsonEditor data={value} onChange={(newData) => onValueChange([], newData)} /> // Propagate new object/array up
-        ) : (
-           <JsonValueEditor value={value} onChange={(newValue) => onValueChange([], newValue)} /> // Propagate new value up
-        )}
-     </div>
-   )
-}
+const inverseOperation = {
+  type: "setValue",
+  nodeId: "node_42",
+  nextValue: "John Doe",
+};
 
-function JsonValueEditor({ value, onChange }) {
-   // ... render input for value ...
-   <input value={value} onChange={(e) => onChange(e.target.value)} />
-}`}
+dispatch(operation);
+undoStack.push([inverseOperation]);
+redoStack.length = 0;`}
             </pre>
           </div>
-          <h3 className="text-lg font-medium mt-4">Pros:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Simple for smaller editors</li>
-            <li>State is close to where it's used</li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Cons:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Prop drilling can become excessive</li>
-            <li>Managing updates in deep hierarchies requires careful immutable updates at each level</li>
-            <li>Sharing state between distant parts of the tree is difficult</li>
-          </ul>
+          <p className="mt-4">
+            Group operations into transactions for multi-step actions like paste, sort, or drag-and-drop. Coalesce text
+            edits so undo feels human, not mechanical.
+          </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">3. Event-Driven Architecture</h2>
         <p>
-          Components can emit events when something happens (e.g., "value changed at path X"). A central event bus or
-          service listens for these events and updates the main state. Other components can subscribe to state changes
-          they care about.
+          If you use Immer, its current patches are useful for history, but they are not a drop-in RFC 6902 JSON Patch
+          payload. Immer patch paths are arrays, while JSON Patch uses JSON Pointer strings. If your backend, audit log,
+          or collaboration service expects RFC 6902, convert intentionally instead of assuming the formats match.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">How it applies to a JSON editor:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>A component editing a value emits a `valueChanged` event with the path and new value.</li>
-            <li>A state service listens for `valueChanged`.</li>
-            <li>The state service updates the main JSON state and emits a `stateUpdated` event.</li>
-            <li>Components needing the latest state subscribe to `stateUpdated`.</li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Conceptual Example (Event Flow):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`// Component editing value
-eventBus.emit('value-changed', { path: ['config', 'timeout'], value: 60 });
-
-// State service
-eventBus.on('value-changed', ({ path, value }) => {
-  const newState = updateIn(currentState, path, value); // Immutable update
-  currentState = newState;
-  eventBus.emit('state-updated', currentState);
-});
-
-// Component needing state
-eventBus.on('state-updated', (newState) => {
-  // Update component's internal representation based on newState
-});`}
-            </pre>
-          </div>
-          <h3 className="text-lg font-medium mt-4">Pros:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Decouples components</li>
-            <li>Flexible for complex interactions and cross-cutting concerns (like logging)</li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Cons:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Harder to follow the flow of state changes</li>
-            <li>Debugging can be challenging</li>
-            <li>Potential for event storms</li>
-          </ul>
-        </div>
-
-        <h2 className="2xl:text-2xl font-semibold mt-8">4. Immutable State and Patches</h2>
+        <h2 className="text-2xl font-semibold mt-8">Pattern 4: Separate Validation from Editing</h2>
         <p>
-          Regardless of the overall pattern, managing updates to a potentially large, deeply nested JSON object
-          efficiently is key. Libraries focusing on immutable updates or generating "patches" (descriptions of changes)
-          can be invaluable.
+          Validation is usually derived state, not core state. The document should not need embedded error flags to be
+          editable. Keep a validation index keyed by node ID or path, update it after edits, and let the renderer ask
+          whether a node currently has errors.
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Run cheap local validation immediately for the active field.</li>
+          <li>Debounce full-document or JSON Schema validation for large files.</li>
+          <li>Cache error maps separately so you can invalidate only affected branches.</li>
+          <li>Store one authoritative error map instead of duplicating booleans on every node.</li>
+        </ul>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Concepts:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>
-              <span className="font-medium">Immutable Data Structures:</span> Ensure updates create new objects/arrays
-              rather than modifying existing ones, allowing React/Next.js to optimize rendering.
-            </li>
-            <li>
-              <span className="font-medium">Structural Sharing:</span> Immutable libraries often share unchanged parts
-              of the tree between old and new states, reducing memory usage.
-            </li>
-            <li>
-              <span className="font-medium">Patches:</span> Instead of sending the whole new state, send a small
-              description of *what changed*. Useful for undo/redo and collaboration.
-            </li>
-          </ul>
-          <h3 className="text-lg font-medium mt-4">Conceptual Example (Using Patches):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`// Original state
-const state1 = { "user": { "name": "John", "age": 30 } };
-
-// Operation
-const operation = { op: 'replace', path: '/user/age', value: 31 };
-
-// Apply patch
-const state2 = applyPatch(state1, [operation]);
-// state2 is now { "user": { "name": "John", "age": 31 } }
-// This is conceptually how collaborative editors sync state.`}
-            </pre>
-          </div>
-          <h3 className="text-lg font-medium mt-4">Tools/Libraries (Concepts):</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>
-              Libraries for deep immutable updates (e.g., Immer allows writing mutable-looking code that produces
-              immutable updates).
-            </li>
-            <li>Libraries implementing RFC 6902 JSON Patch standard.</li>
-          </ul>
-        </div>
-
-        <h2 className="2xl:text-2xl font-semibold mt-8">Combining Patterns</h2>
+        <h2 className="text-2xl font-semibold mt-8">Performance Rules That Matter on Large Files</h2>
         <p>
-          Often, a hybrid approach works best. You might use a centralized store for the core JSON data and related
-          global UI state (like undo history) but manage the expanded/collapsed state of individual nodes using local
-          component state, subscribing to only the necessary parts of the global state to avoid unnecessary re-renders.
+          Large JSON editors fail less because of the wrong library and more because of the wrong update boundaries.
+          These rules usually matter more than the store choice itself:
         </p>
-
-        <h2 className="2xl:text-2xl font-semibold mt-8">Considerations for Complex JSON Editors</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Performance:</span> Deep updates to large objects can be slow without
-            immutable data structures and proper memoization/optimization in rendering.
+            Subscribe to small slices of state. A single context value containing the whole editor will fan out
+            re-renders unless consumers are carefully isolated.
           </li>
           <li>
-            <span className="font-medium">Undo/Redo:</span> Requires tracking state changes, often managed via a stack
-            of actions or patches.
+            Render only visible rows or tree nodes. Virtualization is often a bigger win than micro-optimizing reducers.
           </li>
           <li>
-            <span className="font-medium">Validation:</span> State management needs to accommodate validation status for
-            individual nodes or the whole document.
+            Split raw text input from the parsed document so users can temporarily type invalid JSON without corrupting
+            the canonical model.
           </li>
           <li>
-            <span className="font-medium">Collaboration:</span> Requires a way to sync changes (often using patches) and
-            handle conflicts.
+            Revalidate and reindex incrementally when possible instead of rescanning the whole document on every
+            keystroke.
           </li>
           <li>
-            <span className="font-medium">Schema Validation:</span> Integrating schema validation can add complexity to
-            state, indicating which parts are invalid according to a schema.
+            Move expensive parse or validation work off the hot path for very large documents, including into a worker
+            when needed.
           </li>
         </ul>
 
-        <h2 className="2xl:text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8">Decision Guide</h2>
+        <div className="overflow-x-auto my-4">
+          <table className="min-w-full border border-gray-300 dark:border-gray-700 text-sm">
+            <thead className="bg-gray-100 dark:bg-gray-800">
+              <tr>
+                <th className="text-left p-3 border-b border-gray-300 dark:border-gray-700">Scenario</th>
+                <th className="text-left p-3 border-b border-gray-300 dark:border-gray-700">Best-Fit Pattern</th>
+                <th className="text-left p-3 border-b border-gray-300 dark:border-gray-700">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="align-top">
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Small editor, no schema, no collaboration
+                </td>
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Nested document plus separate UI state
+                </td>
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Lowest complexity, easy to reason about
+                </td>
+              </tr>
+              <tr className="align-top">
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Large tree with frequent structural edits
+                </td>
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Normalized store with stable node IDs and selectors
+                </td>
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Survives reordering and keeps updates local
+                </td>
+              </tr>
+              <tr className="align-top">
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Heavy validation and inspector side panels
+                </td>
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Canonical document plus derived validation index
+                </td>
+                <td className="p-3 border-b border-gray-300 dark:border-gray-700">
+                  Prevents duplicated error state and simplifies refresh
+                </td>
+              </tr>
+              <tr className="align-top">
+                <td className="p-3">
+                  Collaboration, audit trail, or durable undo/redo
+                </td>
+                <td className="p-3">Operation or patch log layered on top of the document store</td>
+                <td className="p-3">Makes sync, replay, and reversible edits practical</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Common Mistakes</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Storing both the selected node object and its ID.</li>
+          <li>Using raw array paths as permanent identity in an editor that supports reordering.</li>
+          <li>Putting every hover, menu, and draft value into one global store.</li>
+          <li>Pushing full-document snapshots into history on every keystroke.</li>
+          <li>Running full schema validation synchronously on each character input.</li>
+          <li>Coupling the parsed document too tightly to a text box that frequently contains invalid JSON mid-edit.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Managing state in a complex JSON editor is a non-trivial task that goes beyond simply holding the JSON string.
-          It involves handling deeply nested, dynamic data alongside intricate UI state. Choosing the right state
-          management pattern—be it centralized, hierarchical, event-driven, or a combination—is critical for building a
-          maintainable, performant, and scalable editor. Leveraging libraries that facilitate immutable updates and
-          patch generation can significantly simplify the process and enable advanced features like undo/redo and
-          collaboration. Carefully consider the specific needs of your editor when selecting and implementing your state
-          management strategy.
+          State management in a complex JSON editor is less about picking a trendy library and more about separating
+          responsibilities. Keep the document canonical, keep UI state independent, treat validation as derived data,
+          and use operations or patches for history and sync. If you do that, the choice between reducer, external
+          store, or custom service becomes an implementation detail instead of the architecture itself.
         </p>
       </div>
     </>

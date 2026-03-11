@@ -4,9 +4,9 @@ import type { Metadata } from "next";
  * Metadata for JSON formatter article about recovering corrupted JSON files
  */
 export const metadata: Metadata = {
-  title: "When Good JSON Goes Bad: Recovering Corrupted JSON Files | Offline Tools",
+  title: "How to Recover Corrupted JSON Files: Fix Truncated and Invalid JSON | Offline Tools",
   description:
-    "Learn effective strategies and techniques for recovering corrupted JSON files and salvaging valuable data from damaged JSON documents.",
+    "Recover corrupted JSON files with a practical workflow for truncated payloads, HTML instead of JSON, broken quotes, trailing commas, BOM issues, and encoding mistakes.",
 };
 
 /**
@@ -19,154 +19,196 @@ export default function JsonFormatterCorruptedFilesArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON files can become corrupted for various reasons—network transmission errors, disk write failures,
-          application crashes, or even human editing mistakes. When your once-perfect JSON breaks, it doesn&apos;t
-          always mean your data is lost forever. With the right approach, you can often recover valuable information
-          from corrupted JSON files.
+          If you need to recover a corrupted JSON file, start by answering one question before you edit anything: is
+          the file actually malformed JSON, or did you receive the wrong payload entirely? Many &quot;corrupted JSON&quot;
+          incidents turn out to be truncated writes, HTML error pages saved as `.json`, or text that was decoded with
+          the wrong character set.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Common Causes of JSON Corruption</h2>
-        <p>Understanding how your JSON became corrupted can help you adopt the right recovery strategy:</p>
-
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Truncated Files</strong>: Sudden application termination or disk space issues can leave JSON files
-            incomplete.
-          </li>
-          <li>
-            <strong>Transmission Errors</strong>: Network interruptions can cause partial or garbled JSON reception.
-          </li>
-          <li>
-            <strong>Encoding Problems</strong>: Character encoding mismatches can introduce invalid bytes into the
-            document.
-          </li>
-          <li>
-            <strong>Syntax Errors</strong>: Manual edits without proper validation often lead to syntax errors.
-          </li>
-          <li>
-            <strong>Invalid Modifications</strong>: Programmatic changes that don&apos;t respect JSON structure.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Signs of JSON Corruption</h2>
-
-        <p>Before attempting recovery, it&apos;s important to recognize the symptoms of corrupted JSON:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Common Error Messages</h3>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`"Unexpected end of JSON input"
-"Invalid character in JSON"
-"Expected property name"
-"Unexpected token < in JSON"
-"SyntaxError: JSON.parse: unexpected character"
-"Unexpected end of file"`}
-          </pre>
-        </div>
 
         <p>
-          Visual inspection may also reveal obvious issues like HTML tags in your JSON (indicating a server returned an
-          error page instead of JSON), text truncation, or visible binary characters.
+          The fastest reliable workflow is simple: preserve the original file, validate it, map the first parser error
+          to the most likely damage, repair the smallest possible section, and validate again. That is usually much
+          faster than guessing and rewriting the whole document from scratch.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Essential Recovery Strategies</h2>
-
-        <div className="space-y-6">
-          <h3 className="text-xl font-medium">1. Check for Backups First</h3>
-          <p>Before diving into repair techniques, always check for backups or version history:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Source control systems (Git, SVN)</li>
-            <li>Automated backups</li>
-            <li>Browser cache (for downloaded files)</li>
-            <li>Application-specific recovery features</li>
-          </ul>
-
-          <h3 className="text-xl font-medium">2. Use JSON Formatters with Error Correction</h3>
-          <p>Quality JSON formatters can automatically fix minor syntax issues:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Missing or extra commas</li>
-            <li>Unquoted property names</li>
-            <li>Single quotes instead of double quotes</li>
-            <li>Trailing commas in arrays or objects</li>
-          </ul>
-
-          <h3 className="text-xl font-medium">3. Manual Repair Techniques</h3>
-          <p>For more serious corruption, manual intervention is often necessary:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Identify and fix structural issues (mismatched brackets, braces)</li>
-            <li>Correct property-value pair syntax</li>
-            <li>Address encoding problems</li>
-            <li>Reconstruct missing sections</li>
-          </ul>
-
-          <h3 className="text-xl font-medium">4. Partial Data Extraction</h3>
-          <p>When complete recovery isn&apos;t possible, focus on salvaging the most critical data:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Extract valid subsections of the JSON</li>
-            <li>Rebuild the document structure around recovered data</li>
-            <li>Use regular expressions to extract key-value pairs from damaged sections</li>
-          </ul>
-
-          <h3 className="text-xl font-medium">5. Specialized Recovery Tools</h3>
-          <p>For severe corruption, dedicated tools and libraries can help:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>JSON repair libraries</li>
-            <li>Relaxed JSON parsers</li>
-            <li>Binary recovery tools (for file system corruption)</li>
-          </ul>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Step-by-Step JSON Recovery Process</h2>
+        <h2 className="text-2xl font-semibold mt-8">Start With Triage, Not Editing</h2>
 
         <ol className="list-decimal pl-6 space-y-3">
           <li>
-            <strong>Create a Backup</strong>
-            <p className="mt-1">Always work with a copy of the corrupted file to prevent further damage.</p>
+            <strong>Make a copy first.</strong>
+            <p className="mt-1">
+              Work on a duplicate so you can compare versions and roll back when a repair attempt makes the structure
+              worse.
+            </p>
+          </li>
+          <li>
+            <strong>Confirm the file is supposed to be JSON.</strong>
+            <p className="mt-1">
+              If the content starts with <code>&lt;html</code>, <code>&lt;!DOCTYPE</code>, or an error banner, your
+              problem is probably upstream. The file may never have contained JSON at all.
+            </p>
+          </li>
+          <li>
+            <strong>Validate once and record the first error.</strong>
+            <p className="mt-1">
+              The first parser error is usually the most useful one. Feed the file into a validator or formatter that
+              reports the earliest failing location instead of trying random edits.
+            </p>
+          </li>
+          <li>
+            <strong>Check the end of the file.</strong>
+            <p className="mt-1">
+              A surprising number of broken JSON files are simply cut off mid-object or mid-array because a write or
+              download stopped early.
+            </p>
+          </li>
+          <li>
+            <strong>Only repair what you can justify.</strong>
+            <p className="mt-1">
+              Close open braces, remove invalid commas, or restore missing quotes when the intended structure is
+              obvious. Do not invent missing business data unless you have a schema or backup to confirm it.
+            </p>
+          </li>
+        </ol>
+
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/20 my-6 border-l-4 border-blue-400">
+          <h3 className="text-lg font-medium text-blue-900 dark:text-blue-200">Current JSON Rules That Matter</h3>
+          <p className="mt-2 text-blue-800 dark:text-blue-100">
+            Standard JSON is still strict. According to{" "}
+            <a className="underline" href="https://www.rfc-editor.org/rfc/rfc8259">
+              RFC 8259
+            </a>
+            , JSON exchanged between systems should use UTF-8, object keys must be double-quoted strings, and comments
+            or trailing commas are not valid JSON. A leading BOM can appear in real files; some parsers ignore it, but
+            it is still worth stripping once if the first character looks suspicious.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">What the Error Usually Means</h2>
+
+        <ul className="list-disc pl-6 space-y-3">
+          <li>
+            <code>Unexpected token &lt;</code> usually means you saved an HTML response, login page, proxy error, or
+            stack trace instead of JSON.
+          </li>
+          <li>
+            <code>Unexpected end of JSON input</code> or an end-of-data error usually means the file is empty or
+            truncated.
+          </li>
+          <li>
+            <code>Expected property name</code> or a message about double-quoted property names usually means you have
+            JavaScript-object syntax, comments, or single quotes instead of strict JSON.
+          </li>
+          <li>
+            Errors near a closing <code>{"}"}</code> or <code>]</code> often point to a trailing comma or an extra
+            closing bracket.
+          </li>
+          <li>
+            <code>Bad control character in string literal</code> often means a raw tab, newline, or broken escape
+            sequence inside a quoted string.
+          </li>
+          <li>
+            If the file parses but values look like <code>caf\\u00c3\\u00a9</code>, you likely have an encoding or
+            decode problem rather than JSON syntax corruption.
+          </li>
+        </ul>
+
+        <p>
+          MDN&apos;s current{" "}
+          <a className="underline" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/JSON_bad_parse">
+            JSON.parse error reference
+          </a>{" "}
+          is useful when the exact wording looks unfamiliar, but the practical pattern is the same: fix the first
+          structural break, then validate again.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">A Practical Recovery Workflow</h2>
+
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>
+            <strong>Preserve the original bytes.</strong>
+            <p className="mt-1">
+              Rename the damaged file, duplicate it, and keep the untouched copy in case you later discover the repair
+              introduced silent data changes.
+            </p>
           </li>
 
           <li>
-            <strong>Visual Inspection</strong>
-            <p className="mt-1">Open the file in a text editor with syntax highlighting to identify obvious issues.</p>
+            <strong>Localize the first break.</strong>
+            <p className="mt-1">
+              Paste the file into a JSON formatter or validator and note the first line and column. On large files,
+              inspect around that location first instead of scrolling blindly from the top.
+            </p>
           </li>
 
           <li>
-            <strong>Validate with a JSON Formatter</strong>
-            <p className="mt-1">Use a JSON formatter with error detection to identify specific syntax problems.</p>
+            <strong>Repair structure in this order:</strong>
+            <p className="mt-1">Quotes, brackets and braces, commas and colons, then escapes and encoding.</p>
           </li>
 
           <li>
-            <strong>Fix Structural Issues</strong>
-            <p className="mt-1">Address mismatched brackets, braces, and quote marks first.</p>
+            <strong>Prefer deleting incomplete fragments over guessing missing values.</strong>
+            <p className="mt-1">
+              If the last object in an array is cut off halfway through, remove that incomplete record and close the
+              array unless you can reconstruct the missing fields from logs, schema defaults, or a backup.
+            </p>
           </li>
 
           <li>
-            <strong>Correct Property-Value Syntax</strong>
-            <p className="mt-1">Ensure all property names are quoted and separators (colons, commas) are correct.</p>
+            <strong>Revalidate after every meaningful edit.</strong>
+            <p className="mt-1">
+              Multiple tiny fixes with repeated validation are safer than a large rewrite that changes both structure
+              and content at once.
+            </p>
           </li>
 
           <li>
-            <strong>Handle Special Characters</strong>
-            <p className="mt-1">Fix escape sequences and encoding issues.</p>
-          </li>
-
-          <li>
-            <strong>Incremental Testing</strong>
-            <p className="mt-1">Validate after each significant change to avoid introducing new errors.</p>
+            <strong>Salvage a valid subset if the whole file cannot be restored.</strong>
+            <p className="mt-1">
+              For append-heavy data, it is often better to recover all complete objects up to the point of corruption
+              and emit fresh JSON than to perfectly recreate missing bytes.
+            </p>
           </li>
         </ol>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Useful Rule of Thumb</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            For critical data, consider consulting with a data recovery specialist if these techniques don&apos;t work.
-            Professional recovery services can sometimes recover data from severely corrupted files using specialized
-            techniques.
+            A JSON formatter is best used as a locator and verifier, not as a magic repair engine. Use it to find the
+            first structural failure, fix that failure deliberately, and then confirm the repaired output is valid
+            before you overwrite the source file.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">Practical Recovery Examples</h2>
 
-        <h3 className="text-xl font-medium mt-6">Example 1: Truncated JSON File</h3>
+        <h3 className="text-xl font-medium mt-6">Example 1: HTML Was Saved Instead of JSON</h3>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h4 className="text-md font-medium text-red-600 dark:text-red-400">What You Found:</h4>
+          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            {`<!DOCTYPE html>
+<html>
+  <head><title>502 Bad Gateway</title></head>
+  <body>Upstream server error</body>
+</html>`}
+          </pre>
+
+          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">What It Means:</h4>
+          <p className="text-sm mt-1">
+            This is not corrupted JSON. The upstream service returned an HTML error page, and the client saved it as if
+            it were JSON.
+          </p>
+
+          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Recovery Strategy:</h4>
+          <ol className="list-decimal pl-6 space-y-1 text-sm">
+            <li>Check the HTTP status code, auth state, or reverse proxy logs.</li>
+            <li>Repeat the request until you obtain the real JSON payload.</li>
+            <li>Do not try to &quot;fix&quot; this file with syntax edits.</li>
+          </ol>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">Example 2: Truncated Array or Object</h3>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-md font-medium text-red-600 dark:text-red-400">Truncated JSON:</h4>
@@ -183,14 +225,7 @@ export default function JsonFormatterCorruptedFilesArticle() {
       "name": "Jane Doe",`}
           </pre>
 
-          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Recovery Strategy:</h4>
-          <ol className="list-decimal pl-6 space-y-1 text-sm">
-            <li>Identify the structure: This is a users array with objects</li>
-            <li>Complete the truncated object</li>
-            <li>Close the array and main object</li>
-          </ol>
-
-          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Recovered JSON:</h4>
+          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Safe Recovery:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             {`{
   "users": [
@@ -198,45 +233,32 @@ export default function JsonFormatterCorruptedFilesArticle() {
       "id": 1,
       "name": "John Smith",
       "email": "john@example.com"
-    },
-    {
-      "id": 2,
-      "name": "Jane Doe"
     }
   ]
 }`}
           </pre>
+
+          <p className="text-sm mt-3">
+            The second record is incomplete, so the safe repair is to keep only the fully known object and close the
+            structure. If you can recover Jane Doe&apos;s missing fields from logs or a previous export, add them back
+            explicitly. If not, do not fabricate them.
+          </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">Example 2: Syntax Errors from Manual Editing</h3>
+        <h3 className="text-xl font-medium mt-6">Example 3: JavaScript Object Syntax Masquerading as JSON</h3>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium text-red-600 dark:text-red-400">Corrupted JSON:</h4>
+          <h4 className="text-md font-medium text-red-600 dark:text-red-400">Invalid JSON:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             {`{
   server_config: {
-    'host': 'api.example.org',
+    // local override
+    host: 'api.example.org',
     port: 443,
-    timeout: 30s,
     retry: true,
-    auth: {
-      type: "oauth",
-      credentials: {
-        "client_id": "abc123",
-        "client_secret": "xyz789"
-      },
-    }
   }
 }`}
           </pre>
-
-          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Issues to Fix:</h4>
-          <ul className="list-disc pl-6 space-y-1 text-sm">
-            <li>Unquoted property names</li>
-            <li>Single quotes instead of double quotes</li>
-            <li>Invalid value (30s should be &quot;30s&quot; or 30)</li>
-            <li>Extra comma after nested object</li>
-          </ul>
 
           <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Recovered JSON:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
@@ -244,144 +266,80 @@ export default function JsonFormatterCorruptedFilesArticle() {
   "server_config": {
     "host": "api.example.org",
     "port": 443,
-    "timeout": 30,
-    "retry": true,
-    "auth": {
-      "type": "oauth",
-      "credentials": {
-        "client_id": "abc123",
-        "client_secret": "xyz789"
-      }
-    }
+    "retry": true
   }
 }`}
           </pre>
+
+          <p className="text-sm mt-3">
+            This pattern is common when a config file was copied from JavaScript, JSON5, or a hand-edited snippet.
+            Remove comments, use double quotes, and delete trailing commas.
+          </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">Example 3: Encoding Problems</h3>
+        <h3 className="text-xl font-medium mt-6">Example 4: Valid JSON, Wrong Text Encoding</h3>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium text-red-600 dark:text-red-400">Corrupted JSON with Encoding Issues:</h4>
+          <h4 className="text-md font-medium text-red-600 dark:text-red-400">Syntactically Valid but Corrupted Data:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             {`{
-  "product": "Premium Café Set",
-  "price": 299.99,
-  "description": "Artisanal café table and chairs with genuine wood.",
-  "inStock": true,
-  "dimensions": {
-    "table": "120cm × 80cm × 75cm",
-    "chairs": "45cm × 45cm × 90cm"
-  }
+  "product": "caf\\u00c3\\u00a9 mug"
 }`}
           </pre>
-
-          <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Issues to Fix:</h4>
-          <ul className="list-disc pl-6 space-y-1 text-sm">
-            <li>Non-ASCII characters (é, ×) may cause encoding problems</li>
-          </ul>
 
           <h4 className="text-md font-medium text-green-600 dark:text-green-400 mt-4">Recovered JSON:</h4>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             {`{
-  "product": "Premium Cafe Set",
-  "price": 299.99,
-  "description": "Artisanal cafe table and chairs with genuine wood.",
-  "inStock": true,
-  "dimensions": {
-    "table": "120cm x 80cm x 75cm",
-    "chairs": "45cm x 45cm x 90cm"
-  }
+  "product": "caf\\u00e9 mug"
 }`}
           </pre>
-        </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Advanced Recovery Techniques</h2>
-
-        <h3 className="text-xl font-medium">Using Regular Expressions for Data Extraction</h3>
-
-        <p>When JSON is severely corrupted, you can use regular expressions to extract key-value pairs:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-md font-medium">Regular Expression Pattern:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`"([^"]+)"\\s*:\\s*"([^"]*)"  // For string values
-"([^"]+)"\\s*:\\s*([0-9\\.]+)  // For numeric values`}
-          </pre>
-          <p className="mt-2 text-sm">
-            These patterns can extract property names and values even from severely damaged JSON.
+          <p className="text-sm mt-3">
+            JSON supports Unicode text. The problem here is not that the file contains non-ASCII characters; the
+            problem is that the text was decoded or re-encoded incorrectly earlier in the pipeline. If possible,
+            recover from the original UTF-8 source instead of manually replacing characters one by one.
           </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">Incremental Validation</h3>
-
-        <p>For complex JSON, validate sections incrementally:</p>
-
-        <ol className="list-decimal pl-6 space-y-1">
-          <li>Split the document into logical sections</li>
-          <li>Validate and fix each section separately</li>
-          <li>Recombine the fixed sections</li>
-          <li>Validate the entire document</li>
-        </ol>
-
-        <h3 className="text-xl font-medium mt-6">Using Relaxed JSON Parsers</h3>
-
-        <p>Some libraries and tools offer &quot;relaxed&quot; or &quot;forgiving&quot; JSON parsing that can handle:</p>
-
-        <ul className="list-disc pl-6 space-y-1">
-          <li>Comments in JSON</li>
-          <li>Trailing commas</li>
-          <li>Unquoted property names</li>
-          <li>Single quotes</li>
-          <li>Hexadecimal numbers</li>
-        </ul>
-
-        <p className="mt-2">
-          These tools can be valuable for initial recovery, though you&apos;ll need to convert back to standard JSON
-          eventually.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Preventing JSON Corruption</h2>
-
-        <p>The best recovery strategy is prevention:</p>
+        <h2 className="text-2xl font-semibold mt-8">When Full Recovery Is Not Realistic</h2>
 
         <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Validate Before Saving</strong>: Always validate JSON before writing to disk or transmitting.
-          </li>
-          <li>
-            <strong>Use Transaction-like Writes</strong>: Write to temporary files first, then rename/move them to the
-            final location.
-          </li>
-          <li>
-            <strong>Implement Backups</strong>: Maintain regular backups of important JSON data.
-          </li>
-          <li>
-            <strong>Version Control</strong>: Store configuration and data files in version control systems.
-          </li>
-          <li>
-            <strong>Schema Validation</strong>: Use JSON Schema to validate document structure before accepting it.
-          </li>
-          <li>
-            <strong>Error Handling</strong>: Implement robust error handling for JSON parsing operations.
-          </li>
+          <li>The file was overwritten and the missing bytes are gone with no backups or logs.</li>
+          <li>Key names or string values were damaged in the middle and you cannot infer the original text safely.</li>
+          <li>The data order matters and you cannot prove which records were partially written or duplicated.</li>
+          <li>You only have a derived export, not the source of truth that produced it.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
-
         <p>
-          While corrupted JSON can be frustrating, it&apos;s often recoverable with the right approach. By understanding
-          common corruption patterns and applying systematic recovery techniques, you can salvage valuable data even
-          from severely damaged JSON files.
+          In those situations, the realistic goal is not perfect reconstruction. It is to salvage the confirmed subset,
+          document what was lost, and rebuild the rest from backups, event logs, or the upstream system that originally
+          generated the JSON.
         </p>
 
-        <p>
-          Remember that prevention is always better than recovery. Implementing good practices like validation, backups,
-          and version control will minimize the likelihood of dealing with corrupted JSON in the first place.
-        </p>
+        <h2 className="text-2xl font-semibold mt-8">What Not to Do</h2>
+
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Do not replace every single quote blindly. Apostrophes inside string values can make that destructive.</li>
+          <li>Do not use regular expressions to rewrite deeply nested JSON wholesale.</li>
+          <li>Do not strip all non-ASCII text. Modern JSON supports Unicode just fine.</li>
+          <li>Do not keep editing after the first valid parse without checking whether the data itself still makes sense.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">How To Prevent the Next Corruption</h2>
+
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Write to a temporary file and rename it atomically after validation succeeds.</li>
+          <li>Validate JSON before saving, deploying, or importing it into another system.</li>
+          <li>Keep versioned backups for files that matter.</li>
+          <li>Store append-heavy logs as NDJSON or JSONL when one-record-per-line is acceptable.</li>
+          <li>Log upstream HTTP status codes so HTML error pages are easier to spot immediately.</li>
+        </ul>
 
         <p>
-          Whether you&apos;re dealing with truncated files, syntax errors, or encoding problems, the structured approach
-          outlined in this article will help you recover your JSON data and get your applications back on track.
+          Recovering corrupted JSON is mostly a discipline problem, not a mystery problem. Preserve the original,
+          identify the first real structural failure, repair only what you can justify, and validate after every edit.
+          That approach gives you the best chance of keeping the data you can trust while avoiding silent corruption you
+          introduce yourself.
         </p>
       </div>
     </>

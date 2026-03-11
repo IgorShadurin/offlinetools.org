@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 
-/**
- * Metadata for JSON formatter article about handling incomplete JSON data streams
- */
 export const metadata: Metadata = {
-  title: "Handling Incomplete JSON Data Streams | Offline Tools",
+  title: "Handling Incomplete JSON Data Streams Safely | Offline Tools",
   description:
-    "Learn effective strategies to handle incomplete JSON data streams and maintain data integrity in your applications",
+    "Learn when to buffer a full JSON document, when to switch to NDJSON or JSON text sequences, and how to recover safely from truncated streams.",
 };
 
-/**
- * Article page component for JSON formatter article about handling incomplete JSON data streams
- */
 export default function JsonFormatterArticle() {
   return (
     <>
@@ -19,339 +13,189 @@ export default function JsonFormatterArticle() {
 
       <div className="space-y-6">
         <p>
-          Working with streaming JSON data presents unique challenges, especially when dealing with incomplete or
-          partial data streams. Whether you're building real-time applications, processing large datasets, or consuming
-          server-sent events, properly handling incomplete JSON is crucial for maintaining data integrity and
-          application stability.
+          Incomplete JSON is usually a protocol problem, not a parsing trick. A normal JSON document becomes valid only
+          when the full serialized value arrives, so cutting a stream in the middle of an object or array leaves you
+          with invalid JSON. The practical fix is to decide whether you are receiving one complete document, or a stream
+          of many smaller JSON records that needs explicit framing.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8">1. The Challenge of Incomplete JSON Streams</h2>
-        <p>JSON data streams can become incomplete due to various reasons:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Network interruptions during data transmission</li>
-          <li>Server timeouts or crashes during data generation</li>
-          <li>Rate limiting or bandwidth restrictions</li>
-          <li>Chunked transfer encoding with interrupted connections</li>
-          <li>Websocket disconnections during streaming</li>
-        </ul>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Example of an Incomplete JSON Stream:</h3>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`{
-  "events": [
-    {"id": 1, "type": "login", "timestamp": 1625097600},
-    {"id": 2, "type": "view_page", "timestamp": 1625097605},
-    {"id": 3, "type": "cli`}
-          </pre>
-          <p className="mt-2">
-            <em>The stream was cut off mid-way through the third event, resulting in invalid JSON.</em>
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">2. Implementing a Robust JSON Stream Parser</h2>
-        <p>
-          To handle incomplete JSON streams effectively, you need a more sophisticated approach than simple
-          <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">JSON.parse()</code>. Here's a strategy using a
-          buffer-based approach:
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">
-            Buffer-Based JSON Stream Processing:
-          </h3>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`class JsonStreamParser {
-  constructor() {
-    this.buffer = "";
-    this.parsedObjects = [];
-  }
-
-  // Add new data to the buffer
-  feed(chunk) {
-    this.buffer += chunk;
-    this.tryParse();
-  }
-
-  // Try to parse complete JSON objects from the buffer
-  tryParse() {
-    let startPos = 0;
-    let depth = 0;
-    let inString = false;
-    let escaped = false;
-    
-    for (let i = 0; i < this.buffer.length; i++) {
-      const char = this.buffer[i];
-      
-      // Handle string state
-      if (char === '"' && !escaped) {
-        inString = !inString;
-      }
-      
-      // Only count braces when not in a string
-      if (!inString) {
-        if (char === '{') {
-          depth++;
-        } else if (char === '}') {
-          depth--;
-          
-          // If depth returns to 0, we have a complete object
-          if (depth === 0) {
-            const jsonStr = this.buffer.substring(startPos, i + 1);
-            try {
-              const parsed = JSON.parse(jsonStr);
-              this.parsedObjects.push(parsed);
-              
-              // Move the start position forward
-              startPos = i + 1;
-            } catch (error) {
-              // If parsing fails, just continue
-            }
-          }
-        }
-      }
-      
-      // Track escape characters in strings
-      escaped = inString && char === '\\' && !escaped;
-    }
-    
-    // Remove processed data from buffer
-    if (startPos > 0) {
-      this.buffer = this.buffer.substring(startPos);
-    }
-  }
-
-  // Get all successfully parsed objects
-  getParsedObjects() {
-    const objects = [...this.parsedObjects];
-    this.parsedObjects = [];
-    return objects;
-  }
-}`}
-          </pre>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">3. Using JSON Streaming Libraries</h2>
-        <p>
-          Rather than implementing your own parser, you can leverage specialized libraries designed for handling JSON
-          streams:
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Using Streaming Libraries:</h3>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`// Example with the 'oboe.js' library
-import oboe from 'oboe';
-
-oboe('/api/events-stream')
-  // This triggers when a node matching the pattern is found
-  .node('events[*]', (event) => {
-    // Process each event as soon as it's parsed
-    processEvent(event);
-    
-    // Return false to release the event from memory
-    return false;
-  })
-  .done((fullResponse) => {
-    console.log('Stream complete');
-  })
-  .fail((error) => {
-    // Handle errors, including incomplete streams
-    console.error('Stream error:', error);
-    
-    // Implement recovery strategy
-    handleStreamError(error);
-  });`}
-          </pre>
-        </div>
 
         <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
-          <h3 className="text-lg font-medium">Popular JSON Streaming Libraries</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
+          <h2 className="text-xl font-semibold">Start With The Right Mental Model</h2>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
             <li>
-              <strong>JavaScript:</strong> oboe.js, JSONStream, stream-json
+              <strong>Single JSON document:</strong> HTTP chunking does not change the payload shape. Buffer until the
+              response is complete, then parse once.
             </li>
             <li>
-              <strong>Python:</strong> ijson, yajl-py
+              <strong>Many records over time:</strong> Use a framed format such as NDJSON/JSONL, server-sent events, or
+              RFC 7464 JSON text sequences so the client can detect record boundaries.
             </li>
             <li>
-              <strong>Java:</strong> Jackson's streaming API, Gson Streams
-            </li>
-            <li>
-              <strong>Go:</strong> json.Decoder with token streaming
-            </li>
-            <li>
-              <strong>Rust:</strong> serde_json streaming parsers
+              <strong>Arbitrary fragments of one object:</strong> Treat this as a broken producer unless you have a
+              runtime-specific incremental parser and no control over the source.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">4. Implementing Chunk-Based Processing</h2>
-        <p>For handling large JSON streams, a chunk-based approach allows you to process elements incrementally:</p>
+        <h2 className="text-2xl font-semibold mt-8">1. Why Plain JSON Breaks In Streams</h2>
+        <p>
+          Plain JSON does not tell the reader where one logical record ends unless the entire value is already complete.
+          That is why naive brace counting is fragile: braces can appear inside strings, top-level values can be arrays,
+          numbers, booleans, or <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">null</code>, and a
+          truncated escape sequence can make the remaining buffer ambiguous.
+        </p>
+        <p>
+          If you control the producer, the safest improvement is usually to stop streaming one massive JSON array and
+          instead emit self-contained records.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">2. Prefer Framed Records For Long-Lived Streams</h2>
+        <p>
+          Two formats are especially useful when a connection may pause, break, or reconnect:
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Common framing choices</h3>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              <strong>NDJSON / JSONL:</strong> one JSON value per line. This is simple to debug and works well for logs,
+              job output, and streaming API responses.
+            </li>
+            <li>
+              <strong>JSON text sequences:</strong> RFC 7464 defines{" "}
+              <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">application/json-seq</code>, where each JSON
+              text is prefixed with the ASCII record separator (
+              <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">\u001E</code>). The RFC is designed so
+              parsers can keep going after a truncated or malformed element.
+            </li>
+            <li>
+              <strong>Server-sent events:</strong> the event stream is already framed. Parse each event first, then
+              parse the JSON carried in its <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">data:</code>{" "}
+              field.
+            </li>
+          </ul>
+        </div>
+
+        <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+          {`NDJSON
+{"id":1,"type":"login"}
+{"id":2,"type":"view"}
+
+RFC 7464 JSON text sequence
+\\u001E{"id":1,"type":"login"}
+\\u001E{"id":2,"type":"view"}`}
+        </pre>
+
+        <h2 className="text-2xl font-semibold mt-8">3. Safe Browser Pattern For NDJSON</h2>
+        <p>
+          In current browsers, <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">fetch()</code> exposes the
+          body as a <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">ReadableStream</code>, and{" "}
+          <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">TextDecoderStream</code> is widely available. A
+          safe reader keeps a text buffer, splits on newlines, parses only complete lines, and treats any leftover tail
+          at end-of-stream as truncated data.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`async function processJsonStream(readableStream) {
-  // Create a reader from the stream
-  const reader = readableStream.getReader();
-  const decoder = new TextDecoder();
-  const parser = new JsonStreamParser();
-  
+            {`async function consumeNdjson(url, { onItem, signal } = {}) {
+  const response = await fetch(url, {
+    headers: { Accept: "application/x-ndjson, application/json" },
+    signal,
+  });
+
+  if (!response.ok || !response.body) {
+    throw new Error(\`Request failed: \${response.status}\`);
+  }
+
+  const reader = response.body
+    .pipeThrough(new TextDecoderStream())
+    .getReader();
+
+  let buffer = "";
+  let lineNumber = 0;
+
   try {
     while (true) {
       const { value, done } = await reader.read();
-      
-      if (done) {
-        break;
-      }
-      
-      // Convert the chunk to text and feed it to the parser
-      const chunk = decoder.decode(value, { stream: true });
-      parser.feed(chunk);
-      
-      // Process any complete objects
-      const objects = parser.getParsedObjects();
-      for (const obj of objects) {
-        await processObject(obj);
+      if (done) break;
+
+      buffer += value;
+      const lines = buffer.split(/\\r?\\n/);
+      buffer = lines.pop() ?? "";
+
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        lineNumber += 1;
+
+        try {
+          onItem?.(JSON.parse(line));
+        } catch (error) {
+          throw new Error(
+            \`Invalid JSON record on line \${lineNumber}: \${error.message}\`
+          );
+        }
       }
     }
-    
-    // Handle any remaining data in the buffer
-    if (parser.buffer.length > 0) {
-      console.warn('Stream ended with incomplete data in buffer');
-      handleIncompleteData(parser.buffer);
+
+    if (buffer.trim()) {
+      throw new Error(
+        "Stream ended with a partial JSON record. Retry from the last confirmed offset."
+      );
     }
-  } catch (error) {
-    console.error('Error processing stream:', error);
+  } finally {
+    reader.releaseLock();
   }
 }`}
           </pre>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">5. Recovery Strategies for Incomplete JSON</h2>
-        <p>When you encounter incomplete JSON, there are several recovery strategies:</p>
-
-        <div className="space-y-4">
-          <h3 className="text-xl font-medium">5.1 Graceful Degradation</h3>
-          <p>Process whatever complete objects you have and acknowledge the incomplete nature of the data.</p>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`function handleIncompleteStream(parsedObjects, incompleteBuffer) {
-  // Work with what we have
-  if (parsedObjects.length > 0) {
-    processValidObjects(parsedObjects);
-  }
-  
-  // Log the incomplete portion for debugging
-  logIncompleteData(incompleteBuffer);
-  
-  // Inform the user
-  notifyUser({
-    message: "Some data could not be processed due to an incomplete transmission",
-    recoveredItems: parsedObjects.length
-  });
-}`}
-          </pre>
-
-          <h3 className="text-xl font-medium mt-4">5.2 Automatic Completion Attempts</h3>
-          <p>For simple cases, you might attempt to complete the JSON structure:</p>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`function attemptJsonCompletion(incompleteJson) {
-  // Count opening and closing braces/brackets
-  const openBraces = (incompleteJson.match(/{/g) || []).length;
-  const closeBraces = (incompleteJson.match(/}/g) || []).length;
-  const openBrackets = (incompleteJson.match(/\\[/g) || []).length;
-  const closeBrackets = (incompleteJson.match(/\\]/g) || []).length;
-  
-  // Add missing closing braces/brackets
-  let completedJson = incompleteJson;
-  for (let i = 0; i < openBraces - closeBraces; i++) {
-    completedJson += '}';
-  }
-  
-  for (let i = 0; i < openBrackets - closeBrackets; i++) {
-    completedJson += ']';
-  }
-  
-  // Try to parse the completed JSON
-  try {
-    return JSON.parse(completedJson);
-  } catch (error) {
-    // If it still fails, return null
-    return null;
-  }
-}`}
-          </pre>
-
-          <h3 className="text-xl font-medium mt-4">5.3 Retry Mechanisms</h3>
-          <p>Implement retry logic with exponential backoff to attempt retrieving the complete data:</p>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            {`async function fetchWithRetry(url, maxRetries = 3) {
-  let retries = 0;
-  
-  while (retries < maxRetries) {
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      retries++;
-      
-      if (retries >= maxRetries) {
-        throw new Error(\`Failed after \${maxRetries} attempts: \${error.message}\`);
-      }
-      
-      // Exponential backoff with jitter
-      const delay = Math.min(1000 * 2 ** retries + Math.random() * 1000, 10000);
-      console.log(\`Retry \${retries} after \${delay}ms\`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-  }
-}`}
-          </pre>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">6. Best Practices for JSON Stream Processing</h2>
+        <h2 className="text-2xl font-semibold mt-8">4. Recovery Strategy When The Stream Cuts Off</h2>
+        <p>
+          The recovery path should be explicit. Do not silently invent closing braces or brackets unless you are doing a
+          one-off repair by hand and already know the missing content.
+        </p>
         <ol className="list-decimal pl-6 space-y-2">
-          <li>
-            <strong>Use streaming parsers for large datasets:</strong> Always prefer specialized JSON streaming
-            libraries over loading everything into memory.
-          </li>
-          <li>
-            <strong>Implement proper error handling:</strong> Capture and respond to stream interruptions and parser
-            errors.
-          </li>
-          <li>
-            <strong>Apply backpressure:</strong> Control the rate of data consumption to prevent memory issues with very
-            large streams.
-          </li>
-          <li>
-            <strong>Keep state minimal:</strong> Process objects incrementally rather than accumulating everything
-            before processing.
-          </li>
-          <li>
-            <strong>Design for resilience:</strong> Your system should handle partial data gracefully rather than
-            failing completely.
-          </li>
-          <li>
-            <strong>Log incomplete segments:</strong> Store problematic JSON fragments for later analysis and debugging.
-          </li>
-          <li>
-            <strong>Consider checkpoints:</strong> For long-running streams, implement checkpointing to resume from the
-            last successful position.
-          </li>
+          <li>Keep the unparsed tail separate from confirmed records.</li>
+          <li>Checkpoint a cursor, byte offset, sequence number, or last event ID as you process each record.</li>
+          <li>Retry from the last confirmed checkpoint instead of replaying from the beginning when possible.</li>
+          <li>Make downstream processing idempotent so duplicates are safe after reconnects.</li>
+          <li>Log the raw fragment, response headers, and checkpoint metadata for debugging.</li>
         </ol>
 
-        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900 my-6">
-          <h3 className="text-lg font-medium">Server-Side Considerations</h3>
-          <p className="mt-2">When designing APIs that stream JSON data, implement these server-side practices:</p>
+        <div className="bg-amber-50 p-4 rounded-lg dark:bg-amber-950 my-6">
+          <h3 className="text-lg font-medium">What usually goes wrong</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Send valid JSON objects in each chunk</li>
-            <li>Implement proper content-length headers for complete responses</li>
-            <li>Use chunked transfer encoding correctly</li>
-            <li>Include sequence IDs to help clients detect missing chunks</li>
-            <li>Provide resumption tokens for interrupted streams</li>
+            <li>Trying to call <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">JSON.parse()</code> on each transport chunk.</li>
+            <li>Assuming balanced braces prove that a JSON value is complete.</li>
+            <li>
+              Auto-appending <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">{"}"}</code> or{" "}
+              <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">{"]"}</code> to "fix" truncated payloads in
+              production.
+            </li>
+            <li>Dropping sequence metadata, which makes resume and deduplication much harder.</li>
           </ul>
         </div>
+
+        <h2 className="text-2xl font-semibold mt-8">5. If You Cannot Change The Producer</h2>
+        <p>
+          Sometimes a third-party service sends one huge JSON document and you still need early results. In that case,
+          use a real incremental parser for your runtime rather than writing a homegrown state machine. Node.js,
+          Python, Java, Go, and Rust all have mature streaming parser options that can emit tokens or objects as the
+          buffer grows.
+        </p>
+        <p>
+          Even then, the goal is usually to <strong>read one valid value safely</strong>, not to guess the missing tail
+          of a broken one. If you need to inspect the fragment manually, validate the recovered piece in the Offline
+          Tools JSON Formatter before replaying it or storing it permanently.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">6. Practical Decision Guide</h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>If the API returns one document, buffer the full response and parse once.</li>
+          <li>If the API emits many records, switch to NDJSON, JSON text sequences, or SSE.</li>
+          <li>If the connection may resume, attach sequence IDs and build around checkpoints.</li>
+          <li>If truncation is common, fix the producer contract before tuning the parser.</li>
+        </ul>
       </div>
     </>
   );

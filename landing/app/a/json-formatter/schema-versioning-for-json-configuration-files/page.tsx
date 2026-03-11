@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { AlertTriangle, GitCommitHorizontal, Code, ArrowRight, CheckCircle, Book } from "lucide-react"; // Only allowed icons
+import { AlertTriangle, GitCommitHorizontal, Code, ArrowRight, CheckCircle, Book } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Schema Versioning for JSON Configuration Files",
   description:
-    "Learn essential strategies and best practices for managing changes to your JSON configuration file schemas over time.",
+    "A practical guide to schema versioning for JSON configuration files, including schemaVersion fields, JSON Schema 2020-12 validation, migrations, and safe rollout rules.",
 };
 
 export default function JsonSchemaVersioningArticle() {
@@ -14,440 +14,289 @@ export default function JsonSchemaVersioningArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON has become a ubiquitous format for configuration files due to its human-readability and ease of parsing.
-          However, as your applications evolve, so too will their configuration needs. This often leads to changes in
-          the structure (schema) of your JSON config files. Without a plan for managing these changes, you can quickly
-          run into issues with backwards compatibility, making deployments difficult and potentially breaking older
-          versions of your application or configuration tooling.
+          Treat a JSON config format like an API. If a file can outlive one application release, be edited by humans,
+          or be shared across services and tools, its structure will eventually change. Without explicit schema
+          versioning, those changes become guesswork, and guesswork is what breaks loaders, deploys, and rollback
+          paths.
         </p>
         <p>
-          This article explores why schema versioning for JSON configuration is important and outlines several
-          strategies for implementing it effectively, suitable for developers of all levels.
+          The safest default for most teams is simple: put a `schemaVersion` field in every config, validate each
+          version explicitly, and migrate older files into one latest in-memory representation before the rest of the
+          application touches them.
         </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h2 className="text-lg font-semibold mb-2">Recommended default</h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Use a root-level `schemaVersion` field for the document format.</li>
+            <li>Keep the application version separate from the config schema version.</li>
+            <li>Validate against a schema for that exact version before migration.</li>
+            <li>Migrate step-by-step from older versions to one latest internal model.</li>
+            <li>Deploy readers that understand the new version before writers start emitting it.</li>
+          </ul>
+        </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <AlertTriangle className="w-6 h-6 text-yellow-500" />
-          <span>The Problem: Configuration Schema Evolution</span>
+          <span>Why Config Schemas Break Over Time</span>
         </h2>
-        <p>Imagine you have a simple JSON configuration file for a feature flag:</p>
+        <p>A configuration that starts simple often grows new nesting, defaults, and validation rules.</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Config v1:</h3>
+          <h3 className="text-lg font-medium mb-2">Config v1</h3>
           <pre>
             {`{
+  "schemaVersion": 1,
   "featureEnabled": true,
   "message": "Feature is active!"
 }`}
           </pre>
         </div>
-        <p>
-          Later, you decide to make the feature more complex, requiring separate messages for different user roles and
-          introducing a start date. You update the configuration file:
-        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Config v2 (breaking change):</h3>
+          <h3 className="text-lg font-medium mb-2">Config v2</h3>
           <pre>
             {`{
+  "schemaVersion": 2,
   "feature": {
     "enabled": true,
-    "startDate": "2023-10-27T10:00:00Z",
     "messages": {
       "admin": "Admin feature message",
       "user": "User feature message"
-    }
+    },
+    "startsAt": "2026-03-10T09:00:00Z"
   }
 }`}
           </pre>
         </div>
         <p>
-          Your application code written to read v1 will likely break when it encounters v2. It expects a top-level
-          `featureEnabled` boolean and a `message` string, but finds a `feature` object instead. Deploying new code that
-          understands v2 won&apos;t help older versions of the code running elsewhere, or configuration tools that still
-          expect v1.
+          A v1 reader expects top-level `featureEnabled` and `message` fields. If it reads v2 without a version check,
+          it can fail outright or, worse, silently misinterpret the data. Explicit versioning turns that failure into a
+          controlled branch instead of an accident.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <GitCommitHorizontal className="w-6 h-6 text-blue-500" />
-          <span>Why Version Your Configuration?</span>
+          <CheckCircle className="w-6 h-6 text-teal-500" />
+          <span>The Practical Baseline</span>
         </h2>
-        <p>Implementing configuration schema versioning provides several key benefits:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Backwards Compatibility:</strong> Allows newer code versions to gracefully handle older
-            configuration formats, and vice-versa (if forward compatibility is also implemented).
+            <strong>Version the document, not just the file name.</strong> File names and directories can help, but
+            the version should travel with the JSON itself.
           </li>
           <li>
-            <strong>Smoother Deployments:</strong> Reduces the risk of application failures when configuration files are
-            updated or rolled back.
+            <strong>Normalize to one internal shape.</strong> The rest of the codebase should consume one latest
+            structure, not branch on every historical format.
           </li>
           <li>
-            <strong>Clear Communication:</strong> Explicitly signals to developers and tools what format a configuration
-            file is expected to be in.
+            <strong>Keep migrations incremental.</strong> Prefer `v1 -&gt; v2 -&gt; v3` functions over a growing set of
+            special-case conversions from every old version directly to the newest.
           </li>
           <li>
-            <strong>Migration Path:</strong> Provides a defined process for transitioning configurations from an older
-            schema to a newer one.
-          </li>
-          <li>
-            <strong>Tooling Support:</strong> Enables development of tools (validators, migrators) that understand
-            different versions of your configuration.
+            <strong>Decide your support window.</strong> Be explicit about how many old schema versions the loader will
+            still accept and when they become unsupported.
           </li>
         </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Code className="w-6 h-6 text-blue-500" />
+          <span>When To Bump The Version</span>
+        </h2>
+        <p>
+          Do not tie schema versioning to every application release. Bump the config schema version when compatibility
+          changes, not just because you shipped new code.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Removing, renaming, or moving a required field is a version bump.</li>
+          <li>Changing a field type or meaning is a version bump.</li>
+          <li>Tightening validation rules enough to reject old valid files is a version bump.</li>
+          <li>
+            Adding an optional field may not need a version bump if older readers safely ignore unknown properties and
+            the new field does not change existing behavior.
+          </li>
+          <li>Changing defaults that materially change runtime behavior should be treated as a versioned change.</li>
+        </ul>
+        <p>
+          Integer versions such as `1`, `2`, and `3` are usually the simplest choice for configuration files. Use
+          semantic versioning only when external users or tools need the extra signal that major means incompatible,
+          minor means backward-compatible additions, and patch means non-structural fixes.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Book className="w-6 h-6 text-green-500" />
-          <span>Versioning Strategies</span>
+          <span>Do Not Confuse `schemaVersion`, App Version, And `$schema`</span>
         </h2>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Code className="w-5 h-5" />
-          <span>1. Explicit Version Field</span>
-        </h3>
-        <p>
-          The most common and often simplest approach is to include a dedicated field, typically named `version` or
-          `schemaVersion`, within the JSON object itself. This field&apos;s value (usually an integer or a string like
-          &quot;1.0.0&quot;) indicates the schema version.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Config v1 with version field:</h3>
-          <pre>
-            {`{
-  "version": 1,
-  "featureEnabled": true,
-  "message": "Feature is active!"
-}`}
-          </pre>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Config v2 with version field:</h3>
-          <pre>
-            {`{
-  "version": 2,
-  "feature": {
-    "enabled": true,
-    "startDate": "2023-10-27T10:00:00Z",
-    "messages": {
-      "admin": "Admin feature message",
-      "user": "User feature message"
-    }
-  }
-}`}
-          </pre>
-        </div>
-        <p>
-          When your application or tool loads the configuration, it first reads the `version` field. Based on this
-          value, it knows which parsing logic or data structure to apply.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Conceptual parsing logic:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`function loadConfig(jsonData: string): AppConfig {
-  const config = JSON.parse(jsonData);
-  const version = config.version || 1; // Default to v1 if no version field
-
-  switch (version) {
-    case 1:
-      return parseConfigV1(config);
-    case 2:
-      // Optionally migrate V2 to the latest internal representation
-      const v2Config = parseConfigV2(config);
-      return migrateV2ToLatest(v2Config); // Migration step
-    // Add cases for future versions
-    default:
-      throw new Error(\`Unsupported config version: \${version}\`);
-  }
-}
-
-// Need separate parsing/validation functions for each version
-function parseConfigV1(data: any): AppConfigV1 { ... }
-function parseConfigV2(data: any): AppConfigV2 { ... }
-
-// Migration logic if needed
-function migrateV2ToLatest(data: AppConfigV2): AppConfig { ... }
-
-// Define TypeScript types for each config version and the final internal representation
-interface AppConfigV1 {
-  featureEnabled: boolean;
-  message: string;
-}
-
-interface AppConfigV2 {
-  feature: {
-    enabled: boolean;
-    startDate: string;
-    messages: { admin: string; user: string };
-  };
-}
-
-interface AppConfig {
-  // The consistent internal representation
-  isFeatureActive: boolean;
-  featureStartDate?: Date;
-  adminMessage: string;
-  userMessage: string;
-}
-`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          <strong>Pros:</strong> Simple to implement, version is clearly visible within the file, works well with
-          migration scripts.
-        </p>
-        <p>
-          <strong>Cons:</strong> Requires adding a field to the root of your schema, every parser needs to check the
-          version field first.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Code className="w-5 h-5" />
-          <span>2. Implicit Versioning (File Naming)</span>
-        </h3>
-        <p>
-          Instead of putting the version inside the JSON, you can encode it in the file name or directory structure.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium mb-2">Example file names:</h3>
-          <pre>
-            {`config.v1.json
-config.v2.json
-config_schema_3.json`}
-          </pre>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium mb-2">Example directory structure:</h3>
-          <pre>
-            {`/config/
-  /v1/
-    settings.json
-  /v2/
-    settings.json`}
-          </pre>
-        </div>
-        <p>The application logic then determines the version based on the file path it loads from.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Conceptual loading logic:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`async function loadConfigFromFile(filePath: string): Promise<AppConfig> {
-  const jsonData = await readFile(filePath, 'utf-8'); // Assuming a file reading function
-  const config = JSON.parse(jsonData);
-
-  // Determine version from file path
-  let version: number | undefined;
-  if (filePath.includes('.v1.')) version = 1;
-  else if (filePath.includes('.v2.')) version = 2;
-  // ... or parse from directory structure
-
-  if (version === undefined) {
-    throw new Error(\`Could not determine config version from file path: \${filePath}\`);
-  }
-
-  switch (version) {
-    case 1:
-      return parseConfigV1(config);
-    case 2:
-      const v2Config = parseConfigV2(config);
-      return migrateV2ToLatest(v2Config);
-    default:
-      throw new Error(\`Unsupported config version: \${version}\`);
-  }
-}
-`}
-            </pre>
-          </div>
-        </div>
-        <p>
-          <strong>Pros:</strong> Keeps the JSON file clean, allows multiple versions of the same logical configuration
-          to exist side-by-side in the file system.
-        </p>
-        <p>
-          <strong>Cons:</strong> Version information is external to the file, requires a convention for
-          naming/structure, can be less intuitive for someone just looking at the JSON content.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Book className="w-5 h-5" />
-          <span>3. Schema-Based Versioning (e.g., JSON Schema)</span>
-        </h3>
-        <p>
-          For more complex configurations or environments where strong validation is critical, you can define your JSON
-          schemas using a standard like JSON Schema. You then maintain separate JSON Schema files for each version of
-          your configuration structure.
-        </p>
-        <p>
-          While JSON Schema files aren&apos;t part of the configuration itself, they act as the formal definition of
-          what a configuration file for a specific version should look like. Your tools can use these schema files to:
-        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Validate a config file against a specific version&apos;s schema.</li>
-          <li>Generate documentation.</li>
-          <li>Potentially generate code for parsing.</li>
+          <li>
+            <strong>`schemaVersion`</strong> is your config document format. Your loader uses it to choose validation
+            and migration logic.
+          </li>
+          <li>
+            <strong>Application version</strong> is your binary or release number. It should stay separate because one
+            app version may read several config schema versions.
+          </li>
+          <li>
+            <strong>`$schema`</strong> belongs in the JSON Schema file. It tells validators which JSON Schema dialect
+            that schema file uses.
+          </li>
         </ul>
         <p>
-          You would typically still combine this with an explicit `version` field in the JSON config file itself to
-          indicate which JSON Schema definition it adheres to.
+          This distinction matters because `$schema` is not a replacement for `schemaVersion`. A config file can be
+          validated by a JSON Schema written in the 2020-12 dialect while still being your own document version 2 or 7.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Book className="w-6 h-6 text-green-500" />
+          <span>Validate Each Version With JSON Schema</span>
+        </h2>
+        <p>
+          If you use JSON Schema today, the published 2020-12 draft is the right default unless your validator or
+          platform is pinned to an older draft. Keep one schema file per config version and make the version check part
+          of the schema itself.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Example JSON Schema (Partial v2):</h3>
+          <h3 className="text-lg font-medium mb-2">Example schema for config v2</h3>
           <pre>
             {`{
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://offlinetools.org/schemas/app-config.v2.schema.json",
   "title": "AppConfig v2",
-  "description": "Schema for application configuration version 2",
   "type": "object",
   "properties": {
-    "version": {
-      "const": 2,
-      "description": "Configuration schema version"
+    "schemaVersion": {
+      "const": 2
     },
     "feature": {
       "type": "object",
       "properties": {
         "enabled": { "type": "boolean" },
-        "startDate": { "type": "string", "format": "date-time" },
+        "startsAt": { "type": "string", "format": "date-time" },
         "messages": {
           "type": "object",
           "properties": {
             "admin": { "type": "string" },
             "user": { "type": "string" }
           },
-          "required": ["admin", "user"]
+          "required": ["admin", "user"],
+          "additionalProperties": false
         }
       },
-      "required": ["enabled", "startDate", "messages"]
+      "required": ["enabled", "messages", "startsAt"],
+      "additionalProperties": false
     }
   },
-  "required": ["version", "feature"],
+  "required": ["schemaVersion", "feature"],
   "additionalProperties": false
 }`}
           </pre>
         </div>
         <p>
-          Your loading/parsing logic would look similar to the explicit version field approach, but you might add a
-          validation step using a JSON Schema library before parsing.
-        </p>
-        <p>
-          <strong>Pros:</strong> Provides formal, machine-readable definitions of your schemas; excellent for
-          validation; supports sophisticated tooling.
-        </p>
-        <p>
-          <strong>Cons:</strong> Adds an external dependency (JSON Schema library) and additional files to manage; more
-          complex to set up initially.
+          A strict schema catches accidental drift early: misspelled keys, wrong types, and forgotten required fields.
+          If you intentionally allow extension points, document them clearly instead of silently accepting arbitrary
+          extra properties everywhere.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <ArrowRight className="w-6 h-6 text-purple-500" />
-          <span>Handling Migrations</span>
+          <span>Migrate To One Latest Representation</span>
         </h2>
         <p>
-          Simply knowing the version isn&apos;t enough if you need to process older configuration files with newer code
-          that expects the latest structure. This is where migration logic comes in. A migration is a process that
-          transforms configuration data from an older schema version to a newer one.
-        </p>
-        <p>Migrations can be applied:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>During Loading (Runtime Migration):</strong> The application reads an older config, applies
-            transformations in memory to convert it to the latest internal structure before use.
-          </li>
-          <li>
-            <strong>As a Separate Tool/Script (Offline Migration):</strong> A utility reads an older config file and
-            writes a new config file in a newer format. This is useful for upgrading persistent configuration files.
-          </li>
-        </ul>
-        <p>
-          Runtime migration is often convenient for handling minor schema changes or supporting older config files on
-          the fly. Offline migration is essential for major schema overhauls.
+          A good loader has a predictable pipeline: parse JSON, detect `schemaVersion`, validate against that version,
+          migrate one step at a time until the latest version, then hand the normalized object to the application.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Conceptual Migration Function (v1 to v2):</h3>
+          <h3 className="text-lg font-medium mb-2">Conceptual loader</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`// Assuming we parsed V1 config into AppConfigV1 type
-function migrateV1ToV2(configV1: AppConfigV1): AppConfigV2 {
-  // Create the V2 structure
-  const configV2: AppConfigV2 = {
-    version: 2, // Explicitly set the new version
-    feature: {
-      enabled: configV1.featureEnabled,
-      startDate: new Date().toISOString(), // Add a default or calculate
-      messages: {
-        admin: configV1.message, // Use V1 message for admin? Or default?
-        user: configV1.message // Use V1 message for user? Or default?
-      }
-    }
-  };
-  return configV2;
-}
+              {`type AnyConfig = Record<string, unknown>;
 
-// Example of chained migration (v1 -> v2 -> v3 ...)
-function migrateToLatest(config: any): AppConfig {
-  let currentConfig = config;
-  let currentVersion = config.version || 1;
+const validators: Record<number, (value: AnyConfig) => boolean> = {
+  1: validateConfigV1,
+  2: validateConfigV2,
+  3: validateConfigV3,
+};
 
-  if (currentVersion < 2) {
-    currentConfig = migrateV1ToV2(currentConfig);
-    currentVersion = 2;
+const migrations: Record<number, (value: AnyConfig) => AnyConfig> = {
+  1: migrateV1ToV2,
+  2: migrateV2ToV3,
+};
+
+function loadConfig(jsonText: string): LatestConfig {
+  const raw = JSON.parse(jsonText) as AnyConfig;
+  const detectedVersion =
+    typeof raw.schemaVersion === "number" ? raw.schemaVersion : 1;
+
+  const validate = validators[detectedVersion];
+  if (!validate) {
+    throw new Error("Unsupported schemaVersion: " + detectedVersion);
   }
 
-  // if (currentVersion < 3) {
-  //   currentConfig = migrateV2ToV3(currentConfig);
-  //   currentVersion = 3;
-  // }
+  if (!validate(raw)) {
+    throw new Error("Config failed validation for schemaVersion " + detectedVersion);
+  }
 
-  // After all migrations, parse the final structure
-  return parseLatestConfig(currentConfig);
-}
-`}
+  let current = raw;
+  for (let version = detectedVersion; migrations[version]; version += 1) {
+    current = migrations[version](current);
+  }
+
+  return parseLatestConfig(current);
+}`}
             </pre>
           </div>
         </div>
         <p>
-          Migration logic can become complex quickly, especially with multiple versions and significant schema changes.
-          Thorough testing of migration paths is crucial.
+          Runtime migration helps the newest code read older configs. Offline migration still matters for persistent
+          files because it lets you rewrite them once, review the diff, and stop carrying historical formats forever.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <CheckCircle className="w-6 h-6 text-teal-500" />
-          <span>Best Practices</span>
+          <GitCommitHorizontal className="w-6 h-6 text-indigo-500" />
+          <span>Rollout Rules That Prevent Breakage</span>
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Document Your Schemas:</strong> Clearly define the structure and meaning of each field for every
-            version. JSON Schema helps with this.
+            <strong>Deploy readers before writers.</strong> The safe order is: release code that can read the new
+            schema, then start writing the new schema.
           </li>
           <li>
-            <strong>Use Incremental Changes:</strong> Avoid massive schema overhauls in a single step if possible.
-            Smaller, incremental changes are easier to version and migrate.
+            <strong>Never change meaning without changing version.</strong> Reusing the same version number for a
+            different interpretation creates the hardest bugs to diagnose.
           </li>
           <li>
-            <strong>Design for Forwards/Backwards Compatibility:</strong> Ideally, newer code should read older configs,
-            and older code should *ignore* new fields in newer configs if possible (backward compatible changes). Adding
-            optional fields is easier than removing or renaming required ones.
+            <strong>Log deprecation warnings early.</strong> If schema version 1 will be removed, say so long before
+            the removal release.
           </li>
           <li>
-            <strong>Test Migrations Thoroughly:</strong> Write tests to ensure your migration logic correctly transforms
-            data from every supported older version to the latest.
+            <strong>Test round trips.</strong> Parse, migrate, write, and re-read representative real configs instead
+            of only synthetic fixtures.
           </li>
           <li>
-            <strong>Establish a Clear Versioning Policy:</strong> Decide early on whether you&apos;ll use integers,
-            semantic versioning strings, etc., and how you&apos;ll increment the version number.
+            <strong>Keep human editing in mind.</strong> Good error messages matter because many config failures are
+            caused by manual edits, not code generation.
           </li>
-          <li>
-            <strong>Consider Default Values:</strong> When adding new fields, define sensible default values so that
-            older configurations without that field can still be migrated or used by newer code.
-          </li>
+        </ul>
+        <p>
+          Large configuration-driven systems follow this same pattern. Kubernetes, for example, puts an explicit
+          `apiVersion` in manifests because configuration often survives longer than any single binary release.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <AlertTriangle className="w-6 h-6 text-red-500" />
+          <span>Common Mistakes</span>
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Relying only on file names such as `config.v2.json` and leaving the JSON itself ambiguous.</li>
+          <li>Using `version` without documenting whether it means app release, business rule set, or schema format.</li>
+          <li>Copying an outdated JSON Schema example and assuming draft-07 is still the default everywhere.</li>
+          <li>Letting every subsystem branch on old versions instead of normalizing once near the loader.</li>
+          <li>Keeping support for old versions forever because no deprecation deadline was defined.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Ignoring configuration schema versioning is a common pitfall that can lead to significant headaches down the
-          road. By proactively implementing a versioning strategy &mdash; whether a simple explicit version field or a
-          more robust JSON Schema approach &mdash; and planning for migrations, you can ensure your application remains
-          maintainable, your deployments are smoother, and your configuration process is less error-prone as your system
-          evolves. Choose the strategy that best fits the complexity of your configuration and the needs of your
-          development lifecycle.
+          The best schema versioning strategy for JSON configuration files is usually not elaborate. Use an explicit
+          `schemaVersion`, validate with a schema for that exact version, migrate incrementally to one latest internal
+          model, and roll out reader support before new writers go live. That approach stays understandable for humans,
+          testable for tooling, and much safer when real deployments drift over time.
         </p>
       </div>
     </>

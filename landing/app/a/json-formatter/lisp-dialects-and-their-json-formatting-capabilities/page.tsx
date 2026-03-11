@@ -4,7 +4,7 @@ import { ArrowRightLeft, Code, FileJson, ListTree, Inspect, FileOutput, Braces }
 export const metadata: Metadata = {
   title: "Lisp Dialects and Their JSON Formatting Capabilities",
   description:
-    "Explore how different Lisp dialects handle JSON parsing and serialization, facilitating interoperability with modern data formats.",
+    "Compare current JSON parsing, serialization, and pretty-printing support in Common Lisp, Clojure, and Racket with practical examples and compatibility notes.",
 };
 
 export default function LispJsonPage() {
@@ -12,360 +12,275 @@ export default function LispJsonPage() {
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center space-x-3">
         <ArrowRightLeft className="w-8 h-8" />
-        <span>Lisp Dialects and JSON Interoperability</span>
+        <span>Lisp Dialects and Their JSON Formatting Capabilities</span>
       </h1>
 
       <div className="space-y-6">
         <p>
-          Lisp, with its iconic S-expressions, might seem worlds apart from JSON, the prevalent data interchange format
-          of the web. Lisp structures are deeply nested lists and atoms, while JSON relies on key-value objects and
-          ordered arrays. However, in practice, Lisp systems frequently need to interact with the outside world, and
-          that world speaks JSON.
+          If you need to parse, generate, or pretty-print JSON from Lisp code, the answer depends heavily on the
+          dialect. Common Lisp usually relies on third-party libraries and lets you choose your object/array mapping.
+          Clojure aligns very naturally with JSON through maps and vectors. Racket ships an official JSON library, but
+          it expects values that satisfy its stricter <code>jsexpr?</code> data model.
         </p>
         <p>
-          Fortunately, the inherent flexibility and powerful data manipulation capabilities of Lisp make integrating
-          with JSON not only possible but often quite elegant. This page explores how various Lisp dialects handle the
-          challenge of parsing JSON into native Lisp data structures and serializing Lisp data into JSON strings.
+          For most real projects, JSON support is not the hard part. The hard part is choosing the right representation
+          for keys, arrays, numbers, and <code>null</code>. That is where dialects differ, and those differences affect
+          whether your code feels pleasant or constantly full of conversion helpers.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <FileJson className="w-6 h-6" />
-          <span>Why JSON in Lisp?</span>
+          <span>Quick Answer</span>
         </h2>
         <p>
-          The primary reason is <strong>interoperability</strong>. Lisp applications often need to:
+          All major Lisp families can handle JSON today, but they do not do it the same way. If you want the shortest
+          path from JSON to native data and back, Clojure tends to be the smoothest fit. If you want maximum
+          representation control, Common Lisp gives you more knobs. If you want batteries included in a Scheme-family
+          language, Racket is the clearest current example.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Communicate with web services (REST APIs, etc.) that exchange data in JSON.</li>
-          <li>Process configuration files or data dumps stored in JSON format.</li>
-          <li>Generate JSON output for client-side applications or other systems.</li>
-        </ul>
-        <p>
-          Mapping JSON data into structures that are idiomatic to the Lisp dialect being used is key to making this
-          interaction seamless.
-        </p>
+        <div className="overflow-x-auto my-4">
+          <table className="min-w-full text-sm border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <thead className="bg-gray-100 dark:bg-gray-800">
+              <tr>
+                <th className="text-left p-3 font-semibold">Dialect</th>
+                <th className="text-left p-3 font-semibold">Current Practical Choice</th>
+                <th className="text-left p-3 font-semibold">Default JSON Shape</th>
+                <th className="text-left p-3 font-semibold">What To Watch</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <td className="p-3 align-top font-medium">Common Lisp</td>
+                <td className="p-3 align-top">
+                  <code>cl-json</code> for documented parsing and serialization
+                </td>
+                <td className="p-3 align-top">Objects are alists by default; arrays are lists</td>
+                <td className="p-3 align-top">Be explicit about key mapping and <code>false</code> versus <code>null</code></td>
+              </tr>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <td className="p-3 align-top font-medium">Clojure</td>
+                <td className="p-3 align-top">
+                  <code>clojure.data.json</code> or <code>cheshire</code>
+                </td>
+                <td className="p-3 align-top">Objects map cleanly to maps; arrays to vectors</td>
+                <td className="p-3 align-top">Choose whether keys stay strings or become keywords</td>
+              </tr>
+              <tr className="border-t border-gray-200 dark:border-gray-700">
+                <td className="p-3 align-top font-medium">Racket</td>
+                <td className="p-3 align-top">
+                  Built-in <code>json</code> library
+                </td>
+                <td className="p-3 align-top">Objects are usually symbol-keyed hashes; arrays are lists</td>
+                <td className="p-3 align-top">
+                  Only values matching <code>jsexpr?</code> can be written
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <ListTree className="w-6 h-6" />
-          <span>Mapping JSON to Lisp Data Structures</span>
+          <span>What Changes Between Dialects</span>
         </h2>
-        <p>
-          JSON defines a few fundamental data types: objects, arrays, strings, numbers, booleans (true/false), and null.
-          Lisp dialects have their own equivalents, and the mapping typically follows these conventions:
-        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>JSON Object (`{}`)</strong>: Maps to a key-value store. Common Lisp often uses association lists
-            (alists) or hash tables. Scheme might use alists or records. Clojure prominently uses maps. The keys (JSON
-            strings) can be mapped to Lisp strings or keywords.
+            <strong>Object keys:</strong> Clojure can keep JSON keys as strings or keywordize them on read. Common Lisp
+            often maps keys to symbols and may normalize names. Racket&apos;s JSON expressions typically use symbol keys
+            in hashes.
           </li>
           <li>
-            <strong>JSON Array (`[]`)</strong>: Maps to an ordered collection. Lisp lists or vectors are common
-            representations.
+            <strong>Arrays:</strong> Clojure defaults to vectors, while Common Lisp and Racket often use lists unless
+            you opt into a different representation.
           </li>
           <li>
-            <strong>JSON String (`"..."`)</strong>: Maps directly to Lisp strings.
+            <strong>Null and booleans:</strong> Clojure keeps <code>nil</code> and <code>false</code> distinct. Racket
+            keeps JSON <code>null</code> distinct from <code>#f</code>. With Common Lisp&apos;s default CL-JSON
+            semantics, <code>false</code> and <code>null</code> can both collapse to <code>NIL</code>, which matters
+            if your API distinguishes them.
           </li>
           <li>
-            <strong>JSON Number (`123`, `4.5`)</strong>: Maps to Lisp numbers (integers, floats, rationals, etc.).
+            <strong>Numbers:</strong> Clojure&apos;s official JSON library can preserve decimal values as BigDecimal via{" "}
+            <code>:bigdec true</code>. Common Lisp and Racket handle numbers cleanly, but you still need to watch
+            precision rules and how your application expects to consume them.
           </li>
           <li>
-            <strong>JSON Boolean (`true`, `false`)</strong>: Maps to the dialect's boolean equivalents (e.g., `T`/`NIL`
-            in Common Lisp, `#t`/`#f` in Scheme, `true`/`false` in Clojure).
-          </li>
-          <li>
-            <strong>JSON Null (`null`)</strong>: Maps to the dialect's null/nil representation (e.g., `NIL` in Common
-            Lisp, `null` object or specific value in Scheme, `nil` in Clojure).
+            <strong>Large payloads:</strong> Streaming APIs exist, but they are library-specific. If you work with very
+            large documents, avoid assuming that all examples using strings scale directly to production.
           </li>
         </ul>
         <p>
-          The choice of mapping (e.g., alist vs. hash table for objects, lists vs. vectors for arrays, string keys vs.
-          keyword keys) often depends on the specific Lisp library being used and performance considerations.
-          Clojure&apos;s strong support for persistent maps with keyword keys makes it particularly well-suited for
-          working with JSON, often mapping <code>{`{"name": "Alice"}`}</code> to <code>{`{:name "Alice"}`}</code>.
+          This is also why a standalone formatter is useful even when your language already has a JSON library. It lets
+          you validate sample payloads, inspect nesting, and normalize whitespace before you lock a representation into
+          code.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Inspect className="w-6 h-6" />
-          <span>Parsing JSON in Different Lisp Dialects</span>
+          <span>Common Lisp</span>
         </h2>
         <p>
-          Parsing involves taking a JSON string and converting it into the corresponding Lisp data structures. Most
-          dialects rely on external libraries for robust JSON parsing.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          Common Lisp: Using <code>cl-json</code> (Example)
-        </h3>
-        <p>
-          <code>cl-json</code> is a popular library for Common Lisp. By default, it often maps JSON objects to
-          association lists or hash tables and arrays to lists. You can often configure the mapping.
+          Common Lisp has multiple JSON libraries, but <code>cl-json</code> remains a well-documented reference point
+          because its behavior is explicit. By default it decodes JSON objects using Lisp-friendly key names and list
+          structures, which is flexible but not always what you want for random access or strict schema matching.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Parsing a JSON object:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(ql:quickload "cl-json") ; Load the library (if not already loaded)`}
-              <br />
-              <br />
-              {`(let ((json-string "{\\"name\\": \\"Alice\\", \\"age\\": 30, \\"isStudent\\": false}"))`}
-              <br />
-              {`  (json:decode-json-from-string json-string))`}
-              <br />
-              <br />
-              {`;; Possible output (association list, string keys):`}
-              <br />
-              {`;; (("name" . "Alice") ("age" . 30) ("isStudent" . NIL))`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Parsing a JSON array:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(let ((json-string "[10, \\"hello\\", true, null]"))`}
-              <br />
-              {`  (json:decode-json-from-string json-string))`}
-              <br />
-              <br />
-              {`;; Possible output (list):`}
-              <br />
-              {`;; (10 "hello" T NIL)`}
-            </pre>
+          <h3 className="text-lg font-medium">Parsing with <code>cl-json</code></h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre className="text-sm">{`(ql:quickload "cl-json")
+
+(let ((payload "{\\"userId\\":42,\\"roles\\":[\\"admin\\",\\"editor\\"],\\"active\\":true}"))
+  (json:decode-json-from-string payload))
+
+;; => ((:USER-ID . 42) (:ROLES "admin" "editor") (:ACTIVE . T))
+`}</pre>
           </div>
         </div>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Serializing back to JSON</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre className="text-sm">{`(json:encode-json-alist-to-string
+ '((:user-id . 42)
+   (:active . t)
+   (:roles . ("admin" "editor"))))
 
-        <h3 className="text-xl font-semibold mt-6">
-          Scheme: Using <code>json-p</code> (Example - Syntax may vary by implementation)
-        </h3>
+;; => "{\\"userId\\":42,\\"active\\":true,\\"roles\\":[\\"admin\\",\\"editor\\"]}"
+`}</pre>
+          </div>
+        </div>
         <p>
-          Schemes have various libraries like <code>json-p</code> (part of SRFI 180). Mapping conventions can differ.
+          The practical question in Common Lisp is not &quot;can it do JSON?&quot; but &quot;which semantics do I want?&quot;
+          CL-JSON documents configurable identifier conversion, strict decoding, and alternate decoder semantics that
+          can produce vectors instead of lists. That makes it capable, but it also means you should make the mapping
+          explicit instead of relying on defaults that may surprise the next person reading the code.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Inspect className="w-6 h-6" />
+          <span>Clojure</span>
+        </h2>
+        <p>
+          Clojure is usually the least awkward Lisp dialect for JSON because its core data structures already look like
+          JSON: maps, vectors, strings, booleans, and <code>nil</code>. The current official API in{" "}
+          <code>clojure.data.json</code> centers on <code>read-str</code>, <code>read</code>,{" "}
+          <code>write-str</code>, and <code>write</code>.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Parsing a JSON object:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`; Assuming json-p is available and imported`}
-              <br />
-              {`(import (json-p))`}
-              {/* Example import, syntax varies */}
-              <br />
-              <br />
-              {`(let ((json-string "{\\"city\\": \\"London\\", \\"population\\": 9000000}"))`}
-              <br />
-              {`  (json-read (open-string-input-port json-string)))`}
-              {/* Example function call */}
-              <br />
-              <br />
-              {`;; Possible output (e.g., Scheme record type or alist):`}
-              <br />
-              {`;; #&lt;json-object ("city" . "London") ("population" . 9000000)&gt;`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Parsing a JSON array:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(let ((json-string "[\\"apple\\", \\"banana\\", \\"cherry\\"]"))`}
-              <br />
-              {`  (json-read (open-string-input-port json-string)))`}
-              <br />
-              <br />
-              {`;; Possible output (e.g., Scheme vector):`}
-              <br />
-              {`;; #("apple" "banana" "cherry")`}
-            </pre>
+          <h3 className="text-lg font-medium">Reading and pretty-printing with <code>clojure.data.json</code></h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre className="text-sm">{`(require '[clojure.data.json :as json])
+
+(def payload
+  (json/read-str
+    "{\\"service\\":\\"billing\\",\\"price\\":1200.50,\\"enabled\\":true}"
+    :key-fn keyword
+    :bigdec true))
+
+;; => {:service "billing" :price 1200.50M :enabled true}
+
+(json/write-str payload :indent true)
+;; => pretty-printed JSON string
+`}</pre>
           </div>
         </div>
-
-        <h3 className="text-xl font-semibold mt-6">
-          Clojure: Using <code>clojure.data.json</code> or <code>cheshire</code> (Example)
-        </h3>
         <p>
-          Clojure&apos;s built-in data structures (maps, vectors) align well with JSON. Libraries like{" "}
-          <code>clojure.data.json</code> or the faster <code>cheshire</code> are commonly used. Keys are often mapped to
-          Clojure keywords by default.
+          One worthwhile current-detail check: older examples on the web still use <code>read-json</code> and{" "}
+          <code>write-json</code>, but the library&apos;s current docs mark those as deprecated. If you are updating old
+          code or blog content, this is usually the first thing worth correcting.
+        </p>
+        <p>
+          In day-to-day Clojure work, teams often choose between the official library and <code>cheshire</code>. The
+          official library is straightforward and dependency-light. Cheshire is a common choice when you want Jackson
+          underneath, custom encoders, stream-based parsing, lazy parsing via <code>parsed-seq</code>, or easy
+          pretty-printing with <code>generate-string</code>.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Inspect className="w-6 h-6" />
+          <span>Racket and Scheme-Family Languages</span>
+        </h2>
+        <p>
+          Scheme is fragmented enough that generic advice is often too vague to help. Racket is the best concrete
+          example because it ships an official <code>json</code> library with documented read/write and string conversion
+          functions. Its model is slightly stricter than Clojure&apos;s, which is useful once you understand the rules.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Parsing a JSON object:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(require '[clojure.data.json :as json])`}
-              <br />
-              <br />
-              {`(let [json-string "{\\"product\\": \\"Laptop\\", \\"price\\": 1200.50, \\"inStock\\": true}"]`}
-              <br />
-              {`  (json/read-json json-string))`}
-              {/* Reads into Clojure data structure */}
-              <br />
-              <br />
-              {`;; Output (Clojure map with keyword keys by default):`}
-              <br />
-              {`;; {:product "Laptop" :price 1200.5 :inStock true}`}
-            </pre>
-          </div>
-          <h4 className="text-lg font-medium mt-4">Parsing a JSON array:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(require '[clojure.data.json :as json])`}
-              <br />
-              <br />
-              {`(let [json-string "[{\\"id\\": 1}, {\\"id\\": 2}]"]`}
-              <br />
-              {`  (json/read-json json-string))`}
-              {/* Reads into Clojure data structure */}
-              <br />
-              <br />
-              {`;; Output (Clojure vector of maps):`}
-              <br />
-              {`;; [{:id 1} {:id 2}]`}
-            </pre>
+          <h3 className="text-lg font-medium">Using Racket&apos;s built-in <code>json</code> module</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre className="text-sm">{`(require json)
+
+(define payload
+  (string->jsexpr "{\\"city\\":\\"London\\",\\"visitors\\":9000000,\\"open\\":true}"))
+
+;; => '#hasheq((city . "London") (visitors . 9000000) (open . #t))
+
+(jsexpr->string
+  #hasheq((city . "London") (tags . ("capital" "uk")))
+  #:indent 2)
+
+;; => pretty-printed JSON string
+`}</pre>
           </div>
         </div>
+        <p>
+          The important Racket-specific caveat is that JSON output must satisfy <code>jsexpr?</code>. In practice that
+          means arrays are normally lists, not vectors, and object keys in hashes are symbols, not arbitrary strings.
+          If your program naturally builds vectors or string-keyed hashes, convert them before writing JSON.
+        </p>
+        <p>
+          Racket also keeps JSON <code>null</code> separate from booleans by representing it as <code>&apos;null</code>{" "}
+          by default, which is often more convenient than the ambiguity some Common Lisp defaults create.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <FileOutput className="w-6 h-6" />
-          <span>Serializing Lisp Data to JSON</span>
-        </h2>
-        <p>
-          Serialization is the reverse process: converting Lisp data structures back into a JSON string. Libraries
-          provide functions to handle this, respecting the standard JSON format.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          Common Lisp: Using <code>cl-json</code> (Example)
-        </h3>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Serializing a Common Lisp alist:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(ql:quickload "cl-json")`}
-              <br />
-              <br />
-              {`(let ((lisp-data '(("user" . "Bob") ("isActive" . T) ("roles" "admin" "editor"))))`}
-              <br />
-              {`  (json:encode-json-to-string lisp-data))`}
-              {/* Requires careful mapping definition often */}
-              <br />
-              <br />
-              {`;; Output (string):`}
-              <br />
-              {`;; "{\\"user\\":\\"Bob\\",\\"isActive\\":true,\\"roles\\":[\\"admin\\",\\"editor\\"]}"`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            Note: Serializing often requires the Lisp structure to conform to what the library expects, or you might
-            need to provide custom mappers. Alists are often treated as objects, and lists as arrays. The library
-            handles basic types.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">
-          Scheme: Using <code>json-p</code> (Example)
-        </h3>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Serializing Scheme data:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(import (json-p))`}
-              {/* Example import */}
-              <br />
-              <br />
-              {`; Assuming a Scheme record or alist representing a JSON object`}
-              <br />
-              {`(let ((scheme-data '#&lt;json-object ("id" . 101) ("items" . #("itemA" "itemB"))&gt;))`}
-              <br />
-              {`  (with-output-to-string (lambda () (json-write scheme-data))))`}
-              {/* Example function call */}
-              <br />
-              <br />
-              {`;; Output (string):`}
-              <br />
-              {`;; "{\\"id\\":101,\\"items\\":[\\"itemA\\",\\"itemB\\"]}"`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">
-          Clojure: Using <code>clojure.data.json</code> or <code>cheshire</code> (Example)
-        </h3>
-        <p>Clojure&apos;s maps (often with keyword keys) and vectors map naturally to JSON objects and arrays.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Serializing a Clojure map and vector:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre className="text-sm">
-              {`(require '[clojure.data.json :as json])`}
-              <br />
-              <br />
-              {`(let [clj-map {:firstName "Jane" :lastName "Doe" :age 25}]`}
-              <br />
-              {`  (json/write-json clj-map))`}
-              {/* Writes to *out* by default */}
-              <br />
-              <br />
-              {`;; Output (string - requires capturing *out* or using a writer):`}
-              <br />
-              {`;; "{\\"firstName\\":\\"Jane\\",\\"lastName\\":\\"Doe\\",\\"age\\":25}"`}
-              <br />
-              <br />
-              {`(let [clj-vector ["red" "green" "blue"]]`}
-              <br />
-              {`  (json/write-json clj-vector))`}
-              {/* Writes to *out* */}
-              <br />
-              <br />
-              {`;; Output (string):`}
-              <br />
-              {`;; "[\\"red\\",\\"green\\",\\"blue\\"]"`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            Libraries often provide options for pretty-printing (adding whitespace and indentation) during serialization
-            for human readability, e.g., <code>(json/write-json clj-map :pretty true)</code>.
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Code className="w-6 h-6" />
-          <span>Key Considerations and Challenges</span>
+          <span>Which Dialect Feels Best For JSON?</span>
         </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Data Type Fidelity:</strong> Ensuring that Lisp numbers map correctly to JSON numbers (e.g., dealing
-            with integers vs. floats, large numbers).
+            <strong>Choose Clojure</strong> if you want the lowest impedance mismatch and the clearest path from JSON
+            to idiomatic data.
           </li>
           <li>
-            <strong>Key Representation:</strong> Deciding whether JSON string keys should map to Lisp strings or
-            keywords (Clojure often prefers keywords, Common Lisp/Scheme often use strings in alists/hash tables).
-            Consistency is important.
+            <strong>Choose Common Lisp</strong> if you want flexible representation control and do not mind deciding the
+            mapping policy yourself.
           </li>
           <li>
-            <strong>Null/Nil Mapping:</strong> Correctly handling the conversion between JSON&apos;s <code>null</code>{" "}
-            and the dialect&apos;s representation of nothingness (<code>NIL</code>, <code>nil</code>, specific object).
+            <strong>Choose Racket</strong> if you want a documented standard library solution and you are comfortable
+            shaping data to fit <code>jsexpr?</code>.
           </li>
+        </ul>
+        <p>
+          That comparison is an inference from each dialect&apos;s default mappings and official APIs, not a universal
+          rule. Performance, ecosystem fit, and the shape of your existing application can matter more than the JSON API
+          alone.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Code className="w-6 h-6" />
+          <span>Troubleshooting Checklist</span>
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>If keys mysteriously change, check whether your library is keywordizing, symbolizing, or renaming them.</li>
+          <li>If arrays come back in the wrong shape, confirm whether your dialect defaults to lists or vectors.</li>
           <li>
-            <strong>Error Handling:</strong> Robustly handling malformed JSON input during parsing.
+            If <code>null</code> and <code>false</code> behave strangely, test them explicitly before trusting default
+            conversions.
           </li>
-          <li>
-            <strong>Performance:</strong> For high-throughput applications, the performance of the JSON library can be
-            critical. Some libraries are significantly faster than others (e.g., <code>cheshire</code> in Clojure vs.{" "}
-            <code>clojure.data.json</code>).
-          </li>
-          <li>
-            <strong>Streaming vs. In-Memory:</strong> For very large JSON documents, streaming parsers that process the
-            data chunk by chunk without loading the entire structure into memory are necessary. Some libraries offer
-            this.
-          </li>
+          <li>If decimals lose precision, look for BigDecimal or exact-number options in your JSON reader.</li>
+          <li>If output is valid but hard to inspect, pretty-print it before debugging application logic.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Braces className="w-6 h-6" />
-          <span>Conclusion</span>
+          <span>Bottom Line</span>
         </h2>
         <p>
-          Despite their syntactical differences, Lisp dialects and JSON coexist peacefully thanks to well-developed
-          libraries. These libraries provide the essential functions for transforming JSON data into native Lisp
-          structures and vice-versa. While the specific data structure mapping might vary slightly between dialects and
-          libraries, the underlying principles of parsing and serialization are standard. Leveraging these tools allows
-          Lisp applications to effectively participate in the modern data landscape, exchanging information seamlessly
-          with systems that rely on JSON.
+          Lisp dialects are fully capable of working with JSON, but the best workflow depends on how closely each
+          dialect&apos;s native data model matches the JSON you exchange. Clojure is usually the smoothest. Common Lisp
+          is the most configurable. Racket is clear and capable once you respect its JSON-expression rules. If you are
+          comparing sample payloads between dialects, format them first, then make the representation choice explicit in
+          code.
         </p>
       </div>
     </>

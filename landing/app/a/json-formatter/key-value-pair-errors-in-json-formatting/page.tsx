@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 /**
- * Metadata for JSON formatter article about key-value pair errors
+ * Metadata for JSON formatter article about fixing key-value pair errors
  */
 export const metadata: Metadata = {
-  title: "Key-Value Pair Errors in JSON Formatting | Offline Tools",
+  title: "Key-Value Pair Errors in JSON Formatting: How to Fix Them | Offline Tools",
   description:
-    "Learn about common key-value pair errors in JSON documents and effective strategies to identify and resolve these formatting issues.",
+    "Fix JSON key-value pair errors fast. Learn how to correct unquoted keys, missing colons, missing commas, trailing commas, and duplicate keys.",
 };
 
 /**
@@ -19,477 +19,312 @@ export default function KeyValuePairErrorsArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) relies on key-value pairs as its fundamental building blocks for organizing
-          data. These pairs form the basis of JSON objects, making them crucial for proper JSON formatting. However,
-          they can also be the source of common errors that break JSON validation. In this article, we&apos;ll explore
-          frequent key-value pair errors and how to efficiently identify and resolve them.
+          If a file such as <code>key-value.json</code> refuses to parse, the problem is usually not the whole
+          document. It is usually one broken object member: a key without double quotes, a missing colon, a missing
+          comma, or a trailing comma left behind during editing. Fixing that first broken pair normally makes the rest
+          of the file readable again.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Understanding JSON Key-Value Pairs</h2>
         <p>
-          In JSON, a key-value pair consists of a key (always a string) and a value (which can be a string, number,
-          object, array, boolean, or null), separated by a colon. Multiple key-value pairs within an object are
-          separated by commas.
+          JSON objects are strict. RFC 8259 defines an object as a set of name/value pairs, with the name written as a
+          string, a colon between the name and value, and commas between members. That is why JavaScript-style shortcuts
+          that feel familiar in config files often break valid JSON immediately.
+        </p>
+
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
+          <h2 className="text-lg font-medium text-blue-800 dark:text-blue-300">Quick Fix Checklist</h2>
+          <ul className="mt-2 list-disc ml-6 space-y-1 text-blue-700 dark:text-blue-200">
+            <li>Every key must be inside double quotes.</li>
+            <li>Every key must be followed by a colon.</li>
+            <li>Every pair except the last one must end with a comma.</li>
+            <li>The last pair must not have a trailing comma.</li>
+            <li>Each key in the same object should appear only once.</li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">What a Valid Key-Value Pair Looks Like</h2>
+        <p>
+          A JSON object member always follows the same shape: <code>&quot;key&quot;: value</code>. The key is always a
+          string. The value can be a string, number, object, array, boolean, or <code>null</code>.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Basic Key-Value Pair Syntax:</h3>
+          <h3 className="text-lg font-medium">Valid JSON Object</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
-  "key1": "string value",
-  "key2": 42,
-  "key3": true,
-  "key4": null,
-  "key5": { "nested": "object" },
-  "key6": [1, 2, 3]
+  "name": "Ada Lovelace",
+  "active": true,
+  "projects": 3,
+  "tags": ["math", "computing"],
+  "profile": {
+    "country": "UK"
+  }
 }`}
             </pre>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Common Key-Value Pair Errors</h2>
+        <h2 className="text-2xl font-semibold mt-8">The Most Common Key-Value Pair Errors</h2>
 
-        <h3 className="text-xl font-medium mt-6">1. Missing or Invalid Quotation Marks for Keys</h3>
+        <h3 className="text-xl font-medium mt-6">1. Keys are not wrapped in double quotes</h3>
         <p>
-          In JSON, keys must be strings and must be enclosed in double quotes. Using unquoted keys or single quotes is a
-          common error that leads to invalid JSON.
+          This is the most common mistake when someone pastes a JavaScript object into a JSON file. In JSON, keys are
+          strings, so they must use double quotes. Unquoted keys and single-quoted keys are invalid.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h3>
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Broken</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
-  name: "John",
-  'age': 30,
-  "email": "john@example.com"
+  user: "Mina",
+  'role': "admin"
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            The key &quot;name&quot; has no quotes, and &quot;age&quot; uses single quotes instead of double quotes
-          </p>
 
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Corrected:</h3>
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Fixed</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
-  "name": "John",
-  "age": 30,
-  "email": "john@example.com"
+  "user": "Mina",
+  "role": "admin"
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">2. The colon between key and value is missing</h3>
+        <p>
+          A key and its value are a pair only when a colon separates them. If the colon is missing, most parsers stop
+          at that point and report an error near the key name.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Broken</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "user" "Mina",
+  "role" = "admin"
+}`}
+            </pre>
+          </div>
+
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Fixed</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "user": "Mina",
+  "role": "admin"
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">3. Commas between pairs are missing</h3>
+        <p>
+          Inside an object, commas separate one member from the next. If one comma is missing, the parser often points
+          at the next key because that is where the structure becomes impossible to read.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Broken</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "id": 12
+  "status": "ok"
+}`}
+            </pre>
+          </div>
+
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Fixed</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "id": 12,
+  "status": "ok"
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">4. There is a trailing comma after the last pair</h3>
+        <p>
+          Trailing commas are allowed in many programming languages, but not in JSON. This is a common source of
+          confusion when editing config snippets by hand.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Broken</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "id": 12,
+  "status": "ok",
+}`}
+            </pre>
+          </div>
+
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Fixed</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "id": 12,
+  "status": "ok"
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-medium mt-6">5. The same key appears more than once</h3>
+        <p>
+          Duplicate keys are especially dangerous because some parsers do not reject them. RFC 8259 says object names
+          should be unique, and if they are not, behavior becomes unpredictable. Many implementations keep only the
+          last value, which can silently overwrite earlier data.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Risky</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "mode": "safe",
+  "retries": 2,
+  "mode": "fast"
+}`}
+            </pre>
+          </div>
+
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Fixed</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "mode": "fast",
+  "retries": 2
 }`}
             </pre>
           </div>
         </div>
 
         <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Common Confusion:</h3>
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Distinction</h3>
           <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            Many developers confuse JSON with JavaScript object literals, where keys don&apos;t require quotes. Remember
-            that while JavaScript is more forgiving, JSON has stricter syntax requirements.
+            JSON is not the same as a JavaScript object literal. Comments, single quotes, unquoted keys, trailing
+            commas, <code>undefined</code>, <code>NaN</code>, and <code>Infinity</code> are common in JavaScript but are
+            not valid JSON.
           </p>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">2. Missing Colons Between Keys and Values</h3>
+        <h2 className="text-2xl font-semibold mt-8">What Parser Errors Usually Mean</h2>
         <p>
-          The key and value in a key-value pair must be separated by a colon. Forgetting this separator or using another
-          character instead will result in invalid JSON.
+          Exact wording varies by runtime, but current parser references such as MDN map most object-member failures to
+          a small set of messages. If your formatter highlights one of these, inspect the pair immediately before the
+          reported position.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "name" "John",
-  "age" = 30,
-  "email": "john@example.com"
-}`}
-            </pre>
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
+            <h3 className="text-lg font-medium">
+              Expected property name or <code>{"}"}</code>
+            </h3>
+            <p className="mt-2 text-sm">
+              Common cause: trailing comma, single-quoted key, or another character where the next key should begin.
+            </p>
           </div>
-          <p className="mt-2 text-sm">
-            Missing colon after &quot;name&quot; and using equals sign instead of a colon for &quot;age&quot;
-          </p>
 
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Corrected:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "name": "John",
-  "age": 30,
-  "email": "john@example.com"
-}`}
-            </pre>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
+            <h3 className="text-lg font-medium">Expected &quot;:&quot; after property name</h3>
+            <p className="mt-2 text-sm">
+              Common cause: the key is present, but the colon between the key and the value is missing or replaced.
+            </p>
+          </div>
+
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800">
+            <h3 className="text-lg font-medium">
+              Expected <code>&quot;,&quot;</code> or <code>{"}"}</code> after property value
+            </h3>
+            <p className="mt-2 text-sm">
+              Common cause: a missing comma after a finished pair, or extra text after a value.
+            </p>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">3. Missing Commas Between Key-Value Pairs</h3>
-        <p>
-          Multiple key-value pairs in a JSON object must be separated by commas. Omitting these commas is a frequent
-          error, especially in larger JSON structures.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "id": 123
-  "name": "Product"
-  "price": 29.99,
-  "available": true
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Missing commas after the &quot;id&quot; and &quot;name&quot; key-value pairs</p>
-
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Corrected:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "id": 123,
-  "name": "Product",
-  "price": 29.99,
-  "available": true
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">4. Trailing Commas</h3>
-        <p>
-          While some programming languages allow trailing commas after the last key-value pair in an object, JSON does
-          not permit this. Including a trailing comma is a common error when manually writing JSON.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Incorrect:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "id": 123,
-  "name": "Product",
-  "price": 29.99,
-  "available": true,
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Trailing comma after the last key-value pair</p>
-
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Corrected:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "id": 123,
-  "name": "Product",
-  "price": 29.99,
-  "available": true
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">5. Duplicate Keys</h3>
-        <p>
-          JSON technically allows duplicate keys, but many parsers will only use the last value associated with a
-          duplicate key, effectively overwriting previous values. This can lead to unexpected behavior and data loss.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problematic:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "setting": "dark",
-  "value": 42,
-  "setting": "light"
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            Duplicate key &quot;setting&quot; will result in only the second value (&quot;light&quot;) being used
-          </p>
-
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Better Structure:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "setting": "light",
-  "value": 42
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">Or, if both values are needed:</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-2">
-            <pre>
-              {`{
-  "settings": {
-    "theme": "light",
-    "previousTheme": "dark"
-  },
-  "value": 42
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">6. Invalid Key Names</h3>
-        <p>
-          While JSON allows any string as a key, including spaces and special characters, it&apos;s important to
-          consider how different parsers and languages handle these keys. Some systems might have difficulty with
-          certain characters in key names.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problematic (in some contexts):</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "user name": "John",
-  "@email": "john@example.com",
-  "2022-revenue": 50000
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">While valid JSON, these keys might cause issues in some programming languages</p>
-
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">More Compatible Structure:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "userName": "John",
-  "email": "john@example.com",
-  "revenue2022": 50000
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">7. Type Mismatch Errors</h3>
-        <p>
-          While not strictly a syntax error, inconsistent value types for the same key across different objects can
-          cause problems when processing the JSON data in strongly-typed languages.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problematic:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`[
-  {
-    "id": 1,
-    "quantity": 5
-  },
-  {
-    "id": 2,
-    "quantity": "10"
-  }
-]`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            The &quot;quantity&quot; value is a number in the first object but a string in the second
-          </p>
-
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Consistent Types:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`[
-  {
-    "id": 1,
-    "quantity": 5
-  },
-  {
-    "id": 2,
-    "quantity": 10
-  }
-]`}
-            </pre>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Tools and Techniques for Identifying Key-Value Pair Errors</h2>
-
-        <h3 className="text-xl font-medium mt-6">1. JSON Validators and Formatters</h3>
-        <p>
-          JSON formatters like our tool can automatically identify common key-value pair errors and provide specific
-          error messages that point to the exact location of the problem.
-        </p>
-
-        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
-          <h3 className="text-lg font-medium text-blue-800 dark:text-blue-300">Formatter Advantage:</h3>
-          <p className="mt-2 text-blue-700 dark:text-blue-200">
-            Our JSON Formatter not only identifies errors but also highlights the specific location of key-value pair
-            issues, making them easier to spot and fix quickly.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">2. Visual Inspection Techniques</h3>
-        <p>
-          For manual inspection, proper indentation and alignment of key-value pairs can make it much easier to spot
-          missing commas, colons, or quotation marks.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Before Formatting:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>{`{"user":"John","settings":{"theme":"dark","notifications":true,"preferences":{"language":"en","timezone":"UTC+0"}}}`}</pre>
-          </div>
-
-          <h3 className="text-lg font-medium mt-4">After Formatting:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "user": "John",
-  "settings": {
-    "theme": "dark",
-    "notifications": true,
-    "preferences": {
-      "language": "en",
-      "timezone": "UTC+0"
-    }
-  }
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">The formatted version makes it much easier to inspect key-value pairs</p>
-        </div>
-
-        <h3 className="text-xl font-medium mt-6">3. JSON Schema Validation</h3>
-        <p>
-          For more complex JSON structures, using JSON Schema validation can help ensure that key-value pairs follow the
-          expected structure, including proper types and required fields.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Simple JSON Schema Example:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "type": "object",
-  "properties": {
-    "id": { "type": "integer" },
-    "name": { "type": "string" },
-    "email": { "type": "string", "format": "email" },
-    "active": { "type": "boolean" }
-  },
-  "required": ["id", "name", "email"]
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            This schema validates that the JSON has the required key-value pairs with the correct types
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Real-world Example: Fixing Key-Value Pair Errors</h2>
-
-        <p>
-          Let&apos;s examine a real-world example of a JSON document with multiple key-value pair errors and how to
-          systematically correct them:
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Problematic JSON:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "order": {
-    id: 12345,
-    customer: {
-      "name": "Jane Smith"
-      'email': "jane@example.com",
-      "phone": 5551234567
-    },
-    "items": [
-      { "product": "Laptop", "price": 999.99, "quantity": 1, },
-      { "product": "Mouse", "price": 24.99 "quantity": 2 },
-      { "product": "Keyboard", price: "79.99", "quantity": 1 }
-    ],
-    "shipping": {
-      "address": "123 Main St",
-      "city": "Springfield",
-      "address": "Apt 4B, 123 Main St",
-      "zip": 12345
-    },
-    "total": 1129.96,
-  }
-}`}
-            </pre>
-          </div>
-
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Corrected JSON:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "order": {
-    "id": 12345,
-    "customer": {
-      "name": "Jane Smith",
-      "email": "jane@example.com",
-      "phone": 5551234567
-    },
-    "items": [
-      { "product": "Laptop", "price": 999.99, "quantity": 1 },
-      { "product": "Mouse", "price": 24.99, "quantity": 2 },
-      { "product": "Keyboard", "price": 79.99, "quantity": 1 }
-    ],
-    "shipping": {
-      "address": "Apt 4B, 123 Main St",
-      "city": "Springfield",
-      "zip": 12345
-    },
-    "total": 1129.96
-  }
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            Fixes applied: Added quotes around keys, fixed missing commas, removed trailing commas, corrected single
-            quotes to double quotes, fixed the type of &quot;price&quot; for the keyboard, and removed the duplicate
-            &quot;address&quot; key (keeping the more specific one).
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Best Practices for Avoiding Key-Value Pair Errors</h2>
-
+        <h2 className="text-2xl font-semibold mt-8">A Fast Workflow to Fix a Broken JSON File</h2>
         <ol className="list-decimal ml-6 space-y-2">
-          <li>
-            <strong>Use a JSON formatter or validator</strong> before attempting to use your JSON in an application.
-          </li>
-          <li>
-            <strong>Be consistent with value types</strong> for the same keys across your JSON structure.
-          </li>
-          <li>
-            <strong>Avoid special characters in key names</strong> when possible for better compatibility.
-          </li>
-          <li>
-            <strong>Generate JSON programmatically</strong> rather than writing it manually to avoid syntax errors.
-          </li>
-          <li>
-            <strong>Use proper indentation</strong> to make your JSON more readable and easier to debug.
-          </li>
-          <li>
-            <strong>Implement JSON Schema validation</strong> for complex structures to enforce consistency.
-          </li>
-          <li>
-            <strong>Be mindful of language differences</strong> – remember that JSON is not the same as JavaScript
-            object literals.
-          </li>
+          <li>Start with the first reported error, not the last one. One broken pair often triggers many later errors.</li>
+          <li>Look one token to the left of the reported column and confirm the key is inside double quotes.</li>
+          <li>Check that the key is followed immediately by a colon, not whitespace plus another token.</li>
+          <li>After the value ends, check whether a comma is required or whether the object should close with <code>{"}"}</code>.</li>
+          <li>Search the surrounding object for duplicate keys before you trust the parsed result.</li>
+          <li>Once syntax is valid, run schema validation for missing required fields or wrong value types.</li>
         </ol>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8">Worked Example</h2>
         <p>
-          Key-value pair errors are among the most common issues in JSON documents. By understanding these common
-          pitfalls and applying the techniques discussed in this article, you can efficiently identify and resolve these
-          errors, ensuring your JSON is valid and properly formatted.
+          This kind of example is typical when someone manually edits a response body, a settings file, or a copied code
+          snippet and then tries to format it as JSON.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium text-red-600 dark:text-red-400">Broken JSON</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "project": {
+    name: "offline-tools",
+    "owner" "Mina",
+    "status": "active",
+    "status": "draft",
+    "tags": ["json", "debugging",],
+    "private": false
+  }
+}`}
+            </pre>
+          </div>
+
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mt-4">Fixed JSON</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  "project": {
+    "name": "offline-tools",
+    "owner": "Mina",
+    "status": "active",
+    "tags": ["json", "debugging"],
+    "private": false
+  }
+}`}
+            </pre>
+          </div>
+          <p className="mt-2 text-sm">
+            Fixes applied: added quotes around <code>name</code>, inserted the missing colon after
+            <code>&quot;owner&quot;</code>, removed the duplicate <code>&quot;status&quot;</code> key, and deleted the
+            trailing comma in the array.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">How to Avoid These Errors</h2>
+        <ul className="list-disc ml-6 space-y-2">
+          <li>Generate JSON with a serializer such as <code>JSON.stringify()</code> instead of hand-writing large objects.</li>
+          <li>Use a formatter that points to the exact line and column of the first syntax failure.</li>
+          <li>Keep one property per line while debugging so missing commas and duplicate keys are easier to spot.</li>
+          <li>Treat duplicate keys as a bug even if your parser accepts them.</li>
+          <li>Validate syntax first, then validate structure and types with JSON Schema or application-level checks.</li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Bottom Line</h2>
+        <p>
+          Most key-value pair errors in JSON come from mixing JSON with JavaScript habits. If you verify quotes, colons,
+          commas, and duplicate keys in that order, you can usually repair a broken JSON object in a minute or two.
         </p>
 
         <p>
-          Remember that well-formatted JSON not only prevents parsing errors but also makes your data more maintainable
-          and easier to work with. Using tools like our JSON Formatter can significantly streamline the process of
-          detecting and fixing key-value pair errors, saving you valuable development time.
+          Use the formatter to catch the first failing pair, repair the syntax there, and re-run validation before you
+          move on. That approach is faster than scanning the entire file and avoids chasing errors that disappear once
+          the first broken member is fixed.
         </p>
       </div>
     </>

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { ArrowRightFromLine, ArrowRightToLine, Code, Info, AlertCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "MATLAB JSON Parsing and Formatting Functions | Offline Tools",
+  title: "MATLAB JSON Parsing and Formatting Functions: jsondecode, jsonencode, File I/O | Offline Tools",
   description:
-    "Learn how to use MATLAB's built-in functions, jsonencode and jsondecode, for parsing and formatting JSON data.",
+    "Use MATLAB's jsondecode and jsonencode to parse JSON text, pretty-print output, and read or write JSON files with newer helpers like readstruct and writestruct.",
 };
 
 export default function MatlabJsonFunctionsPage() {
@@ -14,328 +14,300 @@ export default function MatlabJsonFunctionsPage() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the de facto standard for data interchange on the web and in many
-          modern applications. Whether you&apos;re working with REST APIs, configuration files, or saving complex data
-          structures, dealing with JSON is a common task. Fortunately, MATLAB provides powerful, built-in functions to
-          seamlessly convert between MATLAB data types and JSON strings: <code>jsonencode</code> and{" "}
-          <code>jsondecode</code>.
+          If you need to work with JSON in MATLAB, the core functions are straightforward: use <code>jsondecode</code>{" "}
+          to parse JSON text into MATLAB data, and use <code>jsonencode</code> to turn MATLAB variables back into JSON.
+          For direct file-based workflows, newer MATLAB releases also add helpers such as <code>readstruct</code>,{" "}
+          <code>writestruct</code>, and <code>readdictionary</code>. For most search visitors, the real questions are
+          usually how to decode formatted JSON text, how nested arrays of objects behave, and how to write a valid JSON
+          file without losing structure. This page focuses on those practical cases.
         </p>
 
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-5 dark:border-blue-900 dark:bg-blue-950/30">
+          <h2 className="text-2xl font-semibold flex items-center">
+            <Info className="w-6 h-6 mr-2 text-blue-500" /> Quick Answer: Which MATLAB JSON Function Should You Use?
+          </h2>
+          <ul className="list-disc pl-6 space-y-2 mt-4">
+            <li>
+              Use <code>jsondecode</code> when you already have JSON text in memory and want MATLAB structs, arrays, or
+              cell arrays.
+            </li>
+            <li>
+              Use <code>jsonencode</code> when you want to serialize MATLAB data to JSON text, including pretty-printed
+              output for logs, debugging, or saved files.
+            </li>
+            <li>
+              Use <code>fileread</code> plus <code>jsondecode</code> if you are reading a <code>.json</code> file in
+              any release that supports the JSON functions.
+            </li>
+            <li>
+              Use <code>readstruct</code> and <code>writestruct</code> in newer releases if you want MATLAB to read or
+              write JSON files directly without manual <code>fopen</code>/<code>fprintf</code> code.
+            </li>
+            <li>
+              Use <code>readdictionary</code> in R2024b or newer when preserving string keys matters more than mapping
+              JSON objects into MATLAB struct field names.
+            </li>
+          </ul>
+        </div>
+
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Info className="w-6 h-6 mr-2 text-blue-500" /> Why JSON in MATLAB?
+          <ArrowRightToLine className="w-6 h-6 mr-2 text-red-500" /> <code>jsondecode</code>: Parse JSON Text into
+          MATLAB Data
         </h2>
         <p>
-          MATLAB is widely used for data analysis, simulation, and algorithm development. Interacting with external
-          systems, web services, or saving/loading data in a human-readable, portable format often requires JSON.
-          MATLAB&apos;s built-in functions make this process straightforward, eliminating the need for external
-          libraries or manual parsing.
+          <code>jsondecode</code> accepts JSON text as a character vector or string scalar and converts it into the
+          nearest MATLAB representation. That makes it the right tool for API responses, config files loaded with{" "}
+          <code>fileread</code>, and any situation where you already have raw JSON text.
         </p>
 
+        <h3 className="text-xl font-semibold mt-6">Example: Decode Nested JSON with Multiple Objects</h3>
+        <p>
+          A common MATLAB JSON question is how to handle an array of multiple child objects or nodes. If the objects in
+          the JSON array have a compatible structure, MATLAB gives you a struct array that you can index naturally.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h4 className="text-lg font-medium mb-2">Example: <code>jsondecode</code> with Multiple Nodes</h4>
+          <pre>
+            <code className="language-matlab">{`
+jsonText = ['{' ...
+    '"project":"demo",' ...
+    '"files":[' ...
+        '{"name":"input.csv","rows":12,"active":true},' ...
+        '{"name":"output.csv","rows":18,"active":false}' ...
+    ']' ...
+    '}'];
+
+data = jsondecode(jsonText);
+
+firstName = data.files(1).name
+rowCounts = [data.files.rows]
+activeFlags = [data.files.active]
+`}</code>
+          </pre>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            In this example, <code>data</code> is a struct, and <code>data.files</code> is a struct array with two
+            elements because each JSON object in <code>files</code> has the same fields.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">Does <code>jsondecode</code> Work with Formatted JSON Text?</h3>
+        <p>
+          Yes. Pretty-printed JSON with spaces and line breaks is still valid JSON, so <code>jsondecode</code> can
+          parse it directly. In practice, the reliable MATLAB pattern is to read the whole file with{" "}
+          <code>fileread</code> and pass that text to <code>jsondecode</code>.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h4 className="text-lg font-medium mb-2">Example: Decode Formatted JSON Text</h4>
+          <pre>
+            <code className="language-matlab">{`
+formattedText = sprintf(['{\\n' ...
+    '  "user": "alice",\\n' ...
+    '  "settings": {\\n' ...
+    '    "theme": "light",\\n' ...
+    '    "autosave": true\\n' ...
+    '  }\\n' ...
+    '}']);
+
+config = jsondecode(formattedText);
+mode = config.settings.theme
+
+% When reading from disk:
+config = jsondecode(fileread("config.json"));
+`}</code>
+          </pre>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Use <code>fileread</code> rather than <code>fscanf(fid, &apos;%s&apos;)</code>. The latter reads
+            whitespace-delimited text, which is a poor fit for multi-line JSON.
+          </p>
+        </div>
+
+        <h3 className="text-xl font-semibold mt-6">How <code>jsondecode</code> Maps JSON to MATLAB</h3>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>JSON objects decode to MATLAB structs.</li>
+          <li>JSON arrays of numbers decode to MATLAB numeric arrays, typically <code>double</code>.</li>
+          <li>JSON arrays of booleans decode to MATLAB logical arrays.</li>
+          <li>
+            JSON arrays of compatible objects often decode to struct arrays; mixed or incompatible content can decode
+            to cell arrays instead.
+          </li>
+          <li>JSON strings decode to MATLAB character vectors.</li>
+          <li>
+            JSON <code>null</code> becomes <code>NaN</code> inside numeric arrays, but becomes an empty array in
+            nonnumeric positions.
+          </li>
+          <li>
+            JSON object keys that are not valid MATLAB identifiers may be adjusted when converted into struct field
+            names.
+          </li>
+        </ul>
+
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <ArrowRightFromLine className="w-6 h-6 mr-2 text-green-500" /> <code>jsonencode</code>: Encoding MATLAB Data
+          <ArrowRightFromLine className="w-6 h-6 mr-2 text-green-500" /> <code>jsonencode</code>: Convert MATLAB Data
           to JSON
         </h2>
         <p>
-          The <code>jsonencode</code> function converts a MATLAB data structure (like a scalar, array, cell array, or
-          struct) into a JSON-formatted string.
+          <code>jsonencode</code> converts MATLAB values into JSON text. It is the function behind most MATLAB JSON
+          formatting tasks, whether you need compact output for transport or pretty-printed output for a readable JSON
+          file.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Basic Usage</h3>
-        <p>The simplest use is converting a scalar or a struct:</p>
+        <h3 className="text-xl font-semibold mt-6">Example: Encode a MATLAB Struct as JSON</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Encoding a Struct</h4>
+          <h4 className="text-lg font-medium mb-2">Basic <code>jsonencode</code> Example</h4>
           <pre>
             <code className="language-matlab">{`
-% Create a simple MATLAB struct
-person.name = 'Alice';
-person.age = 30;
-person.isStudent = false;
+person = struct( ...
+    "name", "Alice", ...
+    "age", 30, ...
+    "isStudent", false, ...
+    "scores", [91 88 95]);
 
-% Encode the struct to a JSON string
-jsonString = jsonencode(person);
-
-% Display the resulting JSON string
-disp(jsonString);
+compactJson = jsonencode(person)
+prettyJson = jsonencode(person, PrettyPrint=true)
 `}</code>
           </pre>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Expected Output: <code>{`{"name":"Alice","age":30,"isStudent":false}`}</code>
+            In releases before R2021a, use quoted name-value syntax instead:{" "}
+            <code>jsonencode(person, &apos;PrettyPrint&apos;, true)</code>.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Handling Data Types</h3>
+        <h3 className="text-xl font-semibold mt-6">Special Values: <code>NaN</code> and <code>Inf</code></h3>
         <p>
-          <code>jsonencode</code> automatically handles various MATLAB data types and maps them to their corresponding
-          JSON types:
+          By default, <code>jsonencode</code> converts <code>NaN</code>, <code>Inf</code>, and <code>-Inf</code> to{" "}
+          <code>null</code> because strict JSON has no native representation for those numeric values. If you are
+          targeting a consumer that accepts nonstandard tokens, MATLAB also supports a compatibility mode.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Numeric arrays (double, single, int, etc.) become JSON arrays of numbers.</li>
-          <li>Character arrays (strings) become JSON strings.</li>
-          <li>
-            Logical scalars (<code>true</code>, <code>false</code>) become JSON booleans (<code>true</code>,{" "}
-            <code>false</code>).
-          </li>
-          <li>Structs become JSON objects. Field names become keys.</li>
-          <li>Cell arrays become JSON arrays.</li>
-          <li>
-            Empty arrays (<code>[]</code>) become JSON arrays (<code>[]</code>).
-          </li>
-          <li>
-            <code>NaN</code> and <code>Inf</code> values in numeric arrays are encoded as <code>null</code> (since JSON
-            doesn&apos;t have standard representations for these).
-          </li>
-          <li>
-            <code>missing</code> values are encoded as <code>null</code>.
-          </li>
-        </ul>
-
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Encoding Mixed Data Types</h4>
+          <h4 className="text-lg font-medium mb-2">Example: Control How Nonfinite Numbers Are Encoded</h4>
           <pre>
             <code className="language-matlab">{`
-% Data structure with various types
-data.numbers = [1, 2.5, NaN];
-data.names = {'Bob', 'Charlie'};
-data.isActive = true;
-data.description = "A test object";
-data.emptyList = [];
+values = struct("ok", 5, "missing", NaN, "upper", Inf);
 
-jsonString = jsonencode(data);
-disp(jsonString);
+strictJson = jsonencode(values)
+compatJson = jsonencode(values, ConvertInfAndNaN=false)
 `}</code>
           </pre>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Expected Output (approximate):{" "}
-            <code>{`{"numbers":[1,2.5,null],"names":["Bob","Charlie"],"isActive":true,"description":"A test object","emptyList":[]}`}</code>
+            <code>strictJson</code> is valid JSON. <code>compatJson</code> may emit tokens such as{" "}
+            <code>NaN</code> or <code>Infinity</code>, which many parsers reject.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Formatting Options (Pretty-Printing)</h3>
+        <h3 className="text-xl font-semibold mt-6">Write MATLAB Data to a JSON File</h3>
         <p>
-          By default, <code>jsonencode</code> produces a compact JSON string with no whitespace. For readability,
-          especially when saving to a file or debugging, you can use the <code>&apos;PrettyPrint&apos;</code> option:
+          If your goal is simply &quot;write to JSON file in MATLAB,&quot; the portable approach is still to encode the
+          data first and then write the returned text to disk.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Using PrettyPrint</h4>
+          <h4 className="text-lg font-medium mb-2">Example: Encode and Save JSON</h4>
           <pre>
             <code className="language-matlab">{`
-person.name = 'Alice';
-person.age = 30;
-person.city = 'New York';
+settings = struct( ...
+    "mode", "auto", ...
+    "threshold", 0.75, ...
+    "enabled", true);
 
-% Encode with pretty-printing
-jsonStringPretty = jsonencode(person, 'PrettyPrint', true);
+jsonText = jsonencode(settings, PrettyPrint=true);
 
-% Display the pretty-printed JSON string
-disp(jsonStringPretty);
+fid = fopen("settings.json", "w");
+fprintf(fid, "%s", jsonText);
+fclose(fid);
 `}</code>
           </pre>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Expected Output (formatted):</p>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}`}
-          </pre>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            If you need to read that file back later, use <code>settings = jsondecode(fileread(&quot;settings.json&quot;));</code>
+          </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <ArrowRightToLine className="w-6 h-6 mr-2 text-red-500" /> <code>jsondecode</code>: Decoding JSON to MATLAB
-          Data
+          <Code className="w-6 h-6 mr-2 text-purple-500" /> File-Based Helpers in Newer MATLAB Releases
         </h2>
         <p>
-          The <code>jsondecode</code> function takes a JSON-formatted string and converts it back into a corresponding
-          MATLAB data structure.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Basic Usage</h3>
-        <p>Simply pass the JSON string to the function:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Decoding a JSON Object</h4>
-          <pre>
-            <code className="language-matlab">{`
-% A JSON string representing an object
-jsonString = '{"name":"Alice","age":30,"isStudent":false}';
-
-% Decode the JSON string into a MATLAB struct
-matlabData = jsondecode(jsonString);
-
-% Display the resulting MATLAB struct
-disp(matlabData);
-`}</code>
-          </pre>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Expected Output:</p>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            {`  name: 'Alice'
-   age: 30
-isStudent: 0`}
-          </pre>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Note: JSON <code>true</code>/<code>false</code> decode to MATLAB logical <code>1</code>/<code>0</code>.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Mapping JSON Types to MATLAB</h3>
-        <p>
-          <code>jsondecode</code> performs the reverse mapping of <code>jsonencode</code>:
+          MATLAB has added higher-level JSON file APIs beyond <code>jsonencode</code> and <code>jsondecode</code>.
+          These are worth knowing because many users search for a MATLAB JSON reader or a direct JSON file writer, not
+          just text conversion.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            JSON objects become MATLAB structs. Keys become field names. If a key is not a valid MATLAB identifier, it
-            may be modified or require dynamic field access.
+            <code>readstruct</code> can read JSON files directly into a struct. MathWorks added JSON support for it in
+            R2023b.
           </li>
           <li>
-            JSON arrays become MATLAB cell arrays if elements have different types, or numeric/logical arrays if
-            elements are homogeneous numbers or booleans.
-          </li>
-          <li>JSON strings become MATLAB character vectors (strings).</li>
-          <li>
-            JSON numbers become MATLAB <code>double</code> scalars or arrays.
+            <code>writestruct</code> can write structs to JSON files directly in R2023b and newer.
           </li>
           <li>
-            JSON booleans (<code>true</code>, <code>false</code>) become MATLAB <code>logical</code> scalars (
-            <code>1</code>, <code>0</code>).
+            <code>readdictionary</code> was added in R2024b and is useful when you want JSON object keys to stay as
+            keys instead of becoming MATLAB struct field names.
+          </li>
+        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h4 className="text-lg font-medium mb-2">Example: Direct JSON File I/O in Newer Releases</h4>
+          <pre>
+            <code className="language-matlab">{`
+% R2023b+
+data = readstruct("payload.json");
+writestruct(data, "payload-pretty.json", PrettyPrint=true);
+
+% R2024b+
+headers = readdictionary("headers.json");
+`}</code>
+          </pre>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            One formatting detail that surprises people: <code>jsonencode(..., PrettyPrint=true)</code> uses two-space
+            indentation, while <code>writestruct(..., PrettyPrint=true)</code> writes four-space indentation.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <AlertCircle className="w-6 h-6 mr-2 text-yellow-500" /> Common Pitfalls and Troubleshooting
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Invalid key names:</strong> JSON keys can contain characters MATLAB does not allow in struct field
+            names. After <code>jsondecode</code>, inspect the resulting field names carefully or use{" "}
+            <code>readdictionary</code> in R2024b or newer.
           </li>
           <li>
-            JSON <code>null</code> becomes a MATLAB empty array (<code>[]</code>).
+            <strong>Arrays of objects:</strong> If an array does not resolve cleanly to one struct layout, MATLAB may
+            return a cell array instead of a struct array. Check with <code>class</code> and index accordingly.
+          </li>
+          <li>
+            <strong>Formatted JSON from files:</strong> Prefer <code>fileread</code> for loading multi-line JSON text.
+            It is simpler and more reliable than line-by-line or whitespace-delimited reads.
+          </li>
+          <li>
+            <strong>Strict vs nonstandard JSON:</strong> <code>jsondecode</code> expects valid JSON syntax. Comments,
+            trailing commas, and nonstandard numeric tokens are not safe inputs there.
+          </li>
+          <li>
+            <strong>MATLAB object serialization:</strong> <code>jsonencode</code> encodes public object properties, but
+            complex custom classes may still need a deliberate export struct for stable JSON output.
           </li>
         </ul>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Decoding a JSON Array</h4>
-          <pre>
-            <code className="language-matlab">{`
-% A JSON string representing an array with mixed types
-jsonString = '["apple", 123, true, null, [1, 2]]';
-
-% Decode the JSON string into a MATLAB cell array
-matlabData = jsondecode(jsonString);
-
-% Display the resulting MATLAB cell array
-disp(matlabData);
-`}</code>
-          </pre>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Expected Output:</p>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            {`    'apple'    [  123]    [1x1 logical]    []    [1x2 double]`}
-          </pre>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Note: The output shows a cell array containing a string, a numeric scalar, a logical scalar (1), an empty
-            numeric array, and a numeric array.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Handling Invalid JSON</h3>
-        <p>
-          If <code>jsondecode</code> encounters invalid JSON syntax, it will throw an error. You should use{" "}
-          <code>try-catch</code> blocks to handle potential decoding errors gracefully, especially when dealing with
-          external data sources.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Code className="w-6 h-6 mr-2 text-purple-500" /> Common Scenarios & Best Practices
-        </h2>
-
-        <h3 className="text-xl font-semibold mt-6">Working with JSON Files</h3>
-        <p>You can easily read JSON from a file, decode it, work with the data, and then encode it back to a file.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example: Read, Modify, and Write JSON File</h4>
-          <pre>
-            <code className="language-matlab">{`
-% --- Step 1: Write initial JSON to a file ---
-initialData.version = 1.0;
-initialData.settings.mode = 'auto';
-initialData.settings.level = 5;
-
-jsonStringToFile = jsonencode(initialData, 'PrettyPrint', true);
-
-% Define filename (use fullpath or navigate)
-filename = 'my_config.json';
-
-% Open file for writing, write content, close file
-fid = fopen(filename, 'w');
-fprintf(fid, '%s', jsonStringToFile);
-fclose(fid);
-disp(['Wrote initial JSON to ' filename]);
-
-% --- Step 2: Read JSON from the file ---
-disp(['Reading JSON from ' filename]);
-fid = fopen(filename, 'r');
-% Read entire file as a single string. Note: fscanf might stop at whitespace,
-% a better approach for reading the whole file is often fileread (R2014b+)
-% rawText = fscanf(fid, '%s'); % Original line - might fail on whitespace
-rawText = fread(fid, '*char')'; % Alternative: Read all bytes as chars
-fclose(fid);
-
-% Decode the JSON string
-readData = jsondecode(rawText);
-disp('Decoded Data:');
-disp(readData);
-
-% --- Step 3: Modify the data ---
-readData.settings.mode = 'manual';
-readData.notes = 'Updated setting';
-disp('Modified Data:');
-disp(readData);
-
-% --- Step 4: Encode modified data and write back to file ---
-modifiedJsonString = jsonencode(readData, 'PrettyPrint', true);
-
-fid = fopen(filename, 'w'); % Overwrite the file
-fprintf(fid, '%s', modifiedJsonString);
-fclose(fid);
-disp(['Wrote modified JSON back to ' filename]);
-`}</code>
-          </pre>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            This example demonstrates the full cycle of working with JSON files in MATLAB. Note: The original{" "}
-            <code>fscanf(fid, &apos;%s&apos;)</code> might stop reading at whitespace; using{" "}
-            <code>fileread(filename)</code> (R2014b+) or <code>fread(fid, &apos;*char&apos;)&apos;</code> is generally
-            more reliable for reading the entire file content including spaces and newlines typically found in
-            pretty-printed JSON. I&apos;ve updated the example to use <code>fread</code>.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <AlertCircle className="w-6 h-6 mr-2 text-yellow-500" /> Potential Pitfalls and Considerations
-        </h3>
+        <h2 className="text-2xl font-semibold mt-8">Version Notes</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Data Type Conversion:</strong> Be mindful of how specific MATLAB types (like dates, times,
-            categorical arrays) are handled. They might not have a direct JSON equivalent and could be converted to
-            strings or numbers in a way that requires specific handling on the decoding side.
+            <code>jsonencode</code> and <code>jsondecode</code> were introduced in MATLAB R2016b.
           </li>
           <li>
-            <strong>Large Data:</strong> For extremely large datasets, converting the entire structure to a single
-            string might be memory-intensive. Consider streaming or processing data in chunks if possible, although{" "}
-            <code>jsonencode</code>/<code>jsondecode</code> are generally optimized.
+            Modern name=value syntax such as <code>PrettyPrint=true</code> works in R2021a and newer.
           </li>
           <li>
-            <strong>Non-Standard JSON:</strong> MATLAB&apos;s functions strictly follow the JSON standard. They will
-            reject invalid JSON (e.g., trailing commas, comments, unquoted keys). If you&apos;re consuming data that
-            might contain such non-standard elements, you might need pre-processing or a different parsing library.
+            <code>readstruct</code> and <code>writestruct</code> gained JSON support in R2023b.
           </li>
           <li>
-            <strong>Object Encoding/Decoding:</strong> By default, <code>jsonencode</code> encodes public properties of
-            MATLAB objects. For more complex object serialization (e.g., including private/protected properties, or
-            custom representations), you might need to implement custom <code>toJSON</code> or similar methods within
-            your object classes (consult MATLAB documentation for advanced serialization).
-          </li>
-          <li>
-            <strong>Field Names:</strong> MATLAB struct field names must be valid MATLAB identifiers. JSON keys can be
-            any string. <code>jsondecode</code> attempts to create valid field names, but this can sometimes lead to
-            unexpected results if keys are complex. Using the <code>&apos;SwitchFieldName&apos;</code> option in{" "}
-            <code>jsondecode</code> can provide more control.
+            <code>readdictionary</code> was introduced in R2024b.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          MATLAB&apos;s <code>jsonencode</code> and <code>jsondecode</code> functions provide a robust and convenient
-          way to interact with JSON data directly within your MATLAB workflows. Understanding the data type mappings and
-          utilizing options like <code>&apos;PrettyPrint&apos;</code> will help you effectively integrate MATLAB with
-          external systems and data formats that rely on JSON.
+          For most MATLAB JSON work, the core recipe is simple: <code>jsondecode</code> to parse,{" "}
+          <code>jsonencode</code> to format, <code>fileread</code> when the source is a JSON file, and newer file-based
+          helpers when you want less boilerplate. Once you know how MATLAB maps arrays, objects, <code>null</code>, and
+          nonfinite numbers, most JSON interoperability issues become predictable.
         </p>
       </div>
     </>

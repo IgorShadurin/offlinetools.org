@@ -1,321 +1,386 @@
 import type { Metadata } from "next";
-import { Settings, FileJson, GitBranch, Eye, ShieldCheck, Activity, Workflow, Wrench, BadgeCheck } from "lucide-react";
+import {
+  Settings,
+  FileJson,
+  GitBranch,
+  ShieldCheck,
+  Activity,
+  Workflow,
+  Wrench,
+  BadgeCheck,
+  AlertTriangle,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "JSON-based Service Mesh Configuration | Explained",
+  title: "JSON-based Service Mesh Configuration Guide | Istio, Envoy, Kubernetes",
   description:
-    "A guide to understanding and using JSON for configuring service meshes, covering routing, security, observability, and resilience.",
+    "Learn where JSON fits in modern service mesh configuration, with current Istio and Envoy examples, validation steps, and common mistakes to avoid.",
 };
 
 export default function JsonServiceMeshConfigArticle() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-6">JSON-based Service Mesh Configuration</h1>
+    <div className="container mx-auto max-w-3xl px-4 py-8">
+      <h1 className="mb-6 text-3xl font-bold">JSON-based Service Mesh Configuration</h1>
 
-      <section className="space-y-6 mb-10">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <Settings className="inline-block" /> Introduction
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <Settings className="inline-block" /> What Searchers Usually Need to Know First
         </h2>
         <p>
-          In the world of microservices, managing communication between services can become complex. A
-          <strong className="font-semibold">Service Mesh</strong> helps address this by providing a dedicated
-          infrastructure layer for service-to-service communication. It handles concerns like discovery, routing,
-          security, observability, and resilience, abstracting them away from the application code.
+          If you are looking for a JSON-based service mesh configuration guide, the most important practical detail is
+          this: <strong className="font-semibold">JSON is valid, but it is usually not the format humans hand-author</strong>.
+          In modern Kubernetes-based meshes, people often write YAML, while automation, APIs, patches, and generated
+          manifests frequently use JSON.
         </p>
         <p>
-          Effectively utilizing a service mesh requires configuring its behavior. This configuration dictates how
-          traffic flows, which security policies are applied, how metrics are collected, and more. While various formats
-          exist, <strong className="font-semibold">JSON (JavaScript Object Notation)</strong> is a widely used and
-          flexible format for defining service mesh configurations.
+          That makes JSON most useful when you want machine-generated configuration, strict formatting, easy diffing in
+          CI pipelines, or a clean way to move service mesh rules between tools. It is also directly relevant for
+          Envoy, which can load bootstrap configuration from JSON, YAML, or proto3.
+        </p>
+        <p>
+          So the real question is not “can a service mesh use JSON?” It can. The better question is{" "}
+          <strong className="font-semibold">where JSON fits best in today&apos;s mesh workflow</strong>, and how to
+          validate it before it reaches production.
         </p>
       </section>
 
-      <section className="space-y-6 mb-10">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <FileJson className="inline-block" /> Why JSON for Configuration?
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <FileJson className="inline-block" /> What JSON Means in a Real Mesh in 2026
         </h2>
         <p>
-          JSON is a lightweight data-interchange format that is easy for humans to read and write, and easy for machines
-          to parse and generate. Its hierarchical structure makes it well-suited for representing complex
-          configurations.
+          In current Kubernetes workflows, the platform accepts full object definitions in either YAML or JSON. At the
+          same time, Kubernetes configuration guidance recommends YAML for files people edit directly because it is less
+          noisy. That leads to a common pattern:
         </p>
-
-        <h3 className="text-xl font-semibold mt-4">Advantages:</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong className="font-semibold">Readability:</strong> Although less verbose than XML, JSON&apos;s
-            key-value pairs and arrays are generally straightforward to follow.
-          </li>
-          <li>
-            <strong className="font-semibold">Wide Adoption:</strong> JSON is ubiquitous in web development and APIs,
-            leading to extensive tooling support in virtually every programming language.
-          </li>
-          <li>
-            <strong className="font-semibold">Tooling:</strong> Numerous parsers, validators, formatters, and schema
-            definition languages (like JSON Schema) are available.
-          </li>
-          <li>
-            <strong className="font-semibold">Interoperability:</strong> Easy to integrate with various systems and APIs
-            that are already JSON-based.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-4">Disadvantages:</h3>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong className="font-semibold">Verbosity (compared to YAML):</strong> While simple, representing lists
-            and nested structures can require more characters than equivalent YAML.
-          </li>
-          <li>
-            <strong className="font-semibold">Lack of Comments:</strong> Standard JSON does not support comments, which
-            can make complex configurations harder to annotate (though some implementations might allow them as
-            non-standard extensions or require external documentation).
-          </li>
-          <li>
-            <strong className="font-semibold">Strict Syntax:</strong> JSON is less forgiving of syntax errors than some
-            other formats.
-          </li>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>Humans review and discuss YAML manifests.</li>
+          <li>Automation emits JSON manifests, JSON patches, or JSON payloads for APIs and policy engines.</li>
+          <li>Mesh proxies such as Envoy can consume JSON configuration directly.</li>
         </ul>
         <p>
-          Despite minor drawbacks, JSON&apos;s simplicity and tooling make it a strong contender for service mesh
-          configuration, often seen alongside or converted from other formats like YAML (which is frequently used in
-          Kubernetes environments that commonly host service meshes like Istio or Linkerd).
+          For Istio specifically, the current reference docs use stable <code>v1</code> APIs such as{" "}
+          <code>networking.istio.io/v1</code> for <code>VirtualService</code> and{" "}
+          <code>security.istio.io/v1</code> for <code>PeerAuthentication</code>. Those resources are still Kubernetes
+          objects, so they can be represented as JSON as well as YAML.
         </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Bottom Line</h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            Use JSON when the configuration is generated, transformed, patched, or validated by tools. Use YAML when
+            operators need to read and maintain the file by hand.
+          </p>
+        </div>
       </section>
 
-      <section className="space-y-6 mb-10">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <Wrench className="inline-block" /> Key Areas of JSON Configuration
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <GitBranch className="inline-block" /> Real JSON Example: Traffic Routing, Retries, and Timeouts
         </h2>
         <p>
-          Service mesh configuration using JSON typically involves defining rules and policies for the data plane
-          proxies (like Envoy) that sit alongside your application services. Here are some common areas:
+          A practical mesh example is progressive delivery. The JSON below represents an Istio{" "}
+          <code>VirtualService</code> that routes most traffic to <code>v1</code>, sends a small slice to{" "}
+          <code>v2</code>, and applies retry and timeout policy in the same rule.
         </p>
-
-        <h3 className="text-xl font-semibold flex items-center gap-2 mt-4">
-          <GitBranch className="inline-block" /> Routing and Traffic Management
-        </h3>
-        <p>
-          Control how requests are routed between different versions of services, handle traffic splitting for A/B
-          testing or canary deployments, and define request matching rules.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Traffic Splitting (Hypothetical Schema)</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Istio VirtualService as JSON</h3>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
             <code>
               {`{
-  "api_version": "config.example.com/v1",
-  "kind": "TrafficRoute",
-  "metadata": &lbrace;
-    "name": "my-service-route"
-  &rbrace;,
-  "spec": &lbrace;
-    "host": "my-service.mynamespace.svc.cluster.local",
-    "traffic": [
-      &lbrace;
-        "destination": &lbrace;
-          "service": "my-service-v1"
-        &rbrace;,
-        "weight": 90
-      &rbrace;,
-      &lbrace;
-        "destination": &lbrace;
-          "service": "my-service-v2"
-        &rbrace;,
-        "weight": 10
-      &rbrace;
+  "apiVersion": "networking.istio.io/v1",
+  "kind": "VirtualService",
+  "metadata": {
+    "name": "checkout-route",
+    "namespace": "store"
+  },
+  "spec": {
+    "hosts": ["checkout.store.svc.cluster.local"],
+    "http": [
+      {
+        "route": [
+          {
+            "destination": {
+              "host": "checkout.store.svc.cluster.local",
+              "subset": "v1"
+            },
+            "weight": 90
+          },
+          {
+            "destination": {
+              "host": "checkout.store.svc.cluster.local",
+              "subset": "v2"
+            },
+            "weight": 10
+          }
+        ],
+        "retries": {
+          "attempts": 3,
+          "perTryTimeout": "2s",
+          "retryOn": "gateway-error,connect-failure,refused-stream,5xx"
+        },
+        "timeout": "5s"
+      }
     ]
-  &rbrace;
-&rbrace;`}
+  }
+}`}
             </code>
           </pre>
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            This example shows routing 90% of traffic to &apos;my-service-v1&apos; and 10% to &apos;my-service-v2&apos;.
+            This only works as intended if the matching <code>DestinationRule</code> defines the <code>v1</code> and{" "}
+            <code>v2</code> subsets.
           </p>
         </div>
-
-        <h3 className="text-xl font-semibold flex items-center gap-2 mt-8">
-          <Eye className="inline-block" /> Observability Configuration
-        </h3>
         <p>
-          Configure how metrics, logs, and traces are collected and exported from the data plane proxies. This provides
-          deep insights into service behavior without modifying the applications themselves.
+          This is a better mental model than a hypothetical “mesh route” schema because it mirrors how real Kubernetes
+          meshes are configured today: you declare routing policy as an API object, then the control plane translates it
+          into proxy config for the data plane.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Tracing Configuration (Hypothetical Schema)</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <code>
-              {`{
-  "api_version": "config.example.com/v1",
-  "kind": "ObservabilityPolicy",
-  "metadata": &lbrace;
-    "name": "tracing-policy"
-  &rbrace;,
-  "spec": &lbrace;
-    "service": "my-service",
-    "tracing": &lbrace;
-      "enabled": true,
-      "collector_endpoint": "jaeger-agent.observability.svc.cluster.local:6831",
-      "sample_rate": 0.1
-    &rbrace;
-  &rbrace;
-&rbrace;`}
-            </code>
-          </pre>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            Configuring tracing for &apos;my-service&apos; with a 10% sample rate, sending spans to a Jaeger agent.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold flex items-center gap-2 mt-8">
-          <ShieldCheck className="inline-block" /> Security Policies
-        </h3>
-        <p>Define authentication (e.g., mTLS) and authorization (access control) policies between services.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: mTLS and Authorization (Hypothetical Schema)</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <code>
-              {`{
-  "api_version": "config.example.com/v1",
-  "kind": "SecurityPolicy",
-  "metadata": &lbrace;
-    "name": "backend-access"
-  &rbrace;,
-  "spec": &lbrace;
-    "target_service": "backend-service",
-    "authentication": &lbrace;
-      "mtls": &lbrace;
-        "mode": "STRICT"
-      &rbrace;
-    &rbrace;,
-    "authorization": &lbrace;
-      "rules": [
-        &lbrace;
-          "from": [
-            &lbrace;
-              "source": &lbrace;
-                "principals": ["cluster.local/ns/mynamespace/sa/frontend-service-account"]
-              &rbrace;
-            &rbrace;
-          ],
-          "to": [
-            &lbrace;
-              "operation": &lbrace;
-                "methods": ["GET", "POST"]
-              &rbrace;
-            &rbrace;
-          ]
-        &rbrace;
-      ]
-    &rbrace;
-  &rbrace;
-&rbrace;`}
-            </code>
-          </pre>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            Ensuring strict mTLS for &apos;backend-service&apos; and allowing only GET/POST requests from services with
-            the &apos;frontend-service-account&apos;.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold flex items-center gap-2 mt-8">
-          <Activity className="inline-block" /> Resilience Patterns
-        </h3>
-        <p>
-          Configure policies like timeouts, retries, and circuit breakers to improve the resilience of inter-service
-          communication.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Timeout and Retries (Hypothetical Schema)</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <code>
-              {`{
-  "api_version": "config.example.com/v1",
-  "kind": "ResiliencePolicy",
-  "metadata": &lbrace;
-    "name": "database-resilience"
-  &rbrace;,
-  "spec": &lbrace;
-    "target_service": "database-service",
-    "timeout": "5s",
-    "retries": &lbrace;
-      "attempts": 3,
-      "per_try_timeout": "1s",
-      "retry_on": "5xx,gateway-error"
-    &rbrace;
-  &rbrace;
-&rbrace;`}
-            </code>
-          </pre>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            Setting a 5-second timeout and configuring up to 3 retries with a 1-second timeout per attempt for calls to
-            &apos;database-service&apos; on 5xx errors.
-          </p>
-        </div>
       </section>
 
-      <section className="space-y-6 mb-10">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <Workflow className="inline-block" /> JSON Configuration in the Service Mesh Workflow
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <ShieldCheck className="inline-block" /> Real JSON Example: Namespace mTLS Policy
         </h2>
-        <p>Service meshes typically follow a control plane/data plane architecture:</p>
-        <ul className="list-disc pl-6 space-y-2">
+        <p>
+          Security policy is another place where JSON works cleanly, especially when policies are generated from a
+          higher-level platform or security workflow.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Istio PeerAuthentication as JSON</h3>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+            <code>
+              {`{
+  "apiVersion": "security.istio.io/v1",
+  "kind": "PeerAuthentication",
+  "metadata": {
+    "name": "default",
+    "namespace": "payments"
+  },
+  "spec": {
+    "mtls": {
+      "mode": "STRICT"
+    }
+  }
+}`}
+            </code>
+          </pre>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            This requires mTLS for workloads in the <code>payments</code> namespace. In current Istio docs, ambient
+            mode does not support <code>DISABLE</code>, and <code>portLevelMtls</code> uses the workload port, not the
+            Kubernetes Service port.
+          </p>
+        </div>
+        <p>
+          That last detail matters in real environments. A policy can look correct in code review and still be wrong if
+          the port number came from the Service object instead of the container workload.
+        </p>
+      </section>
+
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <Activity className="inline-block" /> Where Envoy JSON Fits
+        </h2>
+        <p>
+          Many service meshes push their rules into Envoy or Envoy-compatible proxies. That makes Envoy the most direct
+          example of JSON-native mesh configuration. Current Envoy CLI docs state that the bootstrap config path can be
+          JSON, YAML, or proto3, and that <code>--mode validate</code> can validate config without serving traffic.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Typical Envoy Validation Step</h3>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+            <code>{`envoy --mode validate -c bootstrap.json`}</code>
+          </pre>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            This is useful when you generate proxy bootstrap JSON in CI and want a hard fail before rollout.
+          </p>
+        </div>
+        <p>
+          In other words, JSON is not just an interchange format here. It can be the exact proxy configuration that the
+          mesh eventually relies on.
+        </p>
+      </section>
+
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <Workflow className="inline-block" /> A Practical JSON Mesh Workflow
+        </h2>
+        <p>
+          The safest way to use JSON for service mesh configuration is to treat it as part of a reviewable pipeline,
+          not as a blob that gets copied into production.
+        </p>
+        <ol className="list-decimal space-y-3 pl-6">
           <li>
-            <strong className="font-semibold">Control Plane:</strong> Manages and configures the data plane. This is
-            where you apply your JSON configuration files. The control plane processes these files and translates them
-            into dynamic configurations understood by the data plane proxies.
+            <strong className="font-semibold">Generate or edit the JSON manifest.</strong> Keep it small and focused per
+            resource when possible.
           </li>
           <li>
-            <strong className="font-semibold">Data Plane:</strong> Consists of the proxies (sidecars or proxies running
-            on nodes) that handle the actual network traffic between services. They receive their configuration from the
-            control plane and enforce the defined rules (routing, security, resilience, etc.).
+            <strong className="font-semibold">Format it before review.</strong> Pretty-printed JSON makes hosts,
+            selectors, retries, and weights much easier to audit.
+          </li>
+          <li>
+            <strong className="font-semibold">Run platform validation.</strong> For Kubernetes resources, a server-side
+            dry run catches schema and admission issues early.
+          </li>
+          <li>
+            <strong className="font-semibold">Run mesh-aware validation.</strong> For Istio, use{" "}
+            <code>istioctl analyze</code> on the manifest set you intend to deploy so missing hosts, selectors, and
+            other semantic mistakes show up before rollout.
+          </li>
+          <li>
+            <strong className="font-semibold">Deploy gradually.</strong> Start with a canary route or namespace-scoped
+            security policy instead of a mesh-wide change.
+          </li>
+        </ol>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Validation Commands</h3>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+            <code>
+              {`kubectl apply --dry-run=server -f mesh-config.json
+istioctl analyze manifests/
+envoy --mode validate -c bootstrap.json`}
+            </code>
+          </pre>
+        </div>
+        <p>
+          The exact files and directories will differ in your setup, but the pattern is stable: syntax first, platform
+          validation second, mesh semantics third.
+        </p>
+      </section>
+
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <Wrench className="inline-block" /> When JSON Is the Right Choice
+        </h2>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>
+            <strong className="font-semibold">Generated manifests:</strong> platform APIs, internal control planes, or
+            GitOps tooling emitting mesh resources.
+          </li>
+          <li>
+            <strong className="font-semibold">JSON patch workflows:</strong> targeted changes in CI/CD or Kustomize
+            overlays.
+          </li>
+          <li>
+            <strong className="font-semibold">Policy APIs:</strong> when another system stores routing or security rules
+            as structured JSON and renders mesh resources from them.
+          </li>
+          <li>
+            <strong className="font-semibold">Proxy bootstrap:</strong> direct Envoy configuration or debug output from
+            the data plane.
           </li>
         </ul>
         <p>
-          Your JSON configuration acts as the declarative input to the control plane, telling it how you want the data
-          plane proxies to behave.
+          If a team is manually maintaining large mesh manifests in Git, YAML is often the easier default. If a system
+          is producing those manifests automatically, JSON is often the cleaner transport format.
         </p>
       </section>
 
-      <section className="space-y-6 mb-10">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <Wrench className="inline-block" /> Tools and Best Practices
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <AlertTriangle className="inline-block" /> Common Mistakes
         </h2>
-        <p>Using JSON for configuration is enhanced by leveraging appropriate tools and following best practices:</p>
-        <ul className="list-disc pl-6 space-y-2">
+        <ul className="list-disc space-y-2 pl-6">
           <li>
-            <strong className="font-semibold">Schema Validation:</strong> Use JSON Schema to define the expected
-            structure and data types of your configuration files. This helps catch errors early before applying the
-            configuration.
+            Treating JSON as a universal mesh schema. In practice, the schema is mesh-specific, often Kubernetes API
+            objects backed by a control plane.
           </li>
           <li>
-            <strong className="font-semibold">Configuration Management:</strong> Store your JSON configurations in a
-            version control system (like Git) and use configuration management tools (like GitOps workflows, CD
-            platforms, or specific service mesh CLIs) to apply them to the control plane.
+            Defining route subsets in a <code>VirtualService</code> without the matching <code>DestinationRule</code>.
           </li>
           <li>
-            <strong className="font-semibold">Linting and Formatting:</strong> Use linters (like linters built for JSON
-            or specific service mesh config tools) to check for syntax errors and style inconsistencies. Use formatters
-            to ensure readability.
+            Using the Service port instead of the workload port in <code>portLevelMtls</code>.
           </li>
           <li>
-            <strong className="font-semibold">Testing:</strong> Before applying configurations to production, test them
-            in staging environments. Service mesh tools often provide ways to validate configuration files syntax and
-            even simulate traffic scenarios.
+            Storing giant minified JSON documents that nobody can review safely.
+          </li>
+          <li>
+            Validating only JSON syntax and skipping semantic mesh validation.
+          </li>
+        </ul>
+      </section>
+
+      <section className="mb-10 space-y-6">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
+          <BadgeCheck className="inline-block" /> Current Docs Worth Checking
+        </h2>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>
+            <a
+              className="text-blue-700 underline underline-offset-2 dark:text-blue-300"
+              href="https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Kubernetes object management
+            </a>{" "}
+            for the current rule that full object definitions can be supplied in YAML or JSON.
+          </li>
+          <li>
+            <a
+              className="text-blue-700 underline underline-offset-2 dark:text-blue-300"
+              href="https://kubernetes.io/blog/2025/11/25/configuration-good-practices/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Kubernetes configuration good practices
+            </a>{" "}
+            for current guidance that YAML is usually better for human-authored config.
+          </li>
+          <li>
+            <a
+              className="text-blue-700 underline underline-offset-2 dark:text-blue-300"
+              href="https://www.envoyproxy.io/docs/envoy/latest/operations/cli"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Envoy CLI documentation
+            </a>{" "}
+            for supported config formats and validation mode.
+          </li>
+          <li>
+            <a
+              className="text-blue-700 underline underline-offset-2 dark:text-blue-300"
+              href="https://istio.io/latest/docs/reference/config/networking/virtual-service/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Istio VirtualService reference
+            </a>{" "}
+            and{" "}
+            <a
+              className="text-blue-700 underline underline-offset-2 dark:text-blue-300"
+              href="https://istio.io/latest/docs/reference/config/security/peer_authentication/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              PeerAuthentication reference
+            </a>{" "}
+            for current `v1` traffic and security APIs.
+          </li>
+          <li>
+            <a
+              className="text-blue-700 underline underline-offset-2 dark:text-blue-300"
+              href="https://istio.io/latest/docs/ops/diagnostic-tools/istioctl-analyze/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Istio analyze documentation
+            </a>{" "}
+            for pre-deploy semantic checks.
           </li>
         </ul>
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
+        <h2 className="flex items-center gap-2 text-2xl font-semibold">
           <BadgeCheck className="inline-block" /> Conclusion
         </h2>
         <p>
-          JSON provides a clear, structured, and widely supported format for defining the complex behaviors required by
-          modern service meshes. By using JSON to configure routing, observability, security, and resilience, developers
-          and operators can manage the network layer of their microservices architecture effectively and declaratively.
-          Understanding the structure and application of these JSON configurations is key to unlocking the full power of
-          a service mesh, leading to more robust, secure, and observable distributed systems.
+          JSON-based service mesh configuration is real and useful, but the high-value use case is usually{" "}
+          <strong className="font-semibold">structured automation</strong>, not handwritten day-to-day editing. If you
+          treat JSON as the transport or generated form of mesh policy, validate it like any other production config,
+          and ground it in real mesh APIs such as Istio and Envoy, it becomes a strong fit for reliable routing and
+          security workflows.
         </p>
       </section>
     </div>

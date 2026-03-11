@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
-import { Search, Code, ListTree, Eye, Bookmark, FlaskConical, Lightbulb, Info, ChevronRight } from "lucide-react";
+import {
+  Search,
+  Code,
+  ListTree,
+  Eye,
+  Bookmark,
+  FlaskConical,
+  Lightbulb,
+  Info,
+  ChevronRight,
+  AlertTriangle,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Watch Expressions for JSON Properties in Debuggers | Debugging Tips",
+  title: "JSON Watch Expressions in Chrome DevTools and VS Code",
   description:
-    "Learn how to effectively use watch expressions to inspect specific JSON properties while debugging, simplifying data inspection.",
+    "Use watch expressions to inspect nested JSON properties faster in Chrome DevTools and VS Code. Learn safe paths, array access, raw JSON parsing, and common debugger pitfalls.",
 };
 
 export default function WatchExpressionsJsonArticle() {
@@ -17,320 +28,306 @@ export default function WatchExpressionsJsonArticle() {
 
       <div className="space-y-6 text-gray-800 dark:text-gray-200">
         <p>
-          Debugging is an essential skill for every developer. When stepping through code, understanding the state of
-          your variables is crucial. Modern debuggers offer powerful features like &quot;Watch Expressions&quot; which
-          allow you to monitor the value of variables or expressions in real-time as your code executes.
-        </p>
-        <p>
-          While watching simple primitive variables (like strings, numbers, booleans) or even top-level objects is
-          straightforward, debugging applications that deal with complex, deeply nested JSON data can quickly become
-          tedious. Expanding large objects or arrays in the debugger&apos;s variable pane can be overwhelming. This is
-          where targeted watch expressions become invaluable, especially for JSON data structures.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Search className="text-green-500" /> What are Watch Expressions?
-        </h2>
-        <p>
-          A watch expression is a piece of code (usually in the language you are debugging, e.g., JavaScript) that you
-          add to a dedicated &quot;Watch&quot; or &quot;Watch Expressions&quot; pane in your debugger. The debugger
-          evaluates this expression every time the execution pauses (e.g., at a breakpoint) and displays the result.
-        </p>
-        <p>
-          Instead of just watching a variable named{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">data</code> which might
-          be a huge JSON object, you can watch something more specific like{" "}
+          If you are debugging a large API response, watching the entire object is usually the slowest way to find the
+          bug. A better approach is to watch the exact JSON path you care about, such as{" "}
           <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">
-            data.userDetails.address.city
+            response?.data?.user?.email
           </code>{" "}
-          to see only the city value, even if{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">data</code> is megabytes
-          large.
+          or{" "}
+          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">
+            payload?.items?.[0]?.status
+          </code>
+          .
+        </p>
+        <p>
+          One detail matters up front: in most JavaScript debuggers you are not watching raw JSON as a special runtime
+          type. You are usually watching a normal object, array, or string created from JSON. That distinction explains
+          why some expressions work immediately and others require parsing first.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <ListTree className="text-orange-500" /> The Challenge with Complex JSON
+          <Search className="text-green-500" /> Quick Answer
+        </h2>
+        <p>For JSON-heavy debugging sessions, the most useful watch expressions are usually:</p>
+        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
+          <pre className="text-sm">
+            {`// Deep property
+response?.data?.user?.profile?.email
+
+// Array element
+response?.data?.orders?.[0]?.total
+
+// Derived check
+response?.data?.orders?.length ?? 0
+
+// Dynamic key
+response?.data?.flags?.[featureName]
+
+// Raw JSON string only when needed
+(() => {
+  try {
+    return JSON.parse(rawBody)?.user?.id;
+  } catch {
+    return "invalid JSON";
+  }
+})()`}
+          </pre>
+        </div>
+        <p>
+          The pattern is simple: watch the smallest stable expression that answers your current question. Leaf values,
+          counts, booleans, and short derived expressions are usually more useful than watching a whole response body.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <ListTree className="text-orange-500" /> Why Whole-Object Watching Breaks Down
         </h2>
         <p>
-          Imagine you have a variable{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">userData</code> that
-          holds a large JSON response from an API, structured like this:
+          Large JSON payloads are noisy. Expanding nested objects every time execution pauses wastes time, especially
+          when the bug depends on one property changing across retries, loop iterations, or stack frames.
+        </p>
+        <p>
+          For example, if this object is in scope:
         </p>
         <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
           <pre className="text-sm">
             {`{
-  "id": "user123",
-  "username": "john_doe",
-  "isActive": true,
-  "profile": {
-    "firstName": "John",
-    "lastName": "Doe",
-    "contact": {
-      "email": "john.doe@example.com",
-      "phone": "123-456-7890"
-    },
-    "address": {
-      "street": "123 Main St",
-      "city": "Anytown",
-      "zipCode": "98765",
-      "country": "USA"
+  "user": {
+    "id": "u_123",
+    "profile": {
+      "email": "dev@example.com",
+      "address": {
+        "city": "Tallinn"
+      }
     }
   },
   "orders": [
-    {
-      "orderId": "ORD001",
-      "totalAmount": 55.99,
-      "items": [ { "itemId": "A", "qty": 1 } ]
-    },
-    {
-      "orderId": "ORD002",
-      "totalAmount": 120.50,
-      "items": [ { "itemId": "B", "qty": 2 }, { "itemId": "C", "qty": 1 } ]
-    }
-    // ... potentially many more orders
-  ]
-  // ... many other top-level properties
+    { "id": "ord_1", "total": 49.99, "status": "paid" },
+    { "id": "ord_2", "total": 19.99, "status": "pending" }
+  ],
+  "feature-flags": {
+    "beta-checkout": true
+  }
 }`}
           </pre>
         </div>
         <p>
-          If you just watch{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">userData</code>, the
-          Watch pane will show the entire structure. To see the user&apos;s city, you&apos;d have to manually expand{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">userData</code>, then{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">profile</code>, then{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">address</code>. This is
-          time-consuming, especially if you need to check this value frequently or compare it across different
-          breakpoints.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Code className="text-purple-500" /> Using Watch Expressions for JSON Properties
-        </h2>
-        <p>
-          Instead of watching the whole object, you can construct watch expressions that directly access the specific
-          properties you care about using standard JavaScript property access syntax.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ChevronRight /> Accessing Nested Properties with Dot Notation
-        </h3>
-        <p>For simple nested objects, use dot notation:</p>
-        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
-          <pre className="text-sm">
-            {`// Watch the user's first name
-userData.profile.firstName
-
-// Watch the user's email
-userData.profile.contact.email
-
-// Watch the user's city
-userData.profile.address.city`}
-          </pre>
-        </div>
-        <p>
-          Each of these expressions added to your watch pane will show just the value of that specific, deeply nested
-          property.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ChevronRight /> Accessing Array Elements
-        </h3>
-        <p>JSON arrays are common. You can access elements by their index using bracket notation:</p>
-        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
-          <pre className="text-sm">
-            {`// Watch the first order object
-userData.orders[0]
-
-// Watch the second order's total amount
-userData.orders[1].totalAmount`}
-          </pre>
-        </div>
-        <p>
-          If you are inside a loop iterating over the array (e.g., with index{" "}
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">i</code>), you can watch
-          the current element or its properties dynamically:
-        </p>
-        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
-          <pre className="text-sm">
-            {`// Watch the current order in a loop
-userData.orders[i]
-
-// Watch the total amount of the current order in a loop
-userData.orders[i].totalAmount`}
-          </pre>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ChevronRight /> Using Bracket Notation for Property Names
-        </h3>
-        <p>
-          If a property name contains special characters (like hyphens or spaces) or if the property name is stored in a
-          variable, you must use bracket notation:
-        </p>
-        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
-          <pre className="text-sm">
-            {`// Example JSON: { "user-id": "...", "order details": { ... } }
-
-// Accessing a property with a hyphen
-data["user-id"]
-
-// Accessing a property with a space
-data["order details"]
-
-// Accessing a property where the key is in a variable
-let key = "username";
-// Watch expression:
-userData[key]`}
-          </pre>
-        </div>
-        <p>Bracket notation can be combined with dot notation for nested access:</p>
-        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
-          <pre className="text-sm">
-            {`// Accessing nested property using bracket notation
-userData.profile.address["zipCode"]`}
-          </pre>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ChevronRight /> Handling Optional Properties with Conditional Access
-        </h3>
-        <p>
-          If a property or nested path might not exist (e.g., an optional address field), accessing it directly like{" "}
+          Watching{" "}
+          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">response</code> tells
+          you almost nothing at a glance. Watching{" "}
           <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">
-            userData.profile.billingAddress.city
+            response?.user?.profile?.address?.city
           </code>{" "}
-          could throw an error in some debuggers depending on when the watch expression is evaluated. To safely watch
-          properties that might be null or undefined along the path, use optional chaining (
-          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">?.</code>):
+          or{" "}
+          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">
+            response?.orders?.[1]?.status
+          </code>{" "}
+          does.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Code className="text-purple-500" /> JSON Watch Patterns That Actually Help
+        </h2>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> 1. Safe nested property access
+        </h3>
+        <p>
+          Use optional chaining so the watch does not fail just because one parent object is missing at the current
+          breakpoint.
         </p>
         <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
           <pre className="text-sm">
-            {`// Safely watch the billing city, will show undefined if billingAddress or city is missing
-userData.profile.billingAddress?.city
-
-// Safely watch the first item of the third order (if it exists)
-userData.orders?.[2]?.items?.[0]`}
+            {`response?.user?.profile?.email
+response?.user?.profile?.address?.city`}
           </pre>
         </div>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ChevronRight /> Complex Expressions and Transformations
+          <ChevronRight /> 2. Arrays, indexes, and counts
         </h3>
         <p>
-          Watch expressions aren&apos;t limited to simple property access. You can often use any valid expression that
-          is meaningful in the current scope. This includes calling functions (be cautious, as this could have side
-          effects depending on the function!), performing calculations, or transforming data.
+          When debugging JSON arrays, counts and one representative element are often enough to verify that the data is
+          shaped correctly.
         </p>
         <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
           <pre className="text-sm">
-            {`// Check if the user is active AND has orders
-userData.isActive && userData.orders.length > 0
+            {`response?.orders?.length
+response?.orders?.[0]?.total
+response?.orders?.[currentIndex]?.status`}
+          </pre>
+        </div>
 
-// Get the total number of items across all orders (if inside a loop or function with scope)
-// (This might require a debugger that allows multi-line expressions or specific syntax)
-userData.orders.reduce((sum, order) => sum + order.items.length, 0)
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> 3. Bracket notation for real-world keys
+        </h3>
+        <p>
+          API payloads often contain keys that are awkward in dot notation, such as hyphenated feature flags or keys
+          chosen at runtime.
+        </p>
+        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
+          <pre className="text-sm">
+            {`response?.["feature-flags"]?.["beta-checkout"]
+response?.itemsById?.[selectedId]
+response?.meta?.[headerName]`}
+          </pre>
+        </div>
 
-// Check the type of a nested property
-typeof userData.profile.address.zipCode`}
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> 4. Short derived expressions
+        </h3>
+        <p>
+          Watch expressions are best when they answer a question directly instead of making you interpret a whole
+          object.
+        </p>
+        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
+          <pre className="text-sm">
+            {`response?.orders?.some((order) => order.status === "pending")
+response?.orders?.map((order) => order.id)
+typeof response?.user?.id`}
           </pre>
         </div>
         <p>
-          The complexity allowed in watch expressions can vary between debuggers. Browser DevTools often support quite
-          complex expressions.
+          Keep these short. If a watch expression starts to look like application logic, it is usually better as a
+          temporary log, a helper variable, or a Debug Console experiment.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Lightbulb className="text-yellow-500" /> Benefits of Using Targeted Watch Expressions
-        </h2>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong className="font-semibold">Reduced Clutter:</strong> Your watch pane only shows the specific values
-            you are interested in, making it much cleaner than expanding huge JSON trees.
-          </li>
-          <li>
-            <strong className="font-semibold">Faster Inspection:</strong> Get instant visibility into deeply nested
-            values without clicking through layers of objects and arrays.
-          </li>
-          <li>
-            <strong className="font-semibold">Focused Debugging:</strong> Helps you concentrate on the relevant data
-            points that might be causing a bug.
-          </li>
-          <li>
-            <strong className="font-semibold">Dynamic Monitoring:</strong> Watch properties within loops using the loop
-            index, seeing the value change with each iteration.
-          </li>
-          <li>
-            <strong className="font-semibold">Direct Evaluation:</strong> Test property access paths or simple
-            transformations directly in the debugger context.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <FlaskConical className="text-cyan-500" /> Debugger Specifics (General Guidance)
-        </h2>
-        <p>The exact way to add a watch expression varies slightly depending on your debugger:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Browser Developer Tools (Chrome, Firefox, Edge, Safari):</strong> Look for a &quot;Watch&quot; or
-            &quot;Scope&quot; pane in the Sources/Debugger tab. There is usually a &quot;+&quot; button or an input
-            field to add new watch expressions.
-          </li>
-          <li>
-            <strong>VS Code Debugger:</strong> In the &quot;Run and Debug&quot; view, there is a &quot;Watch&quot;
-            section. Click the &quot;Add Expression&quot; button (often a &quot;+&quot; icon) or type into the input
-            field that appears.
-          </li>
-          <li>
-            <strong>Node.js Debugging:</strong> Similar to browser tools, often accessed via integrated developer
-            environments or specific CLI debug tools.
-          </li>
-        </ul>
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> 5. Raw JSON strings need different handling
+        </h3>
         <p>
-          The syntax for accessing properties within your watch expressions is typically the standard syntax of the
-          language you are debugging (JavaScript, Python, etc.).
+          Sometimes the value in scope is still a string, for example a mocked response body before{" "}
+          <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">JSON.parse</code> or a
+          request body you captured manually. In that case, property access will not work until you parse it.
+        </p>
+        <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg my-4 overflow-x-auto text-gray-900 dark:text-gray-50">
+          <pre className="text-sm">
+            {`// rawBody is a string, not an object
+JSON.parse(rawBody).user.id
+
+// Safer for messy test payloads
+(() => {
+  try {
+    return JSON.parse(rawBody)?.user?.id;
+  } catch {
+    return "invalid JSON";
+  }
+})()`}
+          </pre>
+        </div>
+        <p>
+          If the payload is large, avoid leaving a repeated parse in a permanent watch unless you really need it. Parse
+          once in code or use the Debug Console for one-off checks.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Info className="text-blue-500" /> Tips and Considerations
+          <FlaskConical className="text-cyan-500" /> Current Debugger Workflows That Matter
+        </h2>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> Chrome and Edge DevTools
+        </h3>
+        <p>
+          In current Chrome-family DevTools, use the <strong>Watch</strong> pane in <strong>Sources</strong> when you
+          want the expression reevaluated as execution pauses and while stepping through code. This is the right choice
+          for breakpoint-driven JSON debugging.
+        </p>
+        <p>
+          DevTools also has <strong>Live Expressions</strong> in the Console. Those update without stopping execution,
+          which makes them useful for continuously changing values, but they are not a replacement for the Watch pane.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> VS Code
+        </h3>
+        <p>
+          In current VS Code, add JSON property paths to the <strong>WATCH</strong> section in <strong>Run and
+          Debug</strong>. Results are evaluated relative to the currently selected stack frame, so a watch that works in
+          one frame can show <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">not available</code> in another.
+        </p>
+        <p>
+          One practical shortcut is to right-click a nested value in <strong>VARIABLES</strong> and use{" "}
+          <strong>Copy as Expression</strong>. That avoids hand-typing deep JSON paths and reduces mistakes when object
+          names are long.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <ChevronRight /> Watch vs Debug Console
+        </h3>
+        <p>
+          Use the Watch pane for values you need to see repeatedly across pauses. Use the Debug Console for one-off
+          probes, quick transformations, or multi-line experiments. In VS Code, the Debug Console supports multi-line
+          input with <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">Shift+Enter</code>, which is helpful for temporary JSON parsing and filtering.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <AlertTriangle className="text-amber-500" /> Common Reasons JSON Watches Fail
         </h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong className="font-semibold">Scope:</strong> Ensure the variable you are trying to watch (
-            <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">userData</code> in our
-            examples) is actually in scope at the point where your debugger pauses. If it&apos;s not in scope, the watch
-            expression will likely show an error like &quot;undefined&quot; or &quot;not available&quot;.
+            <strong className="font-semibold">Wrong stack frame:</strong> The variable exists, but not in the frame you
+            currently selected.
           </li>
           <li>
-            <strong className="font-semibold">Performance:</strong> While usually negligible, extremely complex watch
-            expressions or watching properties of massive objects evaluated very frequently could theoretically have a
-            minor performance impact during debugging, especially in resource-constrained environments.
+            <strong className="font-semibold">The data is still a string:</strong> You are trying to read{" "}
+            <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">payload.user.id</code>{" "}
+            before parsing the JSON text.
           </li>
           <li>
-            <strong className="font-semibold">Syntax Errors:</strong> If your watch expression has a syntax error or
-            tries to access a property on{" "}
-            <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">null</code> or{" "}
-            <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">undefined</code>{" "}
-            without using optional chaining, the debugger will typically indicate an error instead of displaying a
-            value.
+            <strong className="font-semibold">A parent value is null or undefined:</strong> Switch to optional chaining
+            instead of direct property access.
           </li>
           <li>
-            <strong className="font-semibold">Use Judiciously:</strong> Don&apos;t add dozens of watch expressions if
-            you only need to check a value once. It&apos;s most useful for values you need to monitor repeatedly across
-            different breakpoints or loop iterations.
+            <strong className="font-semibold">The watch is too broad:</strong> Watching an entire response makes it hard
+            to spot the actual mismatch. Watch the leaf value, count, or boolean that proves the state you care about.
+          </li>
+          <li>
+            <strong className="font-semibold">The expression does too much work:</strong> Repeated mapping, reducing,
+            or parsing can make debugging noisier than necessary. Move heavy inspection into the Debug Console or a
+            temporary helper variable.
           </li>
         </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Lightbulb className="text-yellow-500" /> Practical Rules of Thumb
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            Start with the smallest useful path, such as{" "}
+            <code className="font-mono bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-sm">
+              response?.user?.id
+            </code>
+            , not the whole response object.
+          </li>
+          <li>
+            Prefer optional chaining in watch expressions unless you know the full path always exists.
+          </li>
+          <li>
+            Watch counts, statuses, and IDs first. They usually explain data bugs faster than watching complete nested
+            objects.
+          </li>
+          <li>
+            If you copied a raw response body from logs or a network tool, validate and pretty-print it before trying to
+            reason about the structure in the debugger.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Info className="text-blue-500" /> When This Technique Saves the Most Time
+        </h2>
+        <p>
+          Targeted watch expressions are most valuable when the same JSON field must be checked across several
+          breakpoints, retries, or loop iterations. They are less useful for one-off exploration, where the Variables
+          panel or Debug Console is often faster.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Bookmark className="text-pink-500" /> Conclusion
         </h2>
         <p>
-          Leveraging watch expressions to target specific properties within JSON objects is a powerful technique that
-          significantly enhances your debugging efficiency. It allows you to cut through the noise of large data
-          structures and focus directly on the information that matters most at any given breakpoint. By mastering
-          simple property access, array indexing, bracket notation, and optional chaining within your debugger&apos;s
-          watch pane, you can save considerable time and gain clearer insights into your application&apos;s state when
-          working with complex JSON data. Make this a standard tool in your debugging arsenal!
+          The fastest way to debug JSON is rarely to expand the whole payload. In Chrome DevTools or VS Code, watch the
+          exact property path, guard it with optional chaining, and switch to the Debug Console when the expression
+          becomes heavy or the value is still raw JSON text. That gives you cleaner output, faster comparisons, and a
+          much better chance of seeing the real bug immediately.
         </p>
       </div>
     </>

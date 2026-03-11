@@ -4,7 +4,7 @@ import { Container, Lock, CheckCheck, FileJson, Cog, Package, Database } from "l
 export const metadata: Metadata = {
   title: "Immutable JSON Configuration in Container Environments | Article",
   description:
-    "Explore the benefits and implementation strategies of using immutable JSON configuration within containerized applications.",
+    "Practical guide to immutable JSON configuration in containers, with current Kubernetes advice for ConfigMaps, Secrets, rollouts, and common pitfalls.",
 };
 
 export default function ImmutableJsonConfigArticle() {
@@ -16,247 +16,267 @@ export default function ImmutableJsonConfigArticle() {
 
       <div className="space-y-6 text-lg">
         <p>
-          In the world of modern application deployment, containers have become a de facto standard. They provide a
-          consistent and isolated environment for running software, addressing the classic &quot;it works on my
-          machine&quot; problem. A critical aspect of deploying any application, containerized or otherwise, is managing
-          its configuration. This article explores the concept of <strong>immutable JSON configuration</strong> and why
-          it&apos;s a powerful pattern specifically suited for containerized applications.
+          If you want every container instance to run with exactly the same settings for its entire lifetime, treat
+          configuration as <strong>immutable input</strong>. In practice, that means your app reads a validated JSON
+          file at startup, the file is mounted read-only, and any config change triggers a new deployment instead of an
+          in-place edit on a running container.
+        </p>
+        <p>
+          This approach is useful when configuration is too structured for a handful of environment variables: feature
+          flags, service endpoints, rate limits, JSON schema settings, or nested per-tenant behavior. It is especially
+          useful in Kubernetes and other orchestrated environments where reproducibility, clean rollbacks, and low
+          operational surprise matter more than ad hoc runtime tweaks.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Cog className="w-6 h-6" /> What is Immutable Configuration?
+          <Cog className="w-6 h-6" /> What Immutable Configuration Actually Means
         </h2>
         <p>
-          Immutable configuration means that once an application instance (like a container) is started, its
-          configuration values <strong>cannot be changed</strong> without replacing the entire instance. This is in
-          contrast to mutable configuration, where settings can be updated while the application is running (e.g., by
-          editing a file, calling an API, or changing a database entry).
+          Immutable configuration does <strong>not</strong> mean the source of truth can never change. It means a
+          running container should not see config drift halfway through its lifetime. When you need new settings, you
+          create a new config version and replace the container or pod.
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Mutable pattern:</strong> edit a live file or config object and hope the running process reloads it
+            safely.
+          </li>
+          <li>
+            <strong>Immutable pattern:</strong> publish a new config version, roll out new containers, and retire the
+            old ones.
+          </li>
+        </ul>
         <p>
-          Why is this &quot;immutability&quot; desirable? It aligns perfectly with the principles of the
-          &quot;Twelve-Factor App,&quot; specifically the &quot;Config&quot; factor, which advocates storing
-          configuration in the environment. The core idea is that deployments should be predictable and repeatable. If
-          configuration can change independently of the code and dependencies, it introduces a variable that can lead to
-          inconsistencies and errors.
+          That matches the broader container model: build artifacts are disposable, deployments are repeatable, and
+          rollbacks are just a switch back to a known-good image and config combination.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <FileJson className="w-6 h-6" /> JSON as a Configuration Format
+          <FileJson className="w-6 h-6" /> Why JSON Works Well for This
         </h2>
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read and
-          write and easy for machines to parse and generate. Its hierarchical structure makes it a natural fit for
-          representing structured configuration data. Unlike simpler key-value pairs or `.ini` files, JSON allows for
-          nested settings, arrays, and different data types (strings, numbers, booleans, null).
+          JSON is a good fit when config needs real structure. It handles nesting, arrays, booleans, and numbers
+          without forcing everything into flat strings. That makes it easier to review, validate, diff, and version
+          alongside deployment manifests.
         </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h3 className="text-lg font-medium mb-2">Example JSON Config:</h3>
+          <h3 className="text-lg font-medium mb-2">Example production-oriented JSON config</h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
             {`{
-  "database": {
-    "host": "db.example.com",
-    "port": 5432,
-    "username": "appuser",
-    "passwordSecretName": "db-password"
+  "schemaVersion": 3,
+  "http": {
+    "port": 8080,
+    "requestTimeoutMs": 5000
   },
-  "apiKeys": [
-    "abc-123",
-    "def-456"
-  ],
+  "upstreams": {
+    "catalogBaseUrl": "https://catalog.internal.example"
+  },
   "featureFlags": {
-    "newCheckoutEnabled": true,
-    "betaAnalytics": false
+    "auditLogging": true,
+    "betaCheckout": false
   },
-  "loggingLevel": "info"
+  "secrets": {
+    "dbPasswordFile": "/var/run/secrets/myapp/db-password"
+  }
 }`}
           </pre>
         </div>
         <p>
-          Using JSON provides a clear, structured way to define complex application settings compared to just using flat
-          environment variables for everything.
+          The important distinction is that the JSON file should usually contain <strong>non-secret structure</strong>
+          plus references to secret locations, not raw credentials.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Package className="w-6 h-6" /> Why Immutable JSON Config in Containers?
+          <Package className="w-6 h-6" /> The Recommended Container Pattern Today
         </h2>
         <p>
-          Containers thrive on being disposable and reproducible. When you build a container image, you ideally want it
-          to contain everything needed to run the application for a specific version of the code. Configuration, when
-          immutable, becomes part of this reproducible unit.
+          For most production workloads, the safest pattern is: keep one reusable image, store structured non-secret
+          JSON outside the image, mount it read-only, keep secrets in a separate secret store, and roll out new pods
+          when config changes.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li className="flex items-start gap-2">
-            <CheckCheck className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-            <strong>Consistency:</strong> Every container instance spun up from the same image with the same immutable
-            configuration will behave identically. This drastically reduces &quot;configuration drift&quot; and makes
-            debugging issues much easier (&quot;what&apos;s different about this one?&quot; becomes less frequent).
-          </li>
-          <li className="flex items-start gap-2">
-            <Lock className="w-5 h-5 text-blue-500 flex-shrink-0 mt-1" />
-            <strong>Predictability:</strong> Deployments become simple swaps of container versions. You know exactly
-            what configuration is applied to a new set of containers because it&apos;s tied to that deployment unit.
-            Rollbacks are also more reliable – you just revert to the previous image/config combination.
-          </li>
-          <li className="flex items-start gap-2">
-            <Database className="w-5 h-5 text-purple-500 flex-shrink-0 mt-1" />
-            <strong>Simplified Operations:</strong> Configuration changes require a redeployment (spinning up new
-            containers with the updated config and shutting down the old ones). This integrates config management
-            directly into your standard deployment workflow, which is often automated in container orchestration
-            platforms like Kubernetes.
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCheck className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-            <strong>Reduced Attack Surface:</strong> If configuration files are read-only within the container, it
-            prevents accidental or malicious changes at runtime. Sensitive settings are typically handled separately
-            (see below), but even non-secret config benefits from not being modifiable post-start.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Cog className="w-6 h-6" /> Implementing Immutable JSON Configuration
-        </h2>
-        <p>There are several common patterns for getting immutable JSON configuration into your container:</p>
-
-        <h3 className="text-xl font-semibold mt-6">1. Baking Config into the Image (Least Flexible)</h3>
+        <ol className="list-decimal pl-6 space-y-2 my-4">
+          <li>Create a versioned JSON config file and validate it before deploy.</li>
+          <li>Store that JSON in a ConfigMap or equivalent non-secret config object.</li>
+          <li>Mark the config object immutable when your platform supports it.</li>
+          <li>Mount it read-only into the container filesystem.</li>
+          <li>Store passwords, tokens, and certificates in Secrets, not in the JSON document.</li>
+          <li>Deploy a new pod set for every config change instead of mutating live containers.</li>
+        </ol>
         <p>
-          The simplest approach is to include the JSON configuration file directly in the container image&apos;s
-          filesystem during the build process.
+          This is where current Kubernetes behavior matters: mounted ConfigMaps and Secrets can be refreshed in running
+          pods when the underlying object changes, so simply mounting a file does <strong>not</strong> guarantee
+          runtime immutability by itself. If you want truly immutable runtime behavior, avoid editing live config
+          objects in place. Use versioned names or hash-based names, set <code>immutable: true</code> where supported,
+          and trigger a rollout.
         </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example Dockerfile:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
-            {`FROM node:18
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-# Copy the JSON config file into the image
-COPY config/production.json /app/config.json
-
-# Application expects config at /app/config.json
-CMD ["node", "src/index.js"]`}
-          </pre>
-        </div>
-        <p>
-          <strong>Pros:</strong> Extremely simple to implement.
-          <strong>Cons:</strong> Requires rebuilding the image every time the configuration changes. Not suitable for
-          environment-specific config (dev, staging, prod) without building separate images for each, which goes against
-          the ideal of one build artifact. Not suitable for secrets.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">2. Mounting Config File Read-Only (Common)</h3>
-        <p>
-          A more flexible approach is to store the JSON configuration externally and mount it into the container at
-          runtime as a read-only file. In Kubernetes, this is typically done using{" "}
-          <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-            ConfigMap
-          </code>{" "}
-          resources.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example Kubernetes ConfigMap:</h4>
+          <h3 className="text-lg font-medium mb-2">Example Kubernetes ConfigMap and Secret</h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
             {`apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: myapp-config
+  name: myapp-config-2026-03-11
+immutable: true
 data:
   application.json: |
     {
-      "serviceUrl": "https://prod.example.com/api",
-      "timeoutMs": 5000,
+      "schemaVersion": 3,
+      "http": {
+        "port": 8080,
+        "requestTimeoutMs": 5000
+      },
+      "upstreams": {
+        "catalogBaseUrl": "https://catalog.internal.example"
+      },
       "featureFlags": {
-        "darkMode": true
+        "auditLogging": true,
+        "betaCheckout": false
+      },
+      "secrets": {
+        "dbPasswordFile": "/var/run/secrets/myapp/db-password"
       }
-    }`}
+    }
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myapp-db-credentials-2026-03-11
+immutable: true
+type: Opaque
+stringData:
+  db-password: super-secret-value`}
           </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Example Kubernetes Deployment (Mounting ConfigMap):</h4>
+        </div>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h3 className="text-lg font-medium mb-2">Example Deployment</h3>
           <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
             {`apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myapp
 spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
   template:
+    metadata:
+      labels:
+        app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myapp:latest # Same image, different config
-        volumeMounts:
-        - name: config-volume
-          mountPath: /etc/config
-          readOnly: true
+        - name: myapp
+          image: ghcr.io/example/myapp:1.14.2
+          volumeMounts:
+            - name: app-config
+              mountPath: /etc/myapp
+              readOnly: true
+            - name: app-secrets
+              mountPath: /var/run/secrets/myapp
+              readOnly: true
+          env:
+            - name: APP_CONFIG_PATH
+              value: /etc/myapp/application.json
       volumes:
-      - name: config-volume
-        configMap:
-          name: myapp-config # Refers to the ConfigMap above`}
+        - name: app-config
+          configMap:
+            name: myapp-config-2026-03-11
+        - name: app-secrets
+          secret:
+            secretName: myapp-db-credentials-2026-03-11`}
           </pre>
         </div>
         <p>
-          The application inside the container would then read the JSON file from
-          <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-            /etc/config/application.json
-          </code>
-          . Any update to the ConfigMap requires a rolling update of the deployment to pick up the new file version
-          (because the mount is tied to the specific ConfigMap version used when the pod starts), maintaining
-          immutability for the running container instance.
-        </p>
-        <p>
-          <strong>Pros:</strong> Decouples configuration from the image build. Allows easy management of
-          environment-specific configurations using different ConfigMaps. Supports structured JSON format.
-          <strong>Cons:</strong> Requires orchestration platform features (like Kubernetes ConfigMaps/Secrets). Secrets
-          should be handled separately using Secrets, which can also be mounted as files.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          3. Passing JSON via Environment Variables (Less Common for Full JSON)
-        </h3>
-        <p>
-          While the Twelve-Factor App advocates for environment variables, passing an entire, complex JSON structure as
-          a single environment variable is often cumbersome due to quoting and escaping issues.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Example Env Var (Messy):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 text-sm">
-            {`MYAPP_CONFIG='{"serviceUrl": "...", "timeoutMs": 5000}'`}
-          </pre>
-        </div>
-        <p>
-          A better approach is to use environment variables for atomic values (strings, numbers, booleans) or references
-          to secrets, and let the application code assemble the final configuration object, potentially using a default
-          JSON file mounted as read-only, and overriding values with environment variables. Libraries exist to
-          facilitate this pattern.
-        </p>
-        <p>
-          <strong>Pros:</strong> Follows Twelve-Factor principles closely. Highly flexible.
-          <strong>Cons:</strong> Can be difficult to manage complex nested JSON structures purely via environment
-          variables. Requires application logic to parse and apply the variables correctly.
+          This pattern keeps the image reusable across environments while still giving each deployment an exact,
+          reviewable config version. It also makes rollback straightforward because you roll back both the image tag and
+          the referenced config objects together.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Lock className="w-6 h-6" /> Handling Secrets
+          <Database className="w-6 h-6" /> Choosing Between the Main Options
+        </h2>
+        <p>There is no single delivery method for every case. The practical choice usually looks like this:</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>JSON file mounted read-only:</strong> best default when config is nested, environment-specific, and
+            reviewed by operators.
+          </li>
+          <li>
+            <strong>Environment variables:</strong> best for small scalar values, feature switches, and platform-provided
+            metadata. Less pleasant for large or deeply nested JSON because escaping and size become awkward quickly.
+          </li>
+          <li>
+            <strong>Baking config into the image:</strong> acceptable for fixed defaults or fully self-contained demo
+            images, but weak for normal multi-environment deployment because every config tweak requires a rebuild.
+          </li>
+        </ul>
+        <p>
+          A common compromise is to ship safe defaults in the image, mount one read-only JSON file for environment
+          overrides, and use a few environment variables only for values that truly belong at deploy time.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Lock className="w-6 h-6" /> Secret Handling Rules
         </h2>
         <p>
-          While JSON is great for non-sensitive configuration, secrets (like database passwords, API keys) should{" "}
-          <strong className="text-red-500">never</strong> be stored directly in plain JSON configuration files,
-          ConfigMaps, or image layers. Container orchestration platforms provide dedicated Secrets management (e.g.,
-          Kubernetes Secrets, Docker Secrets). These secrets can be injected into containers as environment variables
-          or, preferably for structured data, mounted as read-only files in a temporary filesystem volume, similar to
-          the ConfigMap approach. The application then reads the secret values from these designated locations.
+          Do not put database passwords, API keys, signing keys, or certificates directly into the main JSON config
+          file. Keep secrets separate and inject only references or file paths into the JSON document. That reduces the
+          blast radius of accidental logging, debugging output, git history leaks, and ConfigMap exposure.
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Use your platform&apos;s secret mechanism for secret values. In Kubernetes, Secrets can also be marked
+            immutable.
+          </li>
+          <li>
+            Prefer mounting secrets as read-only files when your app can read from file paths cleanly.
+          </li>
+          <li>
+            Keep secret rotation and config rollout as explicit deployment events, not background surprises.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <CheckCheck className="w-6 h-6" /> Common Mistakes and Troubleshooting
+        </h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>&quot;We edited the ConfigMap and some pods changed behavior without a deploy.&quot;</strong> Mounted
+            config can update in running pods. Treat config objects as versioned release artifacts instead of editing
+            them in place.
+          </li>
+          <li>
+            <strong>&quot;Our file never refreshed.&quot;</strong> If you mount a ConfigMap or Secret using{" "}
+            <code>subPath</code>, Kubernetes does not update that mount automatically. Use a directory mount if you
+            expect refresh behavior, or better, use an explicit rollout for immutable config.
+          </li>
+          <li>
+            <strong>&quot;The app crashed after deploy.&quot;</strong> Validate the JSON before building the manifest or
+            generating the ConfigMap. A formatter or validator catches malformed syntax before it becomes a failed
+            rollout.
+          </li>
+          <li>
+            <strong>&quot;Rollback did not restore behavior.&quot;</strong> Make sure image version and config version are
+            tracked together. Rolling back only the image while leaving newer config mounted often breaks compatibility.
+          </li>
+          <li>
+            <strong>&quot;We need live toggles without redeploying.&quot;</strong> That is a different requirement. Use a
+            runtime config service or feature-flag system instead of pretending an immutable file should behave like a
+            dynamic control plane.
+          </li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Adopting an immutable JSON configuration pattern in container environments brings significant benefits in
-          terms of consistency, predictability, and operational simplicity. By decoupling configuration from the
-          container image and managing it externally (often via read-only mounted files from orchestration platforms),
-          you create a robust and scalable system. Remember to always handle sensitive secrets using dedicated secrets
-          management tools provided by your container platform, keeping them separate from your general JSON
-          configuration.
+          Immutable JSON configuration works best when you treat config as a release artifact, not a shared mutable
+          scratchpad. Keep structured non-secret settings in JSON, keep secrets separate, mount both read-only, and
+          replace pods whenever the config changes.
+        </p>
+        <p>
+          Before shipping, run the JSON through a formatter and validator so the file inside your container environment
+          is predictable, readable, and syntactically correct. That small step prevents many avoidable rollout failures.
         </p>
       </div>
     </>

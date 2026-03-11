@@ -1,305 +1,297 @@
 import type { Metadata } from "next";
 import {
-  Settings,
-  Globe,
-  Scale,
-  Vote,
-  Users,
-  Brain,
-  ShieldCheck,
-  GitBranch,
-  Box,
-  Sparkles,
-  LibraryBig,
   ClipboardList,
+  GitBranch,
+  Globe,
+  LibraryBig,
+  Scale,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Vote,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Building Decentralized Governance for JSON Standards | Decentralized Tech",
+  title: "Building Decentralized Governance for JSON Standards: A Practical 2026 Guide",
   description:
-    "Explore the concepts, models, and challenges of establishing decentralized governance systems for evolving JSON standards.",
+    "Learn how decentralized governance can work for JSON standards in practice, with current context from RFC 8259, RFC 9535, JSON Schema 2020-12, and active JSON-LD work.",
 };
 
 export default function DecentralizedGovernanceJsonStandardsArticle() {
+  const linkClassName = "text-blue-600 underline underline-offset-2 hover:text-blue-800";
+
   return (
     <>
       <h1 className="text-3xl font-bold mb-6">Building Decentralized Governance for JSON Standards</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become the ubiquitous data interchange format for the web and beyond.
-          Its simplicity and flexibility have contributed to its widespread adoption. However, as JSON standards evolve
-          and new specifications or extensions are proposed (like JSON Schema, JSON-LD, JSON Patch, etc.), the process
-          by which these standards are governed, updated, and adopted becomes crucial. Traditionally, standards bodies
-          or centralized maintainers handle this. But what if governance could be decentralized, leveraging the
-          principles behind blockchain and distributed systems?
+          As of March 11, 2026, JSON is not governed by a single decentralized body. It is governed by a mix of
+          public institutions and open technical communities: core JSON remains{" "}
+          <a href="https://www.rfc-editor.org/rfc/rfc8259" className={linkClassName} rel="noreferrer" target="_blank">
+            RFC 8259
+          </a>{" "}
+          (Internet Standard STD 90),{" "}
+          <a href="https://www.rfc-editor.org/rfc/rfc9535" className={linkClassName} rel="noreferrer" target="_blank">
+            JSONPath is now RFC 9535
+          </a>
+          , the latest published{" "}
+          <a href="https://json-schema.org/draft/2020-12" className={linkClassName} rel="noreferrer" target="_blank">
+            JSON Schema draft is 2020-12
+          </a>
+          , and W3C rechartered the{" "}
+          <a href="https://www.w3.org/2026/01/json-ld-wg-charter.html" className={linkClassName} rel="noreferrer" target="_blank">
+            JSON-LD Working Group in January 2026
+          </a>{" "}
+          to work on JSON-LD 1.2, YAML-LD, and CBOR-LD.
         </p>
         <p>
-          This article explores the potential for building decentralized governance models specifically for JSON
-          standards, discussing the motivations, potential models, key components, and challenges involved.
+          That current reality matters because a useful governance model for JSON standards is not "put the spec on a
+          blockchain and let token holders vote." The model that actually works is more conservative: decentralize
+          participation, evidence gathering, and review, but keep compatibility, security, and final normative changes
+          behind strict technical gates.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Globe className="w-6 h-6 text-blue-500" />
-          <span>The Need for Evolving Standards</span>
-        </h2>
-        <p>While the core JSON specification (RFC 8259) is stable, practical applications often require more:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Validation:</strong> Defining the structure and types of JSON data (
-            <code className="font-mono text-sm">JSON Schema</code>).
-          </li>
-          <li>
-            <strong>Linking Data:</strong> Embedding semantic meaning and relationships (
-            <code className="font-mono text-sm">JSON-LD</code>).
-          </li>
-          <li>
-            <strong>Patching/Updating:</strong> Specifying how to modify a JSON document (
-            <code className="font-mono text-sm">JSON Patch</code>,{" "}
-            <code className="font-mono text-sm">JSON Merge Patch</code>).
-          </li>
-          <li>
-            <strong>Querying:</strong> Standardized ways to query JSON data (
-            <code className="font-mono text-sm">JSONPath</code> - often a de facto standard).
-          </li>
-          <li>
-            <strong>Comments/Metadata:</strong> Handling non-data information within JSON structures (though often
-            discouraged in the core spec).
-          </li>
-        </ul>
-        <p>
-          These extensions and related specifications currently live in various places, governed by different groups
-          (IETF working groups, W3C, community initiatives). A decentralized approach could offer alternative pathways
-          for proposal, discussion, and formalization.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Brain className="w-6 h-6 text-green-500" />
-          <span>What is Decentralized Governance?</span>
+          <span>Where JSON Governance Actually Lives in 2026</span>
         </h2>
         <p>
-          Decentralized governance refers to a system where decision-making power is distributed among participants
-          rather than residing in a single entity or a small, appointed group. In the context of software and standards,
-          this typically involves:
+          If you landed on this page looking for a guide, start with the current landscape instead of the theory. The
+          JSON ecosystem already uses a polycentric governance model, which means different parts of the stack are
+          standardized in different venues.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Open proposal mechanisms where anyone can suggest changes or new ideas.</li>
-          <li>Transparent discussion and review processes.</li>
-          <li>A voting or consensus mechanism where participants collectively decide on the adoption of proposals.</li>
-          <li>
-            Rules and processes that are often encoded and automated, sometimes using technologies like smart contracts
-            on a blockchain (forming a Decentralized Autonomous Organization, or DAO).
-          </li>
-        </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Sparkles className="w-6 h-6 text-yellow-500" />
-          <span>Why Decentralize JSON Standards Governance?</span>
-        </h2>
-        <p>Applying decentralized principles could bring several benefits:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Inclusivity:</strong> Lower barriers to participation for developers and users worldwide, not
-            limited to members of specific organizations.
-          </li>
-          <li>
-            <strong>Resilience:</strong> No single point of failure in the governance process; the system is harder to
-            shut down or control externally.
-          </li>
-          <li>
-            <strong>Innovation:</strong> Potentially faster iteration and adoption of useful new ideas originating from
-            diverse communities.
-          </li>
-          <li>
-            <strong>Transparency:</strong> All proposals, discussions, and votes can be publicly visible (depending on
-            the model).
-          </li>
-          <li>
-            <strong>Trust:</strong> Decisions are made according to predefined, verifiable rules, rather than the
-            discretion of a few.
-          </li>
-        </ul>
+        <div className="overflow-x-auto my-4">
+          <table className="w-full border border-gray-200 text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="border border-gray-200 px-4 py-3 text-left font-semibold">Area</th>
+                <th className="border border-gray-200 px-4 py-3 text-left font-semibold">Current anchor</th>
+                <th className="border border-gray-200 px-4 py-3 text-left font-semibold">Governance lesson</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-200 px-4 py-3 align-top">Core JSON</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">RFC 8259 / STD 90, aligned with ECMA-404</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">
+                  The core grammar is intentionally stable. Any change has to protect internet-wide interoperability.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-3 align-top">JSONPath</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">RFC 9535, published in February 2024</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">
+                  De facto behavior can mature into a real standard, but only after years of implementation feedback
+                  and narrowing ambiguity.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-3 align-top">JSON Schema</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">Latest published draft: 2020-12</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">
+                  Community-led governance works well when drafts, validators, and vocabulary changes are versioned and
+                  testable.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-3 align-top">JSON-LD</td>
+                <td className="border border-gray-200 px-4 py-3 align-top">
+                  JSON-LD 1.1 at W3C, with a January 6, 2026 charter for 1.2, YAML-LD, and CBOR-LD
+                </td>
+                <td className="border border-gray-200 px-4 py-3 align-top">
+                  Open incubation can coexist with formal standardization when backward compatibility and security stay
+                  explicit.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The immediate takeaway is that JSON standards already evolve through decentralized participation. What they do
+          not do is let popularity alone redefine what counts as valid JSON across the wider web.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Scale className="w-6 h-6 text-purple-500" />
-          <span>Potential Models for Decentralized Governance</span>
-        </h2>
-        <p>Various approaches could be considered:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Community DAO:</strong> A dedicated Decentralized Autonomous Organization formed by developers and
-            users of JSON standards. Ownership of governance tokens could grant voting rights on proposals for new specs
-            or changes to existing ones.
-          </li>
-          <li>
-            <strong>Federated Open Source Model:</strong> Building on existing open-source project governance (like
-            working groups and steering committees) but formalizing cross-project collaboration and decision-making
-            under a common decentralized umbrella or foundation. Decisions could involve representatives from different
-            projects voting.
-          </li>
-          <li>
-            <strong>Reputation/Contribution Based:</strong> Governance rights tied to demonstrated contributions to the
-            JSON ecosystem (e.g., code commits to parsers/validators, writing documentation, submitting valuable
-            proposals, participating in discussions). This rewards active participants.
-          </li>
-          <li>
-            <strong>Integrated Platform:</strong> A dedicated online platform (potentially decentralized itself) where
-            proposal submission, discussion, and voting are natively supported and linked to specific JSON standards
-            documents stored in a decentralized repository.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Settings className="w-6 h-6 text-orange-500" />
-          <span>Key Components of the System</span>
+          <span>What Should Be Decentralized, and What Should Not</span>
         </h2>
         <p>
-          Regardless of the specific model, a decentralized governance system for JSON standards would likely need these
-          core components:
+          The right split is simple: decentralize contribution, not the meaning of core interoperability guarantees.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Decentralize idea intake:</strong> Anyone should be able to file proposals, contribute examples,
+            add tests, and challenge ambiguous behavior.
+          </li>
+          <li>
+            <strong>Decentralize review:</strong> Parser authors, schema-validator maintainers, API designers, security
+            reviewers, and tool builders should all be able to comment in public.
+          </li>
+          <li>
+            <strong>Do not casually decentralize the core syntax:</strong> Changing plain JSON grammar or
+            `application/json` expectations without a formal path creates fragmentation fast.
+          </li>
+          <li>
+            <strong>Treat relaxed formats as profiles:</strong> Comments, trailing commas, or JSON5 and JSONC features
+            need explicit names and opt-in modes, not silent redefinition of "JSON."
+          </li>
+        </ul>
+        <p>
+          This distinction is especially important for formatter tools. A formatter can support relaxed inputs, but its
+          safest default should still be strict RFC 8259-compatible output.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <GitBranch className="w-6 h-6 text-orange-500" />
+          <span>A Governance Model That Actually Works</span>
+        </h2>
+        <p>
+          If you are building governance around a JSON-derived specification, a staged process works better than a
+          single up-or-down vote.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <ClipboardList className="w-5 h-5 text-gray-600" />
-          <span>Proposal System</span>
+          <span>1. Open Proposal Intake</span>
         </h3>
         <p>
-          A standardized way for anyone to draft and submit a proposal for a new JSON standard, an amendment to an
-          existing one, or a deprecation. This could involve templates, required documentation, and a public registry of
-          proposals.
+          Each proposal should be public, versioned, and explicit about what layer it touches. At minimum, require the
+          proposal to document:
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Whether it affects core syntax, a profile, a vocabulary, a query language, or tooling guidance.</li>
+          <li>Whether all valid RFC 8259 documents remain valid after the change.</li>
+          <li>How existing producers, consumers, and validators are expected to behave during migration.</li>
+          <li>What new failure modes, security risks, or interoperability risks it introduces.</li>
+        </ul>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <Users className="w-5 h-5 text-gray-600" />
-          <span>Discussion &amp; Review</span>
+          <span>2. Review Tied to Real Implementations</span>
         </h3>
+        <p>Do not let governance run on prose alone. Require technical evidence before a proposal can advance:</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>At least two independent implementations, patches, or prototypes.</li>
+          <li>A public conformance test set, including negative tests for invalid input.</li>
+          <li>Feedback from maintainers of parsers, validators, or formatters that would have to ship the change.</li>
+          <li>Edge-case coverage for numbers, Unicode, duplicate keys, nesting depth, and remote references if used.</li>
+        </ul>
         <p>
-          Open forums (mailing lists, dedicated platforms, decentralized communication channels) for technical
-          discussion and review by the community and subject matter experts. Proposals would likely need to reach a
-          certain level of technical maturity and community consensus *before* formal voting.
+          This is how decentralized governance avoids becoming governance theater. The discussion stays tied to software
+          that actually has to parse the bytes.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <Vote className="w-5 h-5 text-gray-600" />
-          <span>Decision Making (Voting)</span>
+          <span>3. Decision Rules with Narrow, Explicit Power</span>
         </h3>
         <p>
-          The mechanism by which proposals are formally accepted or rejected. This is where decentralization is key.
-          Potential voting weights:
+          Pure token voting is usually the wrong tool for standards. Wealth is a poor proxy for interoperability work.
+          Better decision models are:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Token-Based Voting:</strong> Voting power proportional to the amount of governance tokens held
-            (common in many DAOs). Addresses the "skin in the game" aspect but can lead to plutocracy.
+            <strong>Rough consensus plus editor sign-off</strong> for clarifications and editorial fixes.
           </li>
           <li>
-            <strong>One-Person-One-Vote (requires robust Sybil resistance):</strong> Ideal for equal representation but
-            notoriously difficult to implement securely in a truly decentralized way.
+            <strong>Contribution-weighted or delegated voting</strong> for ecosystem profiles, registries, and
+            extension priorities.
           </li>
           <li>
-            <strong>Reputation-Based Voting:</strong> Voting power based on verifiable contributions, expertise, or past
-            participation in the ecosystem. Requires a reliable reputation system.
-          </li>
-          <li>
-            <strong>Delegated Voting (Liquid Democracy):</strong> Participants can vote directly or delegate their
-            voting power to a trusted representative.
+            <strong>Formal ratification by a standards venue</strong> when the change would alter cross-vendor
+            interoperability.
           </li>
         </ul>
         <p>
-          The voting process needs to be transparent and auditable. Smart contracts could automate vote counting and
-          execution if built on a blockchain.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <GitBranch className="w-5 h-5 text-gray-600" />
-          <span>Implementation &amp; Adoption</span>
-        </h3>
-        <p>
-          Once a standard or change is approved, how does it become an official part of the JSON ecosystem? This
-          involves updating documentation, updating reference implementations (parsers, validators), and promoting
-          adoption by developers. A decentralized system needs a clear process for this transition. Approved
-          specifications might be published to decentralized storage (like IPFS) with hashes recorded on a ledger for
-          verifiability.
+          A practical rule is to let the wider community prioritize and review proposals, but require a smaller
+          technical gate to approve anything that changes normative behavior.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
           <ShieldCheck className="w-5 h-5 text-gray-600" />
-          <span>Security and Integrity</span>
+          <span>4. Security and Compatibility Gates</span>
         </h3>
+        <p>Every serious JSON governance process needs a short list of non-negotiable checks:</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Never redefine plain `application/json` semantics through an informal vote.</li>
+          <li>Require backward compatibility or an explicit new version or profile name.</li>
+          <li>Publish immutable test vectors when a release or draft is tagged.</li>
+          <li>Document failure behavior for invalid input, duplicate keys, and resource exhaustion limits.</li>
+          <li>Mandate security review for remote contexts, dynamic loading, canonicalization, or signature-related work.</li>
+        </ul>
         <p>
-          Ensuring the integrity of the standards documents themselves and the governance process is paramount.
-          Decentralized storage and ledger technologies can help ensure that specifications, proposals, and voting
-          records are tamper-proof and publicly verifiable.
+          The current JSON-LD work is a good example. The 2026 charter frames new work around compatibility,
+          maintainability, and security instead of treating governance as open-ended experimentation.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Box className="w-6 h-6 text-red-500" />
-          <span>Challenges</span>
+          <Sparkles className="w-6 h-6 text-yellow-500" />
+          <span>Why Polycentric Governance Beats a Single DAO</span>
         </h2>
-        <p>Building such a system is not without significant hurdles:</p>
+        <p>
+          In practice, the healthiest model for JSON standards is polycentric governance: multiple public venues, clear
+          handoffs, and shared evidence.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Complexity:</strong> Designing and implementing a fair, secure, and efficient decentralized
-            governance system is technically challenging.
-          </li>
-          <li>
-            <strong>Participation:</strong> Ensuring sufficient community engagement and high voter turnout can be
-            difficult in decentralized systems. Low participation can centralize power effectively.
-          </li>
-          <li>
-            <strong>Sybil Attacks:</strong> Preventing a single malicious actor from creating multiple identities to
-            dominate voting is hard, especially with one-person-one-vote models. Token or reputation weighting can
-            mitigate this but introduce other issues.
-          </li>
-          <li>
-            <strong>Speed vs. Deliberation:</strong> Decentralized consensus can sometimes be slower than centralized
-            decision-making, potentially hindering rapid response to issues or opportunities.
-          </li>
-          <li>
-            <strong>Maintainability:</strong> Keeping the governance system itself updated and secure requires ongoing
-            effort from the community.
-          </li>
-          <li>
-            <strong>Compatibility &amp; Fragmentation:</strong> An unofficial decentralized standard might diverge from
-            established norms, leading to fragmentation in the ecosystem if not widely adopted.
-          </li>
-          <li>
-            <strong>Legal &amp; Regulatory Uncertainty:</strong> The legal status and responsibilities within a
-            decentralized, global governance structure can be unclear.
-          </li>
+          <li>The IETF protects internet-wide interoperability for core syntax and query standards.</li>
+          <li>W3C groups and community groups incubate linked-data and web-adjacent work.</li>
+          <li>JSON Schema shows how a community process can iterate quickly when drafts and vocabularies are versioned.</li>
+          <li>Tool authors provide the adoption filter: if implementations disagree, the proposal is not ready.</li>
         </ul>
+        <p>
+          This is a better fit than a single DAO because standards need durable technical legitimacy, not just visible
+          voting participation.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
+          <Settings className="w-6 h-6 text-green-500" />
+          <span>What This Means for JSON Formatter Tools</span>
+        </h2>
+        <p>
+          For formatter and validator tools, governance should translate into product decisions users can understand:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Default to strict JSON parsing and output based on RFC 8259.</li>
+          <li>Expose JSON5, JSONC, or comment-friendly modes as clearly named options.</li>
+          <li>Show the active compatibility target when it matters, such as JSON Schema 2020-12 or JSONPath RFC 9535.</li>
+          <li>Bundle regression tests for edge cases instead of relying only on hand-made examples.</li>
+          <li>Treat new drafts as opt-in until multiple independent tools converge on behavior.</li>
+        </ul>
+        <p>
+          That gives users the upside of open experimentation without breaking the expectation that "JSON" means the
+          same thing across tools and environments.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <LibraryBig className="w-6 h-6 text-teal-500" />
-          <span>Getting Involved</span>
+          <span>Practical Checklist for Teams</span>
         </h2>
-        <p>For developers interested in this space, getting involved could mean:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Participating in existing JSON-related open-source projects and their governance discussions.</li>
-          <li>Exploring and contributing to decentralized governance platforms and DAO frameworks.</li>
-          <li>
-            Proposing ideas for how specific JSON standards or extensions could benefit from decentralized governance.
-          </li>
-          <li>
-            Building tools that could support such a system (e.g., decentralized identity solutions, verifiable
-            credential systems for reputation, off-chain or on-chain voting dApps).
-          </li>
-        </ul>
         <p>
-          Understanding the technical nuances of JSON itself (parsers, validators, schemas) combined with knowledge of
-          decentralized technologies (blockchain, IPFS, DAOs, cryptography) is key.
+          If you maintain a JSON-based specification and want decentralized governance, use this checklist before you
+          claim the process is ready:
         </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Public issue tracker and proposal template.</li>
+          <li>Separate categories for core changes, profiles, vocabularies, and editorial fixes.</li>
+          <li>Published test suite with at least two independent implementations.</li>
+          <li>Clear compatibility promise and deprecation policy.</li>
+          <li>Named security review stage.</li>
+          <li>Formal handoff path when a change needs IETF or W3C standardization.</li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
           <Vote className="w-6 h-6 text-blue-500" />
           <span>Conclusion</span>
         </h2>
         <p>
-          Building decentralized governance for JSON standards is an ambitious concept that aligns with the ethos of
-          open standards and decentralized technologies. While significant challenges exist, the potential benefits in
-          terms of inclusivity, resilience, and innovation make it a fascinating area to explore. It requires careful
-          consideration of the governance model, robust technical components, and active community participation to
-          succeed. As decentralized technologies mature, applying them to the fundamental building blocks of the web,
-          like JSON standards, becomes an increasingly viable and exciting possibility.
+          The modern JSON ecosystem already shows that decentralized input can work. The durable pattern is not
+          anonymous on-chain voting over syntax. It is open participation paired with conservative compatibility rules,
+          public tests, and formal ratification when a change would affect the wider internet. That is how you build
+          decentralized governance for JSON standards without fragmenting what "JSON" means.
         </p>
       </div>
     </>

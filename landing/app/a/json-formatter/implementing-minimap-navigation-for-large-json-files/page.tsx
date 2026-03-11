@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Implementing Minimap Navigation for Large JSON Files | Offline Tools",
   description:
-    "Learn how minimap navigation can improve the experience of working with and exploring large JSON files and how it can be implemented or used.",
+    "Build a fast JSON minimap with line-based rendering, scroll sync, large-file performance safeguards, and current Monaco or CodeMirror integration guidance.",
 };
 
 export default function MinimapJsonNavigationArticle() {
@@ -13,211 +13,300 @@ export default function MinimapJsonNavigationArticle() {
 
       <div className="space-y-6">
         <p>
-          Working with large JSON files can be challenging. Scrolling through thousands of lines of nested data makes it
-          difficult to maintain context and quickly navigate to specific sections. This is where minimap navigation
-          becomes incredibly useful. A minimap provides a high-level overview of the entire document, acting as a
-          miniature representation that helps you orient yourself and jump to different parts of the file efficiently.
+          A useful JSON minimap is not just a tiny copy of the document. For large files, it should act as a fast
+          structural overview that lets users jump between regions, keep their place, and spot dense or unusual
+          sections without forcing the browser to render the entire file twice. If you are building a JSON formatter,
+          viewer, or editor, the implementation details matter more than the visual gimmick.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">What is a Minimap?</h2>
         <p>
-          Inspired by code editors like VS Code or Sublime Text, a minimap is a compressed visual outline of a document,
-          typically displayed on the side of the main content area. It shows a scaled-down version of the text,
-          highlighting syntax elements or structural components, and usually includes a visible area representing the
-          current viewport within the main document.
+          The main job of a minimap for JSON is navigation, not decoration. Search users usually need three things:
+          instant orientation in a deeply nested payload, precise jump-to-section behavior, and performance that stays
+          smooth even when the file is far too large to paint line-by-line DOM previews.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Key features of a minimap:</h3>
+          <h2 className="text-lg font-medium">What a good JSON minimap should provide</h2>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Miniature representation of the entire document</li>
-            <li>Syntax or structure highlighting</li>
-            <li>A viewport indicator showing the currently viewed area</li>
-            <li>Interactive scrolling/navigation (clicking or dragging on the minimap scrolls the main view)</li>
+            <li>A stable overview of the whole document, even when the main editor is virtualized</li>
+            <li>Click and drag navigation that maps predictably to scroll position</li>
+            <li>Visual encoding for structure, such as depth, keys, arrays, primitives, and validation errors</li>
+            <li>A lightweight rendering path that does not duplicate the cost of the main editor</li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Use a Minimap for JSON?</h2>
+        <h2 className="text-2xl font-semibold mt-8">Start With a Structural Line Model</h2>
         <p>
-          For large JSON files, a minimap transforms navigation from a linear, tedious process to a much more visual and
-          intuitive one. Instead of endlessly scrolling, you can see the overall structure at a glance.
+          The biggest improvement over a naive implementation is to stop thinking in terms of tiny characters. For JSON,
+          line-level structure is usually enough. After formatting or loading the payload, build a compact line model
+          that stores the information your minimap actually needs.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Benefits for JSON exploration:</h3>
+          <h3 className="text-lg font-medium">Useful fields per line</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <span className="font-medium">Quick Orientation:</span> Get a sense of the document's size and overall
-              structure immediately.
+              <span className="font-medium">Depth:</span> indentation level or nesting depth
             </li>
             <li>
-              <span className="font-medium">Fast Navigation:</span> Quickly jump to the beginning, end, or any visually
-              distinct section (e.g., a large array or deeply nested object).
+              <span className="font-medium">Dominant token kind:</span> brace, key, string, number, boolean, null, or
+              error
             </li>
             <li>
-              <span className="font-medium">Identify Structure:</span> See where large objects `{}` or arrays `[]` are
-              located, or where nested data blocks begin and end.
+              <span className="font-medium">Offsets:</span> start and end position for jump-to-line or reveal-range
+              behavior
             </li>
             <li>
-              <span className="font-medium">Spot Anomalies:</span> Easily notice unusually large sections or structural
-              inconsistencies.
+              <span className="font-medium">Flags:</span> folded, search-hit, validation-error, or active-selection
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Conceptual Implementation Aspects</h2>
         <p>
-          Implementing a minimap for a JSON viewer involves rendering a scaled-down version of the content. Unlike plain
-          text where each character block is just miniaturized, a JSON minimap benefits from representing the
-          *structure* rather than just the characters.
+          This model gives you a cheap way to aggregate thousands of lines into a few hundred pixel rows. It also makes
+          scroll synchronization much easier because the minimap can operate on stable line or offset metadata instead
+          of DOM measurements from a second copy of the editor content.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Rendering the Minimap</h3>
+        <h2 className="text-2xl font-semibold mt-8">Render to Canvas, Not Thousands of DOM Nodes</h2>
         <p>
-          Instead of drawing every character, a JSON minimap might represent different JSON elements with small colored
-          blocks or lines:
+          For large JSON files, canvas is usually the right default. A minimap built from one absolutely positioned
+          element per token or per line looks simple at first, but it scales badly. A canvas-based minimap keeps the
+          DOM small, redraws quickly, and makes it easy to overlay the current viewport.
         </p>
+
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Objects (`{}`) and Arrays (`[]`) might be represented by distinct background colors or shapes.</li>
-          <li>Keys (string literals before a colon) could have one color.</li>
-          <li>Values (strings, numbers, booleans, null) could have different colors or just a generic block.</li>
-          <li>Commas and colons might be rendered as thin lines or small dots.</li>
-        </ul>
-        <p>
-          The vertical position of these blocks in the minimap corresponds to the vertical position of the actual JSON
-          element in the main view. The width of the minimap is fixed, and the height is scaled proportionally to the
-          full height of the JSON document.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Handling Large Files Efficiently</h3>
-        <p>
-          Rendering a minimap for a massive file (e.g., hundreds of megabytes) requires performance considerations. Full
-          rendering of the minimap at once might be slow. Techniques like virtualization (rendering only the parts of
-          the minimap currently in or near the viewport) or using a canvas for drawing can improve performance.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Synchronization and Interaction</h3>
-        <p>The minimap needs to be synchronized with the main view:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>When the user scrolls the main view, the minimap's viewport indicator moves accordingly.</li>
-          <li>
-            When the user clicks or drags the viewport indicator on the minimap, the main view scrolls to the
-            corresponding position.
-          </li>
-          <li>
-            Hovering over the minimap might show a tooltip or highlight the corresponding line in the main view for
-            better precision.
-          </li>
+          <li>Group many source lines into a single minimap row when the document is taller than the minimap.</li>
+          <li>Draw the dominant token kind for each row and use width or opacity to reflect nesting depth.</li>
+          <li>Paint the viewport indicator last so it stays sharp during scroll and drag operations.</li>
+          <li>Redraw inside <code>requestAnimationFrame</code> and cache derived row data when possible.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Conceptual Code Sketch (Client-side Rendering)</h2>
         <p>
-          While a full implementation is complex, here's a simplified conceptual sketch showing how one might render
-          small blocks representing JSON tokens based on their type. This would typically run in a browser environment
-          where the JSON content is loaded.
+          If your editor supports files that can exceed a few megabytes, do the JSON parsing, token classification, or
+          row bucketing in a Web Worker so the first load does not freeze the main thread.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Use Scroll Math That Matches User Expectations</h2>
+        <p>
+          The minimap should map pointer position to the main scroll range, not to raw document height. That distinction
+          matters when the editor has padding, sticky headers, or internal viewport margins. A reliable formula is:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Simplified Token Representation Logic:</h3>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
+            <pre>{`ratio = clamp((pointerY - minimapTop) / minimapHeight, 0, 1)
+targetScrollTop = ratio * max(0, contentHeight - viewportHeight)
+
+viewportTop = (scrollTop / max(1, contentHeight)) * minimapHeight
+viewportHeight = max(minThumbSize, (viewportHeight / max(1, contentHeight)) * minimapHeight)`}</pre>
+          </div>
+        </div>
+
+        <p>
+          For precision, drag the center of the viewport thumb rather than the top edge, and debounce hover previews
+          separately from scroll updates. If your editor supports wrapped lines, either disable wrapping in large JSON
+          mode or make sure your height map reflects wrapped visual lines, otherwise the minimap and main view will
+          drift out of sync.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Implementation Sketch</h2>
+        <p>
+          This pattern stays practical: build a small line model, aggregate it into draw rows, and keep interaction math
+          separate from rendering. The code below is intentionally simplified, but it is closer to a production design
+          than a token-per-div demo.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Line-based canvas minimap sketch</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-              {`// Assume 'jsonTokens' is an array generated by parsing JSON,
-// where each token has a 'type' (e.g., 'object-start', 'key', 'string', 'number')
-// and a 'position' (e.g., { line: 1, column: 1 }).
-// Assume 'minimapHeight' is the desired total height in pixels.
-// Assume 'lineHeight' is the height of a token representation in pixels.
+              {`type LineKind = "brace" | "key" | "string" | "number" | "literal" | "error";
 
-const renderMinimapTokens = (jsonTokens, minimapHeight, lineHeight) => {
-  const tokenElements = [];
-  const totalLines = jsonTokens.length > 0 ? jsonTokens[jsonTokens.length - 1].position.line : 0;
-  const scaleY = totalLines > 0 ? minimapHeight / totalLines : 0;
-
-  jsonTokens.forEach((token, index) => {
-    // Simple mapping of token type to a color class
-    let colorClass = 'bg-gray-500'; // Default color
-    switch (token.type) {
-      case 'object-start':
-      case 'object-end':
-      case 'array-start':
-      case 'array-end':
-        colorClass = 'bg-blue-500'; // Structure
-        break;
-      case 'key':
-        colorClass = 'bg-yellow-500'; // Key
-        break;
-      case 'string':
-        colorClass = 'bg-green-500'; // String value
-        break;
-      case 'number':
-      case 'boolean':
-      case 'null':
-        colorClass = 'bg-purple-500'; // Primitive value
-        break;
-      default:
-        // Handle commas, colons, etc. maybe with a thin line
-        colorClass = 'bg-gray-600';
-        break;
-    }
-
-    // Calculate vertical position based on original line number
-    const top = (token.position.line - 1) * scaleY; // Adjust for 0-based line index if needed
-
-    // Render a small div for each token
-    tokenElements.push(
-      <div
-        key={\`token-\${index}\`}
-        className={\`w-full \${colorClass}\`}
-        style={{
-          position: 'absolute', // Absolute positioning within the minimap container
-          top: \`\${top}px\`,
-          height: \`\${lineHeight}px\`, // Fixed height for visual density
-          // Width might vary slightly based on token type or simple fixed width
-          left: 0,
-          right: 0, // Full width line for simplicity
-        }}
-      />
-    );
-  });
-
-  return <div style={{ position: 'relative', height: minimapHeight }}>{tokenElements}</div>;
+type LineMeta = {
+  line: number;
+  depth: number;
+  kind: LineKind;
+  startOffset: number;
+  endOffset: number;
 };
 
-// This rendered component would then be placed alongside the main JSON viewer area.
-// Additional logic is needed to handle the viewport indicator and click/drag events.
-`}
+const COLORS: Record<LineKind, string> = {
+  brace: "#94a3b8",
+  key: "#f59e0b",
+  string: "#10b981",
+  number: "#3b82f6",
+  literal: "#8b5cf6",
+  error: "#ef4444",
+};
+
+function buildLineModel(prettyJson: string): LineMeta[] {
+  const lines = prettyJson.split("\\n");
+  const keyPattern = /^"[^"]+"\\s*:/;
+  let offset = 0;
+
+  return lines.map((lineText, line) => {
+    const trimmed = lineText.trim().replace(/,$/, "");
+    const indentWidth = lineText.length - lineText.trimStart().length;
+    const depth = Math.max(0, Math.floor(indentWidth / 2));
+
+    let kind: LineKind = "error";
+    if (trimmed === "{" || trimmed === "}" || trimmed === "[" || trimmed === "]") {
+      kind = "brace";
+    } else if (keyPattern.test(trimmed)) {
+      kind = "key";
+    } else if (/^"/.test(trimmed)) {
+      kind = "string";
+    } else if (/^-?\\d/.test(trimmed)) {
+      kind = "number";
+    } else if (/^(true|false|null)$/.test(trimmed)) {
+      kind = "literal";
+    }
+
+    const startOffset = offset;
+    offset += lineText.length + 1;
+
+    return {
+      line,
+      depth,
+      kind,
+      startOffset,
+      endOffset: offset - 1,
+    };
+  });
+}
+
+function drawMinimap(
+  ctx: CanvasRenderingContext2D,
+  lines: LineMeta[],
+  width: number,
+  height: number,
+  scrollTop: number,
+  viewportHeight: number,
+  contentHeight: number
+) {
+  const safeContentHeight = Math.max(1, contentHeight);
+  const rows = Math.max(1, Math.floor(height));
+  const linesPerRow = Math.max(1, Math.ceil(lines.length / rows));
+
+  ctx.clearRect(0, 0, width, height);
+
+  for (let row = 0; row < rows; row++) {
+    const start = row * linesPerRow;
+    if (start >= lines.length) break;
+
+    let dominant = lines[start];
+    let maxDepth = dominant.depth;
+
+    for (let i = start + 1; i < Math.min(lines.length, start + linesPerRow); i++) {
+      if (dominant.kind === "brace" && lines[i].kind !== "brace") dominant = lines[i];
+      if (lines[i].depth > maxDepth) maxDepth = lines[i].depth;
+    }
+
+    const depthFactor = Math.min(1, (maxDepth + 1) / 10);
+    const left = width * 0.12;
+    const rowWidth = width * (0.36 + depthFactor * 0.5);
+
+    ctx.fillStyle = COLORS[dominant.kind];
+    ctx.fillRect(left, row, rowWidth, 1);
+  }
+
+  const thumbTop = (scrollTop / safeContentHeight) * height;
+  const thumbHeight = Math.max(12, (viewportHeight / safeContentHeight) * height);
+
+  ctx.fillStyle = "rgba(37, 99, 235, 0.18)";
+  ctx.strokeStyle = "rgba(37, 99, 235, 0.78)";
+  ctx.fillRect(0, thumbTop, width, thumbHeight);
+  ctx.strokeRect(0.5, thumbTop + 0.5, width - 1, Math.max(1, thumbHeight - 1));
+}
+
+function scrollTargetFromPointer(
+  clientY: number,
+  rect: DOMRect,
+  contentHeight: number,
+  viewportHeight: number
+) {
+  const ratio = Math.min(1, Math.max(0, (clientY - rect.top) / rect.height));
+  return ratio * Math.max(0, contentHeight - viewportHeight);
+}`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            This sketch simplifies many aspects (like horizontal positioning based on indentation, complex tokenization,
-            and actual rendering performance), but illustrates the core idea of mapping JSON structure to visual
-            elements in the minimap area.
+            The important design choice is aggregation. A large JSON file might contain tens of thousands of lines, but
+            the minimap may only be 200 to 600 pixels tall. Bucket the document first, then draw one row per pixel.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Integrating with Existing Tools</h2>
+        <h2 className="text-2xl font-semibold mt-8">Current Editor Integration Options</h2>
         <p>
-          If you are building a custom JSON viewer or tool, you might integrate a minimap component from a UI library or
-          build one yourself following the principles above. For users of popular code editors or online JSON tools,
-          minimaps are often a built-in feature or available as plugins.
+          If you are not building the editor surface from scratch, the quickest path is to lean on the editor that you
+          already use and customize from there.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Considerations for integration:</h3>
+          <h3 className="text-lg font-medium">Monaco Editor</h3>
+          <p className="mt-2">
+            As of March 11, 2026, Monaco still exposes built-in minimap controls such as{" "}
+            <code>enabled</code>, <code>renderCharacters</code>, <code>showSlider</code>, <code>side</code>,{" "}
+            <code>scale</code>, and <code>size</code>. For JSON, a block-style minimap is usually clearer and lighter
+            than rendering tiny characters.
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm mt-3">
+            <pre>{`monaco.editor.create(container, {
+  value: formattedJson,
+  language: "json",
+  minimap: {
+    enabled: true,
+    renderCharacters: false,
+    side: "right",
+    showSlider: "mouseover",
+    size: "fit",
+    scale: 1,
+  },
+});`}</pre>
+          </div>
+        </div>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">CodeMirror 6</h3>
+          <p className="mt-2">
+            CodeMirror 6 documents viewport-based rendering and view-plugin extension points. That is a strong fit for a
+            custom minimap sidecar: keep the editor virtualized, listen for viewport and height changes, and draw the
+            minimap from editor state rather than cloning the visible DOM.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Large-File Guardrails</h2>
+        <p>
+          Most minimap problems on large JSON files are performance bugs disguised as UI bugs. If the model and scroll
+          math are right but the browser still feels slow, the bottleneck is usually elsewhere.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h3 className="text-lg font-medium">Guardrails worth shipping</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Performance impact on large files</li>
-            <li>Visual customizability (colors, width)</li>
-            <li>Accessibility (keyboard navigation alternatives)</li>
-            <li>Smoothness of scrolling and viewport synchronization</li>
+            <li>Do not rebuild the whole minimap on every keystroke if only a small range changed.</li>
+            <li>Use a worker for parsing and classification when payload size or formatting cost becomes noticeable.</li>
+            <li>Keep line wrapping off for large JSON mode unless your height map handles wrapped visual lines.</li>
+            <li>Support keyboard and search-based navigation so the minimap is helpful, not required.</li>
+            <li>Show errors, search hits, or selected ranges as overlays because those are high-value jump targets.</li>
           </ul>
         </div>
 
+        <h2 className="text-2xl font-semibold mt-8">When a Minimap Is Not Enough</h2>
+        <p>
+          A minimap helps users navigate visually, but it should be paired with search, folding, and path-based
+          navigation. For example, jumping to <code>items[4200].payload.metadata</code> is faster with a search field or
+          tree path than with a drag gesture alone. The best JSON tools treat the minimap as one navigation surface
+          among several.
+        </p>
+
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Minimap navigation is a powerful UI pattern that significantly enhances the usability of editors and viewers
-          for long documents, including large JSON files. By providing a compact, interactive overview of the file
-          structure, it allows developers and data professionals to quickly understand, navigate, and work with complex
-          JSON data more efficiently. Whether you implement it yourself or use a tool that offers it, a minimap is an
-          invaluable feature for tackling the challenges posed by ever-growing JSON datasets.
+          Implementing minimap navigation for large JSON files works best when you optimize for structure, not tiny text.
+          Build a compact line model, aggregate it into a canvas-based overview, keep scroll math honest, and let the
+          main editor stay virtualized. If you do that, the minimap becomes genuinely useful for real-world JSON
+          payloads instead of becoming a second expensive copy of the document.
         </p>
       </div>
     </>

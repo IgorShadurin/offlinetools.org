@@ -4,7 +4,7 @@ import { Code, Braces, FileJson, Search, CheckCircle } from "lucide-react";
 export const metadata: Metadata = {
   title: "Using JSON Formatters in Business Intelligence Applications",
   description:
-    "Explore the importance and applications of JSON formatters in Business Intelligence workflows, from data inspection to UI presentation.",
+    "Practical guide to using JSON formatters in BI workflows, including Power BI and Tableau use cases, import checks, privacy tips, and nested JSON troubleshooting.",
 };
 
 export default function JsonFormattersInBiPage() {
@@ -13,220 +13,278 @@ export default function JsonFormattersInBiPage() {
       <h1 className="text-3xl font-bold mb-6">Using JSON Formatters in Business Intelligence Applications</h1>
 
       <p className="text-lg mb-8">
-        In the world of Business Intelligence (BI), data is king. Often, this data flows through APIs, databases, logs,
-        or other sources in structured formats. JSON (JavaScript Object Notation) is one of the most prevalent formats
-        due to its human-readability and flexibility. However, dealing with large, complex, or unformatted JSON can
-        quickly become a significant hurdle. This is where JSON formatters come into play, transforming raw JSON strings
-        into neatly organized, readable structures that significantly aid BI professionals and developers.
+        JSON formatters are most useful in BI before data ever reaches a chart. They help analysts, analytics
+        engineers, and dashboard developers inspect API payloads, understand nested structures, and catch schema issues
+        before those issues turn into broken joins, wrong aggregates, or confusing refresh failures.
+      </p>
+      <p>
+        That is not a niche workflow. Current{" "}
+        <a
+          href="https://learn.microsoft.com/en-us/power-query/connectors/json"
+          target="_blank"
+          rel="noreferrer"
+          className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+        >
+          Microsoft Power Query documentation
+        </a>{" "}
+        lists JSON import across Excel, Power BI semantic models, Power BI dataflows, Fabric Dataflow Gen2, and other
+        Microsoft data products, while Tableau&apos;s supported{" "}
+        <a
+          href="https://www.tableau.com/developer/tools/web-data-connector"
+          target="_blank"
+          rel="noreferrer"
+          className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+        >
+          Web Data Connector
+        </a>{" "}
+        still supports pulling JSON over HTTP when no native connector exists. In other words, formatted JSON is part
+        of everyday analytics operations, not just developer debugging.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
         <FileJson className="mr-3 text-blue-500" size={28} />
-        Why JSON Formatters are Essential in BI
+        Why Format JSON Before Modeling It
       </h2>
 
       <p>
-        BI applications frequently involve consuming, processing, and visualizing data. Raw JSON, especially from API
-        responses or database dumps, is often minified or poorly indented, making it incredibly difficult to read and
-        understand manually. A JSON formatter parses the string and outputs a "pretty-printed" version with proper
-        indentation, line breaks, and syntax highlighting. This transformation is crucial for several BI tasks:
+        BI tools can ingest JSON, but they do not remove the need to understand it first. A formatter turns a compressed
+        payload into something you can reason about quickly, which matters when you need to decide what becomes a fact
+        table, what should stay as metadata, and which nested objects need to be expanded or normalized elsewhere.
       </p>
 
       <ul className="list-disc pl-6 space-y-2 my-4">
         <li>
-          <strong>Data Inspection and Debugging:</strong> Quickly understanding the structure and content of data
-          received from an API or a data source during development or troubleshooting.
+          <strong>See the real shape of the payload:</strong> root object, nested arrays, repeated records, optional
+          fields, and mixed value types become obvious.
         </li>
         <li>
-          <strong>Schema Understanding:</strong> Inferring the data schema by easily visualizing nested objects and
-          arrays.
+          <strong>Catch modeling problems early:</strong> numbers stored as strings, missing keys, null-heavy fields,
+          and timestamps with inconsistent offsets are easier to spot before import.
         </li>
         <li>
-          <strong>Error Detection:</strong> Identifying malformed JSON structures that can cause data parsing errors in
-          BI pipelines.
+          <strong>Debug connector failures faster:</strong> invalid JSON, truncated API responses, or unexpected schema
+          changes are easier to isolate in a formatted sample than in a raw single-line response.
         </li>
         <li>
-          <strong>Collaboration:</strong> Sharing formatted JSON snippets with colleagues for easier discussion and
-          analysis.
+          <strong>Document transformations clearly:</strong> formatted samples are much better than screenshots when you
+          need to explain a flattening rule or a field-mapping decision to another teammate.
         </li>
         <li>
-          <strong>UI Presentation:</strong> Displaying complex data structures in a user-friendly way within a BI
-          dashboard or application interface (though often a simplified view is preferred for end-users).
+          <strong>Share safer examples:</strong> a formatter plus a small redaction step makes it easier to strip out
+          tokens, customer emails, or internal IDs before sending examples to coworkers or vendors.
         </li>
       </ul>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
         <Search className="mr-3 text-green-500" size={28} />
-        Applications and Use Cases in BI
+        Where This Shows Up in Real BI Workflows
       </h2>
 
-      <h3 className="text-xl font-semibold mt-6 mb-3">1. API Response Debugging</h3>
+      <h3 className="text-xl font-semibold mt-6 mb-3">1. API and SaaS Connector Validation</h3>
       <p>
-        BI often relies on fetching data from various APIs. When testing an API endpoint or debugging an integration,
-        the raw response can be a single, long string. Using a formatter helps in instantly seeing the data structure,
-        locating specific fields, and verifying data types and values.
+        A large share of BI data still arrives from REST APIs, webhook archives, and SaaS exports. Before building a
+        report on top of that data, format a representative sample and answer a few basic questions: where is the array
+        of business records, which fields are truly numeric, which keys appear only sometimes, and which nested objects
+        should be expanded into separate columns or tables.
       </p>
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-        <h4 className="text-lg font-medium mb-2">Example: Raw vs. Formatted API Response Snippet</h4>
+        <h4 className="text-lg font-medium mb-2">Example: A BI Payload Worth Formatting First</h4>
         <div className="bg-white p-3 rounded text-sm overflow-x-auto dark:bg-gray-900">
-          <h5 className="font-semibold mb-1">Raw (often minified):</h5>
-          <pre>
-            {`{"id":123,"name":"Report_A","metrics":[{"name":"Sales","value":15000},{"name":"Profit","value":3500}],"filters":{"region":"North","year":2023},"isActive":true}`}
-          </pre>
-          <h5 className="font-semibold mt-4 mb-1">Formatted:</h5>
           <pre>
             {`{
-  "id": 123,
-  "name": "Report_A",
-  "metrics": [
+  "reportRunId": "bi-2026-03-11-001",
+  "generatedAt": "2026-03-11T08:15:00Z",
+  "account": {
+    "id": "acme-emea",
+    "tier": "enterprise"
+  },
+  "rows": [
     {
-      "name": "Sales",
-      "value": 15000
+      "region": "North",
+      "sales": "15000.25",
+      "profit": 3500,
+      "rep": {
+        "id": 17,
+        "name": "Ali"
+      }
     },
     {
-      "name": "Profit",
-      "value": 3500
+      "region": "South",
+      "sales": "12750.00",
+      "profit": null,
+      "rep": {
+        "id": 29,
+        "name": "Sam"
+      }
     }
   ],
-  "filters": {
-    "region": "North",
-    "year": 2023
-  },
-  "isActive": true
+  "totals": {
+    "currency": "USD",
+    "sales": 27750.25
+  }
 }`}
           </pre>
         </div>
       </div>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3">2. Data Pipeline Development and Testing</h3>
       <p>
-        ETL (Extract, Transform, Load) processes frequently handle JSON data. When developing a data transformation
-        script or testing an ingestion process, being able to quickly format and inspect intermediate data outputs or
-        source samples is invaluable for verifying that data is being processed correctly.
+        One glance at the formatted version tells you what the BI model must handle: the analytical rows live in
+        <code>rows</code>, <code>sales</code> is arriving as text instead of a number, <code>profit</code> can be null,
+        and the nested <code>rep</code> object needs expansion before it becomes a usable report field.
       </p>
 
-      <h3 className="text-xl font-semibold mt-6 mb-3">3. Presenting Data in BI Dashboards (Developer View)</h3>
+      <h3 className="text-xl font-semibold mt-6 mb-3">2. Power Query, Power BI, and Fabric Imports</h3>
       <p>
-        While end-users typically see charts and tables, developers or power users might need to inspect the raw data
-        behind a visualization. Embedding a simple JSON viewer with formatting capabilities can be a powerful debugging
-        tool within the BI application itself.
+        Microsoft&apos;s current JSON connector documentation is a useful signal for BI teams: JSON import is now a normal
+        part of the Power Query stack, and Power Query applies automatic table detection to flatten common JSON
+        structures. That speeds up simple imports, but it does not remove the need for inspection. If the payload mixes
+        arrays, nested records, or inconsistent data types, a formatter still helps you decide what Power Query should
+        expand, split, or cast.
+      </p>
+      <p>
+        The same documentation also calls out a practical edge case: JSON Lines often needs separate handling. If a
+        source emits one JSON object per line instead of one complete JSON document, formatting a sample quickly reveals
+        why a connector import fails or why pre-processing is required.
+      </p>
+
+      <h3 className="text-xl font-semibold mt-6 mb-3">3. Tableau and Custom Web Data Connectors</h3>
+      <p>
+        Tableau&apos;s Web Data Connector remains relevant when an organization needs to consume JSON from an HTTP endpoint
+        that does not have a native connector. In that workflow, formatted samples help define the connector schema,
+        confirm field names, and detect drift when an upstream service adds or renames keys.
+      </p>
+      <p>
+        The broader lesson applies across BI platforms: the more custom the ingestion path, the more valuable a clean,
+        formatted sample becomes during connector design, QA, and refresh troubleshooting.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
         <Code className="mr-3 text-purple-500" size={28} />
-        Implementing or Using Formatters
+        A Practical Formatter-First Workflow
       </h2>
 
-      <p>
-        Implementing a full-featured JSON formatter from scratch involves parsing the JSON string into an in-memory data
-        structure (like a JavaScript object or array) and then recursively traversing this structure to generate a
-        pretty-printed string. Most developers will leverage existing libraries or built-in functions.
-      </p>
+      <ol className="list-decimal pl-6 space-y-3 my-4">
+        <li>
+          <strong>Start with a representative sample, not the full export.</strong> You want enough rows to reveal
+          nesting, optional fields, and type inconsistencies without dragging a huge payload through every debugging
+          session.
+        </li>
+        <li>
+          <strong>Format and validate it immediately.</strong> If the sample does not parse, you may be dealing with
+          malformed JSON, concatenated documents, or JSON Lines rather than a standard JSON object or array.
+        </li>
+        <li>
+          <strong>Mark table boundaries.</strong> Separate metadata from analytical rows. A root object often contains
+          refresh metadata, paging information, or account details that should not be repeated across every fact row.
+        </li>
+        <li>
+          <strong>Normalize data types before modeling.</strong> Strings that look numeric, timestamps with mixed
+          formats, and null-or-missing fields should be handled intentionally instead of left to implicit connector
+          guesses.
+        </li>
+        <li>
+          <strong>Save a redacted golden sample.</strong> Keeping one sanitized, formatted example for each critical
+          integration makes future break-fix work much faster when the upstream API changes.
+        </li>
+      </ol>
 
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-        <h4 className="text-lg font-medium mb-2">Conceptual Code Snippet (Server-Side Processing)</h4>
+        <h4 className="text-lg font-medium mb-2">Example: Format and Redact a BI Payload Before Sharing It</h4>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-          This is how you might format JSON data retrieved on the server before potentially sending it to a client or
-          saving it.
+          The formatter step is often combined with a small redaction pass so analysts can share samples without leaking
+          tokens, personal data, or tenant identifiers.
         </p>
         <div className="bg-white p-3 rounded text-sm overflow-x-auto dark:bg-gray-900">
           <pre>
-            {`// Assume rawJsonString is data fetched from an API or database
-const rawJsonString: string = '{"user":{"id":101,"name":"Alice","roles":["admin","editor"]},"activity":{"lastLogin":"2023-10-27T10:00:00Z","count":5}}';
+            {`const sensitiveKeys = new Set([
+  "access_token",
+  "apiKey",
+  "authorization",
+  "email",
+  "customerId",
+]);
 
-let formattedJsonString: string;
+function formatBiJson(rawJson: string) {
+  const parsed = JSON.parse(rawJson);
 
-try {
-  // 1. Parse the JSON string into a JavaScript object/array
-  const dataObject = JSON.parse(rawJsonString);
-
-  // 2. Convert the JavaScript object/array back into a formatted JSON string
-  //    JSON.stringify(value, replacer, space)
-  //    - value: The object/array to stringify
-  //    - replacer: Optional function or array for filtering/transforming
-  //    - space: Optional string or number of spaces for indentation (pretty-printing)
-  formattedJsonString = JSON.stringify(dataObject, null, 2); // Use 2 spaces for indentation
-
-  console.log("Formatted JSON:\\n", formattedJsonString);
-
-  // Example of sending this formatted data to a frontend for display
-  // return { props: { data: formattedJsonString } }; // For Next.js getServerSideProps/getStaticProps
-  // Or store it, log it, etc.
-
-} catch (error: any) {
-  console.error("Error parsing or formatting JSON:", error.message);
-  formattedJsonString = \`Invalid JSON data: \${error.message}\`; // Handle invalid JSON
+  return JSON.stringify(
+    parsed,
+    (key, value) => (sensitiveKeys.has(key) ? "[REDACTED]" : value),
+    2
+  );
 }
 
-// In a Next.js server component, 'formattedJsonString' could be used directly
-// in the render output (e.g., within a <pre><code> block).
+try {
+  const prettySample = formatBiJson(rawJsonFromApi);
+  console.log(prettySample);
+} catch (error) {
+  console.error("Invalid JSON payload", error);
+}
 `}
           </pre>
         </div>
       </div>
 
       <p className="mt-4">
-        The standard JavaScript <code>JSON.stringify()</code> method with the <code>space</code> parameter is the most
-        common built-in way to "pretty-print" JSON. Setting <code>space</code> to a number (like 2 or 4) uses that many
-        spaces for indentation. Setting it to a string (like <code>"\t"</code>) uses that string for indentation.
-      </p>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3">Leveraging Libraries and Tools</h3>
-      <p>
-        For more advanced features like syntax highlighting, collapsible sections, or built-in validation UI, frontend
-        components or dedicated libraries are often used. However, the core formatting logic typically still relies on
-        parsing and re-serializing with indentation.
-      </p>
-      <p>
-        Many online JSON formatter tools also exist and are frequently used by BI analysts and developers for quick
-        ad-hoc formatting and validation.
+        The built-in <code>JSON.stringify(value, replacer, space)</code> pattern is still the standard way to
+        pretty-print JSON in application code. In BI support workflows, the replacer function is especially useful for
+        masking confidential fields while keeping the overall structure intact.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
         <CheckCircle className="mr-3 text-teal-500" size={28} />
-        Benefits Summarized
+        What a Formatter Helps You Catch Before Import
       </h2>
 
       <ul className="list-disc pl-6 space-y-2 my-4">
         <li>
-          <strong>Improved Readability:</strong> Makes complex data structures easy to follow.
+          <strong>Array explosions:</strong> one nested array can multiply rows and distort totals if you expand it too
+          early.
         </li>
         <li>
-          <strong>Faster Debugging:</strong> Pinpoints data issues quickly.
+          <strong>Type mismatches:</strong> fields like <code>"15000.25"</code> look numeric but arrive as strings.
         </li>
         <li>
-          <strong>Enhanced Comprehension:</strong> Helps understand nested data relationships.
+          <strong>Missing versus null values:</strong> those are different cases and should be modeled differently.
         </li>
         <li>
-          <strong>Reduced Errors:</strong> Easier to spot structural mistakes in JSON.
+          <strong>Schema drift:</strong> new keys, renamed fields, and shape changes are easy to compare between two
+          formatted samples.
         </li>
         <li>
-          <strong>Better Collaboration:</strong> Simplifies sharing and discussing data examples.
+          <strong>Timezone issues:</strong> ISO timestamps, local timestamps, and offset timestamps should not be mixed
+          blindly in reporting pipelines.
         </li>
       </ul>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center">
         <Braces className="mr-3 text-orange-500" size={28} />
-        Considerations
+        Security and Scale Considerations
       </h2>
-      <p>While formatting is highly beneficial for human consumption, remember that:</p>
       <ul className="list-disc pl-6 space-y-2 my-4">
         <li>
-          Formatted JSON is larger in size than minified JSON due to whitespace. This is generally not an issue for
-          debugging or display purposes but is important if storing large volumes or transmitting over low-bandwidth
-          networks.
+          <strong>Prefer local formatting for sensitive payloads.</strong> BI samples often contain revenue figures,
+          customer identifiers, access tokens, or internal URLs. If the data is confidential, use an offline formatter
+          or sanitize the sample before sharing it anywhere.
         </li>
         <li>
-          Formatting only changes the presentation, not the data content or validity. Validating the JSON structure
-          against a schema (like JSON Schema) is a separate, important step in BI workflows.
+          <strong>Pretty-printing increases size.</strong> That is fine for inspection, but avoid storing massive
+          prettified payloads in logs or shipping them through performance-sensitive systems.
+        </li>
+        <li>
+          <strong>Formatting is not the same as validation.</strong> A nicely indented document can still violate your
+          expected schema, omit required keys, or mix incompatible data types.
+        </li>
+        <li>
+          <strong>Large exports should be sampled first.</strong> When the source returns hundreds of thousands of rows,
+          format a small slice to understand the structure before you try to flatten the entire dataset.
         </li>
       </ul>
 
       <p className="mt-8 text-lg">
-        In conclusion, JSON formatters are indispensable tools in the Business Intelligence toolkit. They transform
-        unruly data strings into clear, navigable structures, significantly boosting productivity and understanding for
-        anyone working with JSON data in BI applications, from data engineers building pipelines to analysts inspecting
-        API outputs or developers creating data visualization components.
+        In BI, JSON formatters are less about cosmetics and more about control. They give you a fast way to understand
+        source structure, plan flattening, catch drift, and share clean examples safely. That makes them useful whether
+        you are importing JSON into Power Query, debugging a Tableau web connector, or validating an API payload before
+        it becomes part of a production dashboard.
       </p>
     </div>
   );

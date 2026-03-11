@@ -3,419 +3,438 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Implementing Keyboard Navigation in JSON Tree Views | Offline Tools",
   description:
-    "Learn how to add accessible keyboard navigation to JSON tree view components, improving usability and compliance.",
+    "Build accessible keyboard navigation for JSON tree views with current WAI-ARIA key bindings, focus management, and a practical React example.",
 };
 
 export default function KeyboardNavigationArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">Implementing Keyboard Navigation in JSON Tree Tree Views</h1>
+      <h1 className="text-3xl font-bold mb-6">Implementing Keyboard Navigation in JSON Tree Views</h1>
 
       <div className="space-y-6">
         <p>
-          JSON tree views are powerful tools for visualizing hierarchical data. However, relying solely on mouse
-          interaction can limit accessibility and efficiency. Implementing robust keyboard navigation is crucial for
-          users who prefer keyboard control, have motor impairments, or use screen readers. This article explores the
-          principles and techniques for adding keyboard navigation to your JSON tree view component.
+          A JSON tree view is a composite widget, not just a nested list with click handlers. If you want keyboard users
+          to move through objects, arrays, and values efficiently, the tree needs one predictable tab stop, arrow-key
+          navigation inside the widget, correct ARIA, and a clear distinction between focus and selection.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Why Keyboard Navigation Matters</h2>
         <p>
-          Adding keyboard support to interactive components like tree views isn&apos;t just a feature; it&apos;s a
-          fundamental aspect of good user experience and accessibility.
+          Current guidance from the WAI-ARIA Authoring Practices tree view pattern and MDN still expects the same core
+          behavior in March 2026: <code>Right Arrow</code> opens or enters a branch, <code>Left Arrow</code> closes or
+          moves to the parent, <code>Home</code> and <code>End</code> jump to the first and last visible node, and
+          type-ahead is recommended for larger trees. If your JSON viewer does not implement that contract, it will feel
+          broken to keyboard and assistive-technology users.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Benefits of Keyboard Navigation:</h3>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>
-              <span className="font-medium">Accessibility:</span> Enables users with motor disabilities or those using
-              screen readers to fully interact with the tree view.
-            </li>
-            <li>
-              <span className="font-medium">Efficiency:</span> Allows power users to quickly navigate and manipulate the
-              tree structure without lifting their hands from the keyboard.
-            </li>
-            <li>
-              <span className="font-medium">Compliance:</span> Helps meet accessibility standards like WCAG (Web Content
-              Accessibility Guidelines).
-            </li>
-            <li>
-              <span className="font-medium">Discoverability:</span> Encourages exploration of the data structure.
-            </li>
-          </ul>
+          <h2 className="text-lg font-medium">
+            Before You Reach For <code>role=&quot;tree&quot;</code>
+          </h2>
+          <p className="mt-2">
+            Use a real tree only when users need desktop-style navigation inside a hierarchical widget. If your JSON
+            page simply expands and collapses sections, a disclosure pattern with buttons is often easier to build and
+            easier for web users to understand. MDN explicitly warns that tree views behave more like native apps than
+            ordinary web content.
+          </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Core Concepts</h2>
+        <h2 className="text-2xl font-semibold mt-8">What Users Expect From a Tree</h2>
         <p>
-          Implementing keyboard navigation for a tree view primarily involves managing focus and handling key events.
+          The keyboard model should match the current WAI-ARIA tree pattern. A JSON inspector that only handles
+          {" "}
+          <code>ArrowUp</code> and <code>ArrowDown</code> misses important behavior.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">1. Focus Management</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-gray-300 dark:border-gray-700">
+                <th className="py-2 pr-4 font-semibold">Key</th>
+                <th className="py-2 font-semibold">Expected behavior in a JSON tree</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-gray-200 dark:border-gray-800">
+                <td className="py-2 pr-4 align-top">
+                  <code>Tab</code> / <code>Shift+Tab</code>
+                </td>
+                <td className="py-2">Moves into or out of the tree. Only one tree item should be in the tab order.</td>
+              </tr>
+              <tr className="border-b border-gray-200 dark:border-gray-800">
+                <td className="py-2 pr-4 align-top">
+                  <code>ArrowDown</code> / <code>ArrowUp</code>
+                </td>
+                <td className="py-2">Moves to the next or previous visible node without expanding or collapsing.</td>
+              </tr>
+              <tr className="border-b border-gray-200 dark:border-gray-800">
+                <td className="py-2 pr-4 align-top">
+                  <code>ArrowRight</code>
+                </td>
+                <td className="py-2">
+                  On a closed parent node, expand it. On an open parent node, move to its first child. On a leaf node,
+                  do nothing.
+                </td>
+              </tr>
+              <tr className="border-b border-gray-200 dark:border-gray-800">
+                <td className="py-2 pr-4 align-top">
+                  <code>ArrowLeft</code>
+                </td>
+                <td className="py-2">
+                  On an open parent node, collapse it. On a closed node or leaf, move to the parent if one exists.
+                </td>
+              </tr>
+              <tr className="border-b border-gray-200 dark:border-gray-800">
+                <td className="py-2 pr-4 align-top">
+                  <code>Home</code> / <code>End</code>
+                </td>
+                <td className="py-2">Jump to the first or last visible node.</td>
+              </tr>
+              <tr className="border-b border-gray-200 dark:border-gray-800">
+                <td className="py-2 pr-4 align-top">
+                  <code>Enter</code> / <code>Space</code>
+                </td>
+                <td className="py-2">
+                  Activate the focused node. In a read-only JSON viewer, that usually means toggling expansion for
+                  branches and optionally selecting or copying a leaf value.
+                </td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 align-top">Printable characters</td>
+                <td className="py-2">
+                  Type-ahead is recommended, especially once the tree has more than a handful of root items.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">The State Model That Keeps Navigation Predictable</h2>
         <p>
-          Only one item in the tree view should be "focused" at any given time for keyboard interaction. This focused
-          item receives keyboard events. The focus should be visually indicated, typically with an outline.
+          The easiest way to avoid edge-case bugs is to treat keyboard navigation as derived state, not ad-hoc DOM
+          traversal. A practical JSON tree usually needs:
         </p>
-        <p className="mt-2">Key aspects of focus management:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-2">
-          <li>Determining which element is currently focused (e.g., using state or a ref).</li>
-          <li>Programmatically setting focus on the desired element when a navigation key is pressed.</li>
-          <li>Ensuring focus remains within the tree view container while navigating.</li>
+
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            A normalized node map with stable IDs, parent IDs, labels, levels, and child IDs.
+          </li>
+          <li>
+            An <code>expandedIds</code> set so you can derive which nodes are currently visible.
+          </li>
+          <li>
+            An <code>activeId</code> for keyboard focus and, if selection matters, a separate{" "}
+            <code>selectedId</code> or <code>selectedIds</code>.
+          </li>
+          <li>
+            A depth-first <code>visibleIds</code> array so <code>ArrowUp</code>, <code>ArrowDown</code>,
+            <code>Home</code>, and <code>End</code> are trivial.
+          </li>
+          <li>
+            A ref map from node ID to DOM element so focus can move without querying the whole document every time.
+          </li>
+          <li>
+            A short-lived type-ahead buffer if users need to jump to property names quickly.
+          </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6">2. Event Handling</h3>
+        <h2 className="text-2xl font-semibold mt-8">Implementation Example in React</h2>
         <p>
-          You need to listen for keyboard events on the tree view container or individual tree nodes. The most relevant
-          events are `onKeyDown` or `onKeyPress`.
-        </p>
-        <p className="mt-2">Common keys to handle in a tree view:</p>
-        <ul className="list-disc pl-6 space-y-2 mt-2">
-          <li>
-            <span className="font-mono">ArrowDown</span>: Move focus to the next visible node.
-          </li>
-          <li>
-            <span className="font-mono">ArrowUp</span>: Move focus to the previous visible node.
-          </li>
-          <li>
-            <span className="font-mono">ArrowRight</span>: If focused on a collapsed node, expand it. If focused on an
-            expanded node, move focus to its first child. If focused on a leaf node, do nothing or move to the next
-            sibling (depending on implementation).
-          </li>
-          <li>
-            <span className="font-mono">ArrowLeft</span>: If focused on an expanded node, collapse it. If focused on a
-            collapsed node or leaf node, move focus to its parent.
-          </li>
-          <li>
-            <span className="font-mono">Enter</span> or <span className="font-mono">Space</span>: Toggle the expanded
-            state of a node or activate/select a leaf node.
-          </li>
-          <li>
-            <span className="font-mono">Home</span>: Move focus to the first node in the tree.
-          </li>
-          <li>
-            <span className="font-mono">End</span>: Move focus to the last visible node in the tree.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Implementation Details & Examples</h2>
-        <p>
-          Let&apos;s look at a conceptual outline of how you might implement this in a React/Next.js component using
-          TSX.
+          In React, a roving <code>tabIndex</code> model is often the simplest place to start: only the active tree
+          item gets <code>tabIndex=0</code>, every other item gets <code>-1</code>, and the active item receives DOM
+          focus when <code>activeId</code> changes. The code below shows the core pattern.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Conceptual Structure (React/TSX):</h3>
+          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Practical Tree Skeleton (React/TSX)</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`import React, { useState, useRef, useEffect } from 'react';
+              {`import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-interface JsonNode {
-  key: string;
-  value: any;
-  type: string; // 'object', 'array', 'value'
-  children?: JsonNode[];
-  path: string; // e.g., 'root.user.address[0]'
-}
-
-interface TreeViewProps {
-  data: any;
-}
-
-const buildTreeNodes = (data: any, path = 'root'): JsonNode[] => {
-  if (typeof data !== 'object' || data === null) {
-    return [];
-  }
-
-  return Object.entries(data).map(([key, value], index) => {
-    const currentPath = \`\${path}.\${key}\`;
-    const isObjectOrArray = typeof value === 'object' && value !== null;
-    const type = Array.isArray(value) ? 'array' : (isObjectOrArray ? 'object' : 'value');
-
-    return {
-      key: key,
-      value: value,
-      type: type,
-      children: isObjectOrArray ? buildTreeNodes(value, currentPath) : undefined,
-      path: currentPath,
-    };
-  });
+type TreeNode = {
+  id: string;
+  label: string;
+  level: number;
+  parentId: string | null;
+  childIds: string[];
+  valuePreview: string;
 };
 
+type Props = {
+  nodes: Map<string, TreeNode>;
+  rootIds: string[];
+};
 
-const JsonTreeNode: React.FC<{ node: JsonNode; isFocused: boolean; onToggle: (path: string) => void; onClick: (path: string) => void; }> =
-  ({ node, isFocused, onToggle, onClick }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const nodeRef = useRef<HTMLLIElement>(null);
+export function JsonTree({ nodes, rootIds }: Props) {
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set(rootIds));
+  const [activeId, setActiveId] = useState<string | null>(rootIds[0] ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const itemRefs = useRef(new Map<string, HTMLLIElement>());
+  const typeaheadRef = useRef<{ value: string; timeout?: number }>({ value: '' });
 
-    useEffect(() => {
-      if (isFocused && nodeRef.current) {
-        nodeRef.current.focus();
-      }
-    }, [isFocused]);
+  const visibleIds = useMemo(
+    () => buildVisibleIds(rootIds, nodes, expandedIds),
+    [rootIds, nodes, expandedIds],
+  );
 
-    const handleToggle = () => {
-      if (node.type !== 'value') {
-        setIsExpanded(!isExpanded);
-        onToggle(node.path); // Notify parent component
-      }
-    };
+  useEffect(() => {
+    if (!activeId) return;
+    const element = itemRefs.current.get(activeId);
+    element?.focus();
+    element?.scrollIntoView({ block: 'nearest' });
+  }, [activeId]);
 
-    const handleSelect = () => {
-        onClick(node.path); // Notify parent component
+  const isExpanded = (id: string) => expandedIds.has(id);
+
+  const toggleExpanded = (id: string) => {
+    setExpandedIds((previous) => {
+      const next = new Set(previous);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const moveByOffset = (offset: number) => {
+    if (!activeId) return;
+    const currentIndex = visibleIds.indexOf(activeId);
+    const nextId = visibleIds[currentIndex + offset];
+    if (nextId) setActiveId(nextId);
+  };
+
+  const runTypeahead = (character: string) => {
+    const buffer = (typeaheadRef.current.value + character).toLowerCase();
+    typeaheadRef.current.value = buffer;
+    window.clearTimeout(typeaheadRef.current.timeout);
+    typeaheadRef.current.timeout = window.setTimeout(() => {
+      typeaheadRef.current.value = '';
+    }, 500);
+
+    const startIndex = activeId ? visibleIds.indexOf(activeId) + 1 : 0;
+    const searchOrder = [...visibleIds.slice(startIndex), ...visibleIds.slice(0, startIndex)];
+    const match = searchOrder.find((id) => nodes.get(id)?.label.toLowerCase().startsWith(buffer));
+    if (match) setActiveId(match);
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    if (!activeId) return;
+
+    const node = nodes.get(activeId)!;
+    const parentId = node.parentId;
+    const firstChildId = node.childIds[0];
+    const hasChildren = node.childIds.length > 0;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        moveByOffset(1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        moveByOffset(-1);
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        if (!hasChildren) break;
+        if (!isExpanded(node.id)) toggleExpanded(node.id);
+        else if (firstChildId) setActiveId(firstChildId);
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        if (hasChildren && isExpanded(node.id)) toggleExpanded(node.id);
+        else if (parentId) setActiveId(parentId);
+        break;
+      case 'Home':
+        event.preventDefault();
+        setActiveId(visibleIds[0] ?? activeId);
+        break;
+      case 'End':
+        event.preventDefault();
+        setActiveId(visibleIds.at(-1) ?? activeId);
+        break;
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (hasChildren) toggleExpanded(node.id);
+        else setSelectedId(node.id);
+        break;
+      default:
+        if (event.key.length === 1 && /\\S/.test(event.key)) runTypeahead(event.key);
     }
+  };
 
-    // Unique ID for accessibility (aria-activedescendant)
-    const nodeId = \`tree-node-\${node.path.replace(/[^a-zA-Z0-9]/g, '-')}\`;
+  const renderNode = (id: string): React.ReactNode => {
+    const node = nodes.get(id)!;
+    const hasChildren = node.childIds.length > 0;
+    const expanded = isExpanded(id);
 
     return (
       <li
-        ref={nodeRef}
-        id={nodeId} // Set ID
-        tabIndex={isFocused ? 0 : -1} // Make focused node tabbable, others not directly
-        role="treeitem" // ARIA role
-        aria-expanded={node.type !== 'value' ? isExpanded : undefined} // ARIA state
-        aria-level={node.path.split('.').length} // ARIA level (basic)
-        aria-label={\`\${node.key}: \${node.type === 'value' ? node.value : node.type}\`} // Basic ARIA label
-        onClick={handleSelect}
-        onDoubleClick={handleToggle} // Example: double click to toggle
-        className={\`cursor-pointer \${isFocused ? 'outline outline-blue-500' : ''}\`} // Visual focus indicator
+        key={id}
+        ref={(element) => {
+          if (element) itemRefs.current.set(id, element);
+          else itemRefs.current.delete(id);
+        }}
+        role='treeitem'
+        tabIndex={activeId === id ? 0 : -1}
+        aria-level={node.level}
+        aria-selected={selectedId === id ? true : undefined}
+        aria-expanded={hasChildren ? expanded : undefined}
+        onClick={() => setActiveId(id)}
+        className={activeId === id ? 'outline outline-2 outline-sky-600' : undefined}
       >
-        <span onClick={handleToggle}>{node.type !== 'value' ? (isExpanded ? '▼' : '▶') : ''}</span>
-        <strong>{node.key}:</strong> {node.type === 'value' ? String(node.value) : node.type}
+        <span className='font-medium'>{node.label}</span>{' '}
+        <span className='text-gray-500'>{node.valuePreview}</span>
 
-        {node.children && isExpanded && (
-          <ul role="group"> // ARIA group role for children
-            {node.children.map(child => (
-              // Child nodes need their own focus state management passed down
-              // This is simplified - a real implementation would track focusedPath globally
-              <JsonTreeNode
-                 key={child.path}
-                 node={child}
-                 isFocused={false} // Simplified: Assume focus handled at top level
-                 onToggle={onToggle}
-                 onClick={onClick}
-              />
-            ))}
+        {hasChildren && expanded ? (
+          <ul role='group' className='pl-4'>
+            {node.childIds.map(renderNode)}
           </ul>
-        )}
+        ) : null}
       </li>
     );
   };
 
-const JsonTreeView: React.FC<TreeViewProps> = ({ data }) => {
-  const [treeData, setTreeData] = useState<JsonNode[]>(() => buildTreeNodes(data));
-  const [focusedNodePath, setFocusedNodePath] = useState<string | null>(null);
-  const treeRef = useRef<HTMLUListElement>(null);
-
-  // Effect to set initial focus on the first node
-  useEffect(() => {
-      if (treeData.length > 0) {
-          // Find the path of the first node
-          const firstNodePath = treeData[0].path;
-          setFocusedNodePath(firstNodePath);
-      }
-  }, [treeData]);
-
-
-  const handleToggle = (path: string) => {
-      // In a real app, you'd update the expansion state in the treeData state
-      console.log('Toggle node:', path);
-      // For this example, we just log and don't modify treeData
-  };
-
-  const handleSelect = (path: string) => {
-       console.log('Node selected:', path);
-       setFocusedNodePath(path); // Set focus on click
-  }
-
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    if (!focusedNodePath) return;
-
-    // Logic to find next/previous/child/parent node based on key
-    let nextFocusedPath = focusedNodePath;
-
-    // --- Navigation Logic (Simplified) ---
-    // This is the complex part - you need a function that, given
-    // the current path, tree structure, and expanded states,
-    // finds the path of the target node for ArrowUp/Down/Left/Right.
-
-    // Example (highly simplified):
-    if (event.key === 'ArrowDown') {
-        // Find current node and its visible siblings/children
-        // Get list of all visible nodes (expanded children included)
-        const visibleNodes = getVisibleNodes(treeData, /* expanded states */); // Need a helper function
-        const currentIndex = visibleNodes.findIndex(node => node.path === focusedNodePath);
-        if (currentIndex < visibleNodes.length - 1) {
-             nextFocusedPath = visibleNodes[currentIndex + 1].path;
-        }
-        event.preventDefault(); // Prevent default scroll
-    } else if (event.key === 'ArrowUp') {
-        const visibleNodes = getVisibleNodes(treeData, /* expanded states */);
-        const currentIndex = visibleNodes.findIndex(node => node.path === focusedNodePath);
-        if (currentIndex > 0) {
-            nextFocusedPath = visibleNodes[currentIndex - 1].path;
-        }
-         event.preventDefault(); // Prevent default scroll
-    }
-    // Add logic for ArrowLeft, ArrowRight, Enter, Space, Home, End
-
-    // --- End Navigation Logic ---
-
-
-    if (nextFocusedPath !== focusedNodePath) {
-        setFocusedNodePath(nextFocusedPath);
-        // Optional: Scroll the new focused element into view
-        const nextElement = treeRef.current?.querySelector(&#96;#tree-node-\${nextFocusedPath.replace(/[^a-zA-Z0-9]/g, '-')}&#96;);
-        nextElement?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  };
-
-  // Helper function (needs full implementation based on tree structure and expansion state)
-  const getVisibleNodes = (nodes: JsonNode[], expandedStateMap: { [path: string]: boolean }): JsonNode[] => {
-      let visible: JsonNode[] = [];
-      nodes.forEach(node => {
-          visible.push(node);
-          const isExpanded = expandedStateMap[node.path]; // Need actual state
-          if (node.children && isExpanded) {
-              visible = visible.concat(getVisibleNodes(node.children, expandedStateMap));
-          }
-      });
-      return visible;
-  };
-
-
-  // You need to pass down the focusedNodePath and handle it in JsonTreeNode
-  // The JsonTreeNode component needs to know if it is the currently focused one.
-  // The root ul needs role="tree" and aria-activedescendant pointing to the focused node's ID.
-
   return (
-    <div> {/* Wrapper div */}
-       <p className="mb-4">Use arrow keys, Enter/Space to navigate the tree view below (example).</p>
-      <ul
-        ref={treeRef}
-        role="tree" // ARIA role
-        aria-activedescendant={focusedNodePath ? \`tree-node-\${focusedNodePath.replace(/[^a-zA-Z0-9]/g, '-')}\` : undefined} // ARIA state
-        onKeyDown={handleKeyDown}
-        className="border p-4 rounded-md dark:border-gray-700"
-      >
-        {treeData.map(node => (
-          <JsonTreeNode
-            key={node.path}
-            node={node}
-            isFocused={node.path === focusedNodePath} // Pass focus state
-            onToggle={handleToggle} // Pass toggle handler
-            onClick={handleSelect} // Pass select handler
-          />
-        ))}
-      </ul>
-    </div>
+    <ul role='tree' aria-label='JSON document structure' onKeyDown={onKeyDown}>
+      {rootIds.map(renderNode)}
+    </ul>
   );
-};
+}
 
-// Example Usage (in your page component):
-// import JsonTreeView from './JsonTreeView'; // Assuming the component is in JsonTreeView.tsx
-// const myJsonData = { user: { name: "Alice", address: { city: "Wonderland" } }, items: ["apple", "banana"] };
-// <JsonTreeView data={myJsonData} />
+function buildVisibleIds(
+  rootIds: string[],
+  nodes: Map<string, TreeNode>,
+  expandedIds: Set<string>,
+) {
+  const visible: string[] = [];
 
+  const visit = (id: string) => {
+    visible.push(id);
+    if (!expandedIds.has(id)) return;
+    nodes.get(id)?.childIds.forEach(visit);
+  };
+
+  rootIds.forEach(visit);
+  return visible;
+}
 `}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            <span className="font-medium">Explanation:</span>
-            <br />
-            1. The `JsonNode` interface defines the structure of tree nodes.
-            <br />
-            2. `buildTreeNodes` recursively converts raw JSON data into this structure.
-            <br />
-            3. `JsonTreeNode` is a recursive component rendering each node. It manages its own expanded state but
-            receives its focus state (`isFocused`) and handlers from above. It uses `ref` and `useEffect` to
-            programmatically focus itself when `isFocused` is true. It includes ARIA roles and states.
-            <br />
-            4. `JsonTreeView` is the main component. It holds the parsed `treeData` and the `focusedNodePath` state.
-            <br />
-            5. The `onKeyDown` handler in `JsonTreeView` is the core of navigation. It checks `event.key` and calculates
-            the `nextFocusedPath` based on the current `focusedNodePath`, the tree structure, and the expansion state of
-            nodes (this requires a helper function like `getVisibleNodes`).
-            <br />
-            6. `setFocusedNodePath` updates the state, which triggers re-renders. The `isFocused` prop is passed down,
-            causing the relevant `JsonTreeNode` to receive focus programmatically.
-            <br />
-            7. ARIA attributes like `role=&quot;tree&quot;`, `role=&quot;treeitem&quot;`, `aria-expanded`, and
-            `aria-activedescendant` are crucial for accessibility. `aria-activedescendant` on the container (`ul`) tells
-            screen readers which item within the tree is currently focused, even if native browser focus (`tabIndex=0`)
-            is only on the container or the actively selected item.
+            This example keeps the keyboard logic in one place, derives visible nodes from expansion state, moves real
+            DOM focus onto the active tree item, and omits <code>aria-expanded</code> on leaf nodes. That combination
+            aligns with current APG and MDN tree guidance far better than attaching a few independent key handlers to
+            nested list items.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Key Implementation Challenges</h2>
+        <h2 className="text-2xl font-semibold mt-8">Roving `tabIndex` vs `aria-activedescendant`</h2>
         <p>
-          While the concept is straightforward, implementing robust keyboard navigation in a dynamic tree view involves
-          handling complexities:
+          Both approaches are valid. The WAI-ARIA tree pattern explicitly allows <code>aria-activedescendant</code> on
+          the tree container as an alternative to moving DOM focus between items.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
-              <span className="font-medium">Maintaining Visible Node List:</span> The order of nodes when navigating
-              `ArrowDown` or `ArrowUp` depends on which parent nodes are expanded. You need an efficient way to
-              determine the sequence of currently visible nodes.
+              <span className="font-medium">Roving `tabIndex`:</span> Simpler to reason about when every visible tree
+              item already exists in the DOM. Browser focus lands on the actual node, which makes debugging and focus
+              styling straightforward.
             </li>
             <li>
-              <span className="font-medium">Complex Navigation Logic:</span> The logic for `ArrowLeft` (finding the
-              parent or collapsing) and `ArrowRight` (expanding or finding the first child) can be intricate, especially
-              in deeply nested structures.
+              <span className="font-medium">`aria-activedescendant`:</span> Useful when focus must stay on the tree
+              container or another controlling element, but you must keep IDs stable and ensure the active descendant
+              always points to a rendered node.
             </li>
             <li>
-              <span className="font-medium">Scrolling Into View:</span> When focus moves to a node not currently visible
-              in the viewport, you need to programmatically scroll the container to make it visible.
-            </li>
-            <li>
-              <span className="font-medium">Performance:</span> For very large JSON structures, recalculating visible
-              nodes or re-rendering large parts of the tree on every key press needs to be optimized.
-            </li>
-            <li>
-              <span className="font-medium">ARIA Attributes:</span> Correctly applying ARIA roles and states
-              (`role=&quot;tree&quot;`, `role=&quot;treeitem&quot;`, `aria-expanded`, `aria-level`, `aria-selected`,
-              `aria-activedescendant`) is vital for screen reader users.
+              <span className="font-medium">Practical default:</span> For most React JSON viewers, start with roving
+              <code>tabIndex</code>. Move to <code>aria-activedescendant</code> only if your widget architecture
+              strongly benefits from container-level focus.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Best Practices</h2>
-        <p>Follow these best practices for a better implementation:</p>
+        <h2 className="text-2xl font-semibold mt-8">Common Bugs and Edge Cases</h2>
+        <p>Most broken tree views fail on the same small set of details:</p>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            Use a single state variable (e.g., `focusedNodePath`) at the highest relevant level to manage which node is
-            currently focused.
+            Putting every node in the tab order. A tree should behave like one composite widget, not 50 independent tab
+            stops.
           </li>
           <li>
-            Implement `onKeyDown` on the main container (`ul` or a wrapper div) and manage focus programmatically on the
-            individual `li` elements.
+            Mixing focus and selection. A focused node is where keyboard input goes. A selected node is what the app has
+            chosen. These are not always the same thing.
           </li>
           <li>
-            Set `tabIndex=&quot;0&quot;` only on the currently focused node, and `tabIndex=&quot;-1&quot;` on all other
-            interactive nodes within the tree. Alternatively, use `aria-activedescendant` on the container and manage
-            focus virtually without relying on native `tabIndex` on every item. The ARIA method is generally preferred
-            for tree views.
+            Setting <code>aria-expanded</code> on leaves. Only nodes with children should expose expanded or collapsed
+            state.
           </li>
-          <li>Prevent default browser actions for handled keys (e.g., using `event.preventDefault()`).</li>
           <li>
-            Ensure a clear visual indicator for the focused element (e.g., an outline or background color change).
+            Collapsing a branch while focus is still inside a hidden descendant. If the current node disappears, move
+            focus to the collapsing parent immediately.
           </li>
-          <li>Test thoroughly with keyboard-only navigation and screen readers.</li>
-          <li>Consider adding shortcuts for common actions like expanding/collapsing all nodes.</li>
+          <li>
+            Forgetting an accessible name on the tree itself. Add <code>aria-label</code> or{" "}
+            <code>aria-labelledby</code>.
+          </li>
+          <li>
+            Virtualizing or lazy-loading descendants without supplying <code>aria-level</code>,
+            <code>aria-posinset</code>, and <code>aria-setsize</code> when the full branch is not in the DOM.
+          </li>
+          <li>
+            Overriding the focus ring with subtle styling. Keyboard focus must stay obvious in normal, dark, and
+            high-contrast modes.
+          </li>
         </ul>
 
-        <h2 className="2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="text-2xl font-semibold mt-8">Testing Checklist</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Press <code>Tab</code> once to enter the tree and once more to leave it. If you need many tabs to cross the
+            widget, the focus model is wrong.
+          </li>
+          <li>
+            Verify <code>ArrowUp</code>, <code>ArrowDown</code>, <code>ArrowLeft</code>, and{" "}
+            <code>ArrowRight</code> do not scroll the page while the tree has focus.
+          </li>
+          <li>
+            Confirm that collapsing a parent keeps focus on a visible item and that expanding a node preserves the
+            correct reading order.
+          </li>
+          <li>
+            Test with a screen reader and check that level, expanded state, and selection state are announced
+            accurately.
+          </li>
+          <li>
+            If the tree is large, verify that type-ahead jumps to the next matching property name instead of always
+            restarting from the top.
+          </li>
+          <li>
+            Make sure mouse clicks, touch interaction, and keyboard navigation all update the same active node state.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Adding keyboard navigation to a JSON tree view significantly enhances its usability and makes it accessible to
-          a wider range of users. While the implementation requires careful handling of focus and complex navigation
-          logic, the benefits in terms of user experience and compliance are substantial. By focusing on core concepts
-          like focus management, event handling, and proper ARIA usage, you can create a powerful and accessible tree
-          view component. Remember to test your implementation rigorously to ensure it behaves as expected for all
-          users.
+          A usable JSON tree view is mostly about discipline: derive a visible-node list, keep one active item in the
+          tab order, implement the full arrow-key contract, and expose the right ARIA states. If you do that, keyboard
+          navigation becomes predictable instead of fragile.
+        </p>
+        <p>
+          For current reference material, review the{" "}
+          <a
+            href="https://www.w3.org/WAI/ARIA/apg/patterns/treeview/"
+            className="underline"
+          >
+            WAI-ARIA Authoring Practices tree view pattern
+          </a>{" "}
+          and MDN&apos;s{" "}
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tree_role"
+            className="underline"
+          >
+            `tree` role guide
+          </a>
+          . Those documents are the clearest source of truth for expected behavior.
         </p>
       </div>
     </>

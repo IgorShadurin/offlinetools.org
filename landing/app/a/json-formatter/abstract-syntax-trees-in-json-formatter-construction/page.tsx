@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Abstract Syntax Trees in JSON Formatter Construction | Offline Tools",
+  title: "JSON ASTs in Formatter Construction | Offline Tools",
   description:
-    "Explore how Abstract Syntax Trees (ASTs) are fundamental to the construction of JSON formatters and validators, enabling structured manipulation and analysis.",
+    "Learn what a JSON AST is, why JSON has no single standard AST shape, and how formatters use tree traversal, source locations, and validation to print clean JSON.",
 };
 
 export default function JsonFormatterAstArticle() {
@@ -13,206 +13,260 @@ export default function JsonFormatterAstArticle() {
 
       <div className="space-y-6">
         <p>
-          When you use a JSON formatter, it doesn't just magically re-arrange your text. Behind the scenes, a
-          sophisticated process takes place, starting with parsing the raw JSON string into a structured, intermediate
-          representation. This representation is often an Abstract Syntax Tree (AST). Understanding ASTs is key to
-          appreciating how formatters, validators, and other language processing tools work.
+          A JSON formatter usually works in two phases: parse first, print second. In the parsing phase, the tool turns
+          raw JSON text into a tree-shaped internal representation often called a JSON AST, short for Abstract Syntax
+          Tree. That tree is what gives the formatter reliable structure instead of forcing it to guess from individual
+          characters like <code>&#123;</code>, <code>,</code>, and <code>:</code>.
+        </p>
+        <p>
+          The key detail many searchers miss is that JSON has a standard grammar, but it does not have one official
+          AST schema. Different parsers can represent the same document with different node names and different metadata.
+          If you are looking for an &quot;AST JSON standard,&quot; the practical answer is that the JSON standard defines
+          the data format, while the AST shape is left to each implementation.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">What is an Abstract Syntax Tree (AST)?</h2>
+        <h2 className="text-2xl font-semibold mt-8">Quick Answer: What Is a JSON AST?</h2>
         <p>
-          An Abstract Syntax Tree is a tree representation of the abstract syntactic structure of source code (or, in
-          this case, data like JSON). Each node in the tree denotes a construct appearing in the source code. "Abstract"
-          means it doesn't represent every detail of the syntax (like punctuation or whitespace), but focuses on the
-          structural elements and their relationships.
+          A JSON AST is a tree representation of a JSON document where each node represents a meaningful JSON construct:
+          an object, an array, a property, or a scalar value such as a string, number, boolean, or <code>null</code>.
+          It is &quot;abstract&quot; because it usually omits presentation details like indentation and line breaks and
+          focuses on structure and relationships.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Key characteristics of ASTs:</h3>
+          <h3 className="text-lg font-medium">A useful mental model:</h3>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>Hierarchical structure</li>
-            <li>Nodes represent language/data constructs (e.g., objects, arrays, values)</li>
-            <li>Edges represent relationships (e.g., an object containing properties, an array containing elements)</li>
-            <li>Ignores irrelevant details like whitespace or comments (though JSON doesn't have comments)</li>
-            <li>Provides a structured representation suitable for analysis and manipulation</li>
+            <li>The raw text is linear, but the AST is hierarchical.</li>
+            <li>Objects become object nodes that contain property nodes.</li>
+            <li>Arrays become array nodes that contain ordered child values.</li>
+            <li>Strings, numbers, booleans, and null become leaf nodes.</li>
+            <li>The formatter walks that tree to regenerate readable output.</li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Parsing JSON into an AST</h2>
+        <h2 className="text-2xl font-semibold mt-8">What JSON Standardizes, and What It Does Not</h2>
         <p>
-          The first step for any JSON processing tool, including a formatter, is parsing. A parser reads the raw JSON
-          text character by character and transforms it into a meaningful data structure. For JSON, this structure
-          typically mirrors its nested nature, and an AST is a natural fit.
+          The JSON specification in RFC 8259 standardizes the allowed value types and grammar: objects, arrays,
+          numbers, strings, booleans, and <code>null</code>. It does not define a universal JSON AST format with fixed
+          node names such as <code>ObjectNode</code> or <code>PropertyNode</code>. That is why one parser may return a
+          simple object graph while another returns a richer tree with source offsets, diagnostics, and parent links.
         </p>
         <p>
-          A JSON parser follows the JSON grammar rules (RFC 8259) to build the tree. For example, when it encounters{" "}
-          <code>&#123;</code>, it knows an object is starting. When it sees a string followed by <code>:</code>, it
-          expects a value and creates a property node connecting the key (string) to the value node. Arrays (
-          <code>[ ]</code>) create array nodes with child nodes for each element.
+          RFC 8259 also says object member names <em>should</em> be unique. In other words, duplicate keys are not a
+          good interoperable practice, and parser behavior can differ when they appear. A formatter built on an AST may
+          choose to preserve duplicates exactly as parsed, warn about them, or reject the document before formatting.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Structure of a JSON AST</h2>
-        <p>A JSON AST typically consists of nodes representing the fundamental JSON value types:</p>
+        <h2 className="text-2xl font-semibold mt-8">AST vs. Plain Parsed Data vs. Concrete Syntax</h2>
+        <p>
+          This distinction matters in formatter construction because not every parser output is equally useful for
+          pretty-printing, validation, or editor tooling.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-3">
             <li>
-              <span className="font-medium">Root Node:</span> Represents the entire JSON document, which must be either
-              an object or an array.
+              <span className="font-medium">Plain parsed value:</span> A <code>JSON.parse</code>-style result gives you
+              the data values, but it usually loses source positions, duplicate key information, and the original token
+              spelling.
             </li>
             <li>
-              <span className="font-medium">Object Node:</span> Represents a JSON object <code>&#123;...&#125;</code>.
-              Its children are property nodes.
+              <span className="font-medium">Concrete syntax tree or token stream:</span> This keeps punctuation and
+              every lexical detail, which is useful for editors and non-standard JSON dialects, but often more detailed
+              than a formatter needs.
             </li>
             <li>
-              <span className="font-medium">Property Node:</span> Represents a key-value pair within an object. It has
-              two children: a key node (string) and a value node (any JSON value type).
-            </li>
-            <li>
-              <span className="font-medium">Array Node:</span> Represents a JSON array <code>[...]</code>. Its children
-              are the value nodes for each element in the array, in order.
-            </li>
-            <li>
-              <span className="font-medium">Value Nodes:</span> Represent the terminal or non-container values:
-              <ul className="list-circle pl-4 mt-1">
-                <li>
-                  String Node (e.g., <code>"hello"</code>)
-                </li>
-                <li>
-                  Number Node (e.g., <code>123</code>, <code>3.14</code>)
-                </li>
-                <li>
-                  Boolean Node (<code>true</code> or <code>false</code>)
-                </li>
-                <li>
-                  Null Node (<code>null</code>)
-                </li>
-              </ul>
+              <span className="font-medium">AST:</span> This is the middle ground. It keeps the meaningful structure
+              of the JSON document and often adds just enough metadata for formatting, diagnostics, transformation, and
+              querying.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">How ASTs Aid JSON Formatting</h2>
+        <h2 className="text-2xl font-semibold mt-8">What a Practical JSON Formatter Stores in Its AST</h2>
         <p>
-          Once the JSON string is converted into an AST, formatting becomes a structured traversal of the tree. Instead
-          of manipulating raw text based on finding characters like <code>&#123;</code>, <code>,</code>, or{" "}
-          <code>:</code>, the formatter walks the AST nodes.
+          A real formatter often stores more than the bare value tree. The exact shape is implementation-specific, but
+          practical JSON ASTs usually include some combination of the following:
         </p>
 
-        <ol className="list-decimal pl-6 space-y-3 my-4">
-          <li className="font-medium">
-            <span className="font-semibold">Traversal:</span> The formatter visits each node in the tree (e.g., using
-            depth-first or breadth-first traversal).
-          </li>
-          <li className="font-medium">
-            <span className="font-semibold">Structured Output Generation:</span> Based on the node type and depth within
-            the tree, the formatter adds appropriate indentation, line breaks, and spacing.
-            <ul className="list-circle pl-4 mt-1 text-sm">
-              <li>
-                When entering an Object or Array node, it knows to potentially add a newline and increase indentation
-                for child nodes.
-              </li>
-              <li>
-                Between elements in an Array or properties in an Object, it adds a comma followed by a newline (for
-                standard formatting).
-              </li>
-              <li>
-                For a Property node, it prints the key, followed by <code>:</code>, a space, and then recursively
-                formats the value node.
-              </li>
-              <li>For Value nodes (string, number, boolean, null), it prints their textual representation.</li>
-              <li>
-                When exiting an Object or Array node, it knows to decrease indentation and add the closing brace/bracket
-                on a new line (if the content spans multiple lines).
-              </li>
-            </ul>
-          </li>
-          <li className="font-medium">
-            <span className="font-semibold">Error Handling (during parsing):</span> If the input JSON string is invalid,
-            the parser will fail to construct a valid AST and report a syntax error, often with the location.
-          </li>
-        </ol>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc pl-6 space-y-2">
+            <li>A root node for the document.</li>
+            <li>Object nodes with ordered property children.</li>
+            <li>Property nodes with separate key and value children.</li>
+            <li>Array nodes with ordered element children.</li>
+            <li>Scalar nodes for strings, numbers, booleans, and null.</li>
+            <li>Source spans such as byte offsets, line numbers, or columns for error reporting.</li>
+            <li>Raw token text when the tool needs to preserve or diagnose the original literal spelling.</li>
+            <li>Parser diagnostics when the input is invalid or only partially recoverable.</li>
+          </ul>
+        </div>
 
         <p>
-          This tree-based approach makes the formatting logic robust and easier to implement correctly compared to
-          complex regular expressions or state machines trying to parse and format in one pass over the raw text. It
-          separates the parsing (understanding the structure) from the formatting (rendering the structure).
+          That extra metadata is why formatter internals are often richer than plain application data. A parser that
+          only returns host-language values cannot easily tell you where a malformed token started, whether the source
+          used <code>1e3</code> or <code>1000</code>, or which duplicate key appeared first.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Simplified Conceptual JSON AST Example</h2>
-        <p>Consider the following simple JSON:</p>
+        <h2 className="text-2xl font-semibold mt-8">Conceptual JSON AST Example</h2>
+        <p>
+          Consider this JSON input:
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`{
-  "name": "Test",
-  "details": {
-    "id": 123,
-    "active": true
-  }
-}`}
+              {`{"name":"Ada","tags":["math","logic"],"active":true,"score":1e3}`}
             </pre>
           </div>
         </div>
 
-        <p>A conceptual AST for this JSON might look something like this (not actual code, just structure):</p>
+        <p>
+          One parser might represent it with a tree like this. This is illustrative only, not a standard JSON AST
+          format:
+        </p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 text-sm">
           <pre>
-            {`ObjectNode (root)
-└── PropertyNode ("name")
-    ├── StringNode ("name")
-    └── StringNode ("Test")
-└── PropertyNode ("details")
-    ├── StringNode ("details")
-    └── ObjectNode
-        └── PropertyNode ("id")
-            ├── StringNode ("id")
-            └── NumberNode (123)
-        └── PropertyNode ("active")
-            ├── StringNode ("active")
-            └── BooleanNode (true)`}
+            {`{
+  "type": "Object",
+  "children": [
+    {
+      "type": "Property",
+      "key": { "type": "String", "value": "name" },
+      "value": { "type": "String", "value": "Ada" }
+    },
+    {
+      "type": "Property",
+      "key": { "type": "String", "value": "tags" },
+      "value": {
+        "type": "Array",
+        "children": [
+          { "type": "String", "value": "math" },
+          { "type": "String", "value": "logic" }
+        ]
+      }
+    },
+    {
+      "type": "Property",
+      "key": { "type": "String", "value": "active" },
+      "value": { "type": "Boolean", "value": true }
+    },
+    {
+      "type": "Property",
+      "key": { "type": "String", "value": "score" },
+      "value": { "type": "Number", "value": 1000, "raw": "1e3" }
+    }
+  ]
+}`}
           </pre>
         </div>
 
+        <h2 className="text-2xl font-semibold mt-8">How AST Traversal Becomes Formatted Output</h2>
         <p>
-          The formatter traverses this tree. When it visits the root ObjectNode, it prints <code>&#123;</code> and adds
-          indentation. For the first PropertyNode ("name"), it prints <code>"name": "Test"</code>. Then, it sees the
-          next PropertyNode ("details"), prints a comma, newline, and indentation. It then processes the nested
-          ObjectNode for "details" similarly, adding more indentation. This structured traversal ensures correct spacing
-          and nesting.
+          Once the parser has built the tree, formatting becomes a controlled traversal problem rather than a fragile
+          text-replacement problem.
+        </p>
+        <ol className="list-decimal pl-6 space-y-3 my-4">
+          <li className="font-medium">
+            <span className="font-semibold">Parse and validate:</span> The formatter first confirms the input obeys JSON
+            grammar. If the parse fails, there is no valid AST to print.
+          </li>
+          <li className="font-medium">
+            <span className="font-semibold">Choose print rules:</span> Indentation width, line breaks, spacing after
+            colons, and line-wrapping decisions are output concerns, not parsing concerns.
+          </li>
+          <li className="font-medium">
+            <span className="font-semibold">Walk the tree:</span> A formatter commonly uses depth-first traversal so it
+            can print nested objects and arrays in the correct order.
+          </li>
+          <li className="font-medium">
+            <span className="font-semibold">Emit separators from structure:</span> Commas appear between siblings,
+            colons appear inside property nodes, and closing brackets align with the parent depth.
+          </li>
+          <li className="font-medium">
+            <span className="font-semibold">Use metadata for diagnostics:</span> If the parser stores line and column
+            information, the tool can highlight the exact failure point instead of returning a generic parse error.
+          </li>
+        </ol>
+
+        <p>
+          This separation of parsing and printing is what makes a formatter robust. It also explains why standard JSON
+          formatters do not invent features like trailing commas or comments: those are outside strict JSON syntax, so a
+          strict JSON AST builder should reject them unless the tool intentionally supports a non-standard dialect.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Beyond Formatting: Other AST Uses</h2>
-        <p>ASTs derived from JSON are also invaluable for other tasks:</p>
+        <h2 className="text-2xl font-semibold mt-8">If You Mean Querying: JSON AST vs. JSONPath</h2>
+        <p>
+          People sometimes search for &quot;AST JSON query&quot; when they really want a way to select values inside a
+          JSON document. Those are related ideas, but they are not the same thing.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Validation:</span> Checking if the JSON conforms to a specific schema (e.g.,
-            JSON Schema). A schema validator traverses the AST and checks if node types, values, and structure match the
-            schema definition.
+            <span className="font-medium">AST:</span> An internal tree representation used by parsers, formatters,
+            validators, and editors.
           </li>
           <li>
-            <span className="font-medium">Transformation:</span> Modifying the JSON structure programmatically (e.g.,
-            adding/removing properties, changing values). This is done by manipulating nodes in the AST before
-            serializing it back to a string.
+            <span className="font-medium">JSONPath:</span> A query language for selecting values from a JSON tree.
+            JSONPath was standardized in RFC 9535 in February 2024.
           </li>
           <li>
-            <span className="font-medium">Querying:</span> Finding specific data within the JSON (e.g., using paths like
-            JSONPath). This involves traversing the AST to locate the desired nodes.
+            <span className="font-medium">API query parameters:</span> Request syntax sent to a server. These may
+            return JSON, but they are not themselves a JSON AST.
+          </li>
+        </ul>
+
+        <p>
+          In practice, a formatter may build an AST internally and then expose JSONPath-like operations on top of that
+          tree. The AST is the data structure; JSONPath is one way to ask questions about the data structure.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Edge Cases That Matter in Real Formatter Design</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <span className="font-medium">Duplicate keys:</span> The JSON spec says names should be unique, so a good
+            formatter should make its duplicate-key behavior explicit.
           </li>
           <li>
-            <span className="font-medium">Analysis:</span> Understanding the size, depth, or complexity of the JSON
-            structure.
+            <span className="font-medium">Very large or deeply nested input:</span> Real parsers often impose depth,
+            size, or numeric precision limits, and formatter implementations need guardrails for them.
+          </li>
+          <li>
+            <span className="font-medium">Numeric precision:</span> Converting JSON numbers into host-language numeric
+            types too early can lose information. ASTs help tools delay or avoid that coercion.
+          </li>
+          <li>
+            <span className="font-medium">Non-standard JSON dialects:</span> Comments, trailing commas, and single
+            quotes belong to JSON-like formats, not strict JSON. Supporting them requires a different grammar or a more
+            permissive parser.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Beyond Formatting</h2>
+        <p>A JSON AST is also useful for adjacent tooling tasks:</p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <span className="font-medium">Validation:</span> A validator can traverse the tree and check structure,
+            types, and required fields.
+          </li>
+          <li>
+            <span className="font-medium">Transformation:</span> Tools can add, remove, or replace nodes before
+            serializing the result again.
+          </li>
+          <li>
+            <span className="font-medium">Querying:</span> Search and extraction logic can target nodes or paths inside
+            the parsed tree.
+          </li>
+          <li>
+            <span className="font-medium">Analysis:</span> AST traversal makes it easy to measure nesting depth, object
+            size, and other complexity signals.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Abstract Syntax Trees are a foundational concept in building tools that process structured text data like
-          JSON. For a JSON formatter, the AST serves as a crucial intermediate representation that decouples the
-          complexity of parsing the raw text from the logic of generating the formatted output. By transforming the
-          linear stream of characters into a hierarchical tree of meaningful nodes, the AST enables robust, predictable,
-          and maintainable formatting, validation, and manipulation capabilities. Next time you see your JSON neatly
-          formatted, remember the silent, structured work of the AST beneath the surface.
+          A JSON AST is the bridge between raw text and reliable tooling. It gives a formatter a structured model to
+          print, validate, traverse, and diagnose. The important standards takeaway is that JSON itself is standardized,
+          but JSON AST shapes are not. Once you understand that split, it becomes much easier to evaluate parser APIs,
+          choose formatter behavior, and understand what a tool really means when it says it works with a JSON AST.
         </p>
       </div>
     </>

@@ -1,340 +1,359 @@
 import type { Metadata } from "next";
 import {
-  GitCommitHorizontal,
+  CheckCheck,
+  ClipboardList,
+  CodeXml,
+  FileCode,
   FileDiff,
   FolderTree,
-  Settings,
-  Shield,
-  CheckCheck,
-  FileCode,
+  GitCommitHorizontal,
+  GitPullRequest,
   GripVertical,
-  Waypoints,
-  CodeXml,
   LockKeyhole,
   RefreshCw,
-  GitPullRequest,
-  ClipboardList,
+  Settings,
+  Shield,
+  Waypoints,
   Wrench,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Version Control Best Practices for JSON Configuration Files | Your Site Name",
+  title: "Version Control Best Practices for JSON Configuration Files | Offline Tools",
   description:
-    "Learn effective strategies for managing JSON configuration files using version control systems like Git.",
+    "Practical Git best practices for JSON config files, including deterministic formatting, schema validation, cleaner diffs, safer merges, and secret handling.",
 };
+
+const canonicalJsonExample = `{
+  "api": {
+    "baseUrl": "https://api.example.com",
+    "timeoutMs": 5000
+  },
+  "features": {
+    "newCheckout": true,
+    "searchV2": false
+  }
+}`;
+
+const arrayBasedConfigExample = `{
+  "services": [
+    {
+      "name": "billing",
+      "timeoutMs": 2000
+    },
+    {
+      "name": "search",
+      "timeoutMs": 1000
+    }
+  ]
+}`;
+
+const keyedConfigExample = `{
+  "services": {
+    "billing": {
+      "timeoutMs": 2000
+    },
+    "search": {
+      "timeoutMs": 1000
+    }
+  }
+}`;
+
+const configLayoutExample = `config/
+  base.json
+  production.json
+  staging.json
+config.local.json   # gitignored`;
+
+const schemaExample = `{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "api": {
+      "type": "object",
+      "properties": {
+        "baseUrl": { "type": "string" },
+        "timeoutMs": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["baseUrl", "timeoutMs"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["api"],
+  "additionalProperties": false
+}`;
+
+const gitDiffExample = `# .gitattributes
+*.json diff=json
+
+# .git/config or ~/.gitconfig
+[diff "json"]
+  algorithm = minimal`;
+
+const mergeDriverExample = `# .gitattributes
+*.json merge=json
+
+# .git/config
+[merge "json"]
+  name = json-aware merge
+  driver = your-json-merge %O %A %B %L %P`;
+
+const secretExample = `{
+  "database": {
+    "host": "db.internal",
+    "passwordEnv": "DB_PASSWORD"
+  }
+}`;
 
 export default function JsonConfigVersionControl() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">Version Control Best Practices for JSON Configuration Files</h1>
+      <h1 className="mb-6 text-3xl font-bold">Version Control Best Practices for JSON Configuration Files</h1>
 
       <div className="space-y-6">
         <p>
-          Configuration files are the backbone of many applications, defining everything from database connections and
-          API endpoints to feature flags and user interface settings. JSON (JavaScript Object Notation) is a popular
-          format for these configurations due to its simplicity, readability, and widespread support across languages.
-          However, managing changes to JSON config files within a version control system like Git can present unique
-          challenges.
+          JSON configuration files become hard to manage when every editor rewrites them differently, arrays get
+          reordered for no semantic reason, and production-only values or secrets live next to safe defaults. Good
+          version control practice is really about making each JSON change deterministic, reviewable, and easy to
+          validate before it reaches your main branch.
         </p>
         <p>
-          This article explores best practices for versioning your JSON configuration files, ensuring maintainability,
-          reducing merge conflicts, and improving collaboration among developers.
+          The workflow that scales is simple: normalize formatting before commit, structure config so unrelated teams do
+          not edit the same lines, validate shape and types automatically, and keep sensitive values out of Git. If you
+          do those four things consistently, Git becomes much better at showing real intent instead of formatting noise.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
           <FileDiff className="mr-2" size={24} />
-          The Challenge: Merge Conflicts &amp; Readability
+          What Usually Goes Wrong
         </h2>
-        <p>
-          The primary challenge with JSON configuration files in version control is managing changes made by multiple
-          developers simultaneously. JSON&apos;s structure (especially arrays and objects) can lead to frequent and
-          sometimes confusing merge conflicts if not handled carefully. Poorly formatted or large, monolithic JSON files
-          exacerbate these issues, making it hard to understand what changed between versions.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <CheckCheck className="mr-2" size={24} />
-          Core Principles
-        </h2>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Consistency is Key:</strong> Establish and enforce a consistent format for all JSON config files.
-          </li>
-          <li>
-            <strong>Minimize Conflicts:</strong> Structure your configuration to reduce the likelihood and complexity of
-            merge conflicts.
-          </li>
-          <li>
-            <strong>Keep it Readable:</strong> Ensure changes are easy to review and understand.
-          </li>
-          <li>
-            <strong>Security First:</strong> Never store sensitive data directly in version-controlled config files.
-          </li>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>One logical change is mixed with a whole-file reformat, so reviewers cannot see what actually changed.</li>
+          <li>Large arrays are used for items that really have stable IDs, which makes inserts and reordering conflict-prone.</li>
+          <li>Base config, environment overrides, and developer-local values are all committed in the same file.</li>
+          <li>Broken JSON or wrong value types are only discovered after deployment because validation is manual.</li>
+          <li>Secrets or machine-specific values leak into history and are painful to rotate later.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <CheckCheck className="mr-2" size={24} />
+          The Short Answer
+        </h2>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>Commit one config change at a time and keep formatting-only rewrites in their own commit.</li>
+          <li>Use one canonical JSON style so diffs stay small and predictable.</li>
+          <li>Prefer keyed objects over arrays when item order is not meaningful.</li>
+          <li>Validate config with JSON Schema in CI before merge and before deploy.</li>
+          <li>Store defaults in Git, store secrets elsewhere, and review config diffs as carefully as code.</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
           <ClipboardList className="mr-2" size={24} />
           Best Practices in Detail
         </h2>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
           <GitCommitHorizontal className="mr-2" size={20} />
-          1. Atomic Commits for Config Changes
+          1. Make Every Config Commit Atomic and Reversible
         </h3>
         <p>
-          Just like code, configuration changes should be committed atomically. A single commit should represent a
-          single logical change (e.g., adding a new feature flag, updating a service endpoint, changing a timeout
-          value). Avoid bundling unrelated config changes into one commit, as this makes reverting or understanding
-          history more difficult.
+          A good config commit answers one clear question: what behavior changed? Updating a timeout, enabling a
+          feature flag, or introducing a new service endpoint should each be separate commits. If you also need to
+          reformat the file, do that in a dedicated formatter-only commit so the semantic change stays obvious and easy
+          to revert.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
           <FileCode className="mr-2" size={20} />
-          2. Consistent Formatting (Indentation, Whitespace, Newlines)
+          2. Canonicalize Formatting Before Every Commit
         </h3>
         <p>
-          Inconsistent formatting is a major cause of merge conflicts and diff noise. Ensure everyone on the team uses
-          the same indentation (spaces or tabs), line endings, and spacing around keys/values, commas, and colons.
+          JSON diffs are only readable when every file is serialized the same way every time. Use the same indentation,
+          line endings, final newline behavior, and property layout for the whole repo. Keep one property per line in
+          objects that humans review often, and only sort keys if your application does not attach meaning to display
+          order.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Bad (Inconsistent Formatting):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;app&quot;: &#x7b; &quot;name&quot;: &quot;My App&quot;, &quot;version&quot;: &quot;1.0&quot;
-            &#x7d;, &quot;features&quot;: [ &#x7b; &quot;name&quot;: &quot;featureA&quot;, &quot;enabled&quot;: true
-            &#x7d; ,&#x7b; &quot;name&quot;: &quot;featureB&quot;, &quot;enabled&quot;: false &#x7d;] &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Good (Consistent Formatting):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;app&quot;: &#x7b; &quot;name&quot;: &quot;My App&quot;, &quot;version&quot;: &quot;1.0&quot;
-            &#x7d;, &quot;features&quot;: [ &#x7b; &quot;name&quot;: &quot;featureA&quot;, &quot;enabled&quot;: true
-            &#x7d;, &#x7b; &quot;name&quot;: &quot;featureB&quot;, &quot;enabled&quot;: false &#x7d; ] &#x7d;
-          </pre>
+        <p>
+          Most importantly, keep the file valid JSON. JSON does not allow comments, so do not put inline notes inside
+          the config itself. If reviewers need context, put it in a schema, README, or adjacent documentation file.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h4 className="mb-2 text-lg font-medium">Recommended serialized style</h4>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">{canonicalJsonExample}</pre>
         </div>
         <p>
-          Use code formatters (like Prettier, ESLint with formatting rules, or editor-specific formatters) and integrate
-          them into your pre-commit hooks or CI pipeline to automate this.
+          A JSON formatter is the easiest place to enforce this. Run it locally before commit and again in CI so the
+          branch cannot drift into multiple serialization styles.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
           <GripVertical className="mr-2" size={20} />
-          3. Sort Keys Alphabetically
+          3. Prefer Keyed Objects Over Arrays When Order Does Not Matter
         </h3>
         <p>
-          Within objects, sorting keys alphabetically dramatically reduces merge conflicts when keys are added or
-          removed. If keys are unsorted, adding a new key can affect lines far from the actual change, causing
-          unnecessary conflicts. Sorting ensures that changes to object properties are localized.
+          Arrays are fine when order is part of the meaning, such as middleware order or a priority list. They are a
+          poor fit for collections of named items like feature flags, services, tenants, or per-market settings.
+          Turning those collections into objects keyed by a stable identifier dramatically reduces insert and reorder
+          conflicts.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Bad (Unsorted Keys):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;api&quot;: &#x7b; &quot;timeout&quot;: 5000, &quot;baseUrl&quot;:
-            &quot;https://api.example.com&quot; &#x7d;, &quot;logging&quot;: &#x7b; &quot;level&quot;: &quot;info&quot;
-            &#x7d;, &quot;database&quot;: &#x7b; &quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 5432 &#x7d;
-            &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Good (Sorted Keys):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;api&quot;: &#x7b; &quot;baseUrl&quot;: &quot;https://api.example.com&quot;,
-            &quot;timeout&quot;: 5000 &#x7d;, &quot;database&quot;: &#x7b; &quot;host&quot;: &quot;localhost&quot;,
-            &quot;port&quot;: 5432 &#x7d;, &quot;logging&quot;: &#x7b; &quot;level&quot;: &quot;info&quot; &#x7d; &#x7d;
-          </pre>
+        <div className="my-4 grid gap-4 md:grid-cols-2">
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h4 className="mb-2 text-lg font-medium">Conflict-prone array</h4>
+            <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              {arrayBasedConfigExample}
+            </pre>
+          </div>
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h4 className="mb-2 text-lg font-medium">Stable object keyed by ID</h4>
+            <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              {keyedConfigExample}
+            </pre>
+          </div>
         </div>
         <p>
-          Again, automated tools (like JSON sorters or formatters with sorting options) are essential for enforcing
-          this.
+          This one change often does more for merge quality than any Git setting, because Git is working with smaller,
+          more localized line edits.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Waypoints className="mr-2" size={20} />
-          4. One Property Per Line (or Logical Group)
-        </h3>
-        <p>
-          Avoid putting multiple key-value pairs or array elements on a single line, especially in lists or object
-          definitions. This makes it harder to see changes in diffs and increases the chance of line-level conflicts.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Bad (Multiple items per line):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;users&quot;: [&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;], &quot;settings&quot;:
-            &#x7b; &quot;theme&quot;: &quot;dark&quot;, &quot;language&quot;: &quot;en-US&quot; &#x7d; &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Good (One item/property per line):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;users&quot;: [ &quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot; ], &quot;settings&quot;:
-            &#x7b; &quot;language&quot;: &quot;en-US&quot;, &quot;theme&quot;: &quot;dark&quot; &#x7d; &#x7d;
-          </pre>
-        </div>
-        <p>Combining this with sorted keys (as shown in the &quot;Good&quot; example) makes diffs extremely clean.</p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <LockKeyhole className="mr-2" size={20} />
-          5. Never Store Sensitive Data
-        </h3>
-        <p>
-          Database passwords, API keys, private certificates, and other secrets should &lt;em&gt;never&lt;/em&gt; be
-          committed to version control, even in private repositories. Use environment variables, dedicated secrets
-          management systems (like HashiCorp Vault, AWS Secrets Manager, Azure Key Vault), or configuration libraries
-          that handle secrets injection at runtime.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Bad (Secrets in config):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;database&quot;: &#x7b; &quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 5432,
-            &quot;user&quot;: &quot;admin&quot;, &quot;password&quot;: &quot;SuperSecretPassword123!&quot; // 🚨 DANGER
-            🚨 &#x7d; &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Good (Use placeholders/references):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;database&quot;: &#x7b; &quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 5432,
-            &quot;user&quot;: &quot;admin&quot;, &quot;password&quot;: &quot;&#x24;&#x7b;DB_PASSWORD&#x7d;&quot; //
-            Placeholder resolved at runtime &#x7d; &#x7d;
-          </pre>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
           <FolderTree className="mr-2" size={20} />
-          6. Structure Configuration Files Logically
+          4. Split Base Config, Environment Overrides, and Local Secrets
         </h3>
         <p>
-          Avoid a single, massive JSON file for your entire application&apos;s configuration. Break it down into
-          smaller, logical files or directories based on functionality, module, or service. This limits the scope of
-          changes and reduces the likelihood of different teams or features touching the same file.
+          Teams run into trouble when every environment is encoded in one giant file. A cleaner pattern is to commit a
+          safe base file, add small environment-specific override files for non-secret differences, and keep
+          developer-local overrides or secrets out of version control entirely.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Bad (Monolithic):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">config.json</pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Good (Structured):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            config/ database.json api.json features.json ui_settings.json
-          </pre>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h4 className="mb-2 text-lg font-medium">Typical repo layout</h4>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">{configLayoutExample}</pre>
         </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Settings className="mr-2" size={20} />
-          7. Handle Environment-Specific Configurations
-        </h3>
         <p>
-          Configurations often vary between environments (development, staging, production). Do not store all
-          environment variations in a single file. Common patterns include:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Separate files per environment:</strong> &lt;code&gt;config.development.json&lt;/code&gt;,
-            &lt;code&gt;config.staging.json&lt;/code&gt;, &lt;code&gt;config.production.json&lt;/code&gt;.
-          </li>
-          <li>
-            <strong>Environment folders:</strong> &lt;code&gt;config/development/&lt;/code&gt;,
-            &lt;code&gt;config/staging/&lt;/code&gt;, etc.
-          </li>
-          <li>
-            <strong>Configuration Overrides:</strong> A base config file with environment-specific files that override
-            base values.
-          </li>
-        </ul>
-        <p>
-          The chosen method depends on your application&apos;s needs and deployment process. Ensure your application
-          loads the correct configuration file based on the current environment.
+          This keeps production changes narrow and lets local development stay flexible without polluting shared config
+          history.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
           <CodeXml className="mr-2" size={20} />
-          8. Consider Alternative Configuration Formats/Languages
+          5. Validate With JSON Schema in CI
         </h3>
         <p>
-          While JSON is simple, other formats like YAML, TOML, or even using JavaScript/TypeScript files (for more
-          complex logic or comments) might offer advantages depending on the project:
+          Formatting solves readability, not correctness. To catch missing keys, wrong types, and unexpected fields,
+          validate your config in automation. The current JSON Schema specification is Draft 2020-12, and even a small
+          schema gives reviewers a much stronger safety net than manual eyeballing.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>YAML/TOML:</strong> More human-readable than JSON, often support comments, and can be less prone to
-            syntax errors like misplaced commas.
-          </li>
-          <li>
-            <strong>JS/TS:</strong> Allows for dynamic configuration, computed values, comments, and using your
-            language&apos;s module system for organization. Requires your application to load and evaluate code, which
-            might have security implications if not done carefully.
-          </li>
-        </ul>
-        <p>Regardless of the format, the principles of consistency, structure, and avoiding secrets still apply.</p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <GitPullRequest className="mr-2" size={20} />
-          9. Implement Code Reviews (Including Config Changes)
-        </h3>
-        <p>
-          Reviewing changes to configuration files is just as important as reviewing code. Pull Requests/Merge Requests
-          should clearly show configuration changes. Encourage reviewers to check for:
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Adherence to formatting and sorting rules.</li>
-          <li>Correctness of values.</li>
-          <li>Accidental inclusion of sensitive data.</li>
-          <li>Impact on different environments.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <RefreshCw className="mr-2" size={20} />
-          10. Use Tools to Help
-        </h3>
-        <p>Leverage automation wherever possible:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Formatters:</strong> Prettier, &lt;code&gt;jsonlint --sort-keys&lt;/code&gt;, or IDE-specific tools.
-          </li>
-          <li>
-            <strong>Linters:</strong> ESLint plugins, JSON Schema validators to enforce structure and data types.
-          </li>
-          <li>
-            <strong>CI/CD Pipelines:</strong> Automate formatting checks, validation, and deployment of configurations.
-          </li>
-          <li>
-            <strong>JSON Comparison Tools:</strong> Use diffing tools that understand JSON structure for clearer visual
-            diffs.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Wrench className="mr-2" size={24} />
-          Example: Dealing with a Merge Conflict
-        </h2>
-        <p>Let&apos;s see how sorting and consistent formatting help with a simple conflict.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Original:</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;features&quot;: &#x7b; &quot;featureA&quot;: true, &quot;featureB&quot;: false &#x7d; &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Change A (Add featureC, keeping sorted):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;features&quot;: &#x7b; &quot;featureA&quot;: true, &quot;featureB&quot;: false,
-            &quot;featureC&quot;: true &#x7d; &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Change B (Add featureD, keeping sorted):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;features&quot;: &#x7b; &quot;featureA&quot;: true, &quot;featureB&quot;: false,
-            &quot;featureD&quot;: false &#x7d; &#x7d;
-          </pre>
-          <h4 className="text-lg font-medium mb-2 mt-4">Merge Result (No Conflict):</h4>
-          <pre className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            &#x7b; &quot;features&quot;: &#x7b; &quot;featureA&quot;: true, &quot;featureB&quot;: false,
-            &quot;featureC&quot;: true, &quot;featureD&quot;: false &#x7d; &#x7d;
-          </pre>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h4 className="mb-2 text-lg font-medium">Minimal schema for a config file</h4>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">{schemaExample}</pre>
         </div>
         <p>
-          Because both changes added a new key in the correct sorted position and used consistent formatting, Git could
-          automatically merge them without conflict. If sorting wasn&apos;t applied, the new keys could have been
-          inserted at different positions, leading to a conflict on the lines around the insertion points.
+          Run schema validation in pre-commit hooks if you want quick local feedback, but always enforce it again in CI
+          so the main branch cannot accept invalid JSON.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
+          <Wrench className="mr-2" size={20} />
+          6. Use Git Settings That Improve Review, Not Just Silence Conflicts
+        </h3>
+        <p>
+          Git supports path-specific diff behavior through <code>.gitattributes</code>. For JSON files, a dedicated
+          diff driver with a minimal diff algorithm can make reviews cleaner by shrinking noisy hunks around nearby
+          changes.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h4 className="mb-2 text-lg font-medium">Simple JSON diff setup</h4>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">{gitDiffExample}</pre>
+        </div>
+        <p>
+          That helps diff output, but it does not magically make merges safe. Avoid using <code>merge=union</code> for
+          JSON just to get fewer conflict markers. For structured data, a silent but incorrect merge is worse than an
+          explicit conflict.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h4 className="mb-2 text-lg font-medium">Advanced: custom JSON-aware merge driver</h4>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">{mergeDriverExample}</pre>
+        </div>
+        <p>
+          Only do this if the merge driver actually parses JSON and re-serializes it deterministically. If it just
+          concatenates text, you are trading visible conflicts for broken config.
+        </p>
+
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
+          <RefreshCw className="mr-2" size={20} />
+          7. If You Introduce Normalization Later, Roll It Out Deliberately
+        </h3>
+        <p>
+          Adding a formatter, line-ending normalization, or a clean/smudge filter to an existing repo can create noisy
+          three-way merges for a while. The safest rollout is a dedicated normalization commit, followed by regular
+          semantic commits. During that transition, Git&apos;s <code>merge.renormalize</code> setting can reduce
+          spurious conflicts caused by the serialization change itself.
+        </p>
+
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
+          <LockKeyhole className="mr-2" size={20} />
+          8. Keep Secrets and Machine-Specific Values Out of Git
+        </h3>
+        <p>
+          JSON config in version control should describe safe defaults and references, not live credentials. Use
+          environment variables, a secrets manager, or deployment-time injection for sensitive values. If developers
+          need a template, commit a sample that points to the secret name rather than the secret itself.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h4 className="mb-2 text-lg font-medium">Commit a reference, not the secret</h4>
+          <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">{secretExample}</pre>
+        </div>
+        <p>
+          Secret scanning in CI is worth adding as a backstop, but the better practice is to keep the secret out of the
+          tracked file in the first place.
+        </p>
+
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
+          <GitPullRequest className="mr-2" size={20} />
+          9. Review Config Pull Requests Like Deployment Changes
+        </h3>
+        <p>When JSON controls runtime behavior, the review bar should look closer to an infrastructure change than a typo fix.</p>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>Is the diff mostly semantic, or is it hiding inside a formatting rewrite?</li>
+          <li>Does the new value have the right unit, range, and environment scope?</li>
+          <li>Will the change behave safely for existing users or only for fresh deployments?</li>
+          <li>Did schema validation, tests, and secret checks pass on the pull request?</li>
+          <li>Is rollback obvious if the config change needs to be reversed quickly?</li>
+        </ul>
+
+        <h3 className="mt-6 flex items-center text-xl font-semibold">
+          <Settings className="mr-2" size={20} />
+          10. Document Generated JSON and Human Authoring Rules
+        </h3>
+        <p>
+          Some JSON files are hand-edited. Others are generated from a higher-level source. Mixing those workflows
+          without documentation creates churn. If a file is generated, document the source of truth and the exact
+          regeneration command. If humans need comments or richer authoring features, consider maintaining JSONC, TOML,
+          or YAML as source and emitting stable JSON as build output.
+        </p>
+        <p>
+          The important part is determinism: whether humans or tools edit the source, the committed JSON should be
+          reproducible and serialized the same way every time.
+        </p>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Waypoints className="mr-2" size={24} />
+          When a Merge Conflict Happens Anyway
+        </h2>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Reformat both sides to the canonical style first so you are resolving intent, not whitespace.</li>
+          <li>Check whether the conflict is really caused by an unnecessary array or mixed environment values.</li>
+          <li>Resolve the JSON, then run schema validation and any config-related tests before committing.</li>
+          <li>Write a commit message that explains the behavior you kept, not just that you fixed a conflict.</li>
+        </ol>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
           <Shield className="mr-2" size={24} />
-          Conclusion
+          Bottom Line
         </h2>
         <p>
-          Managing JSON configuration files in version control doesn&apos;t have to be a source of frustration. By
-          implementing consistent formatting, sorting keys, structuring files logically, rigorously excluding sensitive
-          data, and leveraging automated tools, teams can significantly reduce merge conflicts, improve the readability
-          of changes, and maintain a clear and reliable configuration history. Adopting these practices will make
-          working with JSON configurations a much smoother part of your development workflow.
+          The best version control strategy for JSON configuration files is to reduce ambiguity before Git ever has to
+          help you. Canonical formatting, conflict-resistant structure, schema validation, and strict secret handling
+          produce smaller diffs, safer reviews, and fewer merge surprises. Add Git-specific diff and merge tuning on top
+          of that foundation, and JSON config stops feeling fragile.
         </p>
       </div>
     </>

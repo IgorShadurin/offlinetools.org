@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Batch Processing Multiple JSON Files in Desktop Formatters | Offline Tools",
   description:
-    "Learn how to efficiently process and format multiple JSON files in bulk using desktop tools and techniques.",
+    "Batch format, validate, and rewrite multiple JSON files on Windows, macOS, and Linux using jq, PowerShell, or Python.",
 };
 
 export default function BatchJsonProcessingArticle() {
@@ -13,245 +13,216 @@ export default function BatchJsonProcessingArticle() {
 
       <div className="space-y-6">
         <p>
-          Handling large numbers of JSON files can be time-consuming, especially when you need to apply the same
-          formatting, validation, or transformation rules to each one. While many online and desktop JSON formatters
-          excel at single-file operations, tackling a batch of files often requires a different approach. Let&apos;s
-          explore how you can manage batch processing for your JSON data using desktop tools and related techniques.
+          If you need to format or validate dozens of JSON files, a normal desktop formatter is usually the wrong tool
+          for the job. The practical desktop workflow is to keep a formatter for spot checks, then use a batch-friendly
+          tool like <code>jq</code>, PowerShell, or Python to process an entire folder safely and consistently.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Batch Process JSON?</h2>
-        <p>Processing JSON files in bulk offers significant advantages:</p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <h2 className="text-2xl font-semibold">Quick Answer</h2>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              Use <strong>jq</strong> if you want the fastest cross-platform way to pretty-print, validate, sort keys,
+              or script repeatable JSON jobs.
+            </li>
+            <li>
+              Use <strong>PowerShell</strong> if you are on Windows and want a native workflow without adding another
+              tool.
+            </li>
+            <li>
+              Use <strong>Python</strong> if you need custom logic such as renaming fields, normalizing values, or
+              splitting output into a new folder structure.
+            </li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">When Batch Processing Helps</h2>
+        <p>Batch processing multiple JSON files is useful when you need to:</p>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <strong>Efficiency:</strong> Saves time and effort compared to opening, formatting, and saving each file
-              individually.
-            </li>
-            <li>
-              <strong>Consistency:</strong> Ensures the same formatting rules are applied across all files, maintaining
-              uniformity.
-            </li>
-            <li>
-              <strong>Automation:</strong> Enables integration into workflows for recurring tasks.
-            </li>
-            <li>
-              <strong>Scalability:</strong> Handles hundreds or thousands of files more effectively.
-            </li>
+            <li>Reformat an exported dataset so every file uses the same indentation and structure.</li>
+            <li>Validate a folder before committing it to Git or shipping it with an app build.</li>
+            <li>Clean up machine-generated JSON that is hard to diff or review in its raw form.</li>
+            <li>Apply the same transformation to every file without opening them one by one in a GUI.</li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Challenges with Standard Desktop GUI Formatters</h2>
+        <h2 className="text-2xl font-semibold mt-8">Why GUI Desktop Formatters Hit a Limit</h2>
         <p>
-          Traditional desktop JSON formatters with graphical user interfaces (GUIs) are primarily designed for
-          interactive work on one file at a time. They are excellent for quick edits, validation, and formatting of a
-          single document. However, they typically lack built-in features for selecting an entire folder of files and
-          processing them in one go. Clicking through dialogue boxes for each file quickly becomes impractical.
+          A desktop JSON formatter is still useful when you want to inspect one broken file, compare structure, or make
+          a quick edit. It becomes inefficient once the work is repetitive. Most GUI formatters do not offer reliable
+          folder-wide processing, error logging, or safe overwrite behavior, so batch work usually shifts to command
+          line tools or a short script.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Achieving Batch Processing: Beyond Simple GUIs</h2>
+        <h2 className="text-2xl font-semibold mt-8">Best Option for Most Desktops: jq</h2>
         <p>
-          While a simple GUI formatter might not offer a &quot;Process Folder&quot; button, batch processing is
-          definitely achievable on your desktop. It often involves leveraging more powerful tools or combining the
-          capabilities of different applications, frequently involving the command line.
+          For most people, <code>jq</code> is the simplest answer. Current official jq documentation shows that it is
+          available for Windows, macOS, and Linux, pretty-prints JSON by default with <code>.</code>, supports{" "}
+          <code>--indent</code> for spacing, <code>--sort-keys</code> for stable object ordering, and{" "}
+          <code>--stream</code> when individual files are too large to load normally.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">1. Using Scriptable Editors/IDEs</h3>
+        <h3 className="text-xl font-semibold mt-6">Format into a New Folder First</h3>
         <p>
-          Many advanced text editors and Integrated Development Environments (IDEs) like VS Code, Sublime Text, or Atom
-          have extensions or built-in scripting capabilities that can be used to automate tasks across multiple files in
-          a project folder.
+          Writing to a separate output directory is safer than overwriting files in place. It gives you an easy diff,
+          lets you spot failures, and reduces the chance of damaging a whole dataset with one bad command.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">How it works (Concept):</h4>
-          <ol className="list-decimal pl-6 space-y-2 mt-2">
-            <li>Install a relevant JSON formatting/linting extension.</li>
-            <li>
-              Use the editor&apos;s built-in command palette or scripting feature to apply the formatter to all files in
-              a directory.
-            </li>
-            <li>
-              Some editors allow recording macros or writing simple scripts (e.g., in Python, JavaScript) to iterate
-              through files and apply formatting commands.
-            </li>
-          </ol>
-          <p className="mt-2 text-sm italic">
-            Specific implementation varies greatly depending on the editor and extensions used.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">2. Command-Line Tools (Most Common & Powerful)</h3>
-        <p>
-          This is where batch processing truly shines for JSON. Command-line tools are designed for automation and can
-          easily be scripted to process many files sequentially or in parallel. They are available on Windows, macOS,
-          and Linux.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Popular Command-Line JSON Tools:</h4>
-          <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>
-              <strong>jq:</strong> A lightweight and flexible command-line JSON processor. Excellent for filtering,
-              mapping, and transforming JSON data, and can be used for re-formatting.
-            </li>
-            <li>
-              <strong>Python:</strong> The built-in <code>json</code> library is powerful. You can write a simple script
-              to walk through directories and process files.
-            </li>
-            <li>
-              <strong>Node.js:</strong> Using the <code>fs</code> module and <code>JSON.parse</code>/
-              <code>JSON.stringify</code>, a JavaScript script can achieve similar results.
-            </li>
-          </ul>
-        </div>
-
-        <h4 className="text-lg font-medium mt-6">Example: Using jq for Batch Formatting</h4>
-        <p>
-          Imagine you have a directory containing multiple JSON files that need formatting. Let&apos;s call this
-          directory &quot;my_json_files&quot; and format all the JSON files with 4-space indentation.
-        </p>
-        <p className="text-sm mt-2">On Linux/macOS/Windows (using Git Bash or similar):</p>
         <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
           <pre>
-            {`# Loop through all .json files in the directory
-# Use jq '.' to parse and print the JSON (which formats it)
-# Use > tmp_file and mv to overwrite the original file safely
+            {`mkdir -p formatted
+
 for file in my_json_files/*.json; do
-  echo "Processing $file"
-  jq '.' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+  base=$(basename "$file")
+  echo "Formatting $base"
+  jq --indent 2 --sort-keys '.' "$file" > "formatted/$base" || {
+    echo "Failed: $file" >&2
+  }
 done`}
           </pre>
         </div>
-        <p className="text-sm mt-2">On Windows Command Prompt (cmd.exe):</p>
+        <p className="mt-2 text-sm">
+          That command validates each file as it formats it. Files that fail to parse are skipped, and{" "}
+          <code>--sort-keys</code> gives you cleaner diffs when object key order is inconsistent.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6">Overwrite in Place Only After Testing</h3>
+        <p>
+          If you really want to rewrite the originals, write to a temporary file first and replace the original only
+          after <code>jq</code> succeeds.
+        </p>
         <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
           <pre>
-            {`FOR %f IN (my_json_files\\*.json) DO (
-    echo Processing %f
-    jq "." "%f" > "%f.tmp" && MOVE /Y "%f.tmp" "%f"
-)`}
+            {`for file in my_json_files/*.json; do
+  tmp="$file.tmp"
+  jq --indent 2 '.' "$file" > "$tmp" && mv "$tmp" "$file"
+done`}
           </pre>
         </div>
-        <p className="text-sm mt-2">On Windows PowerShell:</p>
+        <p className="mt-2 text-sm">
+          If you use a native <code>jq.exe</code> from WSL, MSYS2, or Cygwin, the current jq manual also notes that{" "}
+          <code>--binary</code> can prevent unwanted newline conversion on Windows.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Native Windows Batch Formatting with PowerShell</h2>
+        <p>
+          If you want a Windows-native approach, PowerShell can parse and re-emit JSON without installing jq. The main
+          gotcha is depth: current Microsoft documentation says <code>ConvertTo-Json</code> defaults to{" "}
+          <code>-Depth 2</code>, which is too shallow for many real files, so set a higher depth explicitly.
+        </p>
         <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
           <pre>
-            {`Get-ChildItem "my_json_files\\*.json" | ForEach-Object {
-    Write-Host "Processing $($_.Name)"
-    jq "." $_.FullName | Set-Content -Path $_.FullName -Force
+            {`$inputDir = ".\\my_json_files"
+$outputDir = ".\\formatted"
+
+New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
+
+Get-ChildItem $inputDir -Filter *.json | ForEach-Object {
+  Write-Host "Formatting $($_.Name)"
+
+  try {
+    $json = Get-Content -Raw $_.FullName | ConvertFrom-Json
+    $outFile = Join-Path $outputDir $_.Name
+
+    $json |
+      ConvertTo-Json -Depth 100 |
+      Set-Content -Path $outFile -Encoding utf8
+  }
+  catch {
+    Write-Warning "Skipping $($_.FullName): $($_.Exception.Message)"
+  }
 }`}
           </pre>
         </div>
         <p className="mt-2 text-sm">
-          The <code>jq '.'</code> command simply parses the input JSON and prints it back to standard output, which by
-          default indents it nicely. You can use <code>jq --indent N '.'</code> for specific indentation levels.
+          This is a good fit for normal configuration files and API payloads. If your JSON uses edge cases such as keys
+          that differ only by letter case, current PowerShell documentation notes that <code>ConvertFrom-Json</code>{" "}
+          with <code>-AsHashtable</code> can help, but <code>jq</code> is usually the safer formatter when you want
+          exact, predictable batch output.
         </p>
 
-        <h4 className="text-lg font-medium mt-6">Example: Using Python for Batch Formatting</h4>
-        <p>A short Python script provides more flexibility for complex tasks.</p>
+        <h2 className="text-2xl font-semibold mt-8">Python for Custom Batch Rules</h2>
+        <p>
+          Python is the best fallback when formatting is only one step in a larger cleanup job. You can normalize
+          values, rename keys, split files into subfolders, or keep a detailed error log without adding much code.
+        </p>
         <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto my-2">
           <pre>
-            {`import json
-import os
+            {`from pathlib import Path
+import json
 
-input_directory = 'my_json_files'
-output_directory = 'my_json_files_formatted' # Optional: save to a new folder
+input_dir = Path("my_json_files")
+output_dir = Path("formatted")
+output_dir.mkdir(exist_ok=True)
 
-if not os.path.exists(output_directory):
-    os.makedirs(output_directory)
+for path in input_dir.glob("*.json"):
+    print(f"Formatting {path.name}")
 
-for filename in os.listdir(input_directory):
-    if filename.endswith('.json'):
-        filepath = os.path.join(input_directory, filename)
-        output_filepath = os.path.join(output_directory, filename) # Change to filepath to overwrite
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"Skipping {path.name}: {exc}")
+        continue
 
-        print(f"Processing {filename}")
-
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f_in:
-                data = json.load(f_in)
-
-            # Use json.dumps with indent parameter for formatting
-            # Change sort_keys=True if you want keys sorted alphabetically
-            formatted_json = json.dumps(data, indent=4, ensure_ascii=False)
-
-            with open(output_filepath, 'w', encoding='utf-8') as f_out:
-                f_out.write(formatted_json)
-
-        except json.JSONDecodeError as e:
-            print(f"Error decoding JSON in {filename}: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred with {filename}: {e}")
-
-print("Batch processing complete.")`}
+    output_path = output_dir / path.name
+    output_path.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False) + "\\n",
+        encoding="utf-8",
+    )`}
           </pre>
         </div>
         <p className="mt-2 text-sm">
-          Save this as a <code>.py</code> file (e.g., <code>format_batch.py</code>) and run it using
-          <code>python format_batch.py</code> in your terminal. This script reads each JSON file, parses it, formats it
-          using <code>json.dumps</code> with <code>indent=4</code>, and saves it.
+          This keeps the job simple: load each file, validate it by parsing, then write clean JSON back out. Add{" "}
+          <code>sort_keys=True</code> if stable key ordering matters more than preserving original order.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">3. Dedicated Desktop Batch Processors (Less Common for JSON)</h3>
-        <p>
-          While common for image or document processing, dedicated desktop applications specifically for batch
-          processing JSON files are less prevalent as GUI tools. However, some data transformation or ETL (Extract,
-          Transform, Load) desktop applications might offer JSON processing capabilities within a batch workflow. These
-          are typically more complex and general-purpose than simple formatters.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Choosing the Right Approach</h2>
-        <p>The best method for batch processing JSON depends on your needs:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc pl-6 space-y-3">
-            <li>
-              <strong>For simple formatting/validation:</strong> Command-line tools like <code>jq</code> are often the
-              fastest and most efficient. They are excellent for applying a consistent style.
-            </li>
-            <li>
-              <strong>For transformations/complex logic:</strong> Scripting languages like Python or Node.js provide the
-              most flexibility to read, modify, and write JSON data programmatically.
-            </li>
-            <li>
-              <strong>For occasional batch tasks within an existing tool:</strong> If you already use a powerful
-              editor/IDE, its built-in or extension capabilities might suffice for smaller batches or simple tasks.
-            </li>
-          </ul>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Tips for Batch Processing</h2>
+        <h2 className="text-2xl font-semibold mt-8">Validation and Troubleshooting</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Backup your files:</strong> Always work on copies or save to a new directory until you are confident
-            in your process. Mistakes in batch scripts can easily damage many files.
+            <strong>Validate without rewriting:</strong> run <code>jq -e &apos;.&apos; file.json &gt; /dev/null</code>{" "}
+            or use <code>Get-Content -Raw file.json | ConvertFrom-Json &gt; $null</code> in PowerShell.
           </li>
           <li>
-            <strong>Test on a subset:</strong> Before processing thousands of files, test your script or command on a
-            small sample set.
+            <strong>Test a small sample first:</strong> a folder of 500 files can turn one bad assumption into 500 bad
+            rewrites.
           </li>
           <li>
-            <strong>Handle errors:</strong> Ensure your script or command handles potential errors gracefully (e.g.,
-            invalid JSON syntax in a file). The Python example includes basic error handling.
+            <strong>Keep input and output separate at first:</strong> it makes review and rollback much easier.
           </li>
           <li>
-            <strong>Consider encoding:</strong> Be mindful of file encoding (usually UTF-8 for JSON) when reading and
-            writing files programmatically.
+            <strong>Watch out for JSON Lines:</strong> <code>.jsonl</code> or newline-delimited JSON is not the same as
+            one JSON document per file, so use a line-oriented workflow instead of normal pretty-print commands.
+          </li>
+          <li>
+            <strong>Use streaming for huge files:</strong> jq&apos;s current manual recommends <code>--stream</code> when
+            a single file is too large for normal in-memory processing.
+          </li>
+          <li>
+            <strong>Stay consistent on encoding:</strong> write UTF-8 output unless you have a specific downstream
+            requirement.
           </li>
         </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
-          <h3 className="text-lg font-medium">Batch Validation:</h3>
-          <p className="mt-2">
-            Batch processing isn&apos;t just for formatting. You can easily adapt the command-line or scripting
-            approaches to validate multiple JSON files against a schema using tools like <code>ajv-cli</code> (Node.js)
-            or Python libraries like <code>jsonschema</code>.
-          </p>
+          <h2 className="text-2xl font-semibold">Which Approach Should You Choose?</h2>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>Choose <strong>jq</strong> for the fastest repeatable batch formatter across Windows, macOS, and Linux.</li>
+            <li>
+              Choose <strong>PowerShell</strong> if you already work in Windows terminals and mostly need formatting and
+              validation.
+            </li>
+            <li>
+              Choose <strong>Python</strong> when the job includes formatting plus business logic, renaming, filtering,
+              or reporting.
+            </li>
+            <li>Keep a <strong>desktop formatter</strong> for one-off inspection, not as the main batch engine.</li>
+          </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          While simple desktop GUI JSON formatters are fantastic for single-file tasks, batch processing multiple JSON
-          files efficiently typically involves stepping into the world of command-line tools or scripting. Tools like{" "}
-          <code>jq</code>, Python, or Node.js offer the power and flexibility needed to automate formatting, validation,
-          and transformation workflows across entire directories of JSON data. By mastering these techniques, you can
-          save significant time and ensure consistency when dealing with large JSON datasets on your desktop.
+          Batch processing multiple JSON files on a desktop is less about finding a magical formatter button and more
+          about choosing the right batch tool. For most teams, that means <code>jq</code> first, PowerShell on Windows
+          when you want a native option, and Python when the workflow needs custom logic beyond formatting.
         </p>
       </div>
     </>

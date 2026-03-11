@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Implementing Auto-Save Functionality with Local Storage | Offline Tools",
+  title: "Implementing Auto-Save with Local Storage | Offline Tools",
   description:
-    "Learn how to implement simple auto-save functionality in your web applications using the browser's Local Storage.",
+    "Build reliable browser auto-save with localStorage: restore drafts, debounce writes, handle quota errors, sync tabs, and know when a server save is required.",
 };
 
 export default function AutoSaveLocalStorageArticle() {
@@ -13,360 +13,319 @@ export default function AutoSaveLocalStorageArticle() {
 
       <div className="space-y-6">
         <p>
-          Auto-save is a user-friendly feature that automatically saves a user&apos;s progress periodically or when
-          changes occur, preventing data loss due to accidents, browser crashes, or navigation. Implementing it can
-          significantly improve the user experience for applications involving data entry or content creation. Local
-          Storage is a simple browser API that provides a persistent client-side key-value store, making it a convenient
-          option for implementing basic auto-save features, especially for offline or single-user scenarios.
+          If you want users to recover a draft after a refresh, crash, or accidental tab close,{" "}
+          <code>localStorage</code> is still one of the fastest ways to add auto-save. It works well for text, JSON
+          input, and small form drafts because it is built into the browser and requires no backend to get started.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">What is Auto-Save?</h2>
         <p>
-          Auto-save automatically saves the user&apos;s work without requiring them to manually click a &quot;Save&quot;
-          button. This can happen based on a timer (e.g., every 30 seconds) or in response to user actions (e.g., after
-          typing stops for a few seconds, or when an input field loses focus). The goal is to ensure that even if
-          something unexpected happens, the user doesn&apos;t lose their most recent changes.
+          The important boundary is this: <code>localStorage</code> is a browser-side recovery layer, not a true
+          replacement for a database or web server. Use it to protect in-progress work inside the same browser. If the
+          draft needs to follow the user across devices, survive browser data clearing, support collaboration, or store
+          large payloads, you need server-side saving as well.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Use Local Storage?</h2>
-        <p>Local Storage offers several advantages for basic auto-save implementations:</p>
+        <h2 className="text-2xl font-semibold mt-8">Quick Answer: Is Browser Auto-Save Enough?</h2>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <span className="font-medium">Simplicity:</span> It has a very straightforward API (
-              <code>localStorage.setItem()</code>, <code>localStorage.getItem()</code>,
-              <code>localStorage.removeItem()</code>).
+              <span className="font-medium">Use only localStorage</span> when the goal is simple same-browser draft
+              recovery for a form, note, JSON editor, or settings screen.
             </li>
             <li>
-              <span className="font-medium">Persistence:</span> Data stored in Local Storage persists even after the
-              browser is closed and reopened, unlike Session Storage.
+              <span className="font-medium">Add a web-server save</span> when the draft must sync across devices,
+              belong to a logged-in account, support team editing, or count as business-critical data.
             </li>
             <li>
-              <span className="font-medium">Client-Side:</span> It works entirely in the user&apos;s browser, requiring
-              no server-side logic for basic saving and loading. This makes it ideal for offline use cases or simple
-              form saving.
-            </li>
-            <li>
-              <span className="font-medium">Synchronous:</span> Operations are synchronous, making the code flow easy to
-              understand (though this can be a drawback for large data).
-            </li>
-          </ul>
-        </div>
-        <p>However, Local Storage also has limitations:</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <span className="font-medium">Storage Limit:</span> Typically limited to 5-10 MB per origin (domain).
-            </li>
-            <li>
-              <span className="font-medium">Synchronous Operations:</span> Can block the main browser thread if dealing
-              with large amounts of data.
-            </li>
-            <li>
-              <span className="font-medium">String Only:</span> Data must be stored as strings. Objects need to be
-              serialized (usually using JSON.stringify) and parsed (JSON.parse).
-            </li>
-            <li>
-              <span className="font-medium">No Structure:</span> It&apos;s a simple key-value store; there&apos;s no
-              built-in database structure or querying capability.
-            </li>
-            <li>
-              <span className="font-medium">Security:</span> Data is accessible via JavaScript on the same origin.
-              Don&apos;t store sensitive information.
+              <span className="font-medium">Use a hybrid approach</span> for most real apps: save locally every few
+              hundred milliseconds for instant recovery, and persist to the server on larger milestones such as explicit
+              save, publish, step completion, or a periodic background sync.
             </li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Basic Implementation Steps</h2>
-        <p>Implementing auto-save with Local Storage involves these core steps:</p>
+        <h2 className="text-2xl font-semibold mt-8">What Matters About localStorage Today</h2>
+        <p>
+          A lot of auto-save examples stop at <code>setItem()</code> and <code>getItem()</code>. In practice, these
+          browser details are what decide whether the feature feels reliable or brittle.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <span className="font-medium">It is small by design.</span> Current MDN guidance describes Web Storage as
+              roughly 10 MiB total, commonly split as about 5 MiB for <code>localStorage</code> and 5 MiB for{" "}
+              <code>sessionStorage</code> per origin. Treat that as a hard ceiling for drafts, not a target.
+            </li>
+            <li>
+              <span className="font-medium">Writes are synchronous.</span> Large or frequent writes can block the main
+              thread and make typing feel laggy. Debounce saves and keep the payload compact.
+            </li>
+            <li>
+              <span className="font-medium">It is origin-specific.</span> <code>https://example.com</code> and{" "}
+              <code>http://example.com</code> do not share the same storage. If you test across different hosts or
+              protocols, drafts will not appear where you expect.
+            </li>
+            <li>
+              <span className="font-medium">Private browsing is temporary.</span> In private or incognito windows,
+              <code>localStorage</code> is cleared when the last private tab closes.
+            </li>
+            <li>
+              <span className="font-medium">Availability can still fail.</span> Some browsers or privacy settings may
+              expose the API but make writes unavailable, so production code should treat storage access as something
+              that can throw.
+            </li>
+            <li>
+              <span className="font-medium">file:// is not predictable.</span> Browser behavior for local files is not
+              consistently defined. If you are testing auto-save locally, run the page behind a local web server such as{" "}
+              <code>http://localhost</code> instead of opening the HTML file directly.
+            </li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">A Reliable Auto-Save Flow</h2>
         <ol className="list-decimal pl-6 space-y-3 my-4">
-          <li className="font-medium">Identify the data that needs to be saved.</li>
-          <li className="font-medium">Choose a unique key for storing the data in Local Storage.</li>
-          <li className="font-medium">
-            Implement a save function that serializes the data and stores it using
-            <code>localStorage.setItem(key, serializedData)</code>.
+          <li>
+            <span className="font-medium">Restore early.</span> Read the draft when the component mounts and validate
+            the shape before trusting it.
           </li>
-          <li className="font-medium">
-            Implement a load function that retrieves the data using
-            <code>localStorage.getItem(key)</code>, deserializes it, and populates the application state or UI.
+          <li>
+            <span className="font-medium">Debounce writes.</span> Save after the user pauses typing rather than on every
+            keypress.
           </li>
-          <li className="font-medium">Trigger the save function based on user actions or a timer.</li>
-          <li className="font-medium">Call the load function when the page or component initializes.</li>
+          <li>
+            <span className="font-medium">Flush on tab hide.</span> Listen for <code>visibilitychange</code> so you can
+            write one last copy when the page is backgrounded. Do not rely on <code>beforeunload</code> as your primary
+            save mechanism.
+          </li>
+          <li>
+            <span className="font-medium">Handle bad data and quota errors.</span> Corrupted JSON and storage limits are
+            normal edge cases, not rare exceptions.
+          </li>
+          <li>
+            <span className="font-medium">Decide how multiple tabs behave.</span> If the same draft can be opened in two
+            tabs, listen for the <code>storage</code> event and resolve conflicts with timestamps or prompts.
+          </li>
+          <li>
+            <span className="font-medium">Show status.</span> A small message such as &quot;Saving...&quot; or
+            &quot;Saved locally&quot; makes the feature easier to trust.
+          </li>
         </ol>
 
-        <h2 className="text-2xl font-semibold mt-8">Handling Data Types (JSON)</h2>
+        <h2 className="text-2xl font-semibold mt-8">Example: Auto-Saving a JSON Draft in React</h2>
         <p>
-          Since Local Storage only stores strings, you&apos;ll typically store complex data structures (like objects or
-          arrays) as JSON strings.
+          This example is closer to what you would ship in a real editor. It restores a saved JSON draft, debounces
+          writes, saves once more when the page becomes hidden, and listens for updates from another tab.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Saving an object:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`const dataToSave = { text: 'User input', count: 5 };
-localStorage.setItem('myAppData', JSON.stringify(dataToSave));`}
-            </pre>
-          </div>
 
-          <h3 className="text-lg font-medium mt-4">Loading an object:</h3>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`const savedDataString = localStorage.getItem('myAppData');
-if (savedDataString) {
+              {`"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+const STORAGE_KEY = "json-formatter:draft:v2";
+
+type Draft = {
+  text: string;
+  updatedAt: number;
+};
+
+function parseDraft(raw: string | null): Draft | null {
+  if (!raw) return null;
+
   try {
-    const loadedData = JSON.parse(savedDataString);
-    console.log(loadedData); // Use the loaded data
-  } catch (e) {
-    console.error('Error parsing saved data:', e);
-    // Handle potential parsing errors (e.g., corrupted data)
-  }
-} else {
-  console.log('No saved data found.');
-  // Handle no saved data (e.g., initialize with defaults)
-}`}
-            </pre>
-          </div>
-        </div>
+    const parsed = JSON.parse(raw) as Partial<Draft>;
 
-        <h2 className="text-2xl font-semibold mt-8">Triggering Saves: Events and Debouncing</h2>
-        <p>
-          Directly saving on every keystroke or change can be inefficient, especially for large inputs. A common
-          technique is to use debouncing or throttling.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: Saving on input change with Debounce</h3>
-          <p className="text-sm mb-2">(Note: A proper debounce function needs to be implemented or imported)</p>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`import { useState, useEffect, useCallback } from 'react';
-// Assume 'debounce' function is available, e.g., from lodash or custom utility
-
-const STORAGE_KEY = 'articleDraft';
-
-function ArticleEditor() {
-  const [content, setContent] = useState('');
-
-  // Load content from storage on mount
-  useEffect(() => {
-    const savedContent = localStorage.getItem(STORAGE_KEY);
-    if (savedContent) {
-      setContent(savedContent);
+    if (typeof parsed.text !== "string" || typeof parsed.updatedAt !== "number") {
+      return null;
     }
-  }, []); // Empty dependency array ensures this runs only once on mount
 
-  // Define the save function
-  const saveContent = useCallback((currentContent: string) => {
-    console.log('Saving...', currentContent.substring(0, 50) + '...');
-    localStorage.setItem(STORAGE_KEY, currentContent);
-  }, []); // Dependencies for useCallback if needed, none here
-
-  // Create a debounced version of the save function
-  // Adjust debounce time (e.g., 500ms) as needed
-  const debouncedSave = useCallback(debounce(saveContent, 500), [saveContent]);
-
-  // Handle input changes and trigger the debounced save
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newContent = event.target.value;
-    setContent(newContent);
-    debouncedSave(newContent); // Pass the latest value
-  };
-
-  // Optional: Save on component unmount (e.g., before navigating away)
-  useEffect(() => {
-    // Cleanup function runs on unmount
-    return () => {
-      // Ensure the latest content is saved
-      saveContent(content); // Save the current state value
-    };
-  }, [content, saveContent]); // Depends on content and saveContent
-
-  return (
-    <div>
-      <textarea
-        value={content}
-        onChange={handleChange}
-        placeholder="Start typing..."
-        rows={10}
-        className="w-full p-2 border rounded"
-      />
-      <p className="text-sm mt-2">Content auto-saved to browser storage.</p>
-    </div>
-  );
+    return { text: parsed.text, updatedAt: parsed.updatedAt };
+  } catch {
+    return null;
+  }
 }
 
-// Simple debounce implementation example (you might use a library)
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
-  return (...args: Parameters<T>) => {
-    const later = () => {
-      timeout = null;
-      func(...args);
-    };
-    if (timeout !== null) {
-      clearTimeout(timeout);
+export default function JsonDraftEditor() {
+  const [text, setText] = useState("");
+  const [status, setStatus] = useState("Idle");
+  const lastSavedAt = useRef(0);
+
+  useEffect(() => {
+    const draft = parseDraft(window.localStorage.getItem(STORAGE_KEY));
+    if (!draft) return;
+
+    setText(draft.text);
+    lastSavedAt.current = draft.updatedAt;
+    setStatus("Draft restored");
+  }, []);
+
+  useEffect(() => {
+    if (!text) {
+      window.localStorage.removeItem(STORAGE_KEY);
+      setStatus("Idle");
+      return;
     }
-    timeout = setTimeout(later, wait);
-  };
+
+    setStatus("Saving...");
+
+    const timeoutId = window.setTimeout(() => {
+      try {
+        const draft: Draft = { text, updatedAt: Date.now() };
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        lastSavedAt.current = draft.updatedAt;
+        setStatus("Saved locally");
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "QuotaExceededError") {
+          setStatus("Draft is too large for localStorage");
+          return;
+        }
+
+        setStatus("Save failed");
+      }
+    }, 400);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [text]);
+
+  useEffect(() => {
+    const flushOnHide = () => {
+      if (document.visibilityState !== "hidden" || !text) return;
+
+      try {
+        const draft: Draft = { text, updatedAt: Date.now() };
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        lastSavedAt.current = draft.updatedAt;
+      } catch {
+        // Ignore final-write failures here and surface errors in normal saves.
+      }
+    };
+
+    document.addEventListener("visibilitychange", flushOnHide);
+    return () => document.removeEventListener("visibilitychange", flushOnHide);
+  }, [text]);
+
+  useEffect(() => {
+    const syncFromOtherTabs = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) return;
+
+      const incoming = parseDraft(event.newValue);
+      if (!incoming || incoming.updatedAt <= lastSavedAt.current) return;
+
+      setText(incoming.text);
+      lastSavedAt.current = incoming.updatedAt;
+      setStatus("Updated from another tab");
+    };
+
+    window.addEventListener("storage", syncFromOtherTabs);
+    return () => window.removeEventListener("storage", syncFromOtherTabs);
+  }, []);
+
+  return (
+    <section className="space-y-3">
+      <textarea
+        value={text}
+        onChange={(event) => setText(event.target.value)}
+        rows={12}
+        placeholder='Paste or type JSON here'
+        className="w-full rounded border p-3"
+      />
+
+      <p className="text-sm text-gray-600">{status}</p>
+    </section>
+  );
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            In this React/Next.js example, we use `useState` for the content, `useEffect` to load on mount and save on
-            unmount, `useCallback` to memoize the save function and its debounced version, and `debounce` to limit how
-            often the save operation runs during typing.
-          </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Loading Data on Page Load</h2>
-        <p>
-          When the user returns to the page, you need to load the saved data from Local Storage to restore their
-          previous state. This should typically happen as early as possible in the component lifecycle (e.g., within a{" "}
-          <code>useEffect</code> hook with an empty dependency array in React).
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Example: Loading in useEffect</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`useEffect(() => {
-  const savedDataString = localStorage.getItem('myAppData');
-  if (savedDataString) {
-    try {
-      const loadedData = JSON.parse(savedDataString);
-      // Update state or UI with loadedData
-      setData(loadedData); // Example using a state setter
-      console.log('Loaded data from storage.');
-    } catch (e) {
-      console.error('Failed to parse saved data:', e);
-      // Optionally clear storage or show an error message
-      // localStorage.removeItem('myAppData');
-    }
-  }
-}, []); // Empty array means run only once on mount`}
-            </pre>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Considerations and Best Practices</h2>
+        <h2 className="text-2xl font-semibold mt-8">Why This Pattern Holds Up Better</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Storage Limits:</span> Be mindful of the 5-10 MB limit. Local Storage is not
-            suitable for storing large files or extensive application data.
+            <span className="font-medium">It stores structured data.</span> Wrapping the text with an{" "}
+            <code>updatedAt</code> timestamp makes tab conflict handling and debugging much easier.
           </li>
           <li>
-            <span className="font-medium">Data Structure Evolution:</span> If your data structure changes over time,
-            you&apos;ll need logic to handle older versions of saved data when loading (migration or graceful
-            degradation).
+            <span className="font-medium">It validates restored state.</span> A malformed or outdated draft should not
+            crash the editor during load.
           </li>
           <li>
-            <span className="font-medium">User Experience:</span> Provide visual feedback (e.g., a &quot;Saving...&quot;
-            or &quot;Saved&quot; message) to the user so they know the auto-save is working.
+            <span className="font-medium">It avoids per-keystroke writes.</span> Debouncing is often the difference
+            between a smooth editor and one that feels sticky on slower devices.
           </li>
           <li>
-            <span className="font-medium">Error Handling:</span> Implement robust
-            <code>try...catch</code> blocks around <code>JSON.parse()</code> as saved data can become corrupted.
-          </li>
-          <li>
-            <span className="font-medium">Privacy/Security:</span> Local Storage is not encrypted by default and is
-            accessible to any script on your domain. Do not store sensitive personal information or credentials.
-          </li>
-          <li>
-            <span className="font-medium">Alternative Storage:</span> For larger data or more complex needs, consider
-            alternatives like IndexedDB, which provides a full-fledged client-side database.
-          </li>
-          <li>
-            <span className="font-medium">Hybrid Save:</span> Often, Local Storage auto-save is used in conjunction with
-            a server-side save mechanism. Local Storage provides temporary, quick recovery, while server-side saves
-            provide permanent storage and syncing across devices.
+            <span className="font-medium">It respects multi-tab editing.</span> The <code>storage</code> event only
+            fires in the other tabs on the same origin, which makes it useful for keeping those views in sync.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">Complete (Simplified) Example</h2>
-        <p>Here&apos;s a more complete example demonstrating saving and loading for a simple text area.</p>
+        <h2 className="text-2xl font-semibold mt-8">When You Need a Real Server Save</h2>
+        <p>
+          Searchers looking for something like &quot;auto save webserver&quot; usually want to know whether browser
+          storage is enough on its own. The practical answer is no if any of the following are true:
+        </p>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`import { useState, useEffect } from 'react';
-
-const SIMPLE_STORAGE_KEY = 'simpleTextData';
-
-export default function SimpleAutoSaveEditor() {
-  const [text, setText] = useState('');
-
-  // Load data on component mount
-  useEffect(() => {
-    const savedText = localStorage.getItem(SIMPLE_STORAGE_KEY);
-    if (savedText !== null) {
-      setText(savedText);
-    }
-  }, []); // Runs only once on initial render
-
-  // Save data whenever 'text' state changes
-  // A real app might use debounce/throttle here
-  useEffect(() => {
-    // Avoid saving on initial mount before user interaction
-    // Could add a flag or check if text is different from initial load
-    console.log('Auto-saving text...');
-    localStorage.setItem(SIMPLE_STORAGE_KEY, text);
-  }, [text]); // Runs whenever 'text' state changes
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
-  };
-
-  // Optional: Clear saved data button
-  const handleClear = () => {
-    localStorage.removeItem(SIMPLE_STORAGE_KEY);
-    setText(''); // Clear the input field as well
-    console.log('Saved data cleared.');
-  };
-
-  return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-semibold">Simple Auto-Save Editor</h2>
-      <p>
-        Type something below. Your progress is automatically saved in your
-        browser&apos;s Local Storage as you type (without debounce in this simple example).
-        Refresh the page to see the data load back.
-      </p>
-      <textarea
-        value={text}
-        onChange={handleChange}
-        placeholder="Start typing..."
-        rows={8}
-        className="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-      />
-      <button
-        onClick={handleClear}
-        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-      >
-        Clear Saved Data
-      </button>
-      <p className="text-sm text-gray-600 dark:text-gray-400">
-        Data is stored locally in your browser. It is not sent to a server.
-      </p>
-    </div>
-  );
-}
-`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            This example uses two <code>useEffect</code> hooks: one for loading data on mount and another for saving
-            data whenever the <code>text</code> state updates. For a real application, wrapping the save logic with
-            debounce or throttle is highly recommended to improve performance.
-          </p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>The user should see the same draft after logging in from another device.</li>
+            <li>The draft must survive cache clearing, browser profile changes, or device loss.</li>
+            <li>The data is shared with a team, reviewed by staff, or needs an audit trail.</li>
+            <li>The payload may exceed a few megabytes or include attachments.</li>
+            <li>The content is important enough that losing one browser profile is unacceptable.</li>
+          </ul>
         </div>
+
+        <p>
+          A solid hybrid design is to write to <code>localStorage</code> immediately for crash recovery, then send the
+          draft to your API in the background on a slower cadence or when the user reaches clear checkpoints. That gives
+          you fast local resilience without pretending the browser is your source of truth.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Common Failure Modes</h2>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <span className="font-medium">Auto-save works on localhost but not from a local file.</span> Run a local
+              web server instead of opening <code>file://</code> pages directly.
+            </li>
+            <li>
+              <span className="font-medium">The draft disappears in incognito mode.</span> That is expected when the
+              private browsing session ends.
+            </li>
+            <li>
+              <span className="font-medium">Typing gets slower as the draft grows.</span> The writes are synchronous;
+              debounce more aggressively or move larger drafts to IndexedDB.
+            </li>
+            <li>
+              <span className="font-medium">Users overwrite each other across tabs.</span> Add timestamp checks,
+              prompts, or single-tab ownership for the draft key.
+            </li>
+            <li>
+              <span className="font-medium">The saved JSON throws on restore.</span> Catch parse errors and clear or
+              migrate invalid drafts instead of failing the entire page.
+            </li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Implementation Checklist</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Use a versioned storage key such as <code>json-formatter:draft:v2</code>.</li>
+          <li>Keep only the minimum data needed to restore the editor.</li>
+          <li>Debounce saves and show save status in the UI.</li>
+          <li>Catch <code>JSON.parse()</code> failures and <code>QuotaExceededError</code>.</li>
+          <li>Assume storage access can fail and keep a fallback path for critical drafts.</li>
+          <li>Test in a real browser origin such as <code>http://localhost</code> or production HTTPS.</li>
+          <li>Do not store secrets, tokens, or sensitive personal data in <code>localStorage</code>.</li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Implementing auto-save functionality with Local Storage is a straightforward way to enhance the robustness and
-          user experience of client-side web applications. It&apos;s particularly effective for scenarios where data
-          persistence within a single browser is sufficient, like drafts of articles, form progress, or simple settings.
-          While Local Storage has limitations regarding size and complexity, for basic auto-save needs, its simplicity
-          makes it an excellent tool. Remember to handle data serialization, employ techniques like debouncing for
-          performance, and always consider the security and privacy implications of storing data client-side.
+          Auto-save with <code>localStorage</code> is best treated as fast local draft recovery. It is excellent for
+          JSON editors, forms, and notes where users mainly need protection from refreshes and crashes inside the same
+          browser. Build it with debounced writes, validation, visibility-based flushing, and multi-tab awareness, then
+          add server-side persistence when the draft needs to become durable beyond that browser session.
         </p>
       </div>
     </>

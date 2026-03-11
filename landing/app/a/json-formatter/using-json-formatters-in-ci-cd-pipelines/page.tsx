@@ -2,21 +2,18 @@ import type { Metadata } from "next";
 import {
   CheckCircle,
   Code,
-  GitBranch,
-  Rocket,
-  Terminal,
   FileText,
+  GitBranch,
+  Terminal,
+  UserCheck,
   Workflow,
   Zap,
-  Columns,
-  UserCheck,
-  HeartHandshake,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Using JSON Formatters in CI/CD Pipelines",
   description:
-    "Learn how to integrate JSON formatters into your CI/CD pipelines for code consistency, readability, and automated checks.",
+    "A practical guide to running JSON formatting checks in CI/CD with Prettier, jq, pre-commit hooks, and GitHub Actions.",
 };
 
 export default function JsonFormattersCiCdArticle() {
@@ -25,125 +22,100 @@ export default function JsonFormattersCiCdArticle() {
       <h1 className="text-3xl font-bold mb-6">Using JSON Formatters in CI/CD Pipelines</h1>
 
       <p>
-        JSON (JavaScript Object Notation) is ubiquitous in modern software development. It's used for API responses,
-        configuration files, data storage, and much more. As projects grow and teams expand, maintaining consistent code
-        style becomes challenging, especially for data formats like JSON. This is where integrating JSON formatters into
-        your Continuous Integration/Continuous Deployment (CI/CD) pipelines becomes invaluable.
+        The most reliable pattern is simple: format JSON locally, then fail CI if anything reaches the pipeline
+        unformatted. In practice that usually means running{" "}
+        <a
+          href="https://prettier.io/docs/cli"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline dark:text-blue-400"
+        >
+          Prettier
+        </a>{" "}
+        with <code>--write</code> on developer machines and <code>--check</code> in CI. If you only need syntax
+        validation or want to re-indent generated JSON in a shell step,{" "}
+        <a
+          href="https://jqlang.org/manual/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline dark:text-blue-400"
+        >
+          jq
+        </a>{" "}
+        is still a useful option.
+      </p>
+      <p>
+        This guide focuses on what a search visitor usually needs: which command to run, where it belongs in the
+        pipeline, what to ignore, and how to avoid common CI failures.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-        <Code className="inline-block" /> What are JSON Formatters?
+        <Workflow className="inline-block" /> Recommended Setup
       </h2>
-      <p>
-        A JSON formatter, also known as a JSON linter or beautifier, is a tool that automatically adjusts the
-        whitespace, indentation, and structure of a JSON file according to a predefined set of rules. Its primary goal
-        is to make JSON data human-readable and consistently formatted across a project.
-      </p>
-      <p>Examples include:</p>
       <ul className="list-disc pl-6 space-y-2">
-        <li>
-          <a
-            href="https://prettier.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline dark:text-blue-400"
-          >
-            Prettier
-          </a>{" "}
-          (supports JSON along with many other formats)
-        </li>
-        <li>
-          <a
-            href="https://stedolan.github.io/jq/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline dark:text-blue-400"
-          >
-            jq
-          </a>{" "}
-          (a command-line JSON processor that can also format)
-        </li>
-        <li>Built-in formatters in IDEs (though CI/CD needs a command-line tool)</li>
-        <li>Various language-specific or dedicated command-line JSON tools.</li>
+        <li>Install a formatter in the repository so every developer and CI job uses the same version.</li>
+        <li>Run <code>prettier --write</code> locally or in a pre-commit hook to fix files before they are pushed.</li>
+        <li>Run <code>prettier --check</code> in CI so pull requests fail instead of silently reformatting code.</li>
+        <li>Commit a <code>.prettierignore</code> file so generated, vendored, or snapshot JSON does not create noise.</li>
+        <li>Use <code>jq</code> for generated artifacts or validation-only shell steps, not as a replacement for repo-wide style policy.</li>
       </ul>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-        <Workflow className="inline-block" /> Why Use Formatters in CI/CD?
+        <Code className="inline-block" /> Pick the Right Tool
       </h2>
-      <p>Integrating JSON formatting into your CI/CD pipeline offers several key benefits:</p>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <Columns className="inline-block text-green-600" /> Consistency and Readability
-      </h3>
       <p>
-        Ensures all JSON files in your codebase adhere to the same style guidelines. This makes the code easier to read
-        and understand for everyone on the team, regardless of their preferred editor settings.
+        For most application repositories, Prettier is the better default because it gives you one consistent style for
+        JSON and other text formats in the same codebase. It is especially useful when your repository already contains
+        JavaScript, TypeScript, Markdown, YAML, or JSON configuration.
       </p>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <GitBranch className="inline-block text-blue-600" /> Stable Diffs in Version Control
-      </h3>
       <p>
-        When everyone's editor automatically formats JSON differently, commits often include significant whitespace
-        changes alongside actual content changes. Standardized formatting minimizes these noisy diffs, making code
-        reviews quicker and less error-prone. You see only the *meaningful* changes.
+        <code>jq</code> is better suited to shell-heavy workflows: validating incoming JSON, reformatting machine-made
+        files during builds, or inspecting pipeline output while debugging. It pretty-prints JSON by default, but it is
+        not a team-wide formatting policy tool in the same way Prettier is.
       </p>
-      <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-        <p className="font-medium mb-2">Example: Before Formatting</p>
-        <pre>
-          <code className="language-json">{`{
-    "name": "Product A",
-  "price": 10.99,
-"tags": ["electronics", "gadget" ]
-}`}</code>
-        </pre>
-        <p className="font-medium mt-4 mb-2">Example: After Consistent Formatting</p>
-        <pre>
-          <code className="language-json">{`{
-  "name": "Product A",
-  "price": 10.99,
-  "tags": [
-    "electronics",
-    "gadget"
-  ]
-}`}</code>
-        </pre>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-          A formatter ensures everyone's code looks like the second example.
-        </p>
-      </div>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <CheckCircle className="inline-block text-emerald-600" /> Automated Validation and Error Detection
-      </h3>
       <p>
-        Many formatters will fail if the JSON is syntactically incorrect. Running the formatter in CI/CD acts as an
-        automatic linter, catching syntax errors before they are merged or deployed.
-      </p>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <Zap className="inline-block text-amber-600" /> Enforcing Standards Automatically
-      </h3>
-      <p>
-        Instead of relying on developers to remember to run formatters locally or hoping reviewers catch formatting
-        issues, the pipeline automatically checks and potentially enforces the standard. This saves time and avoids
-        friction during code reviews.
+        Whichever tool you choose, remember the boundary: formatting catches syntax and layout problems, but it does not
+        replace schema validation or application tests.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-        <Rocket className="inline-block" /> Where to Integrate Formatters in CI/CD
+        <Terminal className="inline-block text-purple-600" /> Check Mode vs Write Mode
       </h2>
-      <p>You can integrate JSON formatting checks at various stages of your development workflow and CI/CD pipeline:</p>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <UserCheck className="inline-block text-indigo-600" /> Pre-commit Hooks
-      </h3>
       <p>
-        <strong>Purpose:</strong> Catch formatting issues *before* the code is even committed. This is the earliest
-        point and saves CI/CD time.
+        This is the core distinction to get right. Use <code>--write</code> where it is safe to modify files. Use{" "}
+        <code>--check</code> where you want the job to fail and force the change back into the branch.
+      </p>
+      <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+        <h3 className="font-semibold mb-2">Typical commands</h3>
+        <pre>
+          <code className="language-bash">{`# Fix files locally
+npx prettier . --write
+
+# Fail CI if formatting drift is found
+npx prettier . --check
+
+# Target JSON-family files only
+npx prettier "**/*.{json,jsonc,json5}" --check`}</code>
+        </pre>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+          Prettier recommends quoting globs so the command behaves consistently across shells and operating systems.
+        </p>
+      </div>
+      <p>
+        If your pipeline uses <code>npm</code>, <code>pnpm</code>, or <code>yarn</code>, prefer the project-local
+        binary rather than downloading a transient formatter version during the build. That keeps local runs and CI
+        results aligned.
+      </p>
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
+        <UserCheck className="inline-block text-indigo-600" /> Pre-Commit Hooks Keep CI Quiet
+      </h2>
+      <p>
+        CI should be the enforcement layer, not the first place developers discover formatting issues. A pre-commit hook
+        fixes the easy cases before they become failed pull requests.
       </p>
       <p>
-        <strong>How:</strong> Use tools like{" "}
+        If you use{" "}
         <a
           href="https://pre-commit.com/"
           target="_blank"
@@ -151,159 +123,133 @@ export default function JsonFormattersCiCdArticle() {
           className="text-blue-600 hover:underline dark:text-blue-400"
         >
           pre-commit
-        </a>{" "}
-        (a framework) or configure Git hooks manually. The hook runs the formatter on staged files, either fixing them
-        automatically or failing the commit if they are not formatted correctly.
+        </a>
+        , a local hook is a clean way to run the formatter already installed in your repository:
       </p>
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-        <h4 className="font-semibold mb-2">
-          Example <code>.pre-commit-config.yaml</code> (using Prettier):
-        </h4>
+        <h3 className="font-semibold mb-2">
+          Example <code>.pre-commit-config.yaml</code>
+        </h3>
         <pre>
           <code className="language-yaml">{`repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0 # Use the latest version
+  - repo: local
     hooks:
-      - id: check-added-large-files
-      - id: check-yaml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-  - repo: https://github.com/prettier/prettier
-    rev: 3.2.5 # Use the latest version
-    hooks:
-      - id: prettier
-        # Only run on relevant file types
-        files: "\\.(json|json5|jsonc|yml|yaml|md|css|scss|less|html|jsx?|tsx?|vue|svelte)$"
-`}</code>
+      - id: prettier-json
+        name: prettier json
+        language: system
+        entry: npx prettier --write
+        files: \\.(json|jsonc|json5)$`}</code>
         </pre>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-          This configuration runs Prettier on specified file types, including JSON, before allowing a commit.
+          This relies on the project&apos;s installed Prettier version and only rewrites matching JSON files before the commit is created.
         </p>
       </div>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <Terminal className="inline-block text-purple-600" /> CI Build/Test Stage
-      </h3>
       <p>
-        <strong>Purpose:</strong> Ensure that no unformatted code makes it past the CI pipeline, even if pre-commit
-        hooks were bypassed or misconfigured. This acts as the final gate before merging.
+        If your team does not use pre-commit, the same idea works with Husky, lefthook, or any other Git-hook manager:
+        run <code>--write</code> before the commit, then keep <code>--check</code> in CI as the hard gate.
       </p>
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
+        <GitBranch className="inline-block text-blue-600" /> Minimal GitHub Actions Job
+      </h2>
       <p>
-        <strong>How:</strong> Add a step in your CI configuration (e.g., GitHub Actions, GitLab CI, Jenkins) that runs
-        the formatter in "check" or "diff" mode. This mode exits with a non-zero status if files are not formatted
-        correctly, causing the CI build to fail.
+        The exact CI provider matters less than the command. GitHub Actions is a common example, and the same pattern
+        maps directly to GitLab CI, CircleCI, Jenkins, or Buildkite: install dependencies, then run the formatter in
+        check mode.
       </p>
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-        <h4 className="font-semibold mb-2">Example CI Step (using Prettier check mode):</h4>
+        <h3 className="font-semibold mb-2">Example workflow</h3>
         <pre>
-          <code className="language-yaml">{`name: CI Pipeline
+          <code className="language-yaml">{`name: json-format-check
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.json"
+      - "**/*.jsonc"
+      - "**/*.json5"
+      - ".prettier*"
+      - "package.json"
+      - "package-lock.json"
 
 jobs:
-  build:
+  prettier:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20' # Or your preferred Node.js version
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-    - name: Install dependencies
-      run: npm ci # or yarn install, pnpm install
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Check JSON and other files formatting with Prettier
-      # The --check flag makes Prettier exit with a non-zero code
-      # if any files are not formatted correctly.
-      run: npx prettier --check "**/*.json" "**/*.{yml,yaml}" "**/*.md" # Add other relevant file types
-
-    # ... other build/test steps
-`}</code>
+      - name: Check JSON formatting
+        run: npx prettier "**/*.{json,jsonc,json5}" --check`}</code>
         </pre>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-          This GitHub Actions step will fail the build if <code>prettier --check</code> finds any formatting
-          inconsistencies in JSON or YAML files.
+          The <code>paths</code> filter keeps unrelated pushes from running the job, which matters in larger repositories.
         </p>
       </div>
-
-      <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-        <FileText className="inline-block text-red-600" /> Release/Deployment Stage (Less Common for Formatting)
-      </h3>
       <p>
-        <strong>Purpose:</strong> Ensure final build artifacts or configuration files are formatted correctly before
-        deployment.
+        For non-GitHub systems, keep the shell commands and drop the provider-specific YAML. That gives you the same
+        enforcement behavior without changing the underlying workflow design.
       </p>
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
+        <FileText className="inline-block text-red-600" /> When jq Is the Better Fit
+      </h2>
       <p>
-        <strong>How:</strong> Typically, formatting is a development/build concern. Running a formatter at the release
-        stage might be necessary if files are generated or modified during the build in a way that could mess up
-        formatting. However, it's usually better to ensure files are formatted earlier. You might use tools like{" "}
-        <code>jq</code> here to process/format generated JSON config files.
+        <code>jq</code> is ideal when a build step produces JSON and you want to validate or normalize it immediately.
+        It also works well in slim environments where adding the full JavaScript toolchain would be excessive.
       </p>
       <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-        <h4 className="font-semibold mb-2">Example: Formatting a Generated Config with jq</h4>
+        <h3 className="font-semibold mb-2">Useful jq patterns</h3>
         <pre>
-          <code className="language-bash">{`# Assume config.json was generated or modified
-cat config.json | jq . > config_formatted.json
-# Replace original or use the formatted version
-mv config_formatted.json config.json
-`}</code>
+          <code className="language-bash">{`# Validate JSON syntax in a CI step
+jq . build/output.json > /dev/null
+
+# Reformat a generated file safely
+tmp_file="$(mktemp)"
+jq . build/output.json > "$tmp_file" && mv "$tmp_file" build/output.json`}</code>
         </pre>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-          Using <code>jq .</code> is a common way to re-indent and format JSON from the command line.
+          Write to a temporary file and move it into place. Redirecting output back into the same file will truncate it.
         </p>
       </div>
+      <p>
+        The main limitation is that <code>jq</code> only knows about JSON structure. It will not apply the same
+        repository-wide style rules you use for other files, and it will not decide which generated directories should
+        be excluded from checks.
+      </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-        <HeartHandshake className="inline-block text-pink-600" /> Benefits for Different Roles
-      </h2>
-      <p>Integrating formatters benefits various stakeholders:</p>
-      <ul className="list-disc pl-6 space-y-2">
-        <li>
-          <strong>Developers:</strong> Don't have to manually format or argue about style. They can configure their IDEs
-          to format on save, and trust the CI/CD check as a safety net.
-        </li>
-        <li>
-          <strong>Code Reviewers:</strong> Reviews focus on logic and content, not whitespace or style issues, leading
-          to faster, more effective reviews.
-        </li>
-        <li>
-          <strong>Operations/DevOps:</strong> Ensures configuration files or data artifacts used in deployment are
-          consistent and easy to read/debug if necessary.
-        </li>
-        <li>
-          <strong>Project Managers:</strong> Reduced friction and time spent on style arguments, leading to smoother
-          development cycles.
-        </li>
-      </ul>
-
-      <h2 className="text-2xl font-semibold mt-8 mb-4 flex items-center gap-2">
-        <Zap className="inline-block text-red-600" /> Challenges and Considerations
+        <Zap className="inline-block text-amber-600" /> Common CI/CD Mistakes
       </h2>
       <ul className="list-disc pl-6 space-y-2">
         <li>
-          <strong>Tool Selection:</strong> Choose a formatter that supports JSON well and ideally other formats you use.
-          Prettier is a popular choice for its multi-format support and opinionated style.
+          <strong>Auto-fixing in CI:</strong> A formatter that rewrites files during CI hides the problem. For pull
+          requests, failing fast with <code>--check</code> is usually cleaner.
         </li>
         <li>
-          <strong>Configuration:</strong> Agree on formatting rules (indentation size, etc.) and configure the formatter
-          and CI/CD steps consistently. Store configuration files (e.g., <code>.prettierrc</code>) in the repository.
+          <strong>Formatting generated output:</strong> Exclude build artifacts, vendored content, and snapshots with{" "}
+          <code>.prettierignore</code> unless they are intentionally committed and reviewed.
         </li>
         <li>
-          <strong>Legacy Code:</strong> Applying formatting to a large existing codebase might result in a single,
-          massive commit with only formatting changes. It's often best to do this as a dedicated effort or apply
-          formatters incrementally if possible.
+          <strong>Unquoted globs:</strong> Shell expansion differs across environments. Quote file patterns to avoid
+          "works on my machine" failures.
         </li>
         <li>
-          <strong>Educating the Team:</strong> Ensure all developers understand why formatting is important and how to
-          use pre-commit hooks and IDE integrations to avoid CI failures.
+          <strong>Expecting formatting to validate meaning:</strong> A formatter can catch malformed JSON, but it will
+          not tell you whether the keys, types, or values are correct for your application.
         </li>
         <li>
-          <strong>Performance:</strong> For extremely large repositories, running a formatter on every file on every
-          commit/push might take time. Configure tools to run only on changed files (like pre-commit hooks do) or target
-          specific directories/file patterns in CI.
+          <strong>Running on the whole monorepo by default:</strong> Scope the job to relevant directories or changed
+          paths if runtime becomes noticeable.
         </li>
       </ul>
 
@@ -311,11 +257,10 @@ mv config_formatted.json config.json
         <CheckCircle className="inline-block text-blue-600" /> Conclusion
       </h2>
       <p>
-        Integrating JSON formatters into your CI/CD pipeline is a straightforward and effective way to improve code
-        quality, maintainability, and team collaboration. By automating style checks, you free up developers and
-        reviewers to focus on more important aspects of the code, reduce merge conflicts caused by inconsistent
-        formatting, and catch potential syntax errors early. It's a small investment in pipeline setup that pays
-        significant dividends in development efficiency and code health.
+        A good JSON formatting pipeline is deliberately boring: fix locally, check in CI, ignore the files that should
+        stay out of scope, and use <code>jq</code> only where shell-oriented JSON handling is actually the goal. That
+        setup keeps diffs clean, catches broken JSON early, and removes format arguments from code review without
+        overcomplicating the pipeline.
       </p>
     </article>
   );

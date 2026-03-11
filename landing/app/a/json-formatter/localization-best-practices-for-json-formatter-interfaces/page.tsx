@@ -10,324 +10,354 @@ import {
   Braces,
   SquareArrowRight,
   Settings,
-} from "lucide-react"; // Using only allowed icons
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Localization Best Practices for JSON Formatter Interfaces | Offline Tools",
-  description: "Learn how to effectively localize JSON formatter user interfaces for a global audience.",
+  description:
+    "A practical guide to localizing JSON formatter interfaces with correct lang and dir usage, Intl-based formatting, plural-aware messages, translated errors, and RTL testing.",
 };
 
 export default function LocalizationJsonFormatterArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <Languages className="w-8 h-8 text-blue-600" /> Localization Best Practices for JSON Formatter Interfaces
+      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold">
+        <Languages className="h-8 w-8 text-blue-600" /> Localization Best Practices for JSON Formatter Interfaces
       </h1>
 
       <div className="space-y-6">
         <p>
-          Building a user interface (UI) for formatting and displaying JSON data is common in web development,
-          especially for developer tools, APIs explorers, or configuration editors. While the core function of parsing
-          and formatting JSON is language-agnostic, the interface surrounding it is not. To make your JSON formatter
-          accessible and user-friendly for a global audience, proper localization is crucial. This article outlines key
-          best practices for localizing the UI of JSON formatters.
+          A localized JSON formatter should feel native to the user without changing the JSON itself. That boundary is
+          the core design rule: localize the interface, help text, validation feedback, derived previews, and settings;
+          keep the raw JSON payload untouched so copy, paste, validation, and debugging stay predictable across every
+          locale.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <ShieldAlert className="w-6 h-6 text-rose-600" /> Why Localize a JSON Formatter Interface?
-        </h2>
         <p>
-          Even if your application primarily targets developers, not all developers speak English fluently. Providing an
-          interface in their native language significantly improves usability and reduces cognitive load. Key benefits
-          include:
+          For most teams, the work is not translating a few buttons. It is deciding which text belongs to the product
+          shell, which values should remain machine-readable, how to handle RTL layouts, and how to avoid browser-only
+          parser messages that cannot be translated cleanly. This guide focuses on those decisions.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Improved Accessibility:</strong> Reaching a wider user base.
-          </li>
-          <li>
-            <strong>Enhanced User Experience:</strong> Making the tool feel intuitive and familiar.
-          </li>
-          <li>
-            <strong>Reduced Support Burden:</strong> Users can better understand labels and error messages.
-          </li>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Braces className="h-6 w-6 text-purple-600" /> What Search Users Usually Need
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Clear rules for what parts of a JSON formatter UI should and should not be localized.</li>
+          <li>Current guidance for language tags, text direction, and locale-aware formatting APIs.</li>
+          <li>Examples for translated status text, plural forms, and parser errors.</li>
+          <li>Testing advice for RTL languages, long strings, and fallback locales.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Braces className="w-6 h-6 text-purple-600" /> Key Areas to Localize
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <FileJson className="h-6 w-6 text-yellow-600" /> 1. Localize the Interface, Not the JSON Payload
         </h2>
         <p>
-          Localizing a JSON formatter UI involves more than just translating static text. You need to consider all
-          user-facing elements and data representations influenced by locale.
+          Users expect the editor, tree view controls, menus, and validation messages to appear in their language. They
+          do not expect a formatter to translate JSON keys, rewrite string values, or silently change number and date
+          literals inside the source panel.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <Tag className="w-5 h-5 text-green-600" /> UI Labels and Text
-        </h3>
-        <p>This is the most obvious part. All static text within the interface needs translation:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Button labels (e.g., "Format", "Copy JSON", "Clear")</li>
-          <li>Input area placeholders (e.g., "Paste JSON here...")</li>
-          <li>Section headings (e.g., "Input", "Output", "Options")</li>
-          <li>Tooltips and help text (e.g., "Automatically formats the JSON")</li>
-          <li>
-            Labels for JSON structure elements (e.g., "Object", "Array", "String", "Number", "Boolean", "Null", "Key",
-            "Value") - especially important if you use a tree view.
-          </li>
-          <li>Settings labels (e.g., "Indentation", "Sort Keys", "Show Line Numbers")</li>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Localize: buttons, labels, tooltips, empty states, settings, onboarding text, and error explanations.</li>
+          <li>Usually localize: inspector labels such as "Object", "Array", "String", or "Copied".</li>
+          <li>Do not localize: raw keys, raw string values, property order, punctuation, or whitespace in the source JSON.</li>
+          <li>Do not auto-convert numeric or date strings in the editor just because they look localizable.</li>
         </ul>
         <p>
-          <strong>Best Practice:</strong> Externalize all UI strings into resource files (like <code>.json</code>,{" "}
-          <code>.po</code>, or JavaScript objects) mapped by language keys. Use a localization library or framework
-          feature to manage translations dynamically.
+          If your formatter offers a richer inspector, show localized helper text next to the raw value instead of
+          modifying the original value. For example, display a human-readable date preview in a side panel while
+          preserving the exact ISO string in the editor.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Externalizing Labels (Conceptual)</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Practical Rule of Thumb</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
             <pre>
-              {`// src/locales/en.json
-{
-  "format_button": "Format",
-  "copy_button": "Copy JSON",
-  "input_placeholder": "Paste JSON here...",
-  "node_type_object": "Object",
-  "node_type_array": "Array",
-  "setting_indentation": "Indentation Level"
-}
+              {`Good:
+- "Format", "Copy", "Line 12", and "Invalid trailing comma" are translated.
+- A preview panel shows 1,234.56 or 1.234,56 based on locale.
 
-// src/locales/es.json
-{
-  "format_button": "Formatear",
-  "copy_button": "Copiar JSON",
-  "input_placeholder": "Pega JSON aquí...",
-  "node_type_object": "Objeto",
-  "node_type_array": "Array",
-  "setting_indentation": "Nivel de Indentación"
-}
-
-// In your component (conceptual usage with a translation function 't')
-// &lt;button&gt;{t('format_button')}&lt;/button&gt;
-// &lt;input placeholder={t('input_placeholder')} /&gt;
-// &lt;span&gt;Type: {t('node_type_object')}&lt;/span&gt;
-`}
+Avoid:
+- Translating {"status":"ok"} into another language inside the editor.
+- Rewriting "2026-03-10T14:00:00Z" into a localized date string in the source JSON.`}
             </pre>
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5 text-rose-600" /> Error Messages and Validation Feedback
-        </h3>
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Tag className="h-6 w-6 text-green-600" /> 2. Use Real Locale Metadata: `lang`, `dir`, and Canonical Tags
+        </h2>
         <p>
-          When users input invalid JSON, the formatter needs to provide clear feedback. These messages must also be
-          localized.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>"Invalid JSON structure"</li>
-          <li>"Unexpected token at line X, column Y"</li>
-          <li>Specific parsing errors</li>
-          <li>Validation errors if you add schema validation</li>
-        </ul>
-        <p>
-          <strong>Best Practice:</strong> Translate all potential error messages. For messages that include dynamic
-          values (like line/column numbers), use placeholders in your translation strings and replace them at runtime.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Localizing Error Messages (Conceptual)</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// src/locales/en.json
-{
-  "error_invalid_json": "Invalid JSON structure",
-  "error_unexpected_token": "Unexpected token '{&#x7b;token&#x7d;}' at line {&#x7b;line&#x7d;}, column {&#x7b;column&#x7d;}"
-}
-
-// src/locales/de.json
-{
-  "error_invalid_json": "Ungültige JSON-Struktur",
-  "error_unexpected_token": "Unerwartetes Token '{&#x7b;token&#x7d;}' in Zeile {&#x7b;line&#x7d;}, Spalte {&#x7b;column&#x7d;}"
-}
-
-// In your parsing error handler (conceptual)
-// catch (e) {
-//   if (e.type === 'unexpected_token') {
-//     displayError(t('error_unexpected_token', { token: e.token, line: e.line, column: e.column }));
-//   } else {
-//     displayError(t('error_invalid_json'));
-//   }
-// }
-`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-orange-600" /> Dates, Times, and Numbers (if displayed)
-        </h3>
-        <p>
-          JSON itself doesn't have native Date or complex Number types beyond floating-point. However, if your formatter
-          provides enhanced views (e.g., detects common date string formats and displays them prettily, or handles large
-          numbers), their formatting should be locale-aware.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Number formatting (decimal separators, thousands separators)</li>
-          <li>Date and time string interpretation and display (e.g., "MM/DD/YYYY" vs "DD.MM.YYYY")</li>
-        </ul>
-        <p>
-          <strong>Best Practice:</strong> Use the browser's built-in{" "}
+          The{" "}
           <a
-            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl"
+            href="https://www.w3.org/International/questions/qa-html-language-declarations"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline"
           >
-            <code>Intl</code>
+            W3C guidance on HTML language declarations
           </a>{" "}
-          object (<code>Intl.NumberFormat</code>, <code>Intl.DateTimeFormat</code>) or a dedicated internationalization
-          library to format numbers and dates according to the user's locale.
+          is still the right baseline: declare the language of the page with a valid language tag such as{" "}
+          <code>en</code>, <code>en-GB</code>, or <code>pt-BR</code>. Keep language and writing direction separate.
+          A locale does not automatically tell the browser everything about bidirectional layout.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Locale-Aware Number Formatting (Conceptual)</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Assuming 'value' is a number from JSON, 'locale' is the user's current locale (e.g., 'en-US', 'de-DE')
-// const formatter = new Intl.NumberFormat(locale);
-// const formattedNumber = formatter.format(value);
-// &lt;span&gt;{formattedNumber}&lt;/span&gt;
-
-// Example Output:
-// For value = 12345.678 and locale = 'en-US': 12,345.678
-// For value = 12345.678 and locale = 'de-DE': 12.345,678
-`}
-            </pre>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Locale-Aware Date Formatting (Conceptual)</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`// Assuming 'dateString' is a parsable date string from JSON, 'locale' is the user's locale
-// const date = new Date(dateString); // Be mindful of parsing date strings reliably!
-// const formatter = new Intl.DateTimeFormat(locale);
-// const formattedDate = formatter.format(date);
-// &lt;span&gt;{formattedDate}&lt;/span&gt;
-
-// Example Output:
-// For date = new Date('2023-10-27') and locale = 'en-US': 10/27/2023
-// For date = new Date('2023-10-27') and locale = 'de-DE': 27.10.2023
-`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <SquareArrowRight className="w-5 h-5 text-teal-600" /> Text Direction (RTL Support)
-        </h3>
         <p>
-          For languages like Arabic or Hebrew, text flows from Right-to-Left (RTL). Your UI layout might need
-          adjustments to accommodate this.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Layout mirroring (e.g., sidebars, buttons, text alignment)</li>
-          <li>Input/output area text direction</li>
-        </ul>
-        <p>
-          <strong>Best Practice:</strong> Design your CSS and layout components to handle both LTR and RTL. Use CSS
-          logical properties (<code>margin-inline-start</code>, <code>padding-inline-end</code>) instead of physical
-          properties (<code>margin-left</code>, <code>padding-right</code>) where possible. Set the HTML{" "}
-          <code>dir</code> attribute based on the current locale.
+          The{" "}
+          <a
+            href="https://www.w3.org/International/questions/qa-html-dir"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            W3C article on the <code>dir</code> attribute
+          </a>{" "}
+          recommends setting base direction explicitly for RTL interfaces and using <code>dir="auto"</code> when the
+          direction of user-supplied text is unknown.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-blue-600" /> Plurals and Context
-        </h3>
-        <p>Some messages might depend on quantities (e.g., "Found 1 error" vs "Found 5 errors") or context.</p>
-        <p>
-          <strong>Best Practice:</strong> Use localization libraries that support pluralization rules for different
-          languages. Avoid string concatenation for sentences; structure your messages with placeholders for dynamic
-          parts.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Example: Pluralization (Conceptual)</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Example: Locale and Direction Setup</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
             <pre>
-              {`// src/locales/en.json
-{
-  "error_count": "{&#x7b;count, plural, one {Found # error} other {Found # errors}}"
-}
+              {`const requestedLocale = userChoice ?? navigator.languages?.[0] ?? "en";
+const locale = Intl.getCanonicalLocales(requestedLocale)[0] ?? "en";
+const isRtl = ["ar", "fa", "he", "ur"].some((prefix) => locale.startsWith(prefix));
 
-// src/locales/ru.json (Russian has multiple plural forms)
-{
-  "error_count": "{&#x7b;count, plural, one {Найдена # ошибка} few {Найдено # ошибки} many {Найдено # ошибок} other {Найдено # ошибки}}"
-}
+// App shell
+// <html lang={locale} dir={isRtl ? "rtl" : "ltr"}>
 
-// In your component (conceptual)
-// &lt;p&gt;{t('error_count', { count: numberOfErrors })}&lt;/p&gt;
-`}
+// User-entered text where direction may vary by content
+// <textarea dir="auto" aria-label={t("editor.input_label")} />`}
             </pre>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Settings className="w-6 h-6 text-zinc-600" /> Implementation Considerations
-        </h2>
-
-        <h3 className="text-xl font-semibold mt-6">Locale Detection and Switching</h3>
-        <p>How will your application determine the user's preferred language? Common methods include:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Browser language settings (<code>navigator.language</code>)
-          </li>
-          <li>User preference stored in local storage or a cookie</li>
-          <li>
-            Server-side detection based on <code>Accept-Language</code> header
-          </li>
-          <li>A language switcher control in the UI</li>
-        </ul>
-        <p>Provide a clear way for users to change the language if the automatic detection isn't desired or correct.</p>
-
-        <h3 className="text-xl font-semibold mt-6">Testing</h3>
-        <p>Thoroughly test your localized interface.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Test with languages that have varying text lengths (German words can be long!).</li>
-          <li>Test with RTL languages to ensure layout is correct.</li>
-          <li>Test with languages that have complex pluralization rules.</li>
-          <li>Ensure dynamic data (numbers, dates, placeholders) are correctly inserted into translated strings.</li>
-          <li>
-            Check that all UI elements are actually getting translated strings and not showing keys or default text.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
-          <CodeXml className="w-5 h-5 text-cyan-600" /> Framework/Library Support
-        </h3>
         <p>
-          Most modern frontend frameworks (React, Vue, Angular) and backend frameworks (Next.js, Express with i18n
-          middleware) have established patterns and libraries for internationalization and localization (i18n/l10n). Use
-          these tools to simplify string management, locale detection, and formatting.
-        </p>
-        <p>
-          For a Next.js application like this one, built-in internationalization support can handle routing and locale
-          detection based on configuration. Libraries like <code>react-i18next</code> or <code>formatjs</code> are
-          common choices for managing translations within React components.
+          In CSS, prefer logical properties such as <code>margin-inline-start</code>, <code>padding-inline-end</code>,
+          and <code>border-inline-start</code> over left/right rules. That keeps the formatter layout, gutters, and
+          side panels much easier to mirror for RTL languages.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <FileJson className="w-6 h-6 text-yellow-600" /> Focus on the Interface, Not the JSON Data Itself
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Calendar className="h-6 w-6 text-orange-600" /> 3. Use `Intl` for Derived Views, Never for Raw JSON Rewrites
         </h2>
         <p>
-          Remember that JSON data itself is just text representing structured values. The keys and string values within
-          the JSON are typically *not* localized by the formatter UI. Your localization efforts should focus on the
-          *presentation* of that data and the surrounding controls and messages, not attempting to translate the user's
-          data content.
+          The modern JavaScript internationalization surface lives in the{" "}
+          <a
+            href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            <code>Intl</code> APIs documented by MDN
+          </a>
+          . If your formatter shows readable previews for numbers, timestamps, lists, or currencies, let <code>Intl</code>{" "}
+          handle locale rules instead of hard-coding separators or date layouts.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Use <code>Intl.NumberFormat</code> for numeric previews and counters.</li>
+          <li>Use <code>Intl.DateTimeFormat</code> only after you have confidently parsed a real date value.</li>
+          <li>Use <code>Intl.ListFormat</code> or <code>Intl.DisplayNames</code> for supporting UI text when needed.</li>
+          <li>Keep source JSON values unchanged in the editor and copy buffer.</li>
+        </ul>
+
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Example: Localized Preview, Raw Source Preserved</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              {`const numberPreview = new Intl.NumberFormat(locale, {
+  maximumFractionDigits: 2,
+}).format(12345.678);
+
+const datePreview = new Intl.DateTimeFormat(locale, {
+  dateStyle: "medium",
+  timeStyle: "short",
+}).format(new Date("2026-03-10T14:00:00Z"));
+
+// Source pane:   12345.678
+// Preview pane:  12,345.68   or   12.345,68
+// Source pane:   "2026-03-10T14:00:00Z"
+// Preview pane:  Mar 10, 2026, 2:00 PM   or locale equivalent`}
+            </pre>
+          </div>
+        </div>
+
+        <p>
+          Be conservative with automatic date detection. Strings like <code>03/04/2026</code> are ambiguous across
+          locales, so it is safer to localize only clearly structured values such as ISO 8601 timestamps or values the
+          user explicitly marks as dates.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <MessageSquare className="h-6 w-6 text-blue-600" /> 4. Translate Messages with Plural-Aware Patterns
+        </h2>
         <p>
-          Localizing the interface of a JSON formatter is a valuable investment in user experience and accessibility. By
-          externalizing text, handling dynamic content with locale-aware formatting, localizing error messages, and
-          considering text directionality, you can create a tool that is truly helpful and welcoming to developers
-          worldwide. Leverage existing i18n/l10n patterns and libraries provided by your chosen development stack to
-          streamline the process.
+          Count-based text is where naive localization breaks fastest. English has simple singular/plural behavior, but
+          many languages do not. MDN&apos;s{" "}
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            <code>Intl.PluralRules</code> reference
+          </a>{" "}
+          is a useful reminder that plural categories vary by locale.
+        </p>
+        <p>
+          The safest pattern is to store full messages, not fragments. Avoid building text with string concatenation
+          such as <code>"Found " + count + " errors"</code>. Use a message format that supports placeholders and plural
+          rules.
+        </p>
+
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Example: Translation Resource Shape</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              {`{
+  "actions": {
+    "format": "Format",
+    "copy": "Copy JSON"
+  },
+  "status": {
+    "errors_found": "{count, plural, one {Found # error} other {Found # errors}}",
+    "characters_selected": "{count, plural, one {# character selected} other {# characters selected}}"
+  },
+  "errors": {
+    "invalid_json": "The JSON is not valid.",
+    "trailing_comma": "Remove the trailing comma before continuing."
+  }
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <p>
+          This structure also helps translators because each string has a stable purpose and enough context to avoid
+          awkward wording in short UI surfaces.
+        </p>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <ShieldAlert className="h-6 w-6 text-rose-600" /> 5. Normalize Parser Errors Before You Translate Them
+        </h2>
+        <p>
+          One common mistake in localized developer tools is displaying the raw exception text from the runtime parser.
+          Those messages are often inconsistent across engines, difficult to translate, and too technical for many
+          users. A better approach is to map parse failures to your own stable error codes, then localize the final
+          message.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Capture the failure type in an internal code such as <code>unexpected_token</code> or <code>trailing_comma</code>.</li>
+          <li>Extract structured details such as line, column, and token where possible.</li>
+          <li>Render the final message from your translation catalog.</li>
+          <li>Keep a secondary technical detail field only if advanced users need the raw parser output for debugging.</li>
+        </ul>
+
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Example: Stable Error Mapping</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              {`const errors = {
+  unexpected_token: "Unexpected token near line {line}, column {column}.",
+  trailing_comma: "Trailing commas are not allowed in standard JSON.",
+  invalid_root: "JSON must start with an object, array, string, number, boolean, or null.",
+};
+
+// UI output example:
+// "Unexpected token near line 12, column 5."
+// "Trailing commas are not allowed in standard JSON."`}
+            </pre>
+          </div>
+        </div>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <SquareArrowRight className="h-6 w-6 text-teal-600" /> 6. Design for RTL, Mixed Scripts, and Long Strings
+        </h2>
+        <p>
+          JSON itself is full of punctuation, Latin keywords, and symbols. Once you add Arabic, Hebrew, or mixed
+          left-to-right and right-to-left labels around it, weak layout decisions become obvious fast.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Mirror layout with logical CSS properties instead of custom RTL overrides everywhere.</li>
+          <li>Test iconography that implies direction, especially arrows, expanders, breadcrumbs, and inline actions.</li>
+          <li>Allow more room for long translated settings labels and helper text.</li>
+          <li>Use <code>dir="auto"</code> for user-entered snippets or annotation fields with unknown direction.</li>
+          <li>Verify line-number gutters, badges, and inline validation markers remain readable in RTL mode.</li>
+        </ul>
+        <p>
+          Also test mixed-script cases such as an Arabic UI rendering English JSON keys or an English UI displaying
+          user data in Hebrew. These are normal real-world cases for debugging tools.
+        </p>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <Settings className="h-6 w-6 text-zinc-600" /> 7. Treat Locale Choice, Fallback, and Testing as Product Features
+        </h2>
+        <p>
+          Automatic locale detection is only a starting point. Use browser preferences or the <code>Accept-Language</code>{" "}
+          header to choose an initial locale, but always let the user override it. Persist that choice and use a clear
+          fallback chain such as <code>pt-BR -&gt; pt -&gt; en</code> so partial translations do not create a broken UI.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Store a user-selected locale in a durable preference such as a cookie or profile setting.</li>
+          <li>Keep untranslated strings obvious in development so missing keys do not ship silently.</li>
+          <li>Test at least one RTL locale, one CJK locale, and one locale with complex plural rules.</li>
+          <li>Check mobile widths, narrow side panels, and dialog layouts with long translations.</li>
+          <li>Run accessibility checks with screen readers after localization because label order often changes.</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center gap-2 text-2xl font-semibold">
+          <CodeXml className="h-6 w-6 text-cyan-600" /> 8. Recommended Content Model for a JSON Formatter
+        </h2>
+        <p>
+          Teams often get into trouble when translation files mirror component names instead of user tasks. A task-based
+          structure is easier to maintain and easier for translators to understand.
+        </p>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Example: Task-Oriented Translation Keys</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              {`{
+  "editor": {
+    "input_label": "Input JSON",
+    "output_label": "Formatted output",
+    "placeholder": "Paste JSON here"
+  },
+  "actions": {
+    "format": "Format",
+    "minify": "Minify",
+    "copy": "Copy",
+    "clear": "Clear"
+  },
+  "status": {
+    "copied": "Copied to clipboard.",
+    "formatted_lines": "{count, plural, one {Formatted # line} other {Formatted # lines}}"
+  },
+  "errors": {
+    "invalid_json": "The JSON is not valid.",
+    "unexpected_token": "Unexpected token near line {line}, column {column}.",
+    "depth_limit": "The input is too deeply nested to display safely."
+  },
+  "settings": {
+    "indent_size": "Indent size",
+    "sort_keys": "Sort object keys",
+    "show_line_numbers": "Show line numbers"
+  }
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <p>
+          This model keeps labels, statuses, errors, and settings separate, which makes both product review and
+          translation QA much easier.
+        </p>
+
+        <h2 className="mt-8 text-2xl font-semibold">Conclusion</h2>
+        <p>
+          Good localization for a JSON formatter is mostly about boundaries and consistency. Preserve raw JSON exactly,
+          expose language and direction correctly, use <code>Intl</code> for derived formatting, translate stable
+          message patterns instead of parser internals, and test RTL and fallback behavior early. If you do that, the
+          interface will feel local without becoming unpredictable.
         </p>
       </div>
     </>

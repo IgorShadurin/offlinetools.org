@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { Lock, Shield, Bug, AlertTriangle, CheckCircle, Code, ListChecks, Server } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Code,
+  ExternalLink,
+  ListChecks,
+  Lock,
+  Server,
+  Shield,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Secure Code Review for JSON Parsing Libraries | Offline Tools",
   description:
-    "A comprehensive guide for developers on how to conduct secure code reviews of JSON parsing logic and libraries to prevent common vulnerabilities.",
+    "Practical secure code review checklist for JSON parsing libraries: strict parsing, duplicate-key handling, size and depth limits, numeric precision, schema validation, and modern Next.js review points.",
 };
 
 export default function SecureJsonParsingReview() {
@@ -12,559 +21,294 @@ export default function SecureJsonParsingReview() {
     <>
       <h1 className="text-3xl font-bold mb-6 flex items-center space-x-2">
         <Lock className="w-8 h-8 text-primary" />
-        <span>Secure Code Review for JSON Parsing</span>
+        <span>Secure Code Review for JSON Parsing Libraries</span>
       </h1>
 
       <div className="space-y-8">
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
             <Shield className="w-6 h-6 text-primary" />
-            <span>Why Secure JSON Parsing Matters</span>
+            <span>What A Secure Review Should Prove</span>
           </h2>
           <p>
-            JSON (JavaScript Object Notation) is ubiquitous for data exchange. While seemingly simple, parsing untrusted
-            JSON input securely is critical. Flaws in JSON parsing can expose applications to various risks, including:
+            A strong review is not just &quot;does parsing fail cleanly?&quot; It should prove that untrusted JSON is
+            handled with predictable parser behavior, bounded resource usage, strict post-parse validation, and safe
+            downstream use. That matters because current interoperability guidance still calls out edge cases many teams
+            miss: duplicate object names are ambiguous, parsers may impose their own limits, and exact integers above{" "}
+            <code>2^53 - 1</code> are not reliably portable across common JSON stacks.
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
-            <li>
-              <span className="font-medium">Injection Attacks:</span> Although less common than SQL or Command
-              Injection, parsing can interact with parts of an application vulnerable to injection if not handled
-              correctly (e.g., using parsed data directly in dynamic code execution like `eval` or in database queries
-              without proper sanitization).
-            </li>
-            <li>
-              <span className="font-medium">Denial of Service (DoS):</span> Specially crafted JSON documents can consume
-              excessive memory or CPU resources, leading to application crashes or unresponsiveness. This includes
-              overly deep nesting, extremely large structures, or resource-intensive key calculations (hash collisions).
-            </li>
-            <li>
-              <span className="font-medium">Data Leaks:</span> Improper error handling during parsing might reveal
-              sensitive information about the application's structure or backend state.
-            </li>
-            <li>
-              <span className="font-medium">Type Confusion:</span> Some parsers might be lenient with types or allow
-              unexpected type coercion, which could be exploited if the application code doesn't strictly validate types
-              *after* parsing.
-            </li>
+            <li>Reject or explicitly define ambiguous input such as duplicate keys and non-standard syntax.</li>
+            <li>Bound cost before business logic with request-size, nesting-depth, and collection-size limits.</li>
+            <li>Validate structure and allowed fields after parsing instead of trusting parser success.</li>
+            <li>Review how parsed values reach logs, templates, queries, merges, and authorization logic.</li>
           </ul>
           <p className="mt-4">
-            A secure code review process helps identify these potential pitfalls, whether you are reviewing the code
-            that uses a JSON parsing library or reviewing the parsing library itself (though the latter is a more
-            advanced task).
+            The standards worth checking against are{" "}
+            <a
+              href="https://www.rfc-editor.org/rfc/rfc8259"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline underline-offset-4"
+            >
+              RFC 8259 <ExternalLink className="inline w-4 h-4" />
+            </a>{" "}
+            for JSON itself,{" "}
+            <a
+              href="https://www.rfc-editor.org/rfc/rfc7493"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline underline-offset-4"
+            >
+              RFC 7493 (I-JSON) <ExternalLink className="inline w-4 h-4" />
+            </a>{" "}
+            for safer interoperability rules, and{" "}
+            <a
+              href="https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline underline-offset-4"
+            >
+              OWASP Input Validation guidance <ExternalLink className="inline w-4 h-4" />
+            </a>{" "}
+            for application-layer validation.
           </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
-            <AlertTriangle className="w-6 h-6 text-primary" />
-            <span>Common Vulnerabilities in JSON Parsing</span>
-          </h2>
-          <p>Let&apos;s dive into specific areas where vulnerabilities often hide:</p>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">
-            <Bug className="inline w-5 h-5 mr-2 text-red-500" />
-            <span>1. Resource Consumption (DoS)</span>
-          </h3>
-          <p>
-            JSON structures can be nested arbitrarily deep or contain very large arrays/objects. Without limits, parsing
-            these can lead to stack overflows (deep nesting) or excessive memory allocation (large structures).
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">Example Scenario (Conceptual):</h4>
-            <p>
-              An attacker sends JSON like <code>[[[...[[]]...]]]</code> with 100,000 levels of nesting or an array like{" "}
-              <code>[null, null, ..., null]</code> with millions of elements.
-            </p>
-            <h4 className="text-lg font-medium mt-4 mb-2">What to look for:</h4>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Does the parser or application code limit maximum nesting depth?</li>
-              <li>Are there limits on the total size of the input JSON string?</li>
-              <li>Are there limits on the maximum number of elements in arrays or properties in objects?</li>
-              <li>
-                For parsers handling very large inputs, do they use streaming or SAX-like approaches instead of loading
-                the whole structure into memory?
-              </li>
-            </ul>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">
-            <Bug className="inline w-5 h-5 mr-2 text-red-500" />
-            <span>2. Code Execution via `eval` (Historical but relevant)</span>
-          </h3>
-          <p>
-            Historically, some approaches to parsing JSON in JavaScript involved using <code>eval()</code>. This is
-            extremely dangerous as it allows arbitrary code execution if the input JSON contains JavaScript code.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">Example Vulnerable Code:</h4>
-            <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-              <pre>
-                {`// ** DO NOT USE THIS - THIS IS VULNERABLE **
-function parseJsonUnsafely(jsonString) {
-  try {
-    // Attacker can inject arbitrary JS code here!
-    const data = eval('(' + jsonString + ')');
-    return data;
-  } catch (e) {
-    console.error("Parsing error:", e);
-    return null;
-  }
-}`}
-              </pre>
-            </div>
-            <p className="mt-2 font-bold text-red-600 dark:text-red-400">
-              <AlertTriangle className="inline w-4 h-4 mr-1" /> Modern, secure JSON parsers (like `JSON.parse` in JS/TS)
-              do NOT use `eval`. Ensure your library doesn&apos;t.
-            </p>
-            <h4 className="text-lg font-medium mt-4 mb-2">What to look for:</h4>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>
-                Does the parser implementation (if reviewing the library) or surrounding code use `eval`, `Function`, or
-                similar dynamic execution functions?
-              </li>
-              <li>
-                Is the input JSON processed in any way (e.g., string replacement) *before* being passed to the parser,
-                which could enable injection?
-              </li>
-            </ul>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">
-            <Bug className="inline w-5 h-5 mr-2 text-red-500" />
-            <span>3. Prototype Pollution</span>
-          </h3>
-          <p>
-            Some JavaScript-based object merging or cloning utilities that process JSON-like structures can be
-            vulnerable to Prototype Pollution. An attacker might inject keys like <code>__proto__</code> or{" "}
-            <code>constructor.prototype</code> to add or modify properties on built-in JavaScript object prototypes,
-            affecting seemingly unrelated parts of the application. While not strictly a *parser* issue, it's a common
-            post-parsing vulnerability when merging/processing the resulting object.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">Example Vulnerable Pattern (Conceptual post-parsing):</h4>
-            <p>
-              If you have a function that recursively merges properties from a source object (parsed JSON) into a target
-              object without checking key names, malicious JSON like{" "}
-              <code>&#x7b;&quot;__proto__&quot;:&#x7b;&quot;isAdmin&quot;:true&#x7d;&#x7d;</code>
-              could potentially add an <code>isAdmin</code> property to <em>all</em> objects.
-            </p>
-            <h4 className="text-lg font-medium mt-4 mb-2">What to look for:</h4>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>
-                When processing the parsed JSON object, are there merging or cloning functions that recursively copy
-                properties?
-              </li>
-              <li>
-                Do these functions explicitly check for or reject `__proto__`, `constructor`, and `prototype` keys?
-              </li>
-              <li>Is the application logic susceptible to unexpected properties being added to objects?</li>
-            </ul>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">
-            <Bug className="inline w-5 h-5 mr-2 text-red-500" />
-            <span>4. External Entity Inclusion / XXE-like Issues</span>
-          </h3>
-          <p>
-            JSON itself has no standard mechanism for external entities (unlike XML). However, some custom or extended
-            "JSON" formats or libraries might introduce similar concepts or features that could lead to Server-Side
-            Request Forgery (SSRF) or information disclosure if they attempt to fetch data based on parsed content. This
-            is rare for standard JSON libraries but possible in specialized parsers.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">What to look for:</h4>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Does the parser library support any non-standard JSON extensions?</li>
-              <li>
-                Do any string values within the parsed JSON trigger external lookups or file reads in the application
-                code?
-              </li>
-            </ul>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">
-            <Bug className="inline w-5 h-5 mr-2 text-red-500" />
-            <span>5. Information Disclosure via Error Messages</span>
-          </h3>
-          <p>
-            Verbose error messages during parsing can sometimes reveal internal file paths, library versions, or stack
-            traces that help attackers understand the system structure.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-            <h4 className="text-lg font-medium mb-2">What to look for:</h4>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Are raw parser error messages shown directly to the user or client?</li>
-              <li>Are error messages logged securely on the server-side without revealing sensitive details?</li>
-              <li>Are generic error messages returned to the client for parsing failures?</li>
-            </ul>
-          </div>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
             <ListChecks className="w-6 h-6 text-primary" />
-            <span>Code Review Checklist for JSON Parsing Logic</span>
+            <span>Fast Review Workflow</span>
           </h2>
-          <p>Use this checklist when reviewing code that receives and parses JSON input:</p>
-          <ul className="list-disc pl-6 mt-4 space-y-3">
+          <ol className="list-decimal pl-6 space-y-3">
             <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" /> <span>Input Source Trustworthiness:</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Is the JSON coming from a trusted source (e.g., internal API) or an untrusted source (e.g., public API,
-                user input)? Assume untrusted unless proven otherwise. Higher trust requires less scrutiny of the
-                *source* but the parsing code itself should still be robust.
-              </p>
+              Map every trust boundary where JSON enters the system: HTTP bodies, queues, cache blobs, config files,
+              and third-party webhooks.
             </li>
             <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" /> <span>Parser Library Choice:</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Is a standard, well-maintained, and security-audited library being used (e.g., `JSON.parse` in JS/TS,
-                standard library parsers in Python, Java, Go, etc.)? Avoid custom or less-known parsers unless
-                absolutely necessary and thoroughly reviewed.
-              </p>
+              Identify the exact parser and mode in use. Reviewers should flag permissive modes that allow comments,
+              trailing commas, <code>NaN</code>, <code>Infinity</code>, or other non-standard extensions at a security
+              boundary.
             </li>
             <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" /> <span>Error Handling:</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Is the parsing operation wrapped in a `try...catch` block or similar error handling mechanism? What
-                happens if parsing fails? Does it throw a controlled error, or crash the application? Are specific
-                parsing errors caught and handled differently?
-              </p>
+              Check pre-parse and parse-time limits. Request size, depth, key count, string length, and total element
+              count should be bounded somewhere explicit.
             </li>
             <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" /> <span>Error Message verbosity:</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Are error messages returned to the client generic (e.g., &quot;Invalid input format&quot;) or detailed
-                (e.g., showing parser internal state, file paths)? Detailed errors should be logged securely
-                server-side, not exposed externally.
-              </p>
+              Inspect post-parse validation. The code should reject unknown fields, wrong types, and out-of-range
+              values before any authorization, persistence, or templating step.
             </li>
             <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" /> <span>Resource Limits (DoS Prevention):</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Does the parsing process enforce limits on input size, nesting depth, or number of elements/properties?
-                Many standard libraries have configuration options for this. If not, is there code to check these
-                *before* or *during* parsing?
-              </p>
-              <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 mt-2 overflow-x-auto">
-                <h5 className="font-mono text-sm mb-2">Example (Conceptual - Node.js):</h5>
-                <pre className="text-xs">
-                  {`// Using a library with limits (example: 'secure-json-parse')
-import { parse } from 'secure-json-parse';
+              Review maintenance signals for third-party libraries: recent releases, security advisories, supported
+              versions, and tests for malformed inputs.
+            </li>
+          </ol>
+        </section>
 
-try {
-  const unsafeJsonString = "..."; // Untrusted input
-  const options = {
-    // Configure limits
-    maxDepth: 20, // Prevent stack overflows
-    maxKeys: 1000, // Limit number of object properties
-    maxStringLength: 10000, // Limit size of individual strings
-    // ... other limits
-  };
-  const parsedData = parse(unsafeJsonString, options);
-  // ... process parsedData safely
-} catch (error) {
-  console.error("Secure parsing failed:", error.message);
-  // Return a generic error to the client
-  throw new Error("Failed to process JSON input.");
-}`}
-                </pre>
-              </div>
-            </li>
+        <section>
+          <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
+            <AlertTriangle className="w-6 h-6 text-primary" />
+            <span>High-Risk Findings Reviewers Commonly Miss</span>
+          </h2>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">1. Duplicate Keys And Other Ambiguous Input</h3>
+          <p>
+            RFC 8259 notes that duplicate member names make behavior unpredictable because implementations differ. In
+            JavaScript, plain object materialization typically keeps the last value, which means a schema validator
+            running after <code>JSON.parse</code> may never see the discarded key. If duplicate names could change
+            meaning, privilege, routing, or signing behavior, block the change until the boundary rejects them.
+          </p>
+          <ul className="list-disc pl-6 mt-3 space-y-1">
+            <li>Ask whether the parser can reject duplicates before building a normal object.</li>
+            <li>Make sure non-standard JSON features are off unless the protocol explicitly requires them.</li>
+            <li>Document exact behavior when interoperability with other languages or services matters.</li>
+          </ul>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">2. Numbers, Unicode, And Cross-Language Drift</h3>
+          <p>
+            I-JSON recommends avoiding exact numeric values outside the IEEE 754 safe integer range. A secure review
+            should verify whether identifiers, timestamps, counters, or monetary values can overflow or lose precision
+            when parsed by JavaScript or mixed-language systems. The same review should check how invalid Unicode
+            sequences are handled and whether the library accepts malformed escapes or surrogate pairs.
+          </p>
+          <ul className="list-disc pl-6 mt-3 space-y-1">
+            <li>Encode very large integers as strings if exact value matters across systems.</li>
+            <li>Verify whether the parser is strict about invalid escape sequences and malformed Unicode.</li>
+            <li>Review comparisons, hashing, and signatures that depend on exact textual or numeric representation.</li>
+          </ul>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">3. Resource Exhaustion And Parser Cost</h3>
+          <p>
+            RFC 8259 explicitly allows implementations to limit input size, nesting depth, number range, and string
+            contents. Reviewers should expect those limits to be intentional, not accidental. Large arrays, deep
+            nesting, and gigantic strings can still turn safe parsing code into a denial-of-service issue.
+          </p>
+          <ul className="list-disc pl-6 mt-3 space-y-1">
+            <li>Enforce request-body limits before parsing when possible.</li>
+            <li>Check depth and structure size limits if the parser does not provide them natively.</li>
+            <li>Prefer streaming parsers for very large or unbounded inputs instead of loading everything at once.</li>
+          </ul>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">4. Validation Gaps After Parsing</h3>
+          <p>
+            Parsing only proves the input is syntactically valid JSON. OWASP guidance still applies: validate as early
+            as possible, and validate semantics, not just syntax. The review should confirm allowed fields, required
+            fields, type constraints, length limits, formats, and business rules.
+          </p>
+          <ul className="list-disc pl-6 mt-3 space-y-1">
+            <li>Reject unexpected fields instead of silently ignoring them.</li>
+            <li>Do not merge parsed objects into live config or defaults without key allowlists.</li>
             <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" />{" "}
-                <span>Post-Parsing Validation (Schema Validation):</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                After successful parsing, is the structure, presence, and type of expected fields validated? Relying
-                solely on the parser guarantees syntactical correctness, but not *semantic* correctness or expected data
-                types. Use libraries like JSON Schema validators.
-              </p>
-              <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 mt-2 overflow-x-auto">
-                <h5 className="font-mono text-sm mb-2">Example (Conceptual - using a JSON Schema library):</h5>
-                <pre className="text-xs">
-                  {`// After parsing using JSON.parse or similar
-const parsedData = JSON.parse(unsafeJsonString);
-
-const userSchema = {
-  type: "object",
-  properties: {
-    id: { type: "number" },
-    username: { type: "string", minLength: 3 },
-    email: { type: "string", format: "email" },
-    isActive: { type: "boolean" }
-  },
-  required: ["id", "username", "email"],
-  additionalProperties: false // Crucial: Disallow unexpected properties
-};
-
-import Ajv from 'ajv'; // Example library
-const ajv = new Ajv();
-const validate = ajv.compile(userSchema);
-
-if (!validate(parsedData)) {
-  console.warn("JSON Schema validation failed:", validate.errors);
-  // Handle validation error - reject the data
-  throw new Error("Invalid JSON structure or data types.");
-}
-
-// Only now is parsedData safe to use downstream
-console.log("Validated user data:", parsedData);
-`}
-                </pre>
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                  Pay special attention to <code>additionalProperties: false</code> in your schema to prevent unexpected
-                  fields from being introduced, mitigating some forms of confusion or subtle bypasses.
-                </p>
-              </div>
+              Treat <code>__proto__</code>, <code>constructor</code>, and <code>prototype</code> as dangerous when
+              recursively merging or cloning parsed objects.
             </li>
-            <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" />{" "}
-                <span>Post-Parsing Usage (Sanitization):</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                How is the parsed data used? If it&apos;s used in database queries, external commands, dynamic code, or
-                displayed in UI, ensure proper context-aware sanitization or escaping is applied to prevent injection or
-                XSS.
-              </p>
-            </li>
-            <li>
-              <span className="font-medium flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-500 inline" />{" "}
-                <span>Prototype Pollution Checks (for JS/TS):</span>
-              </span>
-              <p className="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                If recursively merging or processing the parsed object, ensure keys like `__proto__`, `constructor`, and
-                `prototype` are handled safely (e.g., ignored or explicitly disallowed).
-              </p>
-            </li>
+          </ul>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3">5. Error Handling, Logging, And Observability</h3>
+          <p>
+            Parsing failures should be easy for operators to debug but unhelpful to attackers. The review should ensure
+            clients receive generic parse errors while internal logs capture enough context to investigate malformed
+            payloads, rate spikes, or recurring attack patterns.
+          </p>
+          <ul className="list-disc pl-6 mt-3 space-y-1">
+            <li>Return a generic <code>400</code> or <code>422</code> response for invalid JSON.</li>
+            <li>Avoid reflecting raw payloads into logs when they may contain secrets or attacker-controlled content.</li>
+            <li>Record limit breaches separately from ordinary syntax failures so abuse is visible.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
             <Code className="w-6 h-6 text-primary" />
-            <span>Reviewing the Parser Library Itself</span>
+            <span>What To Inspect In The Parser Library Itself</span>
           </h2>
           <p>
-            Reviewing the source code of a JSON parsing library is a task typically undertaken by security researchers
-            or developers building low-level infrastructure. Key areas to scrutinize include:
+            If the review includes approving or upgrading a third-party parser, focus less on marketing and more on
+            behavior, defaults, and maintenance discipline.
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
             <li>
-              <span className="font-medium">Parser State Management:</span> How does the parser handle state (current
-              position, current token)? Are state transitions strictly controlled?
+              <span className="font-medium">Strictness defaults:</span> Does the library default to standard JSON, or
+              does it silently enable comments, trailing commas, or permissive number parsing?
             </li>
             <li>
-              <span className="font-medium">Character Handling:</span> How does it handle Unicode, escaped characters
-              (`\uXXXX`), and invalid character sequences? Are there potential vulnerabilities related to character
-              decoding or interpretation?
+              <span className="font-medium">Duplicate-key policy:</span> Is behavior documented, configurable, and
+              test-covered?
             </li>
             <li>
-              <span className="font-medium">Number Parsing:</span> How are numbers parsed? Are there limits on size or
-              precision that could lead to overflow or rounding errors if not handled carefully?
+              <span className="font-medium">Limits:</span> Are depth, token, string, object-member, and total-input
+              limits available and documented?
             </li>
             <li>
-              <span className="font-medium">String Parsing:</span> How are string boundaries and escapes handled? Is
-              there a risk of buffer overflows or incorrect length calculations?
+              <span className="font-medium">Unicode and number handling:</span> Are malformed escapes rejected, and is
+              numeric precision behavior clear for big integers and exponents?
             </li>
             <li>
-              <span className="font-medium">Recursion/Stack Usage:</span> For recursive descent parsers, is recursion
-              depth limited to prevent stack overflows?
+              <span className="font-medium">Security process:</span> Check recent releases, advisories, issue response
+              time, and whether malformed-input tests or fuzz cases are visible in the repository.
             </li>
             <li>
-              <span className="font-medium">Memory Allocation:</span> How does the parser allocate memory for strings,
-              arrays, and objects? Are there checks to prevent excessive allocation based on input size?
-            </li>
-            <li>
-              <span className="font-medium">Input Consumption:</span> Does the parser strictly consume only the expected
-              characters for each token and structure? Leaving unexpected data might indicate a flaw.
-            </li>
-            <li>
-              <span className="font-medium">Dependency Review:</span> What external dependencies does the parser library
-              have? Are they secure and up-to-date?
+              <span className="font-medium">Dependency surface:</span> Fewer transitive dependencies usually means less
+              supply-chain risk and a smaller review burden.
             </li>
           </ul>
-          <p className="mt-4">
-            For most application developers, relying on widely used and trusted standard libraries is the most pragmatic
-            and secure approach, rather than attempting to build or deeply audit a custom parser.
-          </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
             <Server className="w-6 h-6 text-primary" />
-            <span>Server-Side Parsing Considerations (Next.js Backend)</span>
+            <span>Modern Next.js Review Example</span>
           </h2>
           <p>
-            When parsing JSON in a Next.js backend (like API routes or server components processing request bodies), the
-            core principles apply. However, the execution environment offers certain advantages and requires specific
-            attention:
+            In current Next.js applications, the practical review target is usually an App Router route handler such as{" "}
+            <code>app/api/example/route.ts</code>. The example below keeps the review points explicit: raw-size check,
+            parse failure handling, depth control, strict shape validation, and a note about duplicate keys and large
+            integers.
           </p>
-          <ul className="list-disc pl-6 mt-4 space-y-2">
-            <li>
-              <span className="font-medium">Resource Limits:</span> While Node.js has default limits (e.g., stack size),
-              explicitly configuring parser limits is still crucial to protect your server process from crashing due to
-              malicious input.
-            </li>
-            <li>
-              <span className="font-medium">Error Logging:</span> Detailed error messages from parsing can be safely
-              logged server-side for debugging and monitoring without exposing them to the client.
-            </li>
-            <li>
-              <span className="font-medium">Input Size Limits:</span> Web frameworks often have built-in limits on
-              request body size. Ensure these are configured appropriately to prevent large file uploads or massive JSON
-              documents from overwhelming your server before parsing even begins.
-            </li>
-            <li>
-              <span className="font-medium">`JSON.parse` Safety:</span> In Node.js, `JSON.parse` is implemented securely
-              in native code and does not use `eval`. It's generally safe from code injection, but is susceptible to DoS
-              via nesting depth or large inputs if not managed.
-            </li>
-            <li>
-              <span className="font-medium">Post-Parsing Logic:</span> Since backend code often interacts with
-              databases, file systems, or other services, the risk of using parsed data in injections (SQL, OS command)
-              or file path manipulation is higher. Rigorous post-parsing validation and sanitization are paramount.
-            </li>
-          </ul>
-          <p className="mt-4">
-            For Next.js API routes, the framework often handles basic JSON body parsing for you. You must still
-            implement post-parsing validation, resource limits if the default aren&apos;t sufficient, and secure error
-            handling.
-          </p>
-          <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 mt-2 overflow-x-auto">
-            <h5 className="font-mono text-sm mb-2">Example (Conceptual - Next.js API Route):</h5>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre className="text-xs">
-              {`// pages/api/process-json.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-// Assume you have a schema validation library and schema defined
-
-type Data = {
-  message: string;
+              {`type CreateUserPayload = {
+  id: string;
+  email: string;
+  role: "viewer" | "editor";
 };
 
-// Example schema (using a conceptual validation function)
-const isValidUserData = (data: any): boolean => {
-  // Implement robust schema validation here
-  // Check types, required fields, maximum string lengths, etc.
-  // Ensure no unexpected properties like __proto__ are present if applicable
-  if (typeof data !== 'object' || data === null) return false;
-  if (typeof data.id !== 'number' || typeof data.username !== 'string') return false;
-  // Add more checks...
-  return true;
-};
+const MAX_BODY_BYTES = 64 * 1024;
+const MAX_DEPTH = 20;
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end(\`Method \${req.method} Not Allowed\`);
+export async function POST(request: Request) {
+  const raw = await request.text();
+
+  if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) {
+    return Response.json({ error: "Request body too large" }, { status: 413 });
   }
 
-  // Next.js often parses JSON body automatically if Content-Type is application/json
-  const unsafeParsedData = req.body;
-
-  // IMPORTANT: Add resource limits check if body-parser defaults are not enough
-  // E.g., check parsed object depth or size before validation
-  if (checkDepth(unsafeParsedData) > 20) { // Conceptual depth check
-     console.warn("Received overly deep JSON structure");
-     return res.status(400).json({ message: "Invalid input structure (too deep)" });
-  }
-
-
-  if (!isValidUserData(unsafeParsedData)) {
-    console.warn("Received invalid JSON data structure/types:", unsafeParsedData);
-    return res.status(400).json({ message: "Invalid input format or data" });
-  }
-
-  // Data is now considered validated and safe for processing downstream
+  let parsed: unknown;
   try {
-    // Use safeParsedData for database operations, etc.
-    // Ensure any database queries or external commands use parameterized inputs
-    // and proper escaping for string values.
-    console.log("Processing validated data:", unsafeParsedData);
-    res.status(200).json({ message: "Data processed successfully" });
-
-  } catch (error) {
-    console.error("Server error processing data:", error);
-    res.status(500).json({ message: "Internal server error" });
+    parsed = JSON.parse(raw);
+  } catch {
+    return Response.json({ error: "Invalid JSON" }, { status: 400 });
   }
+
+  if (getDepth(parsed) > MAX_DEPTH) {
+    return Response.json({ error: "JSON is too deeply nested" }, { status: 400 });
+  }
+
+  if (!isCreateUserPayload(parsed)) {
+    return Response.json({ error: "JSON shape is not allowed" }, { status: 422 });
+  }
+
+  // If duplicate-key rejection or exact big-integer handling matters,
+  // enforce that before materializing into plain JS objects.
+
+  return Response.json({ ok: true });
 }
 
-// Conceptual depth checker (recursive)
-function checkDepth(obj: any, depth = 0): number {
-    if (depth > 100) throw new Error("Max depth exceeded during check"); // Safety break
-    if (obj === null || typeof obj !== 'object') return depth;
+function isCreateUserPayload(value: unknown): value is CreateUserPayload {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
 
-    let maxDepth = depth;
-    if (Array.isArray(obj)) {
-        for (const item of obj) {
-            maxDepth = Math.max(maxDepth, checkDepth(item, depth + 1));
-        }
-    } else {
-        for (const key in obj) {
-            // Potentially add prototype check here if necessary
-            if (key === '__proto__') continue;
-            maxDepth = Math.max(maxDepth, checkDepth(obj[key], depth + 1));
-        }
-    }
-    return maxDepth;
+  const record = value as Record<string, unknown>;
+  const keys = Object.keys(record);
+  if (keys.length !== 3) return false;
+  if (!keys.every((key) => ["id", "email", "role"].includes(key))) return false;
+
+  return (
+    typeof record.id === "string" &&
+    typeof record.email === "string" &&
+    (record.role === "viewer" || record.role === "editor")
+  );
 }
-`}
+
+function getDepth(value: unknown, depth = 0): number {
+  if (!value || typeof value !== "object") return depth;
+
+  const entries = Array.isArray(value) ? value : Object.values(value);
+  return entries.reduce((max, entry) => Math.max(max, getDepth(entry, depth + 1)), depth);
+}`}
             </pre>
           </div>
+          <p className="mt-4">
+            If you do not need raw body inspection, <code>await request.json()</code> is the standard Next.js path.
+            For security reviews, the important part is not the helper you choose but whether size limits, strict
+            validation, and ambiguous-input handling are explicit.
+          </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
             <CheckCircle className="w-6 h-6 text-primary" />
-            <span>Conclusion: A Multi-Layered Approach</span>
+            <span>Block Approval If You See Any Of These</span>
           </h2>
-          <p>
-            Secure JSON parsing is not just about the parsing function itself; it requires a multi-layered approach:
-          </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
-            <li>
-              Choose <span className="font-medium">trusted, well-maintained libraries</span>.
-            </li>
-            <li>
-              Implement <span className="font-medium">robust error handling</span> without leaking sensitive
-              information.
-            </li>
-            <li>
-              Enforce <span className="font-medium">resource limits</span> (size, depth, number of elements) to prevent
-              DoS.
-            </li>
-            <li>
-              Perform <span className="font-medium">strict post-parsing validation</span> using schemas to ensure
-              expected structure, types, and absence of unexpected fields.
-            </li>
-            <li>
-              Apply <span className="font-medium">context-aware sanitization/escaping</span> when using the parsed data
-              in other parts of the application (database, OS commands, UI).
-            </li>
-            <li>
-              Conduct <span className="font-medium">regular code reviews</span> focusing on these points.
-            </li>
+            <li>The code accepts non-standard JSON at a public trust boundary without a documented reason.</li>
+            <li>Duplicate keys can change meaning, but the boundary never rejects or normalizes them explicitly.</li>
+            <li>No request-size or structure-size limits exist for untrusted JSON.</li>
+            <li>Validation only checks a few fields while silently allowing unexpected properties.</li>
+            <li>Parsed objects are recursively merged into defaults, config, or auth context without key allowlists.</li>
+            <li>Large integer handling is unspecified even though IDs or financial values require exactness.</li>
+            <li>Raw parser errors or attacker-controlled payloads are exposed to clients or unsafe logs.</li>
+            <li>The selected parser has weak maintenance signals or unresolved security advisories.</li>
           </ul>
-          <p className="mt-4">
-            By integrating these steps into your development and review process, you can significantly reduce the risk
-            associated with handling untrusted JSON input.
-          </p>
         </section>
       </div>
     </>

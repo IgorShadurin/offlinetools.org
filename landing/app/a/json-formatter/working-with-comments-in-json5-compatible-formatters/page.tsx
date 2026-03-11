@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Working with Comments in JSON5-Compatible Formatters | Offline Tools",
   description:
-    "Learn how to effectively use comments in JSON5 formatters and understand the benefits of adding comments to your data structures.",
+    "Learn when JSON5 comments work, when formatters preserve or drop them, and how to convert commented files for strict JSON parsers, APIs, and VBA tools.",
 };
 
 export default function Json5CommentsArticle() {
@@ -13,16 +13,32 @@ export default function Json5CommentsArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is a lightweight data-interchange format widely used across the web.
-          However, one common complaint about standard JSON is its lack of support for comments. This limitation can
-          make configuration files or complex data structures harder to understand without external documentation.
+          If your file contains <code>// single-line</code> or <code>/* block */</code> comments, it is no longer
+          standard JSON. It needs a formatter or parser that explicitly supports JSON5. That distinction is the main
+          reason commented config files work in some tools but fail immediately in APIs, browser <code>JSON.parse()</code>
+          calls, or older automation scripts.
         </p>
 
         <p>
-          JSON5 is an extension of JSON that aims to make it easier for humans to write and maintain, while still being
-          a subset of ECMAScript 5 (like JSON). One of its most popular features is the ability to include comments.
-          This guide explores how to work with comments in JSON5 and why it&apos;s a valuable feature.
+          JSON5 extends JSON with human-friendly syntax such as comments, trailing commas, single-quoted strings, and
+          unquoted keys. Comments are one of its most useful features, but they only help if your workflow preserves
+          them where needed and converts them away where strict JSON is required.
         </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Quick Answer</h2>
+        <ul className="list-disc pl-6 space-y-2 mt-2">
+          <li>Standard JSON does not allow comments.</li>
+          <li>JSON5 allows both <code>//</code> and <code>/* ... */</code> comments.</li>
+          <li>A JSON5-compatible formatter can read and format commented files, but a strict JSON formatter cannot.</li>
+          <li>
+            If you parse a commented file into an object and then stringify it again, the original comments usually do
+            not survive.
+          </li>
+          <li>
+            If the final destination is an API, a browser JSON parser, or a VBA JSON library, convert the file back to
+            strict JSON before sending it downstream.
+          </li>
+        </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Why Standard JSON Doesn&apos;t Allow Comments</h2>
         <p>
@@ -45,11 +61,12 @@ export default function Json5CommentsArticle() {
           <li>Other number formats (hexadecimal, positive/negative infinity, NaN)</li>
         </ul>
         <p className="mt-4">
-          Among these, the ability to add comments is arguably the most significant for documentation and clarity.
+          For hand-edited config files, comments are usually the feature people care about most because they let you
+          explain defaults, warnings, environment-specific settings, and migration notes right next to the data.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Adding Comments in JSON5</h2>
-        <p>JSON5 supports two types of comments familiar from JavaScript and many other programming languages:</p>
+        <h2 className="text-2xl font-semibold mt-8">Which Comment Styles Work in JSON5</h2>
+        <p>JSON5 supports the same two comment styles most developers already know from JavaScript:</p>
 
         <h3 className="text-xl font-semibold mt-6">1. Single-Line Comments (`//`)</h3>
         <p>
@@ -114,6 +131,46 @@ export default function Json5CommentsArticle() {
           </p>
         </div>
 
+        <h2 className="text-2xl font-semibold mt-8">What a JSON5-Compatible Formatter Actually Does</h2>
+        <p>
+          The phrase &quot;JSON5-compatible formatter&quot; can mean different things, and the difference matters if you care
+          about comments.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 mt-2">
+          <li>
+            <span className="font-medium">Strict JSON formatter:</span> Rejects the file as soon as it sees comments,
+            trailing commas, or other JSON5 syntax.
+          </li>
+          <li>
+            <span className="font-medium">JSON5 text formatter:</span> Reads the commented source and rewrites spacing,
+            indentation, and line breaks while keeping valid comments in place.
+          </li>
+          <li>
+            <span className="font-medium">Parse-and-stringify workflow:</span> Reads the data into an object and writes
+            it back out. This usually removes the original comments because comments are not part of the resulting data
+            structure.
+          </li>
+        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`// Authored by a human
+{
+  // Retry failed uploads three times before surfacing an error
+  retries: 3,
+  timeoutMs: 5000,
+}`}
+            </pre>
+          </div>
+          <p className="mt-3">
+            A JSON5-aware formatter can keep that comment. But if you convert the file to a plain object and export it
+            as strict JSON for an API, the output will usually look more like this:
+          </p>
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto mt-3">
+            <pre>{`{"retries":3,"timeoutMs":5000}`}</pre>
+          </div>
+        </div>
+
         <h2 className="text-2xl font-semibold mt-8">Benefits of Using Comments in JSON5</h2>
         <p>Adding comments to your JSON5 files offers several advantages:</p>
         <ul className="list-disc pl-6 space-y-2 mt-2">
@@ -134,6 +191,22 @@ export default function Json5CommentsArticle() {
             entries without deleting them.
           </li>
         </ul>
+
+        <h2 className="text-2xl font-semibold mt-8">Best Workflow When Comments Matter</h2>
+        <p>
+          The safest pattern is to treat comments as authoring-time help, not as data that every downstream consumer
+          must understand.
+        </p>
+        <ol className="list-decimal pl-6 space-y-2 mt-2">
+          <li>Author and review the file as JSON5 so comments stay close to the settings they explain.</li>
+          <li>Format and validate it with a tool that explicitly says it supports JSON5.</li>
+          <li>Convert it to strict JSON before sending it to systems that expect plain JSON.</li>
+          <li>Keep the commented source file if humans still need to maintain the configuration later.</li>
+        </ol>
+        <p>
+          This avoids the common mistake of assuming that because one editor accepts commented JSON, every parser in the
+          pipeline will accept it too.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8">Using JSON5-Compatible Formatters and Parsers</h2>
         <p>
@@ -156,6 +229,50 @@ export default function Json5CommentsArticle() {
             </li>
           </ul>
         </div>
+        <p>
+          In the JavaScript ecosystem, the official JSON5 tooling also supports validation and conversion. That is
+          useful when your source file should stay commented, but your deployment artifact must be plain JSON.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`# Validate a commented JSON5 file
+json5 --validate config.json5
+
+# Convert JSON5 to strict JSON
+json5 -o config.json config.json5`}
+            </pre>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">Working with VBA and Other Strict JSON Tools</h2>
+        <p>
+          This is where many search users get stuck. A hand-edited file with comments may look fine in a JSON5-aware
+          formatter, but Excel, Access, or older automation code often uses strict JSON libraries that expect plain
+          JSON text.
+        </p>
+        <p>
+          A common VBA workflow uses a parser such as <code>VBA-JSON</code> to load JSON into nested
+          <code>Dictionary</code> and <code>Collection</code> objects. That is a good fit for working with JSON
+          objects in VBA, but it also means your input should already be strict JSON by the time it reaches
+          <code>ParseJson</code>.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`' By this stage, comments should already be removed
+Dim parsed As Object
+Set parsed = JsonConverter.ParseJson(jsonText)
+
+Debug.Print parsed("database")("host")`}
+            </pre>
+          </div>
+        </div>
+        <p>
+          If your source config is commented JSON5, keep it as <code>.json5</code>, format and validate it with a
+          JSON5-aware tool, then export a plain <code>.json</code> version for VBA, APIs, or any system that follows
+          the normal JSON rules.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8">Tips for Effective Commenting in JSON5</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
@@ -164,8 +281,8 @@ export default function Json5CommentsArticle() {
             to the point.
           </li>
           <li>
-            <span className="font-medium">Explain the Why:</span> Instead of just restating what the code does, explain
-            *why* it does it or the purpose of a specific setting.
+            <span className="font-medium">Explain the Why:</span> Instead of just restating what the code does, explain{" "}
+            <em>why</em> it does it or the purpose of a specific setting.
           </li>
           <li>
             <span className="font-medium">Keep Them Updated:</span> Outdated comments are misleading. Ensure comments
@@ -181,6 +298,27 @@ export default function Json5CommentsArticle() {
           </li>
         </ul>
 
+        <h2 className="text-2xl font-semibold mt-8">Common Mistakes and Fixes</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <span className="font-medium">Unexpected token `/` during parsing:</span> You are using a strict JSON
+            parser, not a JSON5 parser.
+          </li>
+          <li>
+            <span className="font-medium">Comments disappeared after formatting:</span> Your workflow likely parsed the
+            file into data and re-serialized it instead of preserving the source text.
+          </li>
+          <li>
+            <span className="font-medium">A browser, API, or import step rejects the file:</span> Convert the file to
+            strict JSON and remove JSON5-only features such as comments, trailing commas, single quotes, and unquoted
+            keys.
+          </li>
+          <li>
+            <span className="font-medium">Your VBA script fails on a config file that looked valid in an editor:</span>
+            Validate the source as JSON5 first, then pass a converted plain JSON string into the VBA parser.
+          </li>
+        </ul>
+
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-6">
           <h3 className="text-lg font-medium">Important Note:</h3>
           <p className="mt-2">
@@ -192,14 +330,13 @@ export default function Json5CommentsArticle() {
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          JSON5, with its support for comments, significantly enhances the human-friendliness of JSON data. By allowing
-          you to add explanations and notes directly within your files using single-line (`//`) and multi-line (`/* */`)
-          comments, JSON5 makes configurations and complex data structures more understandable and maintainable.
+          JSON5 comments are most useful when humans need to understand and maintain a file over time. They make local
+          configuration, test fixtures, and reviewable settings files much easier to work with.
         </p>
         <p>
-          If you frequently work with JSON files that are read or edited by humans, adopting JSON5 and a compatible
-          formatter can streamline your workflow and reduce errors caused by misunderstandings. Just remember to use
-          comments judiciously and ensure your tools support the JSON5 format.
+          The practical rule is simple: author with JSON5 when comments help, but convert to strict JSON before handing
+          the data to tools that only understand plain JSON. If you keep that boundary clear, JSON5-compatible
+          formatters can improve readability without breaking the rest of your pipeline.
         </p>
       </div>
     </>

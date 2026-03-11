@@ -1,324 +1,380 @@
 import type { Metadata } from "next";
 import {
-  Globe,
-  Languages,
-  FileJson,
+  AlertTriangle,
+  ArrowRightLeft,
   Bug,
   Check,
-  X,
-  AlertTriangle, // Corrected icon name from Warning
-  Info,
+  Code,
   Columns2,
+  FileJson,
+  Globe,
+  Info,
+  Languages,
   ListChecks,
   RefreshCcw,
-  ArrowRightLeft,
   TestTube,
-  Code, // Assuming Code icon is intended here based on its usage
-  Users, // Assuming Users icon is intended here based on its usage
+  Users,
+  X,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Localization Testing for Multilingual JSON Formatters | Development",
+  title: "Localization Testing for Multilingual JSON Formatters: Practical QA Guide",
   description:
-    "A comprehensive guide to localization testing strategies for applications that handle and format multilingual data using JSON.",
+    "Learn how to test multilingual JSON formatters for dates, numbers, currencies, plurals, lists, fallback behavior, and RTL text with practical examples and checklists.",
+  alternates: {
+    canonical:
+      "https://offlinetools.org/a/json-formatter/localization-testing-for-multilingual-json-formatters",
+  },
 };
+
+const localeMatrix = [
+  {
+    locale: "en-US",
+    reason: "Baseline English, month/day ordering, 12-hour clock behavior, and common currency formatting expectations.",
+  },
+  {
+    locale: "en-GB",
+    reason: "Same language, different defaults. Useful for catching hard-coded US date and time assumptions.",
+  },
+  {
+    locale: "de-DE",
+    reason: "Decimal commas, different thousands separators, and longer compound words that stress layout.",
+  },
+  {
+    locale: "fr-FR",
+    reason: "Spacing rules around punctuation and currency formatting often expose brittle string handling.",
+  },
+  {
+    locale: "ja-JP",
+    reason: "Different date patterns, dense UI text, and no English-style plural inflection.",
+  },
+  {
+    locale: "ar",
+    reason: "Right-to-left layout, mixed-direction text, and locale-specific digit rendering expectations.",
+  },
+  {
+    locale: "ru",
+    reason: "Plural rules are more complex than simple one/other logic, which makes it a strong message-format test case.",
+  },
+];
+
+const currentApiChecks = [
+  {
+    api: "Intl.DateTimeFormat",
+    detail:
+      "Test locale, calendar, numbering system, and a fixed time zone. Use formatToParts or formatRange when your formatter composes UI from pieces or renders date ranges.",
+  },
+  {
+    api: "Intl.NumberFormat",
+    detail:
+      "Cover decimal, percent, unit, and currency output. Verify grouping, sign display, narrow symbols, and range formatting where totals or comparisons appear.",
+  },
+  {
+    api: "Intl.ListFormat",
+    detail:
+      "Use it for locale-correct conjunctions such as 'A, B, and C' instead of joining arrays manually.",
+  },
+  {
+    api: "Intl.RelativeTimeFormat",
+    detail:
+      "Exercise labels such as 'yesterday', 'in 3 days', or abbreviated forms that many dashboards and feeds rely on.",
+  },
+  {
+    api: "Intl.PluralRules",
+    detail:
+      "Test count-based messages with locale-specific categories, and include range cases when the UI renders values like '1-2 items'.",
+  },
+];
+
+const failurePatterns = [
+  "Tests pass locally but fail in CI because the formatter silently used the host machine's default time zone.",
+  "A translation key exists, but the rendered sentence is still wrong because the app concatenates fragments instead of formatting a full localized message.",
+  "Arabic or Hebrew pages show punctuation, SKU codes, or email addresses in the wrong visual order when embedded values are not direction-isolated.",
+  "The JSON contains a value for 1 item and 5 items, but values such as 0, 2, 11, 21, or 1.0 still render the wrong plural form.",
+  "A fallback locale hides missing translations in staging, then broken raw keys appear in production for one region.",
+];
+
+const releaseChecklist = [
+  "Pin locale and time zone in automated tests so snapshots and assertions are deterministic.",
+  "Run pseudolocalization and at least one RTL locale before release.",
+  "Check dates, numbers, currencies, list output, and pluralized messages from realistic JSON payloads.",
+  "Verify missing-key and fallback behavior intentionally instead of treating it as an edge case.",
+  "Include manual review by a fluent speaker for high-traffic flows and error states.",
+];
+
+const samplePayload = `{
+  "locale": "ar-EG",
+  "updatedAt": "2026-03-10T18:45:00Z",
+  "cart": {
+    "count": 2,
+    "subtotal": 12345.67,
+    "currency": "EGP",
+    "items": ["USB-C Hub", "4K Cable", "SSD Enclosure"]
+  },
+  "messages": {
+    "items": "{count, plural, one {# item} other {# items}}",
+    "eta": "{value, number} {value, plural, one {day} other {days}} left"
+  },
+  "agentNote": "Order #A-1049 ships to Berlin"
+}`;
+
+const bidiExample = `<p dir="rtl">
+  <bdi>Order #A-1049 ships to Berlin</bdi>
+</p>`;
 
 export default function LocalizationTestingJsonArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 flex items-center space-x-3">
-        <Globe className="w-8 h-8" />
+      <h1 className="mb-6 flex items-center space-x-3 text-3xl font-bold">
+        <Globe className="h-8 w-8" />
         <span>Localization Testing for Multilingual JSON Formatters</span>
       </h1>
 
       <div className="space-y-6">
         <p>
-          In today&apos;s globalized digital landscape, applications often need to serve users in multiple languages and
-          regions. This requires not just translating text, but also adapting the application to local customs, formats,
-          and expectations – a process known as <strong>Localization (L10n)</strong>. When dealing with dynamic or
-          structured multilingual data, JSON is a common format for storing and transferring translations and localized
-          content. Components or libraries that take this JSON data and render it for the user are called{" "}
-          <strong>JSON Formatters</strong>.
+          Localization testing for multilingual JSON formatters means more than checking whether translated strings
+          exist. A useful test plan verifies that your formatter renders locale-sensitive dates, numbers, lists,
+          plurals, fallback content, and mixed-direction text correctly when real JSON payloads hit the UI.
         </p>
         <p>
-          While developers focus on building robust formatters, ensuring they behave correctly across all supported
-          languages and locales is the critical role of <strong>Localization Testing</strong>. This article explores the
-          challenges and strategies for effectively testing multilingual JSON formatters.
+          For most teams, the highest-value improvements are simple: pin the test time zone, cover more than one
+          English locale, exercise plural edge cases, and review at least one right-to-left language. Those four steps
+          catch a large share of production localization bugs.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <AlertTriangle className="w-6 h-6 text-yellow-500" /> {/* Corrected icon usage */}
-          <span>Why Localization Testing is Crucial</span>
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+          <p className="flex items-start space-x-2">
+            <Info className="mt-1 h-5 w-5 flex-shrink-0 text-blue-600" />
+            <span>
+              If you only add one new rule to your test suite, make it this: never let locale-sensitive formatting rely
+              on the host environment by accident. A formatter that skips explicit locale or time-zone inputs will often
+              look correct on one machine and break on another.
+            </span>
+          </p>
+        </div>
+
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <AlertTriangle className="h-6 w-6 text-yellow-500" />
+          <span>What Usually Breaks First</span>
         </h2>
-        <p>
-          Simply providing translated strings in JSON isn&apos;t enough. The way these strings are formatted and
-          displayed can lead to significant issues if not properly tested in the target locale contexts. Common problems
-          include:
-        </p>
-        <ul className="list-disc pl-6 space-y-3 my-4">
-          <li className="flex items-start space-x-2">
-            <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>String Length Discrepancies:</strong> Translations are often significantly longer or shorter than
-              the source text. A formatter that works perfectly with a short English string might cause text truncation,
-              overflow, or layout breaks when rendering a longer German or Arabic string using the same allocated space.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Date, Time, and Number Formats:</strong> JSON might contain raw timestamps, numbers, or currency
-              values. Formatters must apply locale-specific rules (e.g., MM/DD/YYYY vs DD.MM.YYYY, using commas vs dots
-              for decimals, currency symbols, percentage signs, etc.). Incorrect formatting can lead to confusion or
-              misinterpretation.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Complex String Structures:</strong> Many strings aren&apos;t simple phrases but involve variables,
-              plurals, genders, or lists. JSON formats like{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ICU MessageFormat</code> are
-              used. Formatters must correctly process these complex structures based on input data and locale rules.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Cultural Nuances:</strong> Even if text is translated, images, icons, colors, or examples embedded
-              or referenced via JSON might be culturally inappropriate or offensive in certain regions. The formatter
-              might simply display a link or image URL from JSON; testing ensures the end result is acceptable.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Right-to-Left (RTL) Languages:</strong> Languages like Arabic, Hebrew, and Persian read from right
-              to left. A formatter needs to handle text alignment, layout mirroring, and embedding Left-to-Right (LTR)
-              text correctly when rendering JSON data.
-              <ArrowRightLeft className="inline w-4 h-4 ml-1" />
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Concatenation Issues:</strong> Strings that are concatenated from multiple JSON values might
-              require different word order or grammatical structures in other languages, leading to awkward or
-              nonsensical phrases if the formatter assumes a fixed structure.
-            </span>
-          </li>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          {failurePatterns.map((item) => (
+            <li key={item} className="flex items-start space-x-2">
+              <X className="mt-1 h-5 w-5 flex-shrink-0 text-red-500" />
+              <span>{item}</span>
+            </li>
+          ))}
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <TestTube className="w-6 h-6 text-blue-500" />
-          <span>Strategies and Techniques</span>
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <Columns2 className="h-6 w-6 text-blue-500" />
+          <span>Build a Small but High-Value Locale Matrix</span>
         </h2>
         <p>
-          Testing multilingual JSON formatters requires a multi-faceted approach, combining automated checks with human
-          review in actual localized environments.
+          You do not need dozens of locales to find real defects. Start with a compact matrix that forces your JSON
+          formatter through different scripts, number systems, date conventions, and plural rules.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <TestTube className="w-5 h-5 text-blue-400" />
-          <span>Pseudo-localization</span>
-        </h3>
-        <p>
-          Pseudo-localization is an automated testing technique run early in the development cycle. It replaces source
-          strings with altered versions that simulate characteristics of translated text.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">How it works:</h4>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Characters are replaced with accented equivalents (e.g., &quot;Hello&quot; → &quot;Ħēľľō&quot;).</li>
-            <li>Strings are padded with extra characters to increase length (e.g., &quot;[~~~Hello~~~]&quot;).</li>
-            <li>Markers are added to check for truncation (e.g., &quot;[[Hello]]&quot;).</li>
-            <li>Text direction markers might be included to test RTL handling.</li>
-          </ul>
+        <div className="overflow-x-auto rounded-lg border dark:border-gray-700">
+          <table className="min-w-full divide-y divide-gray-200 text-left text-sm dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-900/50">
+              <tr>
+                <th className="px-4 py-3 font-semibold">Locale</th>
+                <th className="px-4 py-3 font-semibold">Why it earns a slot</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {localeMatrix.map((entry) => (
+                <tr key={entry.locale}>
+                  <td className="whitespace-nowrap px-4 py-3 font-mono">{entry.locale}</td>
+                  <td className="px-4 py-3">{entry.reason}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <p>
-          <Info className="inline w-4 h-4 mr-1 text-blue-500" />
-          <strong>Benefit:</strong> Helps identify potential layout breaks due to string length or character rendering
-          issues without needing actual translations. It tests the UI/formatter&apos;s robustness. It does NOT test
-          linguistic correctness or cultural appropriateness.
+          Adjust the matrix to your audience, but keep at least one same-language comparison such as{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">en-US</code> vs{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">en-GB</code> and one RTL locale. That is
+          where hidden assumptions show up fastest.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Columns2 className="w-5 h-5 text-blue-400" />
-          <span>UI and Layout Testing</span>
-        </h3>
-        <p>Testing the visual presentation of the formatted JSON data is crucial.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Verify text within elements fits, without overflow or truncation.</li>
-          <li>Check wrapping behavior for long strings.</li>
-          <li>Ensure layout elements adjust correctly for different text lengths and directions (RTL vs LTR).</li>
-          <li>Test alignment of text and UI elements.</li>
-          <li>Look for overlapping text or controls.</li>
-          <li>Verify elements appear in the correct visual order in RTL layouts.</li>
-        </ul>
-        <p>This is often a combination of automated visual regression testing and manual review.</p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Code className="w-5 h-5 text-blue-400" />
-          <span>Automated Functional Testing</span>
-        </h3>
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <FileJson className="h-6 w-6 text-green-500" />
+          <span>JSON Cases Worth Testing Every Time</span>
+        </h2>
         <p>
-          Write automated tests for the formatter component itself, focusing on different JSON data inputs and expected
-          outputs for various locales.
+          Use realistic JSON, not toy strings. A formatter that survives actual product data is far more trustworthy
+          than one that passes a single happy-path snapshot.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Test date/time/number formatting with locale-specific expected strings.</li>
-          <li>
-            Provide JSON with variables for pluralization/gender and verify the correct message is selected based on
-            locale and variable values.
+        <pre className="overflow-x-auto rounded-lg bg-gray-100 p-4 text-sm dark:bg-gray-800">
+          <code>{samplePayload}</code>
+        </pre>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          <li className="flex items-start space-x-2">
+            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+            <span>
+              <strong>Dates and times:</strong> confirm the formatter respects locale and an explicit time zone, then
+              compare single values and date ranges.
+            </span>
           </li>
-          <li>Test complex nested JSON structures to ensure all parts are rendered correctly.</li>
-          <li>
-            Supply edge cases like empty strings, null values, or missing data in the JSON and check how the formatter
-            handles them (graceful degradation, default values).
+          <li className="flex items-start space-x-2">
+            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+            <span>
+              <strong>Numbers and currencies:</strong> verify decimals, group separators, currency symbol placement,
+              negative values, and rounding.
+            </span>
+          </li>
+          <li className="flex items-start space-x-2">
+            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+            <span>
+              <strong>Lists:</strong> do not join arrays with commas by hand. Test conjunctions and shorter UI spaces.
+            </span>
+          </li>
+          <li className="flex items-start space-x-2">
+            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+            <span>
+              <strong>Pluralized messages:</strong> include 0, 1, 2, 5, 11, 21, and at least one fractional value if
+              your product displays measurements or money.
+            </span>
+          </li>
+          <li className="flex items-start space-x-2">
+            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+            <span>
+              <strong>Fallback behavior:</strong> assert the result when a key is missing, a locale is unsupported, or
+              one field is null.
+            </span>
+          </li>
+          <li className="flex items-start space-x-2">
+            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+            <span>
+              <strong>Embedded mixed-direction text:</strong> test order numbers, email addresses, URLs, and Latin
+              product names inside Arabic or Hebrew UI.
+              <ArrowRightLeft className="ml-1 inline h-4 w-4" />
+            </span>
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Users className="w-5 h-5 text-blue-400" />
-          <span>Manual Linguistic and Cultural Review</span>
-        </h3>
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <Code className="h-6 w-6 text-blue-500" />
+          <span>Use Current Intl APIs as Test Targets</span>
+        </h2>
         <p>
-          This is indispensable. Native speakers or professional localization testers review the application with
-          localized JSON data in its target environment.
+          Modern JavaScript internationalization is broader than just{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">toLocaleString()</code>. If your JSON
+          formatter exposes localized output, these APIs should either power the result directly or shape your expected
+          test assertions.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Verify translations are linguistically accurate and sound natural in context.</li>
-          <li>Check for cultural appropriateness of content, images, and examples.</li>
-          <li>Review tone and style consistency.</li>
-          <li>Test input fields with locale-specific characters and input methods.</li>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          {currentApiChecks.map((entry) => (
+            <li key={entry.api}>
+              <strong>{entry.api}:</strong> {entry.detail}
+            </li>
+          ))}
         </ul>
-        <p>This phase catches issues that automated tests and pseudo-localization cannot.</p>
+        <p>
+          A practical rule for stable tests: pass the locale and time zone explicitly into the formatter under test. If
+          the time zone is omitted, date output can vary by environment even when the same JSON input is used.
+        </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <FileJson className="w-6 h-6 text-green-500" />
-          <span>Key Areas to Focus On (with JSON context)</span>
-        </h2>
-        <p>When testing, pay special attention to parts of the UI driven by JSON:</p>
-        <ul className="list-disc pl-6 space-y-3 my-4">
-          <li className="flex items-start space-x-2">
-            <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Display of simple text strings:</strong> Check for length, wrapping, and character rendering.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Formatted data:</strong> Dates, times, numbers, currencies pulled from JSON and formatted. Ensure
-              correct separators, symbols, and order based on locale specified or detected.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Strings with variables:</strong> Check plurals, genders, lists within sentences. Example JSON:{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">
-                &#x7b; &quot;message&quot;: &quot;You have &#x7b;count, plural, one &#x7b;message&#x7d; other
-                &#x7b;messages&#x7d;&#x7d;&quot; &#x7d;
-              </code>
-              - test with various &quot;count&quot; values and locales.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Complex JSON structures:</strong> Ensure arrays, nested objects, or lists derived from JSON are
-              displayed correctly, respecting locale-specific sorting or ordering rules if applicable.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Error and status messages:</strong> Often come from JSON. Ensure they are translated, fit the
-              space, and are culturally appropriate in tone.
-            </span>
-          </li>
-          <li className="flex items-start space-x-2">
-            <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-            <span>
-              <strong>Content with embedded elements:</strong> If JSON includes HTML snippets, markdown, or references
-              to images/icons, verify the rendered output integrates correctly with localized text and layout.
-            </span>
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Languages className="w-6 h-6 text-purple-500" />
-          <span>Best Practices for Developers and QA</span>
-        </h2>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <Info className="w-5 h-5 text-blue-500" />
-          <span>For Developers:</span>
-        </h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Externalize All User-Facing Strings:</strong> Never hardcode display text. Use the JSON data source
-            for everything that users will see.
-          </li>
-          <li>
-            <strong>Use Robust Localization Libraries:</strong> Leverage established libraries that handle complex
-            formatting requirements like ICU MessageFormat, pluralization rules, date/time formatting, etc. Don&apos;t
-            reinvent the wheel.
-          </li>
-          <li>
-            <strong>Design Flexible UI:</strong> Build layouts that can accommodate variable text lengths and adapt to
-            RTL direction. Avoid fixed-width containers for text where possible.
-          </li>
-          <li>
-            <strong>Provide Context:</strong> For translators, ensure keys in the JSON are descriptive, or use comments
-            within the JSON or external tools to provide context about where a string is used.
-          </li>
-          <li>
-            <strong>Implement Pseudo-localization Support:</strong> Integrate pseudo-localization into your build or
-            testing pipeline to catch layout issues early.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center space-x-2">
-          <ListChecks className="w-5 h-5 text-green-500" />
-          <span>For QA Testers:</span>
-        </h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Test on Real Localized Environments:</strong> Whenever possible, test on devices or browsers
-            configured to the target locale, not just by changing the application&apos;s language setting.
-          </li>
-          <li>
-            <strong>Follow Test Cases & Checklists:</strong> Use comprehensive test cases specifically designed for
-            localization, covering all UI elements and data displays driven by JSON.
-          </li>
-          <li>
-            <strong>Report Detailed Bugs:</strong> Provide screenshots (especially for UI/layout issues), specify the
-            locale and exact data used, and clearly describe the expected vs. actual result.
-            <Bug className="inline w-4 h-4 ml-1 text-red-500" />
-          </li>
-          <li>
-            <strong>Focus on High-Traffic Areas:</strong> Prioritize testing of critical user flows and frequently
-            viewed screens.
-          </li>
-          <li>
-            <strong>Perform Regression Testing:</strong>
-            After fixes or new features, re-test localization to ensure previous issues haven&apos;t reappeared.
-            <RefreshCcw className="inline w-4 h-4 ml-1 text-blue-500" />
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center space-x-2">
-          <Globe className="w-6 h-6" />
-          <span>Conclusion</span>
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <Languages className="h-6 w-6 text-purple-500" />
+          <span>Plural and Message Formatting Edge Cases</span>
         </h2>
         <p>
-          Localization testing for multilingual JSON formatters is a non-negotiable step in delivering a high-quality
-          internationalized application. It goes beyond simple translation verification, requiring attention to
-          formatting, layout, cultural nuances, and complex linguistic rules. By combining automated techniques like
-          pseudo-localization and functional tests with crucial manual linguistic and UI review, development teams can
-          ensure their JSON formatters provide a seamless and accurate experience for users worldwide.
+          Many teams still test pluralization as if every language were English. That misses a large class of defects.
+          Locale data used by modern formatters supports categories such as{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">zero</code>,{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">one</code>,{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">two</code>,{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">few</code>,{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">many</code>, and{" "}
+          <code className="rounded bg-gray-100 p-1 text-sm dark:bg-gray-800">other</code>, but not every locale uses
+          the same set or the same rules.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Test teens and twenties, not just 1 and 2.</li>
+          <li>Include fractional values if your app formats prices, sizes, or durations.</li>
+          <li>Prefer full localized messages over concatenating translated fragments around variables.</li>
+          <li>Review range wording if the UI renders values like 1-2 days or 3-5 results.</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <TestTube className="h-6 w-6 text-cyan-500" />
+          <span>RTL and Mixed-Direction Testing</span>
+        </h2>
+        <p>
+          Right-to-left testing is not only about flipping alignment. The harder bugs appear when localized UI contains
+          embedded left-to-right strings from JSON, such as SKU codes, product names, URLs, or addresses.
+        </p>
+        <pre className="overflow-x-auto rounded-lg bg-gray-100 p-4 text-sm dark:bg-gray-800">
+          <code>{bidiExample}</code>
+        </pre>
+        <p>
+          When the direction of injected content is unknown, isolate it instead of assuming the surrounding paragraph
+          direction is enough. In practice, test both Arabic and Hebrew pages with punctuation-heavy strings because
+          visual order mistakes are easier to miss in screenshots than simple translation errors.
+        </p>
+
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <Users className="h-6 w-6 text-emerald-500" />
+          <span>Automation, Pseudolocalization, and Human Review</span>
+        </h2>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          <li>
+            <strong>Unit and integration tests:</strong> assert deterministic formatter output from fixed JSON fixtures.
+          </li>
+          <li>
+            <strong>Pseudolocalization:</strong> expand strings, add markers, and run visual regression to catch
+            overflow before real translations arrive.
+          </li>
+          <li>
+            <strong>RTL screenshots:</strong> capture at least one end-to-end flow with real data, not placeholder text.
+          </li>
+          <li>
+            <strong>Manual linguistic review:</strong> native-speaker review remains essential for tone, context, and
+            cultural fit.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <Bug className="h-6 w-6 text-red-500" />
+          <span>Troubleshooting Checklist</span>
+        </h2>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          <li>
+            If output differs by machine, inspect locale, time zone, and ICU data before blaming the JSON payload.
+          </li>
+          <li>If only one locale fails, compare the raw message pattern first, then the variable values supplied.</li>
+          <li>If punctuation looks wrong in RTL, test with direction isolation instead of CSS-only fixes.</li>
+          <li>
+            If list output sounds awkward, replace manual joining logic with locale-aware list formatting and retest.
+          </li>
+          <li>If keys leak into the UI, make fallback behavior explicit and cover it with assertions.</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <ListChecks className="h-6 w-6 text-green-500" />
+          <span>Release Checklist</span>
+        </h2>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          {releaseChecklist.map((item) => (
+            <li key={item} className="flex items-start space-x-2">
+              <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="mt-8 flex items-center space-x-2 text-2xl font-semibold">
+          <RefreshCcw className="h-6 w-6 text-blue-500" />
+          <span>Bottom Line</span>
+        </h2>
+        <p>
+          A strong multilingual JSON formatter test plan is small, deliberate, and realistic. Cover representative
+          locales, pin environment-sensitive values, use current internationalization APIs as your baseline, and treat
+          plural rules plus mixed-direction text as first-class test targets. That produces a page and a product that
+          actually work for global users, not just for the developer who wrote the formatter.
         </p>
       </div>
     </>

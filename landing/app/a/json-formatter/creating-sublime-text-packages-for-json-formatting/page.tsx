@@ -1,500 +1,346 @@
 import type { Metadata } from "next";
 import {
   Code,
-  Settings,
-  Package,
-  Wrench, // Corrected: Tool is not exported, using Wrench instead
-  FileJson2,
   Command,
-  Keyboard,
-  Play,
+  FileJson2,
   Info,
-  Brain,
-  FlaskConical,
+  Keyboard,
+  Package,
+  Settings,
+  Wrench,
 } from "lucide-react";
 
+const packageStructure = String.raw`JsonFormatter/
+├── .python-version
+├── json_formatter.py
+├── Default.sublime-commands
+└── JsonFormatter.sublime-settings`;
+
+const pythonVersionFile = String.raw`3.8`;
+
+const pluginCode = String.raw`import json
+
+import sublime
+import sublime_plugin
+
+
+def normalized_regions(view, whole_file_if_no_selection):
+    selections = [region for region in view.sel() if not region.empty()]
+    if selections:
+        return selections
+    if whole_file_if_no_selection:
+        return [sublime.Region(0, view.size())]
+    return []
+
+
+def line_ending_for_view(view):
+    line_endings = view.line_endings()
+    if line_endings == "Windows":
+        return "\r\n"
+    if line_endings == "CR":
+        return "\r"
+    return "\n"
+
+
+class JsonFormatterCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        settings = sublime.load_settings("JsonFormatter.sublime-settings")
+        indent = settings.get("indent", 2)
+        sort_keys = settings.get("sort_keys", False)
+        ensure_ascii = settings.get("ensure_ascii", False)
+        whole_file_if_no_selection = settings.get("whole_file_if_no_selection", True)
+
+        regions = normalized_regions(self.view, whole_file_if_no_selection)
+        if not regions:
+            sublime.status_message("Select JSON first")
+            return
+
+        replacements = []
+        line_ending = line_ending_for_view(self.view)
+
+        for region in regions:
+            source = self.view.substr(region)
+            try:
+                parsed = json.loads(source)
+            except json.JSONDecodeError as exc:
+                sublime.error_message(
+                    "Invalid JSON at line {}, column {}: {}".format(
+                        exc.lineno,
+                        exc.colno,
+                        exc.msg,
+                    )
+                )
+                return
+
+            formatted = json.dumps(
+                parsed,
+                indent=indent,
+                sort_keys=sort_keys,
+                ensure_ascii=ensure_ascii,
+            ).replace("\n", line_ending)
+
+            replacements.append((region, formatted))
+
+        for region, formatted in reversed(replacements):
+            self.view.replace(edit, region, formatted)
+
+        sublime.status_message("JSON formatted")`;
+
+const commandsFile = String.raw`[
+  {
+    "caption": "JSON Formatter: Format JSON",
+    "command": "json_formatter"
+  }
+]`;
+
+const settingsFile = String.raw`{
+  "indent": 2,
+  "sort_keys": false,
+  "ensure_ascii": false,
+  "whole_file_if_no_selection": true
+}`;
+
+const keymapFile = String.raw`[
+  {
+    "keys": ["primary+alt+j"],
+    "command": "json_formatter",
+    "context": [
+      { "key": "selector", "operator": "equal", "operand": "source.json" }
+    ]
+  }
+]`;
+
 export const metadata: Metadata = {
-  title: "Creating Sublime Text Packages for JSON Formatting | Sublime Text",
+  title: "Creating Sublime Text Packages for JSON Formatting | Offline Tools",
   description:
-    "Learn how to create Sublime Text packages (plugins, build systems, keybindings) to automatically format JSON data.",
+    "Format JSON in Sublime Text with Package Control or build a small custom package with a command palette entry, settings, and an optional keybinding.",
 };
 
 export default function SublimeTextJsonFormatterPackageArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">Creating Sublime Text Packages for JSON Formatting</h1>
+      <h1 className="mb-6 text-3xl font-bold">Creating Sublime Text Packages for JSON Formatting</h1>
 
       <div className="space-y-6 text-lg">
         <p>
-          Sublime Text is a powerful and highly customizable text editor widely used by developers. One of its greatest
-          strengths lies in its extensive package system, allowing users to extend its functionality with plugins, color
-          schemes, syntax definitions, and more. For developers working frequently with JSON data, having a quick and
-          reliable way to format ugly, unreadable JSON is essential. This guide will walk you through creating your own
-          Sublime Text package specifically for JSON formatting.
+          If your only goal is to format JSON in Sublime Text, the quickest path in March 2026 is still to install a
+          formatter package through{" "}
+          <a
+            href="https://packagecontrol.io/docs/usage"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600 underline decoration-blue-300 underline-offset-2 dark:text-blue-400"
+          >
+            Package Control
+          </a>{" "}
+          and use an existing command such as{" "}
+          <a
+            href="https://packagecontrol.io/packages/Pretty%20JSON"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600 underline decoration-blue-300 underline-offset-2 dark:text-blue-400"
+          >
+            Pretty JSON
+          </a>
+          . Build your own package when you want a fixed team workflow, custom indentation rules, selection-aware
+          formatting, or an offline-friendly command with no third-party formatter dependency.
         </p>
         <p>
-          We'll explore two main approaches: using an external formatter tool and building a simple Python plugin that
-          leverages Sublime Text's built-in capabilities and Python's standard library.
+          This guide focuses on the custom-package route, but it starts with the shortest answer for search visitors:
+          how to format JSON in Sublime Text today, and then how to package that behavior cleanly for reuse.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Info className="inline-block mr-2 text-blue-500" /> What is a Sublime Text Package?
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Wrench className="mr-2 inline-block text-green-500" /> Fastest Option if You Just Want a JSON Formatter
         </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Open the Command Palette with <code>Ctrl+Shift+P</code> on Windows/Linux or <code>Cmd+Shift+P</code> on macOS.</li>
+          <li>Run <code>Package Control: Install Package</code>.</li>
+          <li>Install <code>Pretty JSON</code>.</li>
+          <li>Use the package command to format the active JSON buffer, validate JSON, or minify it when needed.</li>
+        </ul>
         <p>
-          A Sublime Text package is essentially a collection of files organized in a specific directory structure that
-          Sublime Text recognizes. These files can include Python scripts (.py) for plugins, JSON files for settings,
-          key bindings, and commands, XML files for syntax definitions, and more. Packages are installed in the
-          "Packages" directory of your Sublime Text installation. They can be installed as loose files (recommended for
-          development) or as compressed `.sublime-package` files (recommended for distribution).
+          That is usually enough for the search intent behind queries like &quot;format json in sublime text&quot; or
+          &quot;sublime text json formatter&quot;. A custom package is the better choice when you want your own command
+          name, settings file, and predictable behavior across machines.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Wrench className="inline-block mr-2 text-green-500" /> Prerequisites &#x20;(Corrected: Used Wrench icon)
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Info className="mr-2 inline-block text-blue-500" /> When a Custom Package Is Worth It
         </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Sublime Text installed (version 3 or 4 recommended).</li>
-          <li>Basic familiarity with JSON structure.</li>
-          <li>
-            For Method 1 (External Formatter): An external JSON formatting tool (like <code>jq</code>,{" "}
-            <code>prettier</code>, or even Python's
-            <code>json.tool</code> module via the command line) installed and available in your system's PATH.
-          </li>
-          <li>
-            For Method 2 (Python Plugin): Basic understanding of Python (Sublime Text plugins are written in Python).
-          </li>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>You want one command that formats either the current selection or the whole file.</li>
+          <li>You need package-specific settings such as <code>indent</code>, <code>sort_keys</code>, or ASCII escaping.</li>
+          <li>You want to avoid shipping a default keybinding that may collide with another package.</li>
+          <li>You need a formatter that still works in locked-down or offline environments.</li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Code className="inline-block mr-2 text-purple-500" /> Package Structure
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Package className="mr-2 inline-block text-indigo-500" /> Create the Package Folder
         </h2>
         <p>
-          To start, open Sublime Text and go to <code>Preferences &gt; Browse Packages...</code>. This will open the
-          "Packages" directory in your file explorer. Create a new folder inside this directory for your package. Let's
-          call it <code>JsonFormatter</code>.
+          Start in <code>Preferences &gt; Browse Packages...</code>. Create a folder named <code>JsonFormatter</code>{" "}
+          and put your package files at that folder&apos;s root.
         </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
           <pre>
-            <code>
-              Packages/ <br />
-              ├── User/ (Existing folder for your personal settings) <br />
-              └── JsonFormatter/ (New folder for your package) <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;├── Default.sublime-commands (Command Palette entries) <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;├── Default.sublime-keymap (Keyboard shortcuts) <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;└── ... other package files will go here ...
-            </code>
+            <code>{packageStructure}</code>
           </pre>
         </div>
         <p>
-          We'll add more files to the <code>JsonFormatter</code> folder depending on the method we choose.
+          For a new package, add a <code>.python-version</code> file as well. The current Sublime Text API docs still
+          describe package-level opt-in to Python <code>3.8</code>, and Sublime HQ&apos;s May 21, 2025 build notes
+          explicitly said Python 3.3 is being phased out. Starting with <code>3.8</code> now saves migration work.
         </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <FlaskConical className="inline-block mr-2 text-orange-500" /> Method 1: Using an External Formatter
-        </h2>
-        <p>
-          This method is simpler if you already have a preferred command-line JSON formatter. Sublime Text can be
-          configured to send the current buffer's content to an external command and replace the buffer content with the
-          command's output. This is typically done using a "Build System" or directly via a Python plugin that uses the
-          `subprocess` module. We'll use a Build System as it's a common and relatively easy way to achieve this.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <FileJson2 className="inline-block mr-2 text-yellow-600" /> Creating a Build System
-        </h3>
-        <p>
-          Inside your <code>JsonFormatter</code> package folder, create a new file named{" "}
-          <code>JsonFormatter.sublime-build</code>.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">JsonFormatter.sublime-build:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">.python-version</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
             <pre>
-              <code>
-                &#x7b; <br />
-                &nbsp;&nbsp;&quot;name&quot;: &quot;JSON Formatter (External)&quot;, <br />
-                &nbsp;&nbsp;&quot;cmd&quot;: [&quot;python&quot;, &quot;-m&quot;, &quot;json.tool&quot;], <br />
-                &nbsp;&nbsp;&quot;file_regex&quot;: &quot;^...<em>(.</em>?):([0-9]+):?([0-9]+)?&quot;, <br />
-                &nbsp;&nbsp;&quot;selector&quot;: &quot;source.json&quot;, <br />
-                &nbsp;&nbsp;&quot;shell&quot;: true, <br />
-                &nbsp;&nbsp;&quot;working_dir&quot;: &quot;$file_path&quot;, <br />
-                &nbsp;&nbsp;&quot;input_regex&quot;: &quot;&quot;, <br />
-                &nbsp;&nbsp;&quot;target&quot;: &quot;pipe_build&quot;, <br />
-                &nbsp;&nbsp;&quot;pipe_input&quot;: &quot;$contents&quot; <br />
-                &#x7d;
-              </code>
+              <code>{pythonVersionFile}</code>
             </pre>
           </div>
         </div>
-        <p>Let's break down this JSON file:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Code className="mr-2 inline-block text-purple-500" /> Add the Formatter Command
+        </h2>
+        <p>
+          Put the core logic in <code>json_formatter.py</code>. This example formats either the current selection or,
+          if nothing is selected, the whole file. It also preserves the view&apos;s line endings and stops on invalid
+          JSON instead of silently rewriting broken data.
+        </p>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">json_formatter.py</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              <code>{pluginCode}</code>
+            </pre>
+          </div>
+        </div>
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <code>"name"</code>: The name that appears in the Build System menu.
+            <code>JsonFormatterCommand</code> becomes the command name <code>json_formatter</code> inside Sublime
+            Text.
           </li>
           <li>
-            <code>"cmd"</code>: The command to execute. Here, we use Python's built-in <code>json.tool</code> module.
-            You could replace this with
-            <code>[&quot;jq&quot;]</code> or <code>[&quot;prettier&quot;, &quot;--parser&quot;, &quot;json&quot;]</code>
-            or any other command-line JSON formatter.
+            Selection support is useful when the JSON you need to clean up is embedded inside a larger file or log.
           </li>
           <li>
-            <code>"selector"</code>: This build system will only be available when editing files with the `source.json`
-            syntax (i.e., JSON files).
+            <code>ensure_ascii</code> is left configurable because many teams prefer readable UTF-8 output instead of
+            escaped Unicode sequences.
+          </li>
+        </ul>
+        <p>
+          If your team standardizes on <code>jq</code> or <code>prettier</code>, keep the same package skeleton and
+          swap the <code>json.dumps</code> call for a <code>subprocess.run(...)</code> wrapper. For editor formatting, a{" "}
+          <code>TextCommand</code> is usually a better fit than a build system because it can update the current
+          buffer directly.
+        </p>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Command className="mr-2 inline-block text-red-500" /> Add a Command Palette Entry
+        </h2>
+        <p>
+          Create <code>Default.sublime-commands</code> so the formatter is discoverable without remembering a
+          keybinding.
+        </p>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Default.sublime-commands</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              <code>{commandsFile}</code>
+            </pre>
+          </div>
+        </div>
+        <p>
+          After saving the file, open the Command Palette and run <code>JSON Formatter: Format JSON</code>. For a
+          package you intend to share, this is often enough on its own.
+        </p>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Settings className="mr-2 inline-block text-purple-500" /> Add Package Settings
+        </h2>
+        <p>
+          Keep formatting choices in a dedicated settings file instead of hard-coding them into the plugin. That makes
+          the package easier to reuse and easier for users to override in their <code>User</code> package.
+        </p>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">JsonFormatter.sublime-settings</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              <code>{settingsFile}</code>
+            </pre>
+          </div>
+        </div>
+        <p>
+          Put user-specific overrides in <code>Packages/User/JsonFormatter.sublime-settings</code>. For example, you
+          might keep the package default at two spaces while a personal override sets <code>indent</code> to{" "}
+          <code>4</code> or <code>&quot;\t&quot;</code>.
+        </p>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Keyboard className="mr-2 inline-block text-teal-500" /> Add a Keybinding Only if You Want One
+        </h2>
+        <p>
+          Current formatter packages increasingly avoid shipping default shortcuts because collisions are common. For a
+          local workflow, add the keybinding in <code>Packages/User/Default.sublime-keymap</code> instead of baking it
+          into the package.
+        </p>
+        <div className="my-4 overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Packages/User/Default.sublime-keymap</h3>
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
+            <pre>
+              <code>{keymapFile}</code>
+            </pre>
+          </div>
+        </div>
+        <p>
+          The <code>primary</code> modifier maps to <code>Ctrl</code> on Windows/Linux and <code>Cmd</code> on macOS,
+          so one keybinding works across platforms. The selector guard keeps the shortcut limited to JSON buffers.
+        </p>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <FileJson2 className="mr-2 inline-block text-yellow-600" /> Package It for Reuse
+        </h2>
+        <p>
+          For personal use, the loose package inside the folder opened by <code>Browse Packages...</code> is enough.
+          Sublime Text will load the command from there.
+        </p>
+        <p>
+          If you want to hand the package to someone else, use <code>Package Control: Create Package File</code>{" "}
+          instead of manually zipping the folder. That produces a <code>.sublime-package</code> archive in the format
+          Sublime expects.
+        </p>
+
+        <h2 className="mt-8 text-2xl font-semibold">Troubleshooting</h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            If the command does not appear, confirm that <code>json_formatter.py</code> is at the root of the package
+            folder and that the package folder name matches the paths used by your settings file.
           </li>
           <li>
-            <code>"shell"</code>: Set to true if your command needs to run in a shell (e.g., for piping).
+            If formatting fails, check whether the buffer contains comments or trailing commas. Standard JSON does not
+            allow either of those.
           </li>
           <li>
-            <code>"target": "pipe_build"</code>: This special target allows piping input to the command and replacing
-            the buffer with the output.
+            If the keybinding never fires, remove it and test the Command Palette entry first. Shortcut conflicts are
+            more common than plugin loading problems.
           </li>
           <li>
-            <code>"pipe_input": "$contents"</code>: This tells Sublime Text to pipe the entire content of the current
-            buffer (`$contents`) as input to the command specified in <code>"cmd"</code>.
-          </li>
-          <li>
-            <code>"file_regex"</code>, <code>"working_dir"</code>,<code>"input_regex"</code>: Standard build system
-            keys; adjusted for piping but less critical for simple formatting.
+            If you only want a maintained formatter and not a custom workflow, go back to Package Control and install
+            an existing package instead of maintaining code yourself.
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Command className="inline-block mr-2 text-red-500" /> Adding Command Palette Entry
-        </h3>
+        <h2 className="mt-8 text-2xl font-semibold">Conclusion</h2>
         <p>
-          To make this easily accessible via the Command Palette (<code>Ctrl+Shift+P</code> or <code>Cmd+Shift+P</code>
-          ), create a file named <code>Default.sublime-commands</code> in your
-          <code>JsonFormatter</code> folder.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Default.sublime-commands:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                [ <br />
-                &nbsp;&nbsp;&#x7b; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;caption&quot;: &quot;JsonFormatter: Format JSON (External)&quot;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;command&quot;: &quot;build&quot;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;args&quot;: &#x7b; &quot;build_system&quot;:
-                &quot;Packages/JsonFormatter/JsonFormatter.sublime-build&quot; &#x7d; <br />
-                &nbsp;&nbsp;&#x7d; <br />]
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          Now you can open a JSON file, press <code>Ctrl+Shift+P</code>, type "JsonFormatter", and select
-          "JsonFormatter: Format JSON (External)" to format the current file.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Keyboard className="inline-block mr-2 text-teal-500" /> Adding a Keyboard Shortcut
-        </h3>
-        <p>
-          For even faster access, add a keyboard shortcut. Create or edit the
-          <code>Default.sublime-keymap</code> file in your <code>JsonFormatter</code>
-          folder.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Default.sublime-keymap:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                [ <br />
-                &nbsp;&nbsp;&#x7b; &quot;keys&quot;: [&quot;ctrl+alt+f&quot;], &quot;command&quot;: &quot;build&quot;,
-                &quot;args&quot;: &#x7b; &quot;build_system&quot;:
-                &quot;Packages/JsonFormatter/JsonFormatter.sublime-build&quot; &#x7d; &#x7d;, <br />
-                &nbsp;&nbsp; {/* Add other keybindings here if needed */} <br />]
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          This example assigns <code>Ctrl+Alt+F</code> (or <code>Cmd+Alt+F</code> on macOS) to run the build system when
-          a key combination is pressed. Choose a key combination that doesn't conflict with existing shortcuts.
-        </p>
-        <p className="flex items-center">
-          <Play className="inline-block mr-2 text-blue-500" />
-          <strong>To use this method:</strong> Open a JSON file, ensure its syntax is set to JSON, and either run the
-          build system manually (<code>Tools &gt; Build System &gt; JSON Formatter (External)</code> then{" "}
-          <code>Tools &gt; Build</code> or press <code>F7</code>), use the Command Palette entry, or press your defined
-          keyboard shortcut.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Brain className="inline-block mr-2 text-blue-500" /> Method 2: Using a Python Plugin
-        </h2>
-        <p>
-          For more control, or if you don't want to rely on external command-line tools, you can write a Python plugin.
-          Sublime Text provides an API that allows plugins to interact with views (editor tabs), selections, settings,
-          and more.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <FileJson2 className="inline-block mr-2 text-yellow-600" /> Creating the Plugin File
-        </h3>
-        <p>
-          Inside your <code>JsonFormatter</code> package folder, create a new file named{" "}
-          <code>json_formatter_plugin.py</code>.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">json_formatter_plugin.py:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                import sublime <br />
-                import sublime_plugin <br />
-                import json <br />
-                <br />
-                class FormatJsonCommand(sublime_plugin.TextCommand): <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;&quot;&quot; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;Sublime Text Command to format the current view&apos;s JSON content. <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;&quot;&quot; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;def run(self, edit): <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view = self.view <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Get the entire content of the buffer <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; region = sublime.Region(0, view.size()) <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; content = view.substr(region) <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try: <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Parse the JSON content <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data = json.loads(content){" "}
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Format the JSON <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Use indent=4 for readability,
-                separators=(', ', ': ') for standard formatting <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; formatted_json =
-                json.dumps(data, indent=4, separators=(&apos;, &apos;, &apos;: &apos;)) <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Replace the original content
-                with the formatted JSON <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; view.replace(edit, region,
-                formatted_json) <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Optional: show a status
-                message <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                sublime.status_message(&quot;JSON formatted successfully!&quot;) <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; except json.JSONDecodeError as e: <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Handle JSON parsing errors{" "}
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                sublime.error_message(f&quot;JSON Formatting Error: &#x7b;e&#x7d;&quot;) <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; except Exception as e: <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Handle any other potential
-                errors <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sublime.error_message(f&quot;An
-                unexpected error occurred: &#x7b;e&#x7d;&quot;) <br />
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>Explanation of the Python code:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <code>import sublime, sublime_plugin, json</code>: Imports the necessary Sublime Text modules and Python's
-            built-in JSON library.
-          </li>
-          <li>
-            <code>class FormatJsonCommand(...)</code>: Defines a custom Sublime Text command. The class name implicitly
-            defines the command name (lowercase and underscores): <code>format_json</code>.
-          </li>
-          <li>
-            <code>def run(self, edit):</code>: This is the method Sublime Text calls when the command is executed. The{" "}
-            <code>edit</code> object is required for making modifications to the buffer.
-          </li>
-          <li>
-            <code>view = self.view</code>: Gets the current editor view object.
-          </li>
-          <li>
-            <code>region = sublime.Region(0, view.size())</code>: Creates a region that covers the entire buffer
-            content.
-          </li>
-          <li>
-            <code>content = view.substr(region)</code>: Reads the text content within the defined region (the whole
-            file).
-          </li>
-          <li>
-            <code>json.loads(content)</code>: Parses the string content into a Python dictionary or list.
-          </li>
-          <li>
-            <code>json.dumps(data, indent=4, separators=...)</code>: Converts the Python object back into a JSON string,
-            using 4-space indentation and standard separators for pretty-printing.
-          </li>
-          <li>
-            <code>view.replace(edit, region, formatted_json)</code>: Replaces the original content (covered by the{" "}
-            <code>region</code>) with the
-            <code>formatted_json</code> string. This requires the <code>edit</code>
-            object obtained in the <code>run</code> method.
-          </li>
-          <li>
-            <code>try...except json.JSONDecodeError</code>: Basic error handling to catch invalid JSON input. Sublime
-            Text's <code>error_message</code>
-            is used to display a popup.
-          </li>
-          <li>
-            <code>sublime.status_message(...)</code>: Displays a temporary message in the status bar.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Command className="inline-block mr-2 text-red-500" /> Adding Command Palette Entry (for Plugin)
-        </h3>
-        <p>
-          Edit your <code>Default.sublime-commands</code> file in the <code>JsonFormatter</code> folder to add an entry
-          for the new plugin command.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Default.sublime-commands:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                [ <br />
-                &nbsp;&nbsp;&#x7b; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;caption&quot;: &quot;JsonFormatter: Format JSON (Plugin)&quot;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;command&quot;: &quot;format_json&quot; <br />
-                &nbsp;&nbsp;&#x7d; <br />
-                &nbsp;&nbsp;, <br />
-                &nbsp;&nbsp; {/* Optional: Keep the external formatter command if you want */} <br />
-                &nbsp;&nbsp;&#x7b; <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;caption&quot;: &quot;JsonFormatter: Format JSON (External)&quot;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;command&quot;: &quot;build&quot;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&quot;args&quot;: &#x7b; &quot;build_system&quot;:
-                &quot;Packages/JsonFormatter/JsonFormatter.sublime-build&quot; &#x7d; <br />
-                &nbsp;&nbsp;&#x7d; <br />]
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          Notice the <code>"command": "format_json"</code> matches the lowercase, underscore version of your Python
-          class name <code>FormatJsonCommand</code>.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Keyboard className="inline-block mr-2 text-teal-500" /> Adding a Keyboard Shortcut (for Plugin)
-        </h3>
-        <p>
-          Edit your <code>Default.sublime-keymap</code> file to add a shortcut for the plugin command.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Default.sublime-keymap:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                [ <br />
-                &nbsp;&nbsp;&#x7b; &quot;keys&quot;: [&quot;ctrl+alt+j&quot;], &quot;command&quot;:
-                &quot;format_json&quot;, &quot;context&quot;: <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;[ <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x7b; &quot;key&quot;: &quot;selector&quot;, &quot;operator&quot;:
-                &quot;equal&quot;, &quot;operand&quot;: &quot;source.json&quot; &#x7d;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x7b; &quot;key&quot;: &quot;setting.json&quot;,
-                &quot;operator&quot;: &quot;equal&quot;, &quot;operand&quot;: true &#x7d;, <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;] <br />
-                &nbsp;&nbsp;&#x7d;, <br />
-                &nbsp;&nbsp; {/* Optional: Keep the external formatter shortcut if you want */} <br />
-                &nbsp;&nbsp;&#x7b; &quot;keys&quot;: [&quot;ctrl+alt+f&quot;], &quot;command&quot;: &quot;build&quot;,
-                &quot;args&quot;: &#x7b; &quot;build_system&quot;:
-                &quot;Packages/JsonFormatter/JsonFormatter.sublime-build&quot; &#x7d; &#x7d; <br />
-                &nbsp;&nbsp; {/* Add other keybindings here if needed */} <br />]
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          This example assigns <code>Ctrl+Alt+J</code> (or <code>Cmd+Alt+J</code>) to run the <code>format_json</code>{" "}
-          command. We've also added a<code>"context"</code> key to ensure this shortcut only activates when editing a
-          JSON file (`source.json` syntax).
-        </p>
-        <p className="flex items-center">
-          <Play className="inline-block mr-2 text-blue-500" />
-          <strong>To use this method:</strong> Open a JSON file, ensure its syntax is set to JSON, and either use the
-          Command Palette entry ("JsonFormatter: Format JSON (Plugin)") or press your defined keyboard shortcut (e.g.,{" "}
-          <code>Ctrl+Alt+J</code>). Sublime Text automatically loads and reloads plugin files ending in <code>.py</code>{" "}
-          in the Packages directory.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Settings className="inline-block mr-2 text-purple-500" /> Customization and Settings
-        </h2>
-        <p>
-          For the Python plugin method, you might want to make the indentation level or other <code>json.dumps</code>{" "}
-          parameters configurable. You can do this by adding a settings file.
+          The simplest way to format JSON in Sublime Text is to install a formatter package. The simplest way to own
+          the behavior is a tiny package built around one <code>TextCommand</code>, one commands file, and one settings
+          file.
         </p>
         <p>
-          Create a file named <code>JsonFormatter.sublime-settings</code> in your
-          <code>JsonFormatter</code> folder.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">JsonFormatter.sublime-settings:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                &#x7b; <br />
-                &nbsp;&nbsp;// The number of spaces to use for indentation when formatting JSON <br />
-                &nbsp;&nbsp;&quot;json_indent_spaces&quot;: 4 <br />
-                &#x7d;
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          Then, in your <code>json_formatter_plugin.py</code>, you can read this setting:
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">Reading settings in json_formatter_plugin.py:</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              <code>
-                # Inside the run method: <br />
-                settings = sublime.load_settings(&apos;JsonFormatter.sublime-settings&apos;) <br />
-                indent_spaces = settings.get(&apos;json_indent_spaces&apos;, 4) # Default to 4 if setting not found{" "}
-                <br />
-                <br />
-                # Then use it in json.dumps: <br />
-                formatted_json = json.dumps(data, indent=indent_spaces, separators=(&apos;, &apos;, &apos;: &apos;)){" "}
-                <br />
-              </code>
-            </pre>
-          </div>
-        </div>
-        <p>
-          Users can override this setting by creating a file with the same name in their <code>User</code> package
-          folder (<code>Packages/User/JsonFormatter.sublime-settings</code>).
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Package className="inline-block mr-2 text-indigo-500" /> Installing the Package
-        </h2>
-        <p>
-          If you followed the steps above and placed the files in a new folder (e.g.,{" "}
-          <code>Packages/JsonFormatter</code>), your package is already "installed" in development mode. Sublime Text
-          automatically picks up changes to <code>.py</code>, <code>.sublime-commands</code>, and{" "}
-          <code>.sublime-keymap</code> files. You might need to restart Sublime Text for build systems
-          (`.sublime-build`) to appear in the menu, but the Command Palette and keybindings should work immediately
-          after saving the files.
-        </p>
-        <p>
-          For distributing your package, you would typically zip the contents of the <code>JsonFormatter</code> folder
-          and rename the zip file to
-          <code>JsonFormatter.sublime-package</code>. Users can then install this by dragging it into the "Installed
-          Packages" directory (<code>Preferences &gt; Browse Packages...</code> and navigate up one level to find
-          "Installed Packages").
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
-        <p>
-          Creating Sublime Text packages for JSON formatting is a practical way to automate a common development task
-          and tailor your editor workflow. Whether you prefer leveraging existing external tools via a build system or
-          crafting a custom solution with a Python plugin, Sublime Text's flexible package system provides the necessary
-          tools.
-        </p>
-        <p>
-          By following the steps outlined above, you've not only created a useful utility but also gained insight into
-          how Sublime Text packages work, which opens the door to further customization and development of more complex
-          tools within your favorite text editor.
+          That gives you a reusable Sublime Text JSON formatter without turning a small editor convenience into a large
+          plugin project.
         </p>
       </div>
     </>

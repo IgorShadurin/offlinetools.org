@@ -1,403 +1,391 @@
 import type { Metadata } from "next";
 import {
-  Library,
-  Code,
-  Settings,
   AlertCircle,
-  BookOpen,
   ArrowLeftRight,
+  BookOpen,
+  CheckCircle2,
+  Code,
   Component,
-  Package,
   GitBranch,
+  Library,
+  Package,
+  Settings,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Ada Language JSON Libraries and Format Converters | Offline Tools",
   description:
-    "Explore the options for working with JSON data in the Ada programming language, including popular libraries and techniques for format conversion.",
+    "Current Ada JSON options for real projects, including GNATCOLL.JSON, json-ada, VSS JSON, code examples, Unicode caveats, and practical format-conversion advice.",
 };
 
 export default function AdaJsonArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">Ada Language JSON Libraries and Format Converters</h1>
+      <h1 className="mb-6 text-3xl font-bold">Ada Language JSON Libraries and Format Converters</h1>
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) has become a ubiquitous data interchange format across various programming
-          ecosystems. For Ada developers, interacting with web services, configuration files, or external systems often
-          necessitates reading and writing JSON data. While Ada is known for its strong typing and safety features, it
-          also has libraries available to handle the dynamic nature of JSON effectively.
+          If you searched for <strong>Ada JSON</strong>, the practical answer in 2026 is not just &quot;yes, Ada can
+          do JSON.&quot; The real question is which library fits your project, how much streaming support you need, and
+          whether you are building a standalone tool or working inside a larger Ada framework.
         </p>
         <p>
-          This page explores the landscape of JSON processing in Ada, focusing on available libraries and common
-          patterns for parsing JSON into Ada data structures and generating JSON from Ada data.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">
-          <Library className="inline-block w-6 h-6 mr-2 text-blue-500" /> Key Ada JSON Libraries
-        </h2>
-        <p>
-          Several libraries cater to JSON handling in Ada, each with its strengths and target environments. The most
-          prominent ones include:
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">
-          <Package className="inline-block w-5 h-5 mr-2 text-green-600" /> AWA.JSON
-        </h3>
-        <p>
-          Part of the Ada Web Applications (AWA) framework,{" "}
+          For most new projects,{" "}
           <a
-            href="https://docs.getawa.dev/json.html"
+            href="https://docs.adacore.com/gnatcoll-docs/json.html"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline dark:text-blue-400"
           >
-            AWA.JSON
+            GNATCOLL.JSON
           </a>{" "}
-          is a mature and widely used library. It provides comprehensive capabilities for parsing, generating, and
-          manipulating JSON documents.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Representation:</strong> Uses a tagged type hierarchy (<code>JSON_Value</code>,{" "}
-            <code>JSON_Object</code>, <code>JSON_Array</code>, etc.) to represent JSON structures in memory.
-          </li>
-          <li>
-            <strong>Parsing:</strong> Offers SAX-like (event-based) and DOM-like (in-memory tree) parsing approaches.
-          </li>
-          <li>
-            <strong>Generating:</strong> Provides procedures to build JSON structures programmatically and render them
-            as strings.
-          </li>
-          <li>
-            <strong>Integration:</strong> Designed to integrate well within the AWA framework but can be used
-            independently.
-          </li>
-          <li>
-            <strong>Typing:</strong> Strong emphasis on type safety when extracting values (e.g., `Get_Field_String`,
-            `Get_Field_Integer`).
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">
-          <Package className="inline-block w-5 h-5 mr-2 text-green-600" /> JSON-Ada
-        </h3>
-        <p>
+          is the safest place to start. If you want a smaller dedicated package,{" "}
           <a
-            href="https://github.com/AdaCore/json-ada"
+            href="https://alire.ada.dev/crates/json.html"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline dark:text-blue-400"
           >
-            JSON-Ada
+            json-ada
           </a>{" "}
-          is another popular choice, developed by AdaCore. It offers a simpler API compared to AWA.JSON, focusing on
-          core parsing and generation.
+          remains a good lightweight option. If you are already using the VSS text stack, JSON support has moved into{" "}
+          <a
+            href="https://alire.ada.dev/crates/vss_extra.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            vss_extra
+          </a>
+          .
         </p>
-        <ul className="list-disc pl-6 space-6 my-4">
+
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+          <h2 className="text-2xl font-semibold">
+            <CheckCircle2 className="mr-2 inline-block h-6 w-6 text-blue-600" />
+            Quick Answer
+          </h2>
+          <ul className="my-4 list-disc space-y-2 pl-6">
+            <li>
+              Use <strong>GNATCOLL.JSON</strong> when you want the most established general-purpose choice with both
+              tree-style and incremental parsing APIs.
+            </li>
+            <li>
+              Use <strong>json-ada</strong> when you want a focused JSON package and you are comfortable with its
+              parser/generic-package style.
+            </li>
+            <li>
+              Use <strong>vss_extra</strong> only when your codebase already depends on the newer VSS ecosystem and you
+              want JSON support there.
+            </li>
+            <li>
+              For <strong>format conversion</strong>, expect to combine a source-format parser with a JSON writer.
+              There is no dominant &quot;universal converter&quot; package in the Ada ecosystem.
+            </li>
+          </ul>
+        </div>
+
+        <h2 className="mt-8 text-2xl font-semibold">
+          <Library className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Current Ada JSON Libraries
+        </h2>
+        <p>
+          Checked against current primary sources on March 11, 2026, the Ada ecosystem has a few realistic JSON paths
+          rather than a huge field of competing libraries. That is useful because the decision is usually clearer than
+          in larger language ecosystems.
+        </p>
+
+        <h3 className="mt-6 text-xl font-semibold">
+          <Package className="mr-2 inline-block h-5 w-5 text-green-600" />
+          GNATCOLL.JSON
+        </h3>
+        <p>
+          <a
+            href="https://docs.adacore.com/gnatcoll-docs/json.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            AdaCore&apos;s GNATCOLL.JSON documentation
+          </a>{" "}
+          shows two important modes: a normal in-memory JSON tree and an incremental parser API for larger streams.
+          The current{" "}
+          <a
+            href="https://alire.ada.dev/crates/gnatcoll.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Alire package listing
+          </a>{" "}
+          exposes <code>gnatcoll</code> version <strong>26.0.0</strong>.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <strong>Representation:</strong> Also uses a tagged type (<code>Json_Value</code>) to represent JSON values.
+            Best default for service code, CLI utilities, and mixed-tooling projects that already use other AdaCore
+            libraries.
           </li>
           <li>
-            <strong>Parsing:</strong> Primarily provides a DOM-like parsing interface.
+            Supports reading, writing, object and array manipulation, and lower-level parsing when you do not want to
+            build the full tree first.
           </li>
           <li>
-            <strong>Generating:</strong> Supports building JSON structures and serializing them.
-          </li>
-          <li>
-            <strong>Simplicity:</strong> Often perceived as having a more straightforward API for basic tasks.
+            A good fit when payload sizes vary and you do not want to paint yourself into a DOM-only corner.
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6">
-          <Package className="inline-block w-5 h-5 mr-2 text-green-600" /> Other Options / Standard Ada
+        <h3 className="mt-6 text-xl font-semibold">
+          <Package className="mr-2 inline-block h-5 w-5 text-green-600" />
+          json-ada
         </h3>
         <p>
-          While not standard library features, other community projects might exist. It's worth checking community
-          forums and repositories. Generally, for robust JSON support, relying on established libraries like AWA.JSON or
-          JSON-Ada is recommended.
+          The{" "}
+          <a
+            href="https://github.com/onox/json-ada"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            json-ada repository
+          </a>{" "}
+          describes a standalone parser, DOM model, pretty printer, and optional duplicate-key checking. Alire
+          currently lists it as the{" "}
+          <a
+            href="https://alire.ada.dev/crates/json.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            <code>json</code> crate at version 6.0.0
+          </a>
+          .
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            Smaller and more focused than GNATCOLL when you only need JSON and do not want a broader utility
+            collection.
+          </li>
+          <li>
+            Uses generic packages, so the setup feels a little more Ada-like and explicit than looser parser APIs in
+            other languages.
+          </li>
+          <li>
+            The project documentation still notes that escaped Unicode sequences such as <code>\uXXXX</code> are not
+            supported yet, so test this early if you process third-party API payloads.
+          </li>
+        </ul>
+
+        <h3 className="mt-6 text-xl font-semibold">
+          <Package className="mr-2 inline-block h-5 w-5 text-green-600" />
+          VSS JSON via vss_extra
+        </h3>
+        <p>
+          If your application already uses the Visual String Suite stack, JSON is now tied to the newer split
+          repositories rather than the old monolith. The original{" "}
+          <a
+            href="https://github.com/AdaCore/VSS"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            AdaCore VSS repository
+          </a>{" "}
+          was archived on <strong>October 6, 2025</strong> and points developers to <code>vss-text</code> and{" "}
+          <code>vss-extra</code>. Alire currently lists{" "}
+          <a
+            href="https://alire.ada.dev/crates/vss_extra.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            <code>vss_extra</code> 26.0.0
+          </a>{" "}
+          as a work in progress.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Relevant if you are already committed to VSS strings, text, and related infrastructure.</li>
+          <li>
+            Not the clearest first pick for a new project whose only requirement is JSON parsing or pretty-printing.
+          </li>
+        </ul>
+
+        <h3 className="mt-6 text-xl font-semibold">
+          <Component className="mr-2 inline-block h-5 w-5 text-green-600" />
+          AWA and Framework-Specific Layers
+        </h3>
+        <p>
+          If you are already inside the{" "}
+          <a
+            href="https://alire.ada.dev/crates/awa.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Ada Web Application
+          </a>{" "}
+          ecosystem, using its JSON support can reduce dependency churn. That said, search visitors looking for a
+          general Ada JSON answer usually want a library they can add to any project, and in that narrower sense
+          GNATCOLL.JSON and json-ada are the cleaner starting points.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          <Code className="inline-block w-6 h-6 mr-2 text-blue-500" /> Working with JSON: Examples
+        <h2 className="mt-8 text-2xl font-semibold">
+          <Settings className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Which Library Should You Choose?
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            Pick <strong>GNATCOLL.JSON</strong> if you want the most balanced default, especially for long-lived
+            applications or mixed-size payloads.
+          </li>
+          <li>
+            Pick <strong>json-ada</strong> if you prefer a dedicated JSON package and do not need GNATCOLL for
+            anything else.
+          </li>
+          <li>
+            Pick <strong>vss_extra</strong> if your team already standardized on the split VSS stack and wants to stay
+            inside that ecosystem.
+          </li>
+          <li>
+            Pick a <strong>framework-specific layer</strong> only when the rest of your application is already built
+            around that framework.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 text-2xl font-semibold">
+          <Code className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Real Ada Examples
         </h2>
         <p>
-          Let's look at simplified examples using a hypothetical library (drawing concepts from AWA.JSON and JSON-Ada)
-          to illustrate common tasks: parsing and generation.
+          The earlier generic pattern most articles use is not very helpful. These examples use actual package names so
+          you can recognize the APIs you will see in documentation and code search.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">Parsing JSON</h3>
-        <p>Converting a JSON string into an in-memory Ada representation.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Ada Example: Parsing a JSON Object</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+        <h3 className="mt-6 text-xl font-semibold">Parse and pretty-print with GNATCOLL.JSON</h3>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
             <pre>
-              {`with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Json_Library.Parser;   -- Hypothetical parser package
-with Json_Library.Values;   -- Hypothetical values package
-with Json_Library.Elements; -- Hypothetical element access
+              {`with Ada.Text_IO;    use Ada.Text_IO;
+with GNATCOLL.JSON; use GNATCOLL.JSON;
 
-procedure Parse_Example is
-   JSON_Input : Unbounded_String := To_Unbounded_String (
-      "{" & ASCII.LF &
-      "  ""name"": ""Ada Lovelace""," & ASCII.LF &
-      "  ""age"": 201," & ASCII.LF &
-      "  ""isStudent"": false," & ASCII.LF &
-      "  ""courses"": [""Mathematics"", ""Computer Science""]" & ASCII.LF &
-      "}"
-   );
-
-   Root_Value : aliased Json_Library.Values.Json_Value_Access; -- Pointer to the parsed value
-   Name       : Unbounded_String;
-   Age        : Integer;
-   Is_Student : Boolean;
-   Courses    : aliased Json_Library.Values.Json_Value_Access; -- Pointer to the courses array
+procedure Gnatcoll_Json_Demo is
+   Root : JSON_Value := Read ("{""name"":""Ada"",""kind"":""language"",""year"":1983}");
 begin
-   -- Parse the JSON string
-   Root_Value := Json_Library.Parser.Parse (JSON_Input);
-
-   -- Assuming the root is an object, access fields
-   if Root_Value.Is_Object then
-      declare
-         Root_Object : constant Json_Library.Values.Json_Object_Access :=
-            Root_Value.Get_Object; -- Type-safe access
-
-         Name_Value : aliased Json_Library.Values.Json_Value_Access;
-         Age_Value  : aliased Json_Library.Values.Json_Value_Access;
-         Is_Student_Value : aliased Json_Library.Values.Json_Value_Access;
-
-      begin
-         -- Access individual fields by name
-         Name_Value       := Root_Object.Get_Field ("name");
-         Age_Value        := Root_Object.Get_Field ("age");
-         Is_Student_Value := Root_Object.Get_Field ("isStudent");
-         Courses          := Root_Object.Get_Field ("courses");
-
-         -- Extract values with type checking
-         if Name_Value.Is_String then
-            Name := Name_Value.Get_String;
-            Put_Line ("Name: " & To_String (Name));
-         end if;
-
-         if Age_Value.Is_Integer then
-            Age := Age_Value.Get_Integer;
-            Put_Line ("Age: " & Integer'Image (Age));
-         end if;
-
-         if Is_Student_Value.Is_Boolean then
-            Is_Student := Is_Student_Value.Get_Boolean;
-            Put_Line ("Is Student: " & Boolean'Image (Is_Student));
-         end if;
-
-         if Courses.Is_Array then
-            Put_Line ("Courses:");
-            declare
-               Course_Array : constant Json_Library.Values.Json_Array_Access :=
-                  Courses.Get_Array;
-            begin
-               for I in 1 .. Course_Array.Length loop
-                  declare
-                     Course_Value : aliased Json_Library.Values.Json_Value_Access :=
-                        Course_Array.Get_Element (I);
-                  begin
-                     if Course_Value.Is_String then
-                        Put_Line ("- " & To_String (Course_Value.Get_String));
-                     end if;
-                  end;
-               end loop;
-            end;
-         end if;
-
-      exception
-         when Json_Library.Elements.Name_Error =>
-            Put_Line ("Error: Field not found or wrong type.");
-         when others =>
-            Put_Line ("An error occurred during access.");
-      end;
-   else
-      Put_Line ("Error: JSON root is not an object.");
+   if Has_Field (Root, "name") then
+      Put_Line ("Name: " & Get (Root, "name"));
    end if;
 
+   Set_Field (Root, "formatted_by", "Offline Tools");
+   Put_Line (Write (Root, Compact => False));
+
 exception
-   when Json_Library.Parser.Parse_Error =>
-      Put_Line ("Error: Invalid JSON format.");
-   when others =>
-      Put_Line ("An unexpected error occurred.");
-end Parse_Example;
+   when Invalid_JSON_Stream =>
+      Put_Line ("Input was not valid JSON.");
+end Gnatcoll_Json_Demo;
 `}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            <em>Note:</em> The package names (<code>Json_Library</code>, etc.) are illustrative and depend on the
-            specific library used (e.g., <code>AWA.JSON.Parsers</code>, <code>AWA.JSON.Values</code>, or packages from
-            JSON-Ada). Actual libraries provide similar functionalities but with specific package structures and type
-            names. Error handling is crucial; Ada libraries typically use exceptions.
+            This style is a good fit when you want a normal JSON object model first and only move to incremental
+            parsing when payload size demands it.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Generating JSON</h3>
-        <p>Creating a JSON string from Ada data structures or by building the JSON tree programmatically.</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Ada Example: Generating a JSON Object</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+        <h3 className="mt-6 text-xl font-semibold">Parse a document with json-ada</h3>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <div className="overflow-x-auto rounded bg-white p-3 dark:bg-gray-900">
             <pre>
-              {`with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Json_Library.Builder; -- Hypothetical builder package
-with Json_Library.Values;  -- Hypothetical values package
+              {`with Ada.Text_IO;
+with JSON.Parsers;
+with JSON.Types;
 
-procedure Generate_Example is
-   -- Data to be serialized
-   Name       : constant Unbounded_String := To_Unbounded_String ("Grace Hopper");
-   Age        : constant Integer := 85;
-   Is_Active  : constant Boolean := True;
-   Skills     : constant array (1 .. 2) of Unbounded_String :=
-      (To_Unbounded_String ("COBOL"), To_Unbounded_String ("Debugging"));
+procedure Json_Ada_Demo is
+   package Types is new JSON.Types (Long_Integer, Long_Float);
+   package Parsers is new JSON.Parsers (Types);
 
-   -- JSON structure built programmatically
-   Root_Object : aliased Json_Library.Values.Json_Value_Access; -- Pointer to the root object
-   Skills_Array : aliased Json_Library.Values.Json_Value_Access; -- Pointer to the skills array
-   JSON_Output : Unbounded_String;
-
+   Parser : Parsers.Parser := Parsers.Create ("{""tool"":""json formatter"",""valid"":true}");
+   Value  : constant Types.JSON_Value := Parser.Parse;
 begin
-   -- Create a new JSON object
-   Root_Object := Json_Library.Builder.New_Object;
-
-   -- Add fields to the object
-   Root_Object.Put ("name", Json_Library.Builder.New_String (Name));
-   Root_Object.Put ("age",  Json_Library.Builder.New_Integer (Age));
-   Root_Object.Put ("isActive", Json_Library.Builder.New_Boolean (Is_Active));
-
-   -- Create a JSON array for skills
-   Skills_Array := Json_Library.Builder.New_Array;
-   for Skill of Skills loop
-      Skills_Array.Append (Json_Library.Builder.New_String (Skill));
-   end loop;
-
-   -- Add the skills array to the root object
-   Root_Object.Put ("skills", Skills_Array);
-
-   -- Serialize the JSON structure to a string
-   JSON_Output := Json_Library.Builder.To_String (Root_Object);
-
-   -- Output the generated JSON
-   Put_Line ("Generated JSON:");
-   Put_Line (To_String (JSON_Output));
-
-   -- Don't forget to free memory managed by the JSON library if needed (depends on library)
-
-exception
-   when others =>
-      Put_Line ("An error occurred during generation.");
-end Generate_Example;
+   if Value.Contains ("tool") then
+      Ada.Text_IO.Put_Line (Value ("tool").Value);
+   end if;
+end Json_Ada_Demo;
 `}
             </pre>
           </div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            <em>Note:</em> Again, package names are illustrative. Libraries provide functions like{" "}
-            <code>New_Object</code>, <code>New_String</code>, <code>Put</code>, <code>New_Array</code>,{" "}
-            <code>Append</code>, and <code>To_String</code> to build and serialize the JSON structure. Memory management
-            (using access types/pointers) is important in Ada; modern libraries often handle this internally or provide
-            explicit cleanup procedures.
+            Keep the parser object alive while you use the parsed value tree. The project README explicitly documents
+            that lifetime requirement.
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          <ArrowLeftRight className="inline-block w-6 h-6 mr-2 text-blue-500" /> JSON and Format Converters
+        <h2 className="mt-8 text-2xl font-semibold">
+          <ArrowLeftRight className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Format Conversion in Practice
         </h2>
         <p>
-          Direct, general-purpose format conversion libraries (e.g., XML to JSON, YAML to JSON) might not be as common
-          or standardized in the Ada ecosystem compared to languages like Python or Java. However, you can achieve
-          format conversion using Ada JSON libraries in several ways:
+          Searchers also look for &quot;Ada JSON converters,&quot; but in practice most Ada teams build conversions as
+          small pipelines instead of pulling in one big conversion framework.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Parse the source format with the best library for that format, not with a JSON library.</li>
+          <li>Map the parsed data into Ada records or an intermediate object model you control.</li>
+          <li>Serialize the result with GNATCOLL.JSON, json-ada, or your framework&apos;s JSON layer.</li>
           <li>
-            <strong>JSON as an Intermediate:</strong> Parse the source format (e.g., XML) into a generic, in-memory tree
-            representation, then traverse that tree and build an AWA.JSON or JSON-Ada structure, and finally serialize
-            the JSON structure.
-          </li>
-          <li>
-            <strong>Leveraging Existing Parsers:</strong> Use an Ada library for the source format (e.g., an XML parser
-            if available), extract data, and then use a JSON library to construct the JSON output.
-          </li>
-          <li>
-            <strong>Calling External Tools:</strong> For complex or less common formats, it might be pragmatic to call
-            an external command-line tool (written in another language) from your Ada program to perform the conversion.
-          </li>
-          <li>
-            <strong>Schema-Based Conversion:</strong> If you have schemas for both formats, you might write Ada code
-            that directly maps elements/fields from one structure to the other based on the schema definitions.
+            Run the output through a formatter and validator so whitespace, escaping, and accidental trailing edits do
+            not become deployment bugs.
           </li>
         </ul>
         <p>
-          Building a robust, general-purpose converter in Ada often means using the existing parsers/generators for each
-          format involved and writing the mapping logic yourself.
+          That workflow is usually better than searching for a magic XML-to-JSON or CSV-to-JSON Ada package, because
+          the mapping rules nearly always depend on your domain model anyway.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          <Settings className="inline-block w-6 h-6 mr-2 text-blue-500" /> Practical Considerations
+        <h2 className="mt-8 text-2xl font-semibold">
+          <AlertCircle className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Common Pitfalls
         </h2>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <BookOpen className="inline-block w-5 h-5 mr-1 text-gray-600 dark:text-gray-400" />{" "}
-            <strong>Schema Validation:</strong> Ada JSON libraries typically don't include built-in JSON schema
-            validation. You may need to implement checks manually after parsing or use external tools.
+            <strong>Unicode edge cases:</strong> json-ada still documents missing support for escaped Unicode code
+            points, so do not assume every web API payload will parse cleanly without tests.
           </li>
           <li>
-            <GitBranch className="inline-block w-5 h-5 mr-1 text-gray-600 dark:text-gray-400" />{" "}
-            <strong>Performance and Memory:</strong> DOM-like parsing (building the whole tree in memory) can be
-            memory-intensive for very large JSON documents. Consider SAX-like parsing if available (like in AWA.JSON)
-            for streaming data.
+            <strong>Large documents:</strong> tree-style parsing is convenient, but GNATCOLL&apos;s incremental parser is
+            a better fit when payload size or memory pressure matters.
           </li>
           <li>
-            <AlertCircle className="inline-block w-5 h-5 mr-1 text-gray-600 dark:text-gray-400" />{" "}
-            <strong>Error Handling:</strong> JSON parsing and access can fail due to invalid format, missing fields, or
-            type mismatches. Use Ada's exception handling mechanisms (<code>begin...exception...end</code> blocks) to
-            catch errors gracefully, as shown in the parsing example.
+            <strong>Type mapping:</strong> JSON numbers, nulls, missing fields, and optional record components still
+            need explicit Ada-side rules.
           </li>
           <li>
-            <Component className="inline-block w-5 h-5 mr-1 text-gray-600 dark:text-gray-400" />{" "}
-            <strong>Integration with Ada Types:</strong> Mapping between generic JSON values and specific Ada record
-            types often requires manual coding. Libraries might offer helper utilities, but it's a common task
-            developers handle.
+            <strong>Schema validation:</strong> validation is usually a separate concern. Most Ada JSON libraries focus
+            on parsing and writing, not full JSON Schema tooling.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8">
-          <Library className="inline-block w-6 h-6 mr-2 text-blue-500" /> Choosing a Library
+        <h2 className="mt-8 text-2xl font-semibold">
+          <GitBranch className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Bottom Line
         </h2>
-        <p>When deciding between libraries like AWA.JSON and JSON-Ada, consider:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Project Ecosystem:</strong> If you are already using the AWA framework, AWA.JSON is a natural fit.
-          </li>
-          <li>
-            <strong>Complexity Needs:</strong> For very complex JSON structures or large-scale web applications,
-            AWA.JSON might offer more features (like SAX parsing). For simpler tasks, JSON-Ada might feel more
-            lightweight.
-          </li>
-          <li>
-            <strong>API Preference:</strong> Review the documentation and choose the API style that best suits your team
-            and project.
-          </li>
-          <li>
-            <strong>Community and Support:</strong> Both libraries have support from their respective communities
-            (AdaCore for JSON-Ada, the AWA community for AWA.JSON).
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Ada provides capable libraries for working with JSON data, primarily through established projects like
-          AWA.JSON and JSON-Ada. While Ada's strong typing means you often need to explicitly handle the mapping between
-          dynamic JSON values and static Ada types, these libraries offer the necessary tools for parsing, generation,
-          and manipulation. Understanding their API and managing potential errors through Ada's robust exception system
-          are key to successfully integrating JSON processing into your Ada applications. For format conversion tasks,
-          using JSON as an intermediate step or leveraging format-specific parsers/generators within Ada are common
-          approaches.
+          For most people searching for Ada JSON support today, the shortest useful answer is this: start with
+          GNATCOLL.JSON, choose json-ada when you want a smaller dedicated package, and treat VSS JSON as an
+          ecosystem-specific option rather than the default first recommendation.
+        </p>
+        <p>
+          Once you have working output, use a formatter to normalize it before shipping. That is the fastest way to
+          catch broken escaping, malformed edits, and hand-written sample payloads that almost look valid but are not.
+        </p>
+
+        <h2 className="mt-8 text-2xl font-semibold">
+          <BookOpen className="mr-2 inline-block h-6 w-6 text-blue-500" />
+          Source Notes
+        </h2>
+        <p>
+          Library status in this article was checked against current primary sources on March 11, 2026: AdaCore&apos;s
+          GNATCOLL.JSON docs, the Alire package index for <code>gnatcoll</code>, <code>json</code>, and{" "}
+          <code>vss_extra</code>, the json-ada project README, the archived AdaCore VSS repository notice, and the
+          Alire listing for AWA.
         </p>
       </div>
     </>

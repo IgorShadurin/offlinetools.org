@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Building Recursive Descent Parsers for JSON | Offline Tools",
-  description: "Learn the principles of building a recursive descent parser specifically for the JSON data format.",
+  description:
+    "A practical guide to writing a recursive descent JSON parser in TypeScript, including strict grammar rules, error handling, and real parser edge cases.",
 };
 
 export default function RecursiveDescentJsonParserArticle() {
@@ -12,350 +13,436 @@ export default function RecursiveDescentJsonParserArticle() {
 
       <div className="space-y-6">
         <p>
-          Parsing data is a fundamental task in many programming scenarios. When dealing with structured data formats
-          like JSON, a parser is needed to transform the raw text into a usable in-memory representation (like objects,
-          arrays, strings, numbers, booleans, or null). One intuitive and straightforward method for building parsers,
-          especially for context-free grammars like JSON, is
-          <strong>Recursive Descent Parsing</strong>.
+          Recursive descent parsing is a good fit for JSON because the grammar is small, nested, and easy to dispatch
+          with one token or one character of lookahead. The hard part is not the recursion itself. The hard part is
+          being strict enough to accept real JSON and reject JavaScript-like input that only looks close.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">What is Recursive Descent Parsing?</h2>
         <p>
-          Recursive descent is a top-down parsing technique. It constructs the parse tree from the top (the root of the
-          grammar) and works downwards. It&apos;s called &quot;recursive descent&quot; because it often involves
-          recursive function calls to process nested structures within the language or data format being parsed.
-        </p>
-        <p>
-          The core idea is to have a function for each &quot;production rule&quot; in the grammar. When a function for a
-          rule is called, it attempts to match the input sequence to that rule&apos;s definition, potentially calling
-          other functions (recursively) for sub-rules.
+          If you are building a parser for learning, custom diagnostics, or a transformation pipeline, focus on the
+          exact rules first: JSON keys must be double-quoted, trailing commas are invalid, numbers have tighter syntax
+          than JavaScript literals, and the root can be any JSON value, not only an object or array. That gives you a
+          parser that behaves like users expect when they paste data into a formatter or validator.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why Recursive Descent for JSON?</h2>
+        <h2 className="text-2xl font-semibold mt-8">Start from the JSON rules that matter</h2>
         <p>
-          JSON&apos;s structure is naturally hierarchical and fits well with the principles of recursive descent.
-          Let&apos;s look at a simplified grammar for JSON:
+          The current JSON standard is RFC 8259, aligned with ECMA-404. For a hand-written recursive descent parser,
+          this is the core grammar you actually need:
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <pre>
-            {`Value ::= Object | Array | String | Number | "true" | "false" | "null"
-Object ::= "{" ( String ":" Value ( "," String ":" Value )* )? "}"
-Array  ::= "[" ( Value ( "," Value )* )? "]"
-String ::= /* ...definition of a JSON string... */
-Number ::= /* ...definition of a JSON number... */`}
+            {`value  = object / array / string / number / "true" / "false" / "null"
+object = "{" [ member *( "," member ) ] "}"
+member = string ":" value
+array  = "[" [ value *( "," value ) ] "]"`}
           </pre>
         </div>
 
-        <p>
-          Notice how <code>Object</code> and <code>Array</code> production rules recursively refer to
-          <code>Value</code>, and <code>Value</code> can refer back to <code>Object</code> or
-          <code>Array</code>. This recursive definition maps directly to recursive functions in a parser.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Prerequisites: Tokenization</h2>
-        <p>
-          Before parsing, the raw JSON string is typically processed by a <strong>tokenizer</strong>
-          (or lexer). The tokenizer breaks the input string into a sequence of meaningful units called{" "}
-          <strong>tokens</strong>. For JSON, tokens include:
-        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <code>&#123;</code>, <code>&#125;</code>, <code>[</code>, <code>]</code>, <code>,</code>, <code>:</code>
+            A valid JSON document can be <code>42</code>, <code>true</code>, or <code>"hello"</code>, not just{" "}
+            <code>&#123;...&#125;</code> or <code>[...]</code>.
           </li>
           <li>
-            String literals (e.g., <code>&quot;hello&quot;</code>)
+            Object member names should be unique. In practice, parsers differ on duplicates, so it is better to choose
+            a policy explicitly than to leave it accidental.
           </li>
           <li>
-            Number literals (e.g., <code>123</code>, <code>-4.5e+2</code>)
+            Trailing commas are invalid in both objects and arrays. A parser that accepts them is parsing a
+            JavaScript-style extension, not strict JSON.
           </li>
           <li>
-            Keywords (<code>true</code>, <code>false</code>, <code>null</code>)
+            JSON numbers do not allow <code>+1</code>, <code>01</code>, <code>NaN</code>, <code>Infinity</code>, or
+            a decimal point without following digits.
           </li>
-          <li>Whitespace (often ignored by the parser)</li>
         </ul>
-        <p>The parser then works on this sequence of tokens, not the raw string.</p>
 
-        <h2 className="text-2xl font-semibold mt-8">Designing the Parser Functions</h2>
-        <p>Based on the JSON grammar, we can design functions like:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <code>parseValue()</code>: Reads the next token and calls the appropriate specific parser function (
-            <code>parseObject</code>, <code>parseArray</code>, etc.) based on the token type.
-          </li>
-          <li>
-            <code>parseObject()</code>: Expects <code>&#123;</code>, then loops through key-value pairs until it finds{" "}
-            <code>&#125;</code>. Inside the loop, it expects a string (key), <code>:</code>, and then calls{" "}
-            <code>parseValue()</code> for the value.
-          </li>
-          <li>
-            <code>parseArray()</code>: Expects <code>[</code>, then loops through values until it finds <code>]</code>.
-            Inside the loop, it calls <code>parseValue()</code> for each element.
-          </li>
-          <li>
-            <code>parseString()</code>: Expects a string token and consumes it.
-          </li>
-          <li>
-            <code>parseNumber()</code>: Expects a number token and consumes it.
-          </li>
-          <li>
-            <code>parseBoolean()</code>: Expects a <code>true</code> or <code>false</code> token and consumes it.
-          </li>
-          <li>
-            <code>parseNull()</code>: Expects a <code>null</code> token and consumes it.
-          </li>
-        </ul>
+        <h2 className="text-2xl font-semibold mt-8">The parser state can stay very small</h2>
         <p>
-          Each parsing function reads tokens from the input stream, builds a part of the resulting data structure, and
-          potentially calls other parsing functions for nested elements.
+          For JSON, you do not need a large parser framework. A minimal recursive descent parser usually keeps only:
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Simplified Code Example</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            The input string and a current cursor position.
+          </li>
+          <li>
+            A few helpers such as <code>peek()</code>, <code>skipWhitespace()</code>, and <code>expectChar()</code>.
+          </li>
+          <li>
+            One parsing function per grammar concept: <code>parseValue()</code>, <code>parseObject()</code>,{" "}
+            <code>parseArray()</code>, <code>parseString()</code>, and <code>parseNumber()</code>.
+          </li>
+          <li>
+            A consistent way to produce syntax errors with the current position.
+          </li>
+        </ul>
+
         <p>
-          This is a conceptual example focusing on the parser logic. A real implementation would need a robust tokenizer
-          and more detailed error handling.
+          A separate tokenizer is still a valid design, especially if you want line and column tracking, better error
+          recovery, or streaming behavior. But for a strict JSON parser, a direct character scanner is often simpler
+          and easier to reason about.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">How recursive descent maps to JSON</h2>
+        <p>
+          The top-level dispatcher is <code>parseValue()</code>. It looks at the next non-whitespace character and
+          sends control to the matching rule:
+        </p>
+
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <code>&#123;</code> starts an object.
+          </li>
+          <li>
+            <code>[</code> starts an array.
+          </li>
+          <li>
+            <code>&quot;</code> starts a string.
+          </li>
+          <li>
+            <code>-</code> or a digit starts a number.
+          </li>
+          <li>
+            <code>t</code>, <code>f</code>, and <code>n</code> start the literal keywords.
+          </li>
+        </ul>
+
+        <p>
+          Objects and arrays are recursive because their contents call back into <code>parseValue()</code>. That is the
+          whole recursive descent pattern in JSON: containers recurse, leaf values terminate.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">A practical TypeScript implementation</h2>
+        <p>
+          The example below is still compact, but it is strict in the places that matter for real JSON input. It
+          rejects trailing commas, enforces double-quoted keys, validates number syntax, and decodes standard escape
+          sequences.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium">Basic JSON Parser Structure (Conceptual TypeScript):</h3>
+          <h3 className="text-lg font-medium">Strict JSON Parser (TypeScript)</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
-              {`enum TokenType {
-  BraceOpen, BraceClose, BracketOpen, BracketClose, Colon, Comma,
-  String, Number, True, False, Null, EOF
-}
+              {`type JsonValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JsonValue[]
+  | { [key: string]: JsonValue };
 
-interface Token {
-  type: TokenType;
-  value?: string | number | boolean | null;
-}
+class JsonParser {
+  private index = 0;
 
-class Tokenizer {
-  private input: string;
-  private position: number = 0;
-  // ... tokenizer implementation ...
-  // next(): Token - returns the next token
-  // peek(): Token - returns the next token without consuming it
-}
+  constructor(private readonly input: string) {}
 
-class Parser {
-  private tokenizer: Tokenizer;
-  private currentToken: Token;
-
-  constructor(tokenizer: Tokenizer) {
-    this.tokenizer = tokenizer;
-    this.currentToken = this.tokenizer.next(); // Get the first token
-  }
-
-  // Helper to consume the current token and advance
-  private eat(type: TokenType): void {
-    if (this.currentToken.type === type) {
-      this.currentToken = this.tokenizer.next();
-    } else {
-      throw new Error(\`Unexpected token: Expected \${TokenType[type]} but got \${TokenType[this.currentToken.type]}\`);
-    }
-  }
-
-  // Entry point: Parse a JSON Value (which is the root)
-  parse(): any {
+  parse(): JsonValue {
     const value = this.parseValue();
-    if (this.currentToken.type !== TokenType.EOF) {
-        throw new Error("Unexpected data after parsing root value.");
+    this.skipWhitespace();
+
+    if (!this.isAtEnd()) {
+      throw this.error("Unexpected non-whitespace after root value");
     }
+
     return value;
   }
 
-  // Parses any valid JSON value
-  private parseValue(): any {
-    switch (this.currentToken.type) {
-      case TokenType.BraceOpen:
-        return this.parseObject();
-      case TokenType.BracketOpen:
-        return this.parseArray();
-      case TokenType.String:
-        return this.parseString();
-      case TokenType.Number:
-        return this.parseNumber();
-      case TokenType.True:
-        return this.parseBoolean();
-      case TokenType.False:
-        return this.parseBoolean();
-      case TokenType.Null:
-        return this.parseNull();
+  private parseValue(): JsonValue {
+    this.skipWhitespace();
+    const ch = this.peek();
+
+    if (ch === "{") return this.parseObject();
+    if (ch === "[") return this.parseArray();
+    if (ch === '"') return this.parseString();
+    if (ch === "-" || this.isDigit(ch)) return this.parseNumber();
+    if (ch === "t") return this.parseLiteral("true", true);
+    if (ch === "f") return this.parseLiteral("false", false);
+    if (ch === "n") return this.parseLiteral("null", null);
+
+    throw this.error("Expected a JSON value");
+  }
+
+  private parseObject(): { [key: string]: JsonValue } {
+    const result: { [key: string]: JsonValue } = {};
+    this.expectChar("{");
+    this.skipWhitespace();
+
+    if (this.peek() === "}") {
+      this.index++;
+      return result;
+    }
+
+    while (true) {
+      this.skipWhitespace();
+      if (this.peek() !== '"') {
+        throw this.error("Object keys must be double-quoted strings");
+      }
+
+      const key = this.parseString();
+      this.skipWhitespace();
+      this.expectChar(":");
+      const value = this.parseValue();
+
+      if (Object.prototype.hasOwnProperty.call(result, key)) {
+        throw this.error("Duplicate object key: " + key);
+      }
+
+      result[key] = value;
+      this.skipWhitespace();
+
+      if (this.peek() === "}") {
+        this.index++;
+        return result;
+      }
+
+      this.expectChar(",");
+      this.skipWhitespace();
+
+      if (this.peek() === "}") {
+        throw this.error("Trailing commas are not allowed in objects");
+      }
+    }
+  }
+
+  private parseArray(): JsonValue[] {
+    const result: JsonValue[] = [];
+    this.expectChar("[");
+    this.skipWhitespace();
+
+    if (this.peek() === "]") {
+      this.index++;
+      return result;
+    }
+
+    while (true) {
+      result.push(this.parseValue());
+      this.skipWhitespace();
+
+      if (this.peek() === "]") {
+        this.index++;
+        return result;
+      }
+
+      this.expectChar(",");
+      this.skipWhitespace();
+
+      if (this.peek() === "]") {
+        throw this.error("Trailing commas are not allowed in arrays");
+      }
+    }
+  }
+
+  private parseString(): string {
+    this.expectChar('"');
+    let result = "";
+
+    while (!this.isAtEnd()) {
+      const ch = this.input[this.index++];
+
+      if (ch === '"') {
+        return result;
+      }
+
+      if (ch === "\\\\") {
+        result += this.parseEscapeSequence();
+        continue;
+      }
+
+      if (ch < " ") {
+        throw this.error("Unescaped control character in string");
+      }
+
+      result += ch;
+    }
+
+    throw this.error("Unterminated string");
+  }
+
+  private parseEscapeSequence(): string {
+    const ch = this.input[this.index++];
+
+    switch (ch) {
+      case '"':
+      case "\\\\": 
+      case "/":
+        return ch;
+      case "b":
+        return "\\b";
+      case "f":
+        return "\\f";
+      case "n":
+        return "\\n";
+      case "r":
+        return "\\r";
+      case "t":
+        return "\\t";
+      case "u":
+        return this.parseUnicodeEscape();
       default:
-        throw new Error(\`Unexpected token type for value: \${TokenType[this.currentToken.type]}\`);
+        throw this.error("Invalid escape sequence");
     }
   }
 
-  // Parses a JSON object
-  private parseObject(): { [key: string]: any } {
-    this.eat(TokenType.BraceOpen);
-    const obj: { [key: string]: any } = {};
+  private parseUnicodeEscape(): string {
+    const hex = this.input.slice(this.index, this.index + 4);
 
-    // Handle empty object
-    if (this.currentToken.type === TokenType.BraceClose) {
-      this.eat(TokenType.BraceClose);
-      return obj;
+    if (!/^[0-9a-fA-F]{4}$/.test(hex)) {
+      throw this.error("Expected four hex digits after \\\\u");
     }
 
-    // Parse key-value pairs
-    while (this.currentToken.type === TokenType.String) {
-      const key = this.parseString() as string; // Key must be a string
-      this.eat(TokenType.Colon);
-      const value = this.parseValue();
-      obj[key] = value;
+    this.index += 4;
+    return String.fromCharCode(parseInt(hex, 16));
+  }
 
-      if (this.currentToken.type === TokenType.Comma) {
-        this.eat(TokenType.Comma);
-      } else if (this.currentToken.type !== TokenType.BraceClose) {
-        throw new Error("Expected comma or closing brace in object.");
+  private parseNumber(): number {
+    const start = this.index;
+
+    if (this.peek() === "-") {
+      this.index++;
+    }
+
+    if (this.peek() === "0") {
+      this.index++;
+      if (this.isDigit(this.peek())) {
+        throw this.error("Leading zeros are not allowed");
       }
+    } else {
+      this.readDigits("Expected digit after minus sign");
     }
 
-    this.eat(TokenType.BraceClose);
-    return obj;
-  }
-
-  // Parses a JSON array
-  private parseArray(): any[] {
-    this.eat(TokenType.BracketOpen);
-    const arr: any[] = [];
-
-    // Handle empty array
-    if (this.currentToken.type === TokenType.BracketClose) {
-      this.eat(TokenType.BracketClose);
-      return arr;
+    if (this.peek() === ".") {
+      this.index++;
+      this.readDigits("Expected digit after decimal point");
     }
 
-    // Parse elements
-    while (this.currentToken.type !== TokenType.BracketClose) {
-      const value = this.parseValue();
-      arr.push(value);
+    if (this.peek() === "e" || this.peek() === "E") {
+      this.index++;
 
-      if (this.currentToken.type === TokenType.Comma) {
-        this.eat(TokenType.Comma);
-      } else if (this.currentToken.type !== TokenType.BracketClose) {
-        throw new Error("Expected comma or closing bracket in array.");
+      if (this.peek() === "+" || this.peek() === "-") {
+        this.index++;
       }
+
+      this.readDigits("Expected digit in exponent");
     }
 
-    this.eat(TokenType.BracketClose);
-    return arr;
+    return Number(this.input.slice(start, this.index));
   }
 
-  // Parses a JSON string
-  private parseString(): string | null {
-    if (this.currentToken.type !== TokenType.String) {
-      throw new Error("Expected a string token.");
+  private readDigits(message: string): void {
+    if (!this.isDigit(this.peek())) {
+      throw this.error(message);
     }
-    const value = this.currentToken.value as string;
-    this.eat(TokenType.String);
+
+    while (this.isDigit(this.peek())) {
+      this.index++;
+    }
+  }
+
+  private parseLiteral<T extends JsonValue>(text: string, value: T): T {
+    if (this.input.slice(this.index, this.index + text.length) !== text) {
+      throw this.error("Unexpected literal");
+    }
+
+    this.index += text.length;
     return value;
   }
 
-  // Parses a JSON number
-  private parseNumber(): number | null {
-    if (this.currentToken.type !== TokenType.Number) {
-      throw new Error("Expected a number token.");
+  private expectChar(expected: string): void {
+    if (this.peek() !== expected) {
+      throw this.error("Expected '" + expected + "'");
     }
-    const value = this.currentToken.value as number;
-    this.eat(TokenType.Number);
-    return value;
+
+    this.index++;
   }
 
-  // Parses JSON true/false
-  private parseBoolean(): boolean | null {
-    if (this.currentToken.type !== TokenType.True && this.currentToken.type !== TokenType.False) {
-      throw new Error("Expected boolean token (true or false).");
+  private skipWhitespace(): void {
+    while (this.peek() === " " || this.peek() === "\\n" || this.peek() === "\\r" || this.peek() === "\\t") {
+      this.index++;
     }
-    const value = this.currentToken.value as boolean;
-    this.eat(this.currentToken.type); // Consume either True or False token
-    return value;
   }
 
-  // Parses JSON null
-  private parseNull(): null {
-    if (this.currentToken.type !== TokenType.Null) {
-      throw new Error("Expected null token.");
-    }
-    this.eat(TokenType.Null);
-    return null;
+  private peek(): string {
+    return this.input[this.index] ?? "";
+  }
+
+  private isDigit(ch: string): boolean {
+    return ch >= "0" && ch <= "9";
+  }
+
+  private isAtEnd(): boolean {
+    return this.index >= this.input.length;
+  }
+
+  private error(message: string): SyntaxError {
+    return new SyntaxError(message + " at index " + this.index);
   }
 }
 
-// Example Usage (requires Tokenizer implementation):
-// const jsonString = '{"name": "Alice", "age": 30, "isStudent": false, "courses": ["Math", "Science"]}';
-// const tokenizer = new Tokenizer(jsonString); // Tokenizer needs implementation
-// const parser = new Parser(tokenizer);
-// try {
-//   const parsedData = parser.parse();
-//   console.log(parsedData); // Output the parsed JavaScript object/array
-// } catch (error) {
-//   console.error("Parsing failed:", error.message);
-// }
-`}
+const parser = new JsonParser(
+  '{"name":"Ada","scores":[10,20,30],"active":true,"profile":{"city":"London"}}'
+);
+
+console.log(parser.parse());`}
             </pre>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Error Handling</h2>
-        <p>
-          In a recursive descent parser, error handling is typically done by checking the type of the current token and
-          throwing an error if it doesn&apos;t match what the parser expects based on the grammar rule being processed.
-        </p>
-        <p>
-          For example, in <code>parseObject</code>, if we just consumed the opening <code>&#x7b;</code>
-          and the next token isn&apos;t a <code>&#x7d;</code> or a <code>String</code> (for a key), we know there&apos;s
-          a syntax error. The <code>eat()</code> helper function is a common place to include basic error checks. More
-          sophisticated error handling might involve reporting the line/column number from the tokenizer.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8">Advantages and Disadvantages</h2>
-
-        <h3 className="text-xl font-semibold mt-6">Advantages:</h3>
+        <h2 className="text-2xl font-semibold mt-8">Implementation details that usually cause bugs</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Simplicity and Readability:</strong> The parser structure often directly mirrors the grammar rules,
-            making it easy to understand and implement.
+            <strong>Duplicate keys:</strong> RFC 8259 says object names should be unique, but it does not force one
+            runtime behavior. Rejecting duplicates is often safer than silently keeping the last value.
           </li>
           <li>
-            <strong>Ease of Implementation:</strong> For simple grammars like JSON, it can be hand-written relatively
-            quickly.
+            <strong>String escapes:</strong> You need to handle <code>\&quot;</code>, <code>\\</code>,{" "}
+            <code>\/</code>, control escapes, and <code>\uXXXX</code>. Accepting raw control characters inside strings
+            is a parser bug.
           </li>
           <li>
-            <strong>Good for LL(1) Grammars:</strong> JSON&apos;s grammar is suitable for this technique as it can be
-            parsed by looking only one token ahead (LL(1)).
+            <strong>Number precision:</strong> Converting directly to JavaScript <code>number</code> is convenient, but
+            very large integers may lose precision. If exact numeric text matters, keep the original lexeme too.
           </li>
           <li>
-            <strong>Integration with Actions:</strong> It&apos;s straightforward to embed actions (like building the
-            data structure) within the parsing functions.
+            <strong>Error reporting:</strong> Index-only errors are enough for a basic parser. For a formatter or editor,
+            line and column tracking is worth the extra bookkeeping.
           </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6">Disadvantages:</h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <strong>Limited Applicability:</strong> Not suitable for grammars that are left-recursive or require more
-            lookahead than one token.
-          </li>
-          <li>
-            <strong>Error Recovery:</strong> Basic implementations might stop on the first error; robust error recovery
-            can be complex.
-          </li>
-          <li>
-            <strong>Maintenance for Complex Grammars:</strong> For very large or complex grammars, hand-writing can
-            become cumbersome and prone to errors.
-          </li>
-        </ul>
+        <h2 className="text-2xl font-semibold mt-8">Useful tests for a real JSON parser</h2>
+        <p>These cases catch most of the mistakes in first-pass implementations:</p>
 
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <pre>
+            {`// valid
+"hello"
+42
+{"a":[true,false,null]}
+[]
+
+// invalid
+{'a':1}          // single quotes are not JSON
+{"a":1,}         // trailing comma
+{"a":01}         // leading zero
+[1,,2]           // missing element
+{"x":"\\q"}      // invalid escape
+{"x":1} garbage  // extra data after root`}
+          </pre>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">When to hand-write a parser and when not to</h2>
         <p>
-          Building a recursive descent parser for JSON is a practical exercise that clearly demonstrates the
-          relationship between a formal grammar and a parsing algorithm. While modern programming languages and
-          libraries typically provide built-in, highly optimized JSON parsers, understanding how one works under the
-          hood, particularly through a technique like recursive descent, provides valuable insight into parsing theory
-          and compiler design principles. For JSON&apos;s relatively simple and well-defined structure, a hand-written
-          recursive descent parser is quite feasible and educational.
+          Writing a recursive descent parser for JSON is worthwhile when you need custom diagnostics, a teaching
+          example, or strict control over how values are represented. It is usually not worth replacing highly
+          optimized built-in parsers in production application code unless you have a specific behavior that the
+          platform parser cannot provide.
+        </p>
+
+        <p>
+          In other words, recursive descent is excellent for understanding JSON and for building specialized tools. It
+          is not automatically the fastest or safest production choice just because the grammar is simple.
         </p>
       </div>
     </>

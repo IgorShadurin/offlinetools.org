@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Database, Code, Zap, Search, Edit, CheckCircle, Box, CornerDownRight, Info } from "lucide-react";
+import { Box, CheckCircle, Code, CornerDownRight, Database, Edit, Info, Search, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "SQL Server JSON Functions and Formatting Options",
   description:
-    "A comprehensive guide to using SQL Server's built-in JSON functions for generating, parsing, querying, and modifying JSON data.",
+    "Learn how to generate and shape JSON in SQL Server with FOR JSON PATH and AUTO, query JSON with OPENJSON and JSON_VALUE, and understand current JSON version notes.",
 };
 
 export default function SqlServerJsonPage() {
@@ -17,177 +17,85 @@ export default function SqlServerJsonPage() {
       <div className="space-y-8">
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Info size={24} /> Introduction: Why JSON in SQL Server?
+            <Info size={24} /> Quick Answer: Can SQL Server Format a JSON String?
           </h2>
           <p>
-            Modern applications frequently exchange data using the JSON format. SQL Server, starting with SQL Server
-            2016, provides native functions to handle JSON data directly within the database engine. This allows you to:
+            Yes, but only up to a point. SQL Server can <strong>generate</strong> JSON from query results with{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code>, validate JSON
+            with <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ISJSON</code>, read it
+            with <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code>, and
+            update it with{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_MODIFY</code>.
+          </p>
+          <p className="mt-3">
+            What it does <strong>not</strong> provide is a general-purpose pretty-printer for arbitrary JSON text.
+            Current Microsoft documentation describes{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code> as returning
+            compact JSON text. If your goal is to make an existing JSON string readable, the usual workflow is:
           </p>
           <ul className="list-disc pl-6 space-y-2 mt-3">
-            <li>Format query results as JSON.</li>
-            <li>Parse JSON strings stored in database columns.</li>
-            <li>Query values and objects within JSON text.</li>
-            <li>Modify values in JSON strings.</li>
+            <li>Use SQL Server to produce or validate the JSON.</li>
+            <li>Use client tooling or a JSON formatter to indent and inspect it.</li>
+            <li>Use JSON functions inside SQL Server only when you need to query, filter, or reshape the data.</li>
           </ul>
-          <p className="mt-3">
-            Leveraging these functions can simplify your application code, move data transformation logic closer to the
-            data source, and improve performance in certain scenarios.
-          </p>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900 my-4">
+            <p className="font-semibold">Practical rule:</p>
+            <p className="mt-2">
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code> is for
+              serializing rows as JSON. A formatter is for whitespace, indentation, and readable output.
+            </p>
+          </div>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Code size={24} /> Generating JSON from SQL Queries (FOR JSON)
+            <Code size={24} /> Generating JSON with FOR JSON
           </h2>
           <p>
-            The <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code> clause is
-            appended to a<code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">SELECT</code>{" "}
-            statement to format the results as JSON text. It comes with several modes:{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AUTO</code>,
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">PATH</code>, and{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">RAW</code>.
+            SQL Server supports two{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code> modes:
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800 ml-1">PATH</code> and{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AUTO</code>.
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800 ml-1">PATH</code> is usually
+            the better default because it gives you explicit control over property names and nesting.
           </p>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-            <CornerDownRight size={20} /> FOR JSON AUTO
-          </h3>
-          <p>
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AUTO</code> mode automatically
-            structures the JSON output based on the tables and columns in the{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">SELECT</code> statement. It's
-            the simplest to use but offers less control over the structure compared to{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">PATH</code>.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`SELECT
-    CustomerID,
-    Name,
-    Email
-FROM
-    Customers
-FOR JSON AUTO;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output (might vary slightly based on data):</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-json text-sm">
-                {`[
-  {
-    "CustomerID": 1,
-    "Name": "Alice",
-    "Email": "alice@example.com"
-  },
-  {
-    "CustomerID": 2,
-    "Name": "Bob",
-    "Email": "bob@example.com"
-  }
-]`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-3">
-            With Joins, <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AUTO</code> mode
-            will nest based on table joins:
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`SELECT
-    c.CustomerID,
-    c.Name,
-    o.OrderID,
-    o.OrderDate
-FROM
-    Customers c
-JOIN
-    Orders o ON c.CustomerID = o.CustomerID
-ORDER BY
-    c.CustomerID
-FOR JSON AUTO;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-json text-sm">
-                {`[
-  {
-    "CustomerID": 1,
-    "Name": "Alice",
-    "Orders": [
-      {
-        "OrderID": 101,
-        "OrderDate": "2023-01-15T00:00:00"
-      },
-      {
-        "OrderID": 105,
-        "OrderDate": "2023-02-20T00:00:00"
-      }
-    ]
-  },
-  {
-    "CustomerID": 2,
-    "Name": "Bob",
-    "Orders": [
-      {
-        "OrderID": 102,
-        "OrderDate": "2023-01-16T00:00:00"
-      }
-    ]
-  }
-]`}
-              </code>
-            </pre>
-          </div>
 
           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
             <CornerDownRight size={20} /> FOR JSON PATH
           </h3>
           <p>
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">PATH</code> mode gives you full
-            control over the JSON structure using column aliases formatted as paths (e.g.,{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">'$.path.to.property'</code>).
-            This is more flexible for complex or specific JSON outputs.
+            In <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">PATH</code> mode, use
+            column aliases to shape the JSON. Nested objects are created with dot-separated aliases like{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">[customer.email]</code>.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
                 {`SELECT
-    CustomerID AS "$.id",
-    Name AS "$.details.fullName",
-    Email AS "$.contact.email"
-FROM
-    Customers
+    CustomerID AS id,
+    Name AS [customer.name],
+    Email AS [customer.email]
+FROM Customers
 FOR JSON PATH;`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">Example Output:</p>
+          <p className="mt-2">Example output:</p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-json text-sm">
                 {`[
   {
     "id": 1,
-    "details": {
-      "fullName": "Alice"
-    },
-    "contact": {
+    "customer": {
+      "name": "Alice",
       "email": "alice@example.com"
     }
   },
   {
     "id": 2,
-    "details": {
-      "fullName": "Bob"
-    },
-    "contact": {
+    "customer": {
+      "name": "Bob",
       "email": "bob@example.com"
     }
   }
@@ -195,684 +103,364 @@ FOR JSON PATH;`}
               </code>
             </pre>
           </div>
-          <p className="mt-3">
-            Nesting with <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">PATH</code> mode
-            using subqueries or joins:
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`SELECT
-    c.CustomerID AS "id",
-    c.Name AS "name",
-    (
-        SELECT
-            o.OrderID AS "$.orderId",
-            o.OrderDate AS "$.orderDate"
-        FROM
-            Orders o
-        WHERE
-            o.CustomerID = c.CustomerID
-        FOR JSON PATH
-    ) AS "orders" -- Alias names the JSON array property
-FROM
-    Customers c
-FOR JSON PATH;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-json text-sm">
-                {`[
-  {
-    "id": 1,
-    "name": "Alice",
-    "orders": [
-      {
-        "orderId": 101,
-        "orderDate": "2023-01-15T00:00:00"
-      },
-      {
-        "orderId": 105,
-        "orderDate": "2023-02-20T00:00:00"
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Bob",
-    "orders": [
-      {
-        "orderId": 102,
-        "orderDate": "2023-01-16T00:00:00"
-      }
-    ]
-  }
-]`}
-              </code>
-            </pre>
-          </div>
 
           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-            <CornerDownRight size={20} /> FOR JSON RAW
+            <CornerDownRight size={20} /> FOR JSON AUTO
           </h3>
           <p>
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">RAW</code> mode generates a
-            JSON array where each element is the value of a single column. It's typically used when you only select one
-            column and want a simple array of values.
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AUTO</code> is faster to type
+            when you just want JSON output that mirrors the tables and joins in your{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">SELECT</code>. The tradeoff is
+            less control over property names and nesting.
           </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`SELECT
-    Name
-FROM
-    Customers
-FOR JSON RAW;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-json text-sm">
-                {`[
-  "Alice",
-  "Bob"
-]`}
-              </code>
-            </pre>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-            <CornerDownRight size={20} /> FOR JSON Formatting Options
-          </h3>
-          <p>
-            Various options can be combined with{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code> to control the
-            output format:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mt-3">
-            <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">WITHOUT_ARRAY_WRAPPER</code>:
-              Removes the default outer JSON array brackets{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">[]</code>. Useful when you
-              expect a single JSON object.
-            </li>
-            <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">INCLUDE_NULL_VALUES</code>:
-              Includes properties with{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code> values. By
-              default, they are omitted.
-            </li>
-            <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ROOT('ElementName')</code>:
-              Adds a single root key (or element name) to the JSON output, wrapping the result.
-            </li>
-            <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AS JSON</code>: Casts the
-              output to a JSON type, useful for chaining functions or storing JSON.
-            </li>
-          </ul>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
                 {`SELECT
     CustomerID,
     Name,
-    -- Assuming some customers might have NULL email
     Email
-FROM
-    Customers
-WHERE CustomerID = 1 -- Select a single customer
-FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER, INCLUDE_NULL_VALUES, ROOT('CustomerData');`}
+FROM Customers
+FOR JSON AUTO;`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">Example Output (if Email is NULL for CustomerID 1):</p>
+
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
+            <CornerDownRight size={20} /> Formatting Options That Matter
+          </h3>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">WITHOUT_ARRAY_WRAPPER</code>{" "}
+              returns a single object instead of wrapping one row in{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">[]</code>.
+            </li>
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">INCLUDE_NULL_VALUES</code>{" "}
+              keeps properties whose SQL value is{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code>. By default,
+              SQL Server omits them.
+            </li>
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ROOT('name')</code> adds a
+              wrapper object at the top level.
+            </li>
+          </ul>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+            <pre>
+              <code className="language-sql text-sm">
+                {`SELECT
+    CustomerID AS id,
+    Name AS name,
+    Email AS email
+FROM Customers
+WHERE CustomerID = 1
+FOR JSON PATH, WITHOUT_ARRAY_WRAPPER, INCLUDE_NULL_VALUES;`}
+              </code>
+            </pre>
+          </div>
+          <p className="mt-2">Example output:</p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-json text-sm">
                 {`{
-  "CustomerData": {
-    "CustomerID": 1,
-    "Name": "Alice",
-    "Email": null
-  }
+  "id": 1,
+  "name": "Alice",
+  "email": null
 }`}
               </code>
             </pre>
           </div>
+          <p className="mt-3">
+            Notice that the JSON SQL Server returns is still compact text under the hood. If you want human-friendly
+            indentation, format the result in your editor or a JSON formatting tool after the query runs.
+          </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Box size={24} /> Parsing and Querying JSON (OPENJSON, JSON_VALUE, JSON_QUERY)
+            <Box size={24} /> Reading JSON with OPENJSON, JSON_VALUE, and JSON_QUERY
           </h2>
-          <p>SQL Server provides functions to read and extract data from JSON strings.</p>
+          <p>
+            Once JSON is stored in a column or variable, SQL Server gives you three main patterns:
+          </p>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> for turning
+              JSON into rows and columns.
+            </li>
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> for
+              extracting one scalar value.
+            </li>
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_QUERY</code> for
+              extracting an object or array.
+            </li>
+          </ul>
 
           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
-            <CornerDownRight size={20} /> OPENJSON
+            <CornerDownRight size={20} /> OPENJSON with an Explicit Schema
           </h3>
           <p>
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> is a
-            table-valued function that parses JSON text and returns data in rows and columns. It&apos;s particularly
-            useful for shredding JSON arrays or objects into a relational format.
-          </p>
-
-          <h4 className="text-lg font-semibold mt-4 mb-2">Basic OPENJSON usage (default schema):</h4>
-          <p>
-            Without a <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">WITH</code> clause,
-            it returns key, value, and type for each element at the first level of the JSON structure.
+            Use a <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">WITH</code> clause when
+            you know the expected shape. This is also where{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AS JSON</code> belongs: it
+            tells SQL Server to return a nested object or array as JSON text instead of coercing it to a scalar.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
-                {`DECLARE @jsonInfo NVARCHAR(MAX);
-SET @jsonInfo = N'{
-  "name": "Product A",
-  "price": 19.99,
-  "tags": ["electronics", "gadget"],
-  "details": {
-    "weight": "1kg",
-    "color": "black"
-  }
+                {`DECLARE @payload NVARCHAR(MAX) = N'{
+  "orderId": 42,
+  "status": "paid",
+  "items": [
+    { "sku": "A-1", "qty": 2 },
+    { "sku": "B-9", "qty": 1 }
+  ]
 }';
 
-SELECT *
-FROM OPENJSON(@jsonInfo);`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-text text-sm">
-                {`key       value                           type
---------- ------------------------------- ------
-name      Product A                       1
-price     19.99                           2
-tags      ["electronics","gadget"]        4  -- Type 4 is array
-details   {"weight":"1kg","color":"black"} 5  -- Type 5 is object`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">(Types: 0=null, 1=string, 2=number, 3=boolean, 4=array, 5=object)</p>
-
-          <h4 className="text-lg font-semibold mt-4 mb-2">OPENJSON with explicit schema (WITH clause):</h4>
-          <p>
-            This is more common, defining the expected columns, their SQL data types, and the JSON path to the
-            corresponding value.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`DECLARE @jsonInfo NVARCHAR(MAX);
-SET @jsonInfo = N'{
-  "name": "Product A",
-  "price": 19.99,
-  "inStock": true,
-  "releaseDate": "2023-01-01T00:00:00Z",
-  "details": { "weight": "1kg" }
-}';
-
-SELECT name, price, inStock, releaseDate, weight
-FROM OPENJSON(@jsonInfo)
+SELECT
+    orderId,
+    status,
+    items
+FROM OPENJSON(@payload)
 WITH (
-    name VARCHAR(100) '$.name',
-    price DECIMAL(10, 2) '$.price',
-    inStock BIT '$.inStock',
-    releaseDate DATETIME2 '$.releaseDate',
-    -- Extract from nested object
-    weight VARCHAR(50) '$.details.weight'
+    orderId INT '$.orderId',
+    status NVARCHAR(20) '$.status',
+    items NVARCHAR(MAX) '$.items' AS JSON
 );`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-text text-sm">
-                {`name        price   inStock releaseDate               weight
------------ ------- ------- ------------------------- ------
-Product A   19.99   1       2023-01-01 00:00:00.0000000 1kg`}
-              </code>
-            </pre>
-          </div>
-
-          <h4 className="text-lg font-semibold mt-4 mb-2">Extracting arrays with OPENJSON:</h4>
-          <p>
-            You can use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code>{" "}
-            with <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">CROSS APPLY</code> to
-            shred an array property within a JSON column.
+          <p className="mt-3">
+            If you need to shred an array into rows, point{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> at the array
+            path directly:
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
-                {`-- Assume a table 'Products' with a NVARCHAR(MAX) column 'TagsJson'
--- Example data: INSERT INTO Products (TagsJson) VALUES ('["electronics", "gadget", "popular"]');
-
--- Select Product ID and individual tags
-SELECT
-    ProductID,
-    TagValue
-FROM
-    Products
-CROSS APPLY OPENJSON(TagsJson) WITH (TagValue VARCHAR(50) '$'); -- '$' means extract each element`}
+                {`SELECT sku, qty
+FROM OPENJSON(@payload, '$.items')
+WITH (
+    sku NVARCHAR(50) '$.sku',
+    qty INT '$.qty'
+);`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-text text-sm">
-                {`ProductID   TagValue
------------ ---------
-1           electronics
-1           gadget
-1           popular`}
-              </code>
-            </pre>
-          </div>
+          <p className="mt-3">
+            Important compatibility note: Microsoft documents{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> as requiring
+            database compatibility level 130 or higher.
+          </p>
 
           <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
             <Search size={20} /> JSON_VALUE vs JSON_QUERY
           </h3>
           <p>
-            These functions extract values from a JSON string without necessarily shredding the whole document into
-            rows.
+            The difference is simple and important:
           </p>
           <ul className="list-disc pl-6 space-y-2 mt-3">
             <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">
-                JSON_VALUE(jsonString, path)
-              </code>
-              : Extracts a <span className="font-semibold">scalar</span> value (string, number, boolean) from the JSON
-              string at the specified path. Returns{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code> if the path
-              doesn't exist or points to an object/array.
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> returns a
+              scalar, such as text, number, or boolean.
             </li>
             <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">
-                JSON_QUERY(jsonString, path)
-              </code>
-              : Extracts a <span className="font-semibold">JSON object or array</span> from the JSON string at the
-              specified path. Returns{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code> if the path
-              doesn't exist or points to a scalar value.
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_QUERY</code> returns a
+              JSON object or JSON array.
             </li>
           </ul>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
-                {`DECLARE @jsonDoc NVARCHAR(MAX);
-SET @jsonDoc = N'{
-  "id": 123,
-  "customer": {
-    "name": "Alice",
-    "city": "London"
-  },
-  "items": [
-    {"itemId": 1, "qty": 2},
-    {"itemId": 2, "qty": 1}
-  ]
-}';
-
-SELECT
-    JSON_VALUE(@jsonDoc, '$.id') AS OrderId, -- Scalar
-    JSON_VALUE(@jsonDoc, '$.customer.name') AS CustomerName, -- Scalar
-    JSON_VALUE(@jsonDoc, '$.customer.city') AS CustomerCity, -- Scalar
-    JSON_VALUE(@jsonDoc, '$.items[0].itemId') AS FirstItemId, -- Scalar from array element
-    JSON_VALUE(@jsonDoc, '$.items') AS Items_JSON_VALUE_Result, -- Returns NULL (items is an array)
-    JSON_QUERY(@jsonDoc, '$.customer') AS CustomerObject, -- Object
-    JSON_QUERY(@jsonDoc, '$.items') AS ItemsArray, -- Array
-    JSON_QUERY(@jsonDoc, '$.customer.name') AS CustomerName_JSON_QUERY_Result; -- Returns NULL (name is scalar)`}
+                {`SELECT
+    JSON_VALUE(@payload, '$.status') AS OrderStatus,
+    JSON_QUERY(@payload, '$.items') AS ItemsJson;`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-text text-sm">
-                {`OrderId CustomerName CustomerCity FirstItemId Items_JSON_VALUE_Result CustomerObject                      ItemsArray                                   CustomerName_JSON_QUERY_Result
---------- ------------ ------------ ----------- ------------------------- --------------------------------- -------------------------------------------- ------------------------------
-123       Alice        London       1           NULL                      {"name":"Alice","city":"London"}  [{"itemId":1,"qty":2},{"itemId":2,"qty":1}] NULL`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">
-            Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> for
-            simple properties,{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_QUERY</code> for objects
-            or arrays.
-          </p>
-
-          <h4 className="text-lg font-semibold mt-4 mb-2">Path Mode (Lax vs Strict):</h4>
-          <p>
-            JSON paths support <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">lax</code>{" "}
-            (default) and <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">strict</code>{" "}
-            modes.
-          </p>
-          <ul className="list-disc pl-6 space-y-2 mt-3">
-            <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">lax</code>: Returns{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code> if a path step
-              doesn't exist or is invalid.
-            </li>
-            <li>
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">strict</code>: Raises an
-              error if a path step doesn't exist or is invalid.
-            </li>
-          </ul>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`DECLARE @jsonDoc NVARCHAR(MAX) = N'{"name": "Test"}';
-
--- Lax mode (default) - returns NULL for non-existent path
-SELECT JSON_VALUE(@jsonDoc, '$.address.city') AS LaxResult;
-
--- Strict mode - raises an error for non-existent path
--- SELECT JSON_VALUE(@jsonDoc, 'strict $.address.city') AS StrictResult;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Lax result:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-text text-sm">
-                {`LaxResult
----------
-NULL`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">
-            Strict mode is useful when you want to ensure the JSON conforms to an expected structure.
+          <p className="mt-3">
+            JSON paths use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">lax</code> mode
+            by default, which returns{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code> for a missing path.
+            Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">strict</code> when a
+            missing property should raise an error instead of failing quietly.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Edit size={24} /> Modifying JSON Data (JSON_MODIFY)
+            <Edit size={24} /> Updating and Validating JSON
           </h2>
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
+            <CornerDownRight size={20} /> JSON_MODIFY
+          </h3>
           <p>
-            The{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">
-              JSON_MODIFY(jsonString, path, newValue)
-            </code>{" "}
-            function updates a value at a specific path within a JSON string and returns the modified JSON string.
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_MODIFY</code> updates one
+            path at a time and returns the modified JSON string. It is useful for targeted changes without rebuilding the
+            whole document by hand.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
-                {`DECLARE @jsonDoc NVARCHAR(MAX);
-SET @jsonDoc = N'{
-  "name": "Product A",
-  "price": 19.99,
-  "details": { "color": "black" }
+                {`DECLARE @doc NVARCHAR(MAX) = N'{
+  "status": "draft",
+  "tags": ["internal"]
 }';
 
--- Update existing value
-SET @jsonDoc = JSON_MODIFY(@jsonDoc, '$.price', 24.99);
--- Add new value (if path doesn't exist)
-SET @jsonDoc = JSON_MODIFY(@jsonDoc, '$.inStock', 1);
--- Add value in nested object (creates object if it doesn't exist in lax mode)
-SET @jsonDoc = JSON_MODIFY(@jsonDoc, '$.details.weight', '1.2kg');
--- Delete value (set newValue to NULL)
-SET @jsonDoc = JSON_MODIFY(@jsonDoc, '$.details.color', NULL);
+SET @doc = JSON_MODIFY(@doc, '$.status', 'published');
+SET @doc = JSON_MODIFY(@doc, 'append $.tags', 'public');
 
-SELECT @jsonDoc AS ModifiedJson;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-json text-sm">
-                {`{
-  "name": "Product A",
-  "price": 24.99,
-  "details": {
-    "weight": "1.2kg"
-  },
-  "inStock": 1
-}`}
+SELECT @doc AS ModifiedJson;`}
               </code>
             </pre>
           </div>
 
-          <h4 className="text-lg font-semibold mt-4 mb-2">JSON_MODIFY with Arrays:</h4>
+          <h3 className="text-xl font-semibold mt-6 mb-3 flex items-center gap-2">
+            <CheckCircle size={20} /> ISJSON
+          </h3>
           <p>
-            You can modify array elements or append to arrays using{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_MODIFY</code>.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-sql text-sm">
-                {`DECLARE @jsonDoc NVARCHAR(MAX);
-SET @jsonDoc = N'{
-  "tags": ["electronics", "gadget"]
-}';
-
--- Append a value to the array
-SET @jsonDoc = JSON_MODIFY(@jsonDoc, 'append $.tags', 'popular');
--- Update an element by index (0-based)
-SET @jsonDoc = JSON_MODIFY(@jsonDoc, '$.tags[0]', 'hardware');
-
-SELECT @jsonDoc AS ModifiedArrayJson;`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-json text-sm">
-                {`{
-  "tags": [
-    "hardware",
-    "gadget",
-    "popular"
-  ]
-}`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">
-            Note the use of{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">'append $.tags'</code> to add
-            to the end of the array.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <CheckCircle size={24} /> Validating JSON Data (ISJSON)
-          </h2>
-          <p>
-            The <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ISJSON(jsonString)</code>{" "}
-            function checks if a string contains valid JSON. It returns{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">1</code> if the string is valid
-            JSON, <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">0</code> if it's invalid,
-            and <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code> if the input
-            string is <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NULL</code>.
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ISJSON</code> is the fast
+            first check before you trust a payload. On newer SQL Server releases, Microsoft also documents optional JSON
+            type constraints such as{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OBJECT</code>,{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ARRAY</code>, and{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">SCALAR</code>.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
                 {`SELECT
-    ISJSON('{"name": "valid"}') AS IsValid1,
-    ISJSON('[1, 2, 3]') AS IsValid2,
-    ISJSON('invalid json') AS IsValid3,
-    ISJSON(NULL) AS IsValidNull;`}
+    ISJSON('{"name":"valid"}') AS IsValidJson,
+    ISJSON('{"name":"valid"}', OBJECT) AS IsObject,
+    ISJSON('["a","b"]', ARRAY) AS IsArray,
+    ISJSON('"hello"', SCALAR) AS IsScalar;`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">Example Output:</p>
-          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-            <pre>
-              <code className="language-text text-sm">
-                {`IsValid1    IsValid2    IsValid3    IsValidNull
------------ ----------- ----------- -----------
-1           1           0           NULL`}
-              </code>
-            </pre>
-          </div>
-          <p className="mt-2">This is useful for validation constraints or before attempting to parse JSON columns.</p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Zap size={24} /> Performance Considerations
-          </h2>
-          <p>
-            Working with JSON data in SQL Server can sometimes have performance implications, especially with large JSON
-            documents or frequent querying/modification.
+          <p className="mt-3">
+            Validation is especially useful before you pass JSON into{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> or before you
+            send a JSON string to a formatter for inspection.
           </p>
-          <ul className="list-disc pl-6 space-y-2 mt-3">
-            <li>
-              **Indexing JSON properties:** You can create indexes on specific properties within JSON columns to speed
-              up queries using{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> or{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_QUERY</code>. This is
-              typically done by creating computed columns based on the JSON properties and then indexing the computed
-              columns.
-              <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-                <pre>
-                  <code className="language-sql text-sm">
-                    {`-- Add a computed column for a JSON property
-ALTER TABLE Products
-ADD ProductName AS JSON_VALUE(ProductDetailsJson, '$.name')
-
--- Create an index on the computed column
-CREATE INDEX IX_Products_ProductName
-ON Products(ProductName);`}
-                  </code>
-                </pre>
-              </div>
-            </li>
-            <li>
-              **Data Types:** Storing JSON in{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NVARCHAR(MAX)</code> is
-              standard. Ensure you use appropriate SQL types when extracting data with{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON WITH</code>.
-            </li>
-            <li>
-              **Avoid Shredding Large JSON Repeatedly:** If you frequently need to access data within a JSON document,
-              consider extracting commonly accessed properties into standard columns and indexing them, rather than
-              repeatedly using{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> or{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> on the raw
-              JSON string.
-            </li>
-            <li>
-              **Hardware:** As with any database operation, sufficient CPU, memory, and fast storage are crucial for
-              performance, especially when processing large amounts of JSON data.
-            </li>
-          </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Info size={24} /> Summary and Best Practices
-          </h2>
-          <ul className="list-disc pl-6 space-y-2 mt-3">
-            <li>
-              **Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code>** to
-              easily format query results for web services or applications expecting JSON. Use{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">AUTO</code> for simplicity,{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">PATH</code> for precise
-              structure control.
-            </li>
-            <li>
-              **Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code>** when
-              you need to "shred" JSON data into a relational table format, often for querying, filtering, or joining
-              with other relational data.
-            </li>
-            <li>
-              **Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> and{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_QUERY</code>** for
-              extracting specific scalar values or JSON fragments without converting the whole document to rows.
-              Remember the difference between scalar and object/array extraction.
-            </li>
-            <li>
-              **Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_MODIFY</code>**
-              for targeted updates within a JSON string without needing to read and rewrite the entire content.
-            </li>
-            <li>
-              **Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ISJSON</code>** to
-              validate JSON data, especially before attempting parsing or modification.
-            </li>
-            <li>Consider computed columns and indexing for performance-critical queries on JSON properties.</li>
-            <li>
-              Store JSON data in{" "}
-              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NVARCHAR(MAX)</code> columns.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Code size={24} /> Putting It Together: An Example
+            <Code size={24} /> Newer JSON Constructors and 2025 Version Notes
           </h2>
           <p>
-            Let's imagine a scenario where we have customer data with a JSON column storing preferences, and we want to
-            list customers who prefer email notifications and format the output with their orders included as a nested
-            array.
+            SQL Server JSON support is broader now than it was when JSON first arrived in SQL Server 2016. Depending on
+            your version, you may also have SQL/JSON constructor functions such as{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_OBJECT</code> and{" "}
+            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_ARRAY</code>, which are a
+            better choice than manual string concatenation.
           </p>
           <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
             <pre>
               <code className="language-sql text-sm">
-                {`-- Assume table Customers with columns CustomerID INT, Name NVARCHAR(100), PreferencesJson NVARCHAR(MAX)
--- Assume table Orders with columns OrderID INT, CustomerID INT, OrderDate DATETIME2
-
--- Filter customers based on a JSON property and format output with nested orders
-SELECT
-    c.CustomerID AS "id",
-    c.Name AS "name",
-    JSON_VALUE(c.PreferencesJson, '$.newsletter.email') AS "preferences.emailNewsletter", -- Extract scalar from JSON
-    (
-        SELECT
-            o.OrderID AS "$.orderId",
-            o.OrderDate AS "$.orderDate"
-        FROM
-            Orders o
-        WHERE
-            o.CustomerID = c.CustomerID
-        FOR JSON PATH
-    ) AS "orders" -- Nest orders as an array
-FROM
-    Customers c
-WHERE
-    ISJSON(c.PreferencesJson) = 1 -- Ensure JSON is valid
-    AND JSON_VALUE(c.PreferencesJson, '$.newsletter.email') = 'true' -- Filter based on JSON property
-FOR JSON PATH, ROOT('CustomersWithEmailPrefs'); -- Format as root object containing an array`}
+                {`SELECT JSON_OBJECT(
+    'id': CustomerID,
+    'name': Name
+) AS CustomerJson
+FROM Customers;`}
               </code>
             </pre>
           </div>
-          <p className="mt-2">
-            This example combines{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ISJSON</code> for validation,{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> for
-            filtering, and{" "}
-            <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON PATH</code> with a
-            subquery for nested output, demonstrating how these functions can work together.
-          </p>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              Microsoft&apos;s current documentation lists{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_ARRAYAGG</code> and{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_OBJECTAGG</code> as GA
+              in Azure SQL Database and Azure SQL Managed Instance when using SQL Server 2025 or the Always-up-to-date
+              policy, and as preview features in SQL Server 2025.
+            </li>
+            <li>
+              The native <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">json</code> data
+              type is documented as GA in Azure SQL Database and Azure SQL Managed Instance in those 2025 environments,
+              and preview in SQL Server 2025.
+            </li>
+            <li>
+              Microsoft also documents{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">CREATE JSON INDEX</code> as a
+              preview feature in SQL Server 2025. Before that, the standard pattern is still computed columns plus normal
+              indexes.
+            </li>
+          </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Info size={24} /> Conclusion
+            <Zap size={24} /> Performance and Troubleshooting
           </h2>
-          <p>
-            SQL Server's native JSON functions provide powerful capabilities for integrating JSON data into your
-            relational database workflows. Whether you're generating JSON for APIs, parsing data from external sources,
-            or querying/modifying JSON stored within your tables, these functions offer flexible and efficient ways to
-            handle this popular data format directly within SQL Server. Understanding the different functions and
-            formatting options allows developers to choose the most appropriate tools for their specific JSON-related
-            tasks.
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              For frequent filters on one JSON property, expose that property as a computed column and index it.
+            </li>
+            <li>
+              Cast indexed JSON values to an appropriate SQL type or length where possible. Microsoft warns that wide
+              values can exceed the nonclustered index key length limit.
+            </li>
+            <li>
+              Avoid repeatedly shredding large JSON documents in hot query paths if the same properties are needed all
+              the time. Materialize the fields you filter or join on.
+            </li>
+            <li>
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON</code> returns{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">NVARCHAR(MAX)</code> text.
+              Large results may be split across multiple rows in some clients, even though the payload is logically one
+              JSON document.
+            </li>
+          </ul>
+          <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+            <pre>
+              <code className="language-sql text-sm">
+                {`ALTER TABLE Products
+ADD ProductName AS CAST(JSON_VALUE(ProductJson, '$.name') AS NVARCHAR(200));
+
+CREATE INDEX IX_Products_ProductName
+ON Products(ProductName);`}
+              </code>
+            </pre>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+            <Info size={24} /> Which Function Should You Use?
+          </h2>
+          <ul className="list-disc pl-6 space-y-2 mt-3">
+            <li>
+              Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON PATH</code> when
+              you need clean, predictable JSON output from relational data.
+            </li>
+            <li>
+              Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">FOR JSON AUTO</code> when
+              you want a quick JSON export that follows your existing{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">SELECT</code> shape.
+            </li>
+            <li>
+              Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">OPENJSON</code> when you
+              need rows and columns from a JSON document.
+            </li>
+            <li>
+              Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_VALUE</code> for a
+              single scalar value and{" "}
+              <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_QUERY</code> for an
+              object or array.
+            </li>
+            <li>
+              Use <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">JSON_MODIFY</code> for a
+              targeted update, and <code className="font-mono bg-gray-100 p-1 rounded text-sm dark:bg-gray-800">ISJSON</code>{" "}
+              before processing untrusted input.
+            </li>
+          </ul>
+          <p className="mt-3">
+            For searchers asking how to &quot;format a JSON string in SQL Server,&quot; the key distinction is this:
+            SQL Server is excellent at <strong>creating</strong> and <strong>querying</strong> JSON, but readable
+            whitespace formatting is still usually a job for your client or a dedicated formatter.
           </p>
         </section>
       </div>

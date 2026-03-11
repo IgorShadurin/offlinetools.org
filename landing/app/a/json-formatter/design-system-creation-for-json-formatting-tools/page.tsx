@@ -20,243 +20,328 @@ import {
 export const metadata: Metadata = {
   title: "Design System for JSON Formatting Tools | Offline Tools",
   description:
-    "Explore the process and benefits of creating a design system tailored for JSON formatting, validation, and transformation tools.",
+    "Learn how to build a practical design system for JSON formatter, validator, diff, and tree-view tools with tokens, components, and current accessibility guidance.",
 };
 
 export default function DesignSystemJsonToolsArticle() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <article className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6 text-center">Crafting a Design System for JSON Formatting Tools</h1>
+        <h1 className="text-4xl font-bold mb-6 text-center">Design System for JSON Formatting Tools</h1>
 
         <section className="space-y-6">
           <p>
-            Building effective tools for developers, especially those dealing with data like JSON, requires more than
-            just robust functionality. A well-designed user interface significantly enhances usability, reduces
-            cognitive load, and builds user trust. This is where a <strong>Design System</strong> becomes invaluable.
+            A JSON formatter looks simple until you try to make it feel dependable. Users paste broken payloads,
+            compare huge responses, jump between raw text and tree views, and expect every action to be fast, obvious,
+            and safe. A good design system turns that complexity into repeatable rules instead of one-off UI decisions.
           </p>
           <p>
-            For JSON formatting, validation, and transformation tools, a dedicated design system ensures consistency
-            across different features (formatter, validator, diff checker, converter), streamlines the development
-            process, and provides a cohesive user experience. This article explores the key considerations and
-            components involved in creating such a system.
+            For JSON formatting, validation, diff, and conversion tools, the system should define more than colors and
+            buttons. It needs rules for editor chrome, syntax tokens, validation states, tree navigation, copy flows,
+            file import/export, and accessibility behavior. That is what makes the product feel coherent across the
+            whole toolset.
           </p>
 
           <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
-            <Grid className="mr-3 text-blue-500" size={28} /> What is a Design System?
+            <Grid className="mr-3 text-blue-500" size={28} /> What a JSON Tool Design System Must Solve
           </h2>
           <p>
-            A design system is a comprehensive set of standards, guidelines, and reusable components that teams use to
-            build consistent digital products. It&apos;s not just a style guide; it&apos;s a living library of patterns,
-            principles, and practices that ensure coherence and efficiency in design and development workflows.
+            JSON tools are denser than ordinary marketing or dashboard UIs. A visitor may need to scan thousands of
+            characters, understand nested hierarchy, spot one broken comma, or safely copy a transformed result in
+            seconds. That changes the design-system priorities.
           </p>
-          <p>
-            For a suite of JSON tools, this means defining how input areas look, how formatted JSON is presented, how
-            errors are displayed, the style of buttons, spacing rules, typography, and more.
-          </p>
-
-          <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
-            <Lightbulb className="mr-3 text-yellow-500" size={28} /> Why a Design System for JSON Tools?
-          </h2>
           <ul className="list-disc pl-6 space-y-3 my-4">
             <li>
-              <strong>Consistency:</strong> Ensures the same visual language and interaction patterns are used whether
-              the user is formatting, validating, or comparing JSON. This reduces confusion and makes the tools
-              intuitive.
+              <strong>High-density reading:</strong> code fonts, indentation, line wrapping, and syntax colors must
+              remain readable for long sessions.
             </li>
             <li>
-              <strong>Efficiency:</strong> Developers and designers work faster by using pre-built, documented
-              components instead of designing and coding from scratch every time.
+              <strong>Multiple representations:</strong> the same data may appear as raw text, a tree, a diff, a table,
+              or a schema-driven form.
             </li>
             <li>
-              <strong>Scalability:</strong> As new features or tools are added, the design system provides a framework
-              to maintain consistency without reinventing the wheel.
+              <strong>Error localization:</strong> invalid JSON must point to a line, column, or field path instead of
+              showing a vague failure banner.
             </li>
             <li>
-              <strong>Quality & Maintainability:</strong> Centralizing design decisions makes updates easier and reduces
-              the likelihood of design drift or inconsistencies creeping in over time.
+              <strong>Large-file behavior:</strong> the system should define what happens with very large inputs,
+              virtualization, truncation, and long-running formatting operations.
             </li>
             <li>
-              <strong>User Experience:</strong> A predictable and coherent interface builds trust and makes the tools
-              more pleasant and effective to use.
+              <strong>Low-risk actions:</strong> copy, clear, prettify, minify, and download actions need predictable
+              states so users do not lose work.
             </li>
           </ul>
 
           <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
-            <Component className="mr-3 text-green-500" size={28} /> Core Components & Considerations
+            <Lightbulb className="mr-3 text-yellow-500" size={28} /> Start with Core User Flows
           </h2>
-
-          <h3 className="text-2xl font-semibold mt-6 flex items-center">
-            <Palette className="mr-2 text-red-400" /> Colors & Typography
-          </h3>
           <p>
-            Define a clear color palette, including primary, secondary, accent, success, warning, and error colors.
-            Crucially, consider defining colors for syntax highlighting within JSON code blocks. Typography rules should
-            cover fonts, sizes, weights, and line heights for headings, body text, and code.
+            Before choosing tokens or components, list the jobs users are actually trying to complete. If a pattern does
+            not help one of these flows, it probably does not belong in the system.
           </p>
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-            <h4 className="text-xl font-medium mb-2">Example: Syntax Highlighting Colors</h4>
-            <p className="text-sm">Define roles like:</p>
-            <ul className="list-disc list-inside space-y-1 text-sm">
-              <li>
-                <code>--color-json-key: #a77e10;</code> (e.g., a shade of brown/orange)
-              </li>
-              <li>
-                <code>--color-json-string: #067d17;</code> (e.g., a shade of green)
-              </li>
-              <li>
-                <code>--color-json-number: #1a0dad;</code> (e.g., a shade of blue)
-              </li>
-              <li>
-                <code>--color-json-boolean: #880080;</code> (e.g., a shade of purple)
-              </li>
-              <li>
-                <code>--color-json-null: #880080;</code> (e.g., same as boolean)
-              </li>
-              <li>
-                <code>--color-json-punctuation: #333;</code> (e.g., a dark grey)
-              </li>
-            </ul>
-            <p className="mt-2 text-sm font-mono">
-              Define these as CSS variables or tokens for easy management, including dark mode variants.
+          <ul className="list-disc pl-6 space-y-3 my-4">
+            <li>
+              <strong>Paste and format:</strong> raw input, parse result, indentation, and copy feedback.
+            </li>
+            <li>
+              <strong>Validate and repair:</strong> error summary, line/column jump, and visible recovery path.
+            </li>
+            <li>
+              <strong>Inspect hierarchy:</strong> expand or collapse objects and arrays without losing context.
+            </li>
+            <li>
+              <strong>Compare versions:</strong> side-by-side or inline diff with readable change markers.
+            </li>
+            <li>
+              <strong>Transform or convert:</strong> JSON to CSV, YAML, TypeScript, or schema output with trustworthy
+              previews.
+            </li>
+            <li>
+              <strong>Import and export:</strong> drag-and-drop, file picker, clipboard, download, and shareable links.
+            </li>
+          </ul>
+
+          <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
+            <Palette className="mr-3 text-red-400" size={28} /> Model Tokens Like Product Infrastructure
+          </h2>
+          <p>
+            Treat tokens as product infrastructure, not a bag of colors. A JSON-tool system usually benefits from at
+            least four layers: foundation tokens, semantic UI tokens, syntax tokens, and component tokens. That lets
+            you change a theme or accessibility mode without repainting every individual editor rule.
+          </p>
+          <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 p-4 rounded-lg my-4">
+            <h3 className="text-xl font-semibold mt-0 mb-2">Current note for token workflows</h3>
+            <p className="my-0 text-sm">
+              If your team wants one JSON source of truth for design and code, the Design Tokens Community Group
+              published a stable 2025.10 format in October 2025. That makes JSON token files a practical interchange
+              layer instead of an ad hoc convention.
             </p>
           </div>
-
-          <h3 className="text-2xl font-semibold mt-6 flex items-center">
-            <Code className="mr-2 text-purple-500" /> Code Input/Output Areas
-          </h3>
-          <p>These are central to JSON tools. The design system should specify:</p>
-          <ul className="list-disc pl-6 space-y-3 my-4">
-            <li>Visual style of the text areas (borders, background, padding).</li>
-            <li>Scrollbar styling.</li>
-            <li>Syntax highlighting rules based on the color palette.</li>
-            <li>Handling of line numbers (optional but helpful).</li>
-            <li>Read-only vs. editable states.</li>
-            <li>Placeholder text style.</li>
-            <li>Error highlighting (e.g., red underline for invalid JSON).</li>
-          </ul>
-
-          <h3 className="text-2xl font-semibold mt-6 flex items-center">
-            <ListTree className="mr-2 text-teal-500" /> Visualizing Hierarchy and Structure
-          </h3>
-          <p>
-            JSON&apos;s nested nature means tools often need to visualize its structure, especially in tree views or
-            collapsed sections. The design system should define:
-          </p>
+          <p>For JSON tools, useful token categories often include:</p>
           <ul className="list-disc pl-6 space-y-3 my-4">
             <li>
-              Styles for expansion/collapse toggles (e.g., arrows <ChevronRight /> / <ChevronDown />
-              ).
+              <strong>Surface tokens:</strong> page canvas, editor panel, inset panel, sticky toolbar, dialog, and
+              status rail.
             </li>
-            <li>Indentation levels.</li>
-            <li>Visual cues for different data types (object, array, string, number, boolean, null).</li>
-            <li>Hover states for elements.</li>
-          </ul>
-
-          <h3 className="text-2xl font-semibold mt-6 flex items-center">
-            <Diff className="mr-2 text-orange-500" /> Diff and Comparison Views
-          </h3>
-          <p>Tools comparing two JSON inputs need a consistent way to highlight differences. Define styles for:</p>
-          <ul className="list-disc pl-6 space-y-3 my-4">
-            <li>Added lines/values.</li>
-            <li>Deleted lines/values.</li>
-            <li>Changed lines/values.</li>
-            <li>Line-by-line or character-by-character diff highlighting.</li>
+            <li>
+              <strong>Text tokens:</strong> primary, muted, destructive, success, warning, and inverse text.
+            </li>
+            <li>
+              <strong>Syntax tokens:</strong> key, string, number, boolean, <code>null</code>, punctuation, comment,
+              and invalid token states.
+            </li>
+            <li>
+              <strong>Interaction tokens:</strong> focus ring, active row, hover row, selected node, drop target, and
+              drag handle.
+            </li>
+            <li>
+              <strong>Density tokens:</strong> editor padding, row height, gutter width, border radius, and icon size.
+            </li>
           </ul>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4 text-sm">
-            <h4 className="text-xl font-medium mb-2">Example: Diff Styling (CSS)</h4>
+            <h3 className="text-xl font-medium mt-0 mb-2">Example: JSON-based design tokens</h3>
             <pre className="whitespace-pre-wrap break-all">
-              {`/* Assuming a structure where lines are wrapped in a diff component */
-.diff-added {
-  background-color: rgba(144, 238, 144, 0.3); /* Light green */
-  border-left: 3px solid #32cd32; /* Lime green */
-}
-
-.diff-deleted {
-  background-color: rgba(250, 128, 114, 0.3); /* Light coral */
-  border-left: 3px solid #f08080; /* Light red */
-}
-
-.diff-changed {
-  background-color: rgba(173, 216, 230, 0.3); /* Light blue */
-  border-left: 3px solid #add8e6; /* Light blue */
-}
-
-/* Optional: highlight changes within a line */
-.diff-changed span.highlight {
-  background-color: rgba(255, 255, 0, 0.5); /* Yellow */
-  border-radius: 2px;
+              {`{
+  "color": {
+    "surface": {
+      "canvas": { "$type": "color", "$value": "#0f172a" },
+      "panel": { "$type": "color", "$value": "#111827" }
+    },
+    "text": {
+      "primary": { "$type": "color", "$value": "#f8fafc" },
+      "muted": { "$type": "color", "$value": "#94a3b8" },
+      "danger": { "$type": "color", "$value": "#ef4444" }
+    }
+  },
+  "syntax": {
+    "json": {
+      "key": { "$type": "color", "$value": "{color.text.primary}" },
+      "string": { "$type": "color", "$value": "#22c55e" },
+      "number": { "$type": "color", "$value": "#38bdf8" },
+      "boolean": { "$type": "color", "$value": "#f97316" },
+      "null": { "$type": "color", "$value": "#c084fc" }
+    }
+  }
 }`}
             </pre>
           </div>
+          <p>
+            The important part is not the exact names. It is the separation of concerns: components should consume
+            semantic or syntax tokens, not hard-coded hex values.
+          </p>
+
+          <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
+            <Component className="mr-3 text-green-500" size={28} /> Core Components to Standardize
+          </h2>
+
+          <h3 className="text-2xl font-semibold mt-6 flex items-center">
+            <Code className="mr-2 text-purple-500" /> Editor Shell
+          </h3>
+          <p>
+            The editor shell is the heart of the experience. Define the input/output panel layout, toolbar placement,
+            gutter behavior, placeholder treatment, empty state, read-only state, and loading state. Decide early
+            whether validation messages live above the editor, below it, or in a sticky side rail.
+          </p>
+          <ul className="list-disc pl-6 space-y-3 my-4">
+            <li>Use a code font with stable widths and tabular numerals for line and column references.</li>
+            <li>Make line wrapping an explicit mode, not an accidental overflow fallback.</li>
+            <li>Differentiate editable and output panes clearly, especially in dual-pane formatter layouts.</li>
+            <li>Keep toolbar labels short and action-first: Format, Validate, Copy, Clear, Download.</li>
+          </ul>
+
+          <h3 className="text-2xl font-semibold mt-6 flex items-center">
+            <ListTree className="mr-2 text-teal-500" /> Tree Views and Collapsed Structure
+          </h3>
+          <p>
+            If you expose hierarchy, specify whether the UI is a disclosure list or a true tree widget. That decision
+            affects semantics, keyboard support, row height, indentation, and selection behavior.
+          </p>
+          <ul className="list-disc pl-6 space-y-3 my-4">
+            <li>
+              Define the toggle affordance for expand and collapse states, such as{" "}
+              <ChevronRight className="inline mx-1" />
+              and{" "}
+              <ChevronDown className="inline mx-1" />.
+            </li>
+            <li>Keep focus and selection visually distinct so users know what is active versus what is chosen.</li>
+            <li>Show data type badges or icons consistently for object, array, string, number, boolean, and null.</li>
+            <li>Preserve expansion state after formatting when possible, or clearly explain when it resets.</li>
+          </ul>
+
+          <h3 className="text-2xl font-semibold mt-6 flex items-center">
+            <Diff className="mr-2 text-orange-500" /> Diff and Review Surfaces
+          </h3>
+          <p>
+            JSON diffs deserve their own rules instead of inheriting generic code-diff styling. Users need to
+            distinguish between structural changes and simple value changes quickly.
+          </p>
+          <ul className="list-disc pl-6 space-y-3 my-4">
+            <li>Use separate tokens for added, removed, changed, and unchanged lines.</li>
+            <li>Define when inline diffing is used versus side-by-side diffing.</li>
+            <li>Provide a summary count for inserted, removed, and modified nodes before the detailed view.</li>
+            <li>Make moved focus obvious when the user jumps to the next difference.</li>
+          </ul>
 
           <h3 className="text-2xl font-semibold mt-6 flex items-center">
             Buttons & Actions (<Copy className="mx-1 text-blue-600" />)
           </h3>
           <p>
-            Clearly define styles for primary, secondary, and tertiary buttons, including states (hover, active,
-            disabled). Specific actions like &quot;Format&quot;, &quot;Validate&quot;, &quot;Copy&quot;,
-            &quot;Clear&quot; should use consistent button styles. Icons (like <Copy /> for copy) should also have
-            defined sizes and spacing relative to text.
+            Small controls are common in formatter tools, which makes them easy to style badly. Standardize primary,
+            secondary, and quiet actions, then define icon spacing, hover states, disabled states, and confirmation
+            rules.
           </p>
-
-          <h3 className="text-2xl font-semibold mt-6 flex items-center">
-            <Accessibility className="mr-2 text-indigo-500" /> Accessibility
-          </h3>
-          <p>A crucial part of any design system. For JSON tools, this includes:</p>
           <ul className="list-disc pl-6 space-y-3 my-4">
-            <li>Ensuring sufficient color contrast, especially for syntax highlighting and text areas.</li>
-            <li>Defining keyboard navigation and focus states for all interactive elements.</li>
-            <li>Using ARIA attributes where necessary for complex widgets.</li>
-            <li>Providing text alternatives for icons.</li>
-            <li>Designing for different screen sizes and zoom levels.</li>
-            <li>
-              Implementing dark mode/themes correctly (<MoonStar className="inline mx-0.5" />
-              ).
-            </li>
+            <li>Keep destructive actions like Clear away from frequent actions like Format or Copy.</li>
+            <li>Support both pointer and keyboard activation for every important action.</li>
+            <li>Show transient success feedback for copy or download, but do not hide critical errors automatically.</li>
           </ul>
 
-          <h3 className="text-2xl font-semibold mt-6 flex items-center">Error and Success States</h3>
+          <h2 className="text-3xl font-semibold mt-8 mb-4">State Rules Before Visual Polish</h2>
           <p>
-            How does the tool communicate success (e.g., &quot;JSON is valid&quot;), warnings, or errors (&quot;Invalid
-            JSON&quot;)?
+            Many JSON tools fail because they style the happy path and improvise the rest. Write state rules early so
+            every tool in the suite reports status in the same way.
           </p>
           <ul className="list-disc pl-6 space-y-3 my-4">
             <li>
-              Consistent visual treatment (color, icons like <CheckCheck className="inline mx-0.5 text-green-600" /> for
-              success, <X className="inline mx-0.5 text-red-600" /> for errors).
+              <strong>Empty:</strong> explain accepted input and optionally offer a safe sample payload.
             </li>
-            <li>Placement of messages (e.g., above or below the input area).</li>
-            <li>Linking errors to specific lines in the JSON input if possible.</li>
+            <li>
+              <strong>Valid:</strong> use a restrained success treatment with a clear message, such as{" "}
+              <CheckCheck className="inline mx-1 text-green-600" /> valid JSON.
+            </li>
+            <li>
+              <strong>Invalid:</strong> surface line, column, and a useful message instead of a generic{" "}
+              <X className="inline mx-1 text-red-600" /> invalid state.
+            </li>
+            <li>
+              <strong>Busy:</strong> formatting, diff generation, or file parsing should disable only the controls that
+              would conflict with the current task.
+            </li>
+            <li>
+              <strong>Large payload:</strong> define truncation, virtualization, and warning copy before performance
+              problems force inconsistent hacks.
+            </li>
+            <li>
+              <strong>Read-only output:</strong> make it obvious that the value can be copied but not edited.
+            </li>
           </ul>
 
           <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
-            Implementing and Documenting the System
+            <Accessibility className="mr-3 text-indigo-500" size={28} /> Accessibility and Interaction Standards
           </h2>
-          <p>A design system is only effective if it&apos;s accessible and easy to use by the team.</p>
+          <p>
+            Accessibility should be embedded in the component contract, not added as QA cleanup. This matters
+            especially for code-like interfaces because they mix dense text, tiny controls, and custom widgets.
+          </p>
           <ul className="list-disc pl-6 space-y-3 my-4">
             <li>
-              <BookOpenText className="inline mr-2 text-blue-400" /> Documentation: Create a central place (e.g., a
-              dedicated website) documenting all components, principles, and usage guidelines. Show examples of
-              components in different states.
+              WCAG 2.2 adds <strong>Focus Not Obscured</strong> and <strong>Target Size (Minimum)</strong> at AA. In
+              practice, do not let sticky toolbars cover focused controls, and avoid tiny icon-only actions that fall
+              below 24 by 24 CSS pixels unless spacing or an equivalent larger control covers the requirement.
             </li>
             <li>
-              Component Library: Implement the design system components as reusable UI components (e.g., React, Vue, Web
-              Components). This is the practical toolkit for developers.
+              If you want stronger focus treatment, WCAG 2.2&apos;s Focus Appearance guidance defines a visible
+              indicator area comparable to a 2 CSS pixel perimeter and 3:1 contrast between focused and unfocused
+              states.
             </li>
             <li>
-              Tooling: Use tools like Storybook to develop, document, and test UI components in isolation. Implement
-              linting rules to enforce design system usage where possible.
+              If you build a real tree widget, follow the WAI-ARIA tree view pattern:{" "}
+              <code>Right Arrow</code> opens, <code>Left Arrow</code> closes, <code>Up</code>/<code>Down</code> move
+              between visible nodes, <code>Home</code>/<code>End</code> jump, and type-ahead is recommended.
             </li>
+            <li>
+              Use clear live announcements for validation results, copy success, and jump-to-error actions so screen
+              reader users are not left guessing what changed.
+            </li>
+            <li>
+              Test dark themes deliberately (<MoonStar className="inline mx-0.5" />). Do not just invert editor colors;
+              syntax contrast and focus visibility often break first.
+            </li>
+          </ul>
+
+          <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
+            <Code className="mr-3 text-violet-500" size={28} /> Choosing the Editor Foundation
+          </h2>
+          <p>
+            For a lightweight formatter, a styled <code>textarea</code> may be enough. For advanced search, diff,
+            folding, and long-document workflows, most teams embed an editor such as CodeMirror or Monaco and layer the
+            product-specific system on top.
+          </p>
+          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
+            <h3 className="text-xl font-medium mt-0 mb-2">What to standardize even if you use a third-party editor</h3>
+            <ul className="list-disc pl-6 space-y-2 my-0 text-sm">
+              <li>labels, helper text, and error message writing style</li>
+              <li>toolbar layout and button hierarchy</li>
+              <li>focus exit rules and keyboard help</li>
+              <li>copy, download, and clear feedback patterns</li>
+              <li>tokens for syntax colors, gutters, selections, and diff highlights</li>
+            </ul>
+          </div>
+          <p>
+            Current editor docs are a reminder that the surrounding system still matters. Monaco documents features like
+            a command palette, high-contrast mode support, Tab trapping controls, and a diff review pane. CodeMirror
+            emphasizes keyboard-only and screen-reader-friendly use. Your design system should make those capabilities
+            discoverable and consistent instead of burying them in editor-specific defaults.
+          </p>
+
+          <h2 className="text-3xl font-semibold mt-8 mb-4 flex items-center">
+            <BookOpenText className="mr-3 text-blue-500" size={28} /> Document the System So Teams Use It
+          </h2>
+          <p>A design system is only useful when product teams can apply it quickly and predictably.</p>
+          <ul className="list-disc pl-6 space-y-3 my-4">
+            <li>Document each component with anatomy, states, keyboard behavior, and content guidance.</li>
+            <li>Include fixtures for valid, invalid, deeply nested, and very large JSON examples.</li>
+            <li>Show when to use raw text, tree view, or diff view instead of treating them as interchangeable.</li>
+            <li>Keep design tokens, React components, and usage docs versioned together to avoid drift.</li>
           </ul>
 
           <h2 className="text-3xl font-semibold mt-8 mb-4">Conclusion</h2>
           <p>
-            Creating a design system for JSON formatting tools is an investment that pays off by leading to a more
-            consistent, maintainable, and user-friendly product suite. By thoughtfully defining core visual styles,
-            component behaviors, and specific considerations for handling structured data like JSON, teams can build
-            robust tools that developers love to use. It transforms a collection of utilities into a cohesive, polished
-            experience.
+            The best design system for JSON formatting tools is not the prettiest one. It is the one that makes
+            parsing, inspecting, comparing, and copying structured data feel reliable across every screen. Start from
+            real workflows, build a disciplined token model, standardize states and accessibility behavior, and your
+            formatter stops feeling like a one-off utility and starts feeling like a professional tool suite.
           </p>
         </section>
       </article>

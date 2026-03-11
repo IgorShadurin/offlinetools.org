@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { FileJson2, Cog, CircleCheck, CircleX, Github, Wrench, GitPullRequest } from "lucide-react";
+import { CircleCheck, CircleX, Cog, FileJson2, Github, GitPullRequest, Wrench } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "GitHub Actions for Automated JSON Formatting and Validation | Offline Tools",
-  description: "Learn how to use GitHub Actions to automatically format and validate JSON files in your repository.",
+  description:
+    "Set up GitHub Actions to validate JSON syntax, enforce Prettier formatting, and add schema checks to pull requests.",
 };
 
 export default function GithubActionsJsonArticle() {
@@ -16,280 +17,211 @@ export default function GithubActionsJsonArticle() {
 
       <div className="space-y-6 text-lg">
         <p>
-          In modern software development, configuration files, data payloads, and API responses often rely heavily on
-          JSON. Maintaining consistency in JSON formatting and ensuring its validity across a project is crucial for
-          readability, preventing errors, and smooth collaboration, especially in teams. Manually checking and
-          formatting JSON before committing can be tedious and error-prone. This is where automation comes in, and
-          GitHub Actions provide a powerful way to enforce these standards directly within your version control
-          workflow.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Github className="w-7 h-7 mr-2 text-gray-700 dark:text-gray-300" />
-          Why Automate with GitHub Actions?
-        </h2>
-        <p>
-          GitHub Actions allow you to automate tasks in response to GitHub events like pushes, pull requests, and
-          merges. By integrating JSON formatting and validation into your CI/CD pipeline, you gain several key benefits:
-        </p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <span className="font-medium">Consistency:</span> Ensure all JSON files adhere to a predefined style guide
-            (e.g., indentation, spacing, key ordering if using a powerful formatter).
-          </li>
-          <li>
-            <span className="font-medium">Early Error Detection:</span> Catch syntax errors, invalid structures, or
-            incorrect formatting before they are merged into the main branch, saving debugging time later.
-          </li>
-          <li>
-            <span className="font-medium">Improved Code Review:</span> Code reviews can focus on logic and content
-            rather than formatting issues.
-          </li>
-          <li>
-            <span className="font-medium">Reduced Cognitive Load:</span> Developers don&apos;t have to remember to
-            manually run formatting/validation tools.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Wrench className="w-7 h-7 mr-2 text-yellow-600" />
-          Setting Up Your Workflow
-        </h2>
-        <p>
-          GitHub Actions workflows are defined in YAML files located in the `.github/workflows` directory at the root of
-          your repository. A workflow consists of one or more jobs, and each job has a series of steps that are executed
-          on a runner (a virtual machine hosted by GitHub or self-hosted).
+          If you want GitHub to block broken or badly formatted JSON before merge, the best default is a small workflow
+          that runs on pull requests, watches only JSON-related files, and fails fast when a file is malformed or does
+          not match your formatting rules. That gives contributors immediate feedback and keeps bad JSON out of{" "}
+          <code>main</code>.
         </p>
         <p>
-          For our purpose, we&apos;ll create a simple workflow that runs whenever changes are pushed or a pull request
-          is opened targeting your main branch (e.g., `main` or `master`). The workflow will check out the code, set up
-          the necessary environment, and then run formatting and validation tools.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6">Workflow Trigger</h3>
-        <p>You&apos;ll typically want to run JSON checks on `push` and `pull_request` events.</p>
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <pre>
-            {`on:
-  push:
-    branches: [ main, master ] # Adjust branches as needed
-  pull_request:
-    branches: [ main, master ] # Adjust branches as needed`}
-          </pre>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Jobs and Steps</h3>
-        <p>
-          A single job is usually sufficient for this task. Inside the job, you&apos;ll define steps using standard
-          GitHub Actions actions or running command-line scripts.
+          The important distinction is that &quot;JSON validation&quot; can mean three different things: syntax
+          validation, formatting enforcement, and schema validation. Most repositories need the first two. Repositories
+          with machine-read configuration or content files often need the third as well.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <FileJson2 className="w-7 h-7 mr-2 text-green-600" />
-          Example 1: Using <code>jsonlint</code>
+          What To Automate
         </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <span className="font-medium">Syntax validation:</span> catches broken commas, quotes, or trailing
+            characters. A formatter such as Prettier will fail on invalid JSON, so many teams get this for free.
+          </li>
+          <li>
+            <span className="font-medium">Formatting enforcement:</span> keeps indentation, spacing, and line wrapping
+            consistent so reviews focus on content instead of whitespace noise.
+          </li>
+          <li>
+            <span className="font-medium">Schema validation:</span> checks required keys, value types, enums, and
+            other structural rules that a parser or formatter does not understand.
+          </li>
+        </ul>
         <p>
-          <code>jsonlint</code> is a simple command-line tool for validating and formatting JSON. It&apos;s a good
-          choice for basic syntax checking.
-        </p>
-        <p>
-          First, ensure you have Node.js set up in your workflow, as <code>jsonlint</code> is an npm package.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">
-            <code>.github/workflows/json-check.yml</code>
-          </h4>
-          <pre>
-            {`name: JSON Check
-
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-
-jobs:
-  validate-and-format-check:
-    runs-on: ubuntu-latest # Use a standard runner
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4 # Action to get your code
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4 # Action to set up Node.js
-      with:
-        node-version: '20' # Specify Node.js version
-
-    - name: Install jsonlint
-      run: npm install -g jsonlint # Install jsonlint globally
-
-    - name: Validate JSON files
-      run: |
-        find . -name '*.json' -print0 | xargs -0 jsonlint -q # Find all JSON and validate quietly
-      # The -q flag makes jsonlint output nothing on success, and error messages on failure.
-      # xargs -0 handles filenames with spaces or special characters.
-
-    - name: Check JSON Formatting
-      run: |
-        find . -name '*.json' -print0 | xargs -0 -I {} sh -c 'jsonlint -f "{}" | diff - "{}"' # Format and diff
-      # This formats each file and compares it to the original.
-      # If diff finds differences (exit code 1), the command fails.
-      # -I {} tells xargs to replace {} with the filename in the command.
-      # sh -c is used to execute multiple commands (jsonlint and diff) for each file found by find.
-      # Note: This check might be tricky with empty files or specific jsonlint output nuances.
-      # A common alternative is using a dedicated tool like Prettier (see next example).
-`}
-          </pre>
-        </div>
-        <p>
-          In this example, the workflow first checks out the code and sets up Node.js. It then installs{" "}
-          <code>jsonlint</code>. The &quot;Validate JSON files&quot; step uses <code>find</code> and <code>xargs</code>{" "}
-          to run <code>jsonlint -q</code> on every <code>.json</code> file found. If any file is invalid,{" "}
-          <code>jsonlint -q</code> exits with a non-zero status, causing the step and thus the job to fail{" "}
-          <CircleX className="inline w-5 h-5 text-red-600" />. The &quot;Check JSON Formatting&quot; step attempts to
-          format each file and then uses <code>diff</code> to compare the formatted output to the original file. If
-          there&apos;s a difference, it means the file wasn&apos;t correctly formatted, and the step fails{" "}
-          <CircleX className="inline w-5 h-5 text-red-600" />. If all checks pass, the job completes successfully{" "}
-          <CircleCheck className="inline w-5 h-5 text-green-600" />.
+          If you only add one workflow, start with formatting plus parse validation. That covers the common search
+          intent behind &quot;JSON validation in GitHub Actions&quot; without adding much maintenance overhead.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Wrench className="w-7 h-7 mr-2 text-yellow-600" />
-          Example 2: Using Prettier
+          <Github className="w-7 h-7 mr-2 text-gray-700 dark:text-gray-300" />
+          Recommended Baseline Workflow
         </h2>
         <p>
-          <a href="https://prettier.io/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+          In 2026, the cleanest default is still to keep{" "}
+          <a href="https://prettier.io/docs/cli/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
             Prettier
           </a>{" "}
-          is a widely used opinionated code formatter that supports JSON among many other languages. It&apos;s generally
-          more robust and configurable for formatting than simple tools like <code>jsonlint -f</code>.
-        </p>
-        <p>
-          If your project already uses Prettier, you likely have it as a dev dependency. If not, you&apos;d install it.
+          in your repository, run it in check mode on pull requests, and scope the workflow with <code>paths</code> so
+          it only runs when JSON-related files change. Older <code>jsonlint</code> plus <code>diff</code> pipelines can
+          work, but they are usually more brittle than a single formatter check.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
-          <h4 className="text-lg font-medium mb-2">
-            <code>.github/workflows/prettier-json-check.yml</code>
-          </h4>
+          <h3 className="text-lg font-medium mb-2">
+            <code>.github/workflows/json-check.yml</code>
+          </h3>
           <pre>
-            {`name: Prettier JSON Check
+            {`name: JSON checks
 
 on:
-  push:
-    branches: [ main, master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [main]
+    paths:
+      - "**/*.json"
+      - ".prettierrc*"
+      - ".prettierignore"
+      - "package.json"
+      - "package-lock.json"
+  push:
+    branches: [main]
+    paths:
+      - "**/*.json"
+      - ".prettierrc*"
+      - ".prettierignore"
+      - "package.json"
+      - "package-lock.json"
+
+permissions:
+  contents: read
 
 jobs:
-  prettier-check:
+  json-check:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
 
-    # If Prettier is a project dependency (recommended)
-    - name: Install dependencies
-      run: npm ci # Use npm ci for CI/CD environments
+      - name: Install dependencies
+        run: npm ci
 
-    # If Prettier is NOT a project dependency, install it globally just for the action
-    # - name: Install Prettier (Global)
-    #   run: npm install -g prettier
-
-    - name: Run Prettier Check for JSON files
-      # Use npx if Prettier is a project dependency
-      run: npx prettier --check "**/*.json" --ignore-path .gitignore
-      # Use global prettier if installed globally
-      # run: prettier --check "**/*.json" --ignore-path .gitignore
-      # The --check flag makes Prettier exit with a non-zero status if files need formatting.
-      # "**/*.json" targets all .json files recursively.
-      # --ignore-path .gitignore respects your .gitignore file for files to skip.
-`}
+      - name: Check JSON formatting and syntax
+        run: npx prettier --check "**/*.json"`}
           </pre>
         </div>
         <p>
-          This workflow is similar, but instead of <code>jsonlint</code>, it uses <code>npx prettier --check</code>. The{" "}
-          <code>--check</code> flag is designed specifically for CI environments; it compares the files to how Prettier
-          would format them and exits with an error code if any files differ, or if there are syntax errors that prevent
-          formatting. This single command handles both validation (indirectly, as unparseable JSON can cause Prettier to
-          fail) and formatting checks <CircleCheck className="inline w-5 h-5 text-green-600" />{" "}
-          <CircleX className="inline w-5 h-5 text-red-600" />. Using <code>npx</code> is recommended as it runs the
-          version of Prettier installed in your project&apos;s <code>node_modules</code>, ensuring consistency with
-          local development.
+          This assumes Prettier is already in <code>devDependencies</code>. In CI, <code>prettier --check</code> gives
+          you both signals most teams want: invalid JSON fails the step <CircleX className="inline w-5 h-5 text-red-600" />{" "}
+          and valid JSON that does not match your formatting rules also fails{" "}
+          <CircleX className="inline w-5 h-5 text-red-600" />. A clean pull request passes without bot commits or
+          write access <CircleCheck className="inline w-5 h-5 text-green-600" />.
+        </p>
+        <p>
+          Pin the Node major version your repository already uses. The <code>24</code> above is only an example of a
+          current major. If your repo is pinned to a different version, or uses <code>pnpm</code> or <code>yarn</code>,
+          match that instead of copying the sample blindly.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center">
+          <Cog className="w-7 h-7 mr-2 text-blue-600" />
+          When Syntax Validation Is Not Enough
+        </h2>
+        <p>
+          A formatter only tells you whether the JSON parses and whether it is styled correctly. It does not tell you
+          whether your file has the keys or value types your application expects. If your repository depends on config
+          files, content bundles, or deployment manifests, add a schema validation step after installation.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4 overflow-x-auto">
+          <h3 className="text-lg font-medium mb-2">
+            <code>Additional step for structured JSON</code>
+          </h3>
+          <pre>
+            {`- name: Validate JSON against a schema
+  run: |
+    npx ajv-cli validate \
+      -s schema/config.schema.json \
+      -d "config/**/*.json" \
+      --all-errors`}
+          </pre>
+        </div>
+        <p>
+          This is what catches missing keys, invalid enum values, or the wrong data type for a field. Use it when
+          &quot;valid JSON&quot; is not the same thing as &quot;usable JSON&quot; in your application.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <GitPullRequest className="w-7 h-7 mr-2 text-purple-600" />
-          Integrating with Pull Requests
+          Pull Request Enforcement and Auto-Fix
         </h2>
         <p>
-          Running these checks on pull requests is highly effective. If the GitHub Action job fails, the pull request
-          will show a failed status check. You can configure branch protection rules in your GitHub repository settings
-          to require this check to pass before a pull request can be merged. This ensures that no ill-formatted or
-          invalid JSON makes it into your main branch.
+          For most teams, check-only workflows are the better default. They work cleanly with branch protection, keep
+          permissions minimal, and make the contributor fix the file in the same branch that introduced the change. If
+          the check fails on a pull request, require that status check before merge.
+        </p>
+        <p>
+          If you want the action to rewrite files and commit them back, switch to <code>prettier --write</code>, grant{" "}
+          <code>contents: write</code>, and commit only when the working tree changed. Keep that pattern for trusted
+          branches or internal repositories. For fork-based pull requests, read-only validation is usually simpler and
+          safer.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Cog className="w-7 h-7 mr-2 text-blue-600" />
-          Checking vs. Auto-Fixing and Committing
+          <Wrench className="w-7 h-7 mr-2 text-yellow-600" />
+          Common Failures and Fixes
         </h2>
-        <p>
-          The examples above use the &quot;check&quot; approach: the workflow fails if JSON is not formatted/valid, and
-          the developer must fix it locally and push a new commit. This is generally the preferred method as it keeps
-          the responsibility of correct code on the developer and avoids the complexity of giving the GitHub Actions
-          runner commit permissions.
-        </p>
-        <p>
-          An alternative is to have the workflow automatically format/validate the JSON and commit the changes back to
-          the branch. While possible, this adds complexity:
-        </p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>You need to configure Git in the action runner.</li>
           <li>
-            You need to grant the action permissions to write to the repository (e.g., using a Personal Access Token or{" "}
-            <code>GITHUB_TOKEN</code> with appropriate scopes).
+            <span className="font-medium">The workflow never starts:</span> If you use both branch filters and{" "}
+            <code>paths</code> filters, both conditions must match. A JSON-only workflow will not run when a pull
+            request changes only Markdown or TypeScript.
           </li>
-          <li>It creates automatic commits, which some teams might find noisy.</li>
+          <li>
+            <span className="font-medium">Prettier says a file is wrong even though it parses:</span> That is expected.
+            Parsing and formatting are different checks. Run <code>prettier --write</code> locally, then commit the
+            formatted result.
+          </li>
+          <li>
+            <span className="font-medium">You want reproducible CI:</span> Keep Prettier pinned in{" "}
+            <code>devDependencies</code> and commit your lockfile. That avoids downloading a floating formatter version
+            on every run.
+          </li>
+          <li>
+            <span className="font-medium">Your cache behavior changed after updating setup-node:</span>{" "}
+            <code>actions/setup-node@v6</code> can automatically enable npm caching when your <code>package.json</code>{" "}
+            declares npm as the package manager. If you do not want that behavior, set{" "}
+            <code>package-manager-cache: false</code>.
+          </li>
+          <li>
+            <span className="font-medium">You only want to validate part of the repo:</span> Narrow both the workflow{" "}
+            <code>paths</code> filter and the CLI glob, for example <code>config/**/*.json</code> or{" "}
+            <code>content/**/*.json</code>.
+          </li>
+          <li>
+            <span className="font-medium">The repo contains generated JSON:</span> Exclude generated directories with{" "}
+            <code>.prettierignore</code> so CI does not fail on files no human is expected to edit.
+          </li>
         </ul>
-        <p>
-          For most use cases, simply failing the check and notifying the developer is sufficient and easier to maintain.
-        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center">
           <Cog className="w-7 h-7 mr-2 text-blue-600" />
-          Tips and Best Practices
+          Best Practices
         </h2>
         <ul className="list-disc pl-6 space-y-2">
+          <li>Run the job on pull requests and on pushes to your protected branch so bad JSON cannot slip through.</li>
+          <li>Use read-only permissions unless the workflow truly needs to push changes back to the repository.</li>
           <li>
-            <span className="font-medium">Specify Files:</span> Instead of checking *all* <code>.json</code> files, you
-            might want to target specific directories or files if your repo contains external JSON or build artifacts
-            you don&apos;t want to check. Adjust the <code>find</code> command or Prettier patterns (
-            <code>&quot;**/*.json&quot;</code>) accordingly.
+            Prefer one obvious formatter workflow over a chain of ad hoc shell commands. It is easier for contributors
+            to debug.
           </li>
           <li>
-            <span className="font-medium">
-              Use <code>.gitignore</code> / Ignore Files:
-            </span>{" "}
-            Both <code>find</code> (with exclusions) and Prettier&apos;s <code>--ignore-path</code> flag allow you to
-            skip files or directories listed in your <code>.gitignore</code>, which is essential for avoiding checks on
-            generated files.
-          </li>
-          <li>
-            <span className="font-medium">Monorepos:</span> In a monorepo, you might only want to run the check if JSON
-            files within specific projects have changed. You can use GitHub Actions features like <code>paths</code>{" "}
-            filtering in the <code>on</code> trigger or check for changed files within the job.
-          </li>
-          <li>
-            <span className="font-medium">Combine with Linting:</span> If you have other linting rules (like ESLint for
-            JS/TS), consider combining the JSON check into a single &quot;Lint&quot; job in your workflow file.
+            Add schema validation only where structure matters. Not every JSON file deserves the overhead of maintaining
+            a schema.
           </li>
         </ul>
 
@@ -298,12 +230,9 @@ jobs:
           Conclusion
         </h2>
         <p>
-          Automating JSON formatting and validation with GitHub Actions is a straightforward process that significantly
-          improves code quality and developer workflow. By adding a simple YAML file to your repository, you can enforce
-          consistent standards and catch potential errors early in the development cycle. Whether you choose a
-          lightweight tool like <code>jsonlint</code> or a more comprehensive formatter like Prettier, the principle is
-          the same: let automation handle the mundane checks so your team can focus on building features. Implement
-          these checks today and streamline your JSON handling!
+          If your goal is reliable JSON validation in GitHub Actions, start with a small Prettier check scoped to JSON
+          files, then add schema validation only for structured config or content. That setup is simple, current, and
+          easy to enforce with pull request status checks.
         </p>
       </div>
     </>

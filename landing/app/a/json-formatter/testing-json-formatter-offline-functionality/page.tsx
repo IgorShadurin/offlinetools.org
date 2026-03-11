@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { CloudOff, Code, CheckCircle, XCircle, AlertTriangle, ListTree, ListChecks, Lock } from "lucide-react";
+import { AlertTriangle, CheckCircle, CloudOff, Code, ListChecks, ListTree, Lock, XCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Testing JSON Formatter Offline Functionality | Offline Tools",
+  title: "Testing JSON Formatter Offline Functionality | Offline JSON Formatter Guide",
   description:
-    "A guide for developers on how to test the offline functionality of a JSON formatter tool, covering various test cases and strategies.",
+    "Learn how to verify that a JSON formatter really works offline, keeps data in the browser, and still formats and validates JSON with no network connection.",
 };
+
+const jsonExampleMinified = `{"env":"prod","retryCount":3,"features":{"offline":true,"prettyPrint":true},"items":[1,2,3,4]}`;
 
 const jsonExampleNested = `{
   "user": {
@@ -35,6 +37,12 @@ const jsonExampleDataTypes = `{
 
 const jsonExampleEscapes = `{
   "escapedString": "This string has a \\"quote\\" and a newline\\nand a tab\\t and unicode \\u20AC (Euro sign)."
+}`;
+
+const jsonExampleSensitive = `{
+  "customerEmail": "alice@example.com",
+  "apiKey": "sk_test_REDACTED",
+  "internalNote": "Use fake secrets when testing privacy boundaries."
 }`;
 
 const jsonExampleInvalidMissingComma = `{
@@ -81,26 +89,29 @@ export default function JsonFormatterOfflineTestingArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON (JavaScript Object Notation) is the de facto standard for data interchange on the web and beyond. JSON
-          formatters are essential tools that help developers read, write, and debug JSON data by providing syntax
-          highlighting, proper indentation, and structural views. A crucial feature for many developers is the ability
-          of these formatters to work <strong>offline</strong>.
+          If you want a JSON formatter that works offline, the important question is not just whether it can pretty-print
+          JSON. It is whether parsing, validation, and formatting happen locally in the browser after the page has
+          loaded, without sending your payload to a server.
         </p>
         <p>
-          An offline JSON formatter processes and formats JSON data directly within your browser or application without
-          sending the data to a remote server. This document explores how to effectively test the offline functionality
-          of such a tool.
+          For most browser-based formatters, the core logic is local because it relies on native JavaScript APIs such as{" "}
+          <code>JSON.parse()</code> and <code>JSON.stringify()</code>. What you actually need to test is everything
+          around that core: whether the page still works when the network is disabled, whether any request is made while
+          you paste data, and whether errors stay readable when the connection disappears.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CloudOff className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Why is Offline Functionality Important?
+          <CloudOff className="w-6 h-6 text-gray-600 dark:text-gray-400" /> What &quot;Offline JSON Formatter&quot;
+          Should Mean
         </h2>
-        <p>Testing the offline capability is vital for several reasons:</p>
+        <p>A credible offline claim should hold up under all of these checks:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li className="flex items-start gap-2">
             <Lock className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-            <strong>Privacy and Security:</strong> Sensitive data doesn&apos;t leave the user&apos;s machine. This is
-            paramount when dealing with confidential or proprietary information.
+            <span>
+              <strong>Local-only processing:</strong> The JSON payload stays on the device while you format, validate,
+              expand tree views, or copy output.
+            </span>
           </li>
           <li className="flex items-start gap-2">
             <svg
@@ -119,8 +130,10 @@ export default function JsonFormatterOfflineTestingArticle() {
               <path d="M12 2v2" />
               <path d="M12 8v4l3 3" />
             </svg>
-            <strong>Speed and Performance:</strong> Processing data locally is often much faster than sending it over a
-            network and waiting for a response.
+            <span>
+              <strong>Formatting still works with no connection:</strong> Once the page is open, valid JSON should still
+              pretty-print and invalid JSON should still produce local error messages.
+            </span>
           </li>
           <li className="flex items-start gap-2">
             <svg
@@ -141,63 +154,72 @@ export default function JsonFormatterOfflineTestingArticle() {
               <path d="M17 20v-12" />
               <path d="M22 20V4" />
             </svg>
-            <strong>Reliability:</strong> The tool works consistently regardless of network connectivity or server
-            status.
+            <span>
+              <strong>Fresh reload behavior is honest:</strong> If the app shell is cached, it should reopen offline. If
+              it is not cached, the tool should at least avoid pretending it is fully offline-capable.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-1" />
+            <span>
+              <strong>Status indicators are not enough:</strong> <code>navigator.onLine</code> is only a hint. A real
+              offline test checks actual network requests, not just an &quot;offline&quot; badge in the UI.
+            </span>
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Code className="w-6 h-6 text-gray-600 dark:text-gray-400" /> How Offline Formatting Works
+          <ListChecks className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Fast Verification Checklist
         </h2>
-        <p>Offline JSON formatters typically rely on the browser&apos;s built-in JavaScript capabilities, primarily:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <code>JSON.parse()</code>: This function parses a JSON string, constructing the JavaScript value or object
-            described by the string. This step validates the JSON structure.
-          </li>
-          <li>
-            <code>JSON.stringify()</code>: This function converts a JavaScript value (usually the object/array obtained
-            from <code>JSON.parse</code>) to a JSON string. It can accept optional arguments for controlling the
-            indentation (spacing) and how properties are stringified (replacer).
-          </li>
-        </ul>
         <p>
-          The process is usually: Input String &rarr; <code>JSON.parse()</code> &rarr; JavaScript Object &rarr;{" "}
-          <code>JSON.stringify()</code> (with spacing/replacer) &rarr; Formatted JSON String.
+          A search visitor usually wants a quick answer: &quot;Can I trust this formatter offline?&quot; This workflow gets
+          you there quickly.
         </p>
+        <ol className="list-decimal pl-6 space-y-3 my-4">
+          <li>Open the formatter while online, then open the browser&apos;s Network panel and clear the request log.</li>
+          <li>
+            Paste a known valid sample and confirm the expected output first. A tiny minified payload is enough:
+            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
+              <pre>{jsonExampleMinified}</pre>
+            </div>
+          </li>
+          <li>Switch browser network throttling to <strong>Offline</strong>.</li>
+          <li>
+            Repeat the same actions with valid JSON, invalid JSON, and a fake sensitive sample. Formatting and validation
+            should still work.
+          </li>
+          <li>
+            Watch for any new <code>fetch</code>, XHR, WebSocket, analytics, or logging requests when you paste, format,
+            or view the parsed tree.
+          </li>
+          <li>
+            While still offline, do a hard reload. If the page fails to reopen, that does <em>not</em> necessarily mean
+            the formatter logic is remote. It usually means the app shell is not cached for full offline reopening.
+          </li>
+        </ol>
         <p>
-          Since these are native browser functions, they work without a network connection, making the core formatting
-          process inherently offline.
+          That distinction matters. There are really two different promises: <strong>works offline after loading</strong>{" "}
+          and <strong>can be reopened offline from a fresh load</strong>. A good test separates them.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <ListChecks className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Testing Strategy
+          <CloudOff className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Current Browser Workflow
         </h2>
-        <p>
-          Testing an offline JSON formatter involves ensuring it correctly handles a wide range of inputs without
-          requiring network access. A comprehensive strategy includes:
-        </p>
+        <p>Current desktop browsers make offline testing straightforward:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Functional Testing:</strong> Does it produce the correct output for valid JSON? Does it correctly
-            identify and report errors for invalid JSON?
+            <strong>Chrome and Edge:</strong> Open DevTools, go to the <strong>Network</strong> panel, then choose{" "}
+            <strong>Offline</strong> from the throttling dropdown next to <strong>Disable cache</strong>.
           </li>
           <li>
-            <strong>Edge Case Testing:</strong> How does it handle large inputs, empty inputs, or inputs with unusual
-            characters/structures?
-          </li>
-          <li>
-            <strong>Performance Testing:</strong> Is it reasonably fast, especially for larger JSON payloads? (Though
-            less critical for pure offline logic vs. complex UIs).
-          </li>
-          <li>
-            <strong>Error Reporting Testing:</strong> Are the error messages helpful? Do they indicate the location of
-            the error?
-          </li>
-          <li>
-            <strong>Offline Simulation:</strong> Explicitly test the tool while the device has no network connection.
+            <strong>Firefox:</strong> Open the <strong>Network Monitor</strong> and use the <strong>Throttling</strong>{" "}
+            dropdown. Current Firefox builds still include an <strong>Offline</strong> preset there.
           </li>
         </ul>
+        <p>
+          When you do this, prefer the network log over any in-app connectivity flag. Browser vendors explicitly note
+          that <code>navigator.onLine</code> uses heuristics and can report misleading positives.
+        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ListTree className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Key Areas and Test Cases
@@ -206,40 +228,45 @@ export default function JsonFormatterOfflineTestingArticle() {
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-green-500" /> Testing Valid JSON
         </h3>
-        <p>The most basic test is formatting valid JSON. You should test various structures and data types:</p>
+        <p>
+          Start with normal formatting behavior. If the tool cannot handle everyday payloads locally, the offline claim
+          is irrelevant.
+        </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Simple Objects:</strong> <code>&#x7b; &quot;key&quot;: &quot;value&quot; &#x7d;</code>,{" "}
-            <code>&#x7b; &quot;number&quot;: 123, &quot;boolean&quot;: true &#x7d;</code>
+            <strong>Minified payloads:</strong> A real formatter should turn one-line JSON into readable output without
+            touching the network.
           </li>
           <li>
-            <strong>Simple Arrays:</strong> <code>[1, 2, 3]</code>, <code>[&quot;a&quot;, &quot;b&quot;]</code>,{" "}
-            <code>[null, false]</code>
+            <strong>Simple objects and arrays:</strong> <code>&#x7b; &quot;key&quot;: &quot;value&quot; &#x7d;</code>,{" "}
+            <code>[1, 2, 3]</code>, <code>[null, false]</code>
           </li>
           <li>
-            <strong>Nested Structures:</strong> Objects containing arrays, arrays containing objects, deeply nested
+            <strong>Nested structures:</strong> Objects containing arrays, arrays containing objects, and deeper
             combinations.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleNested}</pre>
             </div>
           </li>
           <li>
-            <strong>Various Data Types:</strong> Test strings, numbers (integers, floats, scientific notation), booleans
-            (<code>true</code>, <code>false</code>), <code>null</code>.
+            <strong>Various data types:</strong> Strings, numbers, scientific notation, booleans, and <code>null</code>.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleDataTypes}</pre>
             </div>
           </li>
           <li>
-            <strong>Strings with Escapes:</strong> Test strings containing quotes (<code>\&quot;</code>), backslashes (
-            <code>\\\\</code>), newlines (<code>\\n</code>), tabs (<code>\\t</code>), Unicode escapes (
-            <code>\\uXXXX</code>).
+            <strong>Strings with escapes:</strong> Quotes, backslashes, newlines, tabs, and Unicode escapes should all
+            survive a format round-trip.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleEscapes}</pre>
             </div>
           </li>
           <li>
-            <strong>Empty Structures:</strong> <code>&#x7b;&#x7d;</code> (empty object), <code>[]</code> (empty array).
+            <strong>Top-level primitive JSON values:</strong> <code>&quot;hello&quot;</code>, <code>123</code>,{" "}
+            <code>true</code>, and <code>null</code> are valid JSON values and should parse correctly.
+          </li>
+          <li>
+            <strong>Empty structures:</strong> <code>&#x7b;&#x7d;</code> and <code>[]</code> should format cleanly.
           </li>
         </ul>
 
@@ -247,50 +274,48 @@ export default function JsonFormatterOfflineTestingArticle() {
           <XCircle className="w-5 h-5 text-red-500" /> Testing Invalid JSON
         </h3>
         <p>
-          A good formatter should not just format valid JSON but also clearly report errors for invalid input. Test
-          common syntax errors:
+          A good formatter should not just format valid JSON. It should reject invalid input locally and explain why.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Missing Commas:</strong>
+            <strong>Missing commas:</strong>
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidMissingComma}</pre>
             </div>
           </li>
           <li>
-            <strong>Incorrect Braces/Brackets:</strong> Mismatched or missing delimiters.
+            <strong>Incorrect braces or brackets:</strong> Mismatched or missing delimiters.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidBrackets}</pre>
             </div>
           </li>
           <li>
-            <strong>Unquoted Keys:</strong> JSON requires keys to be double-quoted strings.
+            <strong>Unquoted keys:</strong> JSON requires keys to be double-quoted strings.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidUnquotedKey}</pre>
             </div>
           </li>
           <li>
-            <strong>Single Quoted Strings:</strong> JSON requires double quotes.
+            <strong>Single-quoted strings:</strong> JSON requires double quotes.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidSingleQuotes}</pre>
             </div>
           </li>
           <li>
-            <strong>Trailing Commas:</strong> Commas after the last element in an object or array are invalid JSON
-            (though allowed in modern JavaScript).
+            <strong>Trailing commas:</strong> They are valid in modern JavaScript literals, but invalid in strict JSON.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidTrailingComma}</pre>
             </div>
           </li>
           <li>
-            <strong>Incorrect Keywords:</strong> Using JavaScript keywords like <code>undefined</code> or{" "}
-            <code>NaN</code>, or incorrect casing like <code>True</code> instead of <code>true</code>.
+            <strong>Incorrect keywords:</strong> Using <code>True</code>, <code>undefined</code>, or <code>NaN</code>{" "}
+            should fail immediately.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidKeyword}</pre>
             </div>
           </li>
           <li>
-            <strong>Invalid String Escapes:</strong> Backslashes not followed by a valid escape character.
+            <strong>Invalid string escapes:</strong> Backslashes not followed by a valid escape character.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleInvalidEscape}</pre>
             </div>
@@ -300,25 +325,24 @@ export default function JsonFormatterOfflineTestingArticle() {
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <AlertTriangle className="w-5 h-5 text-yellow-500" /> Testing Edge Cases
         </h3>
-        <p>Consider inputs that might push the boundaries:</p>
+        <p>These cases usually expose hidden dependencies, poor performance, or confusing UX:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Very Large JSON:</strong> Test with MBs of JSON data to check performance and potential browser
-            memory limits.
+            <strong>Very large JSON:</strong> Test with MBs of data to check browser memory pressure and editor
+            responsiveness.
           </li>
           <li>
-            <strong>Minimal JSON:</strong> Single value JSON like <code>&quot;hello&quot;</code>, <code>123</code>,{" "}
-            <code>true</code>, <code>null</code> (though the JSON standard primarily expects an object or array as the
-            top level, <code>JSON.parse</code> handles primitive values).
+            <strong>Whitespace-only input:</strong> The tool should fail clearly, not silently clear the editor or show a
+            misleading success state.
           </li>
           <li>
-            <strong>JSON with only Whitespace:</strong> What happens if the input is just spaces, tabs, and newlines?
+            <strong>Pasted text from other tools:</strong> Smart quotes, hidden characters, and editor-added line endings
+            should produce understandable errors.
           </li>
           {/* eslint-disable react/jsx-no-comment-textnodes */}
           <li>
-            <strong>JSON with Comments:</strong> While not part of the strict JSON standard, some tools might support
-            comments (usually <code>//</code> or <code>/* */</code>). Test if these are handled gracefully (either
-            stripped or cause an error depending on expected behavior).
+            <strong>JSON with comments:</strong> While not part of strict JSON, users paste it often. The tool should
+            either reject it clearly or support a documented cleanup path.
             <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
               <pre>{jsonExampleWithComments}</pre>
             </div>
@@ -327,63 +351,93 @@ export default function JsonFormatterOfflineTestingArticle() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
+          <Lock className="w-5 h-5 text-green-600" /> Testing Privacy and Network Leakage
+        </h3>
+        <p>
+          This is the part many &quot;offline&quot; tools skip. Use obviously fake sensitive data and confirm that nothing is
+          transmitted while you work.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            Paste a sample like the one below while offline and while the Network panel is recording.
+            <div className="bg-gray-100 p-3 rounded-lg dark:bg-gray-800 my-2 overflow-x-auto">
+              <pre>{jsonExampleSensitive}</pre>
+            </div>
+          </li>
+          <li>Confirm there is no new request to an API, logging endpoint, or analytics collector after paste.</li>
+          <li>
+            Confirm secondary actions also stay local, including tree expansion, copy helpers, and validation buttons.
+          </li>
+          <li>
+            If the tool surfaces parse errors, make sure the error UI is generated locally instead of depending on a
+            remote service.
+          </li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 flex items-center gap-2">
           <XCircle className="w-5 h-5 text-red-500" /> Testing Error Reporting
         </h3>
         <p>When invalid JSON is provided, the formatter should provide clear feedback.</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Does it indicate that an error occurred?</li>
-          <li>Is the error message understandable to a developer?</li>
-          <li>Does it provide the line number and potentially the column number where the parsing failed?</li>
-          <li>Is the problematic part of the input highlighted?</li>
+          <li>Does it clearly indicate that an error occurred?</li>
+          <li>Is the message understandable to a developer reading raw JSON?</li>
+          <li>Does it provide the line number and ideally the column number where parsing failed?</li>
+          <li>Is the problematic part of the input highlighted or otherwise easy to find?</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <CloudOff className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Simulating Offline Conditions
+          <AlertTriangle className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Common False Positives
         </h2>
         <p>
-          To truly test the offline functionality, you must simulate being offline. Most modern browsers offer developer
-          tools that allow you to throttle or completely disable network requests:
+          A formatter can appear offline-friendly while still depending on the network in subtle ways. Watch for these
+          traps:
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Chrome/Edge:</strong> Open Developer Tools (F12), go to the &quot;Network&quot; tab, and find the
-            &quot;Online&quot; dropdown (usually next to the disable cache checkbox). Select &quot;Offline&quot;.
+            <strong>Already-open tab passes, fresh reload fails:</strong> The formatting engine is local, but the page is
+            not cached for true reopen-offline use.
           </li>
           <li>
-            <strong>Firefox:</strong> Open Developer Tools (F12), go to the &quot;Network&quot; tab, and find the
-            &quot;No Throttling&quot; dropdown. Select &quot;Offline&quot;.
+            <strong>The UI says offline, but requests still fire:</strong> This usually happens when the app trusts{" "}
+            <code>navigator.onLine</code> too much.
+          </li>
+          <li>
+            <strong>Formatting works, but extras break:</strong> Remote fonts, icon sets, telemetry, or bug-reporting
+            hooks can still fail noisily when the connection is gone.
+          </li>
+          <li>
+            <strong>Cached assets hide a network dependency:</strong> A second visit may look fully offline only because
+            JavaScript and CSS were cached earlier. Clear cache and repeat the test if you need the strict answer.
           </li>
         </ul>
-        <p>
-          With the network disabled, perform all the test cases mentioned above. Ensure the formatting and error
-          reporting work exactly as they do when online, with no errors related to network requests.
-        </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <ListChecks className="w-6 h-6 text-gray-600 dark:text-gray-400" /> Automated vs. Manual Testing
         </h2>
         <p>
-          While the core parsing and stringifying logic can be covered with automated unit tests using frameworks like
-          Jest or Vitest (testing the functions that wrap <code>JSON.parse</code> and <code>JSON.stringify</code>),
-          manual testing is crucial for the user interface part:
+          The parsing logic is easy to unit test. The offline claim is not. You usually need both automated coverage and
+          a browser-level manual pass.
         </p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Checking indentation rendering.</li>
-          <li>Verifying syntax highlighting colors.</li>
-          <li>Interacting with the error messages and location indicators.</li>
-          <li>Testing usability with large inputs where scrolling is involved.</li>
-          <li>Explicitly testing in offline mode via browser developer tools.</li>
+          <li>
+            <strong>Automated:</strong> Test wrapper functions around <code>JSON.parse</code> and{" "}
+            <code>JSON.stringify</code>, indentation options, line and column extraction, and large-input handling.
+          </li>
+          <li>
+            <strong>Manual:</strong> Test offline mode in real browsers, inspect the request log, and verify the editor,
+            tree view, copy buttons, and error UI still work without connectivity.
+          </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <CheckCircle className="w-6 h-6 text-green-500" /> Conclusion
         </h2>
         <p>
-          Testing the offline functionality of a JSON formatter is straightforward but requires covering a diverse set
-          of inputs and scenarios. By systematically testing valid JSON, invalid JSON, and edge cases while simulating
-          offline conditions, developers can ensure their tool is robust, reliable, and protects user privacy by keeping
-          data processing local. The reliance on native browser APIs like <code>JSON.parse</code> and{" "}
-          <code>JSON.stringify</code> makes the core offline capability relatively easy to achieve and verify.
+          Testing a JSON formatter offline is less about indentation and more about trust. A real offline formatter keeps
+          parsing local, stays usable with the network disabled, exposes clear errors, and does not leak payloads through
+          background requests. If you separate <strong>works after load</strong> from{" "}
+          <strong>can reopen from a fresh offline load</strong>, you will get a much more honest answer about how
+          offline the tool really is.
         </p>
       </div>
     </>

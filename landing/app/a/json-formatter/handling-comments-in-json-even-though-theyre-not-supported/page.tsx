@@ -4,9 +4,9 @@ import type { Metadata } from "next";
  * Metadata for JSON formatter article about handling comments in JSON
  */
 export const metadata: Metadata = {
-  title: "Handling Comments in JSON (Even Though They're Not Supported) | Offline Tools",
+  title: "Can JSON Have Comments? Handling JSON, JSONC, and JSON5 | Offline Tools",
   description:
-    "Learn alternative approaches for adding comments to JSON files despite the format not officially supporting them, and discover workarounds for documentation purposes.",
+    "JSON does not support // or /* */ comments. Learn what breaks, when JSONC or JSON5 are appropriate, and the safest ways to document JSON without losing compatibility.",
 };
 
 /**
@@ -19,298 +19,267 @@ export default function HandlingCommentsInJsonArticle() {
 
       <div className="space-y-6">
         <p>
-          One of the common frustrations developers face when working with JSON is the lack of native support for
-          comments. Unlike many configuration formats and programming languages, JSON has no built-in comment syntax.
-          This limitation can make JSON files harder to maintain, especially for configuration settings or data that
-          requires explanation. This article explores why JSON doesn&apos;t support comments, and provides practical
-          workarounds for including comments or documentation in your JSON files.
+          If you are looking for a comment syntax for JSON, the short answer is no: standard JSON does not support
+          comments. A strict parser such as JavaScript&apos;s <code>JSON.parse()</code> will reject both{" "}
+          <code>// single-line</code> and <code>/* block */</code> comments. The confusion usually comes from tools
+          that support JSON-like extensions such as JSONC or JSON5.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Why JSON Doesn&apos;t Support Comments</h2>
+        <div className="bg-blue-50 p-4 rounded-lg dark:bg-blue-900/30 my-6 border-l-4 border-blue-400">
+          <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200">Short answer</h2>
+          <ul className="list-disc ml-6 mt-3 space-y-2 text-blue-950 dark:text-blue-100">
+            <li>Standard JSON has no comment syntax.</li>
+            <li>Strict parsers reject comments because they are not part of the JSON grammar.</li>
+            <li>Comments only work when a specific tool supports an extension such as JSONC or JSON5.</li>
+          </ul>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-8">What the JSON standard actually allows</h2>
 
         <p>
-          Douglas Crockford, who formalized the JSON specification, intentionally excluded comments from JSON for
-          several reasons:
+          The current JSON standard is RFC 8259. Its grammar does not include comments, which means comments are not
+          valid JSON. The RFC does leave room for permissive parsers to accept extensions, but anything claiming to
+          produce JSON still needs to emit strict JSON.
+        </p>
+
+        <p>This is invalid JSON and will fail in strict parsers:</p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`JSON.parse(\`{
+  // Server port
+  "port": 3000
+}\`);
+
+// SyntaxError: Unexpected token '/' ...`}
+            </pre>
+          </div>
+        </div>
+
+        <p>
+          That matters most for API payloads, exported data files, package data, and any file labeled{" "}
+          <code>application/json</code>. In those cases, comments are invalid input, not a harmless convenience.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Why comments sometimes seem to work anyway</h2>
+
+        <p>
+          Some editors and tools intentionally support JSON-like formats for human-edited configuration files. Visual
+          Studio Code, for example, has a <code>jsonc</code> mode for files such as <code>settings.json</code>,{" "}
+          <code>tasks.json</code>, and <code>launch.json</code>. In that mode, line comments and block comments are
+          allowed.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc ml-6 space-y-2">
             <li>
-              <strong>Simplicity</strong>: The absence of comments keeps the JSON format and its parsers simpler
+              <strong>JSONC</strong>: Stays close to JSON and adds comments. The recommended extension is{" "}
+              <code>.jsonc</code>.
             </li>
             <li>
-              <strong>Data interchange focus</strong>: JSON is primarily designed for data interchange between
-              applications, not as a configuration format
+              <strong>Current VS Code behavior</strong>: Comments work in <code>jsonc</code> mode, and trailing commas
+              are accepted but discouraged with a warning.
             </li>
             <li>
-              <strong>Interoperability</strong>: Excluding comments reduces the chance of incompatibility between
-              different JSON implementations
-            </li>
-            <li>
-              <strong>Prevention of abuse</strong>: Comments could potentially be misused for directives that affect
-              processing
+              <strong>Important limit</strong>: A file accepted by one editor or config loader is not automatically
+              valid for <code>JSON.parse()</code>, APIs, validators, or other languages.
             </li>
           </ul>
         </div>
 
         <p>
-          As Crockford explained: &quot;I removed comments from JSON because I saw people were using them to hold
-          parsing directives, a practice which would have destroyed interoperability.&quot;
+          This is the distinction that usually trips people up: a tool can support comments in a JSON-like file, but
+          that does not make comments part of JSON itself.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8">Common Workarounds for JSON Comments</h2>
+        <h2 className="text-2xl font-semibold mt-8">Choose the right format for the job</h2>
+
+        <h3 className="text-xl font-semibold mt-6">1. Use strict JSON when compatibility matters</h3>
 
         <p>
-          Despite the lack of official support, developers have devised several approaches to include comments or
-          documentation within JSON:
+          Use strict JSON when the file is exchanged between systems, sent over an API, checked by generic validators,
+          or consumed by unknown tooling. In those cases, compatibility matters more than authoring convenience.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6">1. Using Comment Properties</h3>
-
-        <p>
-          The most straightforward approach is to create dedicated properties for comments within your JSON objects:
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h3 className="text-lg font-medium text-green-600 dark:text-green-400">Using comment properties:</h3>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "_comment": "Configuration settings for the application",
-  "apiEndpoint": "https://api.example.com",
-  "timeout": 30,
-  "retryCount": 3,
-  "features": {
-    "_comment": "Feature toggle settings for each module",
-    "newUI": true,
-    "betaFeatures": false
-  }
-}`}
-            </pre>
-          </div>
-          <p className="mt-2 text-sm">
-            This approach is straightforward but adds overhead to your JSON size and requires applications to ignore
-            these special properties.
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">2. Using Metadata Properties</h3>
-
-        <p>A more structured approach is to include a dedicated metadata section that contains documentation:</p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre>
-              {`{
-  "metadata": {
-    "description": "User preferences configuration",
-    "version": "1.2.0",
-    "lastModified": "2023-04-15",
-    "notes": "Added new theme options"
-  },
-  "settings": {
-    "theme": "dark",
-    "notifications": true,
-    "autoSave": false
-  }
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">3. Using Adjacent Documentation</h3>
-
-        <p>For many use cases, the best solution is to store documentation separately from the JSON itself:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>README files</strong>: Keep a separate markdown file alongside your JSON
-            </li>
-            <li>
-              <strong>Schema documentation</strong>: Use JSON Schema to document the expected structure and values
-            </li>
-            <li>
-              <strong>Code comments</strong>: If the JSON is embedded in code, use the host language&apos;s comment
-              syntax
-            </li>
-            <li>
-              <strong>External documentation</strong>: Reference more comprehensive documentation elsewhere
-            </li>
+            <li>Good fit: API requests and responses, exported data, shared config, machine-to-machine interchange.</li>
+            <li>Bad fit for comments: anything that eventually goes through a strict JSON parser.</li>
           </ul>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8">Using JSON5 or JSONC When Comments Are Essential</h2>
+        <h3 className="text-xl font-semibold mt-6">2. Use JSONC for human-edited config when the tool documents support</h3>
 
         <p>
-          If comments are absolutely essential for your use case, consider using extended JSON formats that support
-          comments:
+          Use JSONC when comments are part of a local config workflow and the specific tool explicitly supports it. This
+          is common in editor or build-tool configuration, but you should still treat JSONC as a separate format rather
+          than &quot;JSON with a few extras.&quot;
         </p>
 
-        <h3 className="text-xl font-semibold mt-6">1. JSON5</h3>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc ml-6 space-y-2">
+            <li>Prefer the <code>.jsonc</code> extension when you control the file name.</li>
+            <li>Do not assume another parser will accept the same file just because your editor does.</li>
+            <li>Keep trailing commas out unless the tool clearly allows them.</li>
+          </ul>
+        </div>
 
-        <p>JSON5 is an extension of JSON that aims to be more human-friendly, including support for comments:</p>
+        <h3 className="text-xl font-semibold mt-6">3. Use JSON5 only when you want a looser authoring format</h3>
+
+        <p>
+          JSON5 supports comments, but it also allows additional syntax such as trailing commas, single-quoted strings,
+          and unquoted object keys. That makes it convenient for humans, but even less appropriate as a drop-in
+          replacement for standard JSON.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
   // This is a single-line comment
-  "name": "JSON5 Example",
-  "version": "1.0.0",
+  name: 'JSON5 Example',
+  version: '1.0.0',
   /* This is a
      multi-line comment */
-  "description": "A configuration file with comments",
-  "enabled": true,
+  description: 'A configuration file with comments',
+  enabled: true,
 }`}
             </pre>
           </div>
-          <p className="mt-2 text-sm">
-            JSON5 adds several features beyond standard JSON, including comments, trailing commas, and unquoted keys.
+          <p className="mt-2 text-sm">This is JSON5, not JSON. A strict JSON parser will reject it.</p>
+        </div>
+
+        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
+          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Rule of thumb</h3>
+          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
+            If a generic parser, API, or another team needs to read the file, ship strict JSON. Use JSONC or JSON5
+            only when every consumer explicitly supports that format.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">2. JSONC (JSON with Comments)</h3>
+        <h2 className="text-2xl font-semibold mt-8">Safe ways to document strict JSON</h2>
 
-        <p>JSONC is another extension that supports comments while staying closer to the original JSON format:</p>
+        <p>
+          If you must keep the final file valid JSON, these options are safer than adding comment syntax to the JSON
+          itself.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6">1. Comment-like properties</h3>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
-  // Settings for development environment
-  "server": {
-    "port": 3000,
-    "host": "localhost"
-  },
-  /* Security configuration
-     with detailed explanation */
-  "security": {
-    "enableAuth": true,
-    "tokenExpiration": 3600
+  "_comment": "Main application settings",
+  "apiEndpoint": "https://api.example.com",
+  "timeoutSeconds": 30,
+  "features": {
+    "_comment": "Feature flags",
+    "newUi": true
   }
 }`}
             </pre>
           </div>
           <p className="mt-2 text-sm">
-            JSONC is commonly used in development tools like Visual Studio Code for configuration files.
+            This keeps the file valid JSON, but the comments become real data. Downstream code must ignore them, and
+            strict schemas may forbid them.
           </p>
         </div>
 
-        <div className="bg-yellow-50 p-4 rounded-lg dark:bg-yellow-900/30 my-6 border-l-4 border-yellow-400">
-          <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-300">Important Note:</h3>
-          <p className="mt-2 text-yellow-700 dark:text-yellow-200">
-            While JSON5 and JSONC are useful for development and configuration files, they should not be used for data
-            interchange between different systems unless all systems explicitly support these formats. For interchange,
-            stick to standard JSON.
-          </p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Pre-processing and Post-processing Approaches</h2>
+        <h3 className="text-xl font-semibold mt-6">2. JSON Schema and adjacent docs</h3>
 
         <p>
-          Another approach is to work with comments during development, but strip them out when generating the final
-          JSON:
+          For shared data structures, JSON Schema is often the cleanest replacement for inline comments because it
+          documents fields without polluting the JSON instance itself.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6">1. Pre-processing</h3>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc ml-6 space-y-2">
-            <li>Author in JSONC or JSON5 with comments</li>
-            <li>Use a tool to strip comments before deploying</li>
-            <li>
-              Examples: <code>strip-json-comments</code> (Node.js), <code>jq</code> (command line)
-            </li>
-          </ul>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">2. Using JSON-generating Tools</h3>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc ml-6 space-y-2">
-            <li>Generate JSON from formats that do support comments (YAML, TOML)</li>
-            <li>Document in the source format, then convert to JSON for deployment</li>
-            <li>Example workflow: maintain in YAML with comments → convert to JSON for production</li>
-          </ul>
-        </div>
-
-        <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-          <pre>
-            {`# YAML source with comments
-# This is the main configuration file
-server:
-  # Development server port
-  port: 8080
-  # Bind to all interfaces
-  host: "0.0.0.0"
-
-# Security settings
-security:
-  enabled: true
-  # Token validity in seconds
-  tokenLifetime: 3600`}
-          </pre>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-8">Best Practices for Documenting JSON</h2>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>Be consistent</strong>: Choose one approach and use it consistently throughout your project
-            </li>
-            <li>
-              <strong>Consider the context</strong>: For configuration files, JSON5 might be appropriate; for APIs, use
-              standard JSON with separate documentation
-            </li>
-            <li>
-              <strong>Validate before deployment</strong>: Ensure your JSON is valid after removing comments or
-              converting from other formats
-            </li>
-            <li>
-              <strong>Use JSON Schema</strong>: Create a schema that documents your JSON structure formally
-            </li>
-            <li>
-              <strong>Keep documentation up-to-date</strong>: Ensure your comments or documentation are maintained when
-              the JSON structure changes
-            </li>
-          </ul>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">JSON Schema for Documentation</h3>
-
-        <p>JSON Schema provides a powerful way to document JSON structures while also enabling validation:</p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
             <pre>
               {`{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "User Configuration",
-  "description": "Settings for user preferences in the application",
   "type": "object",
   "properties": {
     "theme": {
       "type": "string",
-      "description": "UI theme preference (light or dark)",
-      "enum": ["light", "dark", "system"]
+      "description": "UI theme: light, dark, or system"
     },
     "notifications": {
       "type": "boolean",
-      "description": "Whether to enable push notifications"
-    },
-    "refreshInterval": {
-      "type": "integer",
-      "description": "Data refresh interval in seconds",
-      "minimum": 30,
-      "maximum": 3600
+      "description": "Whether the app should send notifications"
     }
   },
   "required": ["theme", "notifications"]
 }`}
             </pre>
           </div>
+        </div>
+
+        <p>
+          A README beside the file is also effective when the audience is human rather than machine. This avoids
+          turning documentation into extra JSON fields.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Author with comments, ship without them</h2>
+
+        <p>
+          When teams want comments during editing but strict JSON in production, the usual pattern is to author in an
+          extended format and convert as part of the build or release process.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc ml-6 space-y-2">
+            <li>Write the source file in JSONC, JSON5, YAML, or another documented authoring format.</li>
+            <li>Validate and convert it before publishing or deploying.</li>
+            <li>Emit strict <code>.json</code> for the final artifact that other systems read.</li>
+            <li>Test the emitted JSON with the same parser your application uses in production.</li>
+          </ul>
+        </div>
+
+        <p>
+          Do not remove comments with a naive regex. A pattern like <code>//.*</code> can destroy legitimate strings
+          such as URLs.
+        </p>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
+            <pre>
+              {`{
+  // Development endpoint
+  "endpoint": "https://api.example.com/v1",
+  "timeoutSeconds": 30
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <p>
+          Use a real parser or a dedicated comment-stripping step for the format you chose. Treat comment removal as
+          parsing, not as string replacement.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8">Common failures and what they mean</h2>
+
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc ml-6 space-y-2">
+            <li>
+              <strong>&quot;Unexpected token /&quot;</strong>: You passed commented content to a strict JSON parser.
+              Remove comments or switch to a parser that explicitly supports JSONC or JSON5.
+            </li>
+            <li>
+              <strong>&quot;It works in VS Code but not in my app&quot;</strong>: VS Code may be treating the file as{" "}
+              <code>jsonc</code>, but your runtime probably expects actual JSON.
+            </li>
+            <li>
+              <strong>&quot;Why is there a trailing comma warning?&quot;</strong>: Comment support and trailing comma
+              support are not the same thing. Some JSONC tooling accepts both, but trailing commas are often
+              discouraged or disabled by default.
+            </li>
+            <li>
+              <strong>&quot;Can I send JSONC to an API?&quot;</strong>: Only if that API explicitly documents JSONC
+              support. Otherwise, assume the answer is no.
+            </li>
+          </ul>
         </div>
       </div>
     </>

@@ -1,382 +1,261 @@
 import type { Metadata } from "next";
-import { Lock, Shield, Key, User, Database, Eye, RefreshCcw, Bug, Layers, Binary, FileText } from "lucide-react";
+import { Binary, Bug, Database, Eye, FileText, Key, Lock, RefreshCcw, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Session Security in Persistent JSON Editors",
   description:
-    "Explore essential concepts and practices for securing user sessions and data in web-based, persistent JSON editors.",
+    "Practical guidance for securing persistent JSON editors with safer session storage, draft persistence, timeout rules, logout cleanup, and editor-specific protections.",
 };
 
 export default function SessionSecurityJsonEditorArticle() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">Session Security in Persistent JSON Editors</h1>
+      <h1 className="mb-6 text-3xl font-bold">Session Security in Persistent JSON Editors</h1>
 
       <div className="space-y-6">
         <p>
-          Persistent JSON editors are web applications that allow users to create, edit, and store JSON data, typically
-          on a server or cloud storage. Unlike ephemeral editors, these applications maintain the user&apos;s data and
-          state across sessions. This persistence, while convenient, introduces significant security challenges,
-          particularly concerning user sessions and data integrity.
+          Persistent JSON editors often autosave drafts, reopen the last document, and keep users signed in across
+          reloads. That convenience creates a specific security problem: the app may persist both the JSON data and the
+          path back into the data.
         </p>
         <p>
-          Ensuring robust session security is paramount to protect sensitive data, prevent unauthorized access, and
-          maintain user trust. This guide explores the key considerations and techniques for securing sessions in this
-          context.
+          A safer design keeps those concerns separate. Persist document state if the product needs it, but keep
+          authentication short-lived, server-controlled, and easy to revoke. This guide focuses on the parts that
+          matter most for a real editor: storage choices, cookie rules, logout cleanup, offline mode, and stale-tab
+          behavior.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Shield className="mr-2" size={24} /> Why Session Security Matters
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Shield className="mr-2" size={24} /> Why Persistent Editors Need Extra Session Care
         </h2>
         <p>
-          In a persistent JSON editor, a session represents a user&apos;s active interaction with the application after
-          authentication. Securing this session is crucial because it&apos;s the gateway to the user&apos;s data and
-          functionalities. Weak session security can lead to:
+          A persistent editor behaves differently from a simple formatter or viewer. It usually keeps more state, runs
+          longer, and handles more sensitive content.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
+        <ul className="my-4 list-disc space-y-2 pl-6">
           <li>
-            <span className="font-medium">Unauthorized Data Access:</span> An attacker hijacking a session can view,
-            modify, or delete user JSON data.
+            <span className="font-medium">Autosave and rehydration:</span> A reopened tab may restore a draft before
+            the app has fully re-validated the session.
           </li>
           <li>
-            <span className="font-medium">Privilege Escalation:</span> If session handling is flawed, an attacker might
-            gain access to higher-privilege actions or data belonging to other users.
+            <span className="font-medium">Shared-device risk:</span> The next person at the keyboard may inherit
+            drafts, exports, or cached API responses even if the prior user thinks they logged out.
           </li>
           <li>
-            <span className="font-medium">Data Tampering:</span> Malicious modifications to JSON data can have serious
-            consequences depending on how that data is used downstream.
+            <span className="font-medium">Background tabs:</span> Old tabs can keep firing autosave or sync requests
+            after permissions change or a session should have expired.
           </li>
           <li>
-            <span className="font-medium">Account Takeover:</span> Session hijacking can be a stepping stone to full
-            account compromise.
-          </li>
-          <li>
-            <span className="font-medium">Service Disruption:</span> Attackers might delete or corrupt critical data,
-            impacting usability for the legitimate user or even others if data is shared.
+            <span className="font-medium">High-value content:</span> JSON payloads often contain API keys, customer
+            records, environment config, or internal workflow data that should not linger in the browser by accident.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Key className="mr-2" size={24} /> Core Pillars of Session Security
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Lock className="mr-2" size={24} /> Recommended Baseline Architecture
         </h2>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <User className="mr-2" size={20} /> 1. Authentication
-        </h3>
         <p>
-          Before a session is established, the user&apos;s identity must be verified. Strong authentication mechanisms
-          are the first line of defense.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Secure Credential Handling:</span>
-            <ul className="list-circle pl-6 space-y-1 mt-1">
-              <li>
-                Store password hashes, never plain text passwords. Use strong hashing algorithms like bcrypt or scrypt.
-              </li>
-              <li>Implement strict password policies (complexity, length).</li>
-              <li>Limit failed login attempts to prevent brute-force attacks.</li>
-            </ul>
-          </li>
-          <li>
-            <span className="font-medium">Multi-Factor Authentication (MFA):</span> Whenever possible, offer and
-            encourage users to enable MFA (e.g., SMS codes, authenticator apps, hardware tokens). This significantly
-            reduces the risk of account compromise even if a password is stolen.
-          </li>
-          <li>
-            <span className="font-medium">Secure Registration and Recovery:</span> Ensure user registration flows
-            prevent enumeration (don&apos;t reveal if a username/email exists) and password recovery mechanisms are
-            robust and verified (e.g., via email link with expiry).
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Lock className="mr-2" size={20} /> 2. Session Management
-        </h3>
-        <p>
-          Once authenticated, a session token is typically issued. How this token is generated, stored, transmitted, and
-          validated is critical.
+          For most teams, the safest default is simple: persist document content separately from the login session, and
+          let the server stay in charge of session validity.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium mb-2">Common Session Mechanisms:</h4>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>
-              <span className="font-medium">Server-Side Sessions (with Cookies):</span>
-              The server generates a unique session ID, stores session data on the server, and sends the ID to the
-              client in a cookie.
-              <div className="text-sm italic mt-1">
-                Pros: Session data isn&apos;t exposed on the client. Easy revocation.
-              </div>
-              <div className="text-sm italic">
-                Cons: Requires server-side storage, can be stateful (harder to scale horizontally without shared session
-                storage).
-              </div>
-            </li>
-            <li>
-              <span className="font-medium">Token-Based Sessions (e.g., JWT):</span>
-              The server generates a token containing user information and potentially permissions (e.g., JSON Web
-              Token). The token is sent to the client (often in local storage or a cookie) and included in subsequent
-              requests (e.g., &#x60;Authorization: Bearer &lt;token&gt;&#x60;).
-              <div className="text-sm italic mt-1">
-                Pros: Stateless on the server (scales well), can contain necessary user info.
-              </div>
-              <div className="text-sm italic">
-                Cons: Data in the token is visible to the client (though signed, not encrypted by default), harder to
-                immediately revoke a token before expiry (requires a blocklist). Sensitive data should NOT be stored in
-                JWT payloads.
-              </div>
-            </li>
+        <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+          <h3 className="mb-2 text-lg font-medium">Practical default for a persistent JSON editor</h3>
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Use a server-side session or short-lived access token delivered in a `HttpOnly` cookie.</li>
+            <li>Keep long-lived refresh state server-tracked and revocable, not permanently exposed to browser code.</li>
+            <li>Store drafts server-side when online; use browser persistence only for explicit offline mode.</li>
+            <li>Re-authorize every read, save, export, share, and delete request on the server.</li>
+            <li>Require recent re-authentication for high-risk actions such as export, sharing, or secret reveal.</li>
           </ul>
         </div>
 
-        <p>Regardless of the mechanism, follow these best practices:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Secure Cookie Flags (for cookie-based sessions):</span>
-            <ul className="list-circle pl-6 space-y-1 mt-1">
-              <li>&#x60;Secure&#x60;: Only send cookies over HTTPS.</li>
-              <li>&#x60;HttpOnly&#x60;: Prevent JavaScript access to the cookie, mitigating XSS risks.</li>
-              <li>&#x60;SameSite&#x60;: Mitigate CSRF attacks (&#x60;Strict&#x60; or &#x60;Lax&#x60;).</li>
-              <li>&#x60;Domain&#x60; and &#x60;Path&#x60;: Limit the scope of the cookie.</li>
-            </ul>
-            <div className="bg-gray-100 p-3 rounded-md text-sm dark:bg-gray-700 mt-2 overflow-x-auto">
-              <pre>
-                {`// Example HTTP response header for setting a secure cookie
-Set-Cookie: SessionID=abcde12345; Path=/; Secure; HttpOnly; SameSite=Strict`}
-              </pre>
-            </div>
-          </li>
-          <li>
-            <span className="font-medium">Token Storage (for token-based sessions):</span> Storing tokens in
-            &#x60;HttpOnly&#x60; cookies is generally considered safer against XSS than &#x60;localStorage&#x60; because
-            JavaScript cannot access them.
-          </li>
-          <li>
-            <span className="font-medium">Session Expiration:</span> Set reasonable expiration times for sessions. For
-            persistent editors, consider both idle timeout (e.g., 30 minutes of inactivity) and absolute timeout (e.g.,
-            7 days regardless of activity).
-          </li>
-          <li>
-            <span className="font-medium">Session Renewal:</span> Issue new session tokens periodically without
-            requiring re-authentication, especially after significant actions like password changes or privilege
-            updates. Refresh tokens can be used securely to obtain new access tokens.
-          </li>
-          <li>
-            <span className="font-medium">Invalidation/Revocation:</span> Provide mechanisms for users to log out
-            explicitly (invalidating the server-side session or adding a token to a blocklist). Automatically invalidate
-            sessions on password change or when suspicious activity is detected.
-          </li>
-          <li>
-            <span className="font-medium">Associate Session with User Agent/IP (Caution advised):</span> Binding
-            sessions to IP addresses or user agents can prevent hijacking if the attacker has a different IP/UA.
-            However, this can cause usability issues for mobile users switching networks or users behind proxies/load
-            balancers. Use this cautiously and perhaps only as an additional suspicious activity indicator rather than a
-            strict enforcement.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Layers className="mr-2" size={20} /> 3. Authorization
-        </h3>
         <p>
-          Authentication verifies who the user is; authorization determines what resources the authenticated user is
-          allowed to access or modify.
+          This approach lets the editor remember work without turning a copied token or a forgotten browser tab into an
+          account takeover path.
         </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Principle of Least Privilege:</span> Users (and their sessions) should only
-            have access to the data and functionality strictly necessary for their role.
-          </li>
-          <li>
-            <span className="font-medium">Role-Based Access Control (RBAC):</span> Assign users to roles (e.g.,
-            &quot;Admin&quot;, &quot;Editor&quot;, &quot;Viewer&quot;) and define permissions for each role (e.g.,
-            &quot;can create JSON&quot;, &quot;can edit any JSON&quot;, &quot;can view own JSON&quot;).
-          </li>
-          <li>
-            <span className="font-medium">Attribute-Based Access Control (ABAC):</span> More granular control based on
-            attributes of the user, the resource (JSON document), and the environment. E.g., &quot;User X can edit JSON
-            Y if User X is the owner of Y and Y is in status &apos;Draft&apos;&quot;.
-          </li>
-          <li>
-            <span className="font-medium">Server-Side Enforcement:</span> Critically, authorization checks must be
-            performed on the server-side for *every* request that attempts to access or modify data. Client-side checks
-            are easily bypassed.
-          </li>
-        </ul>
 
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <Database className="mr-2" size={20} /> 4. Data Security
-        </h3>
-        <p>Protecting the JSON data itself is just as important as protecting the session.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Encryption In Transit (TLS/SSL):</span> All communication between the
-            user&apos;s browser and the server MUST use HTTPS. This encrypts the data and session tokens as they travel
-            over the network, preventing eavesdropping.
-          </li>
-          <li>
-            <span className="font-medium">Encryption At Rest:</span> Encrypt sensitive JSON data when it&apos;s stored
-            in the database or file system. Use strong encryption algorithms. Key management is crucial here.
-          </li>
-          <li>
-            <span className="font-medium">Data Validation and Sanitization:</span>
-            <ul className="list-circle pl-6 space-y-1 mt-1">
-              <li>
-                Validate incoming JSON data against a schema if possible to ensure it conforms to expected structure and
-                types.
-              </li>
-              <li>
-                If the JSON editor allows embedding URLs, scripts, or other potentially harmful content within JSON
-                values (e.g., if values are rendered directly in a view), ensure proper sanitization or escaping on the
-                frontend when displaying and validation on the backend when saving.
-              </li>
-            </ul>
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Bug className="mr-2" size={24} /> Common Vulnerabilities and Mitigations
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Database className="mr-2" size={24} /> What To Persist and Where
         </h2>
+        <p>The simplest rule is: persist content, not credentials.</p>
 
-        <h3 className="text-xl font-semibold mt-6">Cross-Site Scripting (XSS)</h3>
-        <p>
-          If an attacker can inject malicious scripts into the application (e.g., via stored JSON data that isn&apos;t
-          properly escaped when displayed, or via URL parameters), they could potentially steal session cookies
-          (&#x60;HttpOnly&#x60; helps prevent this) or tokens, or perform actions on behalf of the user.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Mitigation:</span> Strict input sanitization and output encoding/escaping,
-            especially when rendering user-supplied data (like JSON values) in HTML. Use &#x60;HttpOnly&#x60; cookies
-            for session identifiers. Content Security Policy (CSP) headers can restrict which scripts are allowed to
-            run.
-          </li>
-        </ul>
+        <div className="my-4 overflow-x-auto">
+          <table className="min-w-full border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-gray-300 dark:border-gray-700">
+                <th className="px-3 py-2 font-semibold">Item</th>
+                <th className="px-3 py-2 font-semibold">Best home</th>
+                <th className="px-3 py-2 font-semibold">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="px-3 py-2 font-medium">Session ID or refresh token</td>
+                <td className="px-3 py-2">`HttpOnly`, `Secure`, `SameSite` cookie</td>
+                <td className="px-3 py-2">Browser JavaScript cannot read it, and the server can rotate or revoke it.</td>
+              </tr>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="px-3 py-2 font-medium">Short-lived access token</td>
+                <td className="px-3 py-2">Prefer the same cookie model or memory only</td>
+                <td className="px-3 py-2">Avoid leaving durable bearer credentials in browser storage.</td>
+              </tr>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="px-3 py-2 font-medium">Unsaved JSON draft</td>
+                <td className="px-3 py-2">Server-side draft store, or IndexedDB for explicit offline mode</td>
+                <td className="px-3 py-2">Users keep their work without tying long-lived authentication to it.</td>
+              </tr>
+              <tr className="border-b border-gray-200 align-top dark:border-gray-800">
+                <td className="px-3 py-2 font-medium">Per-tab UI state</td>
+                <td className="px-3 py-2">Memory or `sessionStorage`</td>
+                <td className="px-3 py-2">Useful for cursor position or temporary diffs, but still not for auth data.</td>
+              </tr>
+              <tr className="align-top">
+                <td className="px-3 py-2 font-medium">Theme and other low-risk preferences</td>
+                <td className="px-3 py-2">`localStorage`</td>
+                <td className="px-3 py-2">Persistence is convenient here because the values are not sensitive.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <h3 className="text-xl font-semibold mt-6">Cross-Site Request Forgery (CSRF)</h3>
-        <p>
-          An attacker tricks a user into performing an unwanted action (like deleting a JSON document) on your web
-          application while they are authenticated.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Mitigation:</span> Use SameSite cookies (&#x60;Strict&#x60; or
-            &#x60;Lax&#x60;). Implement CSRF tokens (synchronizer pattern) where a unique, unpredictable token is
-            generated by the server, embedded in forms or headers, and verified on the server for state-changing
-            requests (POST, PUT, DELETE).
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Session Hijacking/Fixation</h3>
-        <p>
-          Hijacking: An attacker steals an active session token. Fixation: An attacker forces a user&apos;s session ID
-          to a known value, then waits for the user to log in with that ID.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Mitigation:</span> Always generate new, random, high-entropy session
-            IDs/tokens upon successful login. Use HTTPS to prevent tokens being sniffed. Set appropriate cookie flags
-            (&#x60;Secure&#x60;, &#x60;HttpOnly&#x60;). Re-issue session identifiers after privilege changes.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Insecure Direct Object References (IDOR)</h3>
-        <p>
-          If the application uses predictable or guessable IDs for JSON documents (e.g., &#x60;/json/1&#x60;,
-          &#x60;/json/2&#x60;) and authorization is not properly checked server-side, an authenticated user might be
-          able to access or modify documents they don&apos;t own by simply changing the ID in the URL or API request.
-        </p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Mitigation:</span> Implement robust server-side authorization checks on every
-            request that accesses or manipulates a specific resource. Verify that the authenticated user&apos;s session
-            is authorized to interact with the requested JSON document ID. Use less predictable IDs (e.g., UUIDs) if
-            possible, but DO NOT rely on ID obscurity for security.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 flex items-center">
-          <FileText className="mr-2" size={20} /> JSON Specific Concerns
-        </h3>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Malicious JSON Payloads:</span> While JSON itself is data, vulnerabilities can
-            arise if the application processes the JSON in an unsafe way. E.g., if a feature allows evaluating
-            expressions within JSON values, or if parsing is vulnerable to denial-of-service via deeply nested
-            structures or extremely large keys/values.
-          </li>
-          <li>
-            <span className="font-medium">Schema Validation Security:</span> If your editor supports JSON schema
-            validation, ensure the schema parser is robust and doesn&apos;t expose vulnerabilities (e.g., infinite
-            loops, excessive resource consumption) when processing complex or malicious schemas.
-          </li>
-          <li>
-            <span className="font-medium">Large File Handling:</span> Editors processing very large JSON files are
-            susceptible to denial-of-service if not properly managed. Implement limits on file size and nesting depth.
-            Process large files asynchronously where possible.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Eye className="mr-2" size={24} /> Logging and Monitoring
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Binary className="mr-2" size={24} /> Current Browser Storage Realities
         </h2>
-        <p>Even with preventative measures, detecting security incidents is vital.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            Log authentication attempts (success and failure), session creation and destruction, and sensitive actions
-            (data creation, modification, deletion).
-          </li>
-          <li>
-            Monitor logs for suspicious patterns:
-            <ul className="list-circle pl-6 space-y-1 mt-1">
-              <li>Numerous failed login attempts from a single source.</li>
-              <li>Session activity from unexpected geographic locations or devices.</li>
-              <li>
-                Unusual activity patterns for a user (e.g., accessing/deleting large numbers of documents rapidly).
-              </li>
-            </ul>
-          </li>
-          <li>Set up alerts for critical events.</li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <RefreshCcw className="mr-2" size={24} /> Regular Audits and Updates
-        </h2>
-        <p>Security is not a one-time task.</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Regularly review your authentication, session management, and authorization code.</li>
-          <li>
-            Keep all dependencies (libraries, frameworks, database software) updated to patch known vulnerabilities.
-          </li>
-          <li>Consider periodic security audits or penetration testing by third parties.</li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8 flex items-center">
-          <Binary className="mr-2" size={24} /> Frontend vs. Backend Security
-        </h2>
-        <p>It&apos;s crucial to understand the division of responsibility:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium">Frontend (Client-side):</span> Provides usability, immediate feedback, and
-            basic validation. It should NEVER be trusted for security decisions. Any security logic here is easily
-            bypassed by a malicious user manipulating their browser or sending direct API calls.
-          </li>
-          <li>
-            <span className="font-medium">Backend (Server-side):</span> This is where all critical security checks MUST
-            happen. Authentication, authorization, session validation, data validation, and rate limiting must be
-            enforced on the server before processing any request that affects data or user state.
-          </li>
-        </ul>
-
-        <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Building a secure persistent JSON editor requires a layered approach, with session security as a fundamental
-          component. By implementing strong authentication, robust session management practices, granular server-side
-          authorization, and comprehensive data protection measures, developers can significantly reduce the risk of
-          attacks. Continuous vigilance, logging, monitoring, and regular security reviews are essential to adapting to
-          new threats and maintaining a secure environment for user data. Always prioritize security from the design
-          phase and treat user data with the utmost care.
+          Current browser behavior still trips up teams that build persistent editors, especially when they assume
+          browser storage maps neatly to session boundaries.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            <span className="font-medium">`localStorage` persists across browser sessions.</span> It is also shared by
+            same-origin tabs and windows. That makes it fine for UI preferences and a poor place for session
+            identifiers or long-lived bearer tokens.
+          </li>
+          <li>
+            <span className="font-medium">`sessionStorage` is per-tab, not per-user.</span> It is helpful for
+            temporary editor state, but it is still readable by JavaScript, so it should not be treated as a secure
+            vault for auth material.
+          </li>
+          <li>
+            <span className="font-medium">A browser restart is not a reliable logout boundary.</span> Browsers with
+            session restore can bring session cookies back with the restored session. Enforce idle timeout, absolute
+            timeout, and revocation on the server instead of assuming "close browser" ends access.
+          </li>
+        </ul>
+
+        <p>
+          In practice, current OWASP guidance still points in the same direction: do not store session identifiers in
+          `localStorage`; one XSS bug can expose every token reachable from page JavaScript.
+        </p>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Key className="mr-2" size={24} /> Session Controls That Actually Matter
+        </h2>
+        <ul className="my-4 list-disc space-y-3 pl-6">
+          <li>
+            <span className="font-medium">Set strict cookie attributes.</span> Use `Secure` and `HttpOnly` on session
+            cookies, and choose `SameSite=Lax` or `SameSite=Strict` based on whether the app truly needs cross-site
+            navigation flows. Keep cookie scope tight with the correct host, path, and lifetime.
+          </li>
+          <li>
+            <span className="font-medium">Rotate and revoke credentials.</span> Issue a fresh session after login,
+            privilege change, password change, or suspicious activity. If you use refresh tokens, track and revoke them
+            server-side so logout means something.
+          </li>
+          <li>
+            <span className="font-medium">Use both idle and absolute timeouts.</span> Idle timeout limits how long an
+            abandoned editor stays live. Absolute timeout prevents a session from silently lasting for days because the
+            user kept one tab open.
+          </li>
+          <li>
+            <span className="font-medium">Handle expiry without losing work.</span> When the session expires, stop save
+            requests, preserve unsent edits separately, and prompt the user to re-authenticate. Do not silently keep
+            retrying with stale credentials in the background.
+          </li>
+          <li>
+            <span className="font-medium">Synchronize logout across tabs.</span> If one tab logs out or the server
+            revokes the session, every open tab should stop autosave and clear sensitive cached responses. A
+            `BroadcastChannel` or the browser `storage` event can coordinate that client-side signal.
+          </li>
+          <li>
+            <span className="font-medium">Step up for risky actions.</span> Exporting data, creating share links,
+            deleting documents, or revealing masked secrets should require recent authentication, not just any old
+            session.
+          </li>
+        </ul>
+
+        <div className="my-4 overflow-x-auto rounded-md bg-gray-100 p-3 text-sm dark:bg-gray-700">
+          <pre>
+            {`Set-Cookie: __Host-session=abc123; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=1800`}
+          </pre>
+        </div>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Bug className="mr-2" size={24} /> Failure Modes Specific to JSON Editors
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>
+            <span className="font-medium">Draft restored before auth check:</span> The app rehydrates the last JSON
+            document from browser storage on page load, briefly exposing sensitive content before the server rejects the
+            session. Fix it by gating rehydration behind an auth check for protected workspaces.
+          </li>
+          <li>
+            <span className="font-medium">Autosave after permission loss:</span> A user loses access to a document, but
+            an old tab keeps sending valid-looking save requests. Fix it with per-request authorization and immediate
+            session invalidation on the server.
+          </li>
+          <li>
+            <span className="font-medium">Secret spillage into logs and previews:</span> JSON often contains tokens,
+            connection strings, or personal data. Redact known secret fields in logs, analytics, crash reports, and UI
+            previews.
+          </li>
+          <li>
+            <span className="font-medium">Unsafe rendering of JSON values:</span> If the editor includes a formatted
+            preview or schema-driven UI, never inject raw values as HTML. XSS in a persistent editor is especially
+            dangerous because it can steal whatever session state browser code can reach.
+          </li>
+          <li>
+            <span className="font-medium">Shared-device leftovers:</span> Downloaded exports, cached responses, and
+            offline drafts can remain on disk after logout. Decide whether protected workspaces should clear local draft
+            state on logout or require explicit opt-in for offline persistence.
+          </li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <Eye className="mr-2" size={24} /> Logging, Monitoring, and Response
+        </h2>
+        <p>
+          Persistent editors should log security events around both identity and document activity, but they should not
+          casually log full JSON bodies.
+        </p>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Record login, logout, session renewal, failed renewal, and forced revocation events.</li>
+          <li>Log document reads, writes, exports, share-link creation, and permission changes with actor and document IDs.</li>
+          <li>Alert on token reuse after rotation, repeated save attempts from revoked sessions, or unusual bulk access patterns.</li>
+          <li>Keep enough audit detail to investigate incidents without copying raw secrets into logs.</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <RefreshCcw className="mr-2" size={24} /> Review Checklist
+        </h2>
+        <ul className="my-4 list-disc space-y-2 pl-6">
+          <li>Session identifiers live in `HttpOnly` cookies, not `localStorage` or `sessionStorage`.</li>
+          <li>Draft persistence works without requiring a long-lived browser-readable token.</li>
+          <li>Every document read, save, export, and delete action is authorized on the server.</li>
+          <li>Logout and revocation propagate to all open tabs and stop background autosave immediately.</li>
+          <li>Expired sessions preserve unsaved work safely instead of silently extending stale auth.</li>
+          <li>Logs, previews, and error reports redact sensitive JSON fields.</li>
+        </ul>
+
+        <h2 className="mt-8 flex items-center text-2xl font-semibold">
+          <FileText className="mr-2" size={24} /> Conclusion
+        </h2>
+        <p>
+          The core rule for session security in a persistent JSON editor is straightforward: let the app remember the
+          work, not the authority. If the browser stores drafts while the server owns session truth, revocation,
+          timeout, and re-authentication keep working even when tabs linger, devices are shared, or the browser
+          restores a previous session.
         </p>
       </div>
     </>

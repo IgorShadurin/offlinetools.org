@@ -1,10 +1,77 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Jenkins Pipeline JSON Configuration Techniques",
+  title: "How to Read JSON in Jenkins Pipeline with readJSON",
   description:
-    "Learn how to effectively use JSON data within Jenkins Declarative and Scripted Pipelines for configuration, parameters, and API interactions.",
+    "Read JSON in Jenkins Pipeline using readJSON or Groovy JsonSlurper, with practical examples for files, parameters, API payloads, and troubleshooting.",
 };
+
+const readJsonFileExample = `pipeline {
+    agent any
+
+    stages {
+        stage('Load config') {
+            steps {
+                checkout scm
+
+                script {
+                    def cfg = readJSON file: 'ci/config.json', returnPojo: true
+
+                    if (!cfg.deploy?.environment) {
+                        error('ci/config.json is missing deploy.environment')
+                    }
+
+                    echo "Deploy environment: \${cfg.deploy.environment}"
+                    echo "Services: \${cfg.services.join(', ')}"
+                }
+            }
+        }
+    }
+}`;
+
+const readJsonParameterExample = `pipeline {
+    agent any
+
+    parameters {
+        text(
+            name: 'OVERRIDES_JSON',
+            defaultValue: '{\\n  "deploy": { "environment": "staging" },\\n  "dryRun": true\\n}',
+            description: 'Optional JSON overrides'
+        )
+    }
+
+    stages {
+        stage('Apply overrides') {
+            steps {
+                script {
+                    def overrides = readJSON text: params.OVERRIDES_JSON, returnPojo: true
+
+                    echo "Dry run: \${overrides.dryRun}"
+                    echo "Environment: \${overrides.deploy.environment}"
+                }
+            }
+        }
+    }
+}`;
+
+const jsonSlurperFallbackExample = `pipeline {
+    agent any
+
+    stages {
+        stage('Load config without readJSON') {
+            steps {
+                checkout scm
+
+                script {
+                    def raw = readFile('ci/config.json')
+                    def cfg = new groovy.json.JsonSlurper().parseText(raw) as Map
+
+                    echo "Deploy environment: \${cfg.deploy.environment}"
+                }
+            }
+        }
+    }
+}`;
 
 export default function JenkinsJsonConfigArticle() {
   return (
@@ -15,366 +82,166 @@ export default function JenkinsJsonConfigArticle() {
 
       <div className="space-y-6">
         <p>
-          Jenkins Pipelines, whether written in Declarative or Scripted Groovy syntax, are powerful tools for automating
-          build, test, and deployment workflows. While the pipeline definition itself is written in Groovy, there are
-          many scenarios where you need to work with configuration or data stored in JSON format. This article explores
-          common techniques for incorporating and manipulating JSON data within your Jenkins Pipelines.
+          If you need to read JSON in a Jenkins Pipeline, the usual answer is <code>readJSON</code>. It is the
+          Jenkins pipeline step designed for this job, and it handles the two cases most teams actually have: loading a
+          JSON file from the workspace and parsing a JSON string from a parameter, API response, or shell command.
         </p>
         <p>
-          It&apos;s important to clarify that you don&apos;t write the *entire pipeline definition* in JSON. Instead,
-          you use JSON as a format for data or configuration that your Groovy pipeline script then processes and acts
-          upon.
+          The important distinction is that you do not write the Jenkinsfile itself in JSON. You keep the pipeline in
+          Groovy, then parse JSON as configuration or runtime data. When the <code>readJSON</code> step is not
+          available, Groovy&apos;s <code>JsonSlurper</code> is the clean fallback.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Why Use JSON in Jenkins Pipelines?</h2>
-        <p>JSON is a ubiquitous data interchange format, widely used for:</p>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          Quick Answer: readJSON, JsonSlurper, or jq?
+        </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>API Payloads:</strong> Interacting with REST APIs to fetch data or send configuration.
+            <strong>Use <code>readJSON file:</code></strong> when the JSON lives in your repo or is created in the
+            build workspace.
           </li>
           <li>
-            <strong>Configuration Files:</strong> Reading application or job-specific settings from a structured file.
+            <strong>Use <code>readJSON text:</code></strong> when JSON comes from a Jenkins parameter, an API response,
+            or command output.
           </li>
           <li>
-            <strong>Pipeline Parameters:</strong> Accepting complex input parameters to a job as a JSON string.
+            <strong>Add <code>returnPojo: true</code></strong> when you want plain Groovy-friendly{" "}
+            <code>LinkedHashMap</code> and <code>ArrayList</code> objects instead of json-lib objects.
           </li>
           <li>
-            <strong>Shared Library Data:</strong> Defining configurable behaviors for reusable pipeline code.
+            <strong>Use <code>JsonSlurper</code></strong> when the Pipeline Utility Steps plugin is not installed or
+            you want a plugin-free fallback.
           </li>
           <li>
-            <strong>Logging and Reporting:</strong> Generating structured output for downstream processing.
+            <strong>Use <code>jq</code> or Python on the agent</strong> only for heavy filtering, reshaping, or very
+            large JSON payloads where shell tools are a better fit than Groovy.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Core Techniques for Handling JSON</h2>
-
-        <h3 className="text-xl font-semibold mt-6">Using Groovy&apos;s Built-in JSON Support</h3>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          Use readJSON First for Most Jenkins Pipelines
+        </h2>
         <p>
-          The most common and recommended way to handle JSON directly within your Groovy pipeline script (both
-          Declarative <code>script</code> blocks and Scripted pipelines) is using the built-in libraries available in
-          Jenkins, primarily from the <code>groovy.json</code> package. The key classes are <code>JsonSlurper</code> for
-          parsing JSON strings into Groovy/Java objects (Maps, Lists, primitives) and <code>JsonOutput</code> for
-          converting Groovy/Java objects into JSON strings.
+          The <code>readJSON</code> step comes from the Pipeline Utility Steps plugin, not Jenkins core. Current
+          Jenkins documentation shows that it accepts either <code>file</code> or <code>text</code> input, and
+          <code> returnPojo: true</code> converts the result into plain Java collections. That is usually the easiest
+          form to work with inside Declarative <code>script</code> blocks, Scripted Pipeline, and shared library code.
+        </p>
+        <p>
+          For repo-backed configuration, the path is relative to the workspace. That means you normally need to check
+          out the repository before trying to read the JSON file.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example: Parsing JSON String</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre
-              dangerouslySetInnerHTML={{
-                __html: `pipeline {
-    agent any
-    stages {
-        stage('Parse JSON') {
-            steps {
-                script {
-                    def jsonString = '''
-                    {
-                      "name": "Jenkins Job",
-                      "version": 1.5,
-                      "enabled": true,
-                      "tags": ["build", "deploy"],
-                      "config": {
-                        "timeoutSec": 300
-                      }
-                    }
-                    '''
-
-                    // Use JsonSlurper to parse the string
-                    def slurper = new groovy.json.JsonSlurper()
-                    def jsonObject = slurper.parseText(jsonString)
-
-                    // Access parsed data
-                    echo "Job Name: &#x7b;jsonObject.name&#x7d;"
-                    echo "First Tag: &#x7b;jsonObject.tags[0]&#x7d;"
-                    echo "Timeout: &#x7b;jsonObject.config.timeoutSec&#x7d; seconds"
-
-                    // Check type
-                    echo "Parsed data type: &#x7b;jsonObject.class.name&#x7d;" // Should be Map
-                    echo "Tags type: &#x7b;jsonObject.tags.class.name&#x7d;" // Should be List
-                }
-            }
-        }
-    }
-}`,
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example: Generating JSON String</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre
-              dangerouslySetInnerHTML={{
-                __html: `pipeline {
-    agent any
-    stages {
-        stage('Generate JSON') {
-            steps {
-                script {
-                    def data = [
-                        status: "success",
-                        timestamp: System.currentTimeMillis(),
-                        result: [
-                            buildNumber: &#x7b;env.BUILD_NUMBER&#x7d;,
-                            jobName: &#x7b;env.JOB_NAME&#x7d;
-                        ]
-                    ]
-
-                    // Use JsonOutput to generate a JSON string
-                    def jsonString = groovy.json.JsonOutput.toJson(data)
-                    def prettyJsonString = groovy.json.JsonOutput.prettyPrint(jsonString)
-
-                    echo "Generated JSON:"
-                    echo &#x7b;prettyJsonString&#x7d;
-
-                    // This JSON string can then be sent to an API or saved to a file
-                    // Example (conceptual):
-                    // sh "curl -X POST -H 'Content-Type: application/json' -d '&#x7b;jsonString&#x7d;' http://your-api.com/report"
-                }
-            }
-        }
-    }
-}`,
-              }}
-            />
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Reading JSON from Files</h3>
-        <p>
-          Often, configuration data is stored in a JSON file within your source code repository. You can read these
-          files and parse their content within your pipeline.
-        </p>
-
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example: Reading and Parsing a JSON File</h4>
+          <h3 className="text-lg font-medium">Example: Read JSON File from the Workspace</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Assumes you have a file named <code>config.json</code> in your workspace.
+            This is the most common pattern when a project keeps deployment or build settings in version control.
           </p>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre
-              dangerouslySetInnerHTML={{
-                __html: `pipeline {
-    agent any
-    stages {
-        stage('Read JSON File') {
-            steps {
-                script {
-                    // Ensure you have a config.json file in your workspace
-                    // e.g., echo '{"database": {"host": "localhost", "port": 5432}, "api_key": "abcdef123"}' > config.json
-
-                    def configFile = 'config.json'
-
-                    if (fileExists(configFile)) {
-                        def jsonText = readFile(configFile)
-                        def slurper = new groovy.json.JsonSlurper()
-                        def config = slurper.parseText(jsonText)
-
-                        echo "Database Host: &#x7b;config.database.host&#x7d;"
-                        // Note: Be careful with sensitive data like api_key!
-                        // Store secrets in Jenkins Credentials, not in files committed to Git.
-                        echo "API Key (caution!): &#x7b;config.api_key&#x7d;"
-                    } else {
-                        error "Configuration file &#x7b;configFile&#x7d; not found!"
-                    }
-                }
-            }
-        }
-    }
-}`,
-              }}
-            />
+            <pre>{readJsonFileExample}</pre>
           </div>
         </div>
-        <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
-          <strong>Security Note:</strong> Never store sensitive information like API keys, passwords, or database
-          credentials directly in JSON files committed to source control. Use Jenkins Credentials Provider to securely
-          manage secrets and inject them into your pipeline environment variables or script context at runtime.
-        </p>
 
-        <h3 className="text-xl font-semibold mt-6">Using JSON for Pipeline Parameters</h3>
         <p>
-          For complex job inputs, defining a single String parameter and requiring users to input a JSON string is a
-          common pattern. You can then parse this string inside the pipeline.
+          This pattern is usually better than hardcoding values in the Jenkinsfile because the JSON can be reviewed,
+          versioned, and validated outside Jenkins. It also matches common search intent such as &quot;read json
+          jenkins&quot; and &quot;jenkins pipeline read json&quot;: read a file, turn it into a map, and fail fast if a
+          required key is missing.
         </p>
 
-        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example: JSON Input Parameter</h4>
-          <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre
-              dangerouslySetInnerHTML={{
-                __html: `pipeline {
-    agent any
-    parameters {
-        string(
-            name: 'JOB_CONFIG_JSON',
-            defaultValue: '{"environment": "dev", "featureFlags": {"newUI": false, "betaMode": true}}',
-            description: 'JSON configuration for the job execution'
-        )
-    }
-    stages {
-        stage('Process Parameters') {
-            steps {
-                script {
-                    def configJsonString = params.JOB_CONFIG_JSON
-                    def slurper = new groovy.json.JsonSlurper()
-
-                    try {
-                        def jobConfig = slurper.parseText(configJsonString)
-
-                        echo "Running in environment: &#x7b;jobConfig.environment&#x7d;"
-                        echo "New UI flag is: &#x7b;jobConfig.featureFlags.newUI&#x7d;"
-
-                        if (jobConfig.featureFlags.betaMode) {
-                            echo "Beta mode is enabled."
-                            // Add logic for beta mode
-                        } else {
-                            echo "Beta mode is disabled."
-                        }
-
-                    } catch (Exception e) {
-                        error "Failed to parse JOB_CONFIG_JSON parameter: &#x7b;e.getMessage()&#x7d;"
-                    }
-                }
-            }
-        }
-    }
-}`,
-              }}
-            />
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6">Using Shell Steps with JSON Tools (jq, Python, etc.)</h3>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          Parse JSON Parameters and API Payloads with readJSON text
+        </h2>
         <p>
-          For more complex JSON transformations, validation, or querying, leveraging command-line tools like{" "}
-          <code>jq</code> or scripting languages like Python within <code>sh</code> or <code>bat</code> steps can be
-          highly effective. These tools are often better suited for complex text processing than Groovy&apos;s basic
-          string manipulation.
+          When JSON is not stored as a file, use <code>readJSON text:</code>. A Jenkins <code>text</code> parameter is
+          a better fit than a single-line string parameter because it is easier to paste, review, and edit valid JSON
+          in the job UI.
+        </p>
+        <p>
+          The same technique works for API responses. If another step gives you a JSON string, parse it with
+          <code> readJSON text: responseBody, returnPojo: true</code> and then access fields exactly as you would from a
+          file-backed config object.
         </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example: Using jq to Extract Data</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Requires <code>jq</code> to be installed on the agent.
-          </p>
+          <h3 className="text-lg font-medium">Example: Read JSON from a Jenkins Parameter</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre
-              dangerouslySetInnerHTML={{
-                __html: `pipeline {
-    agent any
-    stages {
-        stage('Process with jq') {
-            steps {
-                script {
-                    def jsonString = '''
-                    {
-                      "users": [
-                        { "name": "Alice", "role": "admin" },
-                        { "name": "Bob", "role": "editor" },
-                        { "name": "Charlie", "role": "viewer" }
-                      ]
-                    }
-                    '''
-
-                    // Use jq to extract names of users with role 'admin'
-                    // Pass the JSON string to jq's standard input
-                    def adminName = sh(script: "echo '\\\\\$\{jsonString\}' | jq -r '.users[] | select(.role == \"admin\") | .name'", returnStdout: true).trim()
-
-                    echo "Admin user found: &#x7b;adminName&#x7d;"
-                }
-            }
-        }
-    }
-}`,
-              }}
-            />
+            <pre>{readJsonParameterExample}</pre>
           </div>
         </div>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          Fallback: readFile Plus JsonSlurper
+        </h2>
+        <p>
+          If you see <code>No such DSL method &apos;readJSON&apos;</code>, your controller probably does not have the
+          Pipeline Utility Steps plugin available to that job. In that case, the simplest fallback is to read the file
+          as text and parse it with Groovy&apos;s built-in <code>JsonSlurper</code>.
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
-          <h4 className="text-lg font-medium">Example: Using Python for Complex Logic</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Requires Python to be installed on the agent.</p>
+          <h3 className="text-lg font-medium">Example: Plugin-Free JSON Parsing</h3>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto">
-            <pre
-              dangerouslySetInnerHTML={{
-                __html: `pipeline {
-    agent any
-    stages {
-        stage('Process with Python') {
-            steps {
-                script {
-                    def jsonString = '''
-                    {
-                      "items": [
-                        { "id": 1, "value": 10 },
-                        { "id": 2, "value": 25 },
-                        { "id": 3, "value": 15 }
-                      ]
-                    }
-                    '''
-
-                    // Use Python to calculate the sum of values > 10
-                    def pythonScript = """
-import json
-import sys
-
-data = json.loads(sys.stdin.read())
-total_sum = sum(item['value'] for item in data['items'] if item['value'] > 10)
-print(total_sum)
-"""
-                    def sumResult = sh(script: "echo '\\\\\$\{jsonString\}' | python -c \"\\\\$\{pythonScript\}\"", returnStdout: true).trim()
-
-                    echo "Sum of values > 10: &#x7b;sumResult&#x7d;"
-                }
-            }
-        }
-    }
-}`,
-              }}
-            />
+            <pre>{jsonSlurperFallbackExample}</pre>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Best Practices</h2>
+        <p>
+          This fallback is also useful in shared library helpers when you want to stay close to standard Groovy. The
+          tradeoff is that you lose the convenience of the dedicated Jenkins step and need to manage file reading
+          yourself.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Common Problems and Fixes</h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <strong>Handle Errors:</strong> Always wrap JSON parsing logic in <code>try-catch</code> blocks to
-            gracefully handle malformed JSON input.
+            <strong><code>readJSON</code> is not recognized:</strong> Install or update the Pipeline Utility Steps
+            plugin. The step is not part of Jenkins core.
           </li>
           <li>
-            <strong>Validate JSON:</strong> If the JSON source is external or user-provided, consider adding validation
-            steps (e.g., checking for required keys or data types) before proceeding.
+            <strong>The file cannot be found:</strong> The <code>file</code> argument is resolved relative to the
+            workspace, so make sure the repository has been checked out and the path matches the workspace layout.
           </li>
           <li>
-            <strong>Use Credentials for Secrets:</strong> As mentioned, sensitive data in JSON should be avoided in
-            source control. Use Jenkins Credentials.
+            <strong>JSON pasted into parameters fails to parse:</strong> Use a <code>text</code> parameter, avoid
+            trailing commas, and validate the JSON before saving the job or triggering the build.
           </li>
           <li>
-            <strong>Keep it Readable:</strong> Use <code>JsonOutput.prettyPrint()</code> when logging JSON for
-            debugging.
+            <strong>Keys are missing at runtime:</strong> Validate required fields explicitly and call
+            <code> error()</code> with a clear message instead of letting a null value fail later in deployment logic.
           </li>
           <li>
-            <strong>Choose the Right Tool:</strong> Use Groovy&apos;s <code>JsonSlurper</code>/<code>JsonOutput</code>{" "}
-            for simple parsing/generation. Use <code>sh</code> with tools like <code>jq</code> or scripting languages
-            for complex queries, transformations, or validation.
+            <strong>The payload is large or heavily nested:</strong> Offload expensive filtering to <code>jq</code> or
+            a small Python script on the agent instead of writing large Groovy transformations in the Jenkinsfile.
+          </li>
+        </ul>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">Practical Guidance</h2>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <strong>Do not store secrets in JSON files committed to Git.</strong> Keep tokens, passwords, and API keys
+            in Jenkins Credentials and merge them into runtime configuration only when the pipeline runs.
           </li>
           <li>
-            <strong>Size Matters:</strong> Be mindful of parsing very large JSON files directly in Groovy, as it
-            consumes memory on the controller or agent. For massive files, stream processing or external tools might be
-            more efficient.
+            <strong>Prefer <code>returnPojo: true</code> when using <code>readJSON</code>.</strong> Plain maps and
+            lists are easier to inspect, pass around, and test in pipeline code.
+          </li>
+          <li>
+            <strong>Keep the Jenkinsfile thin.</strong> Put stable configuration in JSON, validate it early, then
+            extract only the few values the stage actually needs.
+          </li>
+          <li>
+            <strong>Log carefully.</strong> Pretty-printing JSON is helpful for debugging, but only for non-sensitive
+            fields that are safe to expose in build logs.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          While Jenkins Pipeline syntax is Groovy-based, integrating JSON data is a frequent requirement for interacting
-          with external services, managing configurations, or handling complex parameters. By leveraging Groovy&apos;s
-          built-in JSON libraries and external command-line tools, you can effectively incorporate JSON data into your
-          Jenkins workflows, making your pipelines more flexible and powerful. Understanding these techniques allows you
-          to seamlessly connect your automation with the wider ecosystem of tools and services that rely on JSON.
+          For most teams, the best current answer to &quot;how do I read JSON in Jenkins?&quot; is still
+          <code> readJSON file:</code> for workspace files and <code>readJSON text:</code> for parameters or API
+          responses, usually with <code>returnPojo: true</code>. If that step is unavailable, <code>readFile</code> plus
+          <code> JsonSlurper</code> gives you a reliable fallback without changing the overall pipeline design.
         </p>
       </div>
     </>

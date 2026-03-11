@@ -1,495 +1,308 @@
 import type { Metadata } from "next";
-import { Code, FileDiff, ListChecks, Settings } from "lucide-react"; // Import icons
+import { Code, FileDiff, ListChecks, Settings } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Diff Tools in JSON Formatters: Comparative Review | Offline Tools",
   description:
-    "A comparative review of diff tools used within or alongside JSON formatters, exploring text-based vs. structure-aware diffing for JSON data.",
+    "Compare formatted text diff, semantic JSON diff, JSON Patch, and Merge Patch. Learn how current JSON diff tools handle key order, arrays, and privacy-sensitive data.",
 };
 
 export default function JsonDiffToolReview() {
   return (
     <article className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-6 text-center">Diff Tools in JSON Formatters: A Comparative Review</h1>
+      <h1 className="mb-6 text-center text-4xl font-bold">
+        Diff Tools in JSON Formatters: Comparative Review
+      </h1>
 
       <div className="space-y-8">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Code className="w-6 h-6 mr-2 text-blue-500" />
-            Introduction: The Need for JSON Diffing
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <Code className="mr-2 h-6 w-6 text-blue-500" />
+            Start With the Job, Not the Tool Name
           </h2>
           <p>
-            JSON (JavaScript Object Notation) is the de facto standard for data interchange on the web. It's used for
-            configuration files, API responses, data storage, and more. As developers, we often need to compare two
-            versions of a JSON document to understand what has changed. This is where diff tools come in.
+            Most people searching for a JSON diff tool are really trying to answer one of four questions: did the data
+            change, what changed semantically, can I generate a patch document, and can I do it without uploading
+            sensitive payloads to someone else&apos;s website. A useful review has to separate those jobs, because the
+            best tool for a Git-style review is not the best tool for an API patch or a large array comparison.
           </p>
-          <p>
-            While standard text diff tools (like Git's diff) can show line-by-line differences, they often fall short
-            with JSON due to its flexible formatting, arbitrary key order in objects, and nested structures. Comparing
-            raw, unformatted JSON files can result in diffs that are noisy and misleading, highlighting changes in
-            whitespace or key order rather than actual data modifications.
+          <p className="mt-4">
+            The practical rule is simple: normalize first, then compare. Format both documents the same way, sort
+            object keys when key order does not matter, and switch to a structure-aware diff when arrays or nested
+            objects make line-by-line output noisy.
           </p>
-        </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <ListChecks className="w-6 h-6 mr-2 text-green-500" />
-            The Role of JSON Formatters
-          </h2>
-          <p>
-            Before diffing, it's crucial to have a consistent representation of the JSON data. JSON formatters (also
-            known as pretty-printers or beautifiers) serve this purpose. They take raw JSON and output a human-readable
-            version with consistent indentation, spacing, and sometimes sorted keys.
-          </p>
-          <p>
-            Applying a standard formatting ensures that pure text-based diffs are less cluttered by stylistic
-            differences. However, even with consistent formatting, text diffs still treat the JSON as plain text, which
-            can be problematic.
-          </p>
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-            <h3 className="text-lg font-medium mb-2">Example: Raw vs. Formatted JSON</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-semibold mb-1">Raw JSON:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-                  {`{"name":"Alice","age":30,"city":"New York"}`}
-                </pre>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-1">Formatted JSON:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-                  {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}`}
-                </pre>
-              </div>
-            </div>
-            <p className="mt-2 text-sm italic">
-              A formatter adds whitespace and indentation for readability. Some formatters can also sort keys
-              alphabetically.
-            </p>
+          <div className="my-4 rounded-lg bg-blue-50 p-4 dark:bg-blue-950/30">
+            <h3 className="mb-2 text-lg font-medium">Fast Recommendation</h3>
+            <ul className="list-disc space-y-2 pl-6">
+              <li>Use formatted text diff for quick code review when you care about the exact rendered JSON.</li>
+              <li>Use semantic diff when you want logical data changes and need to ignore whitespace or key order.</li>
+              <li>Use JSON Patch when a system must replay precise add, remove, replace, move, copy, or test steps.</li>
+              <li>Use JSON Merge Patch for simple object updates, not for fine-grained array edits.</li>
+              <li>Use local or offline tools when the JSON contains tokens, customer data, or internal configs.</li>
+            </ul>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <FileDiff className="w-6 h-6 mr-2 text-red-500" />
-            Text-Based Diffing on Formatted JSON
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <FileDiff className="mr-2 h-6 w-6 text-red-500" />
+            Four Common Diff Approaches
           </h2>
           <p>
-            The simplest approach is to format both JSON documents using the same settings and then run a standard
-            line-by-line text diff. Tools like `diff` (Unix command), online text diff checkers, or diff views in IDEs
-            work this way.
+            These approaches solve different problems. Treating them as interchangeable is what creates misleading
+            reviews and bad patch payloads.
           </p>
-          <h3 className="text-xl font-semibold mt-6">Pros:</h3>
-          <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>Widely available and easy to use.</li>
-            <li>
-              Shows *exact* textual changes, including comments (if allowed by the parser/formatter) or original
-              formatting variations before formatting.
-            </li>
-            <li>Simple to implement.</li>
-          </ul>
-          <h3 className="text-xl font-semibold mt-6">Cons:</h3>
-          <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>
-              <span className="font-medium">Sensitive to non-semantic changes:</span> Changes in key order (which is not
-              significant in JSON objects) or minor formatting variations not standardized by the formatter can appear
-              as significant differences.
-            </li>
-            <li>
-              <span className="font-medium">Doesn't understand structure:</span> It doesn't know if a change is within a
-              string, a number, an array element, or a key name.
-            </li>
-            <li>Diffs can still be noisy if objects have different key orders, even after formatting.</li>
-          </ul>
 
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-            <h3 className="text-lg font-medium mb-2">Example 1: Text Diff Issue (Key Order)</h3>
-            <p className="text-sm italic mb-2">
-              Assume both files are formatted with 2-space indentation, but File B has different key order.
+          <div className="my-4 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-gray-50 dark:bg-gray-800">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">Approach</th>
+                  <th className="px-4 py-3 font-semibold">Best For</th>
+                  <th className="px-4 py-3 font-semibold">What It Gets Right</th>
+                  <th className="px-4 py-3 font-semibold">Main Weakness</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-gray-200 dark:border-gray-700">
+                  <td className="px-4 py-3 font-medium">Formatted text diff</td>
+                  <td className="px-4 py-3">Pull requests, fixtures, exact file review</td>
+                  <td className="px-4 py-3">Works everywhere and matches editor or Git diff output</td>
+                  <td className="px-4 py-3">Object key reordering and array moves still create noise</td>
+                </tr>
+                <tr className="border-t border-gray-200 dark:border-gray-700">
+                  <td className="px-4 py-3 font-medium">Semantic tree diff</td>
+                  <td className="px-4 py-3">API responses, configs, nested documents</td>
+                  <td className="px-4 py-3">Ignores formatting and compares actual JSON values</td>
+                  <td className="px-4 py-3">Array matching strategy matters more than most users expect</td>
+                </tr>
+                <tr className="border-t border-gray-200 dark:border-gray-700">
+                  <td className="px-4 py-3 font-medium">JSON Patch (RFC 6902)</td>
+                  <td className="px-4 py-3">Replayable changes, audit logs, PATCH APIs</td>
+                  <td className="px-4 py-3">Explicit operations with precise paths</td>
+                  <td className="px-4 py-3">Verbose and less readable for humans reviewing broad changes</td>
+                </tr>
+                <tr className="border-t border-gray-200 dark:border-gray-700">
+                  <td className="px-4 py-3 font-medium">JSON Merge Patch (RFC 7396)</td>
+                  <td className="px-4 py-3">Simple object updates over HTTP PATCH</td>
+                  <td className="px-4 py-3">Compact and easy to author by hand</td>
+                  <td className="px-4 py-3">Arrays are replaced wholesale, and null means removal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <ListChecks className="mr-2 h-6 w-6 text-green-500" />
+            What Current Tools Actually Add
+          </h2>
+          <p>
+            A modern JSON formatter is often most useful as a prep stage, while a dedicated diff engine provides the
+            comparison logic. A few current tools illustrate the difference well:
+          </p>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h3 className="mb-2 text-lg font-medium">1. `jq` for normalization before diff</h3>
+            <p>
+              The `jq` manual still exposes `--sort-keys` (`-S`), which makes it a reliable first step before a normal
+              line diff. That will not sort arrays, but it does reduce noise from object member reordering.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-semibold mb-1">File A:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-                  {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}`}
-                </pre>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-1">File B:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-                  {`{
-  "city": "New York",
-  "name": "Alice",
-  "age": 30
-}`}
-                </pre>
-              </div>
-            </div>
-            <p className="mt-4 font-semibold">Result of a Text Diff:</p>
-            <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm text-red-700 dark:text-red-300">
-              {`--- File A
-+++ File B
-@@ -1,4 +1,4 @@
- {
--  "name": "Alice",
--  "age": 30,
-   "city": "New York",
-+  "name": "Alice",
-+  "age": 30
- }`}
+            <pre className="mt-3 overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              {`jq -S . before.json > before.normalized.json
+jq -S . after.json > after.normalized.json
+diff -u before.normalized.json after.normalized.json`}
             </pre>
             <p className="mt-2 text-sm italic">
-              A standard text diff shows multiple lines changed, even though the actual data (name, age, city values) is
-              identical.
+              This is often enough for config files and API snapshots when the array order is meaningful and should stay
+              visible.
+            </p>
+          </div>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h3 className="mb-2 text-lg font-medium">2. `jsondiffpatch` for semantic diff and patch output</h3>
+            <p>
+              `jsondiffpatch` documents LCS-based array diffing and lets you define `objectHash` so arrays of objects
+              can be matched by a stable identifier instead of just by index. It can also format differences as JSON
+              Patch, which makes it useful when you need both a human review and a machine-consumable change set.
+            </p>
+            <pre className="mt-3 overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+              {`const diffpatcher = jsondiffpatch.create({
+  objectHash: (obj) => obj.id ?? obj.slug,
+});
+
+const delta = diffpatcher.diff(left, right);`}
+            </pre>
+            <p className="mt-2 text-sm italic">
+              If your array items have no stable key, even a good semantic diff will eventually fall back to less
+              intuitive output.
+            </p>
+          </div>
+
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h3 className="mb-2 text-lg font-medium">3. `jd` for structural review and offline-friendly workflows</h3>
+            <p>
+              `jd` focuses on human-readable structural diffs and patching. Its project documents JSON and YAML support
+              and also ships a local WebAssembly UI, which is useful when you want browser convenience without sending
+              the document across the network.
+            </p>
+            <p className="mt-2 text-sm italic">
+              That matters for real-world JSON such as API responses, logs, and configs that may contain secrets or
+              customer data.
             </p>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Settings className="w-6 h-6 mr-2 text-purple-500" />
-            Structure-Aware (Semantic) Diffing
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <Settings className="mr-2 h-6 w-6 text-purple-500" />
+            Array Handling Is Where Diff Tools Separate
           </h2>
           <p>
-            A more sophisticated approach involves parsing the JSON documents into their native data structures
-            (objects, arrays, primitives) and then comparing these structures recursively. This is known as semantic or
-            structure-aware diffing.
+            JSON objects are unordered maps semantically, but arrays are ordered sequences. That single difference is
+            why users often think a tool is broken when it is only using the wrong comparison model.
           </p>
-          <p>
-            This method compares values based on their position in the structure, ignoring whitespace and object key
-            order. It can identify:
-          </p>
-          <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>Added, removed, or changed key-value pairs in objects.</li>
-            <li>
-              Added, removed, or changed elements in arrays (though array diffing can be complex, sometimes requiring
-              configuration on how to match elements).
-            </li>
-            <li>Changes in primitive values (strings, numbers, booleans, null).</li>
-          </ul>
-          <h3 className="text-xl font-semibold mt-6">Pros:</h3>
-          <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>
-              <span className="font-medium">Accurate data comparison:</span> Ignores irrelevant formatting or key order
-              differences.
-            </li>
-            <li>Provides a clearer view of logical changes to the data structure.</li>
-            <li>Can highlight specific value changes within nested structures.</li>
-          </ul>
-          <h3 className="text-xl font-semibold mt-6">Cons:</h3>
-          <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>More complex to implement than text diffing.</li>
-            <li>Requires a JSON parser.</li>
-            <li>May not preserve original formatting details if needed (though some tools offer combined views).</li>
-            <li>
-              Array diffing can be tricky – simple tools might just mark arrays as changed if elements are reordered;
-              advanced tools might use heuristics or specified key fields to match array elements.
-            </li>
-          </ul>
 
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-            <h3 className="text-lg font-medium mb-2">Example 2: Semantic Diff (Value Change and Addition)</h3>
-            <p className="text-sm italic mb-2">Comparing File A from Example 1 to a new File C.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="my-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <h3 className="mb-2 text-lg font-medium">Example: Position-Based vs. ID-Based Matching</h3>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <h4 className="font-semibold mb-1">File A:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-                  {`{
-  "name": "Alice",
-  "age": 30,
-  "city": "New York"
-}`}
-                </pre>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-1">File C:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-                  {`{
-  "name": "Alicia",
-  "age": 31,
-  "city": "New York",
-  "occupation": "Engineer"
-}`}
-                </pre>
-              </div>
-            </div>
-            <p className="mt-4 font-semibold">Result of a Semantic Diff (Conceptual Output):</p>
-            <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm text-green-700 dark:text-green-300">
-              {`Object /:
-  name: "Alice" -> "Alicia" (changed)
-  age: 30 -> 31 (changed)
-  occupation: (missing) -> "Engineer" (added)`}
-            </pre>
-            <p className="mt-2 text-sm italic">
-              A semantic diff clearly shows which specific values changed and which keys were added or removed,
-              regardless of their position or surrounding whitespace.
-            </p>
-          </div>
-
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-            <h3 className="text-lg font-medium mb-2">Example 3: Array Differences</h3>
-            <p className="text-sm italic mb-2">Comparing two arrays.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-semibold mb-1">Array 1:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
+                <h4 className="mb-1 font-semibold">Before</h4>
+                <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
                   {`[
-  "apple",
-  "banana",
-  "cherry"
+  { "id": 101, "name": "alpha", "enabled": true },
+  { "id": 102, "name": "beta", "enabled": false }
 ]`}
                 </pre>
               </div>
               <div>
-                <h4 className="font-semibold mb-1">Array 2:</h4>
-                <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
+                <h4 className="mb-1 font-semibold">After</h4>
+                <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
                   {`[
-  "apple",
-  "date",
-  "banana",
-  "elderberry"
+  { "id": 102, "name": "beta", "enabled": true },
+  { "id": 101, "name": "alpha", "enabled": true },
+  { "id": 103, "name": "gamma", "enabled": true }
 ]`}
                 </pre>
               </div>
             </div>
-            <p className="mt-4 font-semibold">Result of a Semantic Diff (Conceptual Output - Simple):</p>
-            <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm text-yellow-700 dark:text-yellow-300">
-              {`Array /:
-  Element at index 1: "banana" -> "date" (changed)
-  Element at index 2: "cherry" -> "banana" (changed/moved?)
-  Element at index 3: (missing) -> "elderberry" (added)`}
+            <pre className="mt-4 overflow-x-auto rounded bg-white p-3 text-sm text-yellow-700 dark:bg-gray-900 dark:text-yellow-300">
+              {`Naive index diff:
+- item 0 changed completely
+- item 1 changed completely
+- item 2 added`}
             </pre>
-            <p className="mt-2 font-semibold">Result of a Semantic Diff (Conceptual Output - Advanced/Array Aware):</p>
-            <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm text-blue-700 dark:text-blue-300">
-              {`Array /:
-  "banana": Moved from index 1 to index 2
-  "cherry": Removed
-  "date": Added at index 1
-  "elderberry": Added at index 3`}
+            <pre className="mt-4 overflow-x-auto rounded bg-white p-3 text-sm text-blue-700 dark:bg-gray-900 dark:text-blue-300">
+              {`ID-aware diff:
+- id 102: enabled false -> true
+- id 101: moved from index 0 -> 1
+- id 103: added`}
             </pre>
             <p className="mt-2 text-sm italic">
-              Simple semantic diffs might show changes based on index. More advanced diffs can detect moves, additions,
-              and removals more accurately, though this requires more complex algorithms.
+              If your data has stable IDs, choose a tool that can match on that ID. If it does not, accept that array
+              diffs will be approximate and review the output more carefully.
             </p>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <ListChecks className="w-6 h-6 mr-2 text-teal-500" />
-            Features to Look for in JSON Diff Tools/Formatters
-          </h2>
-          <p>When choosing or evaluating tools for diffing JSON, consider these features:</p>
-          <ul className="list-disc pl-6 space-y-2 my-4">
-            <li>
-              <span className="font-medium">Customizable Formatting:</span> Control indentation level, spacing, and
-              whether to sort keys. Consistency is key for text diffing.
-            </li>
-            <li>
-              <span className="font-medium">Semantic Diff Mode:</span> The ability to compare structures directly,
-              ignoring whitespace and key order. This is often the most useful for understanding data changes.
-            </li>
-            <li>
-              <span className="font-medium">Array Comparison Strategy:</span> How the tool handles array differences (by
-              index, by matching elements using a key, detecting moves).
-            </li>
-            <li>
-              <span className="font-medium">Visual Output:</span> Clear side-by-side or inline views highlighting added,
-              removed, and changed lines or values.
-            </li>
-            <li>
-              <span className="font-medium">Handling Large Files:</span> Performance and memory usage when dealing with
-              very large JSON documents.
-            </li>
-            <li>
-              <span className="font-medium">Integration:</span> Command-line interface for scripting, web interface for
-              manual comparison, API for programmatic use, or IDE integration.
-            </li>
-            <li>
-              <span className="font-medium">Error Handling:</span> How the tool reports parsing errors in invalid JSON.
-            </li>
-            <li>
-              <span className="font-medium">Ignoring Paths/Keys:</span> Ability to exclude specific keys or paths from
-              the comparison (e.g., timestamps, unique IDs that are expected to change).
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Code className="w-6 h-6 mr-2 text-yellow-500" />
-            Implementation Considerations (Without `useState`)
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <FileDiff className="mr-2 h-6 w-6 text-red-500" />
+            <Settings className="mr-2 h-6 w-6 text-purple-500" />
+            JSON Patch vs. Merge Patch
           </h2>
           <p>
-            On a Next.js backend page (or any server-side rendering context without client-side hooks like `useState`),
-            JSON diffing would typically involve receiving two JSON strings (e.g., from a request body or file reads),
-            parsing them on the server, performing the diff logic, and rendering the result as HTML.
+            These formats are often mentioned together, but they are not substitutes. JSON Patch is a list of
+            operations with paths. JSON Merge Patch is a partial document that describes the desired end state for
+            object members.
           </p>
-          <p>
-            The diffing logic itself would be a pure function (or a class with methods) that takes two parsed JavaScript
-            objects/arrays and returns a representation of their differences. This representation could then be
-            formatted for display in the rendered HTML.
-          </p>
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-            <h3 className="text-lg font-medium mb-2">Conceptual Backend Diff Logic:</h3>
-            <pre className="bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm">
-              {`// Pseudo-code for a server-side diff function
 
-interface DiffResult {
-  // Structure to represent differences (e.g., added, removed, changed nodes)
-  type: 'added' | 'removed' | 'changed' | 'unchanged';
-  path: string; // JSON Pointer or similar
-  valueA?: any;
-  valueB?: any;
-  children?: DiffResult[]; // For objects/arrays
-}
-
-function semanticDiff(objA: any, objB: any, path = ''): DiffResult[] {
-  const differences: DiffResult[] = [];
-
-  // Handle primitive types or null
-  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
-    if (objA !== objB) {
-      differences.push({ type: 'changed', path, valueA: objA, valueB: objB });
-    }
-    return differences; // No diff if they are equal primitives
-  }
-
-  // Handle different types (e.g., object vs array)
-  if (Array.isArray(objA) !== Array.isArray(objB)) {
-     differences.push({ type: 'changed', path, valueA: objA, valueB: objB });
-     return differences;
-  }
-
-  // Handle Arrays
-  if (Array.isArray(objA)) {
-    // Simple array diff: compares elements by index
-    const maxLength = Math.max(objA.length, objB.length);
-    for (let i = 0; i < maxLength; i++) {
-      const valA = objA[i];
-      const valB = objB[i];
-      const currentPath = \`\${path}/\${i}\`;
-
-      if (i < objA.length && i < objB.length) {
-         // Element exists in both
-         const childDiffs = semanticDiff(valA, valB, currentPath);
-         differences.push(...childDiffs);
-      } else if (i < objA.length) {
-         // Element only in A (removed)
-         differences.push({ type: 'removed', path: currentPath, valueA: valA });
-      } else if (i < objB.length) {
-         // Element only in B (added)
-         differences.push({ type: 'added', path: currentPath, valueB: valB });
-      }
-    }
-  }
-  // Handle Objects
-  else {
-    const keysA = Object.keys(objA);
-    const keysB = Object.keys(objB);
-    const allKeys = new Set([...keysA, ...keysB]);
-
-    for (const key of allKeys) {
-      const valA = objA[key];
-      const valB = objB[key];
-      const currentPath = \`\${path}/\${key}\`;
-
-      if (key in objA && key in objB) {
-        // Key exists in both
-        const childDiffs = semanticDiff(valA, valB, currentPath);
-        differences.push(...childDiffs);
-      } else if (key in objA) {
-        // Key only in A (removed)
-        differences.push({ type: 'removed', path: currentPath, valueA: valA });
-      } else if (key in objB) {
-        // Key only in B (added)
-        differences.push({ type: 'added', path: currentPath, valueB: valB });
-      }
-    }
-  }
-
-  return differences;
-}
-
-// On a Next.js server component/page:
-// async function getServerSideProps() {
-//   const jsonA = await fetchJsonA(); // Fetch or read JSON A
-//   const jsonB = await fetchJsonB(); // Fetch or read JSON B
-//
-//   try {
-//     const parsedA = JSON.parse(jsonA);
-//     const parsedB = JSON.parse(jsonB);
-//     const diffResults = semanticDiff(parsedA, parsedB);
-//
-//     return {
-//       props: {
-//         diffResults: diffResults, // Pass diff results to the component
-//         // ... other props like original formatted JSON strings for text diff view
-//       },
-//     };
-//   } catch (error) {
-//      // Handle parsing errors
-//     return { props: { error: error.message } };
-//   }
-// }
-//
-// Inside the component, render 'diffResults'
-`}
-            </pre>
-            <p className="mt-2 text-sm italic">
-              This pseudo-code illustrates a basic recursive semantic diff logic. A real implementation would require
-              more robust handling of types, potentially different array comparison strategies, and detailed output
-              formatting.
-            </p>
+          <div className="my-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+              <h3 className="mb-2 text-lg font-medium">JSON Patch</h3>
+              <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+                {`[
+  { "op": "replace", "path": "/profile/name", "value": "Alicia" },
+  { "op": "add", "path": "/tags/1", "value": "beta" }
+]`}
+              </pre>
+              <p className="mt-2 text-sm">
+                Best when you need precise, replayable operations, especially for arrays or when consumers already speak
+                RFC 6902.
+              </p>
+            </div>
+            <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+              <h3 className="mb-2 text-lg font-medium">JSON Merge Patch</h3>
+              <pre className="overflow-x-auto rounded bg-white p-3 text-sm dark:bg-gray-900">
+                {`{
+  "profile": { "name": "Alicia" },
+  "obsoleteField": null
+}`}
+              </pre>
+              <p className="mt-2 text-sm">
+                Best when a service accepts simple object patches and you do not need item-level array operations.
+              </p>
+            </div>
           </div>
+
+          <ul className="list-disc space-y-2 pl-6">
+            <li>Choose JSON Patch when order, insert position, move operations, or optimistic tests matter.</li>
+            <li>Choose Merge Patch when a compact document is easier for humans or clients to produce.</li>
+            <li>Do not choose Merge Patch if explicit `null` is valid business data, because `null` also signals removal.</li>
+            <li>Do not choose Merge Patch for array edits unless replacing the entire array is acceptable.</li>
+          </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <FileDiff className="w-6 h-6 mr-2 text-red-500" />
-            <Settings className="w-6 h-6 mr-2 text-purple-500" />
-            Choosing the Right Tool/Approach
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <ListChecks className="mr-2 h-6 w-6 text-teal-500" />
+            Common Failure Modes and Buying Criteria
           </h2>
-          <p>The best approach depends on the context:</p>
-          <ul className="list-disc pl-6 space-y-2 my-4">
+          <p>
+            If you are evaluating a JSON formatter with diff features, these details matter more than a generic
+            side-by-side UI.
+          </p>
+          <ul className="my-4 list-disc space-y-2 pl-6">
             <li>
-              For simple comparison of small, consistently formatted files where you care about the exact text
-              representation (e.g., documenting a minor change in a code example), a{" "}
-              <strong>text diff on formatted JSON</strong> might suffice.
+              <span className="font-medium">Strict JSON vs. JSONC or JSON5:</span> comments and trailing commas may be
+              accepted by editors, but patch standards and most APIs expect valid JSON only.
             </li>
             <li>
-              For comparing configuration files, API responses, or large data structures where you want to understand
-              the actual data differences regardless of formatting or key order, a{" "}
-              <strong>structure-aware (semantic) diff tool</strong> is highly recommended. Many online and desktop JSON
-              tools offer this mode.
+              <span className="font-medium">Duplicate keys:</span> many parsers keep only the last value, which means a
+              diff may hide the original ambiguity instead of warning about it.
             </li>
             <li>
-              For developers, integrating a tool that offers both text and semantic diff views, perhaps side-by-side or
-              toggleable, provides the most flexibility.
+              <span className="font-medium">Path ignore rules:</span> excluding timestamps, generated IDs, and version
+              stamps can turn an unreadable diff into a useful one.
+            </li>
+            <li>
+              <span className="font-medium">Large-file behavior:</span> browser tools are convenient, but very large
+              payloads may require streaming or CLI-based workflows.
+            </li>
+            <li>
+              <span className="font-medium">Offline operation:</span> if the JSON contains secrets, prefer local
+              desktop, CLI, or offline browser tools instead of a remote upload service.
+            </li>
+            <li>
+              <span className="font-medium">Export format:</span> some tools only show visual differences, while others
+              can emit patch data you can store, test, or replay later.
             </li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <Code className="w-6 h-6 mr-2 text-blue-500" />
-            Conclusion
+          <h2 className="mb-4 flex items-center text-2xl font-semibold">
+            <Code className="mr-2 h-6 w-6 text-blue-500" />
+            Bottom Line
           </h2>
           <p>
-            Diffing JSON effectively goes beyond simple text comparison. While consistent formatting is a helpful first
-            step, structure-aware diffing is often necessary to cut through the noise and understand the true changes in
-            your data. Modern JSON diff tools increasingly offer semantic comparison capabilities, providing developers
-            with a powerful way to manage and review changes in JSON documents. Understanding the difference between
-            text-based and semantic diffing allows you to choose the right tool and interpret the results accurately,
-            saving time and preventing errors.
+            The best JSON diff workflow is usually a combination, not a single button. Use a formatter to normalize the
+            input, use text diff when exact file presentation matters, use semantic diff when logical data changes are
+            the real question, and use JSON Patch or Merge Patch only when you actually need a patch document. If your
+            documents contain arrays of objects, treat stable IDs and array matching as first-class evaluation criteria,
+            because that is what determines whether a diff will be clear or misleading.
           </p>
         </section>
       </div>

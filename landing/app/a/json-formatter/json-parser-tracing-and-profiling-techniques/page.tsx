@@ -1,22 +1,20 @@
 import type { Metadata } from "next";
 import {
-  Clock,
-  Microscope,
-  Target,
-  Code,
   AlertCircle,
-  Zap,
+  Clock,
+  Code,
   MemoryStick,
-  Binary,
-  GitFork,
-  Bug,
+  Microscope,
   ScrollText,
-} from "lucide-react"; // Only allowed icons
+  Target,
+  Zap,
+  Bug,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "JSON Parser Tracing and Profiling Techniques | Offline Tools",
   description:
-    "Learn how to trace and profile JSON parsers to understand their execution flow, identify bottlenecks, and debug performance issues.",
+    "Practical JSON parser tracing and profiling for JavaScript and Node.js, including structured trace events, performance.mark(), Chrome DevTools, and node --cpu-prof.",
 };
 
 export default function JsonParserTracingProfilingArticle() {
@@ -26,344 +24,291 @@ export default function JsonParserTracingProfilingArticle() {
 
       <div className="space-y-6">
         <p>
-          JSON parsing is a common operation in modern software, from web services communicating data to configuration
-          file readers. While built-in parsers like JavaScript&apos;s <code>JSON.parse</code> are highly optimized,
-          understanding the internal workings and performance characteristics of a parser is crucial when debugging
-          complex data structures, identifying performance bottlenecks, or working with custom parsing logic.
+          If you came here looking for JSON tracing, the practical goal is simple: see what the parser was doing at the
+          moment it failed or slowed down. In real projects that usually means combining a lightweight parser trace with
+          real timing data and a CPU profile, not just scattering <code>console.log()</code> calls through the code.
         </p>
         <p>
-          This article explores techniques for <strong>tracing</strong> and <strong>profiling</strong> JSON parsers,
-          providing insights into how they process data and where potential issues might lie.
+          That distinction matters because many &quot;JSON parsing&quot; issues are not parser issues at all. Time can be
+          spent reading bytes, decoding text, parsing, validating the result, normalizing fields, or mapping the parsed
+          object into app-specific structures. If you do not separate those phases, you can easily optimize the wrong
+          thing.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
           <Microscope className="w-6 h-6" />
-          What is Tracing?
+          What to Capture in a JSON Trace
         </h2>
         <p>
-          Tracing a parser involves following its execution path step-by-step as it consumes the input JSON string. This
-          is akin to walking through the code with a debugger, but often involves adding explicit output (like log
-          messages) to record the parser&apos;s state and actions at various points.
+          A useful trace is small, structured, and tied to exact parser state. For a custom parser, that means logging
+          parser rules and token boundaries. For built-in <code>JSON.parse()</code>, you normally trace the code around
+          the parse call because the native parser internals are not exposed as JavaScript frames.
         </p>
-        <p>Key information you might trace includes:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>Tokenization steps (what token was identified at which position).</li>
-          <li>
-            Function calls within the parser (e.g., entering <code>parseObject</code>, <code>parseArray</code>,{" "}
-            <code>parseValue</code>).
-          </li>
-          <li>
-            Consumption of specific tokens (e.g., consuming a <code>:</code>, <code>,</code>, <code>&#x7b;</code>,{" "}
-            <code>&#x7d;</code>, <code>[</code>, <code>]</code>).
-          </li>
-          <li>Values being parsed or added to the resulting data structure.</li>
-          <li>Detection of errors or unexpected input.</li>
-          <li>Depth of nested structures.</li>
+          <li>Input position: character offset, and line or column if you surface syntax errors to users.</li>
+          <li>Current rule or phase: tokenization, parseObject, parseArray, parseValue, validation, transform.</li>
+          <li>Nesting depth and parent container so deep-object failures are obvious.</li>
+          <li>Token or lookahead type rather than the full raw value when payloads are large or sensitive.</li>
+          <li>Timestamp or sequence number so the trace can be aligned with a profile later.</li>
         </ul>
-
-        <h3 className="text-xl font-semibold mt-6">Implementing Basic Tracing</h3>
         <p>
-          The simplest form of tracing is adding print statements (e.g., <code>console.log</code> in
-          JavaScript/TypeScript) at strategic points in your parser code.
+          Do not dump the full parsed value by default. Logging large strings and objects changes the workload you are
+          trying to measure and can leak private data into traces.
         </p>
 
+        <h3 className="text-xl font-semibold mt-6">Structured tracing beats console spam</h3>
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
             <Code className="w-5 h-5" />
-            Conceptual Tracing Example:
+            Minimal trace event model
           </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-              {`// Assuming a parser class structure similar to the recursive descent example
-class ParserWithTracing {
-  // ... existing parser properties and methods ...
+              {`type TraceEvent = {
+  phase: "enter" | "exit" | "token" | "error";
+  rule: string;
+  offset: number;
+  depth: number;
+  token?: string;
+  note?: string;
+  t: number;
+};
 
-  private eat(type: TokenType): void {
-    console.log(\`[TRACE] Consuming token: \${TokenType[this.currentToken.type]} (Expected: \${TokenType[type]})\`);
-    if (this.currentToken.type === type) {
-      this.currentToken = this.tokenizer.next();
-    } else {
-      console.error(\`[TRACE] ERROR: Unexpected token at position \${this.tokenizer.position - 1}: Expected \${TokenType[type]} but got \${TokenType[this.currentToken.type]}\`);
-      throw new Error(\`Unexpected token...\`);
-    }
+const trace: TraceEvent[] = [];
+
+function pushTrace(event: Omit<TraceEvent, "t">) {
+  if (!process.env.JSON_TRACE) return;
+  trace.push({ ...event, t: performance.now() });
+}
+
+class Parser {
+  parseValue() {
+    pushTrace({
+      phase: "enter",
+      rule: "parseValue",
+      offset: this.pos,
+      depth: this.depth,
+      token: this.peek().type,
+    });
+
+    // ... parse current token ...
+
+    pushTrace({
+      phase: "exit",
+      rule: "parseValue",
+      offset: this.pos,
+      depth: this.depth,
+    });
   }
-
-  private parseValue(): any {
-    console.log(\`[TRACE] Entering parseValue. Current token: \${TokenType[this.currentToken.type]}\`);
-    // ... switch statement based on token type ...
-    let parsedValue;
-    switch (this.currentToken.type) {
-        case TokenType.BraceOpen:
-            parsedValue = this.parseObject();
-            break;
-        // ... other cases ...
-        default:
-            console.error(\`[TRACE] ERROR: Unexpected token type for value: \${TokenType[this.currentToken.type]}\`);
-            throw new Error(\`Unexpected token type...\`);
-    }
-    console.log(\`[TRACE] Exiting parseValue. Parsed: \`, parsedValue);
-    return parsedValue;
-  }
-
-  private parseObject(): { [key: string]: any } {
-    console.log(\`[TRACE] Entering parseObject\`);
-    this.eat(TokenType.BraceOpen);
-    const obj: { [key: string]: any } = {};
-
-    while (this.currentToken.type === TokenType.String) {
-      const key = this.parseString() as string;
-      console.log(\`[TRACE] Parsed object key: "\${key}"\`);
-      this.eat(TokenType.Colon);
-      const value = this.parseValue(); // Recursive call
-      obj[key] = value;
-      console.log(\`[TRACE] Added key-value pair "\${key}": \`, value);
-
-      if (this.currentToken.type === TokenType.Comma) {
-        this.eat(TokenType.Comma);
-        console.log(\`[TRACE] Consumed comma after object pair\`);
-      } else if (this.currentToken.type !== TokenType.BraceClose) {
-        console.error(\`[TRACE] ERROR: Expected comma or closing brace in object.\`);
-        throw new Error("Expected comma or closing brace in object.");
-      }
-    }
-
-    this.eat(TokenType.BraceClose);
-    console.log(\`[TRACE] Exiting parseObject. Result: \`, obj);
-    return obj;
-  }
-
-  // ... similar tracing in parseArray, parseString, etc. ...
 }
 `}
             </pre>
           </div>
           <p className="mt-4">
-            By strategically placing <code>console.log</code> statements, you can generate a detailed log of the
-            parser&apos;s actions, which is invaluable for understanding exactly *how* a specific piece of JSON was
-            processed or why an error occurred.
-          </p>
-          <p>
-            For more complex parsers or production systems, consider using a dedicated logging library that allows
-            different log levels (DEBUG, INFO, ERROR) and structured logging formats (like JSON) for easier analysis.
+            Keep tracing behind a flag and prefer a ring buffer or sampling when the input can be large. A short,
+            sortable event stream is far more useful than thousands of ad-hoc log lines.
           </p>
         </div>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Clock className="w-6 h-6" />
-          What is Profiling?
+          <Bug className="w-6 h-6" />
+          Debugging a Single Failing Payload
         </h2>
         <p>
-          Profiling a parser focuses on its performance characteristics – how much time and memory it consumes. The goal
-          is to identify bottlenecks: which parts of the parsing process are the slowest or use the most resources.
+          If one JSON document fails and the others work, start with correctness before performance. Reproduce the exact
+          failure with a saved payload, then capture enough parser state to explain the error.
         </p>
-        <p>Key metrics for profiling include:</p>
         <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <Clock className="w-4 h-4" /> Execution Time:
-            </span>{" "}
-            How long does the overall parsing take? How much time is spent in specific functions (e.g., tokenization vs.
-            parsing structure)?
-          </li>
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <MemoryStick className="w-4 h-4" /> Memory Usage:
-            </span>{" "}
-            How much memory is allocated during parsing? Are there patterns that lead to excessive memory consumption or
-            potential leaks?
-          </li>
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <GitFork className="w-4 h-4" /> Function Call Counts:
-            </span>{" "}
-            How many times are key parsing functions called? (Useful for recursive parsers to see depth/frequency).
-          </li>
+          <li>Persist the original bytes or string so retries are identical.</li>
+          <li>Log the last successful token and the next small slice of input around the failure offset.</li>
+          <li>Include depth, current rule, and expected token in the error path.</li>
+          <li>Minimize the payload after you reproduce the failure so the trace stays readable.</li>
         </ul>
+        <p>
+          This gives you a much faster route to the root cause than opening a profiler too early.
+        </p>
 
-        <h3 className="text-xl font-semibold mt-6">Implementing Basic Profiling</h3>
-        <p>Similar to tracing, you can add instrumentation to your code to collect profiling data.</p>
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Clock className="w-6 h-6" />
+          Measure Parse Cost with High-Resolution Timers
+        </h2>
+        <p>
+          For a quick spot check, <code>console.time()</code> is fine. For repeatable work, use{" "}
+          <code>performance.mark()</code> and <code>performance.measure()</code> so the results can be inspected in
+          tooling instead of copied out of logs. In browsers, those marks appear on the Timings track in Chrome
+          DevTools. In Node.js, the same API is available via{" "}
+          <a
+            href="https://nodejs.org/api/perf_hooks.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 underline"
+          >
+            <code>node:perf_hooks</code>
+          </a>
+          .
+        </p>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
             <Zap className="w-5 h-5" />
-            Conceptual Profiling Example (Timing):
+            Measure parse-only time in Node.js
           </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
             <pre>
-              {`class ParserWithProfiling {
-  // ... existing parser properties and methods ...
+              {`import { performance, PerformanceObserver } from "node:perf_hooks";
 
-  parse(): any {
-    console.time("Overall JSON Parsing"); // Start timer for the whole process
-    const value = this.parseValue();
-    // ... check for EOF ...
-    console.timeEnd("Overall JSON Parsing"); // End timer
-    return value;
+const observer = new PerformanceObserver((list) => {
+  for (const entry of list.getEntriesByType("measure")) {
+    console.log(\`\${entry.name}: \${entry.duration.toFixed(2)} ms\`);
   }
+});
 
-  private parseObject(): { [key: string]: any } {
-    console.time("parseObject"); // Start timer for this function
-    this.eat(TokenType.BraceOpen);
-    const obj: { [key: string]: any } = {};
+observer.observe({ entryTypes: ["measure"] });
 
-    while (this.currentToken.type === TokenType.String) {
-      // ... parse key and value ...
-      const key = this.parseString() as string;
-      this.eat(TokenType.Colon);
-      console.time("parseValue_in_Object"); // Timer for nested value
-      const value = this.parseValue(); // Recursive call
-      console.timeEnd("parseValue_in_Object");
-      obj[key] = value;
-      // ... handle comma ...
-    }
-
-    this.eat(TokenType.BraceClose);
-    console.timeEnd("parseObject"); // End timer for this function
-    return obj;
-  }
-
-  // ... similar timing in parseArray, etc. ...
+export function parseJson(text: string) {
+  performance.mark("json-parse:start", { detail: { bytes: text.length } });
+  const value = JSON.parse(text);
+  performance.mark("json-parse:end");
+  performance.measure("json-parse", "json-parse:start", "json-parse:end");
+  performance.clearMarks("json-parse:start");
+  performance.clearMarks("json-parse:end");
+  return value;
 }
 `}
             </pre>
           </div>
           <p className="mt-4">
-            Using <code>console.time</code> and <code>console.timeEnd</code> provides a simple way to measure the
-            duration of specific code blocks. For more detailed timing, you can use the{" "}
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/API/Performance_API"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 underline"
-            >
-              Performance API
-            </a>{" "}
-            (<code>performance.mark</code>, <code>performance.measure</code>).
+            Once parse time is isolated, add separate marks for validation, coercion, or downstream transforms. That is
+            often where the real hotspot turns up.
           </p>
         </div>
+
+        <p>
+          If your parser pipeline is split across helpers, wrapping selected functions with Node&apos;s{" "}
+          <code>performance.timerify()</code> can be cleaner than hand-writing timers around every call site.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <Target className="w-6 h-6" />
+          Use a CPU Profile When Logs Stop Being Useful
+        </h2>
+        <p>
+          Timing tells you how long a phase took. A CPU profile tells you where the time went. That distinction matters
+          because <code>JSON.parse()</code> itself is native code, so flame charts often show the parse boundary plus
+          the JavaScript work right before or after it.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>
+            <span className="font-medium">In Chrome DevTools:</span> record a Performance trace, then inspect the Main
+            track, Call tree, and Bottom-up views. Your custom <code>performance.mark()</code> and{" "}
+            <code>performance.measure()</code> entries show up on the Timings track, which makes it much easier to
+            align code-level phases with actual CPU work.
+          </li>
+          <li>
+            <span className="font-medium">In Node.js:</span> current Node documentation marks{" "}
+            <code>--cpu-prof</code> and the related output flags as stable starting in v20.16.0 and v22.4.0, which
+            makes them the clean default for app-level CPU profiling.
+          </li>
+        </ul>
 
         <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
           <h4 className="text-lg font-medium flex items-center gap-2">
-            <Binary className="w-5 h-5" />
-            Conceptual Profiling Example (Call Counts):
+            <Code className="w-5 h-5" />
+            Current Node.js CPU profile workflow
           </h4>
           <div className="bg-white p-3 rounded dark:bg-gray-900 overflow-x-auto text-sm">
-            <pre>
-              {`class ParserWithCallCounting {
-  private callCounts: { [key: string]: number } = {};
-  // ... existing parser properties and methods ...
-
-  private trackCall(funcName: string): void {
-    this.callCounts[funcName] = (this.callCounts[funcName] || 0) + 1;
-  }
-
-  getCallCounts(): { [key: string]: number } {
-    return this.callCounts;
-  }
-
-  private parseValue(): any {
-    this.trackCall("parseValue");
-    // ... parsing logic ...
-    let parsedValue;
-    switch (this.currentToken.type) {
-      case TokenType.BraceOpen:
-        parsedValue = this.parseObject(); // parseObject also tracks itself
-        break;
-      // ... other cases ...
-    }
-    return parsedValue;
-  }
-
-  private parseObject(): { [key: string]: any } {
-    this.trackCall("parseObject");
-    // ... parsing logic ...
-    return {}; // return parsed object
-  }
-
-  // ... add trackCall to other methods like parseArray, parseString, etc. ...
-}
-
-// Usage:
-// const parser = new ParserWithCallCounting(tokenizer);
-// parser.parse();
-// console.log("Function Call Counts:", parser.getCallCounts());
-`}
-            </pre>
+            <pre>{`node --cpu-prof --cpu-prof-name 'json-parse.cpuprofile' script.mjs`}</pre>
           </div>
           <p className="mt-4">
-            Counting function calls can reveal how often different parser rules are invoked, which is particularly
-            insightful for deeply nested or complex JSON structures.
+            Open the generated <code>.cpuprofile</code> in Chrome DevTools or another compatible viewer. If the trace
+            is noisy, use DevTools ignore-list features to collapse framework or third-party scripts and keep the focus
+            on your parser path.
           </p>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6">Using External Tools</h3>
-        <p>Beyond manual instrumentation, professional profiling tools offer more detailed insights:</p>
+        <p>
+          Useful references:{" "}
+          <a
+            href="https://nodejs.org/api/cli.html#--cpu-prof"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 underline"
+          >
+            Node.js CLI profiling flags
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://developer.chrome.com/docs/devtools/performance/reference/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 underline"
+          >
+            Chrome DevTools Performance reference
+          </a>
+          .
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <MemoryStick className="w-6 h-6" />
+          Large Payload and Memory Checks
+        </h2>
+        <p>
+          Large JSON payloads are often limited by allocation pressure rather than pure parser CPU time. When the input
+          is big, track memory separately from time.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 my-4">
+          <li>Record payload size in bytes alongside every timing measurement.</li>
+          <li>Benchmark parse-only and parse-plus-transform separately.</li>
+          <li>Watch for many small parses that trigger frequent minor garbage collection.</li>
+          <li>For streaming or chunked workflows, trace chunk boundaries and partial object assembly explicitly.</li>
+        </ul>
+        <p>
+          If retained memory keeps growing after parsing finishes, switch from CPU profiling to heap investigation.
+          Otherwise you can waste time optimizing parse code that is not the leak.
+        </p>
+
+        <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
+          <AlertCircle className="w-6 h-6" />
+          Common Mistakes That Create Bad Data
+        </h2>
         <ul className="list-disc pl-6 space-y-2 my-4">
           <li>
-            <span className="font-medium">Browser Developer Tools:</span> The &quot;Performance&quot; and
-            &quot;Memory&quot; tabs in browsers like Chrome or Firefox are powerful for profiling client-side JavaScript
-            parsers (or Node.js code if debugging remotely). They provide flame charts, call trees, and memory heap
-            snapshots.
+            <span className="font-medium">Tracing every token in production:</span> the logging overhead can be larger
+            than the parser cost you are trying to measure.
           </li>
           <li>
-            <span className="font-medium">Node.js Profiler:</span> Node.js has built-in profiling capabilities (e.g.,
-            using <code>--prof</code> flag) that generate V8 profiler output, which can be analyzed using tools like{" "}
-            <code>&quot;0x&quot;</code> or browser devtools.
+            <span className="font-medium">Mixing I/O with parse time:</span> decompression, file reads, network waits,
+            and UTF-8 decoding should be separated unless that broader pipeline is the thing you are measuring.
           </li>
           <li>
-            <span className="font-medium">Language/Platform Specific Profilers:</span> Other languages have their own
-            profiling tools (e.g., VisualVM for Java, cProfile for Python).
+            <span className="font-medium">Comparing unlike payloads:</span> depth, key length, escape sequences, and
+            array widths all change the cost profile.
           </li>
           <li>
-            <span className="font-medium">Application Performance Monitoring (APM) Tools:</span> For production
-            environments, APM tools can provide distributed tracing and profiling across your system, including backend
-            JSON processing.
+            <span className="font-medium">Optimizing the wrong phase:</span> many slow &quot;JSON parsing&quot; reports
+            are really validation, coercion, or object-mapping problems.
           </li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 flex items-center gap-2">
-          <Target className="w-6 h-6" />
-          When to Use Tracing and Profiling
+          <ScrollText className="w-6 h-6" />
+          Practical Checklist
         </h2>
-        <p>These techniques are most useful in specific scenarios:</p>
-        <ul className="list-disc pl-6 space-y-2 my-4">
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <Bug className="w-4 h-4" /> Debugging Complex Errors:
-            </span>{" "}
-            When a parser fails on specific input, tracing shows the exact sequence of tokens and function calls leading
-            up to the error.
-          </li>
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <Zap className="w-4 h-4" /> Identifying Performance Bottlenecks:
-            </span>{" "}
-            Profiling highlights which parser functions or input patterns consume the most time or memory, guiding
-            optimization efforts.
-          </li>
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <ScrollText className="w-4 h-4" /> Understanding Parser Behavior:
-            </span>{" "}
-            For educational purposes or when working with unfamiliar parser code, tracing helps demystify the parsing
-            process.
-          </li>
-          <li>
-            <span className="font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" /> Handling Large or Malformed Data:
-            </span>{" "}
-            Profiling can reveal issues specific to handling very large JSON files or inputs that deviate from the
-            expected format.
-          </li>
-        </ul>
+        <div className="bg-gray-100 p-4 rounded-lg dark:bg-gray-800 my-4">
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Reproduce with a saved payload instead of live traffic.</li>
+            <li>Warm up once, then measure multiple runs.</li>
+            <li>Mark parse, validate, and transform as separate phases.</li>
+            <li>Capture one CPU profile for the slow case and one for a normal case.</li>
+            <li>Keep detailed parser traces only for failing or suspicious inputs.</li>
+          </ul>
+        </div>
 
         <h2 className="text-2xl font-semibold mt-8">Conclusion</h2>
         <p>
-          Tracing and profiling are essential skills for understanding and optimizing software, and JSON parsers are no
-          exception. By adding simple log statements or using built-in/external profiling tools, developers can gain
-          deep insights into how a parser behaves, diagnose errors efficiently, and pinpoint performance bottlenecks.
-          Whether you&apos;re working with a hand-written parser or debugging unexpected behavior in a library, these
-          techniques provide the visibility needed to tackle challenges effectively.
+          Use tracing when you need correctness: unexpected tokens, wrong nesting, or one payload that breaks the
+          parser. Use profiling when parsing succeeds but is too slow or memory-heavy. In most real investigations you
+          need both: tracing explains the path, profiling explains the cost.
         </p>
       </div>
     </>
