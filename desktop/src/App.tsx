@@ -14,9 +14,12 @@ import {
   Image,
   Lock,
   FileText,
-  Settings2
+  Settings2,
+  Crown,
+  Coffee,
+  ArrowUpRight
 } from 'lucide-react'
-import { Sidebar, Tool } from './components/sidebar'
+import { Sidebar, Tool, ThemeMode } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
 import { ToolPlaceholder } from './components/tool-placeholder'
 import { Base64Codec } from './components/base64-codec'
@@ -42,7 +45,6 @@ import { HtmlTextExtractor } from './components/html-text-extractor'
 import { BinaryBase64Codec } from './components/binary-base64-codec'
 import { TextToSlug } from './components/text-to-slug'
 import { FileGenerator } from './components/file-generator'
-import { Alert, AlertDescription, AlertTitle } from './components/ui/alert'
 import { Button } from './components/ui/button'
 import { AnalyticsSettings } from './components/analytics-settings'
 
@@ -70,8 +72,10 @@ const tools: Tool[] = [
   { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} />, tier: 'premium' },
   { id: 'file-generator', name: 'File Generator', icon: <FileText size={16} />, tier: 'premium' },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} />, tier: 'internal' },
-  { id: 'analytics-settings', name: 'Analytics', icon: <Settings2 size={16} />, tier: 'internal' },
+  { id: 'settings', name: 'Settings', icon: <Settings2 size={16} />, tier: 'internal' },
 ]
+
+const THEME_STORAGE_KEY = 'offlinetools.desktop.theme'
 
 /**
  * App component
@@ -81,6 +85,7 @@ function App() {
   const [selectedTool, setSelectedTool] = useState<string>('clipboard-detector')
   const [isDebugVisible, setIsDebugVisible] = useState<boolean>(false)
   const [premiumAlertTool, setPremiumAlertTool] = useState<string | null>(null)
+  const [themeMode, setThemeMode] = useState<ThemeMode>('light')
   const selectedToolMeta = tools.find(tool => tool.id === selectedTool)
 
   const captureAnalyticsEvent = (event: string, properties: Record<string, unknown>) => {
@@ -125,6 +130,18 @@ function App() {
     const blockedTool = tools.find((tool) => tool.id === toolId)
     setPremiumAlertTool(blockedTool?.name ?? 'This tool')
     captureSidebarToolClick(toolId, true)
+  }
+
+  const handleThemeModeChange = (mode: ThemeMode) => {
+    setThemeMode((previousMode) => {
+      if (previousMode !== mode) {
+        captureAnalyticsEvent('theme_mode_changed', {
+          previous_mode: previousMode,
+          new_mode: mode,
+        })
+      }
+      return mode
+    })
   }
 
   /**
@@ -192,6 +209,32 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(THEME_STORAGE_KEY)
+      if (saved === 'light' || saved === 'dark') {
+        setThemeMode(saved)
+      }
+    } catch (error) {
+      console.warn('Failed to read saved theme mode:', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (themeMode === 'dark') {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, themeMode)
+    } catch (error) {
+      console.warn('Failed to save theme mode:', error)
+    }
+  }, [themeMode])
+
   return (
     <main className="flex h-screen w-full overflow-hidden bg-background">
       <Sidebar 
@@ -199,30 +242,11 @@ function App() {
         selectedTool={selectedTool} 
         onSelectTool={handleSidebarToolClick}
         onLockedToolClick={handleLockedSidebarToolClick}
+        themeMode={themeMode}
+        onThemeModeChange={handleThemeModeChange}
       />
       
       <div className="flex-1 overflow-auto">
-        {premiumAlertTool ? (
-          <div className="px-4 pt-4">
-            <Alert variant="warning" className="border-yellow-400/50 bg-yellow-500/10 text-yellow-800">
-              <AlertTitle>Premium feature</AlertTitle>
-              <AlertDescription className="mt-2 flex items-center justify-between gap-3">
-                <span>
-                  <strong>{premiumAlertTool}</strong> is available in Premium. Upgrade to unlock this tool.
-                </span>
-                <span className="flex shrink-0 items-center gap-2">
-                  <Button size="sm" variant="outline" className="border-yellow-400/70 bg-transparent text-yellow-900 hover:bg-yellow-500/15" onClick={() => setPremiumAlertTool(null)}>
-                    Dismiss
-                  </Button>
-                  <Button size="sm" className="bg-yellow-600 text-white hover:bg-yellow-700" onClick={openPricingPage}>
-                    Upgrade
-                  </Button>
-                </span>
-              </AlertDescription>
-            </Alert>
-          </div>
-        ) : null}
-
         {selectedTool === 'clipboard-detector' ? (
           <ClipboardDetector className="min-h-full" onSelectTool={handleSelectTool} />
         ) : selectedTool === 'json-formatter' ? (
@@ -267,7 +291,7 @@ function App() {
           <FileGenerator className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
-        ) : selectedTool === 'analytics-settings' ? (
+        ) : selectedTool === 'settings' ? (
           <AnalyticsSettings className="min-h-full" />
         ) : (
           <ToolPlaceholder 
@@ -276,6 +300,40 @@ function App() {
           />
         )}
       </div>
+
+      {premiumAlertTool ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 px-4" onClick={() => setPremiumAlertTool(null)}>
+          <div
+            className="w-full max-w-2xl rounded-xl border border-border bg-card p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="flex items-center gap-2 text-2xl font-semibold text-foreground">
+              <Crown className="h-6 w-6 text-primary" />
+              Premium feature
+            </h2>
+            <p className="mt-3 text-base leading-7 text-foreground">
+              <strong>{premiumAlertTool}</strong> is available in Premium. Upgrade to unlock this tool.
+            </p>
+            <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+              <Coffee className="h-4 w-4" />
+              Upgrade helps fund several cups of coffee and AI agents for development.
+            </p>
+            <div className="mt-6 flex items-center justify-end gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setPremiumAlertTool(null)}
+              >
+                Dismiss
+              </Button>
+              <Button size="sm" onClick={openPricingPage}>
+                Upgrade
+                <ArrowUpRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       
 
       

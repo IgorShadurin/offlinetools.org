@@ -56,29 +56,27 @@ export function AnalyticsSettings({ className = "" }: AnalyticsSettingsProps) {
 
   return (
     <div className={`p-4 ${className}`}>
-      <Card className="max-w-2xl">
+      <h1 className="mb-4 text-2xl font-semibold">Settings</h1>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl">Analytics</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-start gap-3">
-            <Checkbox
-              id="analytics-enabled"
-              checked={enabled}
-              disabled={loading}
-              onCheckedChange={onToggle}
-            />
-            <div className="space-y-2">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="analytics-enabled"
+                checked={enabled}
+                disabled={loading}
+                onCheckedChange={onToggle}
+              />
               <Label htmlFor="analytics-enabled" className="text-sm font-medium">
                 Enable analytics
               </Label>
-              <p className="text-sm text-muted-foreground">
-                Helps improve OfflineTools by collecting anonymous usage events like app opens and tool selections.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                This setting is saved locally and persists across app restarts.
-              </p>
             </div>
+            <p className="text-sm text-muted-foreground">
+              Helps improve OfflineTools by collecting anonymous usage events like app opens and tool selections.
+            </p>
           </div>
           {error ? (
             <Alert variant="destructive">

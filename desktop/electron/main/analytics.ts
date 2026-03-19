@@ -240,9 +240,28 @@ export function setupAnalyticsIpcHandlers() {
     return desktopAnalytics.isEnabled()
   })
 
-  ipcMain.handle('analytics:set-enabled', (_event, enabled: boolean) => {
+  ipcMain.handle('analytics:set-enabled', async (_event, enabled: boolean) => {
     const safeEnabled = !!enabled
-    desktopAnalytics.setEnabled(safeEnabled)
-    return desktopAnalytics.isEnabled()
+    const previousEnabled = desktopAnalytics.isEnabled()
+
+    if (previousEnabled === safeEnabled) {
+      return previousEnabled
+    }
+
+    if (safeEnabled) {
+      desktopAnalytics.setEnabled(true)
+      await desktopAnalytics.capture('analytics_toggle_changed', {
+        enabled: true,
+        previous_enabled: previousEnabled,
+      })
+      return true
+    }
+
+    await desktopAnalytics.capture('analytics_toggle_changed', {
+      enabled: false,
+      previous_enabled: previousEnabled,
+    })
+    desktopAnalytics.setEnabled(false)
+    return false
   })
 }

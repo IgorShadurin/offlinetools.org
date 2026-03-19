@@ -44,6 +44,7 @@ let win: BrowserWindow | null = null
 let tray: Tray | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
+const appIconPath = path.join(process.env.VITE_PUBLIC, 'logo-512.png')
 
 /**
  * Set up IPC handlers for clipboard operations
@@ -112,7 +113,7 @@ function setupClipboardHandlers() {
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    icon: appIconPath,
     width: 1270,
     height: 640,
     webPreferences: {
@@ -426,6 +427,10 @@ function createApplicationMenu() {
 }
 
 app.whenReady().then(() => {
+  if (process.platform === 'darwin' && app.dock) {
+    app.dock.setIcon(appIconPath)
+  }
+
   // Set up clipboard handlers
   setupClipboardHandlers()
   setupAnalyticsIpcHandlers()

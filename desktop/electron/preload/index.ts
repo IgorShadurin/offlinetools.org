@@ -200,20 +200,18 @@ const safeDOM = {
  * https://matejkustec.github.io/SpinThatShit
  */
 function useLoading() {
-  const className = `loaders-css__square-spin`
+  const className = `loaders-css__brand-logo`
   const styleContent = `
-@keyframes square-spin {
-  25% { transform: perspective(100px) rotateX(180deg) rotateY(0); }
-  50% { transform: perspective(100px) rotateX(180deg) rotateY(180deg); }
-  75% { transform: perspective(100px) rotateX(0) rotateY(180deg); }
-  100% { transform: perspective(100px) rotateX(0) rotateY(0); }
+@keyframes logo-pulse {
+  0% { transform: scale(0.97); opacity: 0.9; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.97); opacity: 0.9; }
 }
-.${className} > div {
-  animation-fill-mode: both;
-  width: 50px;
-  height: 50px;
-  background: #fff;
-  animation: square-spin 3s 0s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
+.${className} > img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  animation: logo-pulse 1.7s ease-in-out infinite;
 }
 .app-loading-wrap {
   position: fixed;
@@ -224,7 +222,7 @@ function useLoading() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #282c34;
+  background: #ffffff;
   z-index: 9;
 }
     `
@@ -234,7 +232,7 @@ function useLoading() {
   oStyle.id = 'app-loading-style'
   oStyle.innerHTML = styleContent
   oDiv.className = 'app-loading-wrap'
-  oDiv.innerHTML = `<div class="${className}"><div></div></div>`
+  oDiv.innerHTML = `<div class="${className}"><img src="./logo-512.png" alt="OfflineTools logo" /></div>`
 
   return {
     appendLoading() {

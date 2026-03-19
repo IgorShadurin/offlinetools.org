@@ -94,7 +94,7 @@ export function JsonFormatter({ className }: JsonFormatterProps) {
             <div className="flex gap-2">
               <Button
                 size="sm"
-                className="bg-emerald-500 hover:bg-emerald-600 font-normal py-1 px-4 rounded-md"
+                className="font-normal py-1 px-4 rounded-md"
                 onClick={handleFormatJson}
               >
                 Format JSON

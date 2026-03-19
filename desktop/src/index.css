@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --brand-primary: oklch(0.723 0.219 149.579);
     --background: #ffffff;
     --foreground: #1f2937;
     
@@ -13,7 +14,7 @@
     --popover: #ffffff;
     --popover-foreground: #1f2937;
     
-    --primary: #10b981;
+    --primary: var(--brand-primary);
     --primary-foreground: #f9fafb;
     
     --secondary: #f3f4f6;
@@ -30,12 +31,13 @@
     
     --border: #e5e7eb;
     --input: #e5e7eb;
-    --ring: #10b981;
+    --ring: var(--brand-primary);
     
     --radius: 0.5rem;
   }
   
   .dark {
+    --brand-primary: oklch(0.723 0.219 149.579);
     --background: #1f2937;
     --foreground: #f9fafb;
     
@@ -45,7 +47,7 @@
     --popover: #111827;
     --popover-foreground: #f9fafb;
     
-    --primary: #10b981;
+    --primary: var(--brand-primary);
     --primary-foreground: #f9fafb;
     
     --secondary: #374151;
@@ -62,7 +64,7 @@
     
     --border: #374151;
     --input: #374151;
-    --ring: #10b981;
+    --ring: var(--brand-primary);
   }
 }
 

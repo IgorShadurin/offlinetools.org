@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { RefreshCw } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface UpdatesPageProps {
@@ -124,8 +125,10 @@ export function UpdatesPage({ className = "" }: UpdatesPageProps) {
 
   return (
     <div className={`p-4 flex flex-col h-full ${className}`}>
+      <h1 className="mb-4 text-2xl font-semibold">Updates</h1>
       <div className="mb-4 flex items-center gap-2 flex-wrap">
         <Button onClick={checkForUpdates} disabled={checking}>
+          <RefreshCw className={`h-4 w-4 ${checking ? 'animate-spin' : ''}`} />
           {checking ? 'Checking...' : 'Check for Updates'}
         </Button>
         {updateInfo && downloadUrl && (
