@@ -40,12 +40,29 @@ export function bytesToHex(bytes: Uint8Array): string {
     .join("");
 }
 
+type BufferFromFn = (
+  value: Uint8Array | string,
+  encoding?: string
+) => Uint8Array & { toString: (encoding?: string) => string };
+
+function getBufferFromFn(): BufferFromFn | null {
+  const maybeBuffer = (globalThis as Record<string, unknown>).Buffer;
+  if (!maybeBuffer || (typeof maybeBuffer !== "object" && typeof maybeBuffer !== "function")) {
+    return null;
+  }
+
+  const maybeFrom = (maybeBuffer as { from?: unknown }).from;
+  if (typeof maybeFrom !== "function") {
+    return null;
+  }
+
+  return maybeFrom as BufferFromFn;
+}
+
 function toBase64Url(bytes: Uint8Array): string {
-  const maybeBuffer = (globalThis as any).Buffer as
-    | { from: (value: Uint8Array | string, encoding?: string) => { toString: (encoding?: string) => string } }
-    | undefined;
-  if (maybeBuffer) {
-    return maybeBuffer.from(bytes).toString("base64url");
+  const bufferFrom = getBufferFromFn();
+  if (bufferFrom) {
+    return bufferFrom(bytes).toString("base64url");
   }
 
   const chunkSize = 0x8000;
@@ -60,11 +77,9 @@ function toBase64Url(bytes: Uint8Array): string {
 function fromBase64Url(value: string): Uint8Array {
   const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
 
-  const maybeBuffer = (globalThis as any).Buffer as
-    | { from: (value: Uint8Array | string, encoding?: string) => Uint8Array }
-    | undefined;
-  if (maybeBuffer) {
-    return new Uint8Array(maybeBuffer.from(normalized, "base64"));
+  const bufferFrom = getBufferFromFn();
+  if (bufferFrom) {
+    return new Uint8Array(bufferFrom(normalized, "base64"));
   }
 
   const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
