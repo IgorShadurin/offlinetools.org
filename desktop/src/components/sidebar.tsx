@@ -20,6 +20,7 @@ interface SidebarProps {
   tools: Tool[]
   selectedTool: string
   onSelectTool: (toolId: string) => void
+  onLockedToolClick?: (toolId: string) => void
 }
 
 /**
@@ -27,7 +28,7 @@ interface SidebarProps {
  * @param props - Sidebar component props
  * @returns Sidebar component
  */
-export function Sidebar({ tools, selectedTool, onSelectTool }: SidebarProps) {
+export function Sidebar({ tools, selectedTool, onSelectTool, onLockedToolClick }: SidebarProps) {
   const [query, setQuery] = useState("")
 
   const filteredTools = useMemo(() => {
@@ -61,11 +62,21 @@ export function Sidebar({ tools, selectedTool, onSelectTool }: SidebarProps) {
           return (
             <button
               key={tool.id}
-              onClick={() => onSelectTool(tool.id)}
+              onClick={() => {
+                if (isLocked) {
+                  onLockedToolClick?.(tool.id)
+                  return
+                }
+                onSelectTool(tool.id)
+              }}
+              aria-disabled={isLocked}
               className={cn(
                 "flex items-center w-full px-4 py-3 text-sm font-medium transition-colors",
-                "hover:bg-muted/50 whitespace-nowrap overflow-hidden text-ellipsis",
-                selectedTool === tool.id
+                "whitespace-nowrap overflow-hidden text-ellipsis",
+                isLocked
+                  ? "text-muted-foreground/70 border-l-2 border-l-transparent cursor-not-allowed opacity-70 bg-transparent"
+                  : "hover:bg-muted/50",
+                !isLocked && selectedTool === tool.id
                   ? "bg-primary/10 text-primary border-l-2 border-l-primary"
                   : "text-foreground border-l-2 border-l-transparent",
               )}

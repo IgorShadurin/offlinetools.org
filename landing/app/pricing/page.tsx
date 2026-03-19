@@ -50,7 +50,7 @@ export default function PricingPage() {
                     "All tools included with lifetime access",
                     "1 year of free updates",
                     "Works on macOS, Windows & Linux (offline)",
-                    "No data collection or hidden costs",
+                    "No hidden costs",
                   ].map((feature) => (
                     <li key={feature} className="flex items-center">
                       <Check className="h-5 w-5 flex-shrink-0 text-green-500" />

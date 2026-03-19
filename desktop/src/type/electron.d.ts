@@ -7,6 +7,9 @@ interface IpcRenderer {
   once(channel: string, listener: (...args: any[]) => void): void;
   send(channel: string, ...args: any[]): void;
   invoke(channel: 'get-app-version'): Promise<string>;
+  invoke(channel: 'analytics:capture', payload: { event: string; properties?: Record<string, unknown> }): Promise<boolean>;
+  invoke(channel: 'analytics:get-enabled'): Promise<boolean>;
+  invoke(channel: 'analytics:set-enabled', enabled: boolean): Promise<boolean>;
   invoke(channel: string, ...args: any[]): Promise<any>;
   removeAllListeners(channel: string): void;
 }

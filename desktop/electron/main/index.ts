@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
 import { update, stopAutoUpdateChecker } from './update'
+import { desktopAnalytics, setupAnalyticsIpcHandlers } from './analytics'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -427,6 +428,13 @@ function createApplicationMenu() {
 app.whenReady().then(() => {
   // Set up clipboard handlers
   setupClipboardHandlers()
+  setupAnalyticsIpcHandlers()
+  desktopAnalytics.initialize()
+  void desktopAnalytics.capture('desktop_app_opened', {
+    app_version: app.getVersion(),
+    platform: process.platform,
+    arch: process.arch,
+  })
   
   createWindow()
   createTray()
@@ -437,6 +445,24 @@ app.on('window-all-closed', () => {
   win = null
   stopAutoUpdateChecker()
   if (process.platform !== 'darwin') app.quit()
+})
+
+let isAnalyticsShutdownInProgress = false
+app.on('before-quit', (event) => {
+  if (isAnalyticsShutdownInProgress) {
+    return
+  }
+
+  event.preventDefault()
+  isAnalyticsShutdownInProgress = true
+
+  void desktopAnalytics.shutdown()
+    .catch((error) => {
+      console.error('Failed to flush analytics on quit:', error)
+    })
+    .finally(() => {
+      app.quit()
+    })
 })
 
 app.on('second-instance', () => {

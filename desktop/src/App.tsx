@@ -13,7 +13,8 @@ import {
   QrCode,
   Image,
   Lock,
-  FileText
+  FileText,
+  Settings2
 } from 'lucide-react'
 import { Sidebar, Tool } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -41,6 +42,9 @@ import { HtmlTextExtractor } from './components/html-text-extractor'
 import { BinaryBase64Codec } from './components/binary-base64-codec'
 import { TextToSlug } from './components/text-to-slug'
 import { FileGenerator } from './components/file-generator'
+import { Alert, AlertDescription, AlertTitle } from './components/ui/alert'
+import { Button } from './components/ui/button'
+import { AnalyticsSettings } from './components/analytics-settings'
 
 // List of tools
 const tools: Tool[] = [
@@ -66,6 +70,7 @@ const tools: Tool[] = [
   { id: 'data-encryptor', name: 'Data Encryptor', icon: <Lock size={16} />, tier: 'premium' },
   { id: 'file-generator', name: 'File Generator', icon: <FileText size={16} />, tier: 'premium' },
   { id: 'updates', name: 'Updates', icon: <RefreshCw size={16} />, tier: 'internal' },
+  { id: 'analytics-settings', name: 'Analytics', icon: <Settings2 size={16} />, tier: 'internal' },
 ]
 
 /**
@@ -75,8 +80,52 @@ const tools: Tool[] = [
 function App() {
   const [selectedTool, setSelectedTool] = useState<string>('clipboard-detector')
   const [isDebugVisible, setIsDebugVisible] = useState<boolean>(false)
+  const [premiumAlertTool, setPremiumAlertTool] = useState<string | null>(null)
   const selectedToolMeta = tools.find(tool => tool.id === selectedTool)
-  const isPremiumLocked = selectedToolMeta?.tier === 'premium'
+
+  const captureAnalyticsEvent = (event: string, properties: Record<string, unknown>) => {
+    if (!window.electron?.ipcRenderer) {
+      return
+    }
+
+    void window.electron.ipcRenderer
+      .invoke('analytics:capture', { event, properties })
+      .catch((error) => {
+        console.warn('Failed to capture analytics event:', error)
+      })
+  }
+
+  const openPricingPage = () => {
+    if (!window.electron?.ipcRenderer) {
+      return
+    }
+
+    void window.electron.ipcRenderer.invoke('open-external-url', 'https://offlinetools.org/pricing')
+      .catch((error) => {
+        console.warn('Failed to open pricing page:', error)
+      })
+  }
+
+  const captureSidebarToolClick = (toolId: string, isBlocked: boolean) => {
+    const clickedTool = tools.find((tool) => tool.id === toolId)
+    captureAnalyticsEvent('desktop_tool_clicked', {
+      tool_id: toolId,
+      tool_tier: clickedTool?.tier ?? 'unknown',
+      is_blocked: isBlocked,
+    })
+  }
+
+  const handleSidebarToolClick = (toolId: string) => {
+    setPremiumAlertTool(null)
+    setSelectedTool(toolId)
+    captureSidebarToolClick(toolId, false)
+  }
+
+  const handleLockedSidebarToolClick = (toolId: string) => {
+    const blockedTool = tools.find((tool) => tool.id === toolId)
+    setPremiumAlertTool(blockedTool?.name ?? 'This tool')
+    captureSidebarToolClick(toolId, true)
+  }
 
   /**
    * Handle selecting a tool from clipboard detector suggestions
@@ -148,17 +197,33 @@ function App() {
       <Sidebar 
         tools={tools} 
         selectedTool={selectedTool} 
-        onSelectTool={setSelectedTool} 
+        onSelectTool={handleSidebarToolClick}
+        onLockedToolClick={handleLockedSidebarToolClick}
       />
       
       <div className="flex-1 overflow-auto">
-        {isPremiumLocked ? (
-          <ToolPlaceholder
-            title={selectedToolMeta?.name || ''}
-            variant="premium"
-            className="min-h-full"
-          />
-        ) : selectedTool === 'clipboard-detector' ? (
+        {premiumAlertTool ? (
+          <div className="px-4 pt-4">
+            <Alert variant="warning" className="border-yellow-400/50 bg-yellow-500/10 text-yellow-800">
+              <AlertTitle>Premium feature</AlertTitle>
+              <AlertDescription className="mt-2 flex items-center justify-between gap-3">
+                <span>
+                  <strong>{premiumAlertTool}</strong> is available in Premium. Upgrade to unlock this tool.
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <Button size="sm" variant="outline" className="border-yellow-400/70 bg-transparent text-yellow-900 hover:bg-yellow-500/15" onClick={() => setPremiumAlertTool(null)}>
+                    Dismiss
+                  </Button>
+                  <Button size="sm" className="bg-yellow-600 text-white hover:bg-yellow-700" onClick={openPricingPage}>
+                    Upgrade
+                  </Button>
+                </span>
+              </AlertDescription>
+            </Alert>
+          </div>
+        ) : null}
+
+        {selectedTool === 'clipboard-detector' ? (
           <ClipboardDetector className="min-h-full" onSelectTool={handleSelectTool} />
         ) : selectedTool === 'json-formatter' ? (
           <JsonFormatter className="min-h-full" />
@@ -202,6 +267,8 @@ function App() {
           <FileGenerator className="min-h-full" />
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
+        ) : selectedTool === 'analytics-settings' ? (
+          <AnalyticsSettings className="min-h-full" />
         ) : (
           <ToolPlaceholder 
             title={selectedToolMeta?.name || ''}
