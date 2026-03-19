@@ -184,7 +184,8 @@ export function BinaryBase64Codec({ className = "" }: BinaryBase64CodecProps) {
   const handleDownload = () => {
     if (!binaryData) return;
 
-    const blob = new Blob([binaryData], { type: fileType || "application/octet-stream" });
+    const blobBytes = Uint8Array.from(binaryData);
+    const blob = new Blob([blobBytes], { type: fileType || "application/octet-stream" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import type { CheckedState } from "@radix-ui/react-checkbox"
 import { BarChart3, CheckCircle2, ExternalLink, KeyRound, Settings2, ShoppingCart, Trash2 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
@@ -70,8 +69,8 @@ export function AnalyticsSettings({
     setLicenseKey(storedLicense.key)
   }, [storedLicense])
 
-  const onToggle = async (checked: CheckedState) => {
-    const nextValue = checked === true
+  const onToggle = async (checked: boolean) => {
+    const nextValue = checked
     setAnalyticsError(null)
     const previous = enabled
     setEnabled(nextValue)

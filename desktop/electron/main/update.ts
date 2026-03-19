@@ -208,11 +208,6 @@ function bindUpdaterEvents() {
     }, 1200)
   })
 
-  autoUpdater.on('before-quit-for-update', () => {
-    quitAndInstallRequested = true
-    logUpdate('before-quit-for-update')
-  })
-
   autoUpdater.on('error', (error: Error) => {
     checkInFlight = false
     downloadInFlight = false
