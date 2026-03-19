@@ -1,7 +1,24 @@
-import { getPublicKeyAsync, signAsync, verifyAsync } from "@noble/ed25519";
-
 const LICENSE_PREFIX = "OT1";
 const LICENSE_MESSAGE_PREFIX = "offlinetools-license-v1";
+
+type Ed25519Api = Pick<
+  typeof import("@noble/ed25519"),
+  "getPublicKeyAsync" | "signAsync" | "verifyAsync"
+>;
+
+let ed25519Promise: Promise<Ed25519Api> | null = null;
+
+function loadEd25519(): Promise<Ed25519Api> {
+  if (!ed25519Promise) {
+    ed25519Promise = import("@noble/ed25519").then(({ getPublicKeyAsync, signAsync, verifyAsync }) => ({
+      getPublicKeyAsync,
+      signAsync,
+      verifyAsync,
+    }));
+  }
+
+  return ed25519Promise;
+}
 
 export interface ParsedLicenseKey {
   prefix: string;
@@ -115,6 +132,7 @@ export function parseLicenseKey(licenseKey: string): ParsedLicenseKey {
 }
 
 export async function generateLicenseKey(email: string, privateKeyHex: string): Promise<string> {
+  const { signAsync } = await loadEd25519();
   const normalizedEmail = normalizeLicenseEmail(email);
   if (!normalizedEmail) {
     throw new Error("Email is required");
@@ -134,6 +152,7 @@ export async function generateLicenseKey(email: string, privateKeyHex: string): 
 
 export async function verifyLicenseKey(email: string, licenseKey: string, publicKeyHex: string): Promise<boolean> {
   try {
+    const { verifyAsync } = await loadEd25519();
     const normalizedEmail = normalizeLicenseEmail(email);
     if (!normalizedEmail) {
       return false;
@@ -153,6 +172,7 @@ export async function verifyLicenseKey(email: string, licenseKey: string, public
 }
 
 export async function derivePublicKeyHex(privateKeyHex: string): Promise<string> {
+  const { getPublicKeyAsync } = await loadEd25519();
   const privateKey = hexToBytes(privateKeyHex);
   if (privateKey.length !== 32) {
     throw new Error("Private key must be 32 bytes (64 hex chars)");
