@@ -186,15 +186,17 @@ export function AnalyticsSettings({
               ) : null}
             </div>
 
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-              onClick={openPricingPage}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Need a license? Buy on offlinetools.org
-              <ExternalLink className="h-3.5 w-3.5" />
-            </button>
+            {!isPremiumUnlocked ? (
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                onClick={openPricingPage}
+              >
+                <ShoppingCart className="h-4 w-4" />
+                Need a license? Buy on offlinetools.org
+                <ExternalLink className="h-3.5 w-3.5" />
+              </button>
+            ) : null}
 
             {isPremiumUnlocked ? (
               <p className="text-sm text-green-600">Premium is unlocked on this device.</p>
