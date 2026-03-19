@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { LockKeyhole, Moon, Search, Sun } from "lucide-react"
+import { LockKeyhole, Moon, Search, Star, Sun } from "lucide-react"
 import { cn } from "../lib/utils"
 
 /**
@@ -23,6 +23,9 @@ interface SidebarProps {
   selectedTool: string
   onSelectTool: (toolId: string) => void
   onLockedToolClick?: (toolId: string) => void
+  isPremiumUnlocked: boolean
+  favoriteToolIds: string[]
+  onToggleFavorite: (toolId: string) => void
   themeMode: ThemeMode
   onThemeModeChange: (mode: ThemeMode) => void
 }
@@ -37,20 +40,36 @@ export function Sidebar({
   selectedTool,
   onSelectTool,
   onLockedToolClick,
+  isPremiumUnlocked,
+  favoriteToolIds,
+  onToggleFavorite,
   themeMode,
   onThemeModeChange,
 }: SidebarProps) {
   const [query, setQuery] = useState("")
 
+  const favoriteSet = useMemo(() => new Set(favoriteToolIds), [favoriteToolIds])
+
   const filteredTools = useMemo(() => {
     const lowerQuery = query.toLowerCase()
-    if (!lowerQuery) {
-      return tools
-    }
-    return tools.filter((tool) =>
-      tool.name.toLowerCase().includes(lowerQuery),
-    )
-  }, [tools, query])
+    const base = !lowerQuery
+      ? tools
+      : tools.filter((tool) => tool.name.toLowerCase().includes(lowerQuery))
+
+    return base
+      .map((tool, index) => ({
+        tool,
+        index,
+        isFavorite: favoriteSet.has(tool.id),
+      }))
+      .sort((a, b) => {
+        if (a.isFavorite !== b.isFavorite) {
+          return a.isFavorite ? -1 : 1
+        }
+        return a.index - b.index
+      })
+      .map((entry) => entry.tool)
+  }, [tools, query, favoriteSet])
 
   return (
     <div className="w-64 border-r border-border/80 bg-background text-card-foreground h-screen overflow-y-auto shrink-0">
@@ -100,18 +119,11 @@ export function Sidebar({
       </div>
       <div className="py-2">
         {filteredTools.map((tool) => {
-          const isLocked = tool.tier === "premium"
+          const isLocked = tool.tier === "premium" && !isPremiumUnlocked
+          const isFavorite = favoriteSet.has(tool.id)
           return (
-            <button
+            <div
               key={tool.id}
-              onClick={() => {
-                if (isLocked) {
-                  onLockedToolClick?.(tool.id)
-                  return
-                }
-                onSelectTool(tool.id)
-              }}
-              aria-disabled={isLocked}
               className={cn(
                 "flex items-center w-full px-4 py-3 text-left text-sm font-medium transition-colors",
                 "whitespace-nowrap overflow-hidden text-ellipsis",
@@ -123,14 +135,47 @@ export function Sidebar({
                   : "text-foreground border-l-2 border-l-transparent",
               )}
             >
-              <span className="mr-3 flex h-5 w-5 items-center justify-center">
-                {tool.icon}
-              </span>
-              <span className="min-w-0 flex-1 truncate">{tool.name}</span>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onToggleFavorite(tool.id)
+                }}
+                className={cn(
+                  "mr-2 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm transition-colors",
+                  isFavorite
+                    ? "text-primary"
+                    : "text-muted-foreground/70 hover:text-foreground",
+                )}
+                aria-label={isFavorite ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`}
+                title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              >
+                <Star className={cn("h-3.5 w-3.5", isFavorite ? "fill-current" : "")} />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (isLocked) {
+                    onLockedToolClick?.(tool.id)
+                    return
+                  }
+                  onSelectTool(tool.id)
+                }}
+                aria-disabled={isLocked}
+                className={cn(
+                  "flex min-w-0 flex-1 items-center text-left",
+                  isLocked ? "cursor-not-allowed" : "cursor-pointer",
+                )}
+              >
+                <span className="mr-3 flex h-5 w-5 items-center justify-center">
+                  {tool.icon}
+                </span>
+                <span className="min-w-0 flex-1 truncate">{tool.name}</span>
+              </button>
               {isLocked ? (
-                <LockKeyhole className="ml-3 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                <LockKeyhole className="ml-3 h-3.5 w-3.5 shrink-0 text-muted-foreground pointer-events-none" />
               ) : null}
-            </button>
+            </div>
           )
         })}
       </div>

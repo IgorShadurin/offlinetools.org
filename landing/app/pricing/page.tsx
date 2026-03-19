@@ -1,26 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { PageLayout } from "@/components/page-layout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, ShoppingCart } from "lucide-react";
+import { Check, Loader2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { FeedbackButton } from "@/components/feedback-button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-/**
- * Pricing page component
- */
 export default function PricingPage() {
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  const [isCanceled, setIsCanceled] = useState(false);
 
-  /**
-   * Handles Buy Now button click to open feedback modal with pre-filled message
-   */
-  const handleBuyNowClick = () => {
-    setIsFeedbackOpen(true);
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    setIsCanceled(params.get("canceled") === "1");
+  }, []);
+
+  const handleBuyNowClick = async () => {
+    setErrorText("");
+
+    if (!email.trim()) {
+      setErrorText("Please enter your email before checkout.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/payments/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result?.url) {
+        throw new Error(result?.error || "Failed to initialize Stripe checkout.");
+      }
+
+      window.location.href = result.url as string;
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : "Failed to initialize checkout.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,7 +77,7 @@ export default function PricingPage() {
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-6">
+              <CardContent className="pt-6 space-y-4">
                 <ul className="space-y-3">
                   {[
                     "All tools included with lifetime access",
@@ -58,11 +91,28 @@ export default function PricingPage() {
                     </li>
                   ))}
                 </ul>
+
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="checkout-email">Email for your license key</Label>
+                  <Input
+                    id="checkout-email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                  />
+                </div>
+
+                {isCanceled ? (
+                  <p className="text-sm text-amber-700">Checkout was canceled. You can try again any time.</p>
+                ) : null}
+                {errorText ? <p className="text-sm text-red-600">{errorText}</p> : null}
               </CardContent>
 
               <CardFooter className="flex justify-center pb-8">
-                <Button size="lg" onClick={handleBuyNowClick} className="flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5" /> Buy Now
+                <Button size="lg" onClick={handleBuyNowClick} disabled={isLoading} className="flex items-center gap-2">
+                  {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShoppingCart className="h-5 w-5" />} Buy Now
                 </Button>
               </CardFooter>
             </Card>
@@ -115,16 +165,6 @@ export default function PricingPage() {
           </div>
         </Container>
       </Section>
-
-      {/* Feedback Modal with pre-filled message */}
-      <FeedbackButton
-        showButton={false}
-        isOpen={isFeedbackOpen}
-        onOpenChange={setIsFeedbackOpen}
-        defaultValues={{
-          message: "I want to buy your product, please contact me by email above.",
-        }}
-      />
     </PageLayout>
   );
 }

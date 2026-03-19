@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "org.offlinetools.app",
+  "productName": "OfflineTools",
   "asar": true,
   "directories": {
     "output": "release/${version}"
@@ -13,9 +14,17 @@
   "mac": {
     "artifactName": "${productName}_${arch}.${ext}",
     "icon": "resources/icons/icon.icns",
+    "extendInfo": {
+      "CFBundleName": "OfflineTools",
+      "CFBundleDisplayName": "OfflineTools"
+    },
     "target": [
       {
         "target": "dmg",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "zip",
         "arch": ["x64", "arm64"]
       }
     ],

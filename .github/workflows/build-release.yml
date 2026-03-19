@@ -109,6 +109,10 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+      - name: Validate updater artifacts
+        run: |
+          node desktop/scripts/verify-updater-assets.mjs release-artifacts
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -126,8 +130,9 @@ jobs:
             **macOS:**
             - Intel (x64): OfflineTools_x64.dmg
             - Apple Silicon (arm64): OfflineTools_arm64.dmg
+            - Auto-update package: OfflineTools_*.zip (+ latest-mac.yml)
             
-            **Linux:** OfflineTools.AppImage or OfflineTools_arm64.deb
+            **Linux:** OfflineTools_*.AppImage (+ latest-linux.yml)
           files: release-artifacts/**/*
           draft: false
           prerelease: false

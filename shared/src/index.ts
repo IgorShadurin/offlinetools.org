@@ -130,6 +130,9 @@ export * from './steganography';
 // Export Online Timer
 export * from './online-timer';
 
+// Export License utilities
+export * from './license';
+
 // Export Timezone Converter
 export * from './timezone-converter';
 

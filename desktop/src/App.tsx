@@ -17,7 +17,8 @@ import {
   Settings2,
   Crown,
   Coffee,
-  ArrowUpRight
+  ArrowUpRight,
+  KeyRound,
 } from 'lucide-react'
 import { Sidebar, Tool, ThemeMode } from './components/sidebar'
 import { JsonFormatter } from './components/json-formatter'
@@ -47,6 +48,13 @@ import { TextToSlug } from './components/text-to-slug'
 import { FileGenerator } from './components/file-generator'
 import { Button } from './components/ui/button'
 import { AnalyticsSettings } from './components/analytics-settings'
+import {
+  clearStoredLicense,
+  readStoredLicense,
+  saveStoredLicense,
+  validateLicense,
+  type StoredLicense,
+} from './lib/license'
 
 // List of tools
 const tools: Tool[] = [
@@ -76,6 +84,7 @@ const tools: Tool[] = [
 ]
 
 const THEME_STORAGE_KEY = 'offlinetools.desktop.theme'
+const FAVORITES_STORAGE_KEY = 'offlinetools.desktop.favorites'
 
 /**
  * App component
@@ -86,6 +95,9 @@ function App() {
   const [isDebugVisible, setIsDebugVisible] = useState<boolean>(false)
   const [premiumAlertTool, setPremiumAlertTool] = useState<string | null>(null)
   const [themeMode, setThemeMode] = useState<ThemeMode>('light')
+  const [favoriteToolIds, setFavoriteToolIds] = useState<string[]>([])
+  const [storedLicense, setStoredLicense] = useState<StoredLicense | null>(null)
+  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState<boolean>(false)
   const selectedToolMeta = tools.find(tool => tool.id === selectedTool)
 
   const captureAnalyticsEvent = (event: string, properties: Record<string, unknown>) => {
@@ -120,7 +132,17 @@ function App() {
     })
   }
 
+  const isToolLocked = (toolId: string) => {
+    const tool = tools.find((entry) => entry.id === toolId)
+    return tool?.tier === 'premium' && !isPremiumUnlocked
+  }
+
   const handleSidebarToolClick = (toolId: string) => {
+    if (isToolLocked(toolId)) {
+      handleLockedSidebarToolClick(toolId)
+      return
+    }
+
     setPremiumAlertTool(null)
     setSelectedTool(toolId)
     captureSidebarToolClick(toolId, false)
@@ -144,14 +166,59 @@ function App() {
     })
   }
 
+  const handleToggleFavorite = (toolId: string) => {
+    setFavoriteToolIds((previous) => {
+      const next = previous.includes(toolId)
+        ? previous.filter((id) => id !== toolId)
+        : [...previous, toolId]
+
+      captureAnalyticsEvent('favorite_toggled', {
+        tool_id: toolId,
+        is_favorite: next.includes(toolId),
+      })
+
+      return next
+    })
+  }
+
   /**
    * Handle selecting a tool from clipboard detector suggestions
    * @param toolId - The ID of the tool to select
    */
   const handleSelectTool = (toolId: string) => {
-    if (tools.some(tool => tool.id === toolId)) {
-      setSelectedTool(toolId)
+    if (!tools.some(tool => tool.id === toolId)) {
+      return
     }
+
+    if (isToolLocked(toolId)) {
+      handleLockedSidebarToolClick(toolId)
+      return
+    }
+
+    setSelectedTool(toolId)
+  }
+
+  const handleActivateLicense = async (email: string, key: string) => {
+    const valid = await validateLicense(email, key)
+    if (!valid) {
+      captureAnalyticsEvent('license_activation_failed', {})
+      return { success: false, error: 'Email and key do not match.' }
+    }
+
+    const normalized = { email: email.trim().toLowerCase(), key: key.trim() }
+    saveStoredLicense(normalized)
+    setStoredLicense(normalized)
+    setIsPremiumUnlocked(true)
+    setPremiumAlertTool(null)
+    captureAnalyticsEvent('license_activated', {})
+    return { success: true }
+  }
+
+  const handleClearLicense = () => {
+    clearStoredLicense()
+    setStoredLicense(null)
+    setIsPremiumUnlocked(false)
+    captureAnalyticsEvent('license_cleared', {})
   }
 
   /**
@@ -221,6 +288,62 @@ function App() {
   }, [])
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem(FAVORITES_STORAGE_KEY)
+      if (!saved) {
+        return
+      }
+
+      const parsed = JSON.parse(saved)
+      if (!Array.isArray(parsed)) {
+        return
+      }
+
+      const validIds = new Set(tools.map((tool) => tool.id))
+      const filtered = parsed.filter((value): value is string => typeof value === 'string' && validIds.has(value))
+      setFavoriteToolIds(filtered)
+    } catch (error) {
+      console.warn('Failed to read saved favorites:', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    const stored = readStoredLicense()
+    if (!stored) {
+      return
+    }
+
+    setStoredLicense(stored)
+    void validateLicense(stored.email, stored.key).then((valid) => {
+      if (!isMounted) {
+        return
+      }
+
+      if (!valid) {
+        clearStoredLicense()
+        setStoredLicense(null)
+        setIsPremiumUnlocked(false)
+        return
+      }
+
+      setIsPremiumUnlocked(true)
+    })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isToolLocked(selectedTool)) {
+      return
+    }
+
+    setSelectedTool('clipboard-detector')
+  }, [selectedTool, isPremiumUnlocked])
+
+  useEffect(() => {
     const root = document.documentElement
     if (themeMode === 'dark') {
       root.classList.add('dark')
@@ -235,6 +358,14 @@ function App() {
     }
   }, [themeMode])
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favoriteToolIds))
+    } catch (error) {
+      console.warn('Failed to save favorites:', error)
+    }
+  }, [favoriteToolIds])
+
   return (
     <main className="flex h-screen w-full overflow-hidden bg-background">
       <Sidebar 
@@ -242,8 +373,11 @@ function App() {
         selectedTool={selectedTool} 
         onSelectTool={handleSidebarToolClick}
         onLockedToolClick={handleLockedSidebarToolClick}
+        favoriteToolIds={favoriteToolIds}
+        onToggleFavorite={handleToggleFavorite}
         themeMode={themeMode}
         onThemeModeChange={handleThemeModeChange}
+        isPremiumUnlocked={isPremiumUnlocked}
       />
       
       <div className="flex-1 overflow-auto">
@@ -292,7 +426,13 @@ function App() {
         ) : selectedTool === 'updates' ? (
           <UpdatesPage className="min-h-full" />
         ) : selectedTool === 'settings' ? (
-          <AnalyticsSettings className="min-h-full" />
+          <AnalyticsSettings
+            className="min-h-full"
+            isPremiumUnlocked={isPremiumUnlocked}
+            storedLicense={storedLicense}
+            onActivateLicense={handleActivateLicense}
+            onClearLicense={handleClearLicense}
+          />
         ) : (
           <ToolPlaceholder 
             title={selectedToolMeta?.name || ''}
@@ -318,6 +458,17 @@ function App() {
               <Coffee className="h-4 w-4" />
               Upgrade helps fund several cups of coffee and AI agents for development.
             </p>
+            <button
+              type="button"
+              className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              onClick={() => {
+                setPremiumAlertTool(null)
+                setSelectedTool('settings')
+              }}
+            >
+              <KeyRound className="h-4 w-4" />
+              Already have a key? Open Settings
+            </button>
             <div className="mt-6 flex items-center justify-end gap-2">
               <Button
                 size="sm"

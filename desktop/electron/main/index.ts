@@ -1,9 +1,17 @@
-import { app, BrowserWindow, shell, ipcMain, Tray, Menu, nativeImage, clipboard, MenuItem } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, Tray, Menu, nativeImage, clipboard } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
-import { update, stopAutoUpdateChecker } from './update'
+import {
+  update,
+  startAutoUpdateChecker,
+  stopAutoUpdateChecker,
+  setUpdateTrayStateHandler,
+  triggerUpdateCheckFromTray,
+  isQuitAndInstallRequested,
+  type UpdaterState,
+} from './update'
 import { desktopAnalytics, setupAnalyticsIpcHandlers } from './analytics'
 
 const require = createRequire(import.meta.url)
@@ -29,11 +37,15 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
   ? path.join(process.env.APP_ROOT, 'public')
   : RENDERER_DIST
 
+const APP_NAME = 'OfflineTools'
+app.setName(APP_NAME)
+process.title = APP_NAME
+
 // Disable GPU Acceleration for Windows 7
 if (os.release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 // Set application name for Windows 10+ notifications
-if (process.platform === 'win32') app.setAppUserModelId(app.getName())
+if (process.platform === 'win32') app.setAppUserModelId('org.offlinetools.app')
 
 if (!app.requestSingleInstanceLock()) {
   app.quit()
@@ -42,9 +54,14 @@ if (!app.requestSingleInstanceLock()) {
 
 let win: BrowserWindow | null = null
 let tray: Tray | null = null
+let latestUpdaterState: UpdaterState | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
-const appIconPath = path.join(process.env.VITE_PUBLIC, 'logo-512.png')
+const macIconIcnsPath = path.join(process.env.APP_ROOT, 'resources/icons/icon.icns')
+const macIconPngPath = path.join(process.env.APP_ROOT, 'resources/icons/icon_512x512.png')
+const appIconPath = process.platform === 'darwin'
+  ? (require('fs').existsSync(macIconPngPath) ? macIconPngPath : macIconIcnsPath)
+  : path.join(process.env.VITE_PUBLIC, 'logo-512.png')
 
 /**
  * Set up IPC handlers for clipboard operations
@@ -112,7 +129,7 @@ function setupClipboardHandlers() {
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: 'OfflineTools',
     icon: appIconPath,
     width: 1270,
     height: 640,
@@ -148,7 +165,98 @@ async function createWindow() {
 
   // Auto update
   update(win)
+  startAutoUpdateChecker()
 
+}
+
+function showOrCreateMainWindow() {
+  if (win) {
+    win.show()
+    win.focus()
+  } else {
+    createWindow()
+  }
+}
+
+function openUpdatesPageAndCheckUpdates() {
+  showOrCreateMainWindow()
+  triggerUpdateCheckFromTray()
+}
+
+function buildUpdaterTrayItem(state: UpdaterState | null): Electron.MenuItemConstructorOptions | null {
+  if (!state) {
+    return null
+  }
+
+  if (state.status === 'available') {
+    return {
+      label: `Update Available${state.availableVersion ? ` (v${state.availableVersion})` : ''}`,
+      click: () => {
+        showOrCreateMainWindow()
+        win?.webContents.send('show-update-dialog')
+      },
+    }
+  }
+
+  if (state.status === 'downloading') {
+    const percent = state.progress?.percent ?? 0
+    return {
+      label: `Downloading Update (${percent.toFixed(1)}%)`,
+      enabled: false,
+    }
+  }
+
+  if (state.status === 'downloaded') {
+    return {
+      label: 'Installing Update...',
+      enabled: false,
+    }
+  }
+
+  if (state.status === 'error') {
+    return {
+      label: 'Updater Error (Open Updates)',
+      click: () => {
+        showOrCreateMainWindow()
+        win?.webContents.send('show-update-dialog')
+      },
+    }
+  }
+
+  return null
+}
+
+function refreshTrayMenu() {
+  if (!tray) {
+    return
+  }
+
+  const updaterItem = buildUpdaterTrayItem(latestUpdaterState)
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Open App',
+      click: () => {
+        showOrCreateMainWindow()
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Check for Updates',
+      click: () => {
+        openUpdatesPageAndCheckUpdates()
+      },
+    },
+    ...(updaterItem ? [updaterItem] : []),
+    { type: 'separator' },
+    {
+      label: 'Exit',
+      click: () => {
+        app.quit()
+      },
+    },
+  ])
+
+  tray.setContextMenu(contextMenu)
 }
 
 /**
@@ -207,41 +315,11 @@ function createTray() {
   tray = new Tray(trayIcon);
   tray.setToolTip('Offline Tools');
 
-  const contextMenu = Menu.buildFromTemplate([
-    { 
-      label: 'Open App', 
-      click: () => {
-        if (win) {
-          win.show()
-          win.focus()
-        } else {
-          createWindow()
-        }
-      } 
-    },
-    // Removed "Check for Updates" and its separator
-    { type: 'separator' },
-    { 
-      label: 'Exit', 
-      click: () => {
-        app.quit()
-      } 
-    }
-  ])
-  
-  tray.setContextMenu(contextMenu)
+  refreshTrayMenu()
   
   // Optional: Add click handler to open app on tray icon click
   tray.on('click', () => {
-    if (win) {
-      if (win.isVisible()) {
-        win.focus()
-      } else {
-        win.show()
-      }
-    } else {
-      createWindow()
-    }
+    showOrCreateMainWindow()
   })
 }
 
@@ -427,8 +505,15 @@ function createApplicationMenu() {
 }
 
 app.whenReady().then(() => {
+  app.setName(APP_NAME)
+  app.setAboutPanelOptions({ applicationName: APP_NAME })
+  process.title = APP_NAME
+
   if (process.platform === 'darwin' && app.dock) {
-    app.dock.setIcon(appIconPath)
+    const dockIcon = nativeImage.createFromPath(appIconPath)
+    if (!dockIcon.isEmpty()) {
+      app.dock.setIcon(dockIcon)
+    }
   }
 
   // Set up clipboard handlers
@@ -443,6 +528,10 @@ app.whenReady().then(() => {
   
   createWindow()
   createTray()
+  setUpdateTrayStateHandler((nextState) => {
+    latestUpdaterState = nextState
+    refreshTrayMenu()
+  })
   createApplicationMenu()
 })
 
@@ -454,6 +543,10 @@ app.on('window-all-closed', () => {
 
 let isAnalyticsShutdownInProgress = false
 app.on('before-quit', (event) => {
+  if (isQuitAndInstallRequested()) {
+    return
+  }
+
   if (isAnalyticsShutdownInProgress) {
     return
   }
@@ -532,86 +625,7 @@ ipcMain.handle('open-external-url', async (_event, url: string) => {
   }
 });
 
-// Update tray menu dynamically
-ipcMain.handle('update-tray-menu', (_, items) => {
-  if (tray) {
-    const template = [
-      { 
-        label: 'Open App', 
-        click: () => {
-          if (win) {
-            win.show()
-            win.focus()
-          } else {
-            createWindow()
-          }
-        } 
-      },
-      { type: 'separator' },
-      ...items,
-      { type: 'separator' },
-      { 
-        label: 'Exit', 
-        click: () => {
-          app.quit()
-        } 
-      }
-    ]
-    
-    const contextMenu = Menu.buildFromTemplate(template)
-    tray.setContextMenu(contextMenu)
-  }
-})
-
-// Handle tray update notifications
-ipcMain.handle('update-tray-notification', (_, { hasUpdate, version }) => {
-  updateTrayWithUpdateNotification(hasUpdate, version)
-})
-
 // Handle manual update check from tray menu
 ipcMain.handle('trigger-update-check', () => {
-  if (win) {
-    win.webContents.send('show-update-dialog')
-  }
+  openUpdatesPageAndCheckUpdates()
 })
-
-function updateTrayWithUpdateNotification(hasUpdate: boolean, version?: string) {
-  if (!tray) return
-
-  const updateMenuItem = hasUpdate ? {
-    label: `Update Available${version ? ` (v${version})` : ''}`,
-    click: () => {
-      if (win) {
-        win.show()
-        win.focus()
-        win.webContents.send('show-update-dialog')
-      } else {
-        createWindow()
-      }
-    }
-  } : null
-
-  const contextMenu = Menu.buildFromTemplate([
-    { 
-      label: 'Open App', 
-      click: () => {
-        if (win) {
-          win.show()
-          win.focus()
-        } else {
-          createWindow()
-        }
-      } 
-    },
-    ...(updateMenuItem ? [{ type: 'separator' as const }, updateMenuItem] : []),
-    { type: 'separator' as const },
-    { 
-      label: 'Exit', 
-      click: () => {
-        app.quit()
-      } 
-    }
-  ])
-  
-  tray.setContextMenu(contextMenu)
-}
