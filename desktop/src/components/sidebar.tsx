@@ -1,22 +1,25 @@
-import React, { useState, useMemo } from "react";
-import { cn } from "../lib/utils";
+import React, { useMemo, useState } from "react"
+import { LockKeyhole } from "lucide-react"
+import { cn } from "../lib/utils"
 
 /**
  * Tool type definition
  */
 export type Tool = {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-};
+  id: string
+  name: string
+  icon: React.ReactNode
+  tier: "free" | "premium" | "internal"
+  hidden?: boolean
+}
 
 /**
  * Sidebar component props
  */
 interface SidebarProps {
-  tools: Tool[];
-  selectedTool: string;
-  onSelectTool: (toolId: string) => void;
+  tools: Tool[]
+  selectedTool: string
+  onSelectTool: (toolId: string) => void
 }
 
 /**
@@ -25,17 +28,17 @@ interface SidebarProps {
  * @returns Sidebar component
  */
 export function Sidebar({ tools, selectedTool, onSelectTool }: SidebarProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("")
 
   const filteredTools = useMemo(() => {
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase()
     if (!lowerQuery) {
-      return tools;
+      return tools
     }
     return tools.filter((tool) =>
       tool.name.toLowerCase().includes(lowerQuery),
-    );
-  }, [tools, query]);
+    )
+  }, [tools, query])
 
   return (
     <div className="w-64 border-r border-border bg-card/50 text-card-foreground h-screen overflow-y-auto shrink-0">
@@ -53,25 +56,31 @@ export function Sidebar({ tools, selectedTool, onSelectTool }: SidebarProps) {
         />
       </div>
       <div className="py-2">
-        {filteredTools.map((tool) => (
-          <button
-            key={tool.id}
-            onClick={() => onSelectTool(tool.id)}
-            className={cn(
-              "flex items-center w-full px-4 py-3 text-sm font-medium transition-colors",
-              "hover:bg-muted/50 whitespace-nowrap overflow-hidden text-ellipsis",
-              selectedTool === tool.id
-                ? "bg-primary/10 text-primary border-l-2 border-l-primary"
-                : "text-foreground border-l-2 border-l-transparent",
-            )}
-          >
-            <span className="mr-3 flex h-5 w-5 items-center justify-center">
-              {tool.icon}
-            </span>
-            <span className="truncate">{tool.name}</span>
-          </button>
-        ))}
+        {filteredTools.map((tool) => {
+          const isLocked = tool.tier === "premium"
+          return (
+            <button
+              key={tool.id}
+              onClick={() => onSelectTool(tool.id)}
+              className={cn(
+                "flex items-center w-full px-4 py-3 text-sm font-medium transition-colors",
+                "hover:bg-muted/50 whitespace-nowrap overflow-hidden text-ellipsis",
+                selectedTool === tool.id
+                  ? "bg-primary/10 text-primary border-l-2 border-l-primary"
+                  : "text-foreground border-l-2 border-l-transparent",
+              )}
+            >
+              <span className="mr-3 flex h-5 w-5 items-center justify-center">
+                {tool.icon}
+              </span>
+              <span className="truncate">{tool.name}</span>
+              {isLocked ? (
+                <LockKeyhole className="ml-2 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              ) : null}
+            </button>
+          )
+        })}
       </div>
     </div>
-  );
+  )
 }
