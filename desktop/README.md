@@ -49,13 +49,9 @@ If you're getting the "app is damaged" error:
 
 ## Development
 
-Create env file for offline license verification:
+Offline license verification public key is hardcoded in:
 
-```
-cp .env.example .env
-```
-
-Set `VITE_LICENSE_PUBLIC_KEY_HEX` to the same public key derived from landing `LICENSE_PRIVATE_KEY_HEX`.
+`src/lib/license.ts`
 
 Then run:
 

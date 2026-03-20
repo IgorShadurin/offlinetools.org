@@ -1,7 +1,7 @@
 import { normalizeLicenseEmail, verifyLicenseKey } from "shared";
 
 export const LICENSE_STORAGE_KEY = "offlinetools.desktop.license";
-export const LICENSE_PUBLIC_KEY_HEX = (import.meta.env.VITE_LICENSE_PUBLIC_KEY_HEX ?? "").trim().toLowerCase();
+export const LICENSE_PUBLIC_KEY_HEX = "33e5a1a186ee0f5c950a1da7398af5dee2541bd9a0a8fca4ecef718ccf0ae37a";
 
 export type StoredLicense = {
   email: string;
