@@ -62,6 +62,7 @@ const macIconPngPath = path.join(process.env.APP_ROOT, 'resources/icons/icon_512
 const appIconPath = process.platform === 'darwin'
   ? (require('fs').existsSync(macIconPngPath) ? macIconPngPath : macIconIcnsPath)
   : path.join(process.env.VITE_PUBLIC, 'logo-512.png')
+const isE2ETestRun = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true'
 
 /**
  * Set up IPC handlers for clipboard operations
@@ -145,11 +146,16 @@ async function createWindow() {
   })
 
   if (VITE_DEV_SERVER_URL) { // #298
-    win.loadURL(VITE_DEV_SERVER_URL)
+    const devServerUrl = isE2ETestRun ? `${VITE_DEV_SERVER_URL}?e2e=1` : VITE_DEV_SERVER_URL
+    win.loadURL(devServerUrl)
     // Open devTool if the app is not packaged
     // win.webContents.openDevTools()
   } else {
-    win.loadFile(indexHtml)
+    if (isE2ETestRun) {
+      win.loadFile(indexHtml, { query: { e2e: '1' } })
+    } else {
+      win.loadFile(indexHtml)
+    }
   }
 
   // Test actively push message to the Electron-Renderer

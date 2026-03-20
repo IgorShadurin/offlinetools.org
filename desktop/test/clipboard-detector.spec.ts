@@ -75,7 +75,8 @@ describe('Clipboard Detector tests', async () => {
     const firstTool = await page.locator('button:has-text("Clipboard Detector")').first();
     expect(await firstTool.isVisible()).toBe(true);
     
-    const className = await firstTool.getAttribute('class');
+    const selectedToolRow = page.locator('div:has(> button:has-text("Clipboard Detector"))').first();
+    const className = await selectedToolRow.getAttribute('class');
     expect(className).toContain('bg-primary/10');
 
     // Verify the component title is visible

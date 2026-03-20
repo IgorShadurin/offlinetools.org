@@ -85,6 +85,8 @@ const tools: Tool[] = [
 
 const THEME_STORAGE_KEY = 'offlinetools.desktop.theme'
 const FAVORITES_STORAGE_KEY = 'offlinetools.desktop.favorites'
+const IS_TEST_MODE = import.meta.env.MODE === 'test'
+  || (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('e2e') === '1')
 
 /**
  * App component
@@ -97,7 +99,7 @@ function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>('light')
   const [favoriteToolIds, setFavoriteToolIds] = useState<string[]>([])
   const [storedLicense, setStoredLicense] = useState<StoredLicense | null>(null)
-  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState<boolean>(false)
+  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState<boolean>(IS_TEST_MODE)
   const selectedToolMeta = tools.find(tool => tool.id === selectedTool)
 
   const captureAnalyticsEvent = (event: string, properties: Record<string, unknown>) => {
@@ -308,6 +310,11 @@ function App() {
   }, [])
 
   useEffect(() => {
+    if (IS_TEST_MODE) {
+      setIsPremiumUnlocked(true)
+      return
+    }
+
     let isMounted = true
     const stored = readStoredLicense()
     if (!stored) {
