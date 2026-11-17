@@ -86,4 +86,12 @@
 Last updated: 2025-07-28
 Generated for: Large Language Models and AI assistants
 Contact: igor.shadurin@gmail.com
-Website: https://offlinetools.org 
+Website: https://offlinetools.org
+
+## Author
+
+Created by Ihar Shaduryn, also known as Igor Shadurin, a software engineer building web tools, native apps, and open-source projects.
+
+- [GitHub](https://github.com/IgorShadurin/): Public projects and repositories.
+- [CV, professional experience and projects](https://github.com/IgorShadurin/IgorShadurin/blob/main/EXPERIENCE.md): The existing GitHub career profile.
+- [Portfolio](https://shadurin.com/): Current projects and their links.
